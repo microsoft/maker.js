@@ -6,6 +6,16 @@
         (...values: number[]): number;
     }
 
+    //units
+
+    export var UnitType = {
+        Centimeter: 'cm',
+        Foot: 'foot',
+        Inch: 'inch',
+        Meter: 'm',
+        Millimeter: 'mm'
+    };
+
     //array
 
     export function IsArray(item: any): boolean {
@@ -72,21 +82,12 @@
 
     //models
 
-    //DXF format documentation:
-    //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
-    //Default drawing units for AutoCAD DesignCenter blocks:
-    //0 = Unitless; 1 = Inches; 2 = Feet; 3 = Miles; 4 = Millimeters; 5 = Centimeters; 6 = Meters; 7 = Kilometers; 8 = Microinches;
-    export enum DXFUnitType {
-        Unitless = 0,
-        Inches = 1,
-        Millimeters = 4
-    };
-
     export interface IMakerModel extends IMakerId {
+        type?: string;
         paths?: IMakerPath[];
         models?: IMakerModel[];
         origin?: IMakerPoint;
-        unitType?: DXFUnitType;
+        units?: string;
     }
 
     export function IsModel(item: any): boolean {
