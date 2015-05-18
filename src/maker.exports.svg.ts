@@ -40,12 +40,9 @@
             return newArc;
         }
 
-        function createElement(tagname: string, attrs: {[name:string]:any}, innerText: string = null, useStroke = true) {
+        function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null, useStroke = true) {
 
-            var tag: Itag = {
-                name: tagname,
-                attrs: attrs
-            };
+            var tag = new XmlTag(tagname, attrs);
 
             if (innerText) {
                 tag.innerText = innerText;
@@ -57,7 +54,7 @@
                 tag.attrs["stroke-width"] = options.strokeWidth;
             }
 
-            elements.push(Tag.TagToString(tag));
+            elements.push(tag.ToString());
         }
 
         function drawText(id: string, x: number, y: number) {
@@ -182,57 +179,11 @@
             exportPath(<IMakerPath>item, options.origin);
         }
 
-        return Tag.TagToString({ name: "svg", innerText: elements.join(''), innerTextEscaped: true });
+        var svgTag = new XmlTag('svg');
+        svgTag.innerText = elements.join('');
+        svgTag.innerTextEscaped = true;
+        return svgTag.ToString();
     }
-
-    var Tag = {
-
-        EscapeString: function (value: string): string {
-            var escape = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;'
-            };
-
-            for (var code in escape) {
-                value = value.split(code).join(escape[code]);
-            }
-
-            return value;
-        },
-
-        TagToString: function (tag: Itag): string {
-            var attrs = '';
-
-            for (var name in tag.attrs) {
-                var value = tag.attrs[name];
-
-                if (typeof value == 'string') {
-                    value = Tag.EscapeString(value);
-                }
-
-                attrs += ' ' + name + '="' + value + '"';
-            }
-
-            var closeTag = '/>';
-
-            if (tag.innerText) {
-                closeTag = '>';
-
-                if (tag.innerTextEscaped) {
-                    closeTag += tag.innerText;
-                } else {
-                    closeTag += Tag.EscapeString(tag.innerText);
-                }
-
-                closeTag += '</' + tag.name + '>';
-            }
-
-            return '<' + tag.name + attrs + closeTag;
-        }
-
-    };
 
     export interface ISVGRenderOptions {
         strokeWidth: number;
@@ -242,10 +193,4 @@
         origin: IMakerPoint;
     }
 
-    interface Itag {
-        name: string;
-        attrs?: { [m: string]: any };
-        innerText?: string;
-        innerTextEscaped?: boolean;
-    }
 } 

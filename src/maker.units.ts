@@ -6,7 +6,7 @@
         addBaseConversion(UnitType.Centimeter, 10);
         addBaseConversion(UnitType.Meter, 1000);
         addBaseConversion(UnitType.Inch, 25.4);
-        addBaseConversion(UnitType.Foot, 12 * 25.4);
+        addBaseConversion(UnitType.Foot, 25.4 * 12);
     }
 
     var table: { [unitType: string]: { [unitType: string]: number }; };

@@ -9,7 +9,7 @@
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
 
         options = options || {
-            units: 'mm'
+            units: UnitType.Millimeter
         };
 
         var dxf: string[] = [];
@@ -113,7 +113,7 @@
             append("9");
             append("$INSUNITS");
             append("70");
-            append(DXFUnitType[options.units]);
+            append(dxfUnit[options.units]);
         }
 
         function entities() {
@@ -144,14 +144,13 @@
     //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
     //Default drawing units for AutoCAD DesignCenter blocks:
     //0 = Unitless; 1 = Inches; 2 = Feet; 3 = Miles; 4 = Millimeters; 5 = Centimeters; 6 = Meters; 7 = Kilometers; 8 = Microinches;
-    var DXFUnitType = {
-        '': 0,
-        'inch': 1,
-        'feet': 2,
-        'mm': 4,
-        'cm': 5,
-        'm': 6
-    };
+    var dxfUnit: { [unitType: string]: number } = {};
+    dxfUnit[''] = 0;
+    dxfUnit[UnitType.Inch] = 1;
+    dxfUnit[UnitType.Foot] = 2;
+    dxfUnit[UnitType.Millimeter] = 4;
+    dxfUnit[UnitType.Centimeter] = 5;
+    dxfUnit[UnitType.Meter] = 6;
 
     export interface IDXFRenderOptions {
         units: string;
