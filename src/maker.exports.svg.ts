@@ -10,7 +10,8 @@
             scale: 100,
             stroke: "blue",
             strokeWidth: 2,
-            origin: { x: 50, y: 300 }
+            origin: { x: 50, y: 300 },
+            useSvgPathOnly: false
         };
 
         var elements: string[] = [];
@@ -88,15 +89,19 @@
             var start = Maker.Point.Add(fixPoint(line.origin), origin);
             var end = Maker.Point.Add(fixPoint(line.end), origin);
 
-            createElement(
-                "line",
-                {
-                    "id": line.id,
-                    "x1": start.x,
-                    "y1": start.y,
-                    "x2": end.x,
-                    "y2": end.y
-                });
+            if (options.useSvgPathOnly) {
+                drawPath(line.id, start.x, start.y, [end.x, end.y]);
+            } else {
+                createElement(
+                    "line",
+                    {
+                        "id": line.id,
+                        "x1": start.x,
+                        "y1": start.y,
+                        "x2": end.x,
+                        "y2": end.y
+                    });
+            }
 
             if (options.annotate) {
                 drawText(line.id, (start.x + end.x) / 2, (start.y + end.y) / 2);
@@ -106,19 +111,45 @@
         map[Maker.PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
             var center = Maker.Point.Add(fixPoint(circle.origin), origin);
 
-            createElement(
-                "circle",
-                {
-                    "id": circle.id,
-                    "r": circle.radius * options.scale,
-                    "cx": center.x,
-                    "cy": center.y
-                });
+            if (options.useSvgPathOnly) {
+
+                var r = circle.radius * options.scale;
+                var d = ['m', -r, 0];
+
+                function halfCircle(sign: number) {
+                    d.push('a');
+                    svgArcData(d, r, [2 * r * sign, 0]);
+                }
+
+                halfCircle(1);
+                halfCircle(-1);
+
+                drawPath(circle.id, center.x, center.y, d);
+
+            } else {
+                createElement(
+                    "circle",
+                    {
+                        "id": circle.id,
+                        "r": circle.radius * options.scale,
+                        "cx": center.x,
+                        "cy": center.y
+                    });
+            }
 
             if (options.annotate) {
                 drawText(circle.id, center.x, center.y);
             }
         };
+
+        function svgArcData(d: any[], radius: number, endPoint: any, largeArc?: boolean, decreasing?: boolean) {
+            var end: IMakerPoint = Point.Ensure(endPoint);
+            d.push(radius, radius);
+            d.push(0);                   //0 = x-axis rotation
+            d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
+            d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
+            d.push(end.x, end.y);
+        }
 
         map[Maker.PathType.Arc] = function (rawArc: IMakerPathArc, origin: IMakerPoint) {
 
@@ -134,11 +165,14 @@
 
             var startPoint = getPointFromAngle(arc.startAngle);
             var endPoint = getPointFromAngle(arc.endAngle);
-
-            var d = ["A", arc.radius, arc.radius, 0];                       //0 = x-axis rotation
-            d.push(Math.abs(arc.endAngle - arc.startAngle) > 180 ? 1 : 0);  //large arc=1, small arc=0
-            d.push((arc.startAngle < arc.endAngle) ? 1 : 0);                //sweep-flag 0=decreasing, 1=increasing 
-            d.push(endPoint.x, endPoint.y);
+            var d = ['A'];
+            svgArcData(
+                d,
+                arc.radius,
+                endPoint,
+                Math.abs(arc.endAngle - arc.startAngle) > 180,
+                arc.startAngle > arc.endAngle
+            );
 
             drawPath(arc.id, startPoint.x, startPoint.y, d);
         };
@@ -191,6 +225,7 @@
         scale: number;
         annotate: boolean;
         origin: IMakerPoint;
+        useSvgPathOnly: boolean;
     }
 
 } 

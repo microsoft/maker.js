@@ -1,79 +1,87 @@
 ﻿<html>
-    <head>
-        <title>Maker.js debug TypeScript source code</title>
-        <style type="text/css">
-            html, body, svg {
-                height: 100%;
-                width: 100%;
-                margin: 0;
-                padding: 0;
-                position: absolute;
-            }
-            a {
-                position: absolute;
-                z-index: 1;
-            }
-        </style>
-        <script src="../src/maker.js"></script>
-        <script src="../src/maker.angle.js"></script>
-        <script src="../src/maker.point.js"></script>
-        <script src="../src/maker.units.js"></script>
-        <script src="../src/maker.measure.js"></script>
-        <script src="../src/maker.path.js"></script>
-        <script src="../src/maker.model.js"></script>
-        <script src="../src/maker.tools.gap.js"></script>
-        <script src="../src/maker.exports.xml.js"></script>
-        <script src="../src/maker.exports.dxf.js"></script>
-        <script src="../src/maker.exports.svg.js"></script>
-        <script src="../src/models/RoundRectangle.js"></script>
-    </head>
-    <body>
-        <a id="dxfdownload" href="#">download dxf</a>
-        <script>
+<head>
+    <title>Maker.js debug TypeScript source code</title>
+    <style type="text/css">
+        html, body, svg {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+        }
+        .links {
+            position: absolute;
+            z-index: 1;
+        }
+    </style>
+    <script src="../src/maker.js"></script>
+    <script src="../src/maker.angle.js"></script>
+    <script src="../src/maker.point.js"></script>
+    <script src="../src/maker.units.js"></script>
+    <script src="../src/maker.measure.js"></script>
+    <script src="../src/maker.path.js"></script>
+    <script src="../src/maker.model.js"></script>
+    <script src="../src/maker.tools.gap.js"></script>
+    <script src="../src/maker.exports.xml.js"></script>
+    <script src="../src/maker.exports.dxf.js"></script>
+    <script src="../src/maker.exports.svg.js"></script>
+    <script src="../src/models/RoundRectangle.js"></script>
+</head>
+<body>
 
-            var c = Maker.Units.ConversionScale('m', 'inch');
+    <div class="links">
+        <a id="download_dxf" href="#">download dxf</a> <a id="download_svg" href="#">download svg</a>
+    </div>
 
-            var model = { paths: [], models: [] };
+    <script>
 
-            var circle = Maker.Path.CreateCircle('c1', [], 1);
+        var c = Maker.Units.ConversionScale('m', 'inch');
 
-            model.paths.push(Maker.Path.MoveRelative(circle, [2, 1.5]));
+        var model = { paths: [], models: [] };
 
-            model.models.push(new Maker.Models.RoundRectangle(4, 3, .25));
+        var circle = Maker.Path.CreateCircle('c1', [], 1);
 
-            document.write(JSON.stringify(model));
+        model.paths.push(Maker.Path.MoveRelative(circle, [2, 1.5]));
 
-            var dxf = Maker.Exports.DXF(model);
+        model.models.push(new Maker.Models.RoundRectangle(4, 3, .25));
 
-            var a = document.getElementById("dxfdownload");
-            a.setAttribute("href", "data:text/plain," + encodeURIComponent(dxf));
-            a.setAttribute("download", "model.dxf");
+        var dxf = Maker.Exports.DXF(model);
 
-            var svgOrigin = [200, 400];
+        var a_dxf = document.getElementById("download_dxf");
+        a_dxf.setAttribute("href", "data:text/plain," + encodeURIComponent(dxf));
+        a_dxf.setAttribute("download", "model.dxf");
 
-            var svgOptions = {
-                annotate: false,
-                scale: 100,
-                stroke: 'blue',
-                strokeWidth: 2,
-                origin: svgOrigin
-            }
+        var svgOrigin = [200, 400];
 
-            var svg = Maker.Exports.SVG(model, svgOptions);
-            document.write(svg);
+        var svgOptions = {
+            annotate: false,
+            scale: 100,
+            stroke: 'blue',
+            strokeWidth: 2,
+            origin: svgOrigin,
+            useSvgPathOnly: false
+        }
 
-            var crossHairs = [
-                Maker.Path.CreateLine('v', [0, 1], [0, -1]),
-                Maker.Path.CreateLine('h', [-1, 0], [1, 0]),
-            ];
+        var svg = Maker.Exports.SVG(model, svgOptions);
+        document.write(svg);
 
-            svgOptions.stroke = 'red';
-            svgOptions.strokeWidth = 1;
+        var a_svg = document.getElementById("download_svg");
+        a_svg.setAttribute("href", "data:text/plain," + encodeURIComponent(svg));
+        a_svg.setAttribute("download", "model.svg");
 
-            var svgOrigin = Maker.Exports.SVG(crossHairs, svgOptions);
+        var crossHairs = [
+            Maker.Path.CreateLine('v', [0, 1], [0, -1]),
+            Maker.Path.CreateLine('h', [-1, 0], [1, 0]),
+        ];
 
-            document.write(svgOrigin);
+        svgOptions.stroke = 'red';
+        svgOptions.strokeWidth = 1;
 
-        </script>
-    </body>
+        var svgOrigin = Maker.Exports.SVG(crossHairs, svgOptions);
+
+        document.write(svgOrigin);
+
+    </script>
+</body>
+
 </html>
