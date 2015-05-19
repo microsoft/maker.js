@@ -28,7 +28,7 @@
         <script src="../src/models/RoundRectangle.js"></script>
     </head>
     <body>
-        <a href="#">download dxf</a>
+        <a id="dxfdownload" href="#">download dxf</a>
         <script>
 
             var c = Maker.Units.ConversionScale('m', 'inch');
@@ -41,6 +41,14 @@
 
             model.models.push(new Maker.Models.RoundRectangle(4, 3, .25));
 
+            document.write(JSON.stringify(model));
+
+            var dxf = Maker.Exports.DXF(model);
+
+            var a = document.getElementById("dxfdownload");
+            a.setAttribute("href", "data:text/plain," + encodeURIComponent(dxf));
+            a.setAttribute("download", "model.dxf");
+
             var svgOrigin = [200, 400];
 
             var svgOptions = {
@@ -52,8 +60,6 @@
             }
 
             var svg = Maker.Exports.SVG(model, svgOptions);
-            var dxf = Maker.Exports.DXF(model);
-
             document.write(svg);
 
             var crossHairs = [
