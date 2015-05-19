@@ -95,3 +95,7 @@
     }
 
 }
+
+//CommonJs
+var module: any = <any>module || {};
+module.exports = Maker;
