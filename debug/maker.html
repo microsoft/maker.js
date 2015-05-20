@@ -165,7 +165,7 @@
         height: <input type="range" min="1" max="7" step=".1" value="3" onchange="render({ height: this.valueAsNumber })" />
         width: <input type="range" min="1" max="7" step=".1" value="4" onchange="render({ width: this.valueAsNumber })" />
         radius: <input type="range" min="0" max="2" step=".1" value=".25" onchange="render({ radius: this.valueAsNumber })" />
-        angle: <input type="range" min="0" max="90" step="1" value="0" onchange="render({ angle: this.valueAsNumber })" />
+        angle: <input type="range" min="-90" max="90" step="2.5" value="0" onchange="render({ angle: 360 - this.valueAsNumber })" />
     </div>
 
     <div id="view">
