@@ -6,6 +6,10 @@
 
         constructor(public width: number, public height: number, public radius: number) {
 
+            var maxRadius = Math.min(height, width) / 2;
+
+            radius = Math.min(radius, maxRadius);
+
             var wr = width - radius;
             var hr = height - radius;
 

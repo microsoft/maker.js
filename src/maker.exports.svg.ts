@@ -3,23 +3,25 @@
     export function SVG(model: IMakerModel, options?: ISVGRenderOptions): string;
     export function SVG(paths: IMakerPath[], options?: ISVGRenderOptions): string;
     export function SVG(path: IMakerPath, options?: ISVGRenderOptions): string;
-    export function SVG(item: any, options?: ISVGRenderOptions): string {
+    export function SVG(itemToExport: any, options?: ISVGRenderOptions): string {
 
-        options = options || {
+        var opts: ISVGRenderOptions = {
             annotate: false,
-            scale: 100,
+            scale: 1,
             stroke: "blue",
             strokeWidth: 2,
-            origin: { x: 50, y: 300 },
+            origin: Point.Zero(),
             useSvgPathOnly: false
         };
+
+        ExtendObject(opts, options);
 
         var elements: string[] = [];
 
         function fixPoint(p: IMakerPoint): IMakerPoint {
             return {
-                x: p.x * options.scale,
-                y: -p.y * options.scale  //in DXF Y increases upward. in SVG, Y increases downward
+                x: p.x * opts.scale,
+                y: -p.y * opts.scale  //in DXF Y increases upward. in SVG, Y increases downward
 
             };
         }
@@ -33,7 +35,7 @@
             var newArc = Path.CreateArc(
                 arc.id,
                 fixPoint(arc.origin),
-                arc.radius * options.scale,
+                arc.radius * opts.scale,
                 invertAngleOnYAxis(arc.startAngle),
                 invertAngleOnYAxis(Maker.Angle.ArcEndAnglePastZero(arc))
             );
@@ -51,8 +53,8 @@
 
             if (useStroke) {
                 tag.attrs["fill"] = "none";
-                tag.attrs["stroke"] = options.stroke;
-                tag.attrs["stroke-width"] = options.strokeWidth;
+                tag.attrs["stroke"] = opts.stroke;
+                tag.attrs["stroke-width"] = opts.strokeWidth;
             }
 
             elements.push(tag.ToString());
@@ -78,7 +80,7 @@
                     "d": ["M", x, y].concat(d).join(" ")
                 });
 
-            if (options.annotate) {
+            if (opts.annotate) {
                 drawText(id, x, y);
             }
         }
@@ -89,7 +91,7 @@
             var start = Maker.Point.Add(fixPoint(line.origin), origin);
             var end = Maker.Point.Add(fixPoint(line.end), origin);
 
-            if (options.useSvgPathOnly) {
+            if (opts.useSvgPathOnly) {
                 drawPath(line.id, start.x, start.y, [end.x, end.y]);
             } else {
                 createElement(
@@ -103,7 +105,7 @@
                     });
             }
 
-            if (options.annotate) {
+            if (opts.annotate) {
                 drawText(line.id, (start.x + end.x) / 2, (start.y + end.y) / 2);
             }
         };
@@ -111,9 +113,9 @@
         map[Maker.PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
             var center = Maker.Point.Add(fixPoint(circle.origin), origin);
 
-            if (options.useSvgPathOnly) {
+            if (opts.useSvgPathOnly) {
 
-                var r = circle.radius * options.scale;
+                var r = circle.radius * opts.scale;
                 var d = ['m', -r, 0];
 
                 function halfCircle(sign: number) {
@@ -131,13 +133,13 @@
                     "circle",
                     {
                         "id": circle.id,
-                        "r": circle.radius * options.scale,
+                        "r": circle.radius * opts.scale,
                         "cx": center.x,
                         "cy": center.y
                     });
             }
 
-            if (options.annotate) {
+            if (opts.annotate) {
                 drawText(circle.id, center.x, center.y);
             }
         };
@@ -184,18 +186,14 @@
             }
         }
 
-        function exportPaths(paths: IMakerPath[], origin: IMakerPoint): void {
-            for (var i = 0; i < paths.length; i++) {
-                exportPath(paths[i], origin);
-            }
-        }
-
         function exportModel(model: IMakerModel, origin: IMakerPoint) {
 
             var newOrigin = Maker.Point.Add(fixPoint(Maker.Point.Ensure(model.origin)), origin);
 
             if (model.paths) {
-                exportPaths(model.paths, newOrigin);
+                for (var i = 0; i < model.paths.length; i++) {
+                    exportPath(model.paths[i], newOrigin);
+                }
             }
 
             if (model.models) {
@@ -205,13 +203,20 @@
             }
         }
 
-        if (IsModel(item)) {
-            exportModel(<IMakerModel>item, options.origin);
-        } else if (IsArray(item)) {
-            exportPaths(<IMakerPath[]>item, options.origin);
-        } else if (IsPath(item)) {
-            exportPath(<IMakerPath>item, options.origin);
+        function exportItem(item: any, origin: IMakerPoint) {
+            if (IsModel(item)) {
+                exportModel(<IMakerModel>item, origin);
+            } else if (IsArray(item)) {
+                var items: any[] = item;
+                for (var i = 0; i < items.length; i++) {
+                    exportItem(items[i], origin);
+                }
+            } else if (IsPath(item)) {
+                exportPath(<IMakerPath>item, origin);
+            }
         }
+
+        exportItem(itemToExport, opts.origin);
 
         var svgTag = new XmlTag('svg');
         svgTag.innerText = elements.join('');

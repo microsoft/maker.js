@@ -3,14 +3,16 @@
     export function DXF(model: IMakerModel, options?: IDXFRenderOptions): string;
     export function DXF(paths: IMakerPath[], options?: IDXFRenderOptions): string;
     export function DXF(path: IMakerPath, options?: IDXFRenderOptions): string;
-    export function DXF(item: any, options?: IDXFRenderOptions): string {
+    export function DXF(itemToExport: any, options?: IDXFRenderOptions): string {
 
         //DXF format documentation:
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
 
-        options = options || {
+        var opts: IDXFRenderOptions = {
             units: UnitType.Millimeter
         };
+
+        ExtendObject(opts, options);
 
         var dxf: string[] = [];
 
@@ -75,24 +77,33 @@
             }
         }
 
-        function exportPaths(paths: IMakerPath[], origin: IMakerPoint) {
-            for (var i = 0; i < paths.length; i++) {
-                exportPath(paths[i], origin);
-            }
-        }
-
         function exportModel(model: IMakerModel, origin: IMakerPoint) {
 
             var newOrigin = Point.Add(model.origin, origin);
 
             if (model.paths) {
-                exportPaths(model.paths, newOrigin);
+                for (var i = 0; i < model.paths.length; i++) {
+                    exportPath(model.paths[i], newOrigin);
+                }
             }
 
             if (model.models) {
                 for (var i = 0; i < model.models.length; i++) {
                     exportModel(model.models[i], newOrigin);
                 }
+            }
+        }
+
+        function exportItem(item: any, origin: IMakerPoint) {
+            if (IsModel(item)) {
+                exportModel(<IMakerModel>item, origin);
+            } else if (IsArray(item)) {
+                var items: any[] = item;
+                for (var i = 0; i < items.length; i++) {
+                    exportItem(items[i], origin);
+                }
+            } else if (IsPath(item)) {
+                exportPath(<IMakerPath>item, origin);
             }
         }
 
@@ -113,7 +124,7 @@
             append("9");
             append("$INSUNITS");
             append("70");
-            append(dxfUnit[options.units]);
+            append(dxfUnit[opts.units]);
         }
 
         function entities() {
@@ -122,13 +133,7 @@
 
             var origin = Point.Zero();
 
-            if (IsModel(item)) {
-                exportModel(<IMakerModel>item, origin);
-            } else if (IsArray(item)) {
-                exportPaths(<IMakerPath[]>item, origin);
-            } else if (IsPath(item)) {
-                exportPath(<IMakerPath>item, origin);
-            }
+            exportItem(itemToExport, origin);
         }
 
         section(header);

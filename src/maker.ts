@@ -16,6 +16,19 @@
         Millimeter: 'mm'
     };
 
+    //object
+
+    export function ExtendObject(target: Object, other: Object) {
+        if (other) {
+            for (var key in other) {
+                if (typeof other[key] !== 'undefined') {
+                    target[key] = other[key];
+                }
+            }
+        }
+        return target;
+    }
+
     //array
 
     export function IsArray(item: any): boolean {
