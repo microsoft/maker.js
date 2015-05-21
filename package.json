@@ -1,0 +1,31 @@
+{
+  "name": "Maker.js",
+  "version": "1.0.0",
+  "description": "Maker.js is a JavaScript library for creating programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.",
+  "main": "maker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/Maker.js.git"
+  },
+  "keywords": [
+    "2D",
+    "vector",
+    "drawing"
+  ],
+  "author": "Dan Marshall / Microsoft Corporation",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/Microsoft/Maker.js/issues"
+  },
+  "homepage": "https://github.com/Microsoft/Maker.js",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-rename": "^1.2.2",
+    "gulp-typescript": "^2.7.4",
+    "gulp-uglify": "^1.2.0",
+    "merge2": "^0.3.5"
+  }
+}
