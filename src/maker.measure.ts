@@ -13,7 +13,7 @@
 
     export function PathExtents(path: IMakerPath): IMakerMeasure {
         var map: IMakerPathFunctionMap = {};
-        var measurement: IMakerMeasure = { low: Point.Zero(), high: Point.Zero() };
+        var measurement: IMakerMeasure = { low: null, high: null };
 
         function extremePoint(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax): IMakerPoint {
             return {
@@ -37,16 +37,23 @@
             var r = arc.radius;
             var startPoint = Point.FromPolar(Angle.ToRadians(arc.startAngle), r);
             var endPoint = Point.FromPolar(Angle.ToRadians(arc.endAngle), r);
+
+            var startAngle = arc.startAngle;
             var endAngle = Angle.ArcEndAnglePastZero(arc);
+
+            if (startAngle < 0) {
+                startAngle += 360;
+                endAngle += 360;
+            }
 
             function extremeAngle(xAngle: number, yAngle: number, value: number, fn: IMathMinMax): IMakerPoint {
                 var point = extremePoint(startPoint, endPoint, fn);
 
-                if (arc.startAngle < xAngle && xAngle < endAngle) {
+                if (startAngle < xAngle && xAngle < endAngle) {
                     point.x = value;
                 }
 
-                if (arc.startAngle < yAngle && yAngle < endAngle) {
+                if (startAngle < yAngle && yAngle < endAngle) {
                     point.y = value;
                 }
 
@@ -92,13 +99,14 @@
     }
 
     export function ModelExtents(model: IMakerModel): IMakerMeasure {
-        var totalMeasurement: IMakerMeasure = { low: Point.Zero(), high: Point.Zero() };
+        var totalMeasurement: IMakerMeasure = { low: { x: null, y: null }, high: { x: null, y: null } };
 
         function lowerOrHigher(offsetOrigin: IMakerPoint, pathMeasurement: IMakerMeasure) {
 
             function getExtreme(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax) {
-                a.x = fn(a.x, b.x + offsetOrigin.x);
-                a.y = fn(a.y, b.y + offsetOrigin.y);
+                var c = Point.Add(b, offsetOrigin);
+                a.x = (a.x == null ? c.x : fn(a.x, c.x));
+                a.y = (a.y == null ? c.y : fn(a.y, c.y));
             }
 
             getExtreme(totalMeasurement.low, pathMeasurement.low, Math.min);
