@@ -18,7 +18,8 @@
 
         var elements: string[] = [];
 
-        function fixPoint(p: IMakerPoint): IMakerPoint {
+        function fixPoint(point: IMakerPoint): IMakerPoint {
+            var p = Maker.Point.Ensure(point);
             return {
                 x: p.x * opts.scale,
                 y: -p.y * opts.scale  //in DXF Y increases upward. in SVG, Y increases downward
@@ -179,44 +180,8 @@
             drawPath(arc.id, startPoint.x, startPoint.y, d);
         };
 
-        function exportPath(path: IMakerPath, origin: IMakerPoint): void {
-            var fn = map[path.type];
-            if (fn) {
-                fn(path, origin);
-            }
-        }
-
-        function exportModel(model: IMakerModel, origin: IMakerPoint) {
-
-            var newOrigin = Maker.Point.Add(fixPoint(Maker.Point.Ensure(model.origin)), origin);
-
-            if (model.paths) {
-                for (var i = 0; i < model.paths.length; i++) {
-                    exportPath(model.paths[i], newOrigin);
-                }
-            }
-
-            if (model.models) {
-                for (var i = 0; i < model.models.length; i++) {
-                    exportModel(model.models[i], newOrigin);
-                }
-            }
-        }
-
-        function exportItem(item: any, origin: IMakerPoint) {
-            if (IsModel(item)) {
-                exportModel(<IMakerModel>item, origin);
-            } else if (IsArray(item)) {
-                var items: any[] = item;
-                for (var i = 0; i < items.length; i++) {
-                    exportItem(items[i], origin);
-                }
-            } else if (IsPath(item)) {
-                exportPath(<IMakerPath>item, origin);
-            }
-        }
-
-        exportItem(itemToExport, opts.origin);
+        var exporter = new Exporter(map, fixPoint);
+        exporter.exportItem(itemToExport, opts.origin);
 
         var svgTag = new XmlTag('svg');
         svgTag.innerText = elements.join('');

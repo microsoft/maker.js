@@ -67,46 +67,6 @@
             append(arc.endAngle);
         };
 
-        function exportPath(path: IMakerPath, origin: IMakerPoint) {
-
-            //todo: scale units
-
-            var fn = map[path.type];
-            if (fn) {
-                fn(path, origin);
-            }
-        }
-
-        function exportModel(model: IMakerModel, origin: IMakerPoint) {
-
-            var newOrigin = Point.Add(model.origin, origin);
-
-            if (model.paths) {
-                for (var i = 0; i < model.paths.length; i++) {
-                    exportPath(model.paths[i], newOrigin);
-                }
-            }
-
-            if (model.models) {
-                for (var i = 0; i < model.models.length; i++) {
-                    exportModel(model.models[i], newOrigin);
-                }
-            }
-        }
-
-        function exportItem(item: any, origin: IMakerPoint) {
-            if (IsModel(item)) {
-                exportModel(<IMakerModel>item, origin);
-            } else if (IsArray(item)) {
-                var items: any[] = item;
-                for (var i = 0; i < items.length; i++) {
-                    exportItem(items[i], origin);
-                }
-            } else if (IsPath(item)) {
-                exportPath(<IMakerPath>item, origin);
-            }
-        }
-
         function section(sectionFn: () => void) {
             append("0");
             append("SECTION");
@@ -131,10 +91,11 @@
             append("2");
             append("ENTITIES");
 
-            var origin = Point.Zero();
-
-            exportItem(itemToExport, origin);
+            var exporter = new Exporter(map);
+            exporter.exportItem(itemToExport, Point.Zero());
         }
+
+        //begin dxf output
 
         section(header);
         section(entities);
