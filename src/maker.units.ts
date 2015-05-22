@@ -1,4 +1,6 @@
-﻿module Maker.Units {
+﻿/// <reference path="maker.ts" />
+
+module Maker.Units {
 
     var base = UnitType.Millimeter;
 

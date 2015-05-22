@@ -1,4 +1,6 @@
-﻿module Maker.Path {
+﻿/// <reference path="maker.point.ts" />
+
+module Maker.Path {
 
     export function CreateArc(id: string, origin: IMakerPoint, radius: number, startAngle: number, endAngle: number): IMakerPathArc;
     export function CreateArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IMakerPathArc;

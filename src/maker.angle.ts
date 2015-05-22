@@ -1,4 +1,6 @@
-﻿module Maker.Angle {
+﻿/// <reference path="maker.ts" />
+
+module Maker.Angle {
 
     export function ToRadians(angleInDegrees: number): number {
         if (angleInDegrees == 360) {
