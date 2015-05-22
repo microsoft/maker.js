@@ -1,4 +1,6 @@
-﻿module Maker.Point {
+﻿/// <reference path="maker.ts" />
+
+module Maker.Point {
 
     export function Add(a: IMakerPoint, b: IMakerPoint, subtract = false): IMakerPoint {
         var p1 = Clone(Ensure(a));

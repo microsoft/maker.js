@@ -1,4 +1,6 @@
-﻿module Maker.Model {
+﻿/// <reference path="maker.path.ts" />
+
+module Maker.Model {
 
     export interface IMakerFound<T> {
         index: number;
@@ -50,17 +52,6 @@
         model.origin = Point.Ensure();
 
         return model;
-    }
-
-    export function Import(parentModel: IMakerModel, children: IMakerModel[]) {
-        if (parentModel.unitType && parentModel.unitType != DXFUnitType.Unitless) {
-            for (var i = 0; i < children.length; i++) {
-                if (parentModel.unitType != children[i].unitType) {
-                    //todo convert
-                }
-            }
-        }
-        //todo add to model
     }
 
     export function Move(model: IMakerModel, origin: IMakerPoint): IMakerModel {

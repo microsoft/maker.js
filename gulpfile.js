@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify');
 var tsProject = ts.createProject({
     declarationFiles: true,
     noExternalResolve: true,
+    sortOutput: true,
     out: 'maker.js'
 });
 
@@ -22,8 +23,14 @@ gulp.task('compile-typescript', function () {
             .pipe(rename('maker.min.js'))
             .pipe(uglify())
             .pipe(gulp.dest('target/js'))
-            
+            .pipe(gulp.dest('target/npm'))
+
     ]);
 });
 
-gulp.task('default', ['compile-typescript']);
+gulp.task('copy-npm-package', function () {
+    gulp.src('./package.json')
+    .pipe(gulp.dest('./target/npm'));
+});
+
+gulp.task('default', ['compile-typescript']);//, 'copy-npm-package']);

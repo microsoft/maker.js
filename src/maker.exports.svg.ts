@@ -1,4 +1,6 @@
-﻿module Maker.Exports {
+﻿/// <reference path="maker.exports.xml.ts" />
+
+module Maker.Exports {
 
     export function SVG(model: IMakerModel, options?: ISVGRenderOptions): string;
     export function SVG(paths: IMakerPath[], options?: ISVGRenderOptions): string;

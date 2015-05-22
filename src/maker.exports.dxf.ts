@@ -1,4 +1,6 @@
-﻿module Maker.Exports {
+﻿/// <reference path="maker.exports.xml.ts" />
+
+module Maker.Exports {
 
     export function DXF(model: IMakerModel, options?: IDXFRenderOptions): string;
     export function DXF(paths: IMakerPath[], options?: IDXFRenderOptions): string;

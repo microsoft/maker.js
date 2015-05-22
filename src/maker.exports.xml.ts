@@ -1,4 +1,8 @@
-﻿module Maker.Exports {
+﻿/// <reference path="maker.model.ts" />
+/// <reference path="maker.units.ts" />
+/// <reference path="maker.measure.ts" />
+
+module Maker.Exports {
 
     export class Exporter {
 
@@ -109,4 +113,3 @@
         }
     }
 }
- 

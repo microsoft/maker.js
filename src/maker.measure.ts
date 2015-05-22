@@ -1,4 +1,6 @@
-﻿module Maker.Measure {
+﻿/// <reference path="maker.model.ts" />
+
+module Maker.Measure {
 
     export function ArcAngle(arc: IMakerPathArc): number {
         var endAngle = Angle.ArcEndAnglePastZero(arc);

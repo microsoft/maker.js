@@ -1,4 +1,6 @@
-﻿module Maker.Tools {
+﻿/// <reference path="maker.ts" />
+
+module Maker.Tools {
 
     interface IMakerBrokenPath {
         path: IMakerPath;
