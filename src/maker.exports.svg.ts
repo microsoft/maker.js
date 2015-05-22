@@ -1,4 +1,4 @@
-﻿/// <reference path="maker.exports.xml.ts" />
+﻿/// <reference path="maker.exports.ts" />
 
 module Maker.Exports {
 
