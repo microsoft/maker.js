@@ -26,4 +26,17 @@ module Maker.Angle {
         var d = Point.Subtract(point, origin);
         return Math.atan2(d.y, d.x);
     }
+
+    export function Mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number {
+
+        if (mirrorY) {
+            angleInDegrees = 360 - angleInDegrees;
+        }
+
+        if (mirrorX) {
+            angleInDegrees = (angleInDegrees < 180 ? 180 : 540) - angleInDegrees;
+        }
+
+        return angleInDegrees;
+    }
 }
