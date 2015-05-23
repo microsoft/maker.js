@@ -1,4 +1,4 @@
-﻿/// <reference path="maker.exports.xml.ts" />
+﻿/// <reference path="maker.exports.ts" />
 
 module Maker.Exports {
 
@@ -21,29 +21,13 @@ module Maker.Exports {
         var elements: string[] = [];
 
         function fixPoint(point: IMakerPoint): IMakerPoint {
-            var p = Maker.Point.Ensure(point);
-            return {
-                x: p.x * opts.scale,
-                y: -p.y * opts.scale  //in DXF Y increases upward. in SVG, Y increases downward
 
-            };
+            //in DXF Y increases upward. in SVG, Y increases downward
+            return Point.Mirror(Point.Scale(point, opts.scale), false, true);
         }
 
-        function convertArcYAxis(arc: IMakerPathArc): IMakerPathArc {
-
-            function invertAngleOnYAxis(angle: number) {
-                return 360 - angle;
-            }
-
-            var newArc = Path.CreateArc(
-                arc.id,
-                fixPoint(arc.origin),
-                arc.radius * opts.scale,
-                invertAngleOnYAxis(arc.startAngle),
-                invertAngleOnYAxis(Maker.Angle.ArcEndAnglePastZero(arc))
-            );
-
-            return newArc;
+        function fixPath(path: IMakerPath): IMakerPath {
+            return Path.Mirror(Path.Scale(path, opts.scale), false, true);
         }
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null, useStroke = true) {
@@ -90,9 +74,10 @@ module Maker.Exports {
 
         var map: IMakerPathOriginFunctionMap = {};
 
-        map[Maker.PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
-            var start = Maker.Point.Add(fixPoint(line.origin), origin);
-            var end = Maker.Point.Add(fixPoint(line.end), origin);
+        map[PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+
+            var start = Point.Add(line.origin, origin);
+            var end = Point.Add(line.end, origin);
 
             if (opts.useSvgPathOnly) {
                 drawPath(line.id, start.x, start.y, [end.x, end.y]);
@@ -113,12 +98,13 @@ module Maker.Exports {
             }
         };
 
-        map[Maker.PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
-            var center = Maker.Point.Add(fixPoint(circle.origin), origin);
+        map[PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+
+            var center = Point.Add(circle.origin, origin);
 
             if (opts.useSvgPathOnly) {
 
-                var r = circle.radius * opts.scale;
+                var r = circle.radius;
                 var d = ['m', -r, 0];
 
                 function halfCircle(sign: number) {
@@ -136,7 +122,7 @@ module Maker.Exports {
                     "circle",
                     {
                         "id": circle.id,
-                        "r": circle.radius * opts.scale,
+                        "r": circle.radius,
                         "cx": center.x,
                         "cy": center.y
                     });
@@ -156,7 +142,7 @@ module Maker.Exports {
             d.push(end.x, end.y);
         }
 
-        map[Maker.PathType.Arc] = function (rawArc: IMakerPathArc, origin: IMakerPoint) {
+        map[PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
 
             function getPointFromAngle(angle: number) {
                 return Point.AddArray(
@@ -165,8 +151,6 @@ module Maker.Exports {
                     origin
                 );
             }
-
-            var arc = convertArcYAxis(rawArc);
 
             var startPoint = getPointFromAngle(arc.startAngle);
             var endPoint = getPointFromAngle(arc.endAngle);
@@ -182,7 +166,7 @@ module Maker.Exports {
             drawPath(arc.id, startPoint.x, startPoint.y, d);
         };
 
-        var exporter = new Exporter(map, fixPoint);
+        var exporter = new Exporter(map, fixPoint, fixPath);
         exporter.exportItem(itemToExport, opts.origin);
 
         var svgTag = new XmlTag('svg');

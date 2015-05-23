@@ -54,6 +54,42 @@ module Maker.Model {
         return model;
     }
 
+    export function Mirror(model: IMakerModel, mirrorX: boolean, mirrorY: boolean): IMakerModel {
+        var newModel: IMakerModel = {};
+
+        if (model.id) {
+            newModel.id = model.id + '_mirror';
+        }
+
+        if (model.origin) {
+            newModel.origin = Point.Mirror(model.origin, mirrorX, mirrorY);
+        }
+
+        if (model.type) {
+            newModel.type = model.type;
+        }
+
+        if (model.units) {
+            newModel.units = model.units;
+        }
+
+        if (model.paths) {
+            newModel.paths = [];
+            for (var i = 0; i < model.paths.length; i++) {
+                newModel.paths.push(Path.Mirror(model.paths[i], mirrorX, mirrorY));
+            }
+        }
+
+        if (model.models) {
+            newModel.models = [];
+            for (var i = 0; i < model.models.length; i++) {
+                newModel.models.push(Model.Mirror(model.models[i], mirrorX, mirrorY));
+            }
+        }
+
+        return newModel;
+    }
+
     export function Move(model: IMakerModel, origin: IMakerPoint): IMakerModel {
         model.origin = Point.Clone(Point.Ensure(origin));
         return model;

@@ -48,6 +48,54 @@ module Maker.Path {
         return line;
     }
 
+    export function Mirror(path: IMakerPath, mirrorX: boolean, mirrorY: boolean): IMakerPath {
+
+        var newPath: IMakerPath = null;
+        var origin = Point.Mirror(path.origin, mirrorX, mirrorY);
+
+        var map: IMakerPathFunctionMap = {};
+
+        map[PathType.Line] = function (line: IMakerPathLine) {
+
+            newPath = Path.CreateLine(
+                line.id,
+                origin,
+                Point.Mirror(line.end, mirrorX, mirrorY)
+                );
+        };
+
+        map[PathType.Circle] = function (circle: IMakerPathCircle) {
+
+            newPath = Path.CreateCircle(
+                circle.id,
+                origin,
+                circle.radius
+                );
+        };
+
+        map[PathType.Arc] = function (arc: IMakerPathArc) {
+
+            var startAngle = Angle.Mirror(arc.startAngle, mirrorX, mirrorY);
+            var endAngle = Angle.Mirror(Angle.ArcEndAnglePastZero(arc), mirrorX, mirrorY);
+            var xor = mirrorX != mirrorY;
+
+            newPath = Path.CreateArc(
+                arc.id,
+                origin,
+                arc.radius,
+                xor ? endAngle : startAngle,
+                xor ? startAngle : endAngle
+                );
+        };
+
+        var fn = map[path.type];
+        if (fn) {
+            fn(path);
+        }
+
+        return newPath;
+    }
+
     export function MoveRelative(path: IMakerPath, adjust: IMakerPoint): IMakerPath {
 
         var map: IMakerPathFunctionMap = {};

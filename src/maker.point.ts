@@ -58,10 +58,17 @@ module Maker.Point {
         };
     }
 
-    export function Scale(point: IMakerPoint, scale: number): IMakerPoint {
+    export function Mirror(point: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
         var p = Clone(Ensure(point));
-        p.x *= scale;
-        p.y *= scale;
+
+        if (mirrorX) {
+            p.x = -p.x;
+        }
+
+        if (mirrorY) {
+            p.y = -p.y;
+        }
+
         return p;
     }
 
@@ -71,6 +78,13 @@ module Maker.Point {
         var rotatedPoint = FromPolar(pointAngleInRadians + Angle.ToRadians(angleInDegrees), d);
 
         return Add(rotationOrigin, rotatedPoint);
+    }
+
+    export function Scale(point: IMakerPoint, scale: number): IMakerPoint {
+        var p = Clone(Ensure(point));
+        p.x *= scale;
+        p.y *= scale;
+        return p;
     }
 
     export function Subtract(a: IMakerPoint, b: IMakerPoint): IMakerPoint {
