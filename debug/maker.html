@@ -2,65 +2,7 @@
 <head>
     <title>Maker.js debug TypeScript source code</title>
 
-    <style type="text/css">
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-        }
-        .panel {
-            padding: 20px;
-        }
-        input[type=range] {
-            margin-right: 10px;
-            width: 100px;
-        }
-        #view {
-            border: 1px dashed silver;
-            position: absolute;
-            top: 100px;
-            bottom: 60px;
-            left: 20px;
-            right: 20px;
-            overflow: hidden;
-        }
-        svg, #svg-zone, #export-zone {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 100%;
-        }
-        #export-zone {
-            overflow: scroll;
-            display: none;
-            background-color: rgba(255,255,255,.9);
-        }
-        .bottompanel {
-            position: absolute;
-            left: 20px;
-            bottom: 20px;
-            right: 20px;
-        }
-        .bottompanel a {
-            background-color: lightsteelblue;
-            color: white;
-            padding: 4px 10px;
-            text-decoration: none;
-        }
-        label {
-            margin-left: 20px;
-        }
-        .logo {
-            position: absolute;
-            right: 0px;
-            bottom: 0px;
-            font-size: 28px;
-            font-weight: bold;
-            color: silver;
-            line-height: 18px;
-        }
-    </style>
+    <link href="viewer.css" rel="stylesheet" />
 
     <script src="../src/maker.js"></script>
     <script src="../src/maker.angle.js"></script>
@@ -74,10 +16,11 @@
     <script src="../src/maker.exports.dxf.js"></script>
     <script src="../src/maker.exports.svg.js"></script>
     <script src="../src/models/RoundRectangle.js"></script>
+    <script src="viewer.js"></script>
 
     <script>
 
-        var svgOrigin = [150, 350];
+        Viewer.SvgOrigin = [150, 400];
 
         var myViewParams = {
             count: 1,
@@ -86,9 +29,6 @@
             radius: .25,
             angle: 0
         };
-
-        var myModel;
-        var viewScale = 90;
 
         function myModelFactory(params) {
 
@@ -104,13 +44,13 @@
             Maker.Model.Rotate(this, params.angle);
         }
 
-        function render(newParams) {
+        Viewer.Render = function (newParams) {
 
             //apply slider parameters
             Maker.ExtendObject(myViewParams, newParams);
 
             //modeling
-            myModel = {
+            var myModel = {
                 models: [new myModelFactory(myViewParams)]
             };
 
@@ -121,73 +61,14 @@
                 myModel.models.push(Maker.Model.Move(new myModelFactory(myViewParams), [x * i, 0]));
             }
 
-            //svg output 
+            //svg output
             var annotate = document.getElementById('checkAnnotate').checked;
-            var svg = Maker.Exports.SVG(myModel, { origin: svgOrigin, scale: viewScale, annotate: annotate });
+            var svg = Maker.Exports.SVG(myModel, { origin: Viewer.SvgOrigin, scale: Viewer.ViewScale, annotate: annotate });
             document.getElementById("svg-zone").innerHTML = svg;
+
+            return myModel;
         }
 
-        function getRaw(type) {
-            switch (type) {
-                case "dxf":
-                    return Maker.Exports.DXF(myModel);
-
-                case "svg":
-                    var myOutputScale = 100;
-                    return Maker.Exports.SVG(myModel, { scale: myOutputScale });
-
-                case "json":
-                    return JSON.stringify(myModel);
-            }
-        }
-
-        function getExport(type) {
-            var raw = getRaw(type);
-            var encoded = encodeURIComponent(raw);
-            switch (type) {
-                case "dxf":
-                    return "data:application/dxf," + encoded;
-
-                case "svg":
-                    return "data:image/svg+xml," + encoded;
-
-                case "json":
-                    return "data:application/json," + encoded;
-            }
-        }
-
-        function hideExport() {
-            var zone = document.getElementById("export-zone");
-            zone.style.display = 'none';
-        }
-
-        function showExport(type) {
-            var raw = getRaw(type);
-            var zone = document.getElementById("export-zone");
-            zone.innerText = raw;
-            zone.style.display = 'block';
-        }
-
-        function prepareView() {
-
-            //attach mousewheel
-            var view = document.getElementById("view");
-            view.onwheel = view.onmousewheel = function (ev) {
-                var scaleDelta = 10;
-                viewScale = Math.max(viewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * scaleDelta, 1);
-                render();
-            };
-
-            //show crosshairs
-            var size = 50;
-            var crossHairs = [Maker.Path.CreateLine('v', [0, size], [0, -size]), Maker.Path.CreateLine('h', [-size, 0], [size, 0]), ];
-            view.innerHTML += Maker.Exports.SVG(crossHairs, { origin: svgOrigin, stroke: 'red', strokeWidth: 1 });
-
-            //render model
-            render();
-        };
-
-        window.onload = prepareView;
 
     </script>
 
@@ -195,11 +76,11 @@
 <body>
 
     <div class="panel">
-        count: <input type="range" min="1" max="10" step="1" value="1" onchange="render({ count: this.valueAsNumber })" />
-        height: <input type="range" min="1" max="7" step=".1" value="3" onchange="render({ height: this.valueAsNumber })" />
-        width: <input type="range" min="1" max="7" step=".1" value="4" onchange="render({ width: this.valueAsNumber })" />
-        radius: <input type="range" min="0" max="2" step=".1" value=".25" onchange="render({ radius: this.valueAsNumber })" />
-        angle: <input type="range" min="-90" max="90" step="2.5" value="0" onchange="render({ angle: this.valueAsNumber })" />
+        count: <input type="range" min="1" max="10" step="1" value="1" onchange="Viewer.Render({ count: this.valueAsNumber })" />
+        height: <input type="range" min="1" max="7" step=".1" value="3" onchange="Viewer.Render({ height: this.valueAsNumber })" />
+        width: <input type="range" min="1" max="7" step=".1" value="4" onchange="Viewer.Render({ width: this.valueAsNumber })" />
+        radius: <input type="range" min="0" max="2" step=".1" value=".25" onchange="Viewer.Render({ radius: this.valueAsNumber })" />
+        angle: <input type="range" min="-90" max="90" step="2.5" value="0" onchange="Viewer.Render({ angle: this.valueAsNumber })" />
     </div>
 
     <div id="view">
@@ -208,10 +89,10 @@
     </div>
 
     <div class="bottompanel">
-        <a href="#" onmouseover="showExport('dxf')" onmouseout="hideExport()" onclick="this.href = getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
-        <a href="#" onmouseover="showExport('svg')" onmouseout="hideExport()" onclick="this.href = getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
-        <a href="#" onmouseover="showExport('json')" onmouseout="hideExport()" onclick="this.href = getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
-        <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="render()" />
+        <a href="#" onmouseover="Viewer.showExport('dxf')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
+        <a href="#" onmouseover="Viewer.showExport('svg')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
+        <a href="#" onmouseover="Viewer.showExport('json')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
+        <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="Viewer.Render()" />
         <div class="logo">Maker.js</div>
     </div>
 
