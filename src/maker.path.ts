@@ -48,7 +48,7 @@ module Maker.Path {
         return line;
     }
 
-    export function Mirror(path: IMakerPath, mirrorX: boolean, mirrorY: boolean): IMakerPath {
+    export function Mirror(path: IMakerPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IMakerPath {
 
         var newPath: IMakerPath = null;
         var origin = Point.Mirror(path.origin, mirrorX, mirrorY);
@@ -58,7 +58,7 @@ module Maker.Path {
         map[PathType.Line] = function (line: IMakerPathLine) {
 
             newPath = Path.CreateLine(
-                line.id,
+                newId || line.id,
                 origin,
                 Point.Mirror(line.end, mirrorX, mirrorY)
                 );
@@ -67,7 +67,7 @@ module Maker.Path {
         map[PathType.Circle] = function (circle: IMakerPathCircle) {
 
             newPath = Path.CreateCircle(
-                circle.id,
+                newId || circle.id,
                 origin,
                 circle.radius
                 );
@@ -80,7 +80,7 @@ module Maker.Path {
             var xor = mirrorX != mirrorY;
 
             newPath = Path.CreateArc(
-                arc.id,
+                newId || arc.id,
                 origin,
                 arc.radius,
                 xor ? endAngle : startAngle,
@@ -96,7 +96,9 @@ module Maker.Path {
         return newPath;
     }
 
-    export function MoveRelative(path: IMakerPath, adjust: IMakerPoint): IMakerPath {
+    export function MoveRelative(path: IMakerPath, adjust: IMakerPoint): IMakerPath;
+    export function MoveRelative(path: IMakerPath, adjust: number[]): IMakerPath;
+    export function MoveRelative(path: IMakerPath, adjust: any): IMakerPath {
 
         var map: IMakerPathFunctionMap = {};
 

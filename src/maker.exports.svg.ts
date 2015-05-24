@@ -21,13 +21,15 @@ module Maker.Exports {
         var elements: string[] = [];
 
         function fixPoint(point: IMakerPoint): IMakerPoint {
-
             //in DXF Y increases upward. in SVG, Y increases downward
-            return Point.Mirror(Point.Scale(point, opts.scale), false, true);
+            var mirrorY = Point.Mirror(point, false, true);
+            return Point.Scale(mirrorY, opts.scale);
         }
 
-        function fixPath(path: IMakerPath): IMakerPath {
-            return Path.Mirror(Path.Scale(path, opts.scale), false, true);
+        function fixPath(path: IMakerPath, origin: IMakerPoint): IMakerPath {
+            //mirror creates a copy, so we don't modify the original
+            var mirrorY = Path.Mirror(path, false, true);
+            return Path.MoveRelative(Path.Scale(mirrorY, opts.scale), origin);
         }
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null, useStroke = true) {
@@ -76,8 +78,8 @@ module Maker.Exports {
 
         map[PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
 
-            var start = Point.Add(line.origin, origin);
-            var end = Point.Add(line.end, origin);
+            var start = line.origin;
+            var end = line.end;
 
             if (opts.useSvgPathOnly) {
                 drawPath(line.id, start.x, start.y, [end.x, end.y]);
@@ -100,7 +102,7 @@ module Maker.Exports {
 
         map[PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
 
-            var center = Point.Add(circle.origin, origin);
+            var center = circle.origin;
 
             if (opts.useSvgPathOnly) {
 
@@ -144,26 +146,18 @@ module Maker.Exports {
 
         map[PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
 
-            function getPointFromAngle(angle: number) {
-                return Point.AddArray(
-                    arc.origin,
-                    Point.FromPolar(Angle.ToRadians(angle), arc.radius),
-                    origin
-                );
-            }
+            var arcPoints = Point.FromArc(arc);
 
-            var startPoint = getPointFromAngle(arc.startAngle);
-            var endPoint = getPointFromAngle(arc.endAngle);
             var d = ['A'];
             svgArcData(
                 d,
                 arc.radius,
-                endPoint,
+                arcPoints[1],
                 Math.abs(arc.endAngle - arc.startAngle) > 180,
                 arc.startAngle > arc.endAngle
             );
 
-            drawPath(arc.id, startPoint.x, startPoint.y, d);
+            drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
         };
 
         var exporter = new Exporter(map, fixPoint, fixPath);
