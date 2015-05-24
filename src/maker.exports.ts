@@ -9,14 +9,14 @@ module Maker.Exports {
         constructor(
             public map: IMakerPathOriginFunctionMap,
             public fixPoint?: (point: IMakerPoint) => IMakerPoint,
-            public fixPath?: (path: IMakerPath) => IMakerPath 
+            public fixPath?: (path: IMakerPath, origin: IMakerPoint) => IMakerPath 
             ) {
         }
 
         public exportPath(path: IMakerPath, origin: IMakerPoint) {
             var fn = this.map[path.type];
             if (fn) {
-                fn(this.fixPath? this.fixPath(path) : path, origin);
+                fn(this.fixPath? this.fixPath(path, origin) : path, origin);
             }
         }
 

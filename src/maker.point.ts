@@ -58,6 +58,15 @@ module Maker.Point {
         };
     }
 
+    export function FromArc(arc: IMakerPathArc): IMakerPoint[] {
+
+        function getPointFromAngle(angle: number) {
+            return Add(arc.origin, FromPolar(Angle.ToRadians(angle), arc.radius));
+        }
+
+        return [getPointFromAngle(arc.startAngle), getPointFromAngle(arc.endAngle)];
+    }
+
     export function Mirror(point: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
         var p = Clone(Ensure(point));
 
