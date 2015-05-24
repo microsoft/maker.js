@@ -1,4 +1,4 @@
-﻿/// <reference path="maker.point.ts" />
+﻿/// <reference path="point.ts" />
 
 module Maker.Path {
 

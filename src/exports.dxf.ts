@@ -1,4 +1,4 @@
-﻿/// <reference path="maker.exports.ts" />
+﻿/// <reference path="exports.ts" />
 
 module Maker.Exports {
 
@@ -24,7 +24,7 @@ module Maker.Exports {
 
         var map: IMakerPathOriginFunctionMap = {};
 
-        map[Maker.PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+        map[PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
             append("0");
             append("LINE");
             append("8");
@@ -39,7 +39,7 @@ module Maker.Exports {
             append(line.end.y + origin.y);
         };
 
-        map[Maker.PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+        map[PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
             append("0");
             append("CIRCLE");
             append("8");
@@ -52,7 +52,7 @@ module Maker.Exports {
             append(circle.radius);
         };
 
-        map[Maker.PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
+        map[PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
             append("0");
             append("ARC");
             append("8");
