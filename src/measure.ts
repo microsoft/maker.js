@@ -1,4 +1,4 @@
-﻿/// <reference path="maker.model.ts" />
+﻿/// <reference path="model.ts" />
 
 module Maker.Measure {
 

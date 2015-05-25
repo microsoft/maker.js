@@ -1,4 +1,4 @@
-﻿/// <reference path="maker.path.ts" />
+﻿/// <reference path="path.ts" />
 
 module Maker.Model {
 

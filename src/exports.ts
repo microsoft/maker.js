@@ -1,6 +1,6 @@
-﻿/// <reference path="maker.model.ts" />
-/// <reference path="maker.units.ts" />
-/// <reference path="maker.measure.ts" />
+﻿/// <reference path="model.ts" />
+/// <reference path="units.ts" />
+/// <reference path="measure.ts" />
 
 module Maker.Exports {
 
@@ -22,7 +22,7 @@ module Maker.Exports {
 
         public exportModel(model: IMakerModel, origin: IMakerPoint) {
 
-            var newOrigin = Maker.Point.Add((this.fixPoint ? this.fixPoint(model.origin) : model.origin), origin);
+            var newOrigin = Point.Add((this.fixPoint ? this.fixPoint(model.origin) : model.origin), origin);
 
             if (model.paths) {
                 for (var i = 0; i < model.paths.length; i++) {
@@ -42,7 +42,7 @@ module Maker.Exports {
             if (IsModel(item)) {
                 this.exportModel(<IMakerModel>item, origin);
 
-            } else if (IsArray(item)) {
+            } else if (Array.isArray(item)) {
                 var items: any[] = item;
                 for (var i = 0; i < items.length; i++) {
                     this.exportItem(items[i], origin);

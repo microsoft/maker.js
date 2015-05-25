@@ -40,7 +40,7 @@ module Maker.Point {
             return item;
         }
 
-        if (IsArray(item) && item.length > 1) {
+        if (Array.isArray(item) && item.length > 1) {
             return { x: item[0], y: item[1] };
         }
 

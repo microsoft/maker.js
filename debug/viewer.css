@@ -1,0 +1,57 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+.panel {
+    padding: 20px;
+}
+input[type=range] {
+    margin-right: 10px;
+    width: 100px;
+}
+#view {
+    border: 1px dashed silver;
+    position: absolute;
+    top: 100px;
+    bottom: 60px;
+    left: 20px;
+    right: 20px;
+    overflow: hidden;
+}
+svg, #svg-zone, #export-zone {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+#export-zone {
+    overflow: scroll;
+    display: none;
+    background-color: rgba(255,255,255,.9);
+}
+.bottompanel {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    right: 20px;
+}
+.bottompanel a {
+    background-color: lightsteelblue;
+    color: white;
+    padding: 4px 10px;
+    text-decoration: none;
+}
+label {
+    margin-left: 20px;
+}
+.logo {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    font-size: 28px;
+    font-weight: bold;
+    color: silver;
+    line-height: 18px;
+}
