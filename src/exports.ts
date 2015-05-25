@@ -42,7 +42,7 @@ module Maker.Exports {
             if (IsModel(item)) {
                 this.exportModel(<IMakerModel>item, origin);
 
-            } else if (IsArray(item)) {
+            } else if (Array.isArray(item)) {
                 var items: any[] = item;
                 for (var i = 0; i < items.length; i++) {
                     this.exportItem(items[i], origin);
