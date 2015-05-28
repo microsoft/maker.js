@@ -2,27 +2,53 @@
 
 module Maker.Measure {
 
+    /**
+     * Interface to Math.min and Math.max functions.
+     */
+    interface IMathMinMax {
+        (...values: number[]): number;
+    }
+
+    /**
+     * Total angle of an arc between its start and end angles.
+     * 
+     * @param arc The arc to measure.
+     * @returns Angle of arc.
+     */
     export function ArcAngle(arc: IMakerPathArc): number {
         var endAngle = Angle.ArcEndAnglePastZero(arc);
         return endAngle - arc.startAngle;
     }
 
+    /**
+     * Calculates the distance between two points.
+     * 
+     * @param a First point.
+     * @param b Second point.
+     * @returns Distance between points.
+     */
     export function PointDistance(a: IMakerPoint, b: IMakerPoint): number {
         var dx = b.x - a.x;
         var dy = b.y - a.y;
-        return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
+    function extremePoint(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax): IMakerPoint {
+        return {
+            x: fn(a.x, b.x),
+            y: fn(a.y, b.y)
+        };
+    }
+
+    /**
+     * Calculates the smallest rectangle which contains a path.
+     * 
+     * @param path The path to measure.
+     * @returns object with low and high points.
+     */
     export function PathExtents(path: IMakerPath): IMakerMeasure {
         var map: IMakerPathFunctionMap = {};
         var measurement: IMakerMeasure = { low: null, high: null };
-
-        function extremePoint(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax): IMakerPoint {
-            return {
-                x: fn(a.x, b.x),
-                y: fn(a.y, b.y)
-            };
-        }
 
         map[PathType.Line] = function (line: IMakerPathLine) {
             measurement.low = extremePoint(line.origin, line.end, Math.min);
@@ -74,6 +100,12 @@ module Maker.Measure {
         return measurement;
     }
 
+    /**
+     * Measures the length of a path.
+     * 
+     * @param path The path to measure.
+     * @returns Length of the path.
+     */
     export function PathLength(path: IMakerPath): number {
         var map: IMakerPathFunctionMap = {};
         var value = 0;
@@ -100,6 +132,12 @@ module Maker.Measure {
         return value;
     }
 
+    /**
+     * Measures the smallest rectangle which contains a model.
+     * 
+     * @param model The model to measure.
+     * @returns object with low and high points.
+     */
     export function ModelExtents(model: IMakerModel): IMakerMeasure {
         var totalMeasurement: IMakerMeasure = { low: { x: null, y: null }, high: { x: null, y: null } };
 

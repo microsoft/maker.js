@@ -5,6 +5,15 @@ module Maker.Exports {
     export function DXF(model: IMakerModel, options?: IDXFRenderOptions): string;
     export function DXF(paths: IMakerPath[], options?: IDXFRenderOptions): string;
     export function DXF(path: IMakerPath, options?: IDXFRenderOptions): string;
+
+    /**
+     * Renders an item in AutoDesk DFX file format.
+     * 
+     * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
+     * @param options Rendering options object.
+     * @param options.units String from Maker.UnitType enumeration.
+     * @returns String of DXF content.
+     */
     export function DXF(itemToExport: any, options?: IDXFRenderOptions): string {
 
         //DXF format documentation:
@@ -120,7 +129,13 @@ module Maker.Exports {
     dxfUnit[UnitType.Centimeter] = 5;
     dxfUnit[UnitType.Meter] = 6;
 
+    /**
+     * DXF rendering options.
+     */
     export interface IDXFRenderOptions {
+        /**
+         * Unit system to embed in DXF file. See UnitType for possible values.
+         */
         units: string;
     }
 
