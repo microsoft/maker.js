@@ -76,7 +76,7 @@ module Maker.Tools {
 
     export function GapPath(model: IMakerModel, pathId: string, gapLength: number, breakAt: number= .5): IMakerPoint[] {
 
-        var found = Model.FindPathById(model, pathId);
+        var found = FindById<IMakerPath>(model.paths, pathId);
 
         if (!found) return null;
 

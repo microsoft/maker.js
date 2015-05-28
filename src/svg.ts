@@ -5,6 +5,20 @@ module Maker.Exports {
     export function SVG(model: IMakerModel, options?: ISVGRenderOptions): string;
     export function SVG(paths: IMakerPath[], options?: ISVGRenderOptions): string;
     export function SVG(path: IMakerPath, options?: ISVGRenderOptions): string;
+
+    /**
+     * Renders an item in SVG markup.
+     * 
+     * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
+     * @param options Rendering options object.
+     * @param options.annotate Boolean to indicate that the id's of paths should be rendered as SVG text elements.
+     * @param options.scale Number to scale the SVG rendering.
+     * @param options.stroke String color of the rendered paths.
+     * @param options.strokeWidth Number width of the rendered paths.
+     * @param options.origin Point object for the rendered reference origin.
+     * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
+     * @returns String of XML / SVG content.
+     */
     export function SVG(itemToExport: any, options?: ISVGRenderOptions): string {
 
         var opts: ISVGRenderOptions = {
@@ -169,12 +183,39 @@ module Maker.Exports {
         return svgTag.ToString();
     }
 
+    /**
+     * SVG rendering options.
+     */
     export interface ISVGRenderOptions {
+
+        /**
+         * SVG stroke width of paths.
+         */
         strokeWidth: number;
+
+        /**
+         * SVG color of the rendered paths.
+         */
         stroke: string;
+
+        /**
+         * Scale of the SVG rendering.
+         */
         scale: number;
+
+        /**
+         *  Indicate that the id's of paths should be rendered as SVG text elements.
+         */
         annotate: boolean;
+
+        /**
+         * Rendered reference origin. 
+         */
         origin: IMakerPoint;
+
+        /**
+         * Use SVG <path> elements instead of <line>, <circle> etc.
+         */
         useSvgPathOnly: boolean;
     }
 
