@@ -53,6 +53,26 @@ We would love to accept your contributions to Maker.js. Before you consider maki
  * CNC routers
  * Plasma cutters
  * 2D engravers
-* Accesible - Maker.js wants to run everywhere JavaScript does. The Maker.js API strives toward simplicity and easy understandability to programmers with a wide range of experience. We do not wish to reinvent a new language, we want to leverage JavaScript as a language.
+* Accessible - Maker.js wants to run everywhere JavaScript does. The Maker.js API strives toward simplicity and easy understandability to programmers with a wide range of experience. We do not wish to reinvent a new language, we want to leverage JavaScript as a language.
 * Reusablility - We want to encourage an ecosystem of models and modeling plugins which may create dependencies on each other.
 * Interoperability - We want other CAD apps when possible to have easy access of importing from or to our data formats.
+
+### How to contribute
+* Submit a CLA (below)
+* Fork the repo.
+* Commit changes in your own repo.
+* Make sure you can build with no errors.
+* WE NEED UNIT TESTS :-)
+* Make a pull request.
+
+### Build Setup
+* Clone the repo.
+* npm install
+ 
+### Build
+* gulp
+
+### Legal
+You will need to complete a Contributor License Agreement (CLA). Briefly, this agreement testifies that you are granting us permission to use the submitted change according to the terms of the project's license, and that the work being submitted is under appropriate copyright.
+
+Please submit a Contributor License Agreement (CLA) before submitting a pull request. You may visit https://cla.microsoft.com to sign digitally. Alternatively, download the agreement ([Microsoft Contribution License Agreement.docx](https://www.codeplex.com/Download?ProjectName=typescript&DownloadId=822190) or [Microsoft Contribution License Agreement.pdf](https://www.codeplex.com/Download?ProjectName=typescript&DownloadId=921298)), sign, scan, and email it back to <cla@microsoft.com>. Be sure to include your github user name along with the agreement. Once we have received the signed CLA, we'll review the request.
