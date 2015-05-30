@@ -11,19 +11,11 @@ Maker.js can be used in a web page as a simple CAD drawing generator. It can be 
 * Uses plain old JavaScript objects (POJO's) for its drawing model.
 * Exports to DXF or SVG format.
 * Support for a variety of unit systems:
- * Millimeter
- * Centimeter
- * Meter
- * Inch
- * Foot
+ * Millimeter / Centimeter / Meter / Inch / Foot
 * Primitive paths:
- * Line
- * Circle
- * Arc
+ * Line / Circle / Arc
 * Transformations:
- * Mirror
- * Rotate
- * Scale
+ * Mirror / Rotate / Scale
 * Basic models:
  * Rectangle
  * Square
