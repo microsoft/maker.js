@@ -17,15 +17,15 @@ Maker.js can be used in a web page as a simple CAD drawing generator. It can be 
 * Transformations:
  * Mirror / Rotate / Scale
 * Basic models:
- * Rectangle
- * Square
- * Rounded rectangle
- * Oval
- * Oval Arc
  * Bolt circle
  * Bolt rectangle
- * S curve
  * Connect the dots
+ * Oval
+ * Oval Arc
+ * Rectangle
+ * Rounded rectangle
+ * S curve
+ * Square
 
 ## What it isn't
 * A general purpose SVG generator. There are many features in SVG such as color fill and animation that are not applicable to CNC output. Maker.js only uses SVG for rendering simple line contours and interoperability with other applications that import SVG.
