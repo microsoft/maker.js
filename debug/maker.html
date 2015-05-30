@@ -16,6 +16,7 @@
     <script src="../src/exports.dxf.js"></script>
     <script src="../src/exports.svg.js"></script>
     <script src="../src/models/RoundRectangle.js"></script>
+    <script src="../src/models/BoltCircle.js"></script>
     <script src="viewer.js"></script>
 
     <script>
@@ -40,6 +41,8 @@
             this.paths.push(Maker.Path.MoveRelative(circle, [params.width / 2, params.height / 2]));
 
             this.models.push(new Maker.Models.RoundRectangle(params.width, params.height, params.radius));
+
+            this.models.push(Maker.Path.MoveRelative(new Maker.Models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
 
             Maker.Model.Rotate(this, params.angle);
         }
