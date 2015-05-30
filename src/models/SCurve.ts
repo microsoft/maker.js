@@ -7,7 +7,7 @@
         constructor(public width: number, public height: number) {
 
             function findRadius(x: number, y: number) {
-                return x + (Math.pow(y, 2) - Math.pow(x, 2)) / (2 * x);
+                return x + (y * y - x * x) / (2 * x);
             }
 
             var h2 = height / 2;
