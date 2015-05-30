@@ -1,6 +1,6 @@
 ﻿module Maker.Models {
 
-    export class ShapeFromPoints implements IMakerModel {
+    export class ConnectTheDots implements IMakerModel {
 
         public paths: IMakerPath[] = [];
 

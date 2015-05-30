@@ -235,6 +235,11 @@ module Maker {
     export interface IMakerModel extends IMakerId {
         
         /**
+         * Optional origin location of this model.
+         */
+        origin?: IMakerPoint;
+
+        /**
          * A model may want to specify its type, but this value is not employed yet.
          */
         type?: string;
@@ -250,14 +255,14 @@ module Maker {
         models?: IMakerModel[];
         
         /**
-         * Optional origin location of this model.
-         */
-        origin?: IMakerPoint;
-        
-        /**
          * Optional unit system of this model. See UnitType for possible values.
          */
         units?: string;
+
+        /**
+         * An author may wish to add notes to this model instance.
+         */
+        notes?: string;
     }
 
     /**
