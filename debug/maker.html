@@ -16,7 +16,9 @@
     <script src="../src/exports.dxf.js"></script>
     <script src="../src/exports.svg.js"></script>
     <script src="../src/models/RoundRectangle.js"></script>
+    <script src="../src/models/BoltRectangle.js"></script>
     <script src="../src/models/BoltCircle.js"></script>
+    <script src="../src/models/OvalArc.js"></script>
     <script src="viewer.js"></script>
 
     <script>
@@ -38,11 +40,15 @@
 
             var circle = Maker.Path.CreateCircle('c1', [], Math.min(params.height, params.width) / 2 - .5);
 
+            if (params.radius < 0.5) {
+                this.models.push(Maker.Model.Move(new Maker.Models.BoltRectangle(params.width - .4, params.height - .4, .07), [.2, .2]));
+            }
+
             this.paths.push(Maker.Path.MoveRelative(circle, [params.width / 2, params.height / 2]));
 
             this.models.push(new Maker.Models.RoundRectangle(params.width, params.height, params.radius));
 
-            this.models.push(Maker.Path.MoveRelative(new Maker.Models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
+            this.models.push(Maker.Model.Move(new Maker.Models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
 
             Maker.Model.Rotate(this, params.angle);
         }

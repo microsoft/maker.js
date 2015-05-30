@@ -1,6 +1,6 @@
 ﻿module Maker.Models {
 
-    export class ArcSlot implements IMakerModel {
+    export class OvalArc implements IMakerModel {
 
         public paths: IMakerPath[] = [];
 
