@@ -62,9 +62,11 @@ module Maker {
      * An item found in an array.
      */
     export interface IMakerFound<T> {
+
         /**
          * Position of the item within the array.
          */
+
         index: number;
         /**
          * The found item.
@@ -117,10 +119,12 @@ module Maker {
      * A measurement of extents, the high and low points.
      */
     export interface IMakerMeasure {
+
         /**
          * The point containing both the lowest x and y values of the rectangle containing the item being measured.
          */
         low: IMakerPoint;
+        
         /**
          * The point containing both the highest x and y values of the rectangle containing the item being measured.
          */
@@ -133,10 +137,12 @@ module Maker {
      * A line, curved line or other simple two dimensional shape.
      */
     export interface IMakerPath extends IMakerId {
+        
         /**
          * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in PathType.
          */
         type: string;
+        
         /**
          * The main point of reference for this path.
          */
@@ -156,6 +162,7 @@ module Maker {
      * A line path.
      */
     export interface IMakerPathLine extends IMakerPath {
+        
         /**
          * The end point defining the line. The start point is the origin.
          */
@@ -166,6 +173,7 @@ module Maker {
      * A circle path.
      */
     export interface IMakerPathCircle extends IMakerPath {
+        
         /**
          * The radius of the circle.
          */
@@ -176,10 +184,12 @@ module Maker {
      * An arc path.
      */
     export interface IMakerPathArc extends IMakerPathCircle {
+
         /**
          * The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.
          */
         startAngle: number;
+
         /**
          * The angle (in degrees) to end drawing the arc, in polar (counter-clockwise) direction. May be less than start angle if it past 360.
          */
@@ -190,6 +200,7 @@ module Maker {
      * A map of functions which accept a path as a parameter.
      */
     export interface IMakerPathFunctionMap {
+        
         /**
          * Key is the type of a path, value is a function which accepts a path object as its parameter.
          */
@@ -200,6 +211,7 @@ module Maker {
      * A map of functions which accept a path and an origin point as parameters.
      */
     export interface IMakerPathOriginFunctionMap {
+        
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
@@ -221,22 +233,27 @@ module Maker {
      * A model is a composite object which may contain an array of paths, or an array of models recursively.
      */
     export interface IMakerModel extends IMakerId {
+        
         /**
          * A model may want to specify its type, but this value is not employed yet.
          */
         type?: string;
+        
         /**
          * Optional array of path objects in this model.
          */
         paths?: IMakerPath[];
+        
         /**
          * Optional array of models within this model.
          */
         models?: IMakerModel[];
+        
         /**
          * Optional origin location of this model.
          */
         origin?: IMakerPoint;
+        
         /**
          * Optional unit system of this model. See UnitType for possible values.
          */
