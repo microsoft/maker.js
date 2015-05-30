@@ -64,6 +64,7 @@ We would love to accept your contributions to Maker.js. Before you consider maki
 * Submit a CLA (below)
 * Fork the repo.
 * Commit changes in your own repo.
+* Check the Wiki for [how to build](wiki/Contributors-Build) and [how to debug](wiki/Contributors-Debug)
 * Make sure you can build with no errors.
 * WE NEED UNIT TESTS :-)
 * Make a pull request.
