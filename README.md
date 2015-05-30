@@ -63,10 +63,10 @@ We would love to accept your contributions to Maker.js. Before you consider maki
 ### How to contribute
 * Submit a CLA (below)
 * Fork the repo.
-* Commit changes in your own repo.
 * Check the Wiki for [how to build](https://github.com/Microsoft/Maker.js/wiki/Contributors-Build) and [how to debug](https://github.com/Microsoft/Maker.js/wiki/Contributors-Debug)
 * Make sure you can build with no errors.
 * WE NEED UNIT TESTS :-)
+* Commit changes in your own repo.
 * Make a pull request.
 
 ### Legal
