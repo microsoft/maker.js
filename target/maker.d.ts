@@ -599,3 +599,70 @@ declare module Maker.Exports {
         useSvgPathOnly: boolean;
     }
 }
+declare module Maker.Models {
+    class BoltCircle implements IMakerModel {
+        paths: IMakerPath[];
+        constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
+    }
+}
+declare module Maker.Models {
+    class BoltRectangle implements IMakerModel {
+        paths: IMakerPath[];
+        constructor(width: number, height: number, holeRadius: number);
+    }
+}
+declare module Maker.Models {
+    class ConnectTheDots implements IMakerModel {
+        isClosed: boolean;
+        points: IMakerPoint[];
+        paths: IMakerPath[];
+        constructor(isClosed: boolean, points: IMakerPoint[]);
+    }
+}
+declare module Maker.Models {
+    class RoundRectangle implements IMakerModel {
+        width: number;
+        height: number;
+        radius: number;
+        paths: IMakerPath[];
+        constructor(width: number, height: number, radius: number);
+    }
+}
+declare module Maker.Models {
+    class Oval extends RoundRectangle {
+        width: number;
+        height: number;
+        constructor(width: number, height: number);
+    }
+}
+declare module Maker.Models {
+    class OvalArc implements IMakerModel {
+        startAngle: number;
+        endAngle: number;
+        sweepRadius: number;
+        slotRadius: number;
+        paths: IMakerPath[];
+        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
+    }
+}
+declare module Maker.Models {
+    class Rectangle extends ConnectTheDots {
+        width: number;
+        height: number;
+        constructor(width: number, height: number);
+    }
+}
+declare module Maker.Models {
+    class SCurve implements IMakerModel {
+        width: number;
+        height: number;
+        paths: IMakerPath[];
+        constructor(width: number, height: number);
+    }
+}
+declare module Maker.Models {
+    class Square extends Rectangle {
+        side: number;
+        constructor(side: number);
+    }
+}

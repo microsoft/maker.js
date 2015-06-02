@@ -1176,5 +1176,230 @@ var Maker;
         Exports.SVG = SVG;
     })(Exports = Maker.Exports || (Maker.Exports = {}));
 })(Maker || (Maker = {}));
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var BoltCircle = (function () {
+            function BoltCircle(boltRadius, holeRadius, boltCount, firstBoltAngle) {
+                if (firstBoltAngle === void 0) { firstBoltAngle = 0; }
+                this.paths = [];
+                var a1 = Maker.Angle.ToRadians(firstBoltAngle);
+                var a = 2 * Math.PI / boltCount;
+                for (var i = 0; i < boltCount; i++) {
+                    var o = Maker.Point.FromPolar(a * i + a1, boltRadius);
+                    this.paths.push(Maker.Path.CreateCircle("bolt " + i, o, holeRadius));
+                }
+            }
+            return BoltCircle;
+        })();
+        Models.BoltCircle = BoltCircle;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var BoltRectangle = (function () {
+            function BoltRectangle(width, height, holeRadius) {
+                this.paths = [];
+                var holes = {
+                    "BottomLeft": [0, 0],
+                    "BottomRight": [width, 0],
+                    "TopRight": [width, height],
+                    "TopLeft": [0, height]
+                };
+                for (var id in holes) {
+                    this.paths.push(Maker.Path.CreateCircle(id + "_bolt", holes[id], holeRadius));
+                }
+            }
+            return BoltRectangle;
+        })();
+        Models.BoltRectangle = BoltRectangle;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var ConnectTheDots = (function () {
+            function ConnectTheDots(isClosed, points) {
+                var _this = this;
+                this.isClosed = isClosed;
+                this.points = points;
+                this.paths = [];
+                var connect = function (a, b) {
+                    _this.paths.push(Maker.Path.CreateLine("ShapeLine" + i, points[a], points[b]));
+                };
+                for (var i = 1; i < points.length; i++) {
+                    connect(i - 1, i);
+                }
+                if (isClosed && points.length > 2) {
+                    connect(points.length - 1, 0);
+                }
+            }
+            return ConnectTheDots;
+        })();
+        Models.ConnectTheDots = ConnectTheDots;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var RoundRectangle = (function () {
+            function RoundRectangle(width, height, radius) {
+                this.width = width;
+                this.height = height;
+                this.radius = radius;
+                this.paths = [];
+                var maxRadius = Math.min(height, width) / 2;
+                radius = Math.min(radius, maxRadius);
+                var wr = width - radius;
+                var hr = height - radius;
+                if (radius > 0) {
+                    this.paths.push(Maker.Path.CreateArc("BottomLeft", [radius, radius], radius, 180, 270));
+                    this.paths.push(Maker.Path.CreateArc("BottomRight", [wr, radius], radius, 270, 0));
+                    this.paths.push(Maker.Path.CreateArc("TopRight", [wr, hr], radius, 0, 90));
+                    this.paths.push(Maker.Path.CreateArc("TopLeft", [radius, hr], radius, 90, 180));
+                }
+                if (wr - radius > 0) {
+                    this.paths.push(Maker.Path.CreateLine("Bottom", [radius, 0], [wr, 0]));
+                    this.paths.push(Maker.Path.CreateLine("Top", [wr, height], [radius, height]));
+                }
+                if (hr - radius > 0) {
+                    this.paths.push(Maker.Path.CreateLine("Right", [width, radius], [width, hr]));
+                    this.paths.push(Maker.Path.CreateLine("Left", [0, hr], [0, radius]));
+                }
+            }
+            return RoundRectangle;
+        })();
+        Models.RoundRectangle = RoundRectangle;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+/// <reference path="roundrectangle.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var Oval = (function (_super) {
+            __extends(Oval, _super);
+            function Oval(width, height) {
+                _super.call(this, width, height, Math.min(height / 2, width / 2));
+                this.width = width;
+                this.height = height;
+            }
+            return Oval;
+        })(Models.RoundRectangle);
+        Models.Oval = Oval;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var OvalArc = (function () {
+            function OvalArc(startAngle, endAngle, sweepRadius, slotRadius) {
+                var _this = this;
+                this.startAngle = startAngle;
+                this.endAngle = endAngle;
+                this.sweepRadius = sweepRadius;
+                this.slotRadius = slotRadius;
+                this.paths = [];
+                var addCap = function (id, angle, offsetStartAngle, offsetEndAngle) {
+                    var point = Maker.Point.FromPolar(Maker.Angle.ToRadians(angle), sweepRadius);
+                    _this.paths.push(Maker.Path.CreateArc(id, point, slotRadius, angle + offsetStartAngle, angle + offsetEndAngle));
+                };
+                var addSweep = function (id, offsetRadius) {
+                    _this.paths.push(Maker.Path.CreateArc(id, Maker.Point.Zero(), sweepRadius + offsetRadius, startAngle, endAngle));
+                };
+                addSweep("Inner", -slotRadius);
+                addSweep("Outer", slotRadius);
+                addCap("StartCap", startAngle, 180, 0);
+                addCap("EndCap", endAngle, 0, 180);
+            }
+            return OvalArc;
+        })();
+        Models.OvalArc = OvalArc;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+/// <reference path="connectthedots.ts" />
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var Rectangle = (function (_super) {
+            __extends(Rectangle, _super);
+            function Rectangle(width, height) {
+                _super.call(this, true, [{ x: 0, y: 0 }, { x: width, y: 0 }, { x: width, y: height }, { x: 0, y: height }]);
+                this.width = width;
+                this.height = height;
+            }
+            return Rectangle;
+        })(Models.ConnectTheDots);
+        Models.Rectangle = Rectangle;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var SCurve = (function () {
+            function SCurve(width, height) {
+                this.width = width;
+                this.height = height;
+                this.paths = [];
+                function findRadius(x, y) {
+                    return x + (y * y - x * x) / (2 * x);
+                }
+                var h2 = height / 2;
+                var w2 = width / 2;
+                var radius;
+                var startAngle;
+                var endAngle;
+                var arcOrigin;
+                if (width > height) {
+                    radius = findRadius(h2, w2);
+                    startAngle = 270;
+                    endAngle = 360 - Maker.Angle.FromRadians(Math.acos(w2 / radius));
+                    arcOrigin = { x: 0, y: radius };
+                }
+                else {
+                    radius = findRadius(w2, h2);
+                    startAngle = 180 - Maker.Angle.FromRadians(Math.asin(h2 / radius));
+                    endAngle = 180;
+                    arcOrigin = { x: radius, y: 0 };
+                }
+                var curve = Maker.Path.CreateArc('curve_start', arcOrigin, radius, startAngle, endAngle);
+                this.paths.push(curve);
+                this.paths.push(Maker.Path.MoveRelative(Maker.Path.Mirror(curve, true, true, 'curve_end'), [width, height]));
+            }
+            return SCurve;
+        })();
+        Models.SCurve = SCurve;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
+/// <reference path="rectangle.ts" />
+var Maker;
+(function (Maker) {
+    var Models;
+    (function (Models) {
+        var Square = (function (_super) {
+            __extends(Square, _super);
+            function Square(side) {
+                _super.call(this, side, side);
+                this.side = side;
+            }
+            return Square;
+        })(Models.Rectangle);
+        Models.Square = Square;
+    })(Models = Maker.Models || (Maker.Models = {}));
+})(Maker || (Maker = {}));
 
 },{}]},{},[]);

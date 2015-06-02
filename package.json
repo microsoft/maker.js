@@ -4,7 +4,8 @@
   "description": "Maker.js is a JavaScript library for creating programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.",
   "main": "target/node.maker.js",
   "scripts": {
-    "compile-typescript": "cd src && ls *.ts > build.txt && tsc --declaration --out ../target/maker.js @build.txt && rm build.txt && cd ..",
+    "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt",
+    "compile-typescript": "tsc --declaration --out target/maker.js @build.txt && rm build.txt",
     "target-node-platform": "cd target && mv maker.js node.maker.js && cd ..",
     "target-browser-platform": "cd target && browserify -o browser.maker.js -r ./node.maker.js:@danmarshall/privatetestmaker && cd ..",
     "build": "npm run compile-typescript && npm run target-node-platform && npm run target-browser-platform",
