@@ -1,5 +1,7 @@
 node_modules/
-src/*.js
-src/*.js.map
+src/core/*.js
+src/core/*.js.map
 src/models/*.js
 src/models/*.js.map
+src/tools/*.js
+src/tools/*.js.map

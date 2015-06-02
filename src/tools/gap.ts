@@ -1,4 +1,4 @@
-﻿/// <reference path="../maker.ts" />
+﻿/// <reference path="../core/maker.ts" />
 
 module Maker.Tools {
 
