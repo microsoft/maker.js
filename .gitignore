@@ -1,5 +1,4 @@
 node_modules/
-target/
 src/*.js
 src/*.js.map
 src/models/*.js
