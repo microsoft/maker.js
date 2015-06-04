@@ -956,7 +956,7 @@ var makerjs;
 /// <reference path="measure.ts" />
 var makerjs;
 (function (makerjs) {
-    (function (exports) {
+    (function (exporter) {
         /**
         * Class to traverse an item 's models or paths and ultimately render each path.
         */
@@ -1027,85 +1027,14 @@ var makerjs;
             };
             return Exporter;
         })();
-        exports.Exporter = Exporter;
-
-        
-
-        /**
-        * Class for an XML tag.
-        */
-        var XmlTag = (function () {
-            /**
-            * @param name Name of the XML tag.
-            * @param attrs Optional attributes for the tag.
-            */
-            function XmlTag(name, attrs) {
-                this.name = name;
-                this.attrs = attrs;
-            }
-            /**
-            * Escapes certain characters within a string so that it can appear in a tag or its attribute.
-            *
-            * @returns Escaped string.
-            */
-            XmlTag.escapeString = function (value) {
-                var escape = {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;'
-                };
-
-                for (var code in escape) {
-                    //.split then .join is a 'replace'
-                    value = value.split(code).join(escape[code]);
-                }
-
-                return value;
-            };
-
-            /**
-            * Output the tag as a string.
-            */
-            XmlTag.prototype.toString = function () {
-                var attrs = '';
-
-                for (var name in this.attrs) {
-                    var value = this.attrs[name];
-
-                    if (typeof value == 'string') {
-                        value = XmlTag.escapeString(value);
-                    }
-
-                    attrs += ' ' + name + '="' + value + '"';
-                }
-
-                var closeTag = '/>';
-
-                if (this.innerText) {
-                    closeTag = '>';
-
-                    if (this.innerTextEscaped) {
-                        closeTag += this.innerText;
-                    } else {
-                        closeTag += XmlTag.escapeString(this.innerText);
-                    }
-
-                    closeTag += '</' + this.name + '>';
-                }
-
-                return '<' + this.name + attrs + closeTag;
-            };
-            return XmlTag;
-        })();
-        exports.XmlTag = XmlTag;
-    })(makerjs.exports || (makerjs.exports = {}));
-    var exports = makerjs.exports;
+        exporter.Exporter = Exporter;
+    })(makerjs.exporter || (makerjs.exporter = {}));
+    var exporter = makerjs.exporter;
 })(makerjs || (makerjs = {}));
-/// <reference path="exports.ts" />
+/// <reference path="exporter.ts" />
 var makerjs;
 (function (makerjs) {
-    (function (exports) {
+    (function (_exporter) {
         /**
         * Renders an item in AutoDesk DFX file format.
         *
@@ -1114,7 +1043,7 @@ var makerjs;
         * @param options.units String from Maker.UnitType enumeration.
         * @returns String of DXF content.
         */
-        function DXF(itemToExport, options) {
+        function toDXF(itemToExport, options) {
             //DXF format documentation:
             //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
             var opts = {
@@ -1200,7 +1129,7 @@ var makerjs;
                 append("2");
                 append("ENTITIES");
 
-                var exporter = new exports.Exporter(map);
+                var exporter = new _exporter.Exporter(map);
                 exporter.exportItem(itemToExport, makerjs.point.zero());
             }
 
@@ -1213,7 +1142,7 @@ var makerjs;
 
             return dxf.join('\n');
         }
-        exports.DXF = DXF;
+        _exporter.toDXF = toDXF;
 
         //DXF format documentation:
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
@@ -1228,13 +1157,90 @@ var makerjs;
         dxfUnit[makerjs.unitType.Meter] = 6;
 
         
-    })(makerjs.exports || (makerjs.exports = {}));
-    var exports = makerjs.exports;
+    })(makerjs.exporter || (makerjs.exporter = {}));
+    var exporter = makerjs.exporter;
 })(makerjs || (makerjs = {}));
-/// <reference path="exports.ts" />
 var makerjs;
 (function (makerjs) {
-    (function (exports) {
+    (function (exporter) {
+        
+
+        /**
+        * Class for an XML tag.
+        */
+        var XmlTag = (function () {
+            /**
+            * @param name Name of the XML tag.
+            * @param attrs Optional attributes for the tag.
+            */
+            function XmlTag(name, attrs) {
+                this.name = name;
+                this.attrs = attrs;
+            }
+            /**
+            * Escapes certain characters within a string so that it can appear in a tag or its attribute.
+            *
+            * @returns Escaped string.
+            */
+            XmlTag.escapeString = function (value) {
+                var escape = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;'
+                };
+
+                for (var code in escape) {
+                    //.split then .join is a 'replace'
+                    value = value.split(code).join(escape[code]);
+                }
+
+                return value;
+            };
+
+            /**
+            * Output the tag as a string.
+            */
+            XmlTag.prototype.toString = function () {
+                var attrs = '';
+
+                for (var name in this.attrs) {
+                    var value = this.attrs[name];
+
+                    if (typeof value == 'string') {
+                        value = XmlTag.escapeString(value);
+                    }
+
+                    attrs += ' ' + name + '="' + value + '"';
+                }
+
+                var closeTag = '/>';
+
+                if (this.innerText) {
+                    closeTag = '>';
+
+                    if (this.innerTextEscaped) {
+                        closeTag += this.innerText;
+                    } else {
+                        closeTag += XmlTag.escapeString(this.innerText);
+                    }
+
+                    closeTag += '</' + this.name + '>';
+                }
+
+                return '<' + this.name + attrs + closeTag;
+            };
+            return XmlTag;
+        })();
+        exporter.XmlTag = XmlTag;
+    })(makerjs.exporter || (makerjs.exporter = {}));
+    var exporter = makerjs.exporter;
+})(makerjs || (makerjs = {}));
+/// <reference path="exporter.ts" />
+/// <reference path="xml.ts" />
+var makerjs;
+(function (makerjs) {
+    (function (exporter) {
         /**
         * Renders an item in SVG markup.
         *
@@ -1248,7 +1254,7 @@ var makerjs;
         * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
         * @returns String of XML / SVG content.
         */
-        function SVG(itemToExport, options) {
+        function toSVG(itemToExport, options) {
             var opts = {
                 annotate: false,
                 scale: 1,
@@ -1277,7 +1283,7 @@ var makerjs;
             function createElement(tagname, attrs, innerText, useStroke) {
                 if (typeof innerText === "undefined") { innerText = null; }
                 if (typeof useStroke === "undefined") { useStroke = true; }
-                var tag = new exports.XmlTag(tagname, attrs);
+                var tag = new exporter.XmlTag(tagname, attrs);
 
                 if (innerText) {
                     tag.innerText = innerText;
@@ -1382,19 +1388,19 @@ var makerjs;
                 drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
             };
 
-            var exporter = new exports.Exporter(map, fixPoint, fixPath);
-            exporter.exportItem(itemToExport, opts.origin);
+            var exp = new exporter.Exporter(map, fixPoint, fixPath);
+            exp.exportItem(itemToExport, opts.origin);
 
-            var svgTag = new exports.XmlTag('svg');
+            var svgTag = new exporter.XmlTag('svg');
             svgTag.innerText = elements.join('');
             svgTag.innerTextEscaped = true;
             return svgTag.toString();
         }
-        exports.SVG = SVG;
+        exporter.toSVG = toSVG;
 
         
-    })(makerjs.exports || (makerjs.exports = {}));
-    var exports = makerjs.exports;
+    })(makerjs.exporter || (makerjs.exporter = {}));
+    var exporter = makerjs.exporter;
 })(makerjs || (makerjs = {}));
 var makerjs;
 (function (makerjs) {

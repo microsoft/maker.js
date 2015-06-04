@@ -477,7 +477,7 @@ declare module makerjs.measure {
     */
     function modelExtents(modelToMeasure: IMakerModel): IMakerMeasure;
 }
-declare module makerjs.exports {
+declare module makerjs.exporter {
     /**
     * Class to traverse an item 's models or paths and ultimately render each path.
     */
@@ -514,6 +514,22 @@ declare module makerjs.exports {
         */
         public exportItem(item: any, origin: IMakerPoint): void;
     }
+}
+declare module makerjs.exporter {
+    function toDXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
+    function toDXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;
+    function toDXF(pathToExport: IMakerPath, options?: IDXFRenderOptions): string;
+    /**
+    * DXF rendering options.
+    */
+    interface IDXFRenderOptions {
+        /**
+        * Unit system to embed in DXF file. See UnitType for possible values.
+        */
+        units: string;
+    }
+}
+declare module makerjs.exporter {
     /**
     * Attributes for an XML tag.
     */
@@ -551,24 +567,10 @@ declare module makerjs.exports {
         public toString(): string;
     }
 }
-declare module makerjs.exports {
-    function DXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
-    function DXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;
-    function DXF(pathToExport: IMakerPath, options?: IDXFRenderOptions): string;
-    /**
-    * DXF rendering options.
-    */
-    interface IDXFRenderOptions {
-        /**
-        * Unit system to embed in DXF file. See UnitType for possible values.
-        */
-        units: string;
-    }
-}
-declare module makerjs.exports {
-    function SVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
-    function SVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
-    function SVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
+declare module makerjs.exporter {
+    function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
+    function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
+    function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
     /**
     * SVG rendering options.
     */

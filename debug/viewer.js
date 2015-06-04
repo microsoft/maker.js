@@ -8,11 +8,11 @@ var Viewer = {
     getRaw: function (type) {
         switch (type) {
             case "dxf":
-                return makerjs.exports.DXF(Viewer.ViewModel);
+                return makerjs.exporter.toDXF(Viewer.ViewModel);
 
             case "svg":
                 var myOutputScale = 100;
-                return makerjs.exports.SVG(Viewer.ViewModel, { scale: myOutputScale });
+                return makerjs.exporter.toSVG(Viewer.ViewModel, { scale: myOutputScale });
 
             case "json":
                 return JSON.stringify(Viewer.ViewModel);
@@ -59,7 +59,7 @@ var Viewer = {
         //show crosshairs
         var size = 50;
         var crossHairs = [makerjs.createLine('v', [0, size], [0, -size]), makerjs.createLine('h', [-size, 0], [size, 0]), ];
-        view.innerHTML += makerjs.exports.SVG(crossHairs, { origin: Viewer.SvgOrigin, stroke: 'red', strokeWidth: 1 });
+        view.innerHTML += makerjs.exporter.toSVG(crossHairs, { origin: Viewer.SvgOrigin, stroke: 'red', strokeWidth: 1 });
 
         //render model
         Viewer.ViewModel = Viewer.Render();

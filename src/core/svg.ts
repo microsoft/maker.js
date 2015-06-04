@@ -1,10 +1,11 @@
-﻿/// <reference path="exports.ts" />
+﻿/// <reference path="exporter.ts" />
+/// <reference path="xml.ts" />
 
-module makerjs.exports {
+module makerjs.exporter {
 
-    export function SVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
-    export function SVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
-    export function SVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
+    export function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
+    export function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
+    export function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
 
     /**
      * Renders an item in SVG markup.
@@ -19,7 +20,7 @@ module makerjs.exports {
      * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
      * @returns String of XML / SVG content.
      */
-    export function SVG(itemToExport: any, options?: ISVGRenderOptions): string {
+    export function toSVG(itemToExport: any, options?: ISVGRenderOptions): string {
 
         var opts: ISVGRenderOptions = {
             annotate: false,
@@ -174,8 +175,8 @@ module makerjs.exports {
             drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
         };
 
-        var exporter = new Exporter(map, fixPoint, fixPath);
-        exporter.exportItem(itemToExport, opts.origin);
+        var exp = new Exporter(map, fixPoint, fixPath);
+        exp.exportItem(itemToExport, opts.origin);
 
         var svgTag = new XmlTag('svg');
         svgTag.innerText = elements.join('');

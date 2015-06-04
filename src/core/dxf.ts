@@ -1,10 +1,10 @@
-﻿/// <reference path="exports.ts" />
+﻿/// <reference path="exporter.ts" />
 
-module makerjs.exports {
+module makerjs.exporter {
 
-    export function DXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
-    export function DXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;
-    export function DXF(pathToExport: IMakerPath, options?: IDXFRenderOptions): string;
+    export function toDXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
+    export function toDXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;
+    export function toDXF(pathToExport: IMakerPath, options?: IDXFRenderOptions): string;
 
     /**
      * Renders an item in AutoDesk DFX file format.
@@ -14,7 +14,7 @@ module makerjs.exports {
      * @param options.units String from Maker.UnitType enumeration.
      * @returns String of DXF content.
      */
-    export function DXF(itemToExport: any, options?: IDXFRenderOptions): string {
+    export function toDXF(itemToExport: any, options?: IDXFRenderOptions): string {
 
         //DXF format documentation:
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
