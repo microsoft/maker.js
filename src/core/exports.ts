@@ -17,7 +17,7 @@ module Maker.Exports {
      */
         constructor(
             public map: IMakerPathOriginFunctionMap,
-            public fixPoint?: (point: IMakerPoint) => IMakerPoint,
+            public fixPoint?: (pointToFix: IMakerPoint) => IMakerPoint,
             public fixPath?: (path: IMakerPath, origin: IMakerPoint) => IMakerPath 
             ) {
         }

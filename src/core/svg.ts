@@ -34,9 +34,9 @@ module Maker.Exports {
 
         var elements: string[] = [];
 
-        function fixPoint(point: IMakerPoint): IMakerPoint {
+        function fixPoint(pointToFix: IMakerPoint): IMakerPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
-            var mirrorY = Point.Mirror(point, false, true);
+            var mirrorY = Point.Mirror(pointToFix, false, true);
             return Point.Scale(mirrorY, opts.scale);
         }
 

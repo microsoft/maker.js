@@ -33,7 +33,7 @@ module Maker.Measure {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    function extremePoint(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax): IMakerPoint {
+    function getExtremePoint(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax): IMakerPoint {
         return {
             x: fn(a.x, b.x),
             y: fn(a.y, b.y)
@@ -51,8 +51,8 @@ module Maker.Measure {
         var measurement: IMakerMeasure = { low: null, high: null };
 
         map[PathType.Line] = function (line: IMakerPathLine) {
-            measurement.low = extremePoint(line.origin, line.end, Math.min);
-            measurement.high = extremePoint(line.origin, line.end, Math.max);
+            measurement.low = getExtremePoint(line.origin, line.end, Math.min);
+            measurement.high = getExtremePoint(line.origin, line.end, Math.max);
         }
 
         map[PathType.Circle] = function (circle: IMakerPathCircle) {
@@ -75,17 +75,17 @@ module Maker.Measure {
             }
 
             function extremeAngle(xAngle: number, yAngle: number, value: number, fn: IMathMinMax): IMakerPoint {
-                var point = extremePoint(startPoint, endPoint, fn);
+                var extremePoint = getExtremePoint(startPoint, endPoint, fn);
 
                 if (startAngle < xAngle && xAngle < endAngle) {
-                    point.x = value;
+                    extremePoint.x = value;
                 }
 
                 if (startAngle < yAngle && yAngle < endAngle) {
-                    point.y = value;
+                    extremePoint.y = value;
                 }
 
-                return Point.Add(arc.origin, point);
+                return Point.Add(arc.origin, extremePoint);
             }
 
             measurement.low = extremeAngle(180, 270, -r, Math.min);

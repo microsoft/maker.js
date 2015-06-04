@@ -30,34 +30,34 @@ module Maker.Point {
     /**
      * Clone a point into a new point.
      * 
-     * @param point The point to clone.
+     * @param pointToClone The point to clone.
      * @returns A new point with same values as the original.
      */
-    export function Clone(point: IMakerPoint): IMakerPoint {
-        return { x: point.x, y: point.y };
+    export function Clone(pointToClone: IMakerPoint): IMakerPoint {
+        return { x: pointToClone.x, y: pointToClone.y };
     }
 
     /**
      * Ensures that an item has the properties of a point object.
      * 
-     * @param point The item to ensure; may be a point object, or an array of numbers, or something else which will attempt to coerce into a point.
+     * @param pointToEnsure The object to ensure; may be a point object, or an array of numbers, or something else which will attempt to coerce into a point.
      * @returns A new point object either with the x, y values corresponding to the input, or 0,0 coordinates.
      */
-    export function Ensure(point: IMakerPoint): IMakerPoint;
-    export function Ensure(point: number[]): IMakerPoint;
+    export function Ensure(pointToEnsure: IMakerPoint): IMakerPoint;
+    export function Ensure(pointToEnsure: number[]): IMakerPoint;
     export function Ensure(): IMakerPoint;
-    export function Ensure(item?: any): IMakerPoint {
+    export function Ensure(pointToEnsure?: any): IMakerPoint {
 
-        if (!item) {
+        if (!pointToEnsure) {
             return Zero();
         }
 
-        if (IsPoint(item)) {
-            return item;
+        if (IsPoint(pointToEnsure)) {
+            return pointToEnsure;
         }
 
-        if (Array.isArray(item) && item.length > 1) {
-            return { x: item[0], y: item[1] };
+        if (Array.isArray(pointToEnsure) && pointToEnsure.length > 1) {
+            return { x: pointToEnsure[0], y: pointToEnsure[1] };
         }
 
         if (arguments.length > 1) {
@@ -99,13 +99,13 @@ module Maker.Point {
     /**
      * Create a clone of a point, mirrored on either or both x and y axes.
      * 
-     * @param point The point to mirror.
+     * @param pointToMirror The point to mirror.
      * @param mirrorX Boolean to mirror on the x axis.
      * @param mirrorY Boolean to mirror on the y axis.
      * @returns Mirrored point.
      */
-    export function Mirror(point: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
-        var p = Clone(Ensure(point));
+    export function Mirror(pointToMirror: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
+        var p = Clone(Ensure(pointToMirror));
 
         if (mirrorX) {
             p.x = -p.x;
@@ -121,14 +121,14 @@ module Maker.Point {
     /**
      * Rotate a point.
      * 
-     * @param point The point to rotate.
+     * @param pointToRotate The point to rotate.
      * @param angleInDegrees The amount of rotation, in degrees.
      * @param rotationOrigin The center point of rotation.
      * @returns A new point.
      */
-    export function Rotate(point: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint {
-        var pointAngleInRadians = Angle.FromPointToRadians(point, rotationOrigin);
-        var d = Measure.PointDistance(rotationOrigin, point);
+    export function Rotate(pointToRotate: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint {
+        var pointAngleInRadians = Angle.FromPointToRadians(pointToRotate, rotationOrigin);
+        var d = Measure.PointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = FromPolar(pointAngleInRadians + Angle.ToRadians(angleInDegrees), d);
 
         return Add(rotationOrigin, rotatedPoint);
@@ -137,12 +137,12 @@ module Maker.Point {
     /**
      * Scale a point's coordinates.
      * 
-     * @param point The point to scale.
+     * @param pointToScale The point to scale.
      * @param scale The amount of scaling.
      * @returns A new point.
      */
-    export function Scale(point: IMakerPoint, scale: number): IMakerPoint {
-        var p = Clone(Ensure(point));
+    export function Scale(pointToScale: IMakerPoint, scale: number): IMakerPoint {
+        var p = Clone(Ensure(pointToScale));
         p.x *= scale;
         p.y *= scale;
         return p;

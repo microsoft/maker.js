@@ -43,12 +43,12 @@ module Maker.Angle {
     /**
      * Angle of a line through a point.
      * 
-     * @param point The point to find the angle.
+     * @param pointToFindAngle The point to find the angle.
      * @param origin (Optional 0,0 implied) point of origin of the angle.
      * @returns Angle of the line throught the point.
      */
-    export function FromPointToRadians(point: IMakerPoint, origin?: IMakerPoint): number {
-        var d = Point.Subtract(point, origin);
+    export function FromPointToRadians(pointToFindAngle: IMakerPoint, origin?: IMakerPoint): number {
+        var d = Point.Subtract(pointToFindAngle, origin);
         return Math.atan2(d.y, d.x);
     }
 
