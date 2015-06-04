@@ -135,10 +135,10 @@ module Maker.Measure {
     /**
      * Measures the smallest rectangle which contains a model.
      * 
-     * @param model The model to measure.
+     * @param modelToMeasure The model to measure.
      * @returns object with low and high points.
      */
-    export function ModelExtents(model: IMakerModel): IMakerMeasure {
+    export function ModelExtents(modelToMeasure: IMakerModel): IMakerMeasure {
         var totalMeasurement: IMakerMeasure = { low: { x: null, y: null }, high: { x: null, y: null } };
 
         function lowerOrHigher(offsetOrigin: IMakerPoint, pathMeasurement: IMakerMeasure) {
@@ -170,7 +170,7 @@ module Maker.Measure {
             }
         }
 
-        measure(model);
+        measure(modelToMeasure);
 
         return totalMeasurement;
     }

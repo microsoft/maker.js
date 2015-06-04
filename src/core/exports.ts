@@ -38,22 +38,22 @@ module Maker.Exports {
         /**
          * Export a model.
          * 
-         * @param model The model to export.
+         * @param modelToExport The model to export.
          * @param offset The offset position of the model.
          */
-        public exportModel(model: IMakerModel, offset: IMakerPoint) {
+        public exportModel(modelToExport: IMakerModel, offset: IMakerPoint) {
 
-            var newOffset = Point.Add((this.fixPoint ? this.fixPoint(model.origin) : model.origin), offset);
+            var newOffset = Point.Add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
 
-            if (model.paths) {
-                for (var i = 0; i < model.paths.length; i++) {
-                    this.exportPath(model.paths[i], newOffset);
+            if (modelToExport.paths) {
+                for (var i = 0; i < modelToExport.paths.length; i++) {
+                    this.exportPath(modelToExport.paths[i], newOffset);
                 }
             }
 
-            if (model.models) {
-                for (var i = 0; i < model.models.length; i++) {
-                    this.exportModel(model.models[i], newOffset);
+            if (modelToExport.models) {
+                for (var i = 0; i < modelToExport.models.length; i++) {
+                    this.exportModel(modelToExport.models[i], newOffset);
                 }
             }
         }

@@ -2,9 +2,9 @@
 
 module Maker.Exports {
 
-    export function DXF(model: IMakerModel, options?: IDXFRenderOptions): string;
-    export function DXF(paths: IMakerPath[], options?: IDXFRenderOptions): string;
-    export function DXF(path: IMakerPath, options?: IDXFRenderOptions): string;
+    export function DXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
+    export function DXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;
+    export function DXF(pathToExport: IMakerPath, options?: IDXFRenderOptions): string;
 
     /**
      * Renders an item in AutoDesk DFX file format.

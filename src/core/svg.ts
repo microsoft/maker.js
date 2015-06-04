@@ -2,7 +2,7 @@
 
 module Maker.Exports {
 
-    export function SVG(model: IMakerModel, options?: ISVGRenderOptions): string;
+    export function SVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
     export function SVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
     export function SVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
 
