@@ -272,6 +272,79 @@ module makerjs {
         return item && (item.paths || item.models);
     }
 
+    //shortcuts
+
+    /**
+     * Shortcut to create a new arc path.
+     * 
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param radius The radius of the arc.
+     * @param startAngle The start angle of the arc.
+     * @param endAngle The end angle of the arc.
+     * @returns A new POJO representing an arc path.
+     */
+    export function createArc(id: string, origin: IMakerPoint, radius: number, startAngle: number, endAngle: number): IMakerPathArc;
+    export function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IMakerPathArc;
+    export function createArc(id: string, origin: any, radius: number, startAngle: number, endAngle: number): IMakerPathArc {
+
+        var arc: IMakerPathArc = {
+            type: pathType.Arc,
+            id: id,
+            origin: point.ensure(origin),
+            radius: radius,
+            startAngle: startAngle,
+            endAngle: endAngle
+        };
+
+        return arc;
+    }
+
+    /**
+     * Shortcut to create a new circle path.
+     * 
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param radius The radius of the circle.
+     * @returns A new POJO representing an circle path.
+     */
+    export function createCircle(id: string, origin: IMakerPoint, radius: number): IMakerPathCircle;
+    export function createCircle(id: string, origin: number[], radius: number): IMakerPathCircle;
+    export function createCircle(id: string, origin: any, radius: number): IMakerPathCircle {
+
+        var circle: IMakerPathCircle = {
+            type: pathType.Circle,
+            id: id,
+            origin: point.ensure(origin),
+            radius: radius
+        };
+
+        return circle;
+    }
+
+    /**
+     * Shortcut to create a new line path.
+     * 
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param end The end point of the line.
+     * @returns A new POJO representing an line path.
+     */
+    export function createLine(id: string, origin: IMakerPoint, end: IMakerPoint): IMakerPathLine;
+    export function createLine(id: string, origin: number[], end: IMakerPoint): IMakerPathLine;
+    export function createLine(id: string, origin: IMakerPoint, end: number[]): IMakerPathLine;
+    export function createLine(id: string, origin: number[], end: number[]): IMakerPathLine;
+    export function createLine(id: string, origin: any, end: any): IMakerPathLine {
+
+        var line: IMakerPathLine = {
+            type: pathType.Line,
+            id: id,
+            origin: point.ensure(origin),
+            end: point.ensure(end)
+        };
+
+        return line;
+    }
 }
 
 //CommonJs

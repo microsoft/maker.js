@@ -29,7 +29,7 @@
                 arcOrigin = { x: radius, y: 0 };
             }
 
-            var curve = path.CreateArc('curve_start', arcOrigin, radius, startAngle, endAngle);
+            var curve = createArc('curve_start', arcOrigin, radius, startAngle, endAngle);
 
             this.paths.push(curve);
             this.paths.push(path.moveRelative(path.mirror(curve, true, true, 'curve_end'), [width, height]));

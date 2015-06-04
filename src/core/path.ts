@@ -3,78 +3,6 @@
 module makerjs.path {
 
     /**
-     * Shortcut to create a new arc path.
-     * 
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param radius The radius of the arc.
-     * @param startAngle The start angle of the arc.
-     * @param endAngle The end angle of the arc.
-     * @returns A new POJO representing an arc path.
-     */
-    export function CreateArc(id: string, origin: IMakerPoint, radius: number, startAngle: number, endAngle: number): IMakerPathArc;
-    export function CreateArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IMakerPathArc;
-    export function CreateArc(id: string, origin: any, radius: number, startAngle: number, endAngle: number): IMakerPathArc {
-
-        var arc: IMakerPathArc = {
-            type: pathType.Arc,
-            id: id,
-            origin: point.ensure(origin),
-            radius: radius,
-            startAngle: startAngle,
-            endAngle: endAngle
-        };
-
-        return arc;
-    }
-
-    /**
-     * Shortcut to create a new circle path.
-     * 
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param radius The radius of the circle.
-     * @returns A new POJO representing an circle path.
-     */
-    export function CreateCircle(id: string, origin: IMakerPoint, radius: number): IMakerPathCircle;
-    export function CreateCircle(id: string, origin: number[], radius: number): IMakerPathCircle;
-    export function CreateCircle(id: string, origin: any, radius: number): IMakerPathCircle {
-
-        var circle: IMakerPathCircle = {
-            type: pathType.Circle,
-            id: id,
-            origin: point.ensure(origin),
-            radius: radius
-        };
-
-        return circle;
-    }
-
-    /**
-     * Shortcut to create a new line path.
-     * 
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param end The end point of the line.
-     * @returns A new POJO representing an line path.
-     */
-    export function CreateLine(id: string, origin: IMakerPoint, end: IMakerPoint): IMakerPathLine;
-    export function CreateLine(id: string, origin: number[], end: IMakerPoint): IMakerPathLine;
-    export function CreateLine(id: string, origin: IMakerPoint, end: number[]): IMakerPathLine;
-    export function CreateLine(id: string, origin: number[], end: number[]): IMakerPathLine;
-    export function CreateLine(id: string, origin: any, end: any): IMakerPathLine {
-
-        var line: IMakerPathLine = {
-            type: pathType.Line,
-            id: id,
-            origin: point.ensure(origin),
-            end: point.ensure(end)
-        };
-
-        return line;
-    }
-
-    /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      * 
      * @param pathToMirror The path to mirror.
@@ -92,7 +20,7 @@ module makerjs.path {
 
         map[pathType.Line] = function (line: IMakerPathLine) {
 
-            newPath = path.CreateLine(
+            newPath = createLine(
                 newId || line.id,
                 origin,
                 point.mirror(line.end, mirrorX, mirrorY)
@@ -101,7 +29,7 @@ module makerjs.path {
 
         map[pathType.Circle] = function (circle: IMakerPathCircle) {
 
-            newPath = path.CreateCircle(
+            newPath = createCircle(
                 newId || circle.id,
                 origin,
                 circle.radius
@@ -114,7 +42,7 @@ module makerjs.path {
             var endAngle = angle.mirror(angle.arcEndAnglePastZero(arc), mirrorX, mirrorY);
             var xor = mirrorX != mirrorY;
 
-            newPath = path.CreateArc(
+            newPath = createArc(
                 newId || arc.id,
                 origin,
                 arc.radius,
