@@ -72,7 +72,7 @@
 
             //svg output
             var annotate = document.getElementById('checkAnnotate').checked;
-            var svg = makerjs.Exports.SVG(myModel, { origin: Viewer.SvgOrigin, scale: Viewer.ViewScale, annotate: annotate });
+            var svg = makerjs.exports.SVG(myModel, { origin: Viewer.SvgOrigin, scale: Viewer.ViewScale, annotate: annotate });
             document.getElementById("svg-zone").innerHTML = svg;
 
             return myModel;

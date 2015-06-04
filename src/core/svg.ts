@@ -1,6 +1,6 @@
 ﻿/// <reference path="exports.ts" />
 
-module makerjs.Exports {
+module makerjs.exports {
 
     export function SVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
     export function SVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;

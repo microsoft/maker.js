@@ -2,7 +2,7 @@
 /// <reference path="units.ts" />
 /// <reference path="measure.ts" />
 
-module makerjs.Exports {
+module makerjs.exports {
 
     /**
      * Class to traverse an item 's models or paths and ultimately render each path.
