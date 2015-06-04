@@ -1,6 +1,6 @@
 ﻿/// <reference path="model.ts" />
 
-module makerjs.Measure {
+module makerjs.measure {
 
     /**
      * Interface to Math.min and Math.max functions.

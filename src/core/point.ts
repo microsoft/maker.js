@@ -128,7 +128,7 @@ module makerjs.Point {
      */
     export function Rotate(pointToRotate: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint {
         var pointAngleInRadians = angle.FromPointToRadians(pointToRotate, rotationOrigin);
-        var d = Measure.PointDistance(rotationOrigin, pointToRotate);
+        var d = measure.PointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = FromPolar(pointAngleInRadians + angle.ToRadians(angleInDegrees), d);
 
         return Add(rotationOrigin, rotatedPoint);

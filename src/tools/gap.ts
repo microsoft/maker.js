@@ -41,7 +41,7 @@ module makerjs.Tools {
 
     breakPathFunctionMap[PathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
 
-        var breakAngle = Measure.ArcAngle(arc) * breakAt + arc.startAngle;
+        var breakAngle = measure.ArcAngle(arc) * breakAt + arc.startAngle;
 
         if (breakAngle >= 360) {
             breakAngle -= 360;
@@ -105,7 +105,7 @@ module makerjs.Tools {
 
             function chop(line: IMakerPathLine, start: boolean) {
 
-                var len = Measure.PathLength(line);
+                var len = measure.PathLength(line);
 
                 if (halfGap < len) {
 
@@ -148,7 +148,7 @@ module makerjs.Tools {
 
             function chop(arc: IMakerPathArc, start: boolean) {
 
-                var totalAngle = Measure.ArcAngle(arc);
+                var totalAngle = measure.ArcAngle(arc);
 
                 if (halfGapAngle < totalAngle) {
 

@@ -63,7 +63,7 @@
                 models: [new myModelFactory(myViewParams)]
             };
 
-            var m = makerjs.Measure.ModelExtents(myModel.models[0]);
+            var m = makerjs.measure.ModelExtents(myModel.models[0]);
             var x = m.high.x - m.low.x + .025;
 
             for (var i = 1; i < myViewParams.count; i++) {
