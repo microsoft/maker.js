@@ -41,13 +41,13 @@ module Maker.Tools {
 
     breakPathFunctionMap[PathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
 
-        var angle = Measure.ArcAngle(arc) * breakAt + arc.startAngle;
+        var breakAngle = Measure.ArcAngle(arc) * breakAt + arc.startAngle;
 
-        if (angle >= 360) {
-            angle -= 360;
+        if (breakAngle >= 360) {
+            breakAngle -= 360;
         }
 
-        var breakPoint = Point.Add(arc.origin, Point.FromPolar(Angle.ToRadians(angle), arc.radius));
+        var breakPoint = Point.Add(arc.origin, Point.FromPolar(Angle.ToRadians(breakAngle), arc.radius));
 
         var ret: IMakerBrokenPath[] = [];
 
@@ -58,8 +58,8 @@ module Maker.Tools {
             });
         }
 
-        addArc("_1", arc.startAngle, angle);
-        addArc("_2", angle, arc.endAngle);
+        addArc("_1", arc.startAngle, breakAngle);
+        addArc("_2", breakAngle, arc.endAngle);
 
         return ret;
     };

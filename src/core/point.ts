@@ -89,8 +89,8 @@ module Maker.Point {
      */
     export function FromArc(arc: IMakerPathArc): IMakerPoint[] {
 
-        function getPointFromAngle(angle: number) {
-            return Add(arc.origin, FromPolar(Angle.ToRadians(angle), arc.radius));
+        function getPointFromAngle(a: number) {
+            return Add(arc.origin, FromPolar(Angle.ToRadians(a), arc.radius));
         }
 
         return [getPointFromAngle(arc.startAngle), getPointFromAngle(arc.endAngle)];
