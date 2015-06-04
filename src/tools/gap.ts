@@ -74,13 +74,13 @@ module Maker.Tools {
         return null;
     }
 
-    export function GapPath(model: IMakerModel, pathId: string, gapLength: number, breakAt: number= .5): IMakerPoint[] {
+    export function GapPath(modelToGap: IMakerModel, pathId: string, gapLength: number, breakAt: number= .5): IMakerPoint[] {
 
-        var found = FindById<IMakerPath>(model.paths, pathId);
+        var found = FindById<IMakerPath>(modelToGap.paths, pathId);
 
         if (!found) return null;
 
-        model.paths.splice(found.index, 1); //remove the path from the array
+        modelToGap.paths.splice(found.index, 1); //remove the path from the array
 
         var foundPath = found.item;
 
@@ -89,7 +89,7 @@ module Maker.Tools {
         var ret: IMakerPoint[] = [];
 
         function append(brokenPath: IMakerBrokenPath, extraPoint?: IMakerPoint) {
-            model.paths.push(brokenPath.newPath);
+            modelToGap.paths.push(brokenPath.newPath);
             ret.push(brokenPath.newPoint);
 
             if (extraPoint) {
