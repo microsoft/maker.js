@@ -48,7 +48,7 @@ module makerjs.angle {
      * @returns Angle of the line throught the point.
      */
     export function FromPointToRadians(pointToFindAngle: IMakerPoint, origin?: IMakerPoint): number {
-        var d = Point.Subtract(pointToFindAngle, origin);
+        var d = point.Subtract(pointToFindAngle, origin);
         return Math.atan2(d.y, d.x);
     }
 

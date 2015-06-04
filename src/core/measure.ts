@@ -57,14 +57,14 @@ module makerjs.measure {
 
         map[PathType.Circle] = function (circle: IMakerPathCircle) {
             var r = circle.radius;
-            measurement.low = Point.Add(circle.origin, { x: -r, y: -r });
-            measurement.high = Point.Add(circle.origin, { x: r, y: r });
+            measurement.low = point.Add(circle.origin, { x: -r, y: -r });
+            measurement.high = point.Add(circle.origin, { x: r, y: r });
         }
 
         map[PathType.Arc] = function (arc: IMakerPathArc) {
             var r = arc.radius;
-            var startPoint = Point.FromPolar(angle.ToRadians(arc.startAngle), r);
-            var endPoint = Point.FromPolar(angle.ToRadians(arc.endAngle), r);
+            var startPoint = point.FromPolar(angle.ToRadians(arc.startAngle), r);
+            var endPoint = point.FromPolar(angle.ToRadians(arc.endAngle), r);
 
             var startAngle = arc.startAngle;
             var endAngle = angle.ArcEndAnglePastZero(arc);
@@ -85,7 +85,7 @@ module makerjs.measure {
                     extremePoint.y = value;
                 }
 
-                return Point.Add(arc.origin, extremePoint);
+                return point.Add(arc.origin, extremePoint);
             }
 
             measurement.low = extremeAngle(180, 270, -r, Math.min);
@@ -144,7 +144,7 @@ module makerjs.measure {
         function lowerOrHigher(offsetOrigin: IMakerPoint, pathMeasurement: IMakerMeasure) {
 
             function getExtreme(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax) {
-                var c = Point.Add(b, offsetOrigin);
+                var c = point.Add(b, offsetOrigin);
                 a.x = (a.x == null ? c.x : fn(a.x, c.x));
                 a.y = (a.y == null ? c.y : fn(a.y, c.y));
             }
@@ -155,7 +155,7 @@ module makerjs.measure {
 
         function measure(model: IMakerModel, offsetOrigin?: IMakerPoint) {
 
-            var newOrigin = Point.Add(model.origin, offsetOrigin);
+            var newOrigin = point.Add(model.origin, offsetOrigin);
 
             if (model.paths) {
                 for (var i = 0; i < model.paths.length; i++) {

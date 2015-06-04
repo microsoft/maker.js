@@ -43,7 +43,7 @@ module makerjs.exports {
          */
         public exportModel(modelToExport: IMakerModel, offset: IMakerPoint) {
 
-            var newOffset = Point.Add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
+            var newOffset = point.Add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
 
             if (modelToExport.paths) {
                 for (var i = 0; i < modelToExport.paths.length; i++) {

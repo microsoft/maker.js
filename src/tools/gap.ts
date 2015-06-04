@@ -28,8 +28,8 @@ module makerjs.Tools {
 
         function addLine(suffix: string, origin: IMakerPoint, end: IMakerPoint) {
             ret.push({
-                newPath: path.CreateLine(line.id + suffix, Point.Clone(origin), Point.Clone(end)),
-                newPoint: Point.Clone(breakPoint)
+                newPath: path.CreateLine(line.id + suffix, point.Clone(origin), point.Clone(end)),
+                newPoint: point.Clone(breakPoint)
             });
         }
 
@@ -47,14 +47,14 @@ module makerjs.Tools {
             breakAngle -= 360;
         }
 
-        var breakPoint = Point.Add(arc.origin, Point.FromPolar(angle.ToRadians(breakAngle), arc.radius));
+        var breakPoint = point.Add(arc.origin, point.FromPolar(angle.ToRadians(breakAngle), arc.radius));
 
         var ret: IMakerBrokenPath[] = [];
 
         function addArc(suffix: string, startAngle: number, endAngle: number) {
             ret.push({
-                newPath: path.CreateArc(arc.id + suffix, Point.Clone(arc.origin), arc.radius, startAngle, endAngle),
-                newPoint: Point.Clone(breakPoint)
+                newPath: path.CreateArc(arc.id + suffix, point.Clone(arc.origin), arc.radius, startAngle, endAngle),
+                newPoint: point.Clone(breakPoint)
             });
         }
 
@@ -127,18 +127,18 @@ module makerjs.Tools {
 
         map[PathType.Circle] = function (circle: IMakerPathCircle) {
 
-            var angle = 360 * breakAt;
+            var breakAangle = 360 * breakAt;
             var halfGapAngle = angle.FromRadians(Math.asin(halfGap / circle.radius));
 
-            var startAngle = angle + halfGapAngle;
-            var endAngle = angle - halfGapAngle;
+            var startAngle = breakAangle + halfGapAngle;
+            var endAngle = breakAangle - halfGapAngle;
 
             var brokenPath = {
-                newPath: path.CreateArc(circle.id + "_1", Point.Clone(circle.origin), circle.radius, startAngle, endAngle),
-                newPoint: Point.Add(circle.origin, Point.FromPolar(angle.ToRadians(startAngle), circle.radius))
+                newPath: path.CreateArc(circle.id + "_1", point.Clone(circle.origin), circle.radius, startAngle, endAngle),
+                newPoint: point.Add(circle.origin, point.FromPolar(angle.ToRadians(startAngle), circle.radius))
             };
 
-            append(brokenPath, Point.Add(circle.origin, Point.FromPolar(angle.ToRadians(endAngle), circle.radius)));
+            append(brokenPath, point.Add(circle.origin, point.FromPolar(angle.ToRadians(endAngle), circle.radius)));
         };
 
         map[PathType.Arc] = function (arc: IMakerPathArc) {

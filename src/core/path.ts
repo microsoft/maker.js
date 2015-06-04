@@ -19,7 +19,7 @@ module makerjs.path {
         var arc: IMakerPathArc = {
             type: PathType.Arc,
             id: id,
-            origin: Point.Ensure(origin),
+            origin: point.Ensure(origin),
             radius: radius,
             startAngle: startAngle,
             endAngle: endAngle
@@ -43,7 +43,7 @@ module makerjs.path {
         var circle: IMakerPathCircle = {
             type: PathType.Circle,
             id: id,
-            origin: Point.Ensure(origin),
+            origin: point.Ensure(origin),
             radius: radius
         };
 
@@ -67,8 +67,8 @@ module makerjs.path {
         var line: IMakerPathLine = {
             type: PathType.Line,
             id: id,
-            origin: Point.Ensure(origin),
-            end: Point.Ensure(end)
+            origin: point.Ensure(origin),
+            end: point.Ensure(end)
         };
 
         return line;
@@ -86,7 +86,7 @@ module makerjs.path {
     export function Mirror(pathToMirror: IMakerPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IMakerPath {
 
         var newPath: IMakerPath = null;
-        var origin = Point.Mirror(pathToMirror.origin, mirrorX, mirrorY);
+        var origin = point.Mirror(pathToMirror.origin, mirrorX, mirrorY);
 
         var map: IMakerPathFunctionMap = {};
 
@@ -95,7 +95,7 @@ module makerjs.path {
             newPath = path.CreateLine(
                 newId || line.id,
                 origin,
-                Point.Mirror(line.end, mirrorX, mirrorY)
+                point.Mirror(line.end, mirrorX, mirrorY)
                 );
         };
 
@@ -145,10 +145,10 @@ module makerjs.path {
         var map: IMakerPathFunctionMap = {};
 
         map[PathType.Line] = function (line: IMakerPathLine) {
-            line.end = Point.Add(line.end, adjust);
+            line.end = point.Add(line.end, adjust);
         };
 
-        pathToMove.origin = Point.Add(pathToMove.origin, adjust);
+        pathToMove.origin = point.Add(pathToMove.origin, adjust);
 
         var fn = map[pathToMove.type];
         if (fn) {
@@ -172,7 +172,7 @@ module makerjs.path {
         var map: IMakerPathFunctionMap = {};
 
         map[PathType.Line] = function (line: IMakerPathLine) {
-            line.end = Point.Rotate(line.end, angleInDegrees, rotationOrigin);
+            line.end = point.Rotate(line.end, angleInDegrees, rotationOrigin);
         }
 
         map[PathType.Arc] = function (arc: IMakerPathArc) {
@@ -180,7 +180,7 @@ module makerjs.path {
             arc.endAngle += angleInDegrees;
         }
 
-        pathToRotate.origin = Point.Rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
+        pathToRotate.origin = point.Rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
 
         var fn = map[pathToRotate.type];
         if (fn) {
@@ -203,7 +203,7 @@ module makerjs.path {
         var map: IMakerPathFunctionMap = {};
 
         map[PathType.Line] = function (line: IMakerPathLine) {
-            line.end = Point.Scale(line.end, scale);
+            line.end = point.Scale(line.end, scale);
         }
 
         map[PathType.Circle] = function (circle: IMakerPathCircle) {
@@ -212,7 +212,7 @@ module makerjs.path {
 
         map[PathType.Arc] = map[PathType.Circle];
 
-        pathToScale.origin = Point.Scale(pathToScale.origin, scale);
+        pathToScale.origin = point.Scale(pathToScale.origin, scale);
 
         var fn = map[pathToScale.type];
         if (fn) {

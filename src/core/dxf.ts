@@ -103,7 +103,7 @@ module makerjs.exports {
             append("ENTITIES");
 
             var exporter = new Exporter(map);
-            exporter.exportItem(itemToExport, Point.Zero());
+            exporter.exportItem(itemToExport, point.Zero());
         }
 
         //begin dxf output

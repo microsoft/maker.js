@@ -15,7 +15,7 @@ module makerjs.exports {
      * @param options.scale Number to scale the SVG rendering.
      * @param options.stroke String color of the rendered paths.
      * @param options.strokeWidth Number width of the rendered paths.
-     * @param options.origin Point object for the rendered reference origin.
+     * @param options.origin point object for the rendered reference origin.
      * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
      * @returns String of XML / SVG content.
      */
@@ -26,7 +26,7 @@ module makerjs.exports {
             scale: 1,
             stroke: "blue",
             strokeWidth: 2,
-            origin: Point.Zero(),
+            origin: point.Zero(),
             useSvgPathOnly: false
         };
 
@@ -36,8 +36,8 @@ module makerjs.exports {
 
         function fixPoint(pointToFix: IMakerPoint): IMakerPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
-            var mirrorY = Point.Mirror(pointToFix, false, true);
-            return Point.Scale(mirrorY, opts.scale);
+            var mirrorY = point.Mirror(pointToFix, false, true);
+            return point.Scale(mirrorY, opts.scale);
         }
 
         function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
@@ -150,7 +150,7 @@ module makerjs.exports {
         };
 
         function svgArcData(d: any[], radius: number, endPoint: any, largeArc?: boolean, decreasing?: boolean) {
-            var end: IMakerPoint = Point.Ensure(endPoint);
+            var end: IMakerPoint = point.Ensure(endPoint);
             d.push(radius, radius);
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
@@ -160,7 +160,7 @@ module makerjs.exports {
 
         map[PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
 
-            var arcPoints = Point.FromArc(arc);
+            var arcPoints = point.FromArc(arc);
 
             var d = ['A'];
             svgArcData(

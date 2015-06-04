@@ -9,7 +9,7 @@ module makerjs.model {
      * @param origin Optional offset reference point.
      */
     export function Flatten(modelToFlatten: IMakerModel, origin?: IMakerPoint) {
-        var newOrigin = Point.Add(modelToFlatten.origin, origin);
+        var newOrigin = point.Add(modelToFlatten.origin, origin);
 
         if (modelToFlatten.paths) {
             for (var i = 0; i < modelToFlatten.paths.length; i++) {
@@ -23,7 +23,7 @@ module makerjs.model {
             }
         }
 
-        modelToFlatten.origin = Point.Ensure();
+        modelToFlatten.origin = point.Ensure();
 
         return modelToFlatten;
     }
@@ -44,7 +44,7 @@ module makerjs.model {
         }
 
         if (modelToMirror.origin) {
-            newModel.origin = Point.Mirror(modelToMirror.origin, mirrorX, mirrorY);
+            newModel.origin = point.Mirror(modelToMirror.origin, mirrorX, mirrorY);
         }
 
         if (modelToMirror.type) {
@@ -80,7 +80,7 @@ module makerjs.model {
      * @returns The original model (for chaining).
      */
     export function Move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel {
-        modelToMove.origin = Point.Clone(Point.Ensure(origin));
+        modelToMove.origin = point.Clone(point.Ensure(origin));
         return modelToMove;
     }
 
@@ -94,7 +94,7 @@ module makerjs.model {
      */
     export function Rotate(modelToRotate: IMakerModel, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerModel {
 
-        var offsetOrigin = Point.Subtract(rotationOrigin, modelToRotate.origin);
+        var offsetOrigin = point.Subtract(rotationOrigin, modelToRotate.origin);
 
         if (modelToRotate.paths) {
             for (var i = 0; i < modelToRotate.paths.length; i++) {
@@ -122,7 +122,7 @@ module makerjs.model {
     export function Scale(modelToScale: IMakerModel, scale: number, scaleOrigin = false): IMakerModel {
 
         if (scaleOrigin && modelToScale.origin) {
-            modelToScale.origin = Point.Scale(modelToScale.origin, scale);
+            modelToScale.origin = point.Scale(modelToScale.origin, scale);
         }
 
         if (modelToScale.paths) {
