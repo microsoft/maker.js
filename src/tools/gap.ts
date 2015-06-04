@@ -28,7 +28,7 @@ module makerjs.Tools {
 
         function addLine(suffix: string, origin: IMakerPoint, end: IMakerPoint) {
             ret.push({
-                newPath: Path.CreateLine(line.id + suffix, Point.Clone(origin), Point.Clone(end)),
+                newPath: path.CreateLine(line.id + suffix, Point.Clone(origin), Point.Clone(end)),
                 newPoint: Point.Clone(breakPoint)
             });
         }
@@ -53,7 +53,7 @@ module makerjs.Tools {
 
         function addArc(suffix: string, startAngle: number, endAngle: number) {
             ret.push({
-                newPath: Path.CreateArc(arc.id + suffix, Point.Clone(arc.origin), arc.radius, startAngle, endAngle),
+                newPath: path.CreateArc(arc.id + suffix, Point.Clone(arc.origin), arc.radius, startAngle, endAngle),
                 newPoint: Point.Clone(breakPoint)
             });
         }
@@ -134,7 +134,7 @@ module makerjs.Tools {
             var endAngle = angle - halfGapAngle;
 
             var brokenPath = {
-                newPath: Path.CreateArc(circle.id + "_1", Point.Clone(circle.origin), circle.radius, startAngle, endAngle),
+                newPath: path.CreateArc(circle.id + "_1", Point.Clone(circle.origin), circle.radius, startAngle, endAngle),
                 newPoint: Point.Add(circle.origin, Point.FromPolar(angle.ToRadians(startAngle), circle.radius))
             };
 

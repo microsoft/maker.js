@@ -12,7 +12,7 @@
             for (var i = 0; i < boltCount; i++) {
                 var o = Point.FromPolar(a * i + a1, boltRadius);
 
-                this.paths.push(Path.CreateCircle("bolt " + i, o, holeRadius));
+                this.paths.push(path.CreateCircle("bolt " + i, o, holeRadius));
             }
 
         }

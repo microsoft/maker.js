@@ -42,8 +42,8 @@ module makerjs.exports {
 
         function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
             //mirror creates a copy, so we don't modify the original
-            var mirrorY = Path.Mirror(pathToFix, false, true);
-            return Path.MoveRelative(Path.Scale(mirrorY, opts.scale), origin);
+            var mirrorY = path.Mirror(pathToFix, false, true);
+            return path.MoveRelative(path.Scale(mirrorY, opts.scale), origin);
         }
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null, useStroke = true) {

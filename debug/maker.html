@@ -38,13 +38,13 @@
             this.paths = [];
             this.models = [];
 
-            var circle = makerjs.Path.CreateCircle('c1', [], Math.min(params.height, params.width) / 2 - .5);
+            var circle = makerjs.path.CreateCircle('c1', [], Math.min(params.height, params.width) / 2 - .5);
 
             if (params.radius < 0.5) {
                 this.models.push(makerjs.model.Move(new makerjs.models.BoltRectangle(params.width - .4, params.height - .4, .07), [.2, .2]));
             }
 
-            this.paths.push(makerjs.Path.MoveRelative(circle, [params.width / 2, params.height / 2]));
+            this.paths.push(makerjs.path.MoveRelative(circle, [params.width / 2, params.height / 2]));
 
             this.models.push(new makerjs.models.RoundRectangle(params.width, params.height, params.radius));
 

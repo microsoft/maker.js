@@ -58,7 +58,7 @@ var Viewer = {
 
         //show crosshairs
         var size = 50;
-        var crossHairs = [makerjs.Path.CreateLine('v', [0, size], [0, -size]), makerjs.Path.CreateLine('h', [-size, 0], [size, 0]), ];
+        var crossHairs = [makerjs.path.CreateLine('v', [0, size], [0, -size]), makerjs.path.CreateLine('h', [-size, 0], [size, 0]), ];
         view.innerHTML += makerjs.exports.SVG(crossHairs, { origin: Viewer.SvgOrigin, stroke: 'red', strokeWidth: 1 });
 
         //render model

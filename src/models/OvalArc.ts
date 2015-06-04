@@ -8,11 +8,11 @@
 
             var addCap = (id: string, tiltAngle: number, offsetStartAngle: number, offsetEndAngle: number) => {
                 var p = Point.FromPolar(angle.ToRadians(tiltAngle), sweepRadius);
-                this.paths.push(Path.CreateArc(id, p, slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle));
+                this.paths.push(path.CreateArc(id, p, slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle));
             };
 
             var addSweep = (id: string, offsetRadius: number) => {
-                this.paths.push(Path.CreateArc(id, Point.Zero(), sweepRadius + offsetRadius, startAngle, endAngle));
+                this.paths.push(path.CreateArc(id, Point.Zero(), sweepRadius + offsetRadius, startAngle, endAngle));
             };
 
             addSweep("Inner", - slotRadius);

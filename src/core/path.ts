@@ -1,6 +1,6 @@
 ﻿/// <reference path="point.ts" />
 
-module makerjs.Path {
+module makerjs.path {
 
     /**
      * Shortcut to create a new arc path.
@@ -92,7 +92,7 @@ module makerjs.Path {
 
         map[PathType.Line] = function (line: IMakerPathLine) {
 
-            newPath = Path.CreateLine(
+            newPath = path.CreateLine(
                 newId || line.id,
                 origin,
                 Point.Mirror(line.end, mirrorX, mirrorY)
@@ -101,7 +101,7 @@ module makerjs.Path {
 
         map[PathType.Circle] = function (circle: IMakerPathCircle) {
 
-            newPath = Path.CreateCircle(
+            newPath = path.CreateCircle(
                 newId || circle.id,
                 origin,
                 circle.radius
@@ -114,7 +114,7 @@ module makerjs.Path {
             var endAngle = angle.Mirror(angle.ArcEndAnglePastZero(arc), mirrorX, mirrorY);
             var xor = mirrorX != mirrorY;
 
-            newPath = Path.CreateArc(
+            newPath = path.CreateArc(
                 newId || arc.id,
                 origin,
                 arc.radius,

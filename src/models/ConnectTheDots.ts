@@ -7,7 +7,7 @@
         constructor(public isClosed: boolean, public points: IMakerPoint[]) {
 
             var connect = (a: number, b: number) => {
-                this.paths.push(Path.CreateLine("ShapeLine" + i, points[a], points[b]));
+                this.paths.push(path.CreateLine("ShapeLine" + i, points[a], points[b]));
             }
 
             for (var i = 1; i < points.length; i++) {

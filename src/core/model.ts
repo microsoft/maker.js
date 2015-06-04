@@ -13,7 +13,7 @@ module makerjs.model {
 
         if (modelToFlatten.paths) {
             for (var i = 0; i < modelToFlatten.paths.length; i++) {
-                Path.MoveRelative(modelToFlatten.paths[i], newOrigin);
+                path.MoveRelative(modelToFlatten.paths[i], newOrigin);
             }
         }
 
@@ -58,7 +58,7 @@ module makerjs.model {
         if (modelToMirror.paths) {
             newModel.paths = [];
             for (var i = 0; i < modelToMirror.paths.length; i++) {
-                newModel.paths.push(Path.Mirror(modelToMirror.paths[i], mirrorX, mirrorY));
+                newModel.paths.push(path.Mirror(modelToMirror.paths[i], mirrorX, mirrorY));
             }
         }
 
@@ -98,7 +98,7 @@ module makerjs.model {
 
         if (modelToRotate.paths) {
             for (var i = 0; i < modelToRotate.paths.length; i++) {
-                Path.Rotate(modelToRotate.paths[i], angleInDegrees, offsetOrigin);
+                path.Rotate(modelToRotate.paths[i], angleInDegrees, offsetOrigin);
             }
         }
 
@@ -127,7 +127,7 @@ module makerjs.model {
 
         if (modelToScale.paths) {
             for (var i = 0; i < modelToScale.paths.length; i++) {
-                Path.Scale(modelToScale.paths[i], scale);
+                path.Scale(modelToScale.paths[i], scale);
             }
         }
 
