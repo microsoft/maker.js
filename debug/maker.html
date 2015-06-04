@@ -41,16 +41,16 @@
             var circle = makerjs.Path.CreateCircle('c1', [], Math.min(params.height, params.width) / 2 - .5);
 
             if (params.radius < 0.5) {
-                this.models.push(makerjs.Model.Move(new makerjs.Models.BoltRectangle(params.width - .4, params.height - .4, .07), [.2, .2]));
+                this.models.push(makerjs.model.Move(new makerjs.models.BoltRectangle(params.width - .4, params.height - .4, .07), [.2, .2]));
             }
 
             this.paths.push(makerjs.Path.MoveRelative(circle, [params.width / 2, params.height / 2]));
 
-            this.models.push(new makerjs.Models.RoundRectangle(params.width, params.height, params.radius));
+            this.models.push(new makerjs.models.RoundRectangle(params.width, params.height, params.radius));
 
-            this.models.push(makerjs.Model.Move(new makerjs.Models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
+            this.models.push(makerjs.model.Move(new makerjs.models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
 
-            makerjs.Model.Rotate(this, params.angle);
+            makerjs.model.Rotate(this, params.angle);
         }
 
         Viewer.Render = function (newParams) {
@@ -67,7 +67,7 @@
             var x = m.high.x - m.low.x + .025;
 
             for (var i = 1; i < myViewParams.count; i++) {
-                myModel.models.push(makerjs.Model.Move(new myModelFactory(myViewParams), [x * i, 0]));
+                myModel.models.push(makerjs.model.Move(new myModelFactory(myViewParams), [x * i, 0]));
             }
 
             //svg output

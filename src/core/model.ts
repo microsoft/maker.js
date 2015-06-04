@@ -1,6 +1,6 @@
 ﻿/// <reference path="path.ts" />
 
-module makerjs.Model {
+module makerjs.model {
 
     /**
      * Moves all children (models and paths, recursively) within a model to their absolute position. Useful when referencing points between children.
@@ -65,7 +65,7 @@ module makerjs.Model {
         if (modelToMirror.models) {
             newModel.models = [];
             for (var i = 0; i < modelToMirror.models.length; i++) {
-                newModel.models.push(Model.Mirror(modelToMirror.models[i], mirrorX, mirrorY));
+                newModel.models.push(model.Mirror(modelToMirror.models[i], mirrorX, mirrorY));
             }
         }
 

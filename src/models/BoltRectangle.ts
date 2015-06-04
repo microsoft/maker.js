@@ -1,4 +1,4 @@
-﻿module makerjs.Models {
+﻿module makerjs.models {
 
     export class BoltRectangle implements IMakerModel {
 

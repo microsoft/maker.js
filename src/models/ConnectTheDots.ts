@@ -1,4 +1,4 @@
-﻿module makerjs.Models {
+﻿module makerjs.models {
 
     export class ConnectTheDots implements IMakerModel {
 
