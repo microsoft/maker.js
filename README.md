@@ -34,7 +34,7 @@ Maker.js can be used in a web page as a simple CAD drawing generator. It can be 
 * A printer driver or G-code generator.
 
 ## About
-Maker.js is written in TypeScript and compiled to JavaScript.
+Maker.js is written in TypeScript and compiled to JavaScript. Maker.js is released under the Apache 2.0 license.
 
 ## Contributing
 We would love to accept your contributions to Maker.js. Before you consider making any changes, please review the tenets of this project, and the legal policy of Microsoft below.
