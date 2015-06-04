@@ -18,20 +18,20 @@ module Maker.Exports {
         constructor(
             public map: IMakerPathOriginFunctionMap,
             public fixPoint?: (pointToFix: IMakerPoint) => IMakerPoint,
-            public fixPath?: (path: IMakerPath, origin: IMakerPoint) => IMakerPath 
+            public fixPath?: (pathToFix: IMakerPath, origin: IMakerPoint) => IMakerPath 
             ) {
         }
 
         /**
          * Export a path.
          * 
-         * @param path The path to export.
+         * @param pathToExport The path to export.
          * @param offset The offset position of the path. 
          */
-        public exportPath(path: IMakerPath, offset: IMakerPoint) {
-            var fn = this.map[path.type];
+        public exportPath(pathToExport: IMakerPath, offset: IMakerPoint) {
+            var fn = this.map[pathToExport.type];
             if (fn) {
-                fn(this.fixPath? this.fixPath(path, offset) : path, offset);
+                fn(this.fixPath? this.fixPath(pathToExport, offset) : pathToExport, offset);
             }
         }
 

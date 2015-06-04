@@ -77,16 +77,16 @@ module Maker.Path {
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      * 
-     * @param path The path to mirror.
+     * @param pathToMirror The path to mirror.
      * @param mirrorX Boolean to mirror on the x axis.
      * @param mirrorY Boolean to mirror on the y axis.
      * @param newId Optional id to assign to the new path.
      * @returns Mirrored path.
      */
-    export function Mirror(path: IMakerPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IMakerPath {
+    export function Mirror(pathToMirror: IMakerPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IMakerPath {
 
         var newPath: IMakerPath = null;
-        var origin = Point.Mirror(path.origin, mirrorX, mirrorY);
+        var origin = Point.Mirror(pathToMirror.origin, mirrorX, mirrorY);
 
         var map: IMakerPathFunctionMap = {};
 
@@ -123,9 +123,9 @@ module Maker.Path {
                 );
         };
 
-        var fn = map[path.type];
+        var fn = map[pathToMirror.type];
         if (fn) {
-            fn(path);
+            fn(pathToMirror);
         }
 
         return newPath;
@@ -134,13 +134,13 @@ module Maker.Path {
     /**
      * Move a path's origin by a relative amount. Note: to move absolute, just set the origin property directly.
      * 
-     * @param path The path to move.
+     * @param pathToMove The path to move.
      * @param adjust The x & y adjustments, either as a point object, or as an array of numbers.
      * @returns The original path (for chaining).
      */
-    export function MoveRelative(path: IMakerPath, adjust: IMakerPoint): IMakerPath;
-    export function MoveRelative(path: IMakerPath, adjust: number[]): IMakerPath;
-    export function MoveRelative(path: IMakerPath, adjust: any): IMakerPath {
+    export function MoveRelative(pathToMove: IMakerPath, adjust: IMakerPoint): IMakerPath;
+    export function MoveRelative(pathToMove: IMakerPath, adjust: number[]): IMakerPath;
+    export function MoveRelative(pathToMove: IMakerPath, adjust: any): IMakerPath {
 
         var map: IMakerPathFunctionMap = {};
 
@@ -148,26 +148,26 @@ module Maker.Path {
             line.end = Point.Add(line.end, adjust);
         };
 
-        path.origin = Point.Add(path.origin, adjust);
+        pathToMove.origin = Point.Add(pathToMove.origin, adjust);
 
-        var fn = map[path.type];
+        var fn = map[pathToMove.type];
         if (fn) {
-            fn(path);
+            fn(pathToMove);
         }
 
-        return path;
+        return pathToMove;
     }
 
     /**
      * Rotate a path.
      * 
-     * @param path The path to rotate.
+     * @param pathToRotate The path to rotate.
      * @param angleInDegrees The amount of rotation, in degrees.
      * @param rotationOrigin The center point of rotation.
      * @returns The original path (for chaining).
      */
-    export function Rotate(path: IMakerPath, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPath {
-        if (angleInDegrees == 0) return path;
+    export function Rotate(pathToRotate: IMakerPath, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPath {
+        if (angleInDegrees == 0) return pathToRotate;
 
         var map: IMakerPathFunctionMap = {};
 
@@ -180,25 +180,25 @@ module Maker.Path {
             arc.endAngle += angleInDegrees;
         }
 
-        path.origin = Point.Rotate(path.origin, angleInDegrees, rotationOrigin);
+        pathToRotate.origin = Point.Rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
 
-        var fn = map[path.type];
+        var fn = map[pathToRotate.type];
         if (fn) {
-            fn(path);
+            fn(pathToRotate);
         }
 
-        return path;
+        return pathToRotate;
     }
 
     /**
      * Scale a path.
      * 
-     * @param path The path to scale.
+     * @param pathToScale The path to scale.
      * @param scale The amount of scaling.
      * @returns The original path (for chaining).
      */
-    export function Scale(path: IMakerPath, scale: number): IMakerPath {
-        if (scale == 1) return path;
+    export function Scale(pathToScale: IMakerPath, scale: number): IMakerPath {
+        if (scale == 1) return pathToScale;
 
         var map: IMakerPathFunctionMap = {};
 
@@ -212,14 +212,14 @@ module Maker.Path {
 
         map[PathType.Arc] = map[PathType.Circle];
 
-        path.origin = Point.Scale(path.origin, scale);
+        pathToScale.origin = Point.Scale(pathToScale.origin, scale);
 
-        var fn = map[path.type];
+        var fn = map[pathToScale.type];
         if (fn) {
-            fn(path);
+            fn(pathToScale);
         }
 
-        return path;
+        return pathToScale;
     }
 
 }

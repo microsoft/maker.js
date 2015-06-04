@@ -3,8 +3,8 @@
 module Maker.Exports {
 
     export function SVG(model: IMakerModel, options?: ISVGRenderOptions): string;
-    export function SVG(paths: IMakerPath[], options?: ISVGRenderOptions): string;
-    export function SVG(path: IMakerPath, options?: ISVGRenderOptions): string;
+    export function SVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
+    export function SVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
 
     /**
      * Renders an item in SVG markup.
@@ -40,9 +40,9 @@ module Maker.Exports {
             return Point.Scale(mirrorY, opts.scale);
         }
 
-        function fixPath(path: IMakerPath, origin: IMakerPoint): IMakerPath {
+        function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
             //mirror creates a copy, so we don't modify the original
-            var mirrorY = Path.Mirror(path, false, true);
+            var mirrorY = Path.Mirror(pathToFix, false, true);
             return Path.MoveRelative(Path.Scale(mirrorY, opts.scale), origin);
         }
 

@@ -204,7 +204,7 @@ module Maker {
         /**
          * Key is the type of a path, value is a function which accepts a path object as its parameter.
          */
-        [type: string]: (path: IMakerPath) => void;
+        [type: string]: (pathValue: IMakerPath) => void;
     }
 
     /**
@@ -215,7 +215,7 @@ module Maker {
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
-        [type: string]: (path: IMakerPath, origin: IMakerPoint) => void;
+        [type: string]: (pathValue: IMakerPath, origin: IMakerPoint) => void;
     }
 
     /**

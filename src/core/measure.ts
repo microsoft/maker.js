@@ -43,10 +43,10 @@ module Maker.Measure {
     /**
      * Calculates the smallest rectangle which contains a path.
      * 
-     * @param path The path to measure.
+     * @param pathToMeasure The path to measure.
      * @returns object with low and high points.
      */
-    export function PathExtents(path: IMakerPath): IMakerMeasure {
+    export function PathExtents(pathToMeasure: IMakerPath): IMakerMeasure {
         var map: IMakerPathFunctionMap = {};
         var measurement: IMakerMeasure = { low: null, high: null };
 
@@ -92,9 +92,9 @@ module Maker.Measure {
             measurement.high = extremeAngle(360, 90, r, Math.max);
         }
 
-        var fn = map[path.type];
+        var fn = map[pathToMeasure.type];
         if (fn) {
-            fn(path);
+            fn(pathToMeasure);
         }
 
         return measurement;
@@ -103,10 +103,10 @@ module Maker.Measure {
     /**
      * Measures the length of a path.
      * 
-     * @param path The path to measure.
+     * @param pathToMeasure The path to measure.
      * @returns Length of the path.
      */
-    export function PathLength(path: IMakerPath): number {
+    export function PathLength(pathToMeasure: IMakerPath): number {
         var map: IMakerPathFunctionMap = {};
         var value = 0;
 
@@ -124,9 +124,9 @@ module Maker.Measure {
             value *= pct;
         } 
 
-        var fn = map[path.type];
+        var fn = map[pathToMeasure.type];
         if (fn) {
-            fn(path);
+            fn(pathToMeasure);
         }
 
         return value;
