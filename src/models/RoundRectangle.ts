@@ -1,4 +1,4 @@
-﻿module Maker.Models {
+﻿module makerjs.Models {
 
     export class RoundRectangle implements IMakerModel {
 

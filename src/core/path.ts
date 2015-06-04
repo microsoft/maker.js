@@ -1,6 +1,6 @@
 ﻿/// <reference path="point.ts" />
 
-module Maker.Path {
+module makerjs.Path {
 
     /**
      * Shortcut to create a new arc path.

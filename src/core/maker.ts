@@ -15,7 +15,7 @@ and limitations under the License.
 
 //https://github.com/Microsoft/Maker.js
 
-module Maker {
+module makerjs {
 
     //units
 
@@ -276,4 +276,4 @@ module Maker {
 
 //CommonJs
 var module: any = <any>module || {};
-module.exports = Maker;
+module.exports = makerjs;
