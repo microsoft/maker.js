@@ -49,11 +49,11 @@ module makerjs.units {
      * Get a conversion ratio between a source unit and a destination unit. This will lazy load the table with initial conversions, 
      * then new cross-conversions will be cached in the table.
      * 
-     * @param srcUnitType UnitType converting from.
-     * @param destUnitType UnitType converting to.
+     * @param srcUnitType unitType converting from.
+     * @param destUnitType unitType converting to.
      * @returns Numeric ratio of the conversion.
      */
-    export function ConversionScale(srcUnitType: string, destUnitType: string): number {
+    export function conversionScale(srcUnitType: string, destUnitType: string): number {
 
         if (srcUnitType == destUnitType) {
             return 1;

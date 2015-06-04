@@ -8,22 +8,22 @@ module makerjs.model {
      * @param modelToFlatten The model to flatten.
      * @param origin Optional offset reference point.
      */
-    export function Flatten(modelToFlatten: IMakerModel, origin?: IMakerPoint) {
-        var newOrigin = point.Add(modelToFlatten.origin, origin);
+    export function flatten(modelToFlatten: IMakerModel, origin?: IMakerPoint) {
+        var newOrigin = point.add(modelToFlatten.origin, origin);
 
         if (modelToFlatten.paths) {
             for (var i = 0; i < modelToFlatten.paths.length; i++) {
-                path.MoveRelative(modelToFlatten.paths[i], newOrigin);
+                path.moveRelative(modelToFlatten.paths[i], newOrigin);
             }
         }
 
         if (modelToFlatten.models) {
             for (var i = 0; i < modelToFlatten.models.length; i++) {
-                Flatten(modelToFlatten.models[i], newOrigin);
+                flatten(modelToFlatten.models[i], newOrigin);
             }
         }
 
-        modelToFlatten.origin = point.Ensure();
+        modelToFlatten.origin = point.ensure();
 
         return modelToFlatten;
     }
@@ -36,7 +36,7 @@ module makerjs.model {
      * @param mirrorY Boolean to mirror on the y axis.
      * @returns Mirrored model.
      */
-    export function Mirror(modelToMirror: IMakerModel, mirrorX: boolean, mirrorY: boolean): IMakerModel {
+    export function mirror(modelToMirror: IMakerModel, mirrorX: boolean, mirrorY: boolean): IMakerModel {
         var newModel: IMakerModel = {};
 
         if (modelToMirror.id) {
@@ -44,7 +44,7 @@ module makerjs.model {
         }
 
         if (modelToMirror.origin) {
-            newModel.origin = point.Mirror(modelToMirror.origin, mirrorX, mirrorY);
+            newModel.origin = point.mirror(modelToMirror.origin, mirrorX, mirrorY);
         }
 
         if (modelToMirror.type) {
@@ -58,14 +58,14 @@ module makerjs.model {
         if (modelToMirror.paths) {
             newModel.paths = [];
             for (var i = 0; i < modelToMirror.paths.length; i++) {
-                newModel.paths.push(path.Mirror(modelToMirror.paths[i], mirrorX, mirrorY));
+                newModel.paths.push(path.mirror(modelToMirror.paths[i], mirrorX, mirrorY));
             }
         }
 
         if (modelToMirror.models) {
             newModel.models = [];
             for (var i = 0; i < modelToMirror.models.length; i++) {
-                newModel.models.push(model.Mirror(modelToMirror.models[i], mirrorX, mirrorY));
+                newModel.models.push(model.mirror(modelToMirror.models[i], mirrorX, mirrorY));
             }
         }
 
@@ -79,8 +79,8 @@ module makerjs.model {
      * @param origin The new position of the model.
      * @returns The original model (for chaining).
      */
-    export function Move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel {
-        modelToMove.origin = point.Clone(point.Ensure(origin));
+    export function move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel {
+        modelToMove.origin = point.clone(point.ensure(origin));
         return modelToMove;
     }
 
@@ -92,19 +92,19 @@ module makerjs.model {
      * @param rotationOrigin The center point of rotation.
      * @returns The original model (for chaining).
      */
-    export function Rotate(modelToRotate: IMakerModel, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerModel {
+    export function rotate(modelToRotate: IMakerModel, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerModel {
 
-        var offsetOrigin = point.Subtract(rotationOrigin, modelToRotate.origin);
+        var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
 
         if (modelToRotate.paths) {
             for (var i = 0; i < modelToRotate.paths.length; i++) {
-                path.Rotate(modelToRotate.paths[i], angleInDegrees, offsetOrigin);
+                path.rotate(modelToRotate.paths[i], angleInDegrees, offsetOrigin);
             }
         }
 
         if (modelToRotate.models) {
             for (var i = 0; i < modelToRotate.models.length; i++) {
-                Rotate(modelToRotate.models[i], angleInDegrees, offsetOrigin);
+                rotate(modelToRotate.models[i], angleInDegrees, offsetOrigin);
             }
         }
 
@@ -115,25 +115,25 @@ module makerjs.model {
      * Scale a model.
      * 
      * @param modelToScale The model to scale.
-     * @param scale The amount of scaling.
+     * @param scaleValue The amount of scaling.
      * @param scaleOrigin Optional boolean to scale the origin point. Typically false for the root model.
      * @returns The original model (for chaining).
      */
-    export function Scale(modelToScale: IMakerModel, scale: number, scaleOrigin = false): IMakerModel {
+    export function scale(modelToScale: IMakerModel, scaleValue: number, scaleOrigin = false): IMakerModel {
 
         if (scaleOrigin && modelToScale.origin) {
-            modelToScale.origin = point.Scale(modelToScale.origin, scale);
+            modelToScale.origin = point.scale(modelToScale.origin, scaleValue);
         }
 
         if (modelToScale.paths) {
             for (var i = 0; i < modelToScale.paths.length; i++) {
-                path.Scale(modelToScale.paths[i], scale);
+                path.scale(modelToScale.paths[i], scaleValue);
             }
         }
 
         if (modelToScale.models) {
             for (var i = 0; i < modelToScale.models.length; i++) {
-                Scale(modelToScale.models[i], scale, true);
+                scale(modelToScale.models[i], scaleValue, true);
             }
         }
 

@@ -26,7 +26,7 @@ module makerjs.exports {
             scale: 1,
             stroke: "blue",
             strokeWidth: 2,
-            origin: point.Zero(),
+            origin: point.zero(),
             useSvgPathOnly: false
         };
 
@@ -36,14 +36,14 @@ module makerjs.exports {
 
         function fixPoint(pointToFix: IMakerPoint): IMakerPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
-            var mirrorY = point.Mirror(pointToFix, false, true);
-            return point.Scale(mirrorY, opts.scale);
+            var mirrorY = point.mirror(pointToFix, false, true);
+            return point.scale(mirrorY, opts.scale);
         }
 
         function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
             //mirror creates a copy, so we don't modify the original
-            var mirrorY = path.Mirror(pathToFix, false, true);
-            return path.MoveRelative(path.Scale(mirrorY, opts.scale), origin);
+            var mirrorY = path.mirror(pathToFix, false, true);
+            return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
         }
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null, useStroke = true) {
@@ -60,7 +60,7 @@ module makerjs.exports {
                 tag.attrs["stroke-width"] = opts.strokeWidth;
             }
 
-            elements.push(tag.ToString());
+            elements.push(tag.toString());
         }
 
         function drawText(id: string, x: number, y: number) {
@@ -150,7 +150,7 @@ module makerjs.exports {
         };
 
         function svgArcData(d: any[], radius: number, endPoint: any, largeArc?: boolean, decreasing?: boolean) {
-            var end: IMakerPoint = point.Ensure(endPoint);
+            var end: IMakerPoint = point.ensure(endPoint);
             d.push(radius, radius);
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
@@ -160,7 +160,7 @@ module makerjs.exports {
 
         map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
 
-            var arcPoints = point.FromArc(arc);
+            var arcPoints = point.fromArc(arc);
 
             var d = ['A'];
             svgArcData(
@@ -180,7 +180,7 @@ module makerjs.exports {
         var svgTag = new XmlTag('svg');
         svgTag.innerText = elements.join('');
         svgTag.innerTextEscaped = true;
-        return svgTag.ToString();
+        return svgTag.toString();
     }
 
     /**

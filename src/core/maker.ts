@@ -22,7 +22,7 @@ module makerjs {
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise. 
      * A model may specify the unit system it is using, if any. When importing a model, it may have different units. 
-     * Unit conversion function is Maker.Units.ConversionScale().
+     * Unit conversion function is makerjs.units.conversionScale().
      * Important: If you add to this, you must also add a corresponding conversion ratio in the unit.ts file!
      */
     export var unitType = {
@@ -139,7 +139,7 @@ module makerjs {
     export interface IMakerPath extends IMakerId {
         
         /**
-         * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in PathType.
+         * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
          */
         type: string;
         

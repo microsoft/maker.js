@@ -28,8 +28,8 @@ module makerjs.Tools {
 
         function addLine(suffix: string, origin: IMakerPoint, end: IMakerPoint) {
             ret.push({
-                newPath: path.CreateLine(line.id + suffix, point.Clone(origin), point.Clone(end)),
-                newPoint: point.Clone(breakPoint)
+                newPath: path.CreateLine(line.id + suffix, point.clone(origin), point.clone(end)),
+                newPoint: point.clone(breakPoint)
             });
         }
 
@@ -41,20 +41,20 @@ module makerjs.Tools {
 
     breakPathFunctionMap[pathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
 
-        var breakAngle = measure.ArcAngle(arc) * breakAt + arc.startAngle;
+        var breakAngle = measure.arcAngle(arc) * breakAt + arc.startAngle;
 
         if (breakAngle >= 360) {
             breakAngle -= 360;
         }
 
-        var breakPoint = point.Add(arc.origin, point.FromPolar(angle.toRadians(breakAngle), arc.radius));
+        var breakPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(breakAngle), arc.radius));
 
         var ret: IMakerBrokenPath[] = [];
 
         function addArc(suffix: string, startAngle: number, endAngle: number) {
             ret.push({
-                newPath: path.CreateArc(arc.id + suffix, point.Clone(arc.origin), arc.radius, startAngle, endAngle),
-                newPoint: point.Clone(breakPoint)
+                newPath: path.CreateArc(arc.id + suffix, point.clone(arc.origin), arc.radius, startAngle, endAngle),
+                newPoint: point.clone(breakPoint)
             });
         }
 
@@ -105,7 +105,7 @@ module makerjs.Tools {
 
             function chop(line: IMakerPathLine, start: boolean) {
 
-                var len = measure.PathLength(line);
+                var len = measure.pathLength(line);
 
                 if (halfGap < len) {
 
@@ -134,11 +134,11 @@ module makerjs.Tools {
             var endAngle = breakAangle - halfGapAngle;
 
             var brokenPath = {
-                newPath: path.CreateArc(circle.id + "_1", point.Clone(circle.origin), circle.radius, startAngle, endAngle),
-                newPoint: point.Add(circle.origin, point.FromPolar(angle.toRadians(startAngle), circle.radius))
+                newPath: path.CreateArc(circle.id + "_1", point.clone(circle.origin), circle.radius, startAngle, endAngle),
+                newPoint: point.add(circle.origin, point.fromPolar(angle.toRadians(startAngle), circle.radius))
             };
 
-            append(brokenPath, point.Add(circle.origin, point.FromPolar(angle.toRadians(endAngle), circle.radius)));
+            append(brokenPath, point.add(circle.origin, point.fromPolar(angle.toRadians(endAngle), circle.radius)));
         };
 
         map[pathType.Arc] = function (arc: IMakerPathArc) {
@@ -148,7 +148,7 @@ module makerjs.Tools {
 
             function chop(arc: IMakerPathArc, start: boolean) {
 
-                var totalAngle = measure.ArcAngle(arc);
+                var totalAngle = measure.arcAngle(arc);
 
                 if (halfGapAngle < totalAngle) {
 

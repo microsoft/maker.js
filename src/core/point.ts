@@ -10,13 +10,13 @@ module makerjs.point {
      * @param subtract Optional boolean to subtract instead of add.
      * @returns A new point object.
      */
-    export function Add(a: IMakerPoint, b: IMakerPoint, subtract?: boolean): IMakerPoint;
-    export function Add(a: IMakerPoint, b: number[], subtract?: boolean): IMakerPoint;
-    export function Add(a: number[], b: IMakerPoint, subtract?: boolean): IMakerPoint;
-    export function Add(a: number[], b: number[], subtract?: boolean): IMakerPoint;
-    export function Add(a: any, b: any, subtract = false): IMakerPoint {
-        var p1 = Clone(Ensure(a));
-        var p2 = Ensure(b);
+    export function add(a: IMakerPoint, b: IMakerPoint, subtract?: boolean): IMakerPoint;
+    export function add(a: IMakerPoint, b: number[], subtract?: boolean): IMakerPoint;
+    export function add(a: number[], b: IMakerPoint, subtract?: boolean): IMakerPoint;
+    export function add(a: number[], b: number[], subtract?: boolean): IMakerPoint;
+    export function add(a: any, b: any, subtract = false): IMakerPoint {
+        var p1 = clone(ensure(a));
+        var p2 = ensure(b);
         if (subtract) {
             p1.x -= p2.x;
             p1.y -= p2.y;
@@ -33,7 +33,7 @@ module makerjs.point {
      * @param pointToClone The point to clone.
      * @returns A new point with same values as the original.
      */
-    export function Clone(pointToClone: IMakerPoint): IMakerPoint {
+    export function clone(pointToClone: IMakerPoint): IMakerPoint {
         return { x: pointToClone.x, y: pointToClone.y };
     }
 
@@ -43,13 +43,13 @@ module makerjs.point {
      * @param pointToEnsure The object to ensure; may be a point object, or an array of numbers, or something else which will attempt to coerce into a point.
      * @returns A new point object either with the x, y values corresponding to the input, or 0,0 coordinates.
      */
-    export function Ensure(pointToEnsure: IMakerPoint): IMakerPoint;
-    export function Ensure(pointToEnsure: number[]): IMakerPoint;
-    export function Ensure(): IMakerPoint;
-    export function Ensure(pointToEnsure?: any): IMakerPoint {
+    export function ensure(pointToEnsure: IMakerPoint): IMakerPoint;
+    export function ensure(pointToEnsure: number[]): IMakerPoint;
+    export function ensure(): IMakerPoint;
+    export function ensure(pointToEnsure?: any): IMakerPoint {
 
         if (!pointToEnsure) {
-            return Zero();
+            return zero();
         }
 
         if (isPoint(pointToEnsure)) {
@@ -64,7 +64,7 @@ module makerjs.point {
             return { x: arguments[0], y: arguments[0] };
         }
 
-        return Zero();
+        return zero();
     }
 
     /**
@@ -74,7 +74,7 @@ module makerjs.point {
      * @param radius The radius of the polar coordinate.
      * @returns A new point object.
      */
-    export function FromPolar(angleInRadians: number, radius: number): IMakerPoint {
+    export function fromPolar(angleInRadians: number, radius: number): IMakerPoint {
         return {
             x: radius * Math.cos(angleInRadians),
             y: radius * Math.sin(angleInRadians)
@@ -87,10 +87,10 @@ module makerjs.point {
      * @param arc The arc path object.
      * @returns Array with 2 elements: [0] is the point object corresponding to the start angle, [1] is the point object corresponding to the end angle.
      */
-    export function FromArc(arc: IMakerPathArc): IMakerPoint[] {
+    export function fromArc(arc: IMakerPathArc): IMakerPoint[] {
 
         function getPointFromAngle(a: number) {
-            return Add(arc.origin, FromPolar(angle.toRadians(a), arc.radius));
+            return add(arc.origin, fromPolar(angle.toRadians(a), arc.radius));
         }
 
         return [getPointFromAngle(arc.startAngle), getPointFromAngle(arc.endAngle)];
@@ -104,8 +104,8 @@ module makerjs.point {
      * @param mirrorY Boolean to mirror on the y axis.
      * @returns Mirrored point.
      */
-    export function Mirror(pointToMirror: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
-        var p = Clone(Ensure(pointToMirror));
+    export function mirror(pointToMirror: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
+        var p = clone(ensure(pointToMirror));
 
         if (mirrorX) {
             p.x = -p.x;
@@ -126,25 +126,25 @@ module makerjs.point {
      * @param rotationOrigin The center point of rotation.
      * @returns A new point.
      */
-    export function Rotate(pointToRotate: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint {
+    export function rotate(pointToRotate: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint {
         var pointAngleInRadians = angle.fromPointToRadians(pointToRotate, rotationOrigin);
-        var d = measure.PointDistance(rotationOrigin, pointToRotate);
-        var rotatedPoint = FromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
+        var d = measure.pointDistance(rotationOrigin, pointToRotate);
+        var rotatedPoint = fromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
 
-        return Add(rotationOrigin, rotatedPoint);
+        return add(rotationOrigin, rotatedPoint);
     }
 
     /**
      * Scale a point's coordinates.
      * 
      * @param pointToScale The point to scale.
-     * @param scale The amount of scaling.
+     * @param scaleValue The amount of scaling.
      * @returns A new point.
      */
-    export function Scale(pointToScale: IMakerPoint, scale: number): IMakerPoint {
-        var p = Clone(Ensure(pointToScale));
-        p.x *= scale;
-        p.y *= scale;
+    export function scale(pointToScale: IMakerPoint, scaleValue: number): IMakerPoint {
+        var p = clone(ensure(pointToScale));
+        p.x *= scaleValue;
+        p.y *= scaleValue;
         return p;
     }
 
@@ -155,12 +155,12 @@ module makerjs.point {
      * @param b Second point, either as a point object, or as an array of numbers.
      * @returns A new point object.
      */
-    export function Subtract(a: IMakerPoint, b: IMakerPoint): IMakerPoint;
-    export function Subtract(a: IMakerPoint, b: number[]): IMakerPoint;
-    export function Subtract(a: number[], b: IMakerPoint): IMakerPoint;
-    export function Subtract(a: number[], b: number[]): IMakerPoint;
-    export function Subtract(a: any, b: any): IMakerPoint {
-        return Add(a, b, true);
+    export function subtract(a: IMakerPoint, b: IMakerPoint): IMakerPoint;
+    export function subtract(a: IMakerPoint, b: number[]): IMakerPoint;
+    export function subtract(a: number[], b: IMakerPoint): IMakerPoint;
+    export function subtract(a: number[], b: number[]): IMakerPoint;
+    export function subtract(a: any, b: any): IMakerPoint {
+        return add(a, b, true);
     }
 
     /**
@@ -168,7 +168,7 @@ module makerjs.point {
      * 
      * @returns A new point.
      */
-    export function Zero(): IMakerPoint {
+    export function zero(): IMakerPoint {
         return { x: 0, y: 0 };
     }
 

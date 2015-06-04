@@ -43,7 +43,7 @@ module makerjs.exports {
          */
         public exportModel(modelToExport: IMakerModel, offset: IMakerPoint) {
 
-            var newOffset = point.Add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
+            var newOffset = point.add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
 
             if (modelToExport.paths) {
                 for (var i = 0; i < modelToExport.paths.length; i++) {
@@ -109,7 +109,7 @@ module makerjs.exports {
          * 
          * @returns Escaped string.
          */
-        public static EscapeString(value: string): string {
+        public static escapeString(value: string): string {
             var escape = {
                 '&': '&amp;',
                 '<': '&lt;',
@@ -135,14 +135,14 @@ module makerjs.exports {
         /**
          * Output the tag as a string.
          */
-        public ToString(): string {
+        public toString(): string {
             var attrs = '';
 
             for (var name in this.attrs) {
                 var value = this.attrs[name];
 
                 if (typeof value == 'string') {
-                    value = XmlTag.EscapeString(value);
+                    value = XmlTag.escapeString(value);
                 }
 
                 attrs += ' ' + name + '="' + value + '"';
@@ -156,7 +156,7 @@ module makerjs.exports {
                 if (this.innerTextEscaped) {
                     closeTag += this.innerText;
                 } else {
-                    closeTag += XmlTag.EscapeString(this.innerText);
+                    closeTag += XmlTag.escapeString(this.innerText);
                 }
 
                 closeTag += '</' + this.name + '>';
