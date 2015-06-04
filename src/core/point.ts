@@ -90,7 +90,7 @@ module makerjs.point {
     export function FromArc(arc: IMakerPathArc): IMakerPoint[] {
 
         function getPointFromAngle(a: number) {
-            return Add(arc.origin, FromPolar(angle.ToRadians(a), arc.radius));
+            return Add(arc.origin, FromPolar(angle.toRadians(a), arc.radius));
         }
 
         return [getPointFromAngle(arc.startAngle), getPointFromAngle(arc.endAngle)];
@@ -127,9 +127,9 @@ module makerjs.point {
      * @returns A new point.
      */
     export function Rotate(pointToRotate: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint {
-        var pointAngleInRadians = angle.FromPointToRadians(pointToRotate, rotationOrigin);
+        var pointAngleInRadians = angle.fromPointToRadians(pointToRotate, rotationOrigin);
         var d = measure.PointDistance(rotationOrigin, pointToRotate);
-        var rotatedPoint = FromPolar(pointAngleInRadians + angle.ToRadians(angleInDegrees), d);
+        var rotatedPoint = FromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
 
         return Add(rotationOrigin, rotatedPoint);
     }

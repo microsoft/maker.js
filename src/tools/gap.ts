@@ -47,7 +47,7 @@ module makerjs.Tools {
             breakAngle -= 360;
         }
 
-        var breakPoint = point.Add(arc.origin, point.FromPolar(angle.ToRadians(breakAngle), arc.radius));
+        var breakPoint = point.Add(arc.origin, point.FromPolar(angle.toRadians(breakAngle), arc.radius));
 
         var ret: IMakerBrokenPath[] = [];
 
@@ -128,23 +128,23 @@ module makerjs.Tools {
         map[pathType.Circle] = function (circle: IMakerPathCircle) {
 
             var breakAangle = 360 * breakAt;
-            var halfGapAngle = angle.FromRadians(Math.asin(halfGap / circle.radius));
+            var halfGapAngle = angle.toDegrees(Math.asin(halfGap / circle.radius));
 
             var startAngle = breakAangle + halfGapAngle;
             var endAngle = breakAangle - halfGapAngle;
 
             var brokenPath = {
                 newPath: path.CreateArc(circle.id + "_1", point.Clone(circle.origin), circle.radius, startAngle, endAngle),
-                newPoint: point.Add(circle.origin, point.FromPolar(angle.ToRadians(startAngle), circle.radius))
+                newPoint: point.Add(circle.origin, point.FromPolar(angle.toRadians(startAngle), circle.radius))
             };
 
-            append(brokenPath, point.Add(circle.origin, point.FromPolar(angle.ToRadians(endAngle), circle.radius)));
+            append(brokenPath, point.Add(circle.origin, point.FromPolar(angle.toRadians(endAngle), circle.radius)));
         };
 
         map[pathType.Arc] = function (arc: IMakerPathArc) {
 
             var firstBreak = breakPath(arc, breakAt);
-            var halfGapAngle = angle.FromRadians(Math.asin(halfGap / arc.radius));
+            var halfGapAngle = angle.toDegrees(Math.asin(halfGap / arc.radius));
 
             function chop(arc: IMakerPathArc, start: boolean) {
 

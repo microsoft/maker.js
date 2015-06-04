@@ -110,8 +110,8 @@ module makerjs.path {
 
         map[pathType.Arc] = function (arc: IMakerPathArc) {
 
-            var startAngle = angle.Mirror(arc.startAngle, mirrorX, mirrorY);
-            var endAngle = angle.Mirror(angle.ArcEndAnglePastZero(arc), mirrorX, mirrorY);
+            var startAngle = angle.mirror(arc.startAngle, mirrorX, mirrorY);
+            var endAngle = angle.mirror(angle.arcEndAnglePastZero(arc), mirrorX, mirrorY);
             var xor = mirrorX != mirrorY;
 
             newPath = path.CreateArc(

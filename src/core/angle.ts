@@ -8,7 +8,7 @@ module makerjs.angle {
      * @param angleInDegrees Angle in degrees.
      * @returns Angle in radians.
      */
-    export function ToRadians(angleInDegrees: number): number {
+    export function toRadians(angleInDegrees: number): number {
         if (angleInDegrees == 360) {
             return 0;
         }
@@ -21,7 +21,7 @@ module makerjs.angle {
      * @param angleInRadians Angle in radians.
      * @returns Angle in degrees.
      */
-    export function FromRadians(angleInRadians: number): number {
+    export function toDegrees(angleInRadians: number): number {
         return angleInRadians * 180.0 / Math.PI;
     }
 
@@ -31,7 +31,7 @@ module makerjs.angle {
      * @param arc An arc path object.
      * @returns End angle of arc.
      */
-    export function ArcEndAnglePastZero(arc: IMakerPathArc): number {
+    export function arcEndAnglePastZero(arc: IMakerPathArc): number {
         //compensate for values past zero. This allows easy compute of total angle size.
         //for example 0 = 360
         if (arc.endAngle < arc.startAngle) {
@@ -47,7 +47,7 @@ module makerjs.angle {
      * @param origin (Optional 0,0 implied) point of origin of the angle.
      * @returns Angle of the line throught the point.
      */
-    export function FromPointToRadians(pointToFindAngle: IMakerPoint, origin?: IMakerPoint): number {
+    export function fromPointToRadians(pointToFindAngle: IMakerPoint, origin?: IMakerPoint): number {
         var d = point.Subtract(pointToFindAngle, origin);
         return Math.atan2(d.y, d.x);
     }
@@ -60,7 +60,7 @@ module makerjs.angle {
      * @param mirrorY Boolean to mirror on the y axis.
      * @returns Mirrored angle.
      */
-    export function Mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number {
+    export function mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number {
 
         if (mirrorY) {
             angleInDegrees = 360 - angleInDegrees;

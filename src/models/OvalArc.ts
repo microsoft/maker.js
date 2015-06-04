@@ -7,7 +7,7 @@
         constructor(public startAngle: number, public endAngle: number, public sweepRadius: number, public slotRadius: number) {
 
             var addCap = (id: string, tiltAngle: number, offsetStartAngle: number, offsetEndAngle: number) => {
-                var p = point.FromPolar(angle.ToRadians(tiltAngle), sweepRadius);
+                var p = point.FromPolar(angle.toRadians(tiltAngle), sweepRadius);
                 this.paths.push(path.CreateArc(id, p, slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle));
             };
 
