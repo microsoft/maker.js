@@ -1,9 +1,9 @@
-﻿/// <reference path="../maker.ts" />
+﻿/// <reference path="../core/maker.ts" />
 
-module Maker.Tools {
+module makerjs.Tools {
 
     interface IMakerBrokenPath {
-        path: IMakerPath;
+        newPath: IMakerPath;
         newPoint: IMakerPoint;
     }
 
@@ -20,7 +20,7 @@ module Maker.Tools {
 
     var breakPathFunctionMap: IMakerBreakPathFunctionMap = {};
 
-    breakPathFunctionMap[PathType.Line] = function (line: IMakerPathLine, breakAt: number): IMakerBrokenPath[] {
+    breakPathFunctionMap[pathType.Line] = function (line: IMakerPathLine, breakAt: number): IMakerBrokenPath[] {
 
         var breakPoint: IMakerPoint = midPoint(line.origin, line.end, breakAt);
 
@@ -28,8 +28,8 @@ module Maker.Tools {
 
         function addLine(suffix: string, origin: IMakerPoint, end: IMakerPoint) {
             ret.push({
-                path: Path.CreateLine(line.id + suffix, Point.Clone(origin), Point.Clone(end)),
-                newPoint: Point.Clone(breakPoint)
+                newPath: createLine(line.id + suffix, point.clone(origin), point.clone(end)),
+                newPoint: point.clone(breakPoint)
             });
         }
 
@@ -39,27 +39,27 @@ module Maker.Tools {
         return ret;
     };
 
-    breakPathFunctionMap[PathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
+    breakPathFunctionMap[pathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
 
-        var angle = Measure.ArcAngle(arc) * breakAt + arc.startAngle;
+        var breakAngle = measure.arcAngle(arc) * breakAt + arc.startAngle;
 
-        if (angle >= 360) {
-            angle -= 360;
+        if (breakAngle >= 360) {
+            breakAngle -= 360;
         }
 
-        var breakPoint = Point.Add(arc.origin, Point.FromPolar(Angle.ToRadians(angle), arc.radius));
+        var breakPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(breakAngle), arc.radius));
 
         var ret: IMakerBrokenPath[] = [];
 
         function addArc(suffix: string, startAngle: number, endAngle: number) {
             ret.push({
-                path: Path.CreateArc(arc.id + suffix, Point.Clone(arc.origin), arc.radius, startAngle, endAngle),
-                newPoint: Point.Clone(breakPoint)
+                newPath: createArc(arc.id + suffix, point.clone(arc.origin), arc.radius, startAngle, endAngle),
+                newPoint: point.clone(breakPoint)
             });
         }
 
-        addArc("_1", arc.startAngle, angle);
-        addArc("_2", angle, arc.endAngle);
+        addArc("_1", arc.startAngle, breakAngle);
+        addArc("_2", breakAngle, arc.endAngle);
 
         return ret;
     };
@@ -74,22 +74,22 @@ module Maker.Tools {
         return null;
     }
 
-    export function GapPath(model: IMakerModel, pathId: string, gapLength: number, breakAt: number= .5): IMakerPoint[] {
+    export function GapPath(modelToGap: IMakerModel, pathId: string, gapLength: number, breakAt: number= .5): IMakerPoint[] {
 
-        var found = FindById<IMakerPath>(model.paths, pathId);
+        var found = findById<IMakerPath>(modelToGap.paths, pathId);
 
         if (!found) return null;
 
-        model.paths.splice(found.index, 1); //remove the path from the array
+        modelToGap.paths.splice(found.index, 1); //remove the path from the array
 
-        var path = found.item;
+        var foundPath = found.item;
 
         var halfGap = gapLength / 2;
 
         var ret: IMakerPoint[] = [];
 
         function append(brokenPath: IMakerBrokenPath, extraPoint?: IMakerPoint) {
-            model.paths.push(brokenPath.path);
+            modelToGap.paths.push(brokenPath.newPath);
             ret.push(brokenPath.newPoint);
 
             if (extraPoint) {
@@ -99,13 +99,13 @@ module Maker.Tools {
 
         var map: IMakerPathFunctionMap = {};
 
-        map[PathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IMakerPathLine) {
 
             var firstBreak = breakPath(line, breakAt);
 
             function chop(line: IMakerPathLine, start: boolean) {
 
-                var len = Measure.PathLength(line);
+                var len = measure.pathLength(line);
 
                 if (halfGap < len) {
 
@@ -121,34 +121,34 @@ module Maker.Tools {
                 } //todo add point else
             }
 
-            chop(<IMakerPathLine>firstBreak[0].path, true);
-            chop(<IMakerPathLine>firstBreak[1].path, false);
+            chop(<IMakerPathLine>firstBreak[0].newPath, true);
+            chop(<IMakerPathLine>firstBreak[1].newPath, false);
         };
 
-        map[PathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IMakerPathCircle) {
 
-            var angle = 360 * breakAt;
-            var halfGapAngle = Angle.FromRadians(Math.asin(halfGap / circle.radius));
+            var breakAangle = 360 * breakAt;
+            var halfGapAngle = angle.toDegrees(Math.asin(halfGap / circle.radius));
 
-            var startAngle = angle + halfGapAngle;
-            var endAngle = angle - halfGapAngle;
+            var startAngle = breakAangle + halfGapAngle;
+            var endAngle = breakAangle - halfGapAngle;
 
             var brokenPath = {
-                path: Path.CreateArc(circle.id + "_1", Point.Clone(circle.origin), circle.radius, startAngle, endAngle),
-                newPoint: Point.Add(circle.origin, Point.FromPolar(Angle.ToRadians(startAngle), circle.radius))
+                newPath: createArc(circle.id + "_1", point.clone(circle.origin), circle.radius, startAngle, endAngle),
+                newPoint: point.add(circle.origin, point.fromPolar(angle.toRadians(startAngle), circle.radius))
             };
 
-            append(brokenPath, Point.Add(circle.origin, Point.FromPolar(Angle.ToRadians(endAngle), circle.radius)));
+            append(brokenPath, point.add(circle.origin, point.fromPolar(angle.toRadians(endAngle), circle.radius)));
         };
 
-        map[PathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IMakerPathArc) {
 
             var firstBreak = breakPath(arc, breakAt);
-            var halfGapAngle = Angle.FromRadians(Math.asin(halfGap / arc.radius));
+            var halfGapAngle = angle.toDegrees(Math.asin(halfGap / arc.radius));
 
             function chop(arc: IMakerPathArc, start: boolean) {
 
-                var totalAngle = Measure.ArcAngle(arc);
+                var totalAngle = measure.arcAngle(arc);
 
                 if (halfGapAngle < totalAngle) {
 
@@ -164,13 +164,13 @@ module Maker.Tools {
                 }  //todo add point else
             }
 
-            chop(<IMakerPathArc>firstBreak[0].path, true);
-            chop(<IMakerPathArc>firstBreak[1].path, false);
+            chop(<IMakerPathArc>firstBreak[0].newPath, true);
+            chop(<IMakerPathArc>firstBreak[1].newPath, false);
         };
 
-        var fn = map[path.type];
+        var fn = map[foundPath.type];
         if (fn) {
-            fn(path);
+            fn(foundPath);
         }
 
         return ret;

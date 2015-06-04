@@ -15,17 +15,17 @@ and limitations under the License.
 
 //https://github.com/Microsoft/Maker.js
 
-module Maker {
+module makerjs {
 
     //units
 
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise. 
      * A model may specify the unit system it is using, if any. When importing a model, it may have different units. 
-     * Unit conversion function is Maker.Units.ConversionScale().
+     * Unit conversion function is makerjs.units.conversionScale().
      * Important: If you add to this, you must also add a corresponding conversion ratio in the unit.ts file!
      */
-    export var UnitType = {
+    export var unitType = {
         Centimeter: 'cm',
         Foot: 'foot',
         Inch: 'inch',
@@ -40,7 +40,7 @@ module Maker {
      * @param other An object containing properties to merge in.
      * @returns The original object after merging.
      */
-    export function ExtendObject(target: Object, other: Object) {
+    export function extendObject(target: Object, other: Object) {
         if (other) {
             for (var key in other) {
                 if (typeof other[key] !== 'undefined') {
@@ -81,7 +81,7 @@ module Maker {
      * @param id Id of the item to find.
      * @returns object with item and its position.
      */
-    export function FindById<T extends IMakerId>(arr: T[], id: string): IMakerFound<T> {
+    export function findById<T extends IMakerId>(arr: T[], id: string): IMakerFound<T> {
         if (arr) {
             for (var i = 0; i < arr.length; i++) {
                 var item = arr[i];
@@ -111,7 +111,7 @@ module Maker {
      * 
      * @param item The item to test.
      */
-    export function IsPoint(item: any) {
+    export function isPoint(item: any) {
         return item && ('x' in item) && ('y' in item); //values might be zero so use "in"
     }
 
@@ -139,7 +139,7 @@ module Maker {
     export interface IMakerPath extends IMakerId {
         
         /**
-         * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in PathType.
+         * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
          */
         type: string;
         
@@ -154,7 +154,7 @@ module Maker {
      * 
      * @param item The item to test.
      */
-    export function IsPath(item: any): boolean {
+    export function isPath(item: any): boolean {
         return item && item.type && item.origin;
     }
 
@@ -204,7 +204,7 @@ module Maker {
         /**
          * Key is the type of a path, value is a function which accepts a path object as its parameter.
          */
-        [type: string]: (path: IMakerPath) => void;
+        [type: string]: (pathValue: IMakerPath) => void;
     }
 
     /**
@@ -215,13 +215,13 @@ module Maker {
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
-        [type: string]: (path: IMakerPath, origin: IMakerPoint) => void;
+        [type: string]: (pathValue: IMakerPath, origin: IMakerPoint) => void;
     }
 
     /**
      * String-based enumeration of all paths types.
      */
-    export var PathType = {
+    export var pathType = {
         Line: "line",
         Circle: "circle",
         Arc: "arc"
@@ -268,12 +268,85 @@ module Maker {
     /**
      * Test to see if an object implements the required properties of a model.
      */
-    export function IsModel(item: any): boolean {
+    export function isModel(item: any): boolean {
         return item && (item.paths || item.models);
     }
 
+    //shortcuts
+
+    /**
+     * Shortcut to create a new arc path.
+     * 
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param radius The radius of the arc.
+     * @param startAngle The start angle of the arc.
+     * @param endAngle The end angle of the arc.
+     * @returns A new POJO representing an arc path.
+     */
+    export function createArc(id: string, origin: IMakerPoint, radius: number, startAngle: number, endAngle: number): IMakerPathArc;
+    export function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IMakerPathArc;
+    export function createArc(id: string, origin: any, radius: number, startAngle: number, endAngle: number): IMakerPathArc {
+
+        var arc: IMakerPathArc = {
+            type: pathType.Arc,
+            id: id,
+            origin: point.ensure(origin),
+            radius: radius,
+            startAngle: startAngle,
+            endAngle: endAngle
+        };
+
+        return arc;
+    }
+
+    /**
+     * Shortcut to create a new circle path.
+     * 
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param radius The radius of the circle.
+     * @returns A new POJO representing an circle path.
+     */
+    export function createCircle(id: string, origin: IMakerPoint, radius: number): IMakerPathCircle;
+    export function createCircle(id: string, origin: number[], radius: number): IMakerPathCircle;
+    export function createCircle(id: string, origin: any, radius: number): IMakerPathCircle {
+
+        var circle: IMakerPathCircle = {
+            type: pathType.Circle,
+            id: id,
+            origin: point.ensure(origin),
+            radius: radius
+        };
+
+        return circle;
+    }
+
+    /**
+     * Shortcut to create a new line path.
+     * 
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param end The end point of the line.
+     * @returns A new POJO representing an line path.
+     */
+    export function createLine(id: string, origin: IMakerPoint, end: IMakerPoint): IMakerPathLine;
+    export function createLine(id: string, origin: number[], end: IMakerPoint): IMakerPathLine;
+    export function createLine(id: string, origin: IMakerPoint, end: number[]): IMakerPathLine;
+    export function createLine(id: string, origin: number[], end: number[]): IMakerPathLine;
+    export function createLine(id: string, origin: any, end: any): IMakerPathLine {
+
+        var line: IMakerPathLine = {
+            type: pathType.Line,
+            id: id,
+            origin: point.ensure(origin),
+            end: point.ensure(end)
+        };
+
+        return line;
+    }
 }
 
 //CommonJs
 var module: any = <any>module || {};
-module.exports = Maker;
+module.exports = makerjs;

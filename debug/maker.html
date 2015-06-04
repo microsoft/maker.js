@@ -4,17 +4,18 @@
 
     <link href="viewer.css" rel="stylesheet" />
 
-    <script src="../src/maker.js"></script>
-    <script src="../src/angle.js"></script>
-    <script src="../src/point.js"></script>
-    <script src="../src/units.js"></script>
-    <script src="../src/measure.js"></script>
-    <script src="../src/path.js"></script>
-    <script src="../src/model.js"></script>
-    <script src="../src/tools.gap.js"></script>
-    <script src="../src/exports.js"></script>
-    <script src="../src/exports.dxf.js"></script>
-    <script src="../src/exports.svg.js"></script>
+    <script src="../src/core/maker.js"></script>
+    <script src="../src/core/angle.js"></script>
+    <script src="../src/core/point.js"></script>
+    <script src="../src/core/units.js"></script>
+    <script src="../src/core/measure.js"></script>
+    <script src="../src/core/path.js"></script>
+    <script src="../src/core/model.js"></script>
+    <script src="../src/core/tools.gap.js"></script>
+    <script src="../src/core/exporter.js"></script>
+    <script src="../src/core/dxf.js"></script>
+    <script src="../src/core/xml.js"></script>
+    <script src="../src/core/svg.js"></script>
     <script src="../src/models/RoundRectangle.js"></script>
     <script src="../src/models/BoltRectangle.js"></script>
     <script src="../src/models/BoltCircle.js"></script>
@@ -38,41 +39,41 @@
             this.paths = [];
             this.models = [];
 
-            var circle = Maker.Path.CreateCircle('c1', [], Math.min(params.height, params.width) / 2 - .5);
+            var circle = makerjs.createCircle('c1', [], Math.min(params.height, params.width) / 2 - .5);
 
             if (params.radius < 0.5) {
-                this.models.push(Maker.Model.Move(new Maker.Models.BoltRectangle(params.width - .4, params.height - .4, .07), [.2, .2]));
+                this.models.push(makerjs.model.move(new makerjs.models.BoltRectangle(params.width - .4, params.height - .4, .07), [.2, .2]));
             }
 
-            this.paths.push(Maker.Path.MoveRelative(circle, [params.width / 2, params.height / 2]));
+            this.paths.push(makerjs.path.moveRelative(circle, [params.width / 2, params.height / 2]));
 
-            this.models.push(new Maker.Models.RoundRectangle(params.width, params.height, params.radius));
+            this.models.push(new makerjs.models.RoundRectangle(params.width, params.height, params.radius));
 
-            this.models.push(Maker.Model.Move(new Maker.Models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
+            this.models.push(makerjs.model.move(new makerjs.models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
 
-            Maker.Model.Rotate(this, params.angle);
+            makerjs.model.rotate(this, params.angle);
         }
 
         Viewer.Render = function (newParams) {
 
             //apply slider parameters
-            Maker.ExtendObject(myViewParams, newParams);
+            makerjs.extendObject(myViewParams, newParams);
 
             //modeling
             var myModel = {
                 models: [new myModelFactory(myViewParams)]
             };
 
-            var m = Maker.Measure.ModelExtents(myModel.models[0]);
+            var m = makerjs.measure.modelExtents(myModel.models[0]);
             var x = m.high.x - m.low.x + .025;
 
             for (var i = 1; i < myViewParams.count; i++) {
-                myModel.models.push(Maker.Model.Move(new myModelFactory(myViewParams), [x * i, 0]));
+                myModel.models.push(makerjs.model.move(new myModelFactory(myViewParams), [x * i, 0]));
             }
 
             //svg output
             var annotate = document.getElementById('checkAnnotate').checked;
-            var svg = Maker.Exports.SVG(myModel, { origin: Viewer.SvgOrigin, scale: Viewer.ViewScale, annotate: annotate });
+            var svg = makerjs.exporter.toSVG(myModel, { origin: Viewer.SvgOrigin, scale: Viewer.ViewScale, annotate: annotate });
             document.getElementById("svg-zone").innerHTML = svg;
 
             return myModel;

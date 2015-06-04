@@ -1,20 +1,20 @@
 ﻿/// <reference path="maker.ts" />
 
-module Maker.Units {
+module makerjs.units {
 
     /**
      * The base type is arbitrary. Other conversions are then based off of this.
      */
-    var base = UnitType.Centimeter;
+    var base = unitType.Centimeter;
 
     /**
      * Initialize all known conversions here.
      */
     function init() {
-        addBaseConversion(UnitType.Millimeter, 0.1);
-        addBaseConversion(UnitType.Meter, 100);
-        addBaseConversion(UnitType.Inch, 2.54);
-        addBaseConversion(UnitType.Foot, 2.54 * 12);
+        addBaseConversion(unitType.Millimeter, 0.1);
+        addBaseConversion(unitType.Meter, 100);
+        addBaseConversion(unitType.Inch, 2.54);
+        addBaseConversion(unitType.Foot, 2.54 * 12);
     }
 
     /**
@@ -49,11 +49,11 @@ module Maker.Units {
      * Get a conversion ratio between a source unit and a destination unit. This will lazy load the table with initial conversions, 
      * then new cross-conversions will be cached in the table.
      * 
-     * @param srcUnitType UnitType converting from.
-     * @param destUnitType UnitType converting to.
+     * @param srcUnitType unitType converting from.
+     * @param destUnitType unitType converting to.
      * @returns Numeric ratio of the conversion.
      */
-    export function ConversionScale(srcUnitType: string, destUnitType: string): number {
+    export function conversionScale(srcUnitType: string, destUnitType: string): number {
 
         if (srcUnitType == destUnitType) {
             return 1;

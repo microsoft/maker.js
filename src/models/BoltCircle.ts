@@ -1,4 +1,4 @@
-﻿module Maker.Models {
+﻿module makerjs.models {
 
     export class BoltCircle implements IMakerModel {
 
@@ -6,13 +6,13 @@
 
         constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle: number = 0) {
 
-            var a1 = Maker.Angle.ToRadians(firstBoltAngle);
+            var a1 = angle.toRadians(firstBoltAngle);
             var a = 2 * Math.PI / boltCount;
 
             for (var i = 0; i < boltCount; i++) {
-                var o = Maker.Point.FromPolar(a * i + a1, boltRadius);
+                var o = point.fromPolar(a * i + a1, boltRadius);
 
-                this.paths.push(Path.CreateCircle("bolt " + i, o, holeRadius));
+                this.paths.push(createCircle("bolt " + i, o, holeRadius));
             }
 
         }

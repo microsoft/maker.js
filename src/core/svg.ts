@@ -1,10 +1,11 @@
-﻿/// <reference path="exports.ts" />
+﻿/// <reference path="exporter.ts" />
+/// <reference path="xml.ts" />
 
-module Maker.Exports {
+module makerjs.exporter {
 
-    export function SVG(model: IMakerModel, options?: ISVGRenderOptions): string;
-    export function SVG(paths: IMakerPath[], options?: ISVGRenderOptions): string;
-    export function SVG(path: IMakerPath, options?: ISVGRenderOptions): string;
+    export function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
+    export function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
+    export function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
 
     /**
      * Renders an item in SVG markup.
@@ -15,35 +16,35 @@ module Maker.Exports {
      * @param options.scale Number to scale the SVG rendering.
      * @param options.stroke String color of the rendered paths.
      * @param options.strokeWidth Number width of the rendered paths.
-     * @param options.origin Point object for the rendered reference origin.
+     * @param options.origin point object for the rendered reference origin.
      * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
      * @returns String of XML / SVG content.
      */
-    export function SVG(itemToExport: any, options?: ISVGRenderOptions): string {
+    export function toSVG(itemToExport: any, options?: ISVGRenderOptions): string {
 
         var opts: ISVGRenderOptions = {
             annotate: false,
             scale: 1,
             stroke: "blue",
             strokeWidth: 2,
-            origin: Point.Zero(),
+            origin: point.zero(),
             useSvgPathOnly: false
         };
 
-        ExtendObject(opts, options);
+        extendObject(opts, options);
 
         var elements: string[] = [];
 
-        function fixPoint(point: IMakerPoint): IMakerPoint {
+        function fixPoint(pointToFix: IMakerPoint): IMakerPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
-            var mirrorY = Point.Mirror(point, false, true);
-            return Point.Scale(mirrorY, opts.scale);
+            var mirrorY = point.mirror(pointToFix, false, true);
+            return point.scale(mirrorY, opts.scale);
         }
 
-        function fixPath(path: IMakerPath, origin: IMakerPoint): IMakerPath {
+        function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
             //mirror creates a copy, so we don't modify the original
-            var mirrorY = Path.Mirror(path, false, true);
-            return Path.MoveRelative(Path.Scale(mirrorY, opts.scale), origin);
+            var mirrorY = path.mirror(pathToFix, false, true);
+            return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
         }
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null, useStroke = true) {
@@ -60,7 +61,7 @@ module Maker.Exports {
                 tag.attrs["stroke-width"] = opts.strokeWidth;
             }
 
-            elements.push(tag.ToString());
+            elements.push(tag.toString());
         }
 
         function drawText(id: string, x: number, y: number) {
@@ -90,7 +91,7 @@ module Maker.Exports {
 
         var map: IMakerPathOriginFunctionMap = {};
 
-        map[PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+        map[pathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
 
             var start = line.origin;
             var end = line.end;
@@ -114,7 +115,7 @@ module Maker.Exports {
             }
         };
 
-        map[PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+        map[pathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
 
             var center = circle.origin;
 
@@ -150,7 +151,7 @@ module Maker.Exports {
         };
 
         function svgArcData(d: any[], radius: number, endPoint: any, largeArc?: boolean, decreasing?: boolean) {
-            var end: IMakerPoint = Point.Ensure(endPoint);
+            var end: IMakerPoint = point.ensure(endPoint);
             d.push(radius, radius);
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
@@ -158,9 +159,9 @@ module Maker.Exports {
             d.push(end.x, end.y);
         }
 
-        map[PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
+        map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
 
-            var arcPoints = Point.FromArc(arc);
+            var arcPoints = point.fromArc(arc);
 
             var d = ['A'];
             svgArcData(
@@ -174,13 +175,13 @@ module Maker.Exports {
             drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
         };
 
-        var exporter = new Exporter(map, fixPoint, fixPath);
-        exporter.exportItem(itemToExport, opts.origin);
+        var exp = new Exporter(map, fixPoint, fixPath);
+        exp.exportItem(itemToExport, opts.origin);
 
         var svgTag = new XmlTag('svg');
         svgTag.innerText = elements.join('');
         svgTag.innerTextEscaped = true;
-        return svgTag.ToString();
+        return svgTag.toString();
     }
 
     /**

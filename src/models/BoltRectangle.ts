@@ -1,4 +1,4 @@
-﻿module Maker.Models {
+﻿module makerjs.models {
 
     export class BoltRectangle implements IMakerModel {
 
@@ -14,7 +14,7 @@
             };
 
             for (var id in holes) {
-                this.paths.push(Path.CreateCircle(id + "_bolt", holes[id], holeRadius));
+                this.paths.push(createCircle(id + "_bolt", holes[id], holeRadius));
             }
         }
     }
