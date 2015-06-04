@@ -30,7 +30,7 @@ module makerjs.exports {
             useSvgPathOnly: false
         };
 
-        ExtendObject(opts, options);
+        extendObject(opts, options);
 
         var elements: string[] = [];
 
@@ -90,7 +90,7 @@ module makerjs.exports {
 
         var map: IMakerPathOriginFunctionMap = {};
 
-        map[PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+        map[pathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
 
             var start = line.origin;
             var end = line.end;
@@ -114,7 +114,7 @@ module makerjs.exports {
             }
         };
 
-        map[PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+        map[pathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
 
             var center = circle.origin;
 
@@ -158,7 +158,7 @@ module makerjs.exports {
             d.push(end.x, end.y);
         }
 
-        map[PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
+        map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
 
             var arcPoints = point.FromArc(arc);
 

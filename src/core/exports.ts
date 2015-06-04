@@ -66,7 +66,7 @@ module makerjs.exports {
          */
         public exportItem(item: any, origin: IMakerPoint) {
 
-            if (IsModel(item)) {
+            if (isModel(item)) {
                 this.exportModel(<IMakerModel>item, origin);
 
             } else if (Array.isArray(item)) {
@@ -75,7 +75,7 @@ module makerjs.exports {
                     this.exportItem(items[i], origin);
                 }
 
-            } else if (IsPath(item)) {
+            } else if (isPath(item)) {
                 this.exportPath(<IMakerPath>item, origin);
             }
         }

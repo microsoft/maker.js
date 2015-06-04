@@ -50,18 +50,18 @@ module makerjs.measure {
         var map: IMakerPathFunctionMap = {};
         var measurement: IMakerMeasure = { low: null, high: null };
 
-        map[PathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IMakerPathLine) {
             measurement.low = getExtremePoint(line.origin, line.end, Math.min);
             measurement.high = getExtremePoint(line.origin, line.end, Math.max);
         }
 
-        map[PathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IMakerPathCircle) {
             var r = circle.radius;
             measurement.low = point.Add(circle.origin, { x: -r, y: -r });
             measurement.high = point.Add(circle.origin, { x: r, y: r });
         }
 
-        map[PathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IMakerPathArc) {
             var r = arc.radius;
             var startPoint = point.FromPolar(angle.ToRadians(arc.startAngle), r);
             var endPoint = point.FromPolar(angle.ToRadians(arc.endAngle), r);
@@ -110,16 +110,16 @@ module makerjs.measure {
         var map: IMakerPathFunctionMap = {};
         var value = 0;
 
-        map[PathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IMakerPathLine) {
             value = PointDistance(line.origin, line.end);
         }
 
-        map[PathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IMakerPathCircle) {
             value = 2 * Math.PI * circle.radius;
         }
 
-        map[PathType.Arc] = function (arc: IMakerPathArc) {
-            map[PathType.Circle](arc); //this sets the value var
+        map[pathType.Arc] = function (arc: IMakerPathArc) {
+            map[pathType.Circle](arc); //this sets the value var
             var pct = ArcAngle(arc) / 360;
             value *= pct;
         } 

@@ -52,7 +52,7 @@ module makerjs.point {
             return Zero();
         }
 
-        if (IsPoint(pointToEnsure)) {
+        if (isPoint(pointToEnsure)) {
             return pointToEnsure;
         }
 

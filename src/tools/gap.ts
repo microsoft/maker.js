@@ -20,7 +20,7 @@ module makerjs.Tools {
 
     var breakPathFunctionMap: IMakerBreakPathFunctionMap = {};
 
-    breakPathFunctionMap[PathType.Line] = function (line: IMakerPathLine, breakAt: number): IMakerBrokenPath[] {
+    breakPathFunctionMap[pathType.Line] = function (line: IMakerPathLine, breakAt: number): IMakerBrokenPath[] {
 
         var breakPoint: IMakerPoint = midPoint(line.origin, line.end, breakAt);
 
@@ -39,7 +39,7 @@ module makerjs.Tools {
         return ret;
     };
 
-    breakPathFunctionMap[PathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
+    breakPathFunctionMap[pathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
 
         var breakAngle = measure.ArcAngle(arc) * breakAt + arc.startAngle;
 
@@ -76,7 +76,7 @@ module makerjs.Tools {
 
     export function GapPath(modelToGap: IMakerModel, pathId: string, gapLength: number, breakAt: number= .5): IMakerPoint[] {
 
-        var found = FindById<IMakerPath>(modelToGap.paths, pathId);
+        var found = findById<IMakerPath>(modelToGap.paths, pathId);
 
         if (!found) return null;
 
@@ -99,7 +99,7 @@ module makerjs.Tools {
 
         var map: IMakerPathFunctionMap = {};
 
-        map[PathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IMakerPathLine) {
 
             var firstBreak = breakPath(line, breakAt);
 
@@ -125,7 +125,7 @@ module makerjs.Tools {
             chop(<IMakerPathLine>firstBreak[1].newPath, false);
         };
 
-        map[PathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IMakerPathCircle) {
 
             var breakAangle = 360 * breakAt;
             var halfGapAngle = angle.FromRadians(Math.asin(halfGap / circle.radius));
@@ -141,7 +141,7 @@ module makerjs.Tools {
             append(brokenPath, point.Add(circle.origin, point.FromPolar(angle.ToRadians(endAngle), circle.radius)));
         };
 
-        map[PathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IMakerPathArc) {
 
             var firstBreak = breakPath(arc, breakAt);
             var halfGapAngle = angle.FromRadians(Math.asin(halfGap / arc.radius));

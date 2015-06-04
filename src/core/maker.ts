@@ -25,7 +25,7 @@ module makerjs {
      * Unit conversion function is Maker.Units.ConversionScale().
      * Important: If you add to this, you must also add a corresponding conversion ratio in the unit.ts file!
      */
-    export var UnitType = {
+    export var unitType = {
         Centimeter: 'cm',
         Foot: 'foot',
         Inch: 'inch',
@@ -40,7 +40,7 @@ module makerjs {
      * @param other An object containing properties to merge in.
      * @returns The original object after merging.
      */
-    export function ExtendObject(target: Object, other: Object) {
+    export function extendObject(target: Object, other: Object) {
         if (other) {
             for (var key in other) {
                 if (typeof other[key] !== 'undefined') {
@@ -81,7 +81,7 @@ module makerjs {
      * @param id Id of the item to find.
      * @returns object with item and its position.
      */
-    export function FindById<T extends IMakerId>(arr: T[], id: string): IMakerFound<T> {
+    export function findById<T extends IMakerId>(arr: T[], id: string): IMakerFound<T> {
         if (arr) {
             for (var i = 0; i < arr.length; i++) {
                 var item = arr[i];
@@ -111,7 +111,7 @@ module makerjs {
      * 
      * @param item The item to test.
      */
-    export function IsPoint(item: any) {
+    export function isPoint(item: any) {
         return item && ('x' in item) && ('y' in item); //values might be zero so use "in"
     }
 
@@ -154,7 +154,7 @@ module makerjs {
      * 
      * @param item The item to test.
      */
-    export function IsPath(item: any): boolean {
+    export function isPath(item: any): boolean {
         return item && item.type && item.origin;
     }
 
@@ -221,7 +221,7 @@ module makerjs {
     /**
      * String-based enumeration of all paths types.
      */
-    export var PathType = {
+    export var pathType = {
         Line: "line",
         Circle: "circle",
         Arc: "arc"
@@ -268,7 +268,7 @@ module makerjs {
     /**
      * Test to see if an object implements the required properties of a model.
      */
-    export function IsModel(item: any): boolean {
+    export function isModel(item: any): boolean {
         return item && (item.paths || item.models);
     }
 

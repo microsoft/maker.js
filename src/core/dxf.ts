@@ -20,10 +20,10 @@ module makerjs.exports {
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
 
         var opts: IDXFRenderOptions = {
-            units: UnitType.Millimeter
+            units: unitType.Millimeter
         };
 
-        ExtendObject(opts, options);
+        extendObject(opts, options);
 
         var dxf: string[] = [];
 
@@ -33,7 +33,7 @@ module makerjs.exports {
 
         var map: IMakerPathOriginFunctionMap = {};
 
-        map[PathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+        map[pathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
             append("0");
             append("LINE");
             append("8");
@@ -48,7 +48,7 @@ module makerjs.exports {
             append(line.end.y + origin.y);
         };
 
-        map[PathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+        map[pathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
             append("0");
             append("CIRCLE");
             append("8");
@@ -61,7 +61,7 @@ module makerjs.exports {
             append(circle.radius);
         };
 
-        map[PathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
+        map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
             append("0");
             append("ARC");
             append("8");
@@ -123,11 +123,11 @@ module makerjs.exports {
     //0 = Unitless; 1 = Inches; 2 = Feet; 3 = Miles; 4 = Millimeters; 5 = Centimeters; 6 = Meters; 7 = Kilometers; 8 = Microinches;
     var dxfUnit: { [unitType: string]: number } = {};
     dxfUnit[''] = 0;
-    dxfUnit[UnitType.Inch] = 1;
-    dxfUnit[UnitType.Foot] = 2;
-    dxfUnit[UnitType.Millimeter] = 4;
-    dxfUnit[UnitType.Centimeter] = 5;
-    dxfUnit[UnitType.Meter] = 6;
+    dxfUnit[unitType.Inch] = 1;
+    dxfUnit[unitType.Foot] = 2;
+    dxfUnit[unitType.Millimeter] = 4;
+    dxfUnit[unitType.Centimeter] = 5;
+    dxfUnit[unitType.Meter] = 6;
 
     /**
      * DXF rendering options.
