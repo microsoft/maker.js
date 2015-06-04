@@ -16,7 +16,7 @@ module makerjs.Measure {
      * @returns Angle of arc.
      */
     export function ArcAngle(arc: IMakerPathArc): number {
-        var endAngle = Angle.ArcEndAnglePastZero(arc);
+        var endAngle = angle.ArcEndAnglePastZero(arc);
         return endAngle - arc.startAngle;
     }
 
@@ -63,11 +63,11 @@ module makerjs.Measure {
 
         map[PathType.Arc] = function (arc: IMakerPathArc) {
             var r = arc.radius;
-            var startPoint = Point.FromPolar(Angle.ToRadians(arc.startAngle), r);
-            var endPoint = Point.FromPolar(Angle.ToRadians(arc.endAngle), r);
+            var startPoint = Point.FromPolar(angle.ToRadians(arc.startAngle), r);
+            var endPoint = Point.FromPolar(angle.ToRadians(arc.endAngle), r);
 
             var startAngle = arc.startAngle;
-            var endAngle = Angle.ArcEndAnglePastZero(arc);
+            var endAngle = angle.ArcEndAnglePastZero(arc);
 
             if (startAngle < 0) {
                 startAngle += 360;
