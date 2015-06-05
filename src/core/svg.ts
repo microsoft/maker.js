@@ -27,7 +27,7 @@ module makerjs.exporter {
             scale: 1,
             stroke: "blue",
             strokeWidth: 2,
-            origin: point.zero(),
+            origin: null,
             useSvgPathOnly: false
         };
 
@@ -174,6 +174,26 @@ module makerjs.exporter {
 
             drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
         };
+
+        //measure the item to move it into svg area
+        if (!opts.origin) {
+
+            var modelToMeasure: IMakerModel;
+
+            if (isModel(itemToExport)) {
+                modelToMeasure = <IMakerModel>itemToExport;
+
+            } else if (Array.isArray(itemToExport)) {
+                //issue: this won't handle an array of models
+                modelToMeasure = { paths: <IMakerPath[]>itemToExport };
+
+            } else if (isPath(itemToExport)) {
+                modelToMeasure = { paths: [(<IMakerPath>itemToExport)] };
+            }
+
+            var size = makerjs.measure.modelExtents(modelToMeasure);
+            opts.origin = { x: -size.low.x * opts.scale, y: size.high.y * opts.scale };
+        }
 
         var exp = new Exporter(map, fixPoint, fixPath);
         exp.exportItem(itemToExport, opts.origin);
