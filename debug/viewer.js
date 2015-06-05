@@ -1,6 +1,5 @@
 ﻿
 var Viewer = {
-    SvgOrigin: [100, 300],
     ViewModel: null,
     ViewScale: 100,
     Render: function (newParams) { },
@@ -58,11 +57,6 @@ var Viewer = {
             Viewer.ViewScale = Math.max(Viewer.ViewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * scaleDelta, 1);
             Viewer.Refresh();
         };
-
-        //show crosshairs
-        var size = 50;
-        var crossHairs = [makerjs.createLine('v', [0, size], [0, -size]), makerjs.createLine('h', [-size, 0], [size, 0]), ];
-        view.innerHTML += makerjs.exporter.toSVG(crossHairs, { origin: Viewer.SvgOrigin, stroke: 'red', strokeWidth: 1 });
 
         //render model
         Viewer.Refresh();

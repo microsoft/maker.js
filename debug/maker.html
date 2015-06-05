@@ -24,8 +24,6 @@
 
     <script>
 
-        Viewer.SvgOrigin = [150, 400];
-
         var myViewParams = {
             count: 1,
             height: 3,
@@ -73,7 +71,7 @@
 
             //svg output
             var annotate = document.getElementById('checkAnnotate').checked;
-            var svg = makerjs.exporter.toSVG(myModel, { origin: Viewer.SvgOrigin, scale: Viewer.ViewScale, annotate: annotate });
+            var svg = makerjs.exporter.toSVG(myModel, { scale: Viewer.ViewScale, annotate: annotate });
             document.getElementById("svg-zone").innerHTML = svg;
 
             return myModel;

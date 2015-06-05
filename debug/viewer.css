@@ -26,6 +26,9 @@ svg, #svg-zone, #export-zone {
     height: 100%;
     width: 100%;
 }
+svg {
+    padding: 1px;
+}
 #export-zone {
     overflow: scroll;
     display: none;
