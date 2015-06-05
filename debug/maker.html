@@ -86,11 +86,11 @@
 <body>
 
     <div class="panel">
-        count: <input type="range" min="1" max="10" step="1" value="1" onchange="Viewer.Render({ count: this.valueAsNumber })" />
-        height: <input type="range" min="1" max="7" step=".1" value="3" onchange="Viewer.Render({ height: this.valueAsNumber })" />
-        width: <input type="range" min="1" max="7" step=".1" value="4" onchange="Viewer.Render({ width: this.valueAsNumber })" />
-        radius: <input type="range" min="0" max="2" step=".1" value=".25" onchange="Viewer.Render({ radius: this.valueAsNumber })" />
-        angle: <input type="range" min="-90" max="90" step="2.5" value="0" onchange="Viewer.Render({ angle: this.valueAsNumber })" />
+        count: <input type="range" min="1" max="10" step="1" value="1" onchange="Viewer.Refresh({ count: this.valueAsNumber })" />
+        height: <input type="range" min="1" max="7" step=".1" value="3" onchange="Viewer.Refresh({ height: this.valueAsNumber })" />
+        width: <input type="range" min="1" max="7" step=".1" value="4" onchange="Viewer.Refresh({ width: this.valueAsNumber })" />
+        radius: <input type="range" min="0" max="2" step=".1" value=".25" onchange="Viewer.Refresh({ radius: this.valueAsNumber })" />
+        angle: <input type="range" min="-90" max="90" step="2.5" value="0" onchange="Viewer.Refresh({ angle: this.valueAsNumber })" />
     </div>
 
     <div id="view">
@@ -102,7 +102,7 @@
         <a href="#" onmouseover="Viewer.showExport('dxf')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
         <a href="#" onmouseover="Viewer.showExport('svg')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
         <a href="#" onmouseover="Viewer.showExport('json')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
-        <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="Viewer.Render()" />
+        <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="Viewer.Refresh()" />
         <div class="logo">Maker.js</div>
     </div>
 

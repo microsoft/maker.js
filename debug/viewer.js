@@ -3,7 +3,10 @@ var Viewer = {
     SvgOrigin: [100, 300],
     ViewModel: null,
     ViewScale: 100,
-    Render: function () { },
+    Render: function (newParams) { },
+    Refresh: function (newParams) {
+        Viewer.ViewModel = Viewer.Render(newParams);
+    },
 
     getRaw: function (type) {
         switch (type) {
@@ -53,7 +56,7 @@ var Viewer = {
         view.onwheel = view.onmousewheel = function (ev) {
             var scaleDelta = 10;
             Viewer.ViewScale = Math.max(Viewer.ViewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * scaleDelta, 1);
-            Viewer.ViewModel = Viewer.Render();
+            Viewer.Refresh();
         };
 
         //show crosshairs
@@ -62,7 +65,7 @@ var Viewer = {
         view.innerHTML += makerjs.exporter.toSVG(crossHairs, { origin: Viewer.SvgOrigin, stroke: 'red', strokeWidth: 1 });
 
         //render model
-        Viewer.ViewModel = Viewer.Render();
+        Viewer.Refresh();
     }
 };
 
