@@ -4,6 +4,22 @@
 
 module makerjs.exporter {
 
+    export interface IMakerExportOptions {
+        /**
+         * Unit system to embed in exported file.
+         */
+        units?: string;
+    }
+
+    /**
+     * Try to get the unit system from a model
+     */
+    export function tryGetModelUnits(itemToExport: any) {
+        if (isModel(itemToExport)) {
+            return (<IMakerModel>itemToExport).units;
+        }
+    }
+
     /**
      * Class to traverse an item 's models or paths and ultimately render each path.
      */
@@ -64,19 +80,19 @@ module makerjs.exporter {
          * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
          * @param offset The offset position of the object.
          */
-        public exportItem(item: any, origin: IMakerPoint) {
+        public exportItem(itemToExport: any, origin: IMakerPoint) {
 
-            if (isModel(item)) {
-                this.exportModel(<IMakerModel>item, origin);
+            if (isModel(itemToExport)) {
+                this.exportModel(<IMakerModel>itemToExport, origin);
 
-            } else if (Array.isArray(item)) {
-                var items: any[] = item;
+            } else if (Array.isArray(itemToExport)) {
+                var items: any[] = itemToExport;
                 for (var i = 0; i < items.length; i++) {
                     this.exportItem(items[i], origin);
                 }
 
-            } else if (isPath(item)) {
-                this.exportPath(<IMakerPath>item, origin);
+            } else if (isPath(itemToExport)) {
+                this.exportPath(<IMakerPath>itemToExport, origin);
             }
         }
 

@@ -11,7 +11,7 @@ module makerjs.exporter {
      * 
      * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
      * @param options Rendering options object.
-     * @param options.units String from Maker.UnitType enumeration.
+     * @param options.units String of the unit system. May be omitted. See makerjs.unitType for possible values.
      * @returns String of DXF content.
      */
     export function toDXF(itemToExport: any, options?: IDXFRenderOptions): string {
@@ -19,9 +19,7 @@ module makerjs.exporter {
         //DXF format documentation:
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
 
-        var opts: IDXFRenderOptions = {
-            units: unitType.Millimeter
-        };
+        var opts: IDXFRenderOptions = {};
 
         extendObject(opts, options);
 
@@ -89,13 +87,15 @@ module makerjs.exporter {
         }
 
         function header() {
+            var units = dxfUnit[opts.units];
+
             append("2");
             append("HEADER");
 
             append("9");
             append("$INSUNITS");
             append("70");
-            append(dxfUnit[opts.units]);
+            append(units);
         }
 
         function entities() {
@@ -106,9 +106,24 @@ module makerjs.exporter {
             exporter.exportItem(itemToExport, point.zero());
         }
 
+        //fixup options
+
+        if (!opts.units) {
+            var units = tryGetModelUnits(itemToExport);
+            if (units) {
+                opts.units = units;
+            }
+        }
+
+        //also pass back to options parameter
+        extendObject(options, opts);
+
         //begin dxf output
 
-        section(header);
+        if (opts.units) {
+            section(header);
+        }
+
         section(entities);
 
         append("0");
@@ -132,11 +147,7 @@ module makerjs.exporter {
     /**
      * DXF rendering options.
      */
-    export interface IDXFRenderOptions {
-        /**
-         * Unit system to embed in DXF file. See UnitType for possible values.
-         */
-        units: string;
+    export interface IDXFRenderOptions extends IMakerExportOptions {
     }
 
 }

@@ -20,7 +20,7 @@ input[type=range] {
     right: 20px;
     overflow: hidden;
 }
-svg, #svg-zone, #export-zone {
+svg, .svg-zone, #export-zone {
     position: absolute;
     top: 0;
     height: 100%;

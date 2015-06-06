@@ -3,6 +3,16 @@
 
 module makerjs.exporter {
 
+    /**
+     * The default stroke width in millimeters.
+     */
+    export var defaultStrokeWidth = 0.2;
+
+    function round(n: number) {
+        var places = 1000000;
+        return Math.round(n * places) / places;
+    }
+
     export function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
     export function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
     export function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
@@ -13,10 +23,11 @@ module makerjs.exporter {
      * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
      * @param options Rendering options object.
      * @param options.annotate Boolean to indicate that the id's of paths should be rendered as SVG text elements.
+     * @param options.origin point object for the rendered reference origin.
      * @param options.scale Number to scale the SVG rendering.
      * @param options.stroke String color of the rendered paths.
-     * @param options.strokeWidth Number width of the rendered paths.
-     * @param options.origin point object for the rendered reference origin.
+     * @param options.strokeWidth Number width of the rendered paths, in the same units as the units parameter.
+     * @param options.units String of the unit system. May be omitted. See makerjs.unitType for possible values.
      * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
      * @returns String of XML / SVG content.
      */
@@ -24,11 +35,11 @@ module makerjs.exporter {
 
         var opts: ISVGRenderOptions = {
             annotate: false,
-            scale: 1,
-            stroke: "blue",
-            strokeWidth: 2,
             origin: null,
-            useSvgPathOnly: false
+            scale: 1,
+            stroke: "#000",
+            useSvgPathOnly: true,
+            viewBox: true
         };
 
         extendObject(opts, options);
@@ -37,8 +48,8 @@ module makerjs.exporter {
 
         function fixPoint(pointToFix: IMakerPoint): IMakerPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
-            var mirrorY = point.mirror(pointToFix, false, true);
-            return point.scale(mirrorY, opts.scale);
+            var pointMirroredY = point.mirror(pointToFix, false, true);
+            return point.scale(pointMirroredY, opts.scale);
         }
 
         function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
@@ -81,7 +92,7 @@ module makerjs.exporter {
                 "path",
                 {
                     "id": id,
-                    "d": ["M", x, y].concat(d).join(" ")
+                    "d": ["M", round(x), round(y)].concat(d).join(" ")
                 });
 
             if (opts.annotate) {
@@ -103,10 +114,10 @@ module makerjs.exporter {
                     "line",
                     {
                         "id": line.id,
-                        "x1": start.x,
-                        "y1": start.y,
-                        "x2": end.x,
-                        "y2": end.y
+                        "x1": round(start.x),
+                        "y1": round(start.y),
+                        "x2": round(end.x),
+                        "y2": round(end.y)
                     });
             }
 
@@ -140,8 +151,8 @@ module makerjs.exporter {
                     {
                         "id": circle.id,
                         "r": circle.radius,
-                        "cx": center.x,
-                        "cy": center.y
+                        "cx": round(center.x),
+                        "cy": round(center.y)
                     });
             }
 
@@ -156,7 +167,7 @@ module makerjs.exporter {
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
             d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
-            d.push(end.x, end.y);
+            d.push(round(end.x), round(end.y));
         }
 
         map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
@@ -175,44 +186,85 @@ module makerjs.exporter {
             drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
         };
 
+        //fixup options
+
         //measure the item to move it into svg area
+
+        var modelToMeasure: IMakerModel;
+
+        if (isModel(itemToExport)) {
+            modelToMeasure = <IMakerModel>itemToExport;
+
+        } else if (Array.isArray(itemToExport)) {
+            //issue: this won't handle an array of models
+            modelToMeasure = { paths: <IMakerPath[]>itemToExport };
+
+        } else if (isPath(itemToExport)) {
+            modelToMeasure = { paths: [(<IMakerPath>itemToExport)] };
+        }
+
+        var size = makerjs.measure.modelExtents(modelToMeasure);
+
         if (!opts.origin) {
-
-            var modelToMeasure: IMakerModel;
-
-            if (isModel(itemToExport)) {
-                modelToMeasure = <IMakerModel>itemToExport;
-
-            } else if (Array.isArray(itemToExport)) {
-                //issue: this won't handle an array of models
-                modelToMeasure = { paths: <IMakerPath[]>itemToExport };
-
-            } else if (isPath(itemToExport)) {
-                modelToMeasure = { paths: [(<IMakerPath>itemToExport)] };
-            }
-
-            var size = makerjs.measure.modelExtents(modelToMeasure);
             opts.origin = { x: -size.low.x * opts.scale, y: size.high.y * opts.scale };
         }
+
+        if (!opts.units) {
+            var unitSystem = tryGetModelUnits(itemToExport);
+            if (unitSystem) {
+                opts.units = unitSystem;
+            }
+        }
+
+        if (!opts.strokeWidth) {
+            if (!opts.units) {
+                opts.strokeWidth = defaultStrokeWidth;
+            } else {
+                opts.strokeWidth = units.conversionScale(unitType.Millimeter, opts.units) * defaultStrokeWidth;
+            }
+        }
+
+        //also pass back to options parameter
+        extendObject(options, opts);
+
+        //begin svg output
 
         var exp = new Exporter(map, fixPoint, fixPath);
         exp.exportItem(itemToExport, opts.origin);
 
-        var svgTag = new XmlTag('svg');
+        var svgAttrs;
+
+        if (opts.viewBox) {
+            var width = round(size.high.x - size.low.x);
+            var height = round(size.high.y - size.low.y);
+            var viewBox = [0, 0, width, height];
+            var unit = svgUnit[opts.units] || '';
+            svgAttrs = { width: width + unit, height: height + unit, viewBox: viewBox.join(' ') };
+        }
+
+        var svgTag = new XmlTag('svg', svgAttrs);
         svgTag.innerText = elements.join('');
         svgTag.innerTextEscaped = true;
         return svgTag.toString();
     }
 
+    //SVG Coordinate Systems, Transformations and Units documentation:
+    //http://www.w3.org/TR/SVG/coords.html
+    //The supported length unit identifiers are: em, ex, px, pt, pc, cm, mm, in, and percentages.
+    var svgUnit: { [unitType: string]: string } = {};
+    svgUnit[unitType.Inch] = "in";
+    svgUnit[unitType.Millimeter] = "mm";
+    svgUnit[unitType.Centimeter] = "cm";
+
     /**
      * SVG rendering options.
      */
-    export interface ISVGRenderOptions {
+    export interface ISVGRenderOptions extends IMakerExportOptions {
 
         /**
-         * SVG stroke width of paths.
+         * SVG stroke width of paths. This is in the same unit system as the units property.
          */
-        strokeWidth: number;
+        strokeWidth?: number;
 
         /**
          * SVG color of the rendered paths.
@@ -238,6 +290,11 @@ module makerjs.exporter {
          * Use SVG <path> elements instead of <line>, <circle> etc.
          */
         useSvgPathOnly: boolean;
+
+        /**
+         * Flag to use SVG viewbox. 
+         */
+        viewBox: boolean;
     }
 
 } 

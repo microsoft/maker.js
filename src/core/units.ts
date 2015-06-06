@@ -5,16 +5,16 @@ module makerjs.units {
     /**
      * The base type is arbitrary. Other conversions are then based off of this.
      */
-    var base = unitType.Centimeter;
+    var base = unitType.Millimeter;
 
     /**
      * Initialize all known conversions here.
      */
     function init() {
-        addBaseConversion(unitType.Millimeter, 0.1);
-        addBaseConversion(unitType.Meter, 100);
-        addBaseConversion(unitType.Inch, 2.54);
-        addBaseConversion(unitType.Foot, 2.54 * 12);
+        addBaseConversion(unitType.Centimeter, 10);
+        addBaseConversion(unitType.Meter, 1000);
+        addBaseConversion(unitType.Inch, 25.4);
+        addBaseConversion(unitType.Foot, 25.4 * 12);
     }
 
     /**
