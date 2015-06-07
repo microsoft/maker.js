@@ -4,7 +4,9 @@
 
         public paths: IMakerPath[] = [];
 
-        constructor(public isClosed: boolean, public points: IMakerPoint[]) {
+        constructor(isClosed: boolean, points: IMakerPoint[]);
+        constructor(isClosed: boolean, points: number[][]);
+        constructor(public isClosed: boolean, public points: any[]) {
 
             var connect = (a: number, b: number) => {
                 this.paths.push(createLine("ShapeLine" + i, points[a], points[b]));

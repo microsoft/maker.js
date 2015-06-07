@@ -10,13 +10,23 @@ var Viewer = {
 
         //apply slider parameters
         for (var paramName in newParams) {
-            Viewer.Params[paramName].value = newParams[paramName];
-        }
+            Viewer.Params[paramName].value = makerjs.round(newParams[paramName], .001);
+        }        
 
         var values = {};
+        var valuesHtml = '';
         for (var paramName in Viewer.Params) {
-            values[paramName] = Viewer.Params[paramName].value;
+            var value = Viewer.Params[paramName].value;
+            values[paramName] = value;
+
+            if (valuesHtml) {
+                valuesHtml += ',<br/>';
+            }
+            valuesHtml += '"' + paramName + '": "' + value + '"';
         }
+        valuesHtml = '{<br/>' + valuesHtml + '<br/>}';
+        document.getElementById('paramValues').innerHTML = valuesHtml;
+
         var model = Viewer.Render(values);
 
         Viewer.ViewModel = model;

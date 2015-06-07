@@ -34,6 +34,17 @@ module makerjs {
     };
 
     /**
+     * Numeric rounding
+     * 
+     * @param n The number to round off.
+     * @param accuracy Optional exemplar of number of decimal places.
+     */
+    export function round(n: number, accuracy = .0000001) {
+        var places = 1 / accuracy;
+        return Math.round(n * places) / places;
+    }
+
+    /**
      * Copy the properties from one object to another object.
      * 
      * @param target The object to extend. It will receive the new properties.

@@ -36,12 +36,16 @@
     <div class="selectModelCode">
         <label for="selectModelCode">model: </label>
         <select id="selectModelCode" onchange="Viewer.loadModelCode(this.value)">
+            <option>m.js</option>
             <option>testPanel.js</option>
             <option>tubeclamp.js</option>
         </select>
     </div>
 
-    <div id="params">
+    <div id="paramBar">
+        <div id="params">
+        </div>
+        <div id="paramValues"></div>
     </div>
 
     <div id="view">
