@@ -8,8 +8,8 @@ module makerjs.exporter {
      */
     export var defaultStrokeWidth = 0.2;
 
-    function round(n: number) {
-        var places = 1000000;
+    function round(n: number, accuracy = .0000001) {
+        var places = 1 / accuracy;
         return Math.round(n * places) / places;
     }
 
@@ -108,7 +108,7 @@ module makerjs.exporter {
             var end = line.end;
 
             if (opts.useSvgPathOnly) {
-                drawPath(line.id, start.x, start.y, [end.x, end.y]);
+                drawPath(line.id, start.x, start.y, [round(end.x), round(end.y)]);
             } else {
                 createElement(
                     "line",
@@ -137,7 +137,7 @@ module makerjs.exporter {
 
                 function halfCircle(sign: number) {
                     d.push('a');
-                    svgArcData(d, r, [2 * r * sign, 0]);
+                    svgArcData(d, r, { x: 2 * r * sign, y: 0 });
                 }
 
                 halfCircle(1);
@@ -161,8 +161,8 @@ module makerjs.exporter {
             }
         };
 
-        function svgArcData(d: any[], radius: number, endPoint: any, largeArc?: boolean, decreasing?: boolean) {
-            var end: IMakerPoint = point.ensure(endPoint);
+        function svgArcData(d: any[], radius: number, endPoint: IMakerPoint, largeArc?: boolean, decreasing?: boolean) {
+            var end: IMakerPoint = endPoint;
             d.push(radius, radius);
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
@@ -220,7 +220,7 @@ module makerjs.exporter {
             if (!opts.units) {
                 opts.strokeWidth = defaultStrokeWidth;
             } else {
-                opts.strokeWidth = units.conversionScale(unitType.Millimeter, opts.units) * defaultStrokeWidth;
+                opts.strokeWidth = round(units.conversionScale(unitType.Millimeter, opts.units) * defaultStrokeWidth, .001);
             }
         }
 
