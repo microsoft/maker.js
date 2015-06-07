@@ -41,7 +41,7 @@ module makerjs {
      * @returns The original object after merging.
      */
     export function extendObject(target: Object, other: Object) {
-        if (other) {
+        if (target && other) {
             for (var key in other) {
                 if (typeof other[key] !== 'undefined') {
                     target[key] = other[key];

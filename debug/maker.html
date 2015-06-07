@@ -1,4 +1,5 @@
-﻿<html>
+﻿<!DOCTYPE html>
+<html>
 <head>
     <title>Maker.js debug TypeScript source code</title>
 
@@ -23,8 +24,6 @@
     <script src="viewer.js"></script>
 
     <script>
-
-        Viewer.SvgOrigin = [150, 400];
 
         var myViewParams = {
             count: 1,
@@ -51,7 +50,7 @@
 
             this.models.push(makerjs.model.move(new makerjs.models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
 
-            makerjs.model.rotate(this, params.angle);
+            makerjs.model.rotate(this, params.angle, makerjs.point.zero());
         }
 
         Viewer.Render = function (newParams) {
@@ -61,6 +60,7 @@
 
             //modeling
             var myModel = {
+                units: makerjs.unitType.Inch,
                 models: [new myModelFactory(myViewParams)]
             };
 
@@ -70,11 +70,6 @@
             for (var i = 1; i < myViewParams.count; i++) {
                 myModel.models.push(makerjs.model.move(new myModelFactory(myViewParams), [x * i, 0]));
             }
-
-            //svg output
-            var annotate = document.getElementById('checkAnnotate').checked;
-            var svg = makerjs.exporter.toSVG(myModel, { origin: Viewer.SvgOrigin, scale: Viewer.ViewScale, annotate: annotate });
-            document.getElementById("svg-zone").innerHTML = svg;
 
             return myModel;
         }
@@ -86,15 +81,16 @@
 <body>
 
     <div class="panel">
-        count: <input type="range" min="1" max="10" step="1" value="1" onchange="Viewer.Render({ count: this.valueAsNumber })" />
-        height: <input type="range" min="1" max="7" step=".1" value="3" onchange="Viewer.Render({ height: this.valueAsNumber })" />
-        width: <input type="range" min="1" max="7" step=".1" value="4" onchange="Viewer.Render({ width: this.valueAsNumber })" />
-        radius: <input type="range" min="0" max="2" step=".1" value=".25" onchange="Viewer.Render({ radius: this.valueAsNumber })" />
-        angle: <input type="range" min="-90" max="90" step="2.5" value="0" onchange="Viewer.Render({ angle: this.valueAsNumber })" />
+        count: <input type="range" min="1" max="10" step="1" value="1" onchange="Viewer.Refresh({ count: this.valueAsNumber })" />
+        height: <input type="range" min="1" max="7" step=".1" value="3" onchange="Viewer.Refresh({ height: this.valueAsNumber })" />
+        width: <input type="range" min="1" max="7" step=".1" value="4" onchange="Viewer.Refresh({ width: this.valueAsNumber })" />
+        radius: <input type="range" min="0" max="2" step=".1" value=".25" onchange="Viewer.Refresh({ radius: this.valueAsNumber })" />
+        angle: <input type="range" min="-90" max="90" step="2.5" value="0" onchange="Viewer.Refresh({ angle: this.valueAsNumber })" />
     </div>
 
     <div id="view">
-        <div id="svg-zone"></div>
+        <div id="svg-render" class="svg-zone"></div>
+        <div id="svg-guides" class="svg-zone"></div>
         <div id="export-zone"></div>
     </div>
 
@@ -102,7 +98,7 @@
         <a href="#" onmouseover="Viewer.showExport('dxf')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
         <a href="#" onmouseover="Viewer.showExport('svg')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
         <a href="#" onmouseover="Viewer.showExport('json')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
-        <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="Viewer.Render()" />
+        <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="Viewer.Refresh()" />
         <div class="logo">Maker.js</div>
     </div>
 

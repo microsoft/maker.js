@@ -70,13 +70,15 @@ module makerjs.path {
     export function moveRelative(pathToMove: IMakerPath, adjust: number[]): IMakerPath;
     export function moveRelative(pathToMove: IMakerPath, adjust: any): IMakerPath {
 
+        var adjustPoint = point.ensure(adjust);
+
         var map: IMakerPathFunctionMap = {};
 
         map[pathType.Line] = function (line: IMakerPathLine) {
-            line.end = point.add(line.end, adjust);
+            line.end = point.add(line.end, adjustPoint);
         };
 
-        pathToMove.origin = point.add(pathToMove.origin, adjust);
+        pathToMove.origin = point.add(pathToMove.origin, adjustPoint);
 
         var fn = map[pathToMove.type];
         if (fn) {

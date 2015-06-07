@@ -23,7 +23,7 @@ module makerjs.model {
             }
         }
 
-        modelToFlatten.origin = point.ensure();
+        modelToFlatten.origin = point.zero();
 
         return modelToFlatten;
     }
@@ -72,6 +72,9 @@ module makerjs.model {
         return newModel;
     }
 
+    export function move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel;
+    export function move(modelToMove: IMakerModel, origin: number[]): IMakerModel;
+
     /**
      * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
      * 
@@ -79,7 +82,7 @@ module makerjs.model {
      * @param origin The new position of the model.
      * @returns The original model (for chaining).
      */
-    export function move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel {
+    export function move(modelToMove: IMakerModel, origin: any): IMakerModel {
         modelToMove.origin = point.clone(point.ensure(origin));
         return modelToMove;
     }

@@ -1,0 +1,279 @@
+﻿<html>
+<head>
+    <title>Maker.js debug TypeScript source code</title>
+
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        .panel {
+            padding: 20px;
+        }
+        input[type=range] {
+            margin-right: 10px;
+            width: 100px;
+        }
+        #view {
+            border: 1px dashed silver;
+            position: absolute;
+            top: 100px;
+            bottom: 60px;
+            left: 20px;
+            right: 20px;
+            overflow: hidden;
+        }
+        svg, #svg-zone, #export-zone {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #export-zone {
+            overflow: scroll;
+            display: none;
+            background-color: rgba(255,255,255,.9);
+        }
+        .bottompanel {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            right: 20px;
+        }
+        .bottompanel a {
+            background-color: lightsteelblue;
+            color: white;
+            padding: 4px 10px;
+            text-decoration: none;
+        }
+        label {
+            margin-left: 20px;
+        }
+        .logo {
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+            font-size: 28px;
+            font-weight: bold;
+            color: silver;
+            line-height: 18px;
+        }
+    </style>
+
+    <script src="../src/maker.js"></script>
+    <script src="../src/maker.angle.js"></script>
+    <script src="../src/maker.point.js"></script>
+    <script src="../src/maker.units.js"></script>
+    <script src="../src/maker.measure.js"></script>
+    <script src="../src/maker.path.js"></script>
+    <script src="../src/maker.model.js"></script>
+    <script src="../src/maker.tools.gap.js"></script>
+    <script src="../src/maker.exports.js"></script>
+    <script src="../src/maker.exports.dxf.js"></script>
+    <script src="../src/maker.exports.svg.js"></script>
+    <script src="../src/models/RoundRectangle.js"></script>
+    <script src="../src/models/ShapeFromPoints.js"></script>
+    <script src="../src/models/SCurve.js"></script>
+    <script src="../src/models/Rectangle.js"></script>
+
+    <script>
+
+        var svgOrigin = [550, 350];
+
+        var myViewParams = {
+            count: 1,
+            tubediameter: .875,
+            thickness: .5,
+            distance: 1,
+            wing: .5,
+            open: .0625,
+            lidclearance: .01,
+            lid: .25,
+            fuselid: true
+        };
+
+        var myModel;
+        var viewScale = 120;
+
+        function myModelFactory(params) {
+
+            this.paths = [];
+            this.models = [];
+
+            var CreateLine = Maker.Path.CreateLine;
+            var Angle = Maker.Angle;
+            var CreateArc = Maker.Path.CreateArc;
+            var Point = Maker.Point;
+
+            var radius = params.tubediameter / 2;
+            var d2 = params.distance / 2;
+            var t2 = params.thickness / 2;
+            var cy = params.distance + radius;
+            var outer = radius + params.wing;
+            var mtop = params.distance + params.tubediameter - params.open;
+            var drop = 0;//radius / 4;
+
+            var z = Math.max(params.thickness + .125 - radius, 0);
+            var bottom = Math.max(radius, params.thickness * 1.2);
+
+            //this.paths.push(Maker.Path.CreateCircle('tube', [0, cy], radius));
+
+            var angle = 360 - Angle.FromRadians(Math.acos(t2 / radius));
+            var arc1 = CreateArc('arc', [0, cy], radius, angle, 0);
+            var arc1Points = Point.FromArc(arc1);
+
+            var halfBody = {
+                models: [
+                    Maker.Model.Move(new Maker.Models.SCurve(params.wing - (bottom - radius), cy - drop), [bottom, 0])
+                ],
+                paths: [
+                    CreateLine('bottom', [0, 0], [bottom, 0]),
+                    //CreateLine('longslope', [radius, 0], [outer, cy - drop]),
+                    CreateLine('crux', [outer, cy - drop], [outer, mtop]),
+                    CreateLine('flat', [outer, mtop], [radius, mtop]),
+                    CreateLine('wall', [radius, mtop], [radius, cy]),
+                    arc1,
+                    CreateLine('boxside', arc1Points[0], [t2, d2]),
+                    CreateLine('boxottom', [0, d2], [t2, d2])
+                ]
+            };
+
+            var lidAngle = Angle.FromRadians(Math.acos((radius - params.lidclearance) / radius));
+            var arc2 = CreateArc('lid', [0, -radius], radius, lidAngle, 90);
+            var arc2Points = Point.FromArc(arc2);
+
+            var halfLid = new Maker.Models.ShapeFromPoints(false, [arc2Points[0], [arc2Points[0].x, 0], [outer, 0], [outer, params.lid], [0, params.lid]]);
+            halfLid.paths.push(arc2);
+
+            var lid = {
+//                origin: { x: 0, y: cy + radius - arc2Points[0].y - params.open },
+                origin: { x: 0, y: cy + radius  },
+                models: [halfLid, Maker.Model.Mirror(halfLid, true, false)]
+            };
+
+            var body = {
+                models: [halfBody, Maker.Model.Mirror(halfBody, true, false)]
+            };
+
+            this.models.push(body);
+            this.models.push(lid);
+
+            this.origin = { x: 0, y: -cy };
+        }
+
+        function render(newParams) {
+
+            //apply slider parameters
+            Maker.ExtendObject(myViewParams, newParams);
+
+            //modeling
+            myModel = {
+                models: [new myModelFactory(myViewParams)]
+            };
+
+            var m = Maker.Measure.ModelExtents(myModel.models[0]);
+            var x = m.high.x - m.low.x + .025;
+
+            for (var i = 1; i < myViewParams.count; i++) {
+                myModel.models.push(Maker.Model.Move(new myModelFactory(myViewParams), [x * i, 0]));
+            }
+
+            //svg output 
+            var annotate = document.getElementById('checkAnnotate').checked;
+            var svg = Maker.Exports.SVG(myModel, { origin: svgOrigin, scale: viewScale, annotate: annotate });
+            document.getElementById("svg-zone").innerHTML = svg;
+        }
+
+        function getRaw(type) {
+            switch (type) {
+                case "dxf":
+                    return Maker.Exports.DXF(myModel, { units: Maker.UnitType.Inch } );
+
+                case "svg":
+                    var myOutputScale = 100;
+                    return Maker.Exports.SVG(myModel, { scale: myOutputScale });
+
+                case "json":
+                    return JSON.stringify(myModel);
+            }
+        }
+
+        function getExport(type) {
+            var raw = getRaw(type);
+            var encoded = encodeURIComponent(raw);
+            switch (type) {
+                case "dxf":
+                    return "data:application/dxf," + encoded;
+
+                case "svg":
+                    return "data:image/svg+xml," + encoded;
+
+                case "json":
+                    return "data:application/json," + encoded;
+            }
+        }
+
+        function hideExport() {
+            var zone = document.getElementById("export-zone");
+            zone.style.display = 'none';
+        }
+
+        function showExport(type) {
+            var raw = getRaw(type);
+            var zone = document.getElementById("export-zone");
+            zone.innerText = raw;
+            zone.style.display = 'block';
+        }
+
+        function prepareView() {
+
+            //attach mousewheel
+            var view = document.getElementById("view");
+            view.onwheel = view.onmousewheel = function (ev) {
+                var scaleDelta = 10;
+                viewScale = Math.max(viewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * scaleDelta, 1);
+                render();
+            };
+
+            //show crosshairs
+            var size = 50;
+            var crossHairs = [Maker.Path.CreateLine('v', [0, size], [0, -size]), Maker.Path.CreateLine('h', [-size, 0], [size, 0]), ];
+            view.innerHTML += Maker.Exports.SVG(crossHairs, { origin: svgOrigin, stroke: 'red', strokeWidth: 1 });
+
+            //render model
+            render();
+        };
+
+        window.onload = prepareView;
+
+    </script>
+
+</head>
+<body>
+
+    <div class="panel">
+        <label>count:</label><input type="range" min="1" max="10" step="1" value="1" onchange="render({ count: this.valueAsNumber })" />
+        <label>tubediameter:</label><input type="range" min=".5" max="3" step=".0625" value=".875" onchange="render({ tubediameter: this.valueAsNumber })" />
+        <label>wing:</label><input type="range" min=".125" max="1.5" step=".0625" value=".5" onchange="render({ wing: this.valueAsNumber })" />
+        <label>distance:</label><input type="range" min=".25" max="2" step=".125" value="1" onchange="render({ distance: this.valueAsNumber })" />
+        <label>thickness:</label><input type="range" min=".0625" max="1" step=".0625" value=".5" onchange="render({ thickness: this.valueAsNumber })" />
+    </div>
+
+    <div id="view">
+        <div id="svg-zone"></div>
+        <div id="export-zone"></div>
+    </div>
+
+    <div class="bottompanel">
+        <a href="#" onmouseover="showExport('dxf')" onmouseout="hideExport()" onclick="this.href = getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
+        <a href="#" onmouseover="showExport('svg')" onmouseout="hideExport()" onclick="this.href = getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
+        <a href="#" onmouseover="showExport('json')" onmouseout="hideExport()" onclick="this.href = getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
+        <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="render()" />
+        <div class="logo">Maker.js</div>
+    </div>
+
+</body>
+
+</html>

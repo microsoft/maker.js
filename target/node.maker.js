@@ -36,7 +36,7 @@ var makerjs;
     * @returns The original object after merging.
     */
     function extendObject(target, other) {
-        if (other) {
+        if (target && other) {
             for (var key in other) {
                 if (typeof other[key] !== 'undefined') {
                     target[key] = other[key];
@@ -262,20 +262,28 @@ var makerjs;
 var makerjs;
 (function (makerjs) {
     (function (point) {
-        
-
+        /**
+        * Add two points together and return the result as a new point object.
+        *
+        * @param a First point, either as a point object, or as an array of numbers.
+        * @param b Second point, either as a point object, or as an array of numbers.
+        * @param subtract Optional boolean to subtract instead of add.
+        * @returns A new point object.
+        */
         function add(a, b, subtract) {
-            if (typeof subtract === "undefined") { subtract = false; }
-            var p1 = clone(ensure(a));
-            var p2 = ensure(b);
+            var newPoint = clone(a);
+
+            if (!b)
+                return newPoint;
+
             if (subtract) {
-                p1.x -= p2.x;
-                p1.y -= p2.y;
+                newPoint.x -= b.x;
+                newPoint.y -= b.y;
             } else {
-                p1.x += p2.x;
-                p1.y += p2.y;
+                newPoint.x += b.x;
+                newPoint.y += b.y;
             }
-            return p1;
+            return newPoint;
         }
         point.add = add;
 
@@ -286,6 +294,8 @@ var makerjs;
         * @returns A new point with same values as the original.
         */
         function clone(pointToClone) {
+            if (!pointToClone)
+                return point.zero();
             return { x: pointToClone.x, y: pointToClone.y };
         }
         point.clone = clone;
@@ -352,7 +362,7 @@ var makerjs;
         * @returns Mirrored point.
         */
         function mirror(pointToMirror, mirrorX, mirrorY) {
-            var p = clone(ensure(pointToMirror));
+            var p = clone(pointToMirror);
 
             if (mirrorX) {
                 p.x = -p.x;
@@ -391,7 +401,7 @@ var makerjs;
         * @returns A new point.
         */
         function scale(pointToScale, scaleValue) {
-            var p = clone(ensure(pointToScale));
+            var p = clone(pointToScale);
             p.x *= scaleValue;
             p.y *= scaleValue;
             return p;
@@ -464,13 +474,15 @@ var makerjs;
         
 
         function moveRelative(pathToMove, adjust) {
+            var adjustPoint = makerjs.point.ensure(adjust);
+
             var map = {};
 
             map[makerjs.pathType.Line] = function (line) {
-                line.end = makerjs.point.add(line.end, adjust);
+                line.end = makerjs.point.add(line.end, adjustPoint);
             };
 
-            pathToMove.origin = makerjs.point.add(pathToMove.origin, adjust);
+            pathToMove.origin = makerjs.point.add(pathToMove.origin, adjustPoint);
 
             var fn = map[pathToMove.type];
             if (fn) {
@@ -576,7 +588,7 @@ var makerjs;
                 }
             }
 
-            modelToFlatten.origin = makerjs.point.ensure();
+            modelToFlatten.origin = makerjs.point.zero();
 
             return modelToFlatten;
         }
@@ -706,16 +718,16 @@ var makerjs;
         /**
         * The base type is arbitrary. Other conversions are then based off of this.
         */
-        var base = makerjs.unitType.Centimeter;
+        var base = makerjs.unitType.Millimeter;
 
         /**
         * Initialize all known conversions here.
         */
         function init() {
-            addBaseConversion(makerjs.unitType.Millimeter, 0.1);
-            addBaseConversion(makerjs.unitType.Meter, 100);
-            addBaseConversion(makerjs.unitType.Inch, 2.54);
-            addBaseConversion(makerjs.unitType.Foot, 2.54 * 12);
+            addBaseConversion(makerjs.unitType.Centimeter, 10);
+            addBaseConversion(makerjs.unitType.Meter, 1000);
+            addBaseConversion(makerjs.unitType.Inch, 25.4);
+            addBaseConversion(makerjs.unitType.Foot, 25.4 * 12);
         }
 
         /**
@@ -957,6 +969,16 @@ var makerjs;
 (function (makerjs) {
     (function (exporter) {
         /**
+        * Try to get the unit system from a model
+        */
+        function tryGetModelUnits(itemToExport) {
+            if (makerjs.isModel(itemToExport)) {
+                return itemToExport.units;
+            }
+        }
+        exporter.tryGetModelUnits = tryGetModelUnits;
+
+        /**
         * Class to traverse an item 's models or paths and ultimately render each path.
         */
         var Exporter = (function () {
@@ -1012,16 +1034,16 @@ var makerjs;
             * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
             * @param offset The offset position of the object.
             */
-            Exporter.prototype.exportItem = function (item, origin) {
-                if (makerjs.isModel(item)) {
-                    this.exportModel(item, origin);
-                } else if (Array.isArray(item)) {
-                    var items = item;
+            Exporter.prototype.exportItem = function (itemToExport, origin) {
+                if (makerjs.isModel(itemToExport)) {
+                    this.exportModel(itemToExport, origin);
+                } else if (Array.isArray(itemToExport)) {
+                    var items = itemToExport;
                     for (var i = 0; i < items.length; i++) {
                         this.exportItem(items[i], origin);
                     }
-                } else if (makerjs.isPath(item)) {
-                    this.exportPath(item, origin);
+                } else if (makerjs.isPath(itemToExport)) {
+                    this.exportPath(itemToExport, origin);
                 }
             };
             return Exporter;
@@ -1039,15 +1061,13 @@ var makerjs;
         *
         * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
         * @param options Rendering options object.
-        * @param options.units String from Maker.UnitType enumeration.
+        * @param options.units String of the unit system. May be omitted. See makerjs.unitType for possible values.
         * @returns String of DXF content.
         */
         function toDXF(itemToExport, options) {
             //DXF format documentation:
             //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
-            var opts = {
-                units: makerjs.unitType.Millimeter
-            };
+            var opts = {};
 
             makerjs.extendObject(opts, options);
 
@@ -1115,13 +1135,15 @@ var makerjs;
             }
 
             function header() {
+                var units = dxfUnit[opts.units];
+
                 append("2");
                 append("HEADER");
 
                 append("9");
                 append("$INSUNITS");
                 append("70");
-                append(dxfUnit[opts.units]);
+                append(units);
             }
 
             function entities() {
@@ -1132,8 +1154,22 @@ var makerjs;
                 exporter.exportItem(itemToExport, makerjs.point.zero());
             }
 
+            //fixup options
+            if (!opts.units) {
+                var units = _exporter.tryGetModelUnits(itemToExport);
+                if (units) {
+                    opts.units = units;
+                }
+            }
+
+            //also pass back to options parameter
+            makerjs.extendObject(options, opts);
+
             //begin dxf output
-            section(header);
+            if (opts.units) {
+                section(header);
+            }
+
             section(entities);
 
             append("0");
@@ -1241,26 +1277,38 @@ var makerjs;
 (function (makerjs) {
     (function (exporter) {
         /**
+        * The default stroke width in millimeters.
+        */
+        exporter.defaultStrokeWidth = 0.2;
+
+        function round(n, accuracy) {
+            if (typeof accuracy === "undefined") { accuracy = .0000001; }
+            var places = 1 / accuracy;
+            return Math.round(n * places) / places;
+        }
+
+        /**
         * Renders an item in SVG markup.
         *
         * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
         * @param options Rendering options object.
         * @param options.annotate Boolean to indicate that the id's of paths should be rendered as SVG text elements.
+        * @param options.origin point object for the rendered reference origin.
         * @param options.scale Number to scale the SVG rendering.
         * @param options.stroke String color of the rendered paths.
-        * @param options.strokeWidth Number width of the rendered paths.
-        * @param options.origin point object for the rendered reference origin.
+        * @param options.strokeWidth Number width of the rendered paths, in the same units as the units parameter.
+        * @param options.units String of the unit system. May be omitted. See makerjs.unitType for possible values.
         * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
         * @returns String of XML / SVG content.
         */
         function toSVG(itemToExport, options) {
             var opts = {
                 annotate: false,
+                origin: null,
                 scale: 1,
-                stroke: "blue",
-                strokeWidth: 2,
-                origin: makerjs.point.zero(),
-                useSvgPathOnly: false
+                stroke: "#000",
+                useSvgPathOnly: true,
+                viewBox: true
             };
 
             makerjs.extendObject(opts, options);
@@ -1269,8 +1317,8 @@ var makerjs;
 
             function fixPoint(pointToFix) {
                 //in DXF Y increases upward. in SVG, Y increases downward
-                var mirrorY = makerjs.point.mirror(pointToFix, false, true);
-                return makerjs.point.scale(mirrorY, opts.scale);
+                var pointMirroredY = makerjs.point.mirror(pointToFix, false, true);
+                return makerjs.point.scale(pointMirroredY, opts.scale);
             }
 
             function fixPath(pathToFix, origin) {
@@ -1308,7 +1356,7 @@ var makerjs;
             function drawPath(id, x, y, d) {
                 createElement("path", {
                     "id": id,
-                    "d": ["M", x, y].concat(d).join(" ")
+                    "d": ["M", round(x), round(y)].concat(d).join(" ")
                 });
 
                 if (opts.annotate) {
@@ -1323,14 +1371,14 @@ var makerjs;
                 var end = line.end;
 
                 if (opts.useSvgPathOnly) {
-                    drawPath(line.id, start.x, start.y, [end.x, end.y]);
+                    drawPath(line.id, start.x, start.y, [round(end.x), round(end.y)]);
                 } else {
                     createElement("line", {
                         "id": line.id,
-                        "x1": start.x,
-                        "y1": start.y,
-                        "x2": end.x,
-                        "y2": end.y
+                        "x1": round(start.x),
+                        "y1": round(start.y),
+                        "x2": round(end.x),
+                        "y2": round(end.y)
                     });
                 }
 
@@ -1348,7 +1396,7 @@ var makerjs;
 
                     function halfCircle(sign) {
                         d.push('a');
-                        svgArcData(d, r, [2 * r * sign, 0]);
+                        svgArcData(d, r, { x: 2 * r * sign, y: 0 });
                     }
 
                     halfCircle(1);
@@ -1359,8 +1407,8 @@ var makerjs;
                     createElement("circle", {
                         "id": circle.id,
                         "r": circle.radius,
-                        "cx": center.x,
-                        "cy": center.y
+                        "cx": round(center.x),
+                        "cy": round(center.y)
                     });
                 }
 
@@ -1370,12 +1418,12 @@ var makerjs;
             };
 
             function svgArcData(d, radius, endPoint, largeArc, decreasing) {
-                var end = makerjs.point.ensure(endPoint);
+                var end = endPoint;
                 d.push(radius, radius);
                 d.push(0); //0 = x-axis rotation
                 d.push(largeArc ? 1 : 0); //large arc=1, small arc=0
                 d.push(decreasing ? 0 : 1); //sweep-flag 0=decreasing, 1=increasing
-                d.push(end.x, end.y);
+                d.push(round(end.x), round(end.y));
             }
 
             map[makerjs.pathType.Arc] = function (arc, origin) {
@@ -1387,19 +1435,97 @@ var makerjs;
                 drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
             };
 
+            //fixup options
+            //measure the item to move it into svg area
+            var modelToMeasure;
+
+            if (makerjs.isModel(itemToExport)) {
+                modelToMeasure = itemToExport;
+            } else if (Array.isArray(itemToExport)) {
+                //issue: this won't handle an array of models
+                modelToMeasure = { paths: itemToExport };
+            } else if (makerjs.isPath(itemToExport)) {
+                modelToMeasure = { paths: [itemToExport] };
+            }
+
+            var size = makerjs.measure.modelExtents(modelToMeasure);
+
+            if (!opts.origin) {
+                opts.origin = { x: -size.low.x * opts.scale, y: size.high.y * opts.scale };
+            }
+
+            if (!opts.units) {
+                var unitSystem = exporter.tryGetModelUnits(itemToExport);
+                if (unitSystem) {
+                    opts.units = unitSystem;
+                }
+            }
+
+            if (!opts.strokeWidth) {
+                if (!opts.units) {
+                    opts.strokeWidth = exporter.defaultStrokeWidth;
+                } else {
+                    opts.strokeWidth = round(makerjs.units.conversionScale(makerjs.unitType.Millimeter, opts.units) * exporter.defaultStrokeWidth, .001);
+                }
+            }
+
+            //also pass back to options parameter
+            makerjs.extendObject(options, opts);
+
+            //begin svg output
             var exp = new exporter.Exporter(map, fixPoint, fixPath);
             exp.exportItem(itemToExport, opts.origin);
 
-            var svgTag = new exporter.XmlTag('svg');
+            var svgAttrs;
+
+            if (opts.viewBox) {
+                var width = round(size.high.x - size.low.x);
+                var height = round(size.high.y - size.low.y);
+                var viewBox = [0, 0, width, height];
+                var unit = svgUnit[opts.units] || '';
+                svgAttrs = { width: width + unit, height: height + unit, viewBox: viewBox.join(' ') };
+            }
+
+            var svgTag = new exporter.XmlTag('svg', svgAttrs);
             svgTag.innerText = elements.join('');
             svgTag.innerTextEscaped = true;
             return svgTag.toString();
         }
         exporter.toSVG = toSVG;
 
+        //SVG Coordinate Systems, Transformations and Units documentation:
+        //http://www.w3.org/TR/SVG/coords.html
+        //The supported length unit identifiers are: em, ex, px, pt, pc, cm, mm, in, and percentages.
+        var svgUnit = {};
+        svgUnit[makerjs.unitType.Inch] = "in";
+        svgUnit[makerjs.unitType.Millimeter] = "mm";
+        svgUnit[makerjs.unitType.Centimeter] = "cm";
+
         
     })(makerjs.exporter || (makerjs.exporter = {}));
     var exporter = makerjs.exporter;
+})(makerjs || (makerjs = {}));
+var makerjs;
+(function (makerjs) {
+    (function (models) {
+        var BoltCircle = (function () {
+            function BoltCircle(boltRadius, holeRadius, boltCount, firstBoltAngle) {
+                if (typeof firstBoltAngle === "undefined") { firstBoltAngle = 0; }
+                this.paths = [];
+                var a1 = makerjs.angle.toRadians(firstBoltAngle);
+                var a = 2 * Math.PI / boltCount;
+
+                for (var i = 0; i < boltCount; i++) {
+                    var o = makerjs.point.fromPolar(a * i + a1, boltRadius);
+
+                    this.paths.push(makerjs.createCircle("bolt " + i, o, holeRadius));
+                }
+            }
+            return BoltCircle;
+        })();
+        models.BoltCircle = BoltCircle;
+    })(makerjs.models || (makerjs.models = {}));
+    var models = makerjs.models;
 })(makerjs || (makerjs = {}));
 var makerjs;
 (function (makerjs) {
@@ -1616,28 +1742,6 @@ var makerjs;
             return Square;
         })(models.Rectangle);
         models.Square = Square;
-    })(makerjs.models || (makerjs.models = {}));
-    var models = makerjs.models;
-})(makerjs || (makerjs = {}));
-var makerjs;
-(function (makerjs) {
-    (function (models) {
-        var BoltCircle = (function () {
-            function BoltCircle(boltRadius, holeRadius, boltCount, firstBoltAngle) {
-                if (typeof firstBoltAngle === "undefined") { firstBoltAngle = 0; }
-                this.paths = [];
-                var a1 = makerjs.angle.toRadians(firstBoltAngle);
-                var a = 2 * Math.PI / boltCount;
-
-                for (var i = 0; i < boltCount; i++) {
-                    var o = makerjs.point.fromPolar(a * i + a1, boltRadius);
-
-                    this.paths.push(makerjs.createCircle("bolt " + i, o, holeRadius));
-                }
-            }
-            return BoltCircle;
-        })();
-        models.BoltCircle = BoltCircle;
     })(makerjs.models || (makerjs.models = {}));
     var models = makerjs.models;
 })(makerjs || (makerjs = {}));
