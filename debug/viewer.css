@@ -46,6 +46,7 @@ svg {
     left: 20px;
     bottom: 20px;
     right: 20px;
+    white-space: nowrap;
 }
 .optionpanel a {
     background-color: lightsteelblue;
@@ -53,7 +54,7 @@ svg {
     padding: 4px 10px;
     text-decoration: none;
 }
-label {
+.optionpanel label {
     margin-left: 20px;
 }
 .logo {
@@ -64,4 +65,13 @@ label {
     font-weight: bold;
     color: silver;
     line-height: 18px;
+}
+.selectModelCode {
+    position: fixed;
+    top: 25px;
+    right: 210px;
+}
+.selectModelCode * {
+    font-size: 18px;
+    font-weight: 200;
 }
