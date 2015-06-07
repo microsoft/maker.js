@@ -50,7 +50,7 @@
 
             this.models.push(makerjs.model.move(new makerjs.models.BoltCircle(circle.radius + 0.25, .05, 6), [params.width / 2, params.height / 2]));
 
-            makerjs.model.rotate(this, params.angle);
+            makerjs.model.rotate(this, params.angle, makerjs.point.zero());
         }
 
         Viewer.Render = function (newParams) {
