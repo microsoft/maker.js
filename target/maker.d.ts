@@ -268,9 +268,6 @@ declare module makerjs.point {
     * @returns A new point object.
     */
     function add(a: IMakerPoint, b: IMakerPoint, subtract?: boolean): IMakerPoint;
-    function add(a: IMakerPoint, b: number[], subtract?: boolean): IMakerPoint;
-    function add(a: number[], b: IMakerPoint, subtract?: boolean): IMakerPoint;
-    function add(a: number[], b: number[], subtract?: boolean): IMakerPoint;
     /**
     * Clone a point into a new point.
     *
@@ -401,14 +398,8 @@ declare module makerjs.model {
     * @returns Mirrored model.
     */
     function mirror(modelToMirror: IMakerModel, mirrorX: boolean, mirrorY: boolean): IMakerModel;
-    /**
-    * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
-    *
-    * @param modelToMove The model to move.
-    * @param origin The new position of the model.
-    * @returns The original model (for chaining).
-    */
     function move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel;
+    function move(modelToMove: IMakerModel, origin: number[]): IMakerModel;
     /**
     * Rotate a model.
     *
@@ -478,6 +469,16 @@ declare module makerjs.measure {
     function modelExtents(modelToMeasure: IMakerModel): IMakerMeasure;
 }
 declare module makerjs.exporter {
+    interface IMakerExportOptions {
+        /**
+        * Unit system to embed in exported file.
+        */
+        units?: string;
+    }
+    /**
+    * Try to get the unit system from a model
+    */
+    function tryGetModelUnits(itemToExport: any): string;
     /**
     * Class to traverse an item 's models or paths and ultimately render each path.
     */
@@ -512,7 +513,7 @@ declare module makerjs.exporter {
         * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
         * @param offset The offset position of the object.
         */
-        public exportItem(item: any, origin: IMakerPoint): void;
+        public exportItem(itemToExport: any, origin: IMakerPoint): void;
     }
 }
 declare module makerjs.exporter {
@@ -522,11 +523,7 @@ declare module makerjs.exporter {
     /**
     * DXF rendering options.
     */
-    interface IDXFRenderOptions {
-        /**
-        * Unit system to embed in DXF file. See UnitType for possible values.
-        */
-        units: string;
+    interface IDXFRenderOptions extends IMakerExportOptions {
     }
 }
 declare module makerjs.exporter {
@@ -568,17 +565,21 @@ declare module makerjs.exporter {
     }
 }
 declare module makerjs.exporter {
+    /**
+    * The default stroke width in millimeters.
+    */
+    var defaultStrokeWidth: number;
     function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
     /**
     * SVG rendering options.
     */
-    interface ISVGRenderOptions {
+    interface ISVGRenderOptions extends IMakerExportOptions {
         /**
-        * SVG stroke width of paths.
+        * SVG stroke width of paths. This is in the same unit system as the units property.
         */
-        strokeWidth: number;
+        strokeWidth?: number;
         /**
         * SVG color of the rendered paths.
         */
@@ -599,6 +600,16 @@ declare module makerjs.exporter {
         * Use SVG <path> elements instead of <line>, <circle> etc.
         */
         useSvgPathOnly: boolean;
+        /**
+        * Flag to use SVG viewbox.
+        */
+        viewBox: boolean;
+    }
+}
+declare module makerjs.models {
+    class BoltCircle implements IMakerModel {
+        public paths: IMakerPath[];
+        constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
     }
 }
 declare module makerjs.models {
@@ -660,11 +671,5 @@ declare module makerjs.models {
     class Square extends Rectangle {
         public side: number;
         constructor(side: number);
-    }
-}
-declare module makerjs.models {
-    class BoltCircle implements IMakerModel {
-        public paths: IMakerPath[];
-        constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
     }
 }
