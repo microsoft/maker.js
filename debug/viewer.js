@@ -1,12 +1,23 @@
 ﻿
 var Viewer = {
+    Params: {},
     ViewModel: null,
     ViewScale: 100, //100 pixels per mm
-    Render: function (newParams) {
+    Render: function () {
         return {};
     },
     Refresh: function (newParams) {
-        var model = Viewer.Render(newParams);
+
+        //apply slider parameters
+        for (var paramName in newParams) {
+            Viewer.Params[paramName].value = newParams[paramName];
+        }
+
+        var values = {};
+        for (var paramName in Viewer.Params) {
+            values[paramName] = Viewer.Params[paramName].value;
+        }
+        var model = Viewer.Render(values);
 
         Viewer.ViewModel = model;
 
@@ -32,7 +43,7 @@ var Viewer = {
             useSvgPathOnly: false
         };
 
-        var size = 50;
+        var size = 250;
         var crossHairs = [makerjs.createLine('v', [0, size], [0, -size]), makerjs.createLine('h', [-size, 0], [size, 0]), ];
         document.getElementById("svg-guides").innerHTML = makerjs.exporter.toSVG(crossHairs, crosshairOptions);
     },
@@ -85,7 +96,21 @@ var Viewer = {
             var scaleDelta = 10;
             Viewer.ViewScale = Math.max(Viewer.ViewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * scaleDelta, 1);
             Viewer.Refresh();
+            return false;
         };
+
+        //populate params
+        var paramsHtml = '';
+        for (var paramName in Viewer.Params) {
+            var attrs = Viewer.Params[paramName];
+
+            if (attrs.type == 'range') {
+                var input = new makerjs.exporter.XmlTag('input', attrs);
+                input.attrs['onchange'] = 'Viewer.Refresh({ "' + paramName + '": this.valueAsNumber })';
+                paramsHtml += '<div>' + paramName + ': ' + input.toString() + '</div>';
+            }
+        }
+        document.getElementById("params").innerHTML = paramsHtml;
 
         //render model
         Viewer.Refresh();
