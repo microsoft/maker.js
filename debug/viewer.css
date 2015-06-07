@@ -27,7 +27,7 @@ svg, .svg-zone, #export-zone {
     width: 100%;
 }
 svg {
-    padding: 1px;
+    padding: 20px 0 0 20px;
 }
 #export-zone {
     overflow: scroll;
