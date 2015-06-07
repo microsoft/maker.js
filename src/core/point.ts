@@ -10,21 +10,19 @@ module makerjs.point {
      * @param subtract Optional boolean to subtract instead of add.
      * @returns A new point object.
      */
-    export function add(a: IMakerPoint, b: IMakerPoint, subtract?: boolean): IMakerPoint;
-    export function add(a: IMakerPoint, b: number[], subtract?: boolean): IMakerPoint;
-    export function add(a: number[], b: IMakerPoint, subtract?: boolean): IMakerPoint;
-    export function add(a: number[], b: number[], subtract?: boolean): IMakerPoint;
-    export function add(a: any, b: any, subtract = false): IMakerPoint {
-        var p1 = clone(ensure(a));
-        var p2 = ensure(b);
+    export function add(a: IMakerPoint, b: IMakerPoint, subtract?: boolean): IMakerPoint{
+        var newPoint = clone(a);
+
+        if (!b) return newPoint;
+
         if (subtract) {
-            p1.x -= p2.x;
-            p1.y -= p2.y;
+            newPoint.x -= b.x;
+            newPoint.y -= b.y;
         } else {
-            p1.x += p2.x;
-            p1.y += p2.y;
+            newPoint.x += b.x;
+            newPoint.y += b.y;
         }
-        return p1;
+        return newPoint;
     }
 
     /**
@@ -34,6 +32,7 @@ module makerjs.point {
      * @returns A new point with same values as the original.
      */
     export function clone(pointToClone: IMakerPoint): IMakerPoint {
+        if (!pointToClone) return point.zero();
         return { x: pointToClone.x, y: pointToClone.y };
     }
 
@@ -105,7 +104,7 @@ module makerjs.point {
      * @returns Mirrored point.
      */
     export function mirror(pointToMirror: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
-        var p = clone(ensure(pointToMirror));
+        var p = clone(pointToMirror);
 
         if (mirrorX) {
             p.x = -p.x;
@@ -142,7 +141,7 @@ module makerjs.point {
      * @returns A new point.
      */
     export function scale(pointToScale: IMakerPoint, scaleValue: number): IMakerPoint {
-        var p = clone(ensure(pointToScale));
+        var p = clone(pointToScale);
         p.x *= scaleValue;
         p.y *= scaleValue;
         return p;
