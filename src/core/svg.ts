@@ -8,11 +8,6 @@ module makerjs.exporter {
      */
     export var defaultStrokeWidth = 0.2;
 
-    function round(n: number, accuracy = .0000001) {
-        var places = 1 / accuracy;
-        return Math.round(n * places) / places;
-    }
-
     export function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
     export function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
     export function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;

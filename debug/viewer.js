@@ -1,12 +1,33 @@
 ﻿
 var Viewer = {
+    Params: {},
     ViewModel: null,
     ViewScale: 100, //100 pixels per mm
-    Render: function (newParams) {
+    Render: function () {
         return {};
     },
     Refresh: function (newParams) {
-        var model = Viewer.Render(newParams);
+
+        //apply slider parameters
+        for (var paramName in newParams) {
+            Viewer.Params[paramName].value = makerjs.round(newParams[paramName], .001);
+        }        
+
+        var values = {};
+        var valuesHtml = '';
+        for (var paramName in Viewer.Params) {
+            var value = Viewer.Params[paramName].value;
+            values[paramName] = value;
+
+            if (valuesHtml) {
+                valuesHtml += ',<br/>';
+            }
+            valuesHtml += '"' + paramName + '": "' + value + '"';
+        }
+        valuesHtml = '{<br/>' + valuesHtml + '<br/>}';
+        document.getElementById('paramValues').innerHTML = valuesHtml;
+
+        var model = Viewer.Render(values);
 
         Viewer.ViewModel = model;
 
@@ -32,7 +53,7 @@ var Viewer = {
             useSvgPathOnly: false
         };
 
-        var size = 50;
+        var size = 250;
         var crossHairs = [makerjs.createLine('v', [0, size], [0, -size]), makerjs.createLine('h', [-size, 0], [size, 0]), ];
         document.getElementById("svg-guides").innerHTML = makerjs.exporter.toSVG(crossHairs, crosshairOptions);
     },
@@ -78,6 +99,7 @@ var Viewer = {
     },
 
     prepareView: function () {
+        Viewer.defaultViewScale = Viewer.ViewScale;
 
         //attach mousewheel
         var view = document.getElementById("view");
@@ -85,10 +107,58 @@ var Viewer = {
             var scaleDelta = 10;
             Viewer.ViewScale = Math.max(Viewer.ViewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * scaleDelta, 1);
             Viewer.Refresh();
+            return false;
         };
 
-        //render model
+        var selectModelCode = document.getElementById('selectModelCode');
+        Viewer.loadModelCode(selectModelCode.value);
+    },
+
+    populateParams: function () {
+        var paramsHtml = '';
+        var i = 0;
+        for (var paramName in Viewer.Params) {
+            var attrs = Viewer.Params[paramName];
+
+            var id = 'input_' + i;
+            var label = new makerjs.exporter.XmlTag('label', { "for": id });
+            label.innerText = paramName + ': ';
+
+            if (attrs.type == 'range') {
+                var input = new makerjs.exporter.XmlTag('input', attrs);
+                input.attrs['onchange'] = 'Viewer.Refresh({ "' + paramName + '": this.valueAsNumber })';
+                input.attrs['id'] = id;
+
+                var div = new makerjs.exporter.XmlTag('div');
+                div.innerText = label.toString() + input.toString();
+                div.innerTextEscaped = true;
+                paramsHtml += div.toString();
+            }
+            i++;
+        }
+
+        document.getElementById("params").innerHTML = paramsHtml;
+    },
+
+    newModelCode: function () {
+        Viewer.ViewScale = Viewer.defaultViewScale;
+        Viewer.populateParams();
         Viewer.Refresh();
+    },
+
+    loadModelCode: function (filename) {
+
+        if (filename) {
+            var script = document.createElement('script');
+            script.setAttribute('src', filename);
+            
+            script.onload = function () {
+                setTimeout(Viewer.newModelCode, 0);
+            };
+
+            document.getElementsByTagName('head')[0].appendChild(script);
+        }
+
     }
 };
 
