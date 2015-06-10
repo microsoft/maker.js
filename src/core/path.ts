@@ -1,6 +1,6 @@
 ﻿/// <reference path="point.ts" />
 
-module makerjs.path {
+module Maker.path {
 
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.

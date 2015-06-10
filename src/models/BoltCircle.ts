@@ -1,4 +1,4 @@
-﻿module makerjs.models {
+﻿module Maker.models {
 
     export class BoltCircle implements IMakerModel {
 

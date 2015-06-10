@@ -1,7 +1,7 @@
 ﻿/// <reference path="exporter.ts" />
 /// <reference path="xml.ts" />
 
-module makerjs.exporter {
+module Maker.exporter {
 
     /**
      * The default stroke width in millimeters.
@@ -198,7 +198,7 @@ module makerjs.exporter {
             modelToMeasure = { paths: [(<IMakerPath>itemToExport)] };
         }
 
-        var size = makerjs.measure.modelExtents(modelToMeasure);
+        var size = measure.modelExtents(modelToMeasure);
 
         if (!opts.origin) {
             opts.origin = { x: -size.low.x * opts.scale, y: size.high.y * opts.scale };

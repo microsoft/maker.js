@@ -1,6 +1,6 @@
 ﻿/// <reference path="maker.ts" />
 
-module makerjs.angle {
+module Maker.angle {
 
     /**
      * Convert an angle from degrees to radians.

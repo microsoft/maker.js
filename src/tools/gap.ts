@@ -1,6 +1,6 @@
 ﻿/// <reference path="../core/maker.ts" />
 
-module makerjs.Tools {
+module Maker.Tools {
 
     interface IMakerBrokenPath {
         newPath: IMakerPath;

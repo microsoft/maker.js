@@ -1,6 +1,6 @@
 ﻿/// <reference path="maker.ts" />
 
-module makerjs.point {
+module Maker.point {
 
     /**
      * Add two points together and return the result as a new point object.

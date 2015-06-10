@@ -1,6 +1,6 @@
 ﻿/// <reference path="exporter.ts" />
 
-module makerjs.exporter {
+module Maker.exporter {
 
     export function toDXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
     export function toDXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;

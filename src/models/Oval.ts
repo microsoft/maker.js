@@ -1,6 +1,6 @@
 ﻿/// <reference path="roundrectangle.ts" />
 
-module makerjs.models {
+module Maker.models {
 
     export class Oval extends RoundRectangle {
 
