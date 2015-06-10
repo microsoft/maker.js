@@ -65,14 +65,14 @@ module Maker {
     /**
      * Things that may have an id.
      */
-    export interface IMakerId {
+    export interface IHaveId {
         id?: string;
     }
 
     /**
      * An item found in an array.
      */
-    export interface IMakerFound<T> {
+    export interface IFound<T> {
 
         /**
          * Position of the item within the array.
@@ -92,7 +92,7 @@ module Maker {
      * @param id Id of the item to find.
      * @returns object with item and its position.
      */
-    export function findById<T extends IMakerId>(arr: T[], id: string): IMakerFound<T> {
+    export function findById<T extends IHaveId>(arr: T[], id: string): IFound<T> {
         if (arr) {
             for (var i = 0; i < arr.length; i++) {
                 var item = arr[i];
@@ -112,7 +112,7 @@ module Maker {
     /**
      * An x-y point in a two-dimensional space.
      */
-    export interface IMakerPoint {
+    export interface IPoint {
         x: number;
         y: number;
     }
@@ -129,17 +129,17 @@ module Maker {
     /**
      * A measurement of extents, the high and low points.
      */
-    export interface IMakerMeasure {
+    export interface IMeasure {
 
         /**
          * The point containing both the lowest x and y values of the rectangle containing the item being measured.
          */
-        low: IMakerPoint;
+        low: IPoint;
         
         /**
          * The point containing both the highest x and y values of the rectangle containing the item being measured.
          */
-        high: IMakerPoint;
+        high: IPoint;
     }
 
     //paths
@@ -147,7 +147,7 @@ module Maker {
     /**
      * A line, curved line or other simple two dimensional shape.
      */
-    export interface IMakerPath extends IMakerId {
+    export interface IPath extends IHaveId {
         
         /**
          * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
@@ -157,7 +157,7 @@ module Maker {
         /**
          * The main point of reference for this path.
          */
-        origin: IMakerPoint;
+        origin: IPoint;
     }
 
     /**
@@ -172,18 +172,18 @@ module Maker {
     /**
      * A line path.
      */
-    export interface IMakerPathLine extends IMakerPath {
+    export interface IPathLine extends IPath {
         
         /**
          * The end point defining the line. The start point is the origin.
          */
-        end: IMakerPoint;
+        end: IPoint;
     }
 
     /**
      * A circle path.
      */
-    export interface IMakerPathCircle extends IMakerPath {
+    export interface IPathCircle extends IPath {
         
         /**
          * The radius of the circle.
@@ -194,7 +194,7 @@ module Maker {
     /**
      * An arc path.
      */
-    export interface IMakerPathArc extends IMakerPathCircle {
+    export interface IPathArc extends IPathCircle {
 
         /**
          * The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.
@@ -210,23 +210,23 @@ module Maker {
     /**
      * A map of functions which accept a path as a parameter.
      */
-    export interface IMakerPathFunctionMap {
+    export interface IPathFunctionMap {
         
         /**
          * Key is the type of a path, value is a function which accepts a path object as its parameter.
          */
-        [type: string]: (pathValue: IMakerPath) => void;
+        [type: string]: (pathValue: IPath) => void;
     }
 
     /**
      * A map of functions which accept a path and an origin point as parameters.
      */
-    export interface IMakerPathOriginFunctionMap {
+    export interface IPathOriginFunctionMap {
         
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
-        [type: string]: (pathValue: IMakerPath, origin: IMakerPoint) => void;
+        [type: string]: (pathValue: IPath, origin: IPoint) => void;
     }
 
     /**
@@ -243,12 +243,12 @@ module Maker {
     /**
      * A model is a composite object which may contain an array of paths, or an array of models recursively.
      */
-    export interface IMakerModel extends IMakerId {
+    export interface IModel extends IHaveId {
         
         /**
          * Optional origin location of this model.
          */
-        origin?: IMakerPoint;
+        origin?: IPoint;
 
         /**
          * A model may want to specify its type, but this value is not employed yet.
@@ -258,12 +258,12 @@ module Maker {
         /**
          * Optional array of path objects in this model.
          */
-        paths?: IMakerPath[];
+        paths?: IPath[];
         
         /**
          * Optional array of models within this model.
          */
-        models?: IMakerModel[];
+        models?: IModel[];
         
         /**
          * Optional unit system of this model. See UnitType for possible values.
@@ -295,11 +295,11 @@ module Maker {
      * @param endAngle The end angle of the arc.
      * @returns A new POJO representing an arc path.
      */
-    export function createArc(id: string, origin: IMakerPoint, radius: number, startAngle: number, endAngle: number): IMakerPathArc;
-    export function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IMakerPathArc;
-    export function createArc(id: string, origin: any, radius: number, startAngle: number, endAngle: number): IMakerPathArc {
+    export function createArc(id: string, origin: IPoint, radius: number, startAngle: number, endAngle: number): IPathArc;
+    export function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IPathArc;
+    export function createArc(id: string, origin: any, radius: number, startAngle: number, endAngle: number): IPathArc {
 
-        var arc: IMakerPathArc = {
+        var arc: IPathArc = {
             type: pathType.Arc,
             id: id,
             origin: point.ensure(origin),
@@ -319,11 +319,11 @@ module Maker {
      * @param radius The radius of the circle.
      * @returns A new POJO representing an circle path.
      */
-    export function createCircle(id: string, origin: IMakerPoint, radius: number): IMakerPathCircle;
-    export function createCircle(id: string, origin: number[], radius: number): IMakerPathCircle;
-    export function createCircle(id: string, origin: any, radius: number): IMakerPathCircle {
+    export function createCircle(id: string, origin: IPoint, radius: number): IPathCircle;
+    export function createCircle(id: string, origin: number[], radius: number): IPathCircle;
+    export function createCircle(id: string, origin: any, radius: number): IPathCircle {
 
-        var circle: IMakerPathCircle = {
+        var circle: IPathCircle = {
             type: pathType.Circle,
             id: id,
             origin: point.ensure(origin),
@@ -341,13 +341,13 @@ module Maker {
      * @param end The end point of the line.
      * @returns A new POJO representing an line path.
      */
-    export function createLine(id: string, origin: IMakerPoint, end: IMakerPoint): IMakerPathLine;
-    export function createLine(id: string, origin: number[], end: IMakerPoint): IMakerPathLine;
-    export function createLine(id: string, origin: IMakerPoint, end: number[]): IMakerPathLine;
-    export function createLine(id: string, origin: number[], end: number[]): IMakerPathLine;
-    export function createLine(id: string, origin: any, end: any): IMakerPathLine {
+    export function createLine(id: string, origin: IPoint, end: IPoint): IPathLine;
+    export function createLine(id: string, origin: number[], end: IPoint): IPathLine;
+    export function createLine(id: string, origin: IPoint, end: number[]): IPathLine;
+    export function createLine(id: string, origin: number[], end: number[]): IPathLine;
+    export function createLine(id: string, origin: any, end: any): IPathLine {
 
-        var line: IMakerPathLine = {
+        var line: IPathLine = {
             type: pathType.Line,
             id: id,
             origin: point.ensure(origin),

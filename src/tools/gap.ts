@@ -2,31 +2,31 @@
 
 module Maker.Tools {
 
-    interface IMakerBrokenPath {
-        newPath: IMakerPath;
-        newPoint: IMakerPoint;
+    interface IBrokenPath {
+        newPath: IPath;
+        newPoint: IPoint;
     }
 
-    interface IMakerBreakPathFunctionMap {
-        [type: string]: (path: IMakerPath, breakAt: number) => IMakerBrokenPath[];
+    interface IBreakPathFunctionMap {
+        [type: string]: (path: IPath, breakAt: number) => IBrokenPath[];
     }
 
-    function midPoint(a: IMakerPoint, b: IMakerPoint, breakAt: number= .5): IMakerPoint {
+    function midPoint(a: IPoint, b: IPoint, breakAt: number= .5): IPoint {
         return {
             x: a.x + (b.x - a.x) * breakAt,
             y: a.y + (b.y - a.y) * breakAt,
         };
     }
 
-    var breakPathFunctionMap: IMakerBreakPathFunctionMap = {};
+    var breakPathFunctionMap: IBreakPathFunctionMap = {};
 
-    breakPathFunctionMap[pathType.Line] = function (line: IMakerPathLine, breakAt: number): IMakerBrokenPath[] {
+    breakPathFunctionMap[pathType.Line] = function (line: IPathLine, breakAt: number): IBrokenPath[] {
 
-        var breakPoint: IMakerPoint = midPoint(line.origin, line.end, breakAt);
+        var breakPoint: IPoint = midPoint(line.origin, line.end, breakAt);
 
-        var ret: IMakerBrokenPath[] = [];
+        var ret: IBrokenPath[] = [];
 
-        function addLine(suffix: string, origin: IMakerPoint, end: IMakerPoint) {
+        function addLine(suffix: string, origin: IPoint, end: IPoint) {
             ret.push({
                 newPath: createLine(line.id + suffix, point.clone(origin), point.clone(end)),
                 newPoint: point.clone(breakPoint)
@@ -39,7 +39,7 @@ module Maker.Tools {
         return ret;
     };
 
-    breakPathFunctionMap[pathType.Arc] = function (arc: IMakerPathArc, breakAt: number): IMakerBrokenPath[] {
+    breakPathFunctionMap[pathType.Arc] = function (arc: IPathArc, breakAt: number): IBrokenPath[] {
 
         var breakAngle = measure.arcAngle(arc) * breakAt + arc.startAngle;
 
@@ -49,7 +49,7 @@ module Maker.Tools {
 
         var breakPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(breakAngle), arc.radius));
 
-        var ret: IMakerBrokenPath[] = [];
+        var ret: IBrokenPath[] = [];
 
         function addArc(suffix: string, startAngle: number, endAngle: number) {
             ret.push({
@@ -64,7 +64,7 @@ module Maker.Tools {
         return ret;
     };
 
-    function breakPath(path: IMakerPath, breakAt: number= .5): IMakerBrokenPath[] {
+    function breakPath(path: IPath, breakAt: number= .5): IBrokenPath[] {
 
         var fn = breakPathFunctionMap[path.type];
         if (fn) {
@@ -74,9 +74,9 @@ module Maker.Tools {
         return null;
     }
 
-    export function GapPath(modelToGap: IMakerModel, pathId: string, gapLength: number, breakAt: number= .5): IMakerPoint[] {
+    export function GapPath(modelToGap: IModel, pathId: string, gapLength: number, breakAt: number= .5): IPoint[] {
 
-        var found = findById<IMakerPath>(modelToGap.paths, pathId);
+        var found = findById<IPath>(modelToGap.paths, pathId);
 
         if (!found) return null;
 
@@ -86,9 +86,9 @@ module Maker.Tools {
 
         var halfGap = gapLength / 2;
 
-        var ret: IMakerPoint[] = [];
+        var ret: IPoint[] = [];
 
-        function append(brokenPath: IMakerBrokenPath, extraPoint?: IMakerPoint) {
+        function append(brokenPath: IBrokenPath, extraPoint?: IPoint) {
             modelToGap.paths.push(brokenPath.newPath);
             ret.push(brokenPath.newPoint);
 
@@ -97,13 +97,13 @@ module Maker.Tools {
             }
         }
 
-        var map: IMakerPathFunctionMap = {};
+        var map: IPathFunctionMap = {};
 
-        map[pathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IPathLine) {
 
             var firstBreak = breakPath(line, breakAt);
 
-            function chop(line: IMakerPathLine, start: boolean) {
+            function chop(line: IPathLine, start: boolean) {
 
                 var len = measure.pathLength(line);
 
@@ -121,11 +121,11 @@ module Maker.Tools {
                 } //todo add point else
             }
 
-            chop(<IMakerPathLine>firstBreak[0].newPath, true);
-            chop(<IMakerPathLine>firstBreak[1].newPath, false);
+            chop(<IPathLine>firstBreak[0].newPath, true);
+            chop(<IPathLine>firstBreak[1].newPath, false);
         };
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IPathCircle) {
 
             var breakAangle = 360 * breakAt;
             var halfGapAngle = angle.toDegrees(Math.asin(halfGap / circle.radius));
@@ -141,12 +141,12 @@ module Maker.Tools {
             append(brokenPath, point.add(circle.origin, point.fromPolar(angle.toRadians(endAngle), circle.radius)));
         };
 
-        map[pathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IPathArc) {
 
             var firstBreak = breakPath(arc, breakAt);
             var halfGapAngle = angle.toDegrees(Math.asin(halfGap / arc.radius));
 
-            function chop(arc: IMakerPathArc, start: boolean) {
+            function chop(arc: IPathArc, start: boolean) {
 
                 var totalAngle = measure.arcAngle(arc);
 
@@ -164,8 +164,8 @@ module Maker.Tools {
                 }  //todo add point else
             }
 
-            chop(<IMakerPathArc>firstBreak[0].newPath, true);
-            chop(<IMakerPathArc>firstBreak[1].newPath, false);
+            chop(<IPathArc>firstBreak[0].newPath, true);
+            chop(<IPathArc>firstBreak[1].newPath, false);
         };
 
         var fn = map[foundPath.type];

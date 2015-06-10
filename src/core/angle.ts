@@ -31,7 +31,7 @@ module Maker.angle {
      * @param arc An arc path object.
      * @returns End angle of arc.
      */
-    export function arcEndAnglePastZero(arc: IMakerPathArc): number {
+    export function arcEndAnglePastZero(arc: IPathArc): number {
         //compensate for values past zero. This allows easy compute of total angle size.
         //for example 0 = 360
         if (arc.endAngle < arc.startAngle) {
@@ -47,7 +47,7 @@ module Maker.angle {
      * @param origin (Optional 0,0 implied) point of origin of the angle.
      * @returns Angle of the line throught the point.
      */
-    export function fromPointToRadians(pointToFindAngle: IMakerPoint, origin?: IMakerPoint): number {
+    export function fromPointToRadians(pointToFindAngle: IPoint, origin?: IPoint): number {
         var d = point.subtract(pointToFindAngle, origin);
         return Math.atan2(d.y, d.x);
     }

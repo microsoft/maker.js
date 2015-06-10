@@ -1,8 +1,8 @@
 ﻿module Maker.models {
 
-    export class BoltCircle implements IMakerModel {
+    export class BoltCircle implements IModel {
 
-        public paths: IMakerPath[] = [];
+        public paths: IPath[] = [];
 
         constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle: number = 0) {
 

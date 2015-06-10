@@ -1,10 +1,10 @@
 ﻿module Maker.models {
 
-    export class ConnectTheDots implements IMakerModel {
+    export class ConnectTheDots implements IModel {
 
-        public paths: IMakerPath[] = [];
+        public paths: IPath[] = [];
 
-        constructor(isClosed: boolean, points: IMakerPoint[]);
+        constructor(isClosed: boolean, points: IPoint[]);
         constructor(isClosed: boolean, points: number[][]);
         constructor(public isClosed: boolean, public points: any[]) {
 

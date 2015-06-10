@@ -10,7 +10,7 @@ module Maker.point {
      * @param subtract Optional boolean to subtract instead of add.
      * @returns A new point object.
      */
-    export function add(a: IMakerPoint, b: IMakerPoint, subtract?: boolean): IMakerPoint{
+    export function add(a: IPoint, b: IPoint, subtract?: boolean): IPoint{
         var newPoint = clone(a);
 
         if (!b) return newPoint;
@@ -31,7 +31,7 @@ module Maker.point {
      * @param pointToClone The point to clone.
      * @returns A new point with same values as the original.
      */
-    export function clone(pointToClone: IMakerPoint): IMakerPoint {
+    export function clone(pointToClone: IPoint): IPoint {
         if (!pointToClone) return point.zero();
         return { x: pointToClone.x, y: pointToClone.y };
     }
@@ -42,10 +42,10 @@ module Maker.point {
      * @param pointToEnsure The object to ensure; may be a point object, or an array of numbers, or something else which will attempt to coerce into a point.
      * @returns A new point object either with the x, y values corresponding to the input, or 0,0 coordinates.
      */
-    export function ensure(pointToEnsure: IMakerPoint): IMakerPoint;
-    export function ensure(pointToEnsure: number[]): IMakerPoint;
-    export function ensure(): IMakerPoint;
-    export function ensure(pointToEnsure?: any): IMakerPoint {
+    export function ensure(pointToEnsure: IPoint): IPoint;
+    export function ensure(pointToEnsure: number[]): IPoint;
+    export function ensure(): IPoint;
+    export function ensure(pointToEnsure?: any): IPoint {
 
         if (!pointToEnsure) {
             return zero();
@@ -73,7 +73,7 @@ module Maker.point {
      * @param radius The radius of the polar coordinate.
      * @returns A new point object.
      */
-    export function fromPolar(angleInRadians: number, radius: number): IMakerPoint {
+    export function fromPolar(angleInRadians: number, radius: number): IPoint {
         return {
             x: radius * Math.cos(angleInRadians),
             y: radius * Math.sin(angleInRadians)
@@ -86,7 +86,7 @@ module Maker.point {
      * @param arc The arc path object.
      * @returns Array with 2 elements: [0] is the point object corresponding to the start angle, [1] is the point object corresponding to the end angle.
      */
-    export function fromArc(arc: IMakerPathArc): IMakerPoint[] {
+    export function fromArc(arc: IPathArc): IPoint[] {
 
         function getPointFromAngle(a: number) {
             return add(arc.origin, fromPolar(angle.toRadians(a), arc.radius));
@@ -103,7 +103,7 @@ module Maker.point {
      * @param mirrorY Boolean to mirror on the y axis.
      * @returns Mirrored point.
      */
-    export function mirror(pointToMirror: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint {
+    export function mirror(pointToMirror: IPoint, mirrorX: boolean, mirrorY: boolean): IPoint {
         var p = clone(pointToMirror);
 
         if (mirrorX) {
@@ -125,7 +125,7 @@ module Maker.point {
      * @param rotationOrigin The center point of rotation.
      * @returns A new point.
      */
-    export function rotate(pointToRotate: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint {
+    export function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin: IPoint): IPoint {
         var pointAngleInRadians = angle.fromPointToRadians(pointToRotate, rotationOrigin);
         var d = measure.pointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = fromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
@@ -140,7 +140,7 @@ module Maker.point {
      * @param scaleValue The amount of scaling.
      * @returns A new point.
      */
-    export function scale(pointToScale: IMakerPoint, scaleValue: number): IMakerPoint {
+    export function scale(pointToScale: IPoint, scaleValue: number): IPoint {
         var p = clone(pointToScale);
         p.x *= scaleValue;
         p.y *= scaleValue;
@@ -154,11 +154,11 @@ module Maker.point {
      * @param b Second point, either as a point object, or as an array of numbers.
      * @returns A new point object.
      */
-    export function subtract(a: IMakerPoint, b: IMakerPoint): IMakerPoint;
-    export function subtract(a: IMakerPoint, b: number[]): IMakerPoint;
-    export function subtract(a: number[], b: IMakerPoint): IMakerPoint;
-    export function subtract(a: number[], b: number[]): IMakerPoint;
-    export function subtract(a: any, b: any): IMakerPoint {
+    export function subtract(a: IPoint, b: IPoint): IPoint;
+    export function subtract(a: IPoint, b: number[]): IPoint;
+    export function subtract(a: number[], b: IPoint): IPoint;
+    export function subtract(a: number[], b: number[]): IPoint;
+    export function subtract(a: any, b: any): IPoint {
         return add(a, b, true);
     }
 
@@ -167,7 +167,7 @@ module Maker.point {
      * 
      * @returns A new point.
      */
-    export function zero(): IMakerPoint {
+    export function zero(): IPoint {
         return { x: 0, y: 0 };
     }
 

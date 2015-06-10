@@ -4,7 +4,7 @@
 
 module Maker.exporter {
 
-    export interface IMakerExportOptions {
+    export interface IExportOptions {
         /**
          * Unit system to embed in exported file.
          */
@@ -16,7 +16,7 @@ module Maker.exporter {
      */
     export function tryGetModelUnits(itemToExport: any) {
         if (isModel(itemToExport)) {
-            return (<IMakerModel>itemToExport).units;
+            return (<IModel>itemToExport).units;
         }
     }
 
@@ -32,9 +32,9 @@ module Maker.exporter {
      * @param fixPath Optional function to modify a path prior to output. Function parameters are path and offset point; function must return a path.
      */
         constructor(
-            public map: IMakerPathOriginFunctionMap,
-            public fixPoint?: (pointToFix: IMakerPoint) => IMakerPoint,
-            public fixPath?: (pathToFix: IMakerPath, origin: IMakerPoint) => IMakerPath 
+            public map: IPathOriginFunctionMap,
+            public fixPoint?: (pointToFix: IPoint) => IPoint,
+            public fixPath?: (pathToFix: IPath, origin: IPoint) => IPath 
             ) {
         }
 
@@ -44,7 +44,7 @@ module Maker.exporter {
          * @param pathToExport The path to export.
          * @param offset The offset position of the path. 
          */
-        public exportPath(pathToExport: IMakerPath, offset: IMakerPoint) {
+        public exportPath(pathToExport: IPath, offset: IPoint) {
             var fn = this.map[pathToExport.type];
             if (fn) {
                 fn(this.fixPath? this.fixPath(pathToExport, offset) : pathToExport, offset);
@@ -57,7 +57,7 @@ module Maker.exporter {
          * @param modelToExport The model to export.
          * @param offset The offset position of the model.
          */
-        public exportModel(modelToExport: IMakerModel, offset: IMakerPoint) {
+        public exportModel(modelToExport: IModel, offset: IPoint) {
 
             var newOffset = point.add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
 
@@ -80,10 +80,10 @@ module Maker.exporter {
          * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
          * @param offset The offset position of the object.
          */
-        public exportItem(itemToExport: any, origin: IMakerPoint) {
+        public exportItem(itemToExport: any, origin: IPoint) {
 
             if (isModel(itemToExport)) {
-                this.exportModel(<IMakerModel>itemToExport, origin);
+                this.exportModel(<IModel>itemToExport, origin);
 
             } else if (Array.isArray(itemToExport)) {
                 var items: any[] = itemToExport;
@@ -92,7 +92,7 @@ module Maker.exporter {
                 }
 
             } else if (isPath(itemToExport)) {
-                this.exportPath(<IMakerPath>itemToExport, origin);
+                this.exportPath(<IPath>itemToExport, origin);
             }
         }
 

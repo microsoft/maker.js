@@ -8,7 +8,7 @@ module Maker.model {
      * @param modelToFlatten The model to flatten.
      * @param origin Optional offset reference point.
      */
-    export function flatten(modelToFlatten: IMakerModel, origin?: IMakerPoint) {
+    export function flatten(modelToFlatten: IModel, origin?: IPoint) {
         var newOrigin = point.add(modelToFlatten.origin, origin);
 
         if (modelToFlatten.paths) {
@@ -36,8 +36,8 @@ module Maker.model {
      * @param mirrorY Boolean to mirror on the y axis.
      * @returns Mirrored model.
      */
-    export function mirror(modelToMirror: IMakerModel, mirrorX: boolean, mirrorY: boolean): IMakerModel {
-        var newModel: IMakerModel = {};
+    export function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel {
+        var newModel: IModel = {};
 
         if (modelToMirror.id) {
             newModel.id = modelToMirror.id + '_mirror';
@@ -72,8 +72,8 @@ module Maker.model {
         return newModel;
     }
 
-    export function move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel;
-    export function move(modelToMove: IMakerModel, origin: number[]): IMakerModel;
+    export function move(modelToMove: IModel, origin: IPoint): IModel;
+    export function move(modelToMove: IModel, origin: number[]): IModel;
 
     /**
      * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
@@ -82,7 +82,7 @@ module Maker.model {
      * @param origin The new position of the model.
      * @returns The original model (for chaining).
      */
-    export function move(modelToMove: IMakerModel, origin: any): IMakerModel {
+    export function move(modelToMove: IModel, origin: any): IModel {
         modelToMove.origin = point.clone(point.ensure(origin));
         return modelToMove;
     }
@@ -95,7 +95,7 @@ module Maker.model {
      * @param rotationOrigin The center point of rotation.
      * @returns The original model (for chaining).
      */
-    export function rotate(modelToRotate: IMakerModel, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerModel {
+    export function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint): IModel {
 
         var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
 
@@ -122,7 +122,7 @@ module Maker.model {
      * @param scaleOrigin Optional boolean to scale the origin point. Typically false for the root model.
      * @returns The original model (for chaining).
      */
-    export function scale(modelToScale: IMakerModel, scaleValue: number, scaleOrigin = false): IMakerModel {
+    export function scale(modelToScale: IModel, scaleValue: number, scaleOrigin = false): IModel {
 
         if (scaleOrigin && modelToScale.origin) {
             modelToScale.origin = point.scale(modelToScale.origin, scaleValue);

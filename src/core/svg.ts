@@ -8,9 +8,9 @@ module Maker.exporter {
      */
     export var defaultStrokeWidth = 0.2;
 
-    export function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
-    export function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
-    export function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
+    export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
+    export function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
+    export function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
 
     /**
      * Renders an item in SVG markup.
@@ -41,13 +41,13 @@ module Maker.exporter {
 
         var elements: string[] = [];
 
-        function fixPoint(pointToFix: IMakerPoint): IMakerPoint {
+        function fixPoint(pointToFix: IPoint): IPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
             var pointMirroredY = point.mirror(pointToFix, false, true);
             return point.scale(pointMirroredY, opts.scale);
         }
 
-        function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
+        function fixPath(pathToFix: IPath, origin: IPoint): IPath {
             //mirror creates a copy, so we don't modify the original
             var mirrorY = path.mirror(pathToFix, false, true);
             return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
@@ -95,9 +95,9 @@ module Maker.exporter {
             }
         }
 
-        var map: IMakerPathOriginFunctionMap = {};
+        var map: IPathOriginFunctionMap = {};
 
-        map[pathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+        map[pathType.Line] = function (line: IPathLine, origin: IPoint) {
 
             var start = line.origin;
             var end = line.end;
@@ -121,7 +121,7 @@ module Maker.exporter {
             }
         };
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+        map[pathType.Circle] = function (circle: IPathCircle, origin: IPoint) {
 
             var center = circle.origin;
 
@@ -156,8 +156,8 @@ module Maker.exporter {
             }
         };
 
-        function svgArcData(d: any[], radius: number, endPoint: IMakerPoint, largeArc?: boolean, decreasing?: boolean) {
-            var end: IMakerPoint = endPoint;
+        function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
+            var end: IPoint = endPoint;
             d.push(radius, radius);
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
@@ -165,7 +165,7 @@ module Maker.exporter {
             d.push(round(end.x), round(end.y));
         }
 
-        map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
+        map[pathType.Arc] = function (arc: IPathArc, origin: IPoint) {
 
             var arcPoints = point.fromArc(arc);
 
@@ -185,17 +185,17 @@ module Maker.exporter {
 
         //measure the item to move it into svg area
 
-        var modelToMeasure: IMakerModel;
+        var modelToMeasure: IModel;
 
         if (isModel(itemToExport)) {
-            modelToMeasure = <IMakerModel>itemToExport;
+            modelToMeasure = <IModel>itemToExport;
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToMeasure = { paths: <IMakerPath[]>itemToExport };
+            modelToMeasure = { paths: <IPath[]>itemToExport };
 
         } else if (isPath(itemToExport)) {
-            modelToMeasure = { paths: [(<IMakerPath>itemToExport)] };
+            modelToMeasure = { paths: [(<IPath>itemToExport)] };
         }
 
         var size = measure.modelExtents(modelToMeasure);
@@ -254,7 +254,7 @@ module Maker.exporter {
     /**
      * SVG rendering options.
      */
-    export interface ISVGRenderOptions extends IMakerExportOptions {
+    export interface ISVGRenderOptions extends IExportOptions {
 
         /**
          * SVG stroke width of paths. This is in the same unit system as the units property.
@@ -279,7 +279,7 @@ module Maker.exporter {
         /**
          * Rendered reference origin. 
          */
-        origin: IMakerPoint;
+        origin: IPoint;
 
         /**
          * Use SVG <path> elements instead of <line>, <circle> etc.

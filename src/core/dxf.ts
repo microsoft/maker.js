@@ -2,9 +2,9 @@
 
 module Maker.exporter {
 
-    export function toDXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
-    export function toDXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;
-    export function toDXF(pathToExport: IMakerPath, options?: IDXFRenderOptions): string;
+    export function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;
+    export function toDXF(pathsToExport: IPath[], options?: IDXFRenderOptions): string;
+    export function toDXF(pathToExport: IPath, options?: IDXFRenderOptions): string;
 
     /**
      * Renders an item in AutoDesk DFX file format.
@@ -29,9 +29,9 @@ module Maker.exporter {
             dxf.push(value);
         }
 
-        var map: IMakerPathOriginFunctionMap = {};
+        var map: IPathOriginFunctionMap = {};
 
-        map[pathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+        map[pathType.Line] = function (line: IPathLine, origin: IPoint) {
             append("0");
             append("LINE");
             append("8");
@@ -46,7 +46,7 @@ module Maker.exporter {
             append(line.end.y + origin.y);
         };
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+        map[pathType.Circle] = function (circle: IPathCircle, origin: IPoint) {
             append("0");
             append("CIRCLE");
             append("8");
@@ -59,7 +59,7 @@ module Maker.exporter {
             append(circle.radius);
         };
 
-        map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
+        map[pathType.Arc] = function (arc: IPathArc, origin: IPoint) {
             append("0");
             append("ARC");
             append("8");
@@ -147,7 +147,7 @@ module Maker.exporter {
     /**
      * DXF rendering options.
      */
-    export interface IDXFRenderOptions extends IMakerExportOptions {
+    export interface IDXFRenderOptions extends IExportOptions {
     }
 
 }

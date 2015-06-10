@@ -1,8 +1,8 @@
 ﻿module Maker.models {
 
-    export class SCurve implements IMakerModel {
+    export class SCurve implements IModel {
 
-        public paths: IMakerPath[] = [];
+        public paths: IPath[] = [];
 
         constructor(public width: number, public height: number) {
 
@@ -15,7 +15,7 @@
             var radius: number;
             var startAngle: number;
             var endAngle: number;
-            var arcOrigin: IMakerPoint;
+            var arcOrigin: IPoint;
 
             if (width > height) {
                 radius = findRadius(h2, w2);
