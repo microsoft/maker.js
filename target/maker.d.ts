@@ -1,4 +1,4 @@
-﻿declare module makerjs {
+﻿declare module Maker {
     /**
     * String-based enumeration of unit types: imperial, metric or otherwise.
     * A model may specify the unit system it is using, if any. When importing a model, it may have different units.
@@ -13,6 +13,13 @@
         Millimeter: string;
     };
     /**
+    * Numeric rounding
+    *
+    * @param n The number to round off.
+    * @param accuracy Optional exemplar of number of decimal places.
+    */
+    function round(n: number, accuracy?: number): number;
+    /**
     * Copy the properties from one object to another object.
     *
     * @param target The object to extend. It will receive the new properties.
@@ -23,13 +30,13 @@
     /**
     * Things that may have an id.
     */
-    interface IMakerId {
+    interface IHaveId {
         id?: string;
     }
     /**
     * An item found in an array.
     */
-    interface IMakerFound<T> {
+    interface IFound<T> {
         /**
         * Position of the item within the array.
         */
@@ -46,11 +53,11 @@
     * @param id Id of the item to find.
     * @returns object with item and its position.
     */
-    function findById<T extends IMakerId>(arr: T[], id: string): IMakerFound<T>;
+    function findById<T extends IHaveId>(arr: T[], id: string): IFound<T>;
     /**
     * An x-y point in a two-dimensional space.
     */
-    interface IMakerPoint {
+    interface IPoint {
         x: number;
         y: number;
     }
@@ -63,20 +70,20 @@
     /**
     * A measurement of extents, the high and low points.
     */
-    interface IMakerMeasure {
+    interface IMeasure {
         /**
         * The point containing both the lowest x and y values of the rectangle containing the item being measured.
         */
-        low: IMakerPoint;
+        low: IPoint;
         /**
         * The point containing both the highest x and y values of the rectangle containing the item being measured.
         */
-        high: IMakerPoint;
+        high: IPoint;
     }
     /**
     * A line, curved line or other simple two dimensional shape.
     */
-    interface IMakerPath extends IMakerId {
+    interface IPath extends IHaveId {
         /**
         * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
         */
@@ -84,7 +91,7 @@
         /**
         * The main point of reference for this path.
         */
-        origin: IMakerPoint;
+        origin: IPoint;
     }
     /**
     * Test to see if an object implements the required properties of a path.
@@ -95,16 +102,16 @@
     /**
     * A line path.
     */
-    interface IMakerPathLine extends IMakerPath {
+    interface IPathLine extends IPath {
         /**
         * The end point defining the line. The start point is the origin.
         */
-        end: IMakerPoint;
+        end: IPoint;
     }
     /**
     * A circle path.
     */
-    interface IMakerPathCircle extends IMakerPath {
+    interface IPathCircle extends IPath {
         /**
         * The radius of the circle.
         */
@@ -113,7 +120,7 @@
     /**
     * An arc path.
     */
-    interface IMakerPathArc extends IMakerPathCircle {
+    interface IPathArc extends IPathCircle {
         /**
         * The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.
         */
@@ -126,20 +133,20 @@
     /**
     * A map of functions which accept a path as a parameter.
     */
-    interface IMakerPathFunctionMap {
+    interface IPathFunctionMap {
         /**
         * Key is the type of a path, value is a function which accepts a path object as its parameter.
         */
-        [type: string]: (pathValue: IMakerPath) => void;
+        [type: string]: (pathValue: IPath) => void;
     }
     /**
     * A map of functions which accept a path and an origin point as parameters.
     */
-    interface IMakerPathOriginFunctionMap {
+    interface IPathOriginFunctionMap {
         /**
         * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
         */
-        [type: string]: (pathValue: IMakerPath, origin: IMakerPoint) => void;
+        [type: string]: (pathValue: IPath, origin: IPoint) => void;
     }
     /**
     * String-based enumeration of all paths types.
@@ -152,11 +159,11 @@
     /**
     * A model is a composite object which may contain an array of paths, or an array of models recursively.
     */
-    interface IMakerModel extends IMakerId {
+    interface IModel extends IHaveId {
         /**
         * Optional origin location of this model.
         */
-        origin?: IMakerPoint;
+        origin?: IPoint;
         /**
         * A model may want to specify its type, but this value is not employed yet.
         */
@@ -164,11 +171,11 @@
         /**
         * Optional array of path objects in this model.
         */
-        paths?: IMakerPath[];
+        paths?: IPath[];
         /**
         * Optional array of models within this model.
         */
-        models?: IMakerModel[];
+        models?: IModel[];
         /**
         * Optional unit system of this model. See UnitType for possible values.
         */
@@ -192,8 +199,8 @@
     * @param endAngle The end angle of the arc.
     * @returns A new POJO representing an arc path.
     */
-    function createArc(id: string, origin: IMakerPoint, radius: number, startAngle: number, endAngle: number): IMakerPathArc;
-    function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IMakerPathArc;
+    function createArc(id: string, origin: IPoint, radius: number, startAngle: number, endAngle: number): IPathArc;
+    function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IPathArc;
     /**
     * Shortcut to create a new circle path.
     *
@@ -202,8 +209,8 @@
     * @param radius The radius of the circle.
     * @returns A new POJO representing an circle path.
     */
-    function createCircle(id: string, origin: IMakerPoint, radius: number): IMakerPathCircle;
-    function createCircle(id: string, origin: number[], radius: number): IMakerPathCircle;
+    function createCircle(id: string, origin: IPoint, radius: number): IPathCircle;
+    function createCircle(id: string, origin: number[], radius: number): IPathCircle;
     /**
     * Shortcut to create a new line path.
     *
@@ -212,13 +219,13 @@
     * @param end The end point of the line.
     * @returns A new POJO representing an line path.
     */
-    function createLine(id: string, origin: IMakerPoint, end: IMakerPoint): IMakerPathLine;
-    function createLine(id: string, origin: number[], end: IMakerPoint): IMakerPathLine;
-    function createLine(id: string, origin: IMakerPoint, end: number[]): IMakerPathLine;
-    function createLine(id: string, origin: number[], end: number[]): IMakerPathLine;
+    function createLine(id: string, origin: IPoint, end: IPoint): IPathLine;
+    function createLine(id: string, origin: number[], end: IPoint): IPathLine;
+    function createLine(id: string, origin: IPoint, end: number[]): IPathLine;
+    function createLine(id: string, origin: number[], end: number[]): IPathLine;
 }
 declare var module: any;
-declare module makerjs.angle {
+declare module Maker.angle {
     /**
     * Convert an angle from degrees to radians.
     *
@@ -239,7 +246,7 @@ declare module makerjs.angle {
     * @param arc An arc path object.
     * @returns End angle of arc.
     */
-    function arcEndAnglePastZero(arc: IMakerPathArc): number;
+    function arcEndAnglePastZero(arc: IPathArc): number;
     /**
     * Angle of a line through a point.
     *
@@ -247,7 +254,7 @@ declare module makerjs.angle {
     * @param origin (Optional 0,0 implied) point of origin of the angle.
     * @returns Angle of the line throught the point.
     */
-    function fromPointToRadians(pointToFindAngle: IMakerPoint, origin?: IMakerPoint): number;
+    function fromPointToRadians(pointToFindAngle: IPoint, origin?: IPoint): number;
     /**
     * Mirror an angle on either or both x and y axes.
     *
@@ -258,7 +265,7 @@ declare module makerjs.angle {
     */
     function mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number;
 }
-declare module makerjs.point {
+declare module Maker.point {
     /**
     * Add two points together and return the result as a new point object.
     *
@@ -267,23 +274,23 @@ declare module makerjs.point {
     * @param subtract Optional boolean to subtract instead of add.
     * @returns A new point object.
     */
-    function add(a: IMakerPoint, b: IMakerPoint, subtract?: boolean): IMakerPoint;
+    function add(a: IPoint, b: IPoint, subtract?: boolean): IPoint;
     /**
     * Clone a point into a new point.
     *
     * @param pointToClone The point to clone.
     * @returns A new point with same values as the original.
     */
-    function clone(pointToClone: IMakerPoint): IMakerPoint;
+    function clone(pointToClone: IPoint): IPoint;
     /**
     * Ensures that an item has the properties of a point object.
     *
     * @param pointToEnsure The object to ensure; may be a point object, or an array of numbers, or something else which will attempt to coerce into a point.
     * @returns A new point object either with the x, y values corresponding to the input, or 0,0 coordinates.
     */
-    function ensure(pointToEnsure: IMakerPoint): IMakerPoint;
-    function ensure(pointToEnsure: number[]): IMakerPoint;
-    function ensure(): IMakerPoint;
+    function ensure(pointToEnsure: IPoint): IPoint;
+    function ensure(pointToEnsure: number[]): IPoint;
+    function ensure(): IPoint;
     /**
     * Get a point from its polar coordinates.
     *
@@ -291,14 +298,14 @@ declare module makerjs.point {
     * @param radius The radius of the polar coordinate.
     * @returns A new point object.
     */
-    function fromPolar(angleInRadians: number, radius: number): IMakerPoint;
+    function fromPolar(angleInRadians: number, radius: number): IPoint;
     /**
     * Get the two end points of an arc path.
     *
     * @param arc The arc path object.
     * @returns Array with 2 elements: [0] is the point object corresponding to the start angle, [1] is the point object corresponding to the end angle.
     */
-    function fromArc(arc: IMakerPathArc): IMakerPoint[];
+    function fromArc(arc: IPathArc): IPoint[];
     /**
     * Create a clone of a point, mirrored on either or both x and y axes.
     *
@@ -307,7 +314,7 @@ declare module makerjs.point {
     * @param mirrorY Boolean to mirror on the y axis.
     * @returns Mirrored point.
     */
-    function mirror(pointToMirror: IMakerPoint, mirrorX: boolean, mirrorY: boolean): IMakerPoint;
+    function mirror(pointToMirror: IPoint, mirrorX: boolean, mirrorY: boolean): IPoint;
     /**
     * Rotate a point.
     *
@@ -316,7 +323,7 @@ declare module makerjs.point {
     * @param rotationOrigin The center point of rotation.
     * @returns A new point.
     */
-    function rotate(pointToRotate: IMakerPoint, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPoint;
+    function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin: IPoint): IPoint;
     /**
     * Scale a point's coordinates.
     *
@@ -324,7 +331,7 @@ declare module makerjs.point {
     * @param scaleValue The amount of scaling.
     * @returns A new point.
     */
-    function scale(pointToScale: IMakerPoint, scaleValue: number): IMakerPoint;
+    function scale(pointToScale: IPoint, scaleValue: number): IPoint;
     /**
     * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
     *
@@ -332,18 +339,18 @@ declare module makerjs.point {
     * @param b Second point, either as a point object, or as an array of numbers.
     * @returns A new point object.
     */
-    function subtract(a: IMakerPoint, b: IMakerPoint): IMakerPoint;
-    function subtract(a: IMakerPoint, b: number[]): IMakerPoint;
-    function subtract(a: number[], b: IMakerPoint): IMakerPoint;
-    function subtract(a: number[], b: number[]): IMakerPoint;
+    function subtract(a: IPoint, b: IPoint): IPoint;
+    function subtract(a: IPoint, b: number[]): IPoint;
+    function subtract(a: number[], b: IPoint): IPoint;
+    function subtract(a: number[], b: number[]): IPoint;
     /**
     * A point at 0,0 coordinates.
     *
     * @returns A new point.
     */
-    function zero(): IMakerPoint;
+    function zero(): IPoint;
 }
-declare module makerjs.path {
+declare module Maker.path {
     /**
     * Create a clone of a path, mirrored on either or both x and y axes.
     *
@@ -353,7 +360,7 @@ declare module makerjs.path {
     * @param newId Optional id to assign to the new path.
     * @returns Mirrored path.
     */
-    function mirror(pathToMirror: IMakerPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IMakerPath;
+    function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IPath;
     /**
     * Move a path's origin by a relative amount. Note: to move absolute, just set the origin property directly.
     *
@@ -361,8 +368,8 @@ declare module makerjs.path {
     * @param adjust The x & y adjustments, either as a point object, or as an array of numbers.
     * @returns The original path (for chaining).
     */
-    function moveRelative(pathToMove: IMakerPath, adjust: IMakerPoint): IMakerPath;
-    function moveRelative(pathToMove: IMakerPath, adjust: number[]): IMakerPath;
+    function moveRelative(pathToMove: IPath, adjust: IPoint): IPath;
+    function moveRelative(pathToMove: IPath, adjust: number[]): IPath;
     /**
     * Rotate a path.
     *
@@ -371,7 +378,7 @@ declare module makerjs.path {
     * @param rotationOrigin The center point of rotation.
     * @returns The original path (for chaining).
     */
-    function rotate(pathToRotate: IMakerPath, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPath;
+    function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint): IPath;
     /**
     * Scale a path.
     *
@@ -379,16 +386,16 @@ declare module makerjs.path {
     * @param scaleValue The amount of scaling.
     * @returns The original path (for chaining).
     */
-    function scale(pathToScale: IMakerPath, scaleValue: number): IMakerPath;
+    function scale(pathToScale: IPath, scaleValue: number): IPath;
 }
-declare module makerjs.model {
+declare module Maker.model {
     /**
     * Moves all children (models and paths, recursively) within a model to their absolute position. Useful when referencing points between children.
     *
     * @param modelToFlatten The model to flatten.
     * @param origin Optional offset reference point.
     */
-    function flatten(modelToFlatten: IMakerModel, origin?: IMakerPoint): IMakerModel;
+    function flatten(modelToFlatten: IModel, origin?: IPoint): IModel;
     /**
     * Create a clone of a model, mirrored on either or both x and y axes.
     *
@@ -397,9 +404,9 @@ declare module makerjs.model {
     * @param mirrorY Boolean to mirror on the y axis.
     * @returns Mirrored model.
     */
-    function mirror(modelToMirror: IMakerModel, mirrorX: boolean, mirrorY: boolean): IMakerModel;
-    function move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel;
-    function move(modelToMove: IMakerModel, origin: number[]): IMakerModel;
+    function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel;
+    function move(modelToMove: IModel, origin: IPoint): IModel;
+    function move(modelToMove: IModel, origin: number[]): IModel;
     /**
     * Rotate a model.
     *
@@ -408,7 +415,7 @@ declare module makerjs.model {
     * @param rotationOrigin The center point of rotation.
     * @returns The original model (for chaining).
     */
-    function rotate(modelToRotate: IMakerModel, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerModel;
+    function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint): IModel;
     /**
     * Scale a model.
     *
@@ -417,9 +424,9 @@ declare module makerjs.model {
     * @param scaleOrigin Optional boolean to scale the origin point. Typically false for the root model.
     * @returns The original model (for chaining).
     */
-    function scale(modelToScale: IMakerModel, scaleValue: number, scaleOrigin?: boolean): IMakerModel;
+    function scale(modelToScale: IModel, scaleValue: number, scaleOrigin?: boolean): IModel;
 }
-declare module makerjs.units {
+declare module Maker.units {
     /**
     * Get a conversion ratio between a source unit and a destination unit. This will lazy load the table with initial conversions,
     * then new cross-conversions will be cached in the table.
@@ -430,14 +437,14 @@ declare module makerjs.units {
     */
     function conversionScale(srcUnitType: string, destUnitType: string): number;
 }
-declare module makerjs.measure {
+declare module Maker.measure {
     /**
     * Total angle of an arc between its start and end angles.
     *
     * @param arc The arc to measure.
     * @returns Angle of arc.
     */
-    function arcAngle(arc: IMakerPathArc): number;
+    function arcAngle(arc: IPathArc): number;
     /**
     * Calculates the distance between two points.
     *
@@ -445,31 +452,31 @@ declare module makerjs.measure {
     * @param b Second point.
     * @returns Distance between points.
     */
-    function pointDistance(a: IMakerPoint, b: IMakerPoint): number;
+    function pointDistance(a: IPoint, b: IPoint): number;
     /**
     * Calculates the smallest rectangle which contains a path.
     *
     * @param pathToMeasure The path to measure.
     * @returns object with low and high points.
     */
-    function pathExtents(pathToMeasure: IMakerPath): IMakerMeasure;
+    function pathExtents(pathToMeasure: IPath): IMeasure;
     /**
     * Measures the length of a path.
     *
     * @param pathToMeasure The path to measure.
     * @returns Length of the path.
     */
-    function pathLength(pathToMeasure: IMakerPath): number;
+    function pathLength(pathToMeasure: IPath): number;
     /**
     * Measures the smallest rectangle which contains a model.
     *
     * @param modelToMeasure The model to measure.
     * @returns object with low and high points.
     */
-    function modelExtents(modelToMeasure: IMakerModel): IMakerMeasure;
+    function modelExtents(modelToMeasure: IModel): IMeasure;
 }
-declare module makerjs.exporter {
-    interface IMakerExportOptions {
+declare module Maker.exporter {
+    interface IExportOptions {
         /**
         * Unit system to embed in exported file.
         */
@@ -483,50 +490,50 @@ declare module makerjs.exporter {
     * Class to traverse an item 's models or paths and ultimately render each path.
     */
     class Exporter {
-        public map: IMakerPathOriginFunctionMap;
-        public fixPoint: (pointToFix: IMakerPoint) => IMakerPoint;
-        public fixPath: (pathToFix: IMakerPath, origin: IMakerPoint) => IMakerPath;
+        public map: IPathOriginFunctionMap;
+        public fixPoint: (pointToFix: IPoint) => IPoint;
+        public fixPath: (pathToFix: IPath, origin: IPoint) => IPath;
         /**
         * @param map Object containing properties: property name is the type of path, e.g. "line", "circle"; property value
         * is a function to render a path. Function parameters are path and point.
         * @param fixPoint Optional function to modify a point prior to export. Function parameter is a point; function must return a point.
         * @param fixPath Optional function to modify a path prior to output. Function parameters are path and offset point; function must return a path.
         */
-        constructor(map: IMakerPathOriginFunctionMap, fixPoint?: (pointToFix: IMakerPoint) => IMakerPoint, fixPath?: (pathToFix: IMakerPath, origin: IMakerPoint) => IMakerPath);
+        constructor(map: IPathOriginFunctionMap, fixPoint?: (pointToFix: IPoint) => IPoint, fixPath?: (pathToFix: IPath, origin: IPoint) => IPath);
         /**
         * Export a path.
         *
         * @param pathToExport The path to export.
         * @param offset The offset position of the path.
         */
-        public exportPath(pathToExport: IMakerPath, offset: IMakerPoint): void;
+        public exportPath(pathToExport: IPath, offset: IPoint): void;
         /**
         * Export a model.
         *
         * @param modelToExport The model to export.
         * @param offset The offset position of the model.
         */
-        public exportModel(modelToExport: IMakerModel, offset: IMakerPoint): void;
+        public exportModel(modelToExport: IModel, offset: IPoint): void;
         /**
         * Export an object.
         *
         * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
         * @param offset The offset position of the object.
         */
-        public exportItem(itemToExport: any, origin: IMakerPoint): void;
+        public exportItem(itemToExport: any, origin: IPoint): void;
     }
 }
-declare module makerjs.exporter {
-    function toDXF(modelToExport: IMakerModel, options?: IDXFRenderOptions): string;
-    function toDXF(pathsToExport: IMakerPath[], options?: IDXFRenderOptions): string;
-    function toDXF(pathToExport: IMakerPath, options?: IDXFRenderOptions): string;
+declare module Maker.exporter {
+    function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;
+    function toDXF(pathsToExport: IPath[], options?: IDXFRenderOptions): string;
+    function toDXF(pathToExport: IPath, options?: IDXFRenderOptions): string;
     /**
     * DXF rendering options.
     */
-    interface IDXFRenderOptions extends IMakerExportOptions {
+    interface IDXFRenderOptions extends IExportOptions {
     }
 }
-declare module makerjs.exporter {
+declare module Maker.exporter {
     /**
     * Attributes for an XML tag.
     */
@@ -564,18 +571,18 @@ declare module makerjs.exporter {
         public toString(): string;
     }
 }
-declare module makerjs.exporter {
+declare module Maker.exporter {
     /**
     * The default stroke width in millimeters.
     */
     var defaultStrokeWidth: number;
-    function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
-    function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
-    function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
+    function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
+    function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
+    function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
     /**
     * SVG rendering options.
     */
-    interface ISVGRenderOptions extends IMakerExportOptions {
+    interface ISVGRenderOptions extends IExportOptions {
         /**
         * SVG stroke width of paths. This is in the same unit system as the units property.
         */
@@ -595,7 +602,7 @@ declare module makerjs.exporter {
         /**
         * Rendered reference origin.
         */
-        origin: IMakerPoint;
+        origin: IPoint;
         /**
         * Use SVG <path> elements instead of <line>, <circle> etc.
         */
@@ -606,68 +613,69 @@ declare module makerjs.exporter {
         viewBox: boolean;
     }
 }
-declare module makerjs.models {
-    class BoltCircle implements IMakerModel {
-        public paths: IMakerPath[];
+declare module Maker.models {
+    class BoltCircle implements IModel {
+        public paths: IPath[];
         constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
     }
 }
-declare module makerjs.models {
-    class BoltRectangle implements IMakerModel {
-        public paths: IMakerPath[];
+declare module Maker.models {
+    class BoltRectangle implements IModel {
+        public paths: IPath[];
         constructor(width: number, height: number, holeRadius: number);
     }
 }
-declare module makerjs.models {
-    class ConnectTheDots implements IMakerModel {
+declare module Maker.models {
+    class ConnectTheDots implements IModel {
         public isClosed: boolean;
-        public points: IMakerPoint[];
-        public paths: IMakerPath[];
-        constructor(isClosed: boolean, points: IMakerPoint[]);
+        public points: any[];
+        public paths: IPath[];
+        constructor(isClosed: boolean, points: IPoint[]);
+        constructor(isClosed: boolean, points: number[][]);
     }
 }
-declare module makerjs.models {
-    class RoundRectangle implements IMakerModel {
+declare module Maker.models {
+    class RoundRectangle implements IModel {
         public width: number;
         public height: number;
         public radius: number;
-        public paths: IMakerPath[];
+        public paths: IPath[];
         constructor(width: number, height: number, radius: number);
     }
 }
-declare module makerjs.models {
+declare module Maker.models {
     class Oval extends RoundRectangle {
         public width: number;
         public height: number;
         constructor(width: number, height: number);
     }
 }
-declare module makerjs.models {
-    class OvalArc implements IMakerModel {
+declare module Maker.models {
+    class OvalArc implements IModel {
         public startAngle: number;
         public endAngle: number;
         public sweepRadius: number;
         public slotRadius: number;
-        public paths: IMakerPath[];
+        public paths: IPath[];
         constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
     }
 }
-declare module makerjs.models {
+declare module Maker.models {
     class Rectangle extends ConnectTheDots {
         public width: number;
         public height: number;
         constructor(width: number, height: number);
     }
 }
-declare module makerjs.models {
-    class SCurve implements IMakerModel {
+declare module Maker.models {
+    class SCurve implements IModel {
         public width: number;
         public height: number;
-        public paths: IMakerPath[];
+        public paths: IPath[];
         constructor(width: number, height: number);
     }
 }
-declare module makerjs.models {
+declare module Maker.models {
     class Square extends Rectangle {
         public side: number;
         constructor(side: number);
