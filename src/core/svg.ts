@@ -103,21 +103,21 @@ module Maker.exporter {
             var end = line.end;
 
             if (opts.useSvgPathOnly) {
-                drawPath(line.id, start.x, start.y, [round(end.x), round(end.y)]);
+                drawPath(line.id, start[0], start[1], [round(end[0]), round(end[1])]);
             } else {
                 createElement(
                     "line",
                     {
                         "id": line.id,
-                        "x1": round(start.x),
-                        "y1": round(start.y),
-                        "x2": round(end.x),
-                        "y2": round(end.y)
+                        "x1": round(start[0]),
+                        "y1": round(start[1]),
+                        "x2": round(end[0]),
+                        "y2": round(end[1])
                     });
             }
 
             if (opts.annotate) {
-                drawText(line.id, (start.x + end.x) / 2, (start.y + end.y) / 2);
+                drawText(line.id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
             }
         };
 
@@ -132,13 +132,13 @@ module Maker.exporter {
 
                 function halfCircle(sign: number) {
                     d.push('a');
-                    svgArcData(d, r, { x: 2 * r * sign, y: 0 });
+                    svgArcData(d, r, [2 * r * sign, 0]);
                 }
 
                 halfCircle(1);
                 halfCircle(-1);
 
-                drawPath(circle.id, center.x, center.y, d);
+                drawPath(circle.id, center[0], center[1], d);
 
             } else {
                 createElement(
@@ -146,13 +146,13 @@ module Maker.exporter {
                     {
                         "id": circle.id,
                         "r": circle.radius,
-                        "cx": round(center.x),
-                        "cy": round(center.y)
+                        "cx": round(center[0]),
+                        "cy": round(center[1])
                     });
             }
 
             if (opts.annotate) {
-                drawText(circle.id, center.x, center.y);
+                drawText(circle.id, center[0], center[1]);
             }
         };
 
@@ -162,7 +162,7 @@ module Maker.exporter {
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
             d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
-            d.push(round(end.x), round(end.y));
+            d.push(round(end[0]), round(end[1]));
         }
 
         map[pathType.Arc] = function (arc: IPathArc, origin: IPoint) {
@@ -178,7 +178,7 @@ module Maker.exporter {
                 arc.startAngle > arc.endAngle
             );
 
-            drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
+            drawPath(arc.id, arcPoints[0][0], arcPoints[0][1], d);
         };
 
         //fixup options
@@ -201,7 +201,7 @@ module Maker.exporter {
         var size = measure.modelExtents(modelToMeasure);
 
         if (!opts.origin) {
-            opts.origin = { x: -size.low.x * opts.scale, y: size.high.y * opts.scale };
+            opts.origin = [-size.low[0] * opts.scale, size.high[1] * opts.scale];
         }
 
         if (!opts.units) {
@@ -230,8 +230,8 @@ module Maker.exporter {
         var svgAttrs;
 
         if (opts.viewBox) {
-            var width = round(size.high.x - size.low.x);
-            var height = round(size.high.y - size.low.y);
+            var width = round(size.high[0] - size.low[0]);
+            var height = round(size.high[1] - size.low[1]);
             var viewBox = [0, 0, width, height];
             var unit = svgUnit[opts.units] || '';
             svgAttrs = { width: width + unit, height: height + unit, viewBox: viewBox.join(' ') };

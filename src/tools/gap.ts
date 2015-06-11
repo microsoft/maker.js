@@ -12,10 +12,13 @@ module Maker.Tools {
     }
 
     function midPoint(a: IPoint, b: IPoint, breakAt: number= .5): IPoint {
-        return {
-            x: a.x + (b.x - a.x) * breakAt,
-            y: a.y + (b.y - a.y) * breakAt,
-        };
+        var mp = [];
+
+        for (var i = 2; i--;) {
+            mp.push(a[i] + (b[i] - a[i]) * breakAt);
+        }
+
+        return mp;
     }
 
     var breakPathFunctionMap: IBreakPathFunctionMap = {};

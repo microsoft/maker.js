@@ -37,13 +37,13 @@ module Maker.exporter {
             append("8");
             append(line.id);
             append("10");
-            append(line.origin.x + origin.x);
+            append(line.origin[0] + origin[0]);
             append("20");
-            append(line.origin.y + origin.y);
+            append(line.origin[1] + origin[1]);
             append("11");
-            append(line.end.x + origin.x);
+            append(line.end[0] + origin[0]);
             append("21");
-            append(line.end.y + origin.y);
+            append(line.end[1] + origin[1]);
         };
 
         map[pathType.Circle] = function (circle: IPathCircle, origin: IPoint) {
@@ -52,9 +52,9 @@ module Maker.exporter {
             append("8");
             append(circle.id);
             append("10");
-            append(circle.origin.x + origin.x);
+            append(circle.origin[0] + origin[0]);
             append("20");
-            append(circle.origin.y + origin.y);
+            append(circle.origin[1] + origin[1]);
             append("40");
             append(circle.radius);
         };
@@ -65,9 +65,9 @@ module Maker.exporter {
             append("8");
             append(arc.id);
             append("10");
-            append(arc.origin.x + origin.x);
+            append(arc.origin[0] + origin[0]);
             append("20");
-            append(arc.origin.y + origin.y);
+            append(arc.origin[1] + origin[1]);
             append("40");
             append(arc.radius);
             append("50");

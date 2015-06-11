@@ -66,19 +66,15 @@ module Maker.path {
      * @param adjust The x & y adjustments, either as a point object, or as an array of numbers.
      * @returns The original path (for chaining).
      */
-    export function moveRelative(pathToMove: IPath, adjust: IPoint): IPath;
-    export function moveRelative(pathToMove: IPath, adjust: number[]): IPath;
-    export function moveRelative(pathToMove: IPath, adjust: any): IPath {
-
-        var adjustPoint = point.ensure(adjust);
+    export function moveRelative(pathToMove: IPath, adjust: IPoint): IPath {
 
         var map: IPathFunctionMap = {};
 
         map[pathType.Line] = function (line: IPathLine) {
-            line.end = point.add(line.end, adjustPoint);
+            line.end = point.add(line.end, adjust);
         };
 
-        pathToMove.origin = point.add(pathToMove.origin, adjustPoint);
+        pathToMove.origin = point.add(pathToMove.origin, adjust);
 
         var fn = map[pathToMove.type];
         if (fn) {

@@ -13,7 +13,7 @@ Viewer.Render = function (params) {
         this.paths = [];
         this.models = [];
 
-        var circle = makerjs.createCircle('c1', [], Math.min(params.height, params.width) / 2 - .5);
+        var circle = makerjs.createCircle('c1', [0, 0], Math.min(params.height, params.width) / 2 - .5);
 
         if (params.radius < 0.5) {
             this.models.push(makerjs.model.move(new makerjs.models.BoltRectangle(params.width - .4, params.height - .4, .07), [.2, .2]));
@@ -35,7 +35,7 @@ Viewer.Render = function (params) {
     };
 
     var m = makerjs.measure.modelExtents(myModel.models[0]);
-    var x = m.high.x - m.low.x + .025;
+    var x = m.high[0] - m.low[0] + .025;
 
     for (var i = 1; i < params.count; i++) {
         myModel.models.push(makerjs.model.move(new myModelFactory(), [x * i, 0]));

@@ -72,9 +72,6 @@ module Maker.model {
         return newModel;
     }
 
-    export function move(modelToMove: IModel, origin: IPoint): IModel;
-    export function move(modelToMove: IModel, origin: number[]): IModel;
-
     /**
      * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
      * 
@@ -82,8 +79,8 @@ module Maker.model {
      * @param origin The new position of the model.
      * @returns The original model (for chaining).
      */
-    export function move(modelToMove: IModel, origin: any): IModel {
-        modelToMove.origin = point.clone(point.ensure(origin));
+    export function move(modelToMove: IModel, origin: IPoint): IModel {
+        modelToMove.origin = point.clone(origin);
         return modelToMove;
     }
 

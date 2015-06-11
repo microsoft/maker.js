@@ -96,7 +96,7 @@ var Maker;
     * @param item The item to test.
     */
     function isPoint(item) {
-        return item && ('x' in item) && ('y' in item);
+        return (Array.isArray(item) && item.length > 1);
     }
     Maker.isPoint = isPoint;
 
@@ -143,13 +143,22 @@ var Maker;
     }
     Maker.isModel = isModel;
 
-    
-
+    //shortcuts
+    /**
+    * Shortcut to create a new arc path.
+    *
+    * @param id The id of the new path.
+    * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+    * @param radius The radius of the arc.
+    * @param startAngle The start angle of the arc.
+    * @param endAngle The end angle of the arc.
+    * @returns A new POJO representing an arc path.
+    */
     function createArc(id, origin, radius, startAngle, endAngle) {
         var arc = {
             type: Maker.pathType.Arc,
             id: id,
-            origin: Maker.point.ensure(origin),
+            origin: origin,
             radius: radius,
             startAngle: startAngle,
             endAngle: endAngle
@@ -159,13 +168,19 @@ var Maker;
     }
     Maker.createArc = createArc;
 
-    
-
+    /**
+    * Shortcut to create a new circle path.
+    *
+    * @param id The id of the new path.
+    * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+    * @param radius The radius of the circle.
+    * @returns A new POJO representing an circle path.
+    */
     function createCircle(id, origin, radius) {
         var circle = {
             type: Maker.pathType.Circle,
             id: id,
-            origin: Maker.point.ensure(origin),
+            origin: origin,
             radius: radius
         };
 
@@ -173,14 +188,20 @@ var Maker;
     }
     Maker.createCircle = createCircle;
 
-    
-
+    /**
+    * Shortcut to create a new line path.
+    *
+    * @param id The id of the new path.
+    * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+    * @param end The end point of the line.
+    * @returns A new POJO representing an line path.
+    */
     function createLine(id, origin, end) {
         var line = {
             type: Maker.pathType.Line,
             id: id,
-            origin: Maker.point.ensure(origin),
-            end: Maker.point.ensure(end)
+            origin: origin,
+            end: end
         };
 
         return line;
@@ -245,7 +266,7 @@ var Maker;
         */
         function fromPointToRadians(pointToFindAngle, origin) {
             var d = Maker.point.subtract(pointToFindAngle, origin);
-            return Math.atan2(d.y, d.x);
+            return Math.atan2(d[1], d[0]);
         }
         angle.fromPointToRadians = fromPointToRadians;
 
@@ -290,12 +311,12 @@ var Maker;
             if (!b)
                 return newPoint;
 
-            if (subtract) {
-                newPoint.x -= b.x;
-                newPoint.y -= b.y;
-            } else {
-                newPoint.x += b.x;
-                newPoint.y += b.y;
+            for (var i = 2; i--;) {
+                if (subtract) {
+                    newPoint[i] -= b[i];
+                } else {
+                    newPoint[i] += b[i];
+                }
             }
             return newPoint;
         }
@@ -310,32 +331,9 @@ var Maker;
         function clone(pointToClone) {
             if (!pointToClone)
                 return point.zero();
-            return { x: pointToClone.x, y: pointToClone.y };
+            return [pointToClone[0], pointToClone[1]];
         }
         point.clone = clone;
-
-        
-
-        function ensure(pointToEnsure) {
-            if (!pointToEnsure) {
-                return zero();
-            }
-
-            if (Maker.isPoint(pointToEnsure)) {
-                return pointToEnsure;
-            }
-
-            if (Array.isArray(pointToEnsure) && pointToEnsure.length > 1) {
-                return { x: pointToEnsure[0], y: pointToEnsure[1] };
-            }
-
-            if (arguments.length > 1) {
-                return { x: arguments[0], y: arguments[0] };
-            }
-
-            return zero();
-        }
-        point.ensure = ensure;
 
         /**
         * Get a point from its polar coordinates.
@@ -345,10 +343,10 @@ var Maker;
         * @returns A new point object.
         */
         function fromPolar(angleInRadians, radius) {
-            return {
-                x: radius * Math.cos(angleInRadians),
-                y: radius * Math.sin(angleInRadians)
-            };
+            return [
+                radius * Math.cos(angleInRadians),
+                radius * Math.sin(angleInRadians)
+            ];
         }
         point.fromPolar = fromPolar;
 
@@ -379,11 +377,11 @@ var Maker;
             var p = clone(pointToMirror);
 
             if (mirrorX) {
-                p.x = -p.x;
+                p[0] = -p[0];
             }
 
             if (mirrorY) {
-                p.y = -p.y;
+                p[1] = -p[1];
             }
 
             return p;
@@ -416,8 +414,9 @@ var Maker;
         */
         function scale(pointToScale, scaleValue) {
             var p = clone(pointToScale);
-            p.x *= scaleValue;
-            p.y *= scaleValue;
+            for (var i = 2; i--;) {
+                p[i] *= scaleValue;
+            }
             return p;
         }
         point.scale = scale;
@@ -435,7 +434,7 @@ var Maker;
         * @returns A new point.
         */
         function zero() {
-            return { x: 0, y: 0 };
+            return [0, 0];
         }
         point.zero = zero;
     })(Maker.point || (Maker.point = {}));
@@ -485,18 +484,21 @@ var Maker;
         }
         path.mirror = mirror;
 
-        
-
+        /**
+        * Move a path's origin by a relative amount. Note: to move absolute, just set the origin property directly.
+        *
+        * @param pathToMove The path to move.
+        * @param adjust The x & y adjustments, either as a point object, or as an array of numbers.
+        * @returns The original path (for chaining).
+        */
         function moveRelative(pathToMove, adjust) {
-            var adjustPoint = Maker.point.ensure(adjust);
-
             var map = {};
 
             map[Maker.pathType.Line] = function (line) {
-                line.end = Maker.point.add(line.end, adjustPoint);
+                line.end = Maker.point.add(line.end, adjust);
             };
 
-            pathToMove.origin = Maker.point.add(pathToMove.origin, adjustPoint);
+            pathToMove.origin = Maker.point.add(pathToMove.origin, adjust);
 
             var fn = map[pathToMove.type];
             if (fn) {
@@ -661,7 +663,7 @@ var Maker;
         * @returns The original model (for chaining).
         */
         function move(modelToMove, origin) {
-            modelToMove.origin = Maker.point.clone(Maker.point.ensure(origin));
+            modelToMove.origin = Maker.point.clone(origin);
             return modelToMove;
         }
         model.move = move;
@@ -825,17 +827,17 @@ var Maker;
         * @returns Distance between points.
         */
         function pointDistance(a, b) {
-            var dx = b.x - a.x;
-            var dy = b.y - a.y;
+            var dx = b[0] - a[0];
+            var dy = b[1] - a[1];
             return Math.sqrt(dx * dx + dy * dy);
         }
         _measure.pointDistance = pointDistance;
 
         function getExtremePoint(a, b, fn) {
-            return {
-                x: fn(a.x, b.x),
-                y: fn(a.y, b.y)
-            };
+            return [
+                fn(a[0], b[0]),
+                fn(a[1], b[1])
+            ];
         }
 
         /**
@@ -855,8 +857,8 @@ var Maker;
 
             map[Maker.pathType.Circle] = function (circle) {
                 var r = circle.radius;
-                measurement.low = Maker.point.add(circle.origin, { x: -r, y: -r });
-                measurement.high = Maker.point.add(circle.origin, { x: r, y: r });
+                measurement.low = Maker.point.add(circle.origin, [-r, -r]);
+                measurement.high = Maker.point.add(circle.origin, [r, r]);
             };
 
             map[Maker.pathType.Arc] = function (arc) {
@@ -872,22 +874,20 @@ var Maker;
                     endAngle += 360;
                 }
 
-                function extremeAngle(xAngle, yAngle, value, fn) {
+                function extremeAngle(xyAngle, value, fn) {
                     var extremePoint = getExtremePoint(startPoint, endPoint, fn);
 
-                    if (startAngle < xAngle && xAngle < endAngle) {
-                        extremePoint.x = value;
-                    }
-
-                    if (startAngle < yAngle && yAngle < endAngle) {
-                        extremePoint.y = value;
+                    for (var i = 2; i--;) {
+                        if (startAngle < xyAngle[i] && xyAngle[i] < endAngle) {
+                            extremePoint[i] = value;
+                        }
                     }
 
                     return Maker.point.add(arc.origin, extremePoint);
                 }
 
-                measurement.low = extremeAngle(180, 270, -r, Math.min);
-                measurement.high = extremeAngle(360, 90, r, Math.max);
+                measurement.low = extremeAngle([180, 270], -r, Math.min);
+                measurement.high = extremeAngle([360, 90], r, Math.max);
             };
 
             var fn = map[pathToMeasure.type];
@@ -939,13 +939,14 @@ var Maker;
         * @returns object with low and high points.
         */
         function modelExtents(modelToMeasure) {
-            var totalMeasurement = { low: { x: null, y: null }, high: { x: null, y: null } };
+            var totalMeasurement = { low: [null, null], high: [null, null] };
 
             function lowerOrHigher(offsetOrigin, pathMeasurement) {
                 function getExtreme(a, b, fn) {
                     var c = Maker.point.add(b, offsetOrigin);
-                    a.x = (a.x == null ? c.x : fn(a.x, c.x));
-                    a.y = (a.y == null ? c.y : fn(a.y, c.y));
+                    for (var i = 2; i--;) {
+                        a[i] = (a[i] == null ? c[i] : fn(a[i], c[i]));
+                    }
                 }
 
                 getExtreme(totalMeasurement.low, pathMeasurement.low, Math.min);
@@ -1099,13 +1100,13 @@ var Maker;
                 append("8");
                 append(line.id);
                 append("10");
-                append(line.origin.x + origin.x);
+                append(line.origin[0] + origin[0]);
                 append("20");
-                append(line.origin.y + origin.y);
+                append(line.origin[1] + origin[1]);
                 append("11");
-                append(line.end.x + origin.x);
+                append(line.end[0] + origin[0]);
                 append("21");
-                append(line.end.y + origin.y);
+                append(line.end[1] + origin[1]);
             };
 
             map[Maker.pathType.Circle] = function (circle, origin) {
@@ -1114,9 +1115,9 @@ var Maker;
                 append("8");
                 append(circle.id);
                 append("10");
-                append(circle.origin.x + origin.x);
+                append(circle.origin[0] + origin[0]);
                 append("20");
-                append(circle.origin.y + origin.y);
+                append(circle.origin[1] + origin[1]);
                 append("40");
                 append(circle.radius);
             };
@@ -1127,9 +1128,9 @@ var Maker;
                 append("8");
                 append(arc.id);
                 append("10");
-                append(arc.origin.x + origin.x);
+                append(arc.origin[0] + origin[0]);
                 append("20");
-                append(arc.origin.y + origin.y);
+                append(arc.origin[1] + origin[1]);
                 append("40");
                 append(arc.radius);
                 append("50");
@@ -1379,19 +1380,19 @@ var Maker;
                 var end = line.end;
 
                 if (opts.useSvgPathOnly) {
-                    drawPath(line.id, start.x, start.y, [Maker.round(end.x), Maker.round(end.y)]);
+                    drawPath(line.id, start[0], start[1], [Maker.round(end[0]), Maker.round(end[1])]);
                 } else {
                     createElement("line", {
                         "id": line.id,
-                        "x1": Maker.round(start.x),
-                        "y1": Maker.round(start.y),
-                        "x2": Maker.round(end.x),
-                        "y2": Maker.round(end.y)
+                        "x1": Maker.round(start[0]),
+                        "y1": Maker.round(start[1]),
+                        "x2": Maker.round(end[0]),
+                        "y2": Maker.round(end[1])
                     });
                 }
 
                 if (opts.annotate) {
-                    drawText(line.id, (start.x + end.x) / 2, (start.y + end.y) / 2);
+                    drawText(line.id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
                 }
             };
 
@@ -1404,24 +1405,24 @@ var Maker;
 
                     function halfCircle(sign) {
                         d.push('a');
-                        svgArcData(d, r, { x: 2 * r * sign, y: 0 });
+                        svgArcData(d, r, [2 * r * sign, 0]);
                     }
 
                     halfCircle(1);
                     halfCircle(-1);
 
-                    drawPath(circle.id, center.x, center.y, d);
+                    drawPath(circle.id, center[0], center[1], d);
                 } else {
                     createElement("circle", {
                         "id": circle.id,
                         "r": circle.radius,
-                        "cx": Maker.round(center.x),
-                        "cy": Maker.round(center.y)
+                        "cx": Maker.round(center[0]),
+                        "cy": Maker.round(center[1])
                     });
                 }
 
                 if (opts.annotate) {
-                    drawText(circle.id, center.x, center.y);
+                    drawText(circle.id, center[0], center[1]);
                 }
             };
 
@@ -1431,7 +1432,7 @@ var Maker;
                 d.push(0); //0 = x-axis rotation
                 d.push(largeArc ? 1 : 0); //large arc=1, small arc=0
                 d.push(decreasing ? 0 : 1); //sweep-flag 0=decreasing, 1=increasing
-                d.push(Maker.round(end.x), Maker.round(end.y));
+                d.push(Maker.round(end[0]), Maker.round(end[1]));
             }
 
             map[Maker.pathType.Arc] = function (arc, origin) {
@@ -1440,7 +1441,7 @@ var Maker;
                 var d = ['A'];
                 svgArcData(d, arc.radius, arcPoints[1], Math.abs(arc.endAngle - arc.startAngle) > 180, arc.startAngle > arc.endAngle);
 
-                drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
+                drawPath(arc.id, arcPoints[0][0], arcPoints[0][1], d);
             };
 
             //fixup options
@@ -1459,7 +1460,7 @@ var Maker;
             var size = Maker.measure.modelExtents(modelToMeasure);
 
             if (!opts.origin) {
-                opts.origin = { x: -size.low.x * opts.scale, y: size.high.y * opts.scale };
+                opts.origin = [-size.low[0] * opts.scale, size.high[1] * opts.scale];
             }
 
             if (!opts.units) {
@@ -1487,8 +1488,8 @@ var Maker;
             var svgAttrs;
 
             if (opts.viewBox) {
-                var width = Maker.round(size.high.x - size.low.x);
-                var height = Maker.round(size.high.y - size.low.y);
+                var width = Maker.round(size.high[0] - size.low[0]);
+                var height = Maker.round(size.high[1] - size.low[1]);
                 var viewBox = [0, 0, width, height];
                 var unit = svgUnit[opts.units] || '';
                 svgAttrs = { width: width + unit, height: height + unit, viewBox: viewBox.join(' ') };
@@ -1685,7 +1686,7 @@ var Maker;
         var Rectangle = (function (_super) {
             __extends(Rectangle, _super);
             function Rectangle(width, height) {
-                _super.call(this, true, [{ x: 0, y: 0 }, { x: width, y: 0 }, { x: width, y: height }, { x: 0, y: height }]);
+                _super.call(this, true, [[0, 0], [width, 0], [width, height], [0, height]]);
                 this.width = width;
                 this.height = height;
             }
@@ -1718,12 +1719,12 @@ var Maker;
                     radius = findRadius(h2, w2);
                     startAngle = 270;
                     endAngle = 360 - Maker.angle.toDegrees(Math.acos(w2 / radius));
-                    arcOrigin = { x: 0, y: radius };
+                    arcOrigin = [0, radius];
                 } else {
                     radius = findRadius(w2, h2);
                     startAngle = 180 - Maker.angle.toDegrees(Math.asin(h2 / radius));
                     endAngle = 180;
-                    arcOrigin = { x: radius, y: 0 };
+                    arcOrigin = [radius, 0];
                 }
 
                 var curve = Maker.createArc('curve_start', arcOrigin, radius, startAngle, endAngle);

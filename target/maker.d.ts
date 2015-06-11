@@ -58,8 +58,7 @@
     * An x-y point in a two-dimensional space.
     */
     interface IPoint {
-        x: number;
-        y: number;
+        [index: number]: number;
     }
     /**
     * Test to see if an object implements the required properties of a point.
@@ -200,7 +199,6 @@
     * @returns A new POJO representing an arc path.
     */
     function createArc(id: string, origin: IPoint, radius: number, startAngle: number, endAngle: number): IPathArc;
-    function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IPathArc;
     /**
     * Shortcut to create a new circle path.
     *
@@ -210,7 +208,6 @@
     * @returns A new POJO representing an circle path.
     */
     function createCircle(id: string, origin: IPoint, radius: number): IPathCircle;
-    function createCircle(id: string, origin: number[], radius: number): IPathCircle;
     /**
     * Shortcut to create a new line path.
     *
@@ -220,9 +217,6 @@
     * @returns A new POJO representing an line path.
     */
     function createLine(id: string, origin: IPoint, end: IPoint): IPathLine;
-    function createLine(id: string, origin: number[], end: IPoint): IPathLine;
-    function createLine(id: string, origin: IPoint, end: number[]): IPathLine;
-    function createLine(id: string, origin: number[], end: number[]): IPathLine;
 }
 declare var module: any;
 declare module Maker.angle {
@@ -282,15 +276,6 @@ declare module Maker.point {
     * @returns A new point with same values as the original.
     */
     function clone(pointToClone: IPoint): IPoint;
-    /**
-    * Ensures that an item has the properties of a point object.
-    *
-    * @param pointToEnsure The object to ensure; may be a point object, or an array of numbers, or something else which will attempt to coerce into a point.
-    * @returns A new point object either with the x, y values corresponding to the input, or 0,0 coordinates.
-    */
-    function ensure(pointToEnsure: IPoint): IPoint;
-    function ensure(pointToEnsure: number[]): IPoint;
-    function ensure(): IPoint;
     /**
     * Get a point from its polar coordinates.
     *
@@ -369,7 +354,6 @@ declare module Maker.path {
     * @returns The original path (for chaining).
     */
     function moveRelative(pathToMove: IPath, adjust: IPoint): IPath;
-    function moveRelative(pathToMove: IPath, adjust: number[]): IPath;
     /**
     * Rotate a path.
     *
@@ -405,8 +389,14 @@ declare module Maker.model {
     * @returns Mirrored model.
     */
     function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel;
+    /**
+    * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
+    *
+    * @param modelToMove The model to move.
+    * @param origin The new position of the model.
+    * @returns The original model (for chaining).
+    */
     function move(modelToMove: IModel, origin: IPoint): IModel;
-    function move(modelToMove: IModel, origin: number[]): IModel;
     /**
     * Rotate a model.
     *

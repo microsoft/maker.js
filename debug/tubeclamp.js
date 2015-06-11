@@ -55,12 +55,12 @@ Viewer.Render = function (params) {
         var arc2 = createArc('lid', [0, -radius], radius, lidAngle, 90);
         var arc2Points = point.fromArc(arc2);
 
-        var halfLid = new makerjs.models.ConnectTheDots(false, [arc2Points[0], [arc2Points[0].x, 0], [outer, 0], [outer, params.lid], [0, params.lid]]);
+        var halfLid = new makerjs.models.ConnectTheDots(false, [arc2Points[0], [arc2Points[0][0], 0], [outer, 0], [outer, params.lid], [0, params.lid]]);
         halfLid.paths.push(arc2);
 
         var lid = {
-            //                origin: { x: 0, y: cy + radius - arc2Points[0].y - params.open },
-            origin: { x: 0, y: cy + radius },
+            //                origin: [ 0, cy + radius - arc2Points[0].y - params.open ],
+            origin: [0, cy + radius],
             models: [halfLid, makerjs.model.mirror(halfLid, true, false)]
         };
 
@@ -71,7 +71,7 @@ Viewer.Render = function (params) {
         this.models.push(body);
         this.models.push(lid);
 
-        this.origin = { x: 0, y: -cy };
+        this.origin = [0, -cy];
     }
 
     return new tubeClamp();

@@ -49,7 +49,7 @@ module Maker.angle {
      */
     export function fromPointToRadians(pointToFindAngle: IPoint, origin?: IPoint): number {
         var d = point.subtract(pointToFindAngle, origin);
-        return Math.atan2(d.y, d.x);
+        return Math.atan2(d[1], d[0]); //First param is Y, second is X
     }
 
     /**

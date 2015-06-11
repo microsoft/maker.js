@@ -15,12 +15,12 @@ module Maker.point {
 
         if (!b) return newPoint;
 
-        if (subtract) {
-            newPoint.x -= b.x;
-            newPoint.y -= b.y;
-        } else {
-            newPoint.x += b.x;
-            newPoint.y += b.y;
+        for (var i = 2; i--;) {
+            if (subtract) {
+                newPoint[i] -= b[i];
+            } else {
+                newPoint[i] += b[i];
+            }
         }
         return newPoint;
     }
@@ -33,37 +33,7 @@ module Maker.point {
      */
     export function clone(pointToClone: IPoint): IPoint {
         if (!pointToClone) return point.zero();
-        return { x: pointToClone.x, y: pointToClone.y };
-    }
-
-    /**
-     * Ensures that an item has the properties of a point object.
-     * 
-     * @param pointToEnsure The object to ensure; may be a point object, or an array of numbers, or something else which will attempt to coerce into a point.
-     * @returns A new point object either with the x, y values corresponding to the input, or 0,0 coordinates.
-     */
-    export function ensure(pointToEnsure: IPoint): IPoint;
-    export function ensure(pointToEnsure: number[]): IPoint;
-    export function ensure(): IPoint;
-    export function ensure(pointToEnsure?: any): IPoint {
-
-        if (!pointToEnsure) {
-            return zero();
-        }
-
-        if (isPoint(pointToEnsure)) {
-            return pointToEnsure;
-        }
-
-        if (Array.isArray(pointToEnsure) && pointToEnsure.length > 1) {
-            return { x: pointToEnsure[0], y: pointToEnsure[1] };
-        }
-
-        if (arguments.length > 1) {
-            return { x: arguments[0], y: arguments[0] };
-        }
-
-        return zero();
+        return [pointToClone[0], pointToClone[1]];
     }
 
     /**
@@ -74,10 +44,10 @@ module Maker.point {
      * @returns A new point object.
      */
     export function fromPolar(angleInRadians: number, radius: number): IPoint {
-        return {
-            x: radius * Math.cos(angleInRadians),
-            y: radius * Math.sin(angleInRadians)
-        };
+        return [
+            radius * Math.cos(angleInRadians),
+            radius * Math.sin(angleInRadians)
+        ];
     }
 
     /**
@@ -107,11 +77,11 @@ module Maker.point {
         var p = clone(pointToMirror);
 
         if (mirrorX) {
-            p.x = -p.x;
+            p[0] = -p[0];
         }
 
         if (mirrorY) {
-            p.y = -p.y;
+            p[1] = -p[1];
         }
 
         return p;
@@ -142,8 +112,9 @@ module Maker.point {
      */
     export function scale(pointToScale: IPoint, scaleValue: number): IPoint {
         var p = clone(pointToScale);
-        p.x *= scaleValue;
-        p.y *= scaleValue;
+        for (var i = 2; i--;) {
+            p[i] *= scaleValue;
+        }
         return p;
     }
 
@@ -168,7 +139,7 @@ module Maker.point {
      * @returns A new point.
      */
     export function zero(): IPoint {
-        return { x: 0, y: 0 };
+        return [0, 0];
     }
 
 }

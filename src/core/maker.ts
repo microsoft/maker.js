@@ -113,8 +113,7 @@ module Maker {
      * An x-y point in a two-dimensional space.
      */
     export interface IPoint {
-        x: number;
-        y: number;
+        [index: number]: number;
     }
 
     /**
@@ -123,7 +122,7 @@ module Maker {
      * @param item The item to test.
      */
     export function isPoint(item: any) {
-        return item && ('x' in item) && ('y' in item); //values might be zero so use "in"
+        return (Array.isArray(item) && item.length > 1);
     }
 
     /**
@@ -295,14 +294,12 @@ module Maker {
      * @param endAngle The end angle of the arc.
      * @returns A new POJO representing an arc path.
      */
-    export function createArc(id: string, origin: IPoint, radius: number, startAngle: number, endAngle: number): IPathArc;
-    export function createArc(id: string, origin: number[], radius: number, startAngle: number, endAngle: number): IPathArc;
-    export function createArc(id: string, origin: any, radius: number, startAngle: number, endAngle: number): IPathArc {
+    export function createArc(id: string, origin: IPoint, radius: number, startAngle: number, endAngle: number): IPathArc {
 
         var arc: IPathArc = {
             type: pathType.Arc,
             id: id,
-            origin: point.ensure(origin),
+            origin: origin,
             radius: radius,
             startAngle: startAngle,
             endAngle: endAngle
@@ -319,14 +316,12 @@ module Maker {
      * @param radius The radius of the circle.
      * @returns A new POJO representing an circle path.
      */
-    export function createCircle(id: string, origin: IPoint, radius: number): IPathCircle;
-    export function createCircle(id: string, origin: number[], radius: number): IPathCircle;
-    export function createCircle(id: string, origin: any, radius: number): IPathCircle {
+    export function createCircle(id: string, origin: IPoint, radius: number): IPathCircle {
 
         var circle: IPathCircle = {
             type: pathType.Circle,
             id: id,
-            origin: point.ensure(origin),
+            origin: origin,
             radius: radius
         };
 
@@ -341,17 +336,13 @@ module Maker {
      * @param end The end point of the line.
      * @returns A new POJO representing an line path.
      */
-    export function createLine(id: string, origin: IPoint, end: IPoint): IPathLine;
-    export function createLine(id: string, origin: number[], end: IPoint): IPathLine;
-    export function createLine(id: string, origin: IPoint, end: number[]): IPathLine;
-    export function createLine(id: string, origin: number[], end: number[]): IPathLine;
-    export function createLine(id: string, origin: any, end: any): IPathLine {
+    export function createLine(id: string, origin: IPoint, end: IPoint): IPathLine {
 
         var line: IPathLine = {
             type: pathType.Line,
             id: id,
-            origin: point.ensure(origin),
-            end: point.ensure(end)
+            origin: origin,
+            end: end
         };
 
         return line;
