@@ -28,6 +28,7 @@
   "homepage": "https://github.com/Microsoft/Maker.js",
   "devDependencies": {
     "browserify": "^10.2.3",
+    "tsd": "^0.6.1",
     "typescript": "^1.1.0-1"
   }
 }
