@@ -1,5 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
-declare module Maker {
+declare module MakerJs {
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise.
      * A model may specify the unit system it is using, if any. When importing a model, it may have different units.
@@ -219,7 +219,7 @@ declare module Maker {
      */
     function createLine(id: string, origin: IPoint, end: IPoint): IPathLine;
 }
-declare module Maker.angle {
+declare module MakerJs.angle {
     /**
      * Convert an angle from degrees to radians.
      *
@@ -259,7 +259,7 @@ declare module Maker.angle {
      */
     function mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number;
 }
-declare module Maker.point {
+declare module MakerJs.point {
     /**
      * Add two points together and return the result as a new point object.
      *
@@ -335,7 +335,7 @@ declare module Maker.point {
      */
     function zero(): IPoint;
 }
-declare module Maker.path {
+declare module MakerJs.path {
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      *
@@ -372,7 +372,7 @@ declare module Maker.path {
      */
     function scale(pathToScale: IPath, scaleValue: number): IPath;
 }
-declare module Maker.model {
+declare module MakerJs.model {
     /**
      * Moves all children (models and paths, recursively) within a model to their absolute position. Useful when referencing points between children.
      *
@@ -416,7 +416,7 @@ declare module Maker.model {
      */
     function scale(modelToScale: IModel, scaleValue: number, scaleOrigin?: boolean): IModel;
 }
-declare module Maker.units {
+declare module MakerJs.units {
     /**
      * Get a conversion ratio between a source unit and a destination unit. This will lazy load the table with initial conversions,
      * then new cross-conversions will be cached in the table.
@@ -427,7 +427,7 @@ declare module Maker.units {
      */
     function conversionScale(srcUnitType: string, destUnitType: string): number;
 }
-declare module Maker.measure {
+declare module MakerJs.measure {
     /**
      * Total angle of an arc between its start and end angles.
      *
@@ -465,7 +465,7 @@ declare module Maker.measure {
      */
     function modelExtents(modelToMeasure: IModel): IMeasure;
 }
-declare module Maker.exporter {
+declare module MakerJs.exporter {
     interface IExportOptions {
         /**
          * Unit system to embed in exported file.
@@ -513,7 +513,7 @@ declare module Maker.exporter {
         exportItem(itemToExport: any, origin: IPoint): void;
     }
 }
-declare module Maker.exporter {
+declare module MakerJs.exporter {
     function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;
     function toDXF(pathsToExport: IPath[], options?: IDXFRenderOptions): string;
     function toDXF(pathToExport: IPath, options?: IDXFRenderOptions): string;
@@ -523,7 +523,7 @@ declare module Maker.exporter {
     interface IDXFRenderOptions extends IExportOptions {
     }
 }
-declare module Maker.exporter {
+declare module MakerJs.exporter {
     /**
      * Attributes for an XML tag.
      */
@@ -561,7 +561,7 @@ declare module Maker.exporter {
         toString(): string;
     }
 }
-declare module Maker.exporter {
+declare module MakerJs.exporter {
     /**
      * The default stroke width in millimeters.
      */
@@ -603,19 +603,19 @@ declare module Maker.exporter {
         viewBox: boolean;
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class BoltCircle implements IModel {
         paths: IPath[];
         constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class BoltRectangle implements IModel {
         paths: IPath[];
         constructor(width: number, height: number, holeRadius: number);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class ConnectTheDots implements IModel {
         isClosed: boolean;
         points: any[];
@@ -624,7 +624,7 @@ declare module Maker.models {
         constructor(isClosed: boolean, points: number[][]);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class RoundRectangle implements IModel {
         width: number;
         height: number;
@@ -633,14 +633,14 @@ declare module Maker.models {
         constructor(width: number, height: number, radius: number);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class Oval extends RoundRectangle {
         width: number;
         height: number;
         constructor(width: number, height: number);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class OvalArc implements IModel {
         startAngle: number;
         endAngle: number;
@@ -650,14 +650,14 @@ declare module Maker.models {
         constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class Rectangle extends ConnectTheDots {
         width: number;
         height: number;
         constructor(width: number, height: number);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class SCurve implements IModel {
         width: number;
         height: number;
@@ -665,7 +665,7 @@ declare module Maker.models {
         constructor(width: number, height: number);
     }
 }
-declare module Maker.models {
+declare module MakerJs.models {
     class Square extends Rectangle {
         side: number;
         constructor(side: number);

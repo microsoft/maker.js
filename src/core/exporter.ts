@@ -2,7 +2,7 @@
 /// <reference path="units.ts" />
 /// <reference path="measure.ts" />
 
-module Maker.exporter {
+module MakerJs.exporter {
 
     export interface IExportOptions {
         /**

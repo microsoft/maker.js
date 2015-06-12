@@ -1,7 +1,7 @@
 ﻿/// <reference path="exporter.ts" />
 /// <reference path="xml.ts" />
 
-module Maker.exporter {
+module MakerJs.exporter {
 
     /**
      * The default stroke width in millimeters.

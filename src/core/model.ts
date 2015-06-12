@@ -1,6 +1,6 @@
 ﻿/// <reference path="path.ts" />
 
-module Maker.model {
+module MakerJs.model {
 
     /**
      * Moves all children (models and paths, recursively) within a model to their absolute position. Useful when referencing points between children.

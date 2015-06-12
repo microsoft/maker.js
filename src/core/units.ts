@@ -1,6 +1,6 @@
 ﻿/// <reference path="maker.ts" />
 
-module Maker.units {
+module MakerJs.units {
 
     /**
      * The base type is arbitrary. Other conversions are then based off of this.
