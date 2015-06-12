@@ -1,6 +1,6 @@
 ﻿/// <reference path="model.ts" />
 
-module makerjs.measure {
+module MakerJs.measure {
 
     /**
      * Interface to Math.min and Math.max functions.
@@ -15,7 +15,7 @@ module makerjs.measure {
      * @param arc The arc to measure.
      * @returns Angle of arc.
      */
-    export function arcAngle(arc: IMakerPathArc): number {
+    export function arcAngle(arc: IPathArc): number {
         var endAngle = angle.arcEndAnglePastZero(arc);
         return endAngle - arc.startAngle;
     }
@@ -27,17 +27,17 @@ module makerjs.measure {
      * @param b Second point.
      * @returns Distance between points.
      */
-    export function pointDistance(a: IMakerPoint, b: IMakerPoint): number {
-        var dx = b.x - a.x;
-        var dy = b.y - a.y;
+    export function pointDistance(a: IPoint, b: IPoint): number {
+        var dx = b[0] - a[0];
+        var dy = b[1] - a[1];
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    function getExtremePoint(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax): IMakerPoint {
-        return {
-            x: fn(a.x, b.x),
-            y: fn(a.y, b.y)
-        };
+    function getExtremePoint(a: IPoint, b: IPoint, fn: IMathMinMax): IPoint {
+        return [
+            fn(a[0], b[0]),
+            fn(a[1], b[1])
+        ];
     }
 
     /**
@@ -46,22 +46,22 @@ module makerjs.measure {
      * @param pathToMeasure The path to measure.
      * @returns object with low and high points.
      */
-    export function pathExtents(pathToMeasure: IMakerPath): IMakerMeasure {
-        var map: IMakerPathFunctionMap = {};
-        var measurement: IMakerMeasure = { low: null, high: null };
+    export function pathExtents(pathToMeasure: IPath): IMeasure {
+        var map: IPathFunctionMap = {};
+        var measurement: IMeasure = { low: null, high: null };
 
-        map[pathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IPathLine) {
             measurement.low = getExtremePoint(line.origin, line.end, Math.min);
             measurement.high = getExtremePoint(line.origin, line.end, Math.max);
         }
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IPathCircle) {
             var r = circle.radius;
-            measurement.low = point.add(circle.origin, { x: -r, y: -r });
-            measurement.high = point.add(circle.origin, { x: r, y: r });
+            measurement.low = point.add(circle.origin, [-r, -r]);
+            measurement.high = point.add(circle.origin, [r, r]);
         }
 
-        map[pathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IPathArc) {
             var r = arc.radius;
             var startPoint = point.fromPolar(angle.toRadians(arc.startAngle), r);
             var endPoint = point.fromPolar(angle.toRadians(arc.endAngle), r);
@@ -74,22 +74,20 @@ module makerjs.measure {
                 endAngle += 360;
             }
 
-            function extremeAngle(xAngle: number, yAngle: number, value: number, fn: IMathMinMax): IMakerPoint {
+            function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
                 var extremePoint = getExtremePoint(startPoint, endPoint, fn);
 
-                if (startAngle < xAngle && xAngle < endAngle) {
-                    extremePoint.x = value;
-                }
-
-                if (startAngle < yAngle && yAngle < endAngle) {
-                    extremePoint.y = value;
+                for (var i = 2; i--;) {
+                    if (startAngle < xyAngle[i] && xyAngle[i] < endAngle) {
+                        extremePoint[i] = value;
+                    }
                 }
 
                 return point.add(arc.origin, extremePoint);
             }
 
-            measurement.low = extremeAngle(180, 270, -r, Math.min);
-            measurement.high = extremeAngle(360, 90, r, Math.max);
+            measurement.low = extremeAngle([180, 270], -r, Math.min);
+            measurement.high = extremeAngle([360, 90], r, Math.max);
         }
 
         var fn = map[pathToMeasure.type];
@@ -106,19 +104,19 @@ module makerjs.measure {
      * @param pathToMeasure The path to measure.
      * @returns Length of the path.
      */
-    export function pathLength(pathToMeasure: IMakerPath): number {
-        var map: IMakerPathFunctionMap = {};
+    export function pathLength(pathToMeasure: IPath): number {
+        var map: IPathFunctionMap = {};
         var value = 0;
 
-        map[pathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IPathLine) {
             value = pointDistance(line.origin, line.end);
         }
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IPathCircle) {
             value = 2 * Math.PI * circle.radius;
         }
 
-        map[pathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IPathArc) {
             map[pathType.Circle](arc); //this sets the value var
             var pct = arcAngle(arc) / 360;
             value *= pct;
@@ -138,22 +136,23 @@ module makerjs.measure {
      * @param modelToMeasure The model to measure.
      * @returns object with low and high points.
      */
-    export function modelExtents(modelToMeasure: IMakerModel): IMakerMeasure {
-        var totalMeasurement: IMakerMeasure = { low: { x: null, y: null }, high: { x: null, y: null } };
+    export function modelExtents(modelToMeasure: IModel): IMeasure {
+        var totalMeasurement: IMeasure = { low: [null, null], high: [null, null] };
 
-        function lowerOrHigher(offsetOrigin: IMakerPoint, pathMeasurement: IMakerMeasure) {
+        function lowerOrHigher(offsetOrigin: IPoint, pathMeasurement: IMeasure) {
 
-            function getExtreme(a: IMakerPoint, b: IMakerPoint, fn: IMathMinMax) {
+            function getExtreme(a: IPoint, b: IPoint, fn: IMathMinMax) {
                 var c = point.add(b, offsetOrigin);
-                a.x = (a.x == null ? c.x : fn(a.x, c.x));
-                a.y = (a.y == null ? c.y : fn(a.y, c.y));
+                for (var i = 2; i--;) {
+                    a[i] = (a[i] == null ? c[i] : fn(a[i], c[i]));
+                }
             }
 
             getExtreme(totalMeasurement.low, pathMeasurement.low, Math.min);
             getExtreme(totalMeasurement.high, pathMeasurement.high, Math.max);
         }
 
-        function measure(model: IMakerModel, offsetOrigin?: IMakerPoint) {
+        function measure(model: IModel, offsetOrigin?: IPoint) {
 
             var newOrigin = point.add(model.origin, offsetOrigin);
 

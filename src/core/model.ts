@@ -1,6 +1,6 @@
 ﻿/// <reference path="path.ts" />
 
-module makerjs.model {
+module MakerJs.model {
 
     /**
      * Moves all children (models and paths, recursively) within a model to their absolute position. Useful when referencing points between children.
@@ -8,7 +8,7 @@ module makerjs.model {
      * @param modelToFlatten The model to flatten.
      * @param origin Optional offset reference point.
      */
-    export function flatten(modelToFlatten: IMakerModel, origin?: IMakerPoint) {
+    export function flatten(modelToFlatten: IModel, origin?: IPoint) {
         var newOrigin = point.add(modelToFlatten.origin, origin);
 
         if (modelToFlatten.paths) {
@@ -36,8 +36,8 @@ module makerjs.model {
      * @param mirrorY Boolean to mirror on the y axis.
      * @returns Mirrored model.
      */
-    export function mirror(modelToMirror: IMakerModel, mirrorX: boolean, mirrorY: boolean): IMakerModel {
-        var newModel: IMakerModel = {};
+    export function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel {
+        var newModel: IModel = {};
 
         if (modelToMirror.id) {
             newModel.id = modelToMirror.id + '_mirror';
@@ -72,9 +72,6 @@ module makerjs.model {
         return newModel;
     }
 
-    export function move(modelToMove: IMakerModel, origin: IMakerPoint): IMakerModel;
-    export function move(modelToMove: IMakerModel, origin: number[]): IMakerModel;
-
     /**
      * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
      * 
@@ -82,8 +79,8 @@ module makerjs.model {
      * @param origin The new position of the model.
      * @returns The original model (for chaining).
      */
-    export function move(modelToMove: IMakerModel, origin: any): IMakerModel {
-        modelToMove.origin = point.clone(point.ensure(origin));
+    export function move(modelToMove: IModel, origin: IPoint): IModel {
+        modelToMove.origin = point.clone(origin);
         return modelToMove;
     }
 
@@ -95,7 +92,7 @@ module makerjs.model {
      * @param rotationOrigin The center point of rotation.
      * @returns The original model (for chaining).
      */
-    export function rotate(modelToRotate: IMakerModel, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerModel {
+    export function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint): IModel {
 
         var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
 
@@ -122,7 +119,7 @@ module makerjs.model {
      * @param scaleOrigin Optional boolean to scale the origin point. Typically false for the root model.
      * @returns The original model (for chaining).
      */
-    export function scale(modelToScale: IMakerModel, scaleValue: number, scaleOrigin = false): IMakerModel {
+    export function scale(modelToScale: IModel, scaleValue: number, scaleOrigin = false): IModel {
 
         if (scaleOrigin && modelToScale.origin) {
             modelToScale.origin = point.scale(modelToScale.origin, scaleValue);

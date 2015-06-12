@@ -1,8 +1,8 @@
-﻿module makerjs.models {
+﻿module MakerJs.models {
 
-    export class RoundRectangle implements IMakerModel {
+    export class RoundRectangle implements IModel {
 
-        public paths: IMakerPath[] = [];
+        public paths: IPath[] = [];
 
         constructor(public width: number, public height: number, public radius: number) {
 

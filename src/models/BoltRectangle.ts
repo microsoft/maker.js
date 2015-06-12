@@ -1,8 +1,8 @@
-﻿module makerjs.models {
+﻿module MakerJs.models {
 
-    export class BoltRectangle implements IMakerModel {
+    export class BoltRectangle implements IModel {
 
-        public paths: IMakerPath[] = [];
+        public paths: IPath[] = [];
 
         constructor(width: number, height: number, holeRadius: number) {
 

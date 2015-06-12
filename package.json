@@ -5,8 +5,8 @@
   "main": "target/node.maker.js",
   "scripts": {
     "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt",
-    "compile-typescript": "tsc --declaration --out target/maker.js @build.txt && rm build.txt",
-    "target-node-platform": "cd target && mv maker.js node.maker.js && cd ..",
+    "compile-typescript": "tsc --declaration --out target/makerjs.js @build.txt && rm build.txt",
+    "target-node-platform": "cd target && mv makerjs.js node.maker.js && cd ..",
     "target-browser-platform": "cd target && browserify -o browser.maker.js -r ./node.maker.js:@danmarshall/privatetestmaker && cd ..",
     "build": "npm run compile-typescript && npm run target-node-platform && npm run target-browser-platform",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/Microsoft/Maker.js",
   "devDependencies": {
     "browserify": "^10.2.3",
+    "tsd": "^0.6.1",
     "typescript": "^1.1.0-1"
   }
 }

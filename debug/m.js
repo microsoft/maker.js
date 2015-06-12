@@ -38,7 +38,7 @@ Viewer.Render = function (params) {
     var otherHalf = makerjs.model.move(makerjs.model.mirror(halfModel, true, false), [center * 2, 0])
 
     return {
-        origin: { x: .1, y: .1 },
+        origin: [.1, .1],
         models: [halfModel, otherHalf]
     };
 }

@@ -1,6 +1,6 @@
 ﻿/// <reference path="point.ts" />
 
-module makerjs.path {
+module MakerJs.path {
 
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
@@ -11,14 +11,14 @@ module makerjs.path {
      * @param newId Optional id to assign to the new path.
      * @returns Mirrored path.
      */
-    export function mirror(pathToMirror: IMakerPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IMakerPath {
+    export function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IPath {
 
-        var newPath: IMakerPath = null;
+        var newPath: IPath = null;
         var origin = point.mirror(pathToMirror.origin, mirrorX, mirrorY);
 
-        var map: IMakerPathFunctionMap = {};
+        var map: IPathFunctionMap = {};
 
-        map[pathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IPathLine) {
 
             newPath = createLine(
                 newId || line.id,
@@ -27,7 +27,7 @@ module makerjs.path {
                 );
         };
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IPathCircle) {
 
             newPath = createCircle(
                 newId || circle.id,
@@ -36,7 +36,7 @@ module makerjs.path {
                 );
         };
 
-        map[pathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IPathArc) {
 
             var startAngle = angle.mirror(arc.startAngle, mirrorX, mirrorY);
             var endAngle = angle.mirror(angle.arcEndAnglePastZero(arc), mirrorX, mirrorY);
@@ -66,19 +66,15 @@ module makerjs.path {
      * @param adjust The x & y adjustments, either as a point object, or as an array of numbers.
      * @returns The original path (for chaining).
      */
-    export function moveRelative(pathToMove: IMakerPath, adjust: IMakerPoint): IMakerPath;
-    export function moveRelative(pathToMove: IMakerPath, adjust: number[]): IMakerPath;
-    export function moveRelative(pathToMove: IMakerPath, adjust: any): IMakerPath {
+    export function moveRelative(pathToMove: IPath, adjust: IPoint): IPath {
 
-        var adjustPoint = point.ensure(adjust);
+        var map: IPathFunctionMap = {};
 
-        var map: IMakerPathFunctionMap = {};
-
-        map[pathType.Line] = function (line: IMakerPathLine) {
-            line.end = point.add(line.end, adjustPoint);
+        map[pathType.Line] = function (line: IPathLine) {
+            line.end = point.add(line.end, adjust);
         };
 
-        pathToMove.origin = point.add(pathToMove.origin, adjustPoint);
+        pathToMove.origin = point.add(pathToMove.origin, adjust);
 
         var fn = map[pathToMove.type];
         if (fn) {
@@ -96,16 +92,16 @@ module makerjs.path {
      * @param rotationOrigin The center point of rotation.
      * @returns The original path (for chaining).
      */
-    export function rotate(pathToRotate: IMakerPath, angleInDegrees: number, rotationOrigin: IMakerPoint): IMakerPath {
+    export function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint): IPath {
         if (angleInDegrees == 0) return pathToRotate;
 
-        var map: IMakerPathFunctionMap = {};
+        var map: IPathFunctionMap = {};
 
-        map[pathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IPathLine) {
             line.end = point.rotate(line.end, angleInDegrees, rotationOrigin);
         }
 
-        map[pathType.Arc] = function (arc: IMakerPathArc) {
+        map[pathType.Arc] = function (arc: IPathArc) {
             arc.startAngle += angleInDegrees;
             arc.endAngle += angleInDegrees;
         }
@@ -127,16 +123,16 @@ module makerjs.path {
      * @param scaleValue The amount of scaling.
      * @returns The original path (for chaining).
      */
-    export function scale(pathToScale: IMakerPath, scaleValue: number): IMakerPath {
+    export function scale(pathToScale: IPath, scaleValue: number): IPath {
         if (scaleValue == 1) return pathToScale;
 
-        var map: IMakerPathFunctionMap = {};
+        var map: IPathFunctionMap = {};
 
-        map[pathType.Line] = function (line: IMakerPathLine) {
+        map[pathType.Line] = function (line: IPathLine) {
             line.end = point.scale(line.end, scaleValue);
         }
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle) {
+        map[pathType.Circle] = function (circle: IPathCircle) {
             circle.radius *= scaleValue;
         }
 

@@ -1,16 +1,16 @@
 ﻿/// <reference path="exporter.ts" />
 /// <reference path="xml.ts" />
 
-module makerjs.exporter {
+module MakerJs.exporter {
 
     /**
      * The default stroke width in millimeters.
      */
     export var defaultStrokeWidth = 0.2;
 
-    export function toSVG(modelToExport: IMakerModel, options?: ISVGRenderOptions): string;
-    export function toSVG(pathsToExport: IMakerPath[], options?: ISVGRenderOptions): string;
-    export function toSVG(pathToExport: IMakerPath, options?: ISVGRenderOptions): string;
+    export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
+    export function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
+    export function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
 
     /**
      * Renders an item in SVG markup.
@@ -41,13 +41,13 @@ module makerjs.exporter {
 
         var elements: string[] = [];
 
-        function fixPoint(pointToFix: IMakerPoint): IMakerPoint {
+        function fixPoint(pointToFix: IPoint): IPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
             var pointMirroredY = point.mirror(pointToFix, false, true);
             return point.scale(pointMirroredY, opts.scale);
         }
 
-        function fixPath(pathToFix: IMakerPath, origin: IMakerPoint): IMakerPath {
+        function fixPath(pathToFix: IPath, origin: IPoint): IPath {
             //mirror creates a copy, so we don't modify the original
             var mirrorY = path.mirror(pathToFix, false, true);
             return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
@@ -95,33 +95,33 @@ module makerjs.exporter {
             }
         }
 
-        var map: IMakerPathOriginFunctionMap = {};
+        var map: IPathOriginFunctionMap = {};
 
-        map[pathType.Line] = function (line: IMakerPathLine, origin: IMakerPoint) {
+        map[pathType.Line] = function (line: IPathLine, origin: IPoint) {
 
             var start = line.origin;
             var end = line.end;
 
             if (opts.useSvgPathOnly) {
-                drawPath(line.id, start.x, start.y, [round(end.x), round(end.y)]);
+                drawPath(line.id, start[0], start[1], [round(end[0]), round(end[1])]);
             } else {
                 createElement(
                     "line",
                     {
                         "id": line.id,
-                        "x1": round(start.x),
-                        "y1": round(start.y),
-                        "x2": round(end.x),
-                        "y2": round(end.y)
+                        "x1": round(start[0]),
+                        "y1": round(start[1]),
+                        "x2": round(end[0]),
+                        "y2": round(end[1])
                     });
             }
 
             if (opts.annotate) {
-                drawText(line.id, (start.x + end.x) / 2, (start.y + end.y) / 2);
+                drawText(line.id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
             }
         };
 
-        map[pathType.Circle] = function (circle: IMakerPathCircle, origin: IMakerPoint) {
+        map[pathType.Circle] = function (circle: IPathCircle, origin: IPoint) {
 
             var center = circle.origin;
 
@@ -132,13 +132,13 @@ module makerjs.exporter {
 
                 function halfCircle(sign: number) {
                     d.push('a');
-                    svgArcData(d, r, { x: 2 * r * sign, y: 0 });
+                    svgArcData(d, r, [2 * r * sign, 0]);
                 }
 
                 halfCircle(1);
                 halfCircle(-1);
 
-                drawPath(circle.id, center.x, center.y, d);
+                drawPath(circle.id, center[0], center[1], d);
 
             } else {
                 createElement(
@@ -146,26 +146,26 @@ module makerjs.exporter {
                     {
                         "id": circle.id,
                         "r": circle.radius,
-                        "cx": round(center.x),
-                        "cy": round(center.y)
+                        "cx": round(center[0]),
+                        "cy": round(center[1])
                     });
             }
 
             if (opts.annotate) {
-                drawText(circle.id, center.x, center.y);
+                drawText(circle.id, center[0], center[1]);
             }
         };
 
-        function svgArcData(d: any[], radius: number, endPoint: IMakerPoint, largeArc?: boolean, decreasing?: boolean) {
-            var end: IMakerPoint = endPoint;
+        function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
+            var end: IPoint = endPoint;
             d.push(radius, radius);
             d.push(0);                   //0 = x-axis rotation
             d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
             d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
-            d.push(round(end.x), round(end.y));
+            d.push(round(end[0]), round(end[1]));
         }
 
-        map[pathType.Arc] = function (arc: IMakerPathArc, origin: IMakerPoint) {
+        map[pathType.Arc] = function (arc: IPathArc, origin: IPoint) {
 
             var arcPoints = point.fromArc(arc);
 
@@ -178,30 +178,30 @@ module makerjs.exporter {
                 arc.startAngle > arc.endAngle
             );
 
-            drawPath(arc.id, arcPoints[0].x, arcPoints[0].y, d);
+            drawPath(arc.id, arcPoints[0][0], arcPoints[0][1], d);
         };
 
         //fixup options
 
         //measure the item to move it into svg area
 
-        var modelToMeasure: IMakerModel;
+        var modelToMeasure: IModel;
 
         if (isModel(itemToExport)) {
-            modelToMeasure = <IMakerModel>itemToExport;
+            modelToMeasure = <IModel>itemToExport;
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToMeasure = { paths: <IMakerPath[]>itemToExport };
+            modelToMeasure = { paths: <IPath[]>itemToExport };
 
         } else if (isPath(itemToExport)) {
-            modelToMeasure = { paths: [(<IMakerPath>itemToExport)] };
+            modelToMeasure = { paths: [(<IPath>itemToExport)] };
         }
 
-        var size = makerjs.measure.modelExtents(modelToMeasure);
+        var size = measure.modelExtents(modelToMeasure);
 
         if (!opts.origin) {
-            opts.origin = { x: -size.low.x * opts.scale, y: size.high.y * opts.scale };
+            opts.origin = [-size.low[0] * opts.scale, size.high[1] * opts.scale];
         }
 
         if (!opts.units) {
@@ -230,8 +230,8 @@ module makerjs.exporter {
         var svgAttrs;
 
         if (opts.viewBox) {
-            var width = round(size.high.x - size.low.x);
-            var height = round(size.high.y - size.low.y);
+            var width = round(size.high[0] - size.low[0]);
+            var height = round(size.high[1] - size.low[1]);
             var viewBox = [0, 0, width, height];
             var unit = svgUnit[opts.units] || '';
             svgAttrs = { width: width + unit, height: height + unit, viewBox: viewBox.join(' ') };
@@ -254,7 +254,7 @@ module makerjs.exporter {
     /**
      * SVG rendering options.
      */
-    export interface ISVGRenderOptions extends IMakerExportOptions {
+    export interface ISVGRenderOptions extends IExportOptions {
 
         /**
          * SVG stroke width of paths. This is in the same unit system as the units property.
@@ -279,7 +279,7 @@ module makerjs.exporter {
         /**
          * Rendered reference origin. 
          */
-        origin: IMakerPoint;
+        origin: IPoint;
 
         /**
          * Use SVG <path> elements instead of <line>, <circle> etc.

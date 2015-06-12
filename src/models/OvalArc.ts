@@ -1,8 +1,8 @@
-﻿module makerjs.models {
+﻿module MakerJs.models {
 
-    export class OvalArc implements IMakerModel {
+    export class OvalArc implements IModel {
 
-        public paths: IMakerPath[] = [];
+        public paths: IPath[] = [];
 
         constructor(public startAngle: number, public endAngle: number, public sweepRadius: number, public slotRadius: number) {
 

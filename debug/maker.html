@@ -5,6 +5,11 @@
 
     <link href="viewer.css" rel="stylesheet" />
 
+    <script>
+        //pretend we are in node
+        var module = {};
+    </script>
+
     <script src="../src/core/maker.js"></script>
     <script src="../src/core/angle.js"></script>
     <script src="../src/core/point.js"></script>
@@ -26,6 +31,12 @@
     <script src="../src/models/Square.js"></script>
     <script src="../src/models/SCurve.js"></script>
     <script src="../src/core/tools.gap.js"></script>
+
+    <script>
+        //pretend it's been required
+        var makerjs = MakerJs;
+    </script>
+
     <script src="viewer.js"></script>
 
 </head>
