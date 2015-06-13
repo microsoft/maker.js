@@ -41,6 +41,10 @@ module MakerJs.exporter {
 
         var elements: string[] = [];
 
+        function append(value) {
+            elements.push(value);
+        }
+
         function fixPoint(pointToFix: IPoint): IPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
             var pointMirroredY = point.mirror(pointToFix, false, true);
@@ -53,7 +57,7 @@ module MakerJs.exporter {
             return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
         }
 
-        function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null, useStroke = true) {
+        function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null) {
 
             var tag = new XmlTag(tagname, attrs);
 
@@ -61,13 +65,7 @@ module MakerJs.exporter {
                 tag.innerText = innerText;
             }
 
-            if (useStroke) {
-                tag.attrs["fill"] = "none";
-                tag.attrs["stroke"] = opts.stroke;
-                tag.attrs["stroke-width"] = opts.strokeWidth;
-            }
-
-            elements.push(tag.toString());
+            append(tag.toString());
         }
 
         function drawText(id: string, x: number, y: number) {
@@ -78,8 +76,7 @@ module MakerJs.exporter {
                     "x": x,
                     "y": y,
                 },
-                id,
-                false);
+                id);
         }
 
         function drawPath(id: string, x: number, y: number, d: any[]) {
@@ -211,7 +208,7 @@ module MakerJs.exporter {
             }
         }
 
-        if (!opts.strokeWidth) {
+        if (typeof opts.strokeWidth === 'undefined') {
             if (!opts.units) {
                 opts.strokeWidth = defaultStrokeWidth;
             } else {
@@ -224,23 +221,52 @@ module MakerJs.exporter {
 
         //begin svg output
 
-        var exp = new Exporter(map, fixPoint, fixPath);
-        exp.exportItem(itemToExport, opts.origin);
+        var modelGroup = new XmlTag('g');
 
-        var svgAttrs;
+        function beginModel(modelContext: IModel) {
+            modelGroup.attrs = {
+                id: modelContext.id
+            };
+            append(modelGroup.getOpeningTag(false));
+        }
+
+        function endModel(modelContext: IModel) {
+            append(modelGroup.getClosingTag());
+        }
+
+        var svgAttrs: IXmlTagAttrs;
 
         if (opts.viewBox) {
             var width = round(size.high[0] - size.low[0]);
             var height = round(size.high[1] - size.low[1]);
             var viewBox = [0, 0, width, height];
             var unit = svgUnit[opts.units] || '';
-            svgAttrs = { width: width + unit, height: height + unit, viewBox: viewBox.join(' ') };
+            svgAttrs = {
+                width: width + unit,
+                height: height + unit,
+                viewBox: viewBox.join(' ')
+            };
         }
 
         var svgTag = new XmlTag('svg', svgAttrs);
-        svgTag.innerText = elements.join('');
-        svgTag.innerTextEscaped = true;
-        return svgTag.toString();
+
+        append(svgTag.getOpeningTag(false));
+
+        var svgGroup = new XmlTag('g', {
+            id: 'svgGroup',
+            stroke: opts.stroke,
+            "stroke-width": opts.strokeWidth,
+            "fill": "none"
+        });
+        append(svgGroup.getOpeningTag(false));
+
+        var exp = new Exporter(map, fixPoint, fixPath, beginModel, endModel);
+        exp.exportItem(itemToExport, opts.origin);
+
+        append(svgGroup.getClosingTag());
+        append(svgTag.getClosingTag());
+
+        return elements.join('');
     }
 
     //SVG Coordinate Systems, Transformations and Units documentation:

@@ -32,9 +32,11 @@ module MakerJs.exporter {
      * @param fixPath Optional function to modify a path prior to output. Function parameters are path and offset point; function must return a path.
      */
         constructor(
-            public map: IPathOriginFunctionMap,
-            public fixPoint?: (pointToFix: IPoint) => IPoint,
-            public fixPath?: (pathToFix: IPath, origin: IPoint) => IPath 
+            private map: IPathOriginFunctionMap,
+            private fixPoint?: (pointToFix: IPoint) => IPoint,
+            private fixPath?: (pathToFix: IPath, origin: IPoint) => IPath,
+            private beginModel?: (modelContext: IModel) => void,
+            private endModel?: (modelContext: IModel) => void
             ) {
         }
 
@@ -59,6 +61,10 @@ module MakerJs.exporter {
          */
         public exportModel(modelToExport: IModel, offset: IPoint) {
 
+            if (this.beginModel) {
+                this.beginModel(modelToExport);
+            }
+
             var newOffset = point.add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
 
             if (modelToExport.paths) {
@@ -72,6 +78,11 @@ module MakerJs.exporter {
                     this.exportModel(modelToExport.models[i], newOffset);
                 }
             }
+
+            if (this.endModel) {
+                this.endModel(modelToExport);
+            }
+
         }
 
         /**

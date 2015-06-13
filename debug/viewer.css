@@ -18,13 +18,6 @@
     margin-top: 8px;
     padding: 0;
 }
-#paramValues {
-    border: 1px solid silver;
-    background-color: #f8f8f8;
-    padding: 10px;
-    color: #777;
-    margin-bottom: 20px;
-}
 #view {
     border: 1px dashed silver;
     position: fixed;
@@ -42,6 +35,18 @@ svg, .svg-zone, #export-zone {
 }
 svg {
     padding: 20px 0 0 20px;
+}
+svg line, svg circle, svg path {
+    stroke: blue;
+    stroke-width: 2;
+    fill: none;
+}
+#svg-guides svg line {
+    stroke: #00A8FF;
+    stroke-width: 1;
+}
+svg text {
+    fill: black;
 }
 #export-zone {
     overflow: scroll;

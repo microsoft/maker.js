@@ -1,41 +1,32 @@
 ﻿
 var Viewer = {
-    Params: {},
+    Params: [],
     ViewModel: null,
     ViewScale: 100, //100 pixels per mm
-    Render: function () {
-        return {};
+    construct: function(constructor, args) {
+        function F() {
+            return constructor.apply(this, args);
+        }
+        F.prototype = constructor.prototype;
+        return new F();
     },
-    Refresh: function (newParams) {
+    Constructor: function () {},
+    Refresh: function (index, arg) {
 
         //apply slider parameters
-        for (var paramName in newParams) {
-            Viewer.Params[paramName].value = makerjs.round(newParams[paramName], .001);
-        }        
-
-        var values = {};
-        var valuesHtml = '';
-        for (var paramName in Viewer.Params) {
-            var value = Viewer.Params[paramName].value;
-            values[paramName] = value;
-
-            if (valuesHtml) {
-                valuesHtml += ',<br/>';
-            }
-            valuesHtml += '"' + paramName + '": "' + value + '"';
+        if (typeof index !== 'undefined') {
+            Viewer.Params[index] = makerjs.round(arg, .001);
         }
-        valuesHtml = '{<br/>' + valuesHtml + '<br/>}';
-        document.getElementById('paramValues').innerHTML = valuesHtml;
 
-        var model = Viewer.Render(values);
+        var model = Viewer.construct(Viewer.Constructor, Viewer.Params);
 
         Viewer.ViewModel = model;
 
         //svg output
         var renderOptions = {
             viewBox: false,
-            stroke: 'blue',
-            strokeWidth: 2,
+            stroke: null,
+            strokeWidth: null,
             annotate: document.getElementById('checkAnnotate').checked,
             scale: Viewer.ViewScale,
             useSvgPathOnly: false
@@ -48,8 +39,8 @@ var Viewer = {
         var crosshairOptions = {
             viewBox: false,
             origin: renderOptions.origin,
-            stroke: 'red',
-            strokeWidth: 1,
+            stroke: null,
+            strokeWidth: null,
             useSvgPathOnly: false
         };
 
@@ -115,18 +106,21 @@ var Viewer = {
     },
 
     populateParams: function () {
+        Viewer.Params = [];
         var paramsHtml = '';
-        var i = 0;
-        for (var paramName in Viewer.Params) {
-            var attrs = Viewer.Params[paramName];
+        for (var i = 0; i < Viewer.Constructor.metaArguments.length; i++) {
+            var attrs = Viewer.Constructor.metaArguments[i];
+
+            Viewer.Params.push(attrs.value);
 
             var id = 'input_' + i;
-            var label = new makerjs.exporter.XmlTag('label', { "for": id });
-            label.innerText = paramName + ': ';
+            var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
+            label.innerText = attrs.title + ': ';
 
             if (attrs.type == 'range') {
+                attrs.title = attrs.value;
                 var input = new makerjs.exporter.XmlTag('input', attrs);
-                input.attrs['onchange'] = 'Viewer.Refresh({ "' + paramName + '": this.valueAsNumber })';
+                input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', this.valueAsNumber)';
                 input.attrs['id'] = id;
 
                 var div = new makerjs.exporter.XmlTag('div');
@@ -134,7 +128,6 @@ var Viewer = {
                 div.innerTextEscaped = true;
                 paramsHtml += div.toString();
             }
-            i++;
         }
 
         document.getElementById("params").innerHTML = paramsHtml;
