@@ -14,7 +14,7 @@
             };
 
             for (var id2 in holes) {
-                this.paths.push(createCircle(id2+ "_bolt", holes[id2], holeRadius));
+                this.paths.push(new paths.Circle(id2+ "_bolt", holes[id2], holeRadius));
             }
         }
     }

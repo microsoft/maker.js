@@ -116,65 +116,6 @@ var MakerJs;
         return item && (item.paths || item.models);
     }
     MakerJs.isModel = isModel;
-    //shortcuts
-    /**
-     * Shortcut to create a new arc path.
-     *
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param radius The radius of the arc.
-     * @param startAngle The start angle of the arc.
-     * @param endAngle The end angle of the arc.
-     * @returns A new POJO representing an arc path.
-     */
-    function createArc(id, origin, radius, startAngle, endAngle) {
-        var arc = {
-            type: MakerJs.pathType.Arc,
-            id: id,
-            origin: origin,
-            radius: radius,
-            startAngle: startAngle,
-            endAngle: endAngle
-        };
-        return arc;
-    }
-    MakerJs.createArc = createArc;
-    /**
-     * Shortcut to create a new circle path.
-     *
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param radius The radius of the circle.
-     * @returns A new POJO representing an circle path.
-     */
-    function createCircle(id, origin, radius) {
-        var circle = {
-            type: MakerJs.pathType.Circle,
-            id: id,
-            origin: origin,
-            radius: radius
-        };
-        return circle;
-    }
-    MakerJs.createCircle = createCircle;
-    /**
-     * Shortcut to create a new line path.
-     *
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param end The end point of the line.
-     * @returns A new POJO representing an line path.
-     */
-    function createLine(id, origin, end) {
-        var line = {
-            type: MakerJs.pathType.Line,
-            id: id,
-            origin: origin,
-            end: end
-        };
-        return line;
-    }
-    MakerJs.createLine = createLine;
 })(MakerJs || (MakerJs = {}));
 //CommonJs
 module.exports = MakerJs;
@@ -403,16 +344,16 @@ var MakerJs;
             var origin = MakerJs.point.mirror(pathToMirror.origin, mirrorX, mirrorY);
             var map = {};
             map[MakerJs.pathType.Line] = function (line) {
-                newPath = MakerJs.createLine(newId || line.id, origin, MakerJs.point.mirror(line.end, mirrorX, mirrorY));
+                newPath = new MakerJs.paths.Line(newId || line.id, origin, MakerJs.point.mirror(line.end, mirrorX, mirrorY));
             };
             map[MakerJs.pathType.Circle] = function (circle) {
-                newPath = MakerJs.createCircle(newId || circle.id, origin, circle.radius);
+                newPath = new MakerJs.paths.Circle(newId || circle.id, origin, circle.radius);
             };
             map[MakerJs.pathType.Arc] = function (arc) {
                 var startAngle = MakerJs.angle.mirror(arc.startAngle, mirrorX, mirrorY);
                 var endAngle = MakerJs.angle.mirror(MakerJs.angle.arcEndAnglePastZero(arc), mirrorX, mirrorY);
                 var xor = mirrorX != mirrorY;
-                newPath = MakerJs.createArc(newId || arc.id, origin, arc.radius, xor ? endAngle : startAngle, xor ? startAngle : endAngle);
+                newPath = new MakerJs.paths.Arc(newId || arc.id, origin, arc.radius, xor ? endAngle : startAngle, xor ? startAngle : endAngle);
             };
             var fn = map[pathToMirror.type];
             if (fn) {
@@ -497,6 +438,72 @@ var MakerJs;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="path.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var paths;
+    (function (paths) {
+        //shortcuts
+        /**
+         * Class for arc path.
+         *
+         * @param id The id of the new path.
+         * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+         * @param radius The radius of the arc.
+         * @param startAngle The start angle of the arc.
+         * @param endAngle The end angle of the arc.
+         * @returns A new POJO representing an arc path.
+         */
+        var Arc = (function () {
+            function Arc(id, origin, radius, startAngle, endAngle) {
+                this.id = id;
+                this.origin = origin;
+                this.radius = radius;
+                this.startAngle = startAngle;
+                this.endAngle = endAngle;
+                this.type = MakerJs.pathType.Arc;
+            }
+            return Arc;
+        })();
+        paths.Arc = Arc;
+        /**
+         * Class for circle path.
+         *
+         * @param id The id of the new path.
+         * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+         * @param radius The radius of the circle.
+         * @returns A new POJO representing an circle path.
+         */
+        var Circle = (function () {
+            function Circle(id, origin, radius) {
+                this.id = id;
+                this.origin = origin;
+                this.radius = radius;
+                this.type = MakerJs.pathType.Circle;
+            }
+            return Circle;
+        })();
+        paths.Circle = Circle;
+        /**
+         * Class for line path.
+         *
+         * @param id The id of the new path.
+         * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+         * @param end The end point of the line.
+         * @returns A new POJO representing an line path.
+         */
+        var Line = (function () {
+            function Line(id, origin, end) {
+                this.id = id;
+                this.origin = origin;
+                this.end = end;
+                this.type = MakerJs.pathType.Line;
+            }
+            return Line;
+        })();
+        paths.Line = Line;
+    })(paths = MakerJs.paths || (MakerJs.paths = {}));
+})(MakerJs || (MakerJs = {}));
+/// <reference path="paths.ts" />
 var MakerJs;
 (function (MakerJs) {
     var model;
@@ -1361,7 +1368,7 @@ var MakerJs;
                 var a = 2 * Math.PI / boltCount;
                 for (var i = 0; i < boltCount; i++) {
                     var o = MakerJs.point.fromPolar(a * i + a1, boltRadius);
-                    this.paths.push(MakerJs.createCircle("bolt " + i, o, holeRadius));
+                    this.paths.push(new MakerJs.paths.Circle("bolt " + i, o, holeRadius));
                 }
             }
             return BoltCircle;
@@ -1384,7 +1391,7 @@ var MakerJs;
                     "TopLeft": [0, height]
                 };
                 for (var id2 in holes) {
-                    this.paths.push(MakerJs.createCircle(id2 + "_bolt", holes[id2], holeRadius));
+                    this.paths.push(new MakerJs.paths.Circle(id2 + "_bolt", holes[id2], holeRadius));
                 }
             }
             return BoltRectangle;
@@ -1402,7 +1409,7 @@ var MakerJs;
                 this.id = id;
                 this.paths = [];
                 var connect = function (a, b) {
-                    _this.paths.push(MakerJs.createLine("ShapeLine" + i, points[a], points[b]));
+                    _this.paths.push(new MakerJs.paths.Line("ShapeLine" + i, points[a], points[b]));
                 };
                 for (var i = 1; i < points.length; i++) {
                     connect(i - 1, i);
@@ -1429,18 +1436,18 @@ var MakerJs;
                 var wr = width - radius;
                 var hr = height - radius;
                 if (radius > 0) {
-                    this.paths.push(MakerJs.createArc("BottomLeft", [radius, radius], radius, 180, 270));
-                    this.paths.push(MakerJs.createArc("BottomRight", [wr, radius], radius, 270, 0));
-                    this.paths.push(MakerJs.createArc("TopRight", [wr, hr], radius, 0, 90));
-                    this.paths.push(MakerJs.createArc("TopLeft", [radius, hr], radius, 90, 180));
+                    this.paths.push(new MakerJs.paths.Arc("BottomLeft", [radius, radius], radius, 180, 270));
+                    this.paths.push(new MakerJs.paths.Arc("BottomRight", [wr, radius], radius, 270, 0));
+                    this.paths.push(new MakerJs.paths.Arc("TopRight", [wr, hr], radius, 0, 90));
+                    this.paths.push(new MakerJs.paths.Arc("TopLeft", [radius, hr], radius, 90, 180));
                 }
                 if (wr - radius > 0) {
-                    this.paths.push(MakerJs.createLine("Bottom", [radius, 0], [wr, 0]));
-                    this.paths.push(MakerJs.createLine("Top", [wr, height], [radius, height]));
+                    this.paths.push(new MakerJs.paths.Line("Bottom", [radius, 0], [wr, 0]));
+                    this.paths.push(new MakerJs.paths.Line("Top", [wr, height], [radius, height]));
                 }
                 if (hr - radius > 0) {
-                    this.paths.push(MakerJs.createLine("Right", [width, radius], [width, hr]));
-                    this.paths.push(MakerJs.createLine("Left", [0, hr], [0, radius]));
+                    this.paths.push(new MakerJs.paths.Line("Right", [width, radius], [width, hr]));
+                    this.paths.push(new MakerJs.paths.Line("Left", [0, hr], [0, radius]));
                 }
             }
             return RoundRectangle;
@@ -1481,10 +1488,10 @@ var MakerJs;
                 this.paths = [];
                 var addCap = function (id, tiltAngle, offsetStartAngle, offsetEndAngle) {
                     var p = MakerJs.point.fromPolar(MakerJs.angle.toRadians(tiltAngle), sweepRadius);
-                    _this.paths.push(MakerJs.createArc(id, p, slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle));
+                    _this.paths.push(new MakerJs.paths.Arc(id, p, slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle));
                 };
                 var addSweep = function (id, offsetRadius) {
-                    _this.paths.push(MakerJs.createArc(id, MakerJs.point.zero(), sweepRadius + offsetRadius, startAngle, endAngle));
+                    _this.paths.push(new MakerJs.paths.Arc(id, MakerJs.point.zero(), sweepRadius + offsetRadius, startAngle, endAngle));
                 };
                 addSweep("Inner", -slotRadius);
                 addSweep("Outer", slotRadius);
@@ -1541,7 +1548,7 @@ var MakerJs;
                     endAngle = 180;
                     arcOrigin = [radius, 0];
                 }
-                var curve = MakerJs.createArc('curve_start', arcOrigin, radius, startAngle, endAngle);
+                var curve = new MakerJs.paths.Arc('curve_start', arcOrigin, radius, startAngle, endAngle);
                 this.paths.push(curve);
                 this.paths.push(MakerJs.path.moveRelative(MakerJs.path.mirror(curve, true, true, 'curve_end'), [width, height]));
             }

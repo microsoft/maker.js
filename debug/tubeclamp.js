@@ -3,8 +3,8 @@
     this.paths = [];
     this.models = [];
 
-    var createLine = makerjs.createLine;
-    var createArc = makerjs.createArc;
+    var line = makerjs.paths.Line;
+    var arc = makerjs.paths.Arc;
     var point = makerjs.point;
 
     var radius = tubediameter / 2;
@@ -18,10 +18,10 @@
     var z = Math.max(thickness + .125 - radius, 0);
     var bottom = Math.max(radius, thickness * 1.2);
 
-    //this.paths.push(makerjs.Path.CreateCircle('tube', [0, cy], radius));
+    //this.paths.push(new makerjs.paths.Circle('tube', [0, cy], radius));
 
     var thicknessAngle = 360 - makerjs.angle.toDegrees(Math.acos(t2 / radius));
-    var arc1 = createArc('arc', [0, cy], radius, thicknessAngle, 0);
+    var arc1 = new arc('arc', [0, cy], radius, thicknessAngle, 0);
     var arc1Points = point.fromArc(arc1);
 
     var halfBody = {
@@ -30,19 +30,19 @@
             makerjs.model.move(new makerjs.models.SCurve('scurve', wing - (bottom - radius), cy - drop), [bottom, 0])
         ],
         paths: [
-            createLine('bottom', [0, 0], [bottom, 0]),
-            //createLine('longslope', [radius, 0], [outer, cy - drop]),
-            createLine('crux', [outer, cy - drop], [outer, mtop]),
-            createLine('flat', [outer, mtop], [radius, mtop]),
-            createLine('wall', [radius, mtop], [radius, cy]),
+            new line('bottom', [0, 0], [bottom, 0]),
+            //new line('longslope', [radius, 0], [outer, cy - drop]),
+            new line('crux', [outer, cy - drop], [outer, mtop]),
+            new line('flat', [outer, mtop], [radius, mtop]),
+            new line('wall', [radius, mtop], [radius, cy]),
             arc1,
-            createLine('boxside', arc1Points[0], [t2, d2]),
-            createLine('boxottom', [0, d2], [t2, d2])
+            new line('boxside', arc1Points[0], [t2, d2]),
+            new line('boxottom', [0, d2], [t2, d2])
         ]
     };
 
     var lidAngle = makerjs.angle.toDegrees(Math.acos((radius - lidclearance) / radius));
-    var arc2 = createArc('lid', [0, -radius], radius, lidAngle, 90);
+    var arc2 = new arc('lid', [0, -radius], radius, lidAngle, 90);
     var arc2Points = point.fromArc(arc2);
 
     var halfLid = new makerjs.models.ConnectTheDots('halflid', false, [arc2Points[0], [arc2Points[0][0], 0], [outer, 0], [outer, lid], [0, lid]]);

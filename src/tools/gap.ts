@@ -31,7 +31,7 @@ module MakerJs.Tools {
 
         function addLine(suffix: string, origin: IPoint, end: IPoint) {
             ret.push({
-                newPath: createLine(line.id + suffix, point.clone(origin), point.clone(end)),
+                newPath: new paths.Line(line.id + suffix, point.clone(origin), point.clone(end)),
                 newPoint: point.clone(breakPoint)
             });
         }
@@ -56,7 +56,7 @@ module MakerJs.Tools {
 
         function addArc(suffix: string, startAngle: number, endAngle: number) {
             ret.push({
-                newPath: createArc(arc.id + suffix, point.clone(arc.origin), arc.radius, startAngle, endAngle),
+                newPath: new paths.Arc(arc.id + suffix, point.clone(arc.origin), arc.radius, startAngle, endAngle),
                 newPoint: point.clone(breakPoint)
             });
         }
@@ -137,7 +137,7 @@ module MakerJs.Tools {
             var endAngle = breakAangle - halfGapAngle;
 
             var brokenPath = {
-                newPath: createArc(circle.id + "_1", point.clone(circle.origin), circle.radius, startAngle, endAngle),
+                newPath: new paths.Arc(circle.id + "_1", point.clone(circle.origin), circle.radius, startAngle, endAngle),
                 newPoint: point.add(circle.origin, point.fromPolar(angle.toRadians(startAngle), circle.radius))
             };
 

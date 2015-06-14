@@ -189,35 +189,6 @@ declare module MakerJs {
      * Test to see if an object implements the required properties of a model.
      */
     function isModel(item: any): boolean;
-    /**
-     * Shortcut to create a new arc path.
-     *
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param radius The radius of the arc.
-     * @param startAngle The start angle of the arc.
-     * @param endAngle The end angle of the arc.
-     * @returns A new POJO representing an arc path.
-     */
-    function createArc(id: string, origin: IPoint, radius: number, startAngle: number, endAngle: number): IPathArc;
-    /**
-     * Shortcut to create a new circle path.
-     *
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param radius The radius of the circle.
-     * @returns A new POJO representing an circle path.
-     */
-    function createCircle(id: string, origin: IPoint, radius: number): IPathCircle;
-    /**
-     * Shortcut to create a new line path.
-     *
-     * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
-     * @param end The end point of the line.
-     * @returns A new POJO representing an line path.
-     */
-    function createLine(id: string, origin: IPoint, end: IPoint): IPathLine;
 }
 declare module MakerJs.angle {
     /**
@@ -371,6 +342,57 @@ declare module MakerJs.path {
      * @returns The original path (for chaining).
      */
     function scale(pathToScale: IPath, scaleValue: number): IPath;
+}
+declare module MakerJs.paths {
+    /**
+     * Class for arc path.
+     *
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param radius The radius of the arc.
+     * @param startAngle The start angle of the arc.
+     * @param endAngle The end angle of the arc.
+     * @returns A new POJO representing an arc path.
+     */
+    class Arc implements IPathArc {
+        id: string;
+        origin: IPoint;
+        radius: number;
+        startAngle: number;
+        endAngle: number;
+        type: string;
+        constructor(id: string, origin: IPoint, radius: number, startAngle: number, endAngle: number);
+    }
+    /**
+     * Class for circle path.
+     *
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param radius The radius of the circle.
+     * @returns A new POJO representing an circle path.
+     */
+    class Circle implements IPathCircle {
+        id: string;
+        origin: IPoint;
+        radius: number;
+        type: string;
+        constructor(id: string, origin: IPoint, radius: number);
+    }
+    /**
+     * Class for line path.
+     *
+     * @param id The id of the new path.
+     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param end The end point of the line.
+     * @returns A new POJO representing an line path.
+     */
+    class Line implements IPathLine {
+        id: string;
+        origin: IPoint;
+        end: IPoint;
+        type: string;
+        constructor(id: string, origin: IPoint, end: IPoint);
+    }
 }
 declare module MakerJs.model {
     /**

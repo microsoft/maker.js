@@ -5,7 +5,7 @@
         this.paths = [];
         this.models = [];
 
-        var circle = makerjs.createCircle('c1', [0, 0], Math.min(height, width) / 2 - .5);
+        var circle = new makerjs.paths.Circle('c1', [0, 0], Math.min(height, width) / 2 - .5);
 
         if (radius < 0.5) {
             this.models.push(makerjs.model.move(new makerjs.models.BoltRectangle('boltrect', width - .4, height - .4, .07), [.2, .2]));
