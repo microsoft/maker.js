@@ -480,16 +480,18 @@ declare module MakerJs.exporter {
      * Class to traverse an item 's models or paths and ultimately render each path.
      */
     class Exporter {
-        map: IPathOriginFunctionMap;
-        fixPoint: (pointToFix: IPoint) => IPoint;
-        fixPath: (pathToFix: IPath, origin: IPoint) => IPath;
+        private map;
+        private fixPoint;
+        private fixPath;
+        private beginModel;
+        private endModel;
         /**
          * @param map Object containing properties: property name is the type of path, e.g. "line", "circle"; property value
          * is a function to render a path. Function parameters are path and point.
          * @param fixPoint Optional function to modify a point prior to export. Function parameter is a point; function must return a point.
          * @param fixPath Optional function to modify a path prior to output. Function parameters are path and offset point; function must return a path.
          */
-        constructor(map: IPathOriginFunctionMap, fixPoint?: (pointToFix: IPoint) => IPoint, fixPath?: (pathToFix: IPath, origin: IPoint) => IPath);
+        constructor(map: IPathOriginFunctionMap, fixPoint?: (pointToFix: IPoint) => IPoint, fixPath?: (pathToFix: IPath, origin: IPoint) => IPath, beginModel?: (modelContext: IModel) => void, endModel?: (modelContext: IModel) => void);
         /**
          * Export a path.
          *
@@ -556,7 +558,21 @@ declare module MakerJs.exporter {
          */
         constructor(name: string, attrs?: IXmlTagAttrs);
         /**
-         * Output the tag as a string.
+         * Get the opening tag.
+         *
+         * @param selfClose Flag to determine if opening tag should be self closing.
+         */
+        getOpeningTag(selfClose: boolean): string;
+        /**
+         * Get the inner text.
+         */
+        getInnerText(): string;
+        /**
+         * Get the closing tag.
+         */
+        getClosingTag(): string;
+        /**
+         * Output the entire tag as a string.
          */
         toString(): string;
     }
@@ -605,69 +621,61 @@ declare module MakerJs.exporter {
 }
 declare module MakerJs.models {
     class BoltCircle implements IModel {
+        id: string;
         paths: IPath[];
-        constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
+        constructor(id: string, boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
     }
 }
 declare module MakerJs.models {
     class BoltRectangle implements IModel {
+        id: string;
         paths: IPath[];
-        constructor(width: number, height: number, holeRadius: number);
+        constructor(id: string, width: number, height: number, holeRadius: number);
     }
 }
 declare module MakerJs.models {
     class ConnectTheDots implements IModel {
-        isClosed: boolean;
-        points: any[];
+        id: string;
         paths: IPath[];
-        constructor(isClosed: boolean, points: IPoint[]);
-        constructor(isClosed: boolean, points: number[][]);
+        constructor(id: string, isClosed: boolean, points: IPoint[]);
     }
 }
 declare module MakerJs.models {
     class RoundRectangle implements IModel {
-        width: number;
-        height: number;
-        radius: number;
+        id: string;
         paths: IPath[];
-        constructor(width: number, height: number, radius: number);
+        constructor(id: string, width: number, height: number, radius: number);
     }
 }
 declare module MakerJs.models {
     class Oval extends RoundRectangle {
-        width: number;
-        height: number;
-        constructor(width: number, height: number);
+        id: string;
+        constructor(id: string, width: number, height: number);
     }
 }
 declare module MakerJs.models {
     class OvalArc implements IModel {
-        startAngle: number;
-        endAngle: number;
-        sweepRadius: number;
-        slotRadius: number;
+        id: string;
         paths: IPath[];
-        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
+        constructor(id: string, startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
     }
 }
 declare module MakerJs.models {
     class Rectangle extends ConnectTheDots {
-        width: number;
-        height: number;
-        constructor(width: number, height: number);
+        id: string;
+        constructor(id: string, width: number, height: number);
     }
 }
 declare module MakerJs.models {
     class SCurve implements IModel {
-        width: number;
-        height: number;
+        id: string;
         paths: IPath[];
-        constructor(width: number, height: number);
+        constructor(id: string, width: number, height: number);
     }
 }
 declare module MakerJs.models {
     class Square extends Rectangle {
-        side: number;
-        constructor(side: number);
+        id: string;
+        constructor(id: string, side: number);
     }
 }

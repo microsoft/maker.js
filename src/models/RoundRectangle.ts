@@ -4,7 +4,7 @@
 
         public paths: IPath[] = [];
 
-        constructor(public width: number, public height: number, public radius: number) {
+        constructor(public id: string, width: number, height: number, radius: number) {
 
             var maxRadius = Math.min(height, width) / 2;
 

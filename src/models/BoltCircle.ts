@@ -4,7 +4,7 @@
 
         public paths: IPath[] = [];
 
-        constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle: number = 0) {
+        constructor(public id:string, boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle: number = 0) {
 
             var a1 = angle.toRadians(firstBoltAngle);
             var a = 2 * Math.PI / boltCount;

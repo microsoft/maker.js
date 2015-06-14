@@ -859,10 +859,12 @@ var MakerJs;
              * @param fixPoint Optional function to modify a point prior to export. Function parameter is a point; function must return a point.
              * @param fixPath Optional function to modify a path prior to output. Function parameters are path and offset point; function must return a path.
              */
-            function Exporter(map, fixPoint, fixPath) {
+            function Exporter(map, fixPoint, fixPath, beginModel, endModel) {
                 this.map = map;
                 this.fixPoint = fixPoint;
                 this.fixPath = fixPath;
+                this.beginModel = beginModel;
+                this.endModel = endModel;
             }
             /**
              * Export a path.
@@ -883,6 +885,9 @@ var MakerJs;
              * @param offset The offset position of the model.
              */
             Exporter.prototype.exportModel = function (modelToExport, offset) {
+                if (this.beginModel) {
+                    this.beginModel(modelToExport);
+                }
                 var newOffset = MakerJs.point.add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
                 if (modelToExport.paths) {
                     for (var i = 0; i < modelToExport.paths.length; i++) {
@@ -893,6 +898,9 @@ var MakerJs;
                     for (var i = 0; i < modelToExport.models.length; i++) {
                         this.exportModel(modelToExport.models[i], newOffset);
                     }
+                }
+                if (this.endModel) {
+                    this.endModel(modelToExport);
                 }
             };
             /**
@@ -1074,29 +1082,53 @@ var MakerJs;
                 return value;
             };
             /**
-             * Output the tag as a string.
+             * Get the opening tag.
+             *
+             * @param selfClose Flag to determine if opening tag should be self closing.
+             */
+            XmlTag.prototype.getOpeningTag = function (selfClose) {
+                var attrs = '';
+                function outputAttr(attrName, attrValue) {
+                    if (attrValue == null || typeof attrValue === 'undefined')
+                        return;
+                    if (typeof attrValue === 'string') {
+                        attrValue = XmlTag.escapeString(attrValue);
+                    }
+                    attrs += ' ' + attrName + '="' + attrValue + '"';
+                }
+                for (var name in this.attrs) {
+                    outputAttr(name, this.attrs[name]);
+                }
+                return '<' + this.name + attrs + (selfClose ? '/' : '') + '>';
+            };
+            /**
+             * Get the inner text.
+             */
+            XmlTag.prototype.getInnerText = function () {
+                if (this.innerTextEscaped) {
+                    return this.innerText;
+                }
+                else {
+                    return XmlTag.escapeString(this.innerText);
+                }
+            };
+            /**
+             * Get the closing tag.
+             */
+            XmlTag.prototype.getClosingTag = function () {
+                return '</' + this.name + '>';
+            };
+            /**
+             * Output the entire tag as a string.
              */
             XmlTag.prototype.toString = function () {
-                var attrs = '';
-                for (var name in this.attrs) {
-                    var value = this.attrs[name];
-                    if (typeof value == 'string') {
-                        value = XmlTag.escapeString(value);
-                    }
-                    attrs += ' ' + name + '="' + value + '"';
+                var selfClose = !this.innerText;
+                if (selfClose) {
+                    return this.getOpeningTag(true);
                 }
-                var closeTag = '/>';
-                if (this.innerText) {
-                    closeTag = '>';
-                    if (this.innerTextEscaped) {
-                        closeTag += this.innerText;
-                    }
-                    else {
-                        closeTag += XmlTag.escapeString(this.innerText);
-                    }
-                    closeTag += '</' + this.name + '>';
+                else {
+                    return this.getOpeningTag(false) + this.getInnerText() + this.getClosingTag();
                 }
-                return '<' + this.name + attrs + closeTag;
             };
             return XmlTag;
         })();
@@ -1138,6 +1170,9 @@ var MakerJs;
             };
             MakerJs.extendObject(opts, options);
             var elements = [];
+            function append(value) {
+                elements.push(value);
+            }
             function fixPoint(pointToFix) {
                 //in DXF Y increases upward. in SVG, Y increases downward
                 var pointMirroredY = MakerJs.point.mirror(pointToFix, false, true);
@@ -1148,26 +1183,20 @@ var MakerJs;
                 var mirrorY = MakerJs.path.mirror(pathToFix, false, true);
                 return MakerJs.path.moveRelative(MakerJs.path.scale(mirrorY, opts.scale), origin);
             }
-            function createElement(tagname, attrs, innerText, useStroke) {
+            function createElement(tagname, attrs, innerText) {
                 if (innerText === void 0) { innerText = null; }
-                if (useStroke === void 0) { useStroke = true; }
                 var tag = new exporter.XmlTag(tagname, attrs);
                 if (innerText) {
                     tag.innerText = innerText;
                 }
-                if (useStroke) {
-                    tag.attrs["fill"] = "none";
-                    tag.attrs["stroke"] = opts.stroke;
-                    tag.attrs["stroke-width"] = opts.strokeWidth;
-                }
-                elements.push(tag.toString());
+                append(tag.toString());
             }
             function drawText(id, x, y) {
                 createElement("text", {
                     "id": id + "_text",
                     "x": x,
                     "y": y
-                }, id, false);
+                }, id);
             }
             function drawPath(id, x, y, d) {
                 createElement("path", {
@@ -1260,7 +1289,7 @@ var MakerJs;
                     opts.units = unitSystem;
                 }
             }
-            if (!opts.strokeWidth) {
+            if (typeof opts.strokeWidth === 'undefined') {
                 if (!opts.units) {
                     opts.strokeWidth = exporter.defaultStrokeWidth;
                 }
@@ -1271,20 +1300,42 @@ var MakerJs;
             //also pass back to options parameter
             MakerJs.extendObject(options, opts);
             //begin svg output
-            var exp = new exporter.Exporter(map, fixPoint, fixPath);
-            exp.exportItem(itemToExport, opts.origin);
+            var modelGroup = new exporter.XmlTag('g');
+            function beginModel(modelContext) {
+                modelGroup.attrs = {
+                    id: modelContext.id
+                };
+                append(modelGroup.getOpeningTag(false));
+            }
+            function endModel(modelContext) {
+                append(modelGroup.getClosingTag());
+            }
             var svgAttrs;
             if (opts.viewBox) {
                 var width = MakerJs.round(size.high[0] - size.low[0]);
                 var height = MakerJs.round(size.high[1] - size.low[1]);
                 var viewBox = [0, 0, width, height];
                 var unit = svgUnit[opts.units] || '';
-                svgAttrs = { width: width + unit, height: height + unit, viewBox: viewBox.join(' ') };
+                svgAttrs = {
+                    width: width + unit,
+                    height: height + unit,
+                    viewBox: viewBox.join(' ')
+                };
             }
             var svgTag = new exporter.XmlTag('svg', svgAttrs);
-            svgTag.innerText = elements.join('');
-            svgTag.innerTextEscaped = true;
-            return svgTag.toString();
+            append(svgTag.getOpeningTag(false));
+            var svgGroup = new exporter.XmlTag('g', {
+                id: 'svgGroup',
+                stroke: opts.stroke,
+                "stroke-width": opts.strokeWidth,
+                "fill": "none"
+            });
+            append(svgGroup.getOpeningTag(false));
+            var exp = new exporter.Exporter(map, fixPoint, fixPath, beginModel, endModel);
+            exp.exportItem(itemToExport, opts.origin);
+            append(svgGroup.getClosingTag());
+            append(svgTag.getClosingTag());
+            return elements.join('');
         }
         exporter.toSVG = toSVG;
         //SVG Coordinate Systems, Transformations and Units documentation:
@@ -1301,8 +1352,9 @@ var MakerJs;
     var models;
     (function (models) {
         var BoltCircle = (function () {
-            function BoltCircle(boltRadius, holeRadius, boltCount, firstBoltAngle) {
+            function BoltCircle(id, boltRadius, holeRadius, boltCount, firstBoltAngle) {
                 if (firstBoltAngle === void 0) { firstBoltAngle = 0; }
+                this.id = id;
                 this.paths = [];
                 var a1 = MakerJs.angle.toRadians(firstBoltAngle);
                 var a = 2 * Math.PI / boltCount;
@@ -1321,7 +1373,8 @@ var MakerJs;
     var models;
     (function (models) {
         var BoltRectangle = (function () {
-            function BoltRectangle(width, height, holeRadius) {
+            function BoltRectangle(id, width, height, holeRadius) {
+                this.id = id;
                 this.paths = [];
                 var holes = {
                     "BottomLeft": [0, 0],
@@ -1329,8 +1382,8 @@ var MakerJs;
                     "TopRight": [width, height],
                     "TopLeft": [0, height]
                 };
-                for (var id in holes) {
-                    this.paths.push(MakerJs.createCircle(id + "_bolt", holes[id], holeRadius));
+                for (var id2 in holes) {
+                    this.paths.push(MakerJs.createCircle(id2 + "_bolt", holes[id2], holeRadius));
                 }
             }
             return BoltRectangle;
@@ -1343,10 +1396,9 @@ var MakerJs;
     var models;
     (function (models) {
         var ConnectTheDots = (function () {
-            function ConnectTheDots(isClosed, points) {
+            function ConnectTheDots(id, isClosed, points) {
                 var _this = this;
-                this.isClosed = isClosed;
-                this.points = points;
+                this.id = id;
                 this.paths = [];
                 var connect = function (a, b) {
                     _this.paths.push(MakerJs.createLine("ShapeLine" + i, points[a], points[b]));
@@ -1368,10 +1420,8 @@ var MakerJs;
     var models;
     (function (models) {
         var RoundRectangle = (function () {
-            function RoundRectangle(width, height, radius) {
-                this.width = width;
-                this.height = height;
-                this.radius = radius;
+            function RoundRectangle(id, width, height, radius) {
+                this.id = id;
                 this.paths = [];
                 var maxRadius = Math.min(height, width) / 2;
                 radius = Math.min(radius, maxRadius);
@@ -1410,10 +1460,9 @@ var MakerJs;
     (function (models) {
         var Oval = (function (_super) {
             __extends(Oval, _super);
-            function Oval(width, height) {
-                _super.call(this, width, height, Math.min(height / 2, width / 2));
-                this.width = width;
-                this.height = height;
+            function Oval(id, width, height) {
+                _super.call(this, id, width, height, Math.min(height / 2, width / 2));
+                this.id = id;
             }
             return Oval;
         })(models.RoundRectangle);
@@ -1425,12 +1474,9 @@ var MakerJs;
     var models;
     (function (models) {
         var OvalArc = (function () {
-            function OvalArc(startAngle, endAngle, sweepRadius, slotRadius) {
+            function OvalArc(id, startAngle, endAngle, sweepRadius, slotRadius) {
                 var _this = this;
-                this.startAngle = startAngle;
-                this.endAngle = endAngle;
-                this.sweepRadius = sweepRadius;
-                this.slotRadius = slotRadius;
+                this.id = id;
                 this.paths = [];
                 var addCap = function (id, tiltAngle, offsetStartAngle, offsetEndAngle) {
                     var p = MakerJs.point.fromPolar(MakerJs.angle.toRadians(tiltAngle), sweepRadius);
@@ -1456,10 +1502,9 @@ var MakerJs;
     (function (models) {
         var Rectangle = (function (_super) {
             __extends(Rectangle, _super);
-            function Rectangle(width, height) {
-                _super.call(this, true, [[0, 0], [width, 0], [width, height], [0, height]]);
-                this.width = width;
-                this.height = height;
+            function Rectangle(id, width, height) {
+                _super.call(this, id, true, [[0, 0], [width, 0], [width, height], [0, height]]);
+                this.id = id;
             }
             return Rectangle;
         })(models.ConnectTheDots);
@@ -1471,9 +1516,8 @@ var MakerJs;
     var models;
     (function (models) {
         var SCurve = (function () {
-            function SCurve(width, height) {
-                this.width = width;
-                this.height = height;
+            function SCurve(id, width, height) {
+                this.id = id;
                 this.paths = [];
                 function findRadius(x, y) {
                     return x + (y * y - x * x) / (2 * x);
@@ -1512,9 +1556,9 @@ var MakerJs;
     (function (models) {
         var Square = (function (_super) {
             __extends(Square, _super);
-            function Square(side) {
-                _super.call(this, side, side);
-                this.side = side;
+            function Square(id, side) {
+                _super.call(this, id, side, side);
+                this.id = id;
             }
             return Square;
         })(models.Rectangle);

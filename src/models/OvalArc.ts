@@ -4,7 +4,7 @@
 
         public paths: IPath[] = [];
 
-        constructor(public startAngle: number, public endAngle: number, public sweepRadius: number, public slotRadius: number) {
+        constructor(public id: string, startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number) {
 
             var addCap = (id: string, tiltAngle: number, offsetStartAngle: number, offsetEndAngle: number) => {
                 var p = point.fromPolar(angle.toRadians(tiltAngle), sweepRadius);

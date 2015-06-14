@@ -4,7 +4,7 @@
 
         public paths: IPath[] = [];
 
-        constructor(public width: number, public height: number) {
+        constructor(public id: string, width: number, height: number) {
 
             function findRadius(x: number, y: number) {
                 return x + (y * y - x * x) / (2 * x);

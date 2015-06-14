@@ -22,11 +22,8 @@
     points.push([columnRef, serifH + (height - serifH) * dropConnect]);
     points.push([center, height * dropLow]);
 
-    var halfModel = new makerjs.models.ConnectTheDots(false, points);
+    var halfModel = new makerjs.models.ConnectTheDots('halfModel', false, points);
     var otherHalf = makerjs.model.move(makerjs.model.mirror(halfModel, true, false), [center * 2, 0])
-
-    halfModel.id = 'halfModel';
-    otherHalf.id = 'otherHalf';
 
     this.id = 'M';
     this.units = makerjs.unitType.Inch;

@@ -8,14 +8,14 @@
         var circle = makerjs.createCircle('c1', [0, 0], Math.min(height, width) / 2 - .5);
 
         if (radius < 0.5) {
-            this.models.push(makerjs.model.move(new makerjs.models.BoltRectangle(width - .4, height - .4, .07), [.2, .2]));
+            this.models.push(makerjs.model.move(new makerjs.models.BoltRectangle('boltrect', width - .4, height - .4, .07), [.2, .2]));
         }
 
         this.paths.push(makerjs.path.moveRelative(circle, [width / 2, height / 2]));
 
-        this.models.push(new makerjs.models.RoundRectangle(width, height, radius));
+        this.models.push(new makerjs.models.RoundRectangle('panel', width, height, radius));
 
-        this.models.push(makerjs.model.move(new makerjs.models.BoltCircle(circle.radius + 0.25, .05, 6), [width / 2, height / 2]));
+        this.models.push(makerjs.model.move(new makerjs.models.BoltCircle('boltcircle', circle.radius + 0.25, .05, 6), [width / 2, height / 2]));
 
         makerjs.model.rotate(this, angle, makerjs.point.zero());
     }
