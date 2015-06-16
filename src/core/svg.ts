@@ -198,7 +198,11 @@ module MakerJs.exporter {
         var size = measure.modelExtents(modelToMeasure);
 
         if (!opts.origin) {
-            opts.origin = [-size.low[0] * opts.scale, size.high[1] * opts.scale];
+            var left = 0;
+            if (size.low[0] < 0) {
+                left = -size.low[0] * opts.scale;
+            }
+            opts.origin = [left, size.high[1] * opts.scale];
         }
 
         if (!opts.units) {
