@@ -16,7 +16,9 @@
     <script src="../src/core/units.js"></script>
     <script src="../src/core/measure.js"></script>
     <script src="../src/core/path.js"></script>
+    <script src="../src/core/paths.js"></script>
     <script src="../src/core/model.js"></script>
+    <script src="../src/core/kit.js"></script>
     <script src="../src/core/exporter.js"></script>
     <script src="../src/core/dxf.js"></script>
     <script src="../src/core/xml.js"></script>
@@ -30,7 +32,7 @@
     <script src="../src/models/Rectangle.js"></script>
     <script src="../src/models/Square.js"></script>
     <script src="../src/models/SCurve.js"></script>
-    <script src="../src/core/tools.gap.js"></script>
+    <script src="../src/tools/gap.js"></script>
 
     <script>
         //pretend it's been required
@@ -47,16 +49,16 @@
     <div class="selectModelCode">
         <label for="selectModelCode">model: </label>
         <select id="selectModelCode" onchange="Viewer.loadModelCode(this.value)">
-            <option>m.js</option>
-            <option>testPanel.js</option>
-            <option>tubeclamp.js</option>
+            <option>smile</option>
+            <option>m</option>
+            <option>testPanel</option>
+            <option>tubeclamp</option>
         </select>
     </div>
 
     <div id="paramBar">
         <div id="params">
         </div>
-        <div id="paramValues"></div>
     </div>
 
     <div id="view">

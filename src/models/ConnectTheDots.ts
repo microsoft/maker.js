@@ -4,12 +4,10 @@
 
         public paths: IPath[] = [];
 
-        constructor(isClosed: boolean, points: IPoint[]);
-        constructor(isClosed: boolean, points: number[][]);
-        constructor(public isClosed: boolean, public points: any[]) {
+        constructor(public id: string, isClosed: boolean, points: IPoint[]) {
 
             var connect = (a: number, b: number) => {
-                this.paths.push(createLine("ShapeLine" + i, points[a], points[b]));
+                this.paths.push(new paths.Line("ShapeLine" + i, points[a], points[b]));
             }
 
             for (var i = 1; i < points.length; i++) {

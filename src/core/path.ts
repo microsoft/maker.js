@@ -20,7 +20,7 @@ module MakerJs.path {
 
         map[pathType.Line] = function (line: IPathLine) {
 
-            newPath = createLine(
+            newPath = new paths.Line(
                 newId || line.id,
                 origin,
                 point.mirror(line.end, mirrorX, mirrorY)
@@ -29,7 +29,7 @@ module MakerJs.path {
 
         map[pathType.Circle] = function (circle: IPathCircle) {
 
-            newPath = createCircle(
+            newPath = new paths.Circle(
                 newId || circle.id,
                 origin,
                 circle.radius
@@ -42,7 +42,7 @@ module MakerJs.path {
             var endAngle = angle.mirror(angle.arcEndAnglePastZero(arc), mirrorX, mirrorY);
             var xor = mirrorX != mirrorY;
 
-            newPath = createArc(
+            newPath = new paths.Arc(
                 newId || arc.id,
                 origin,
                 arc.radius,

@@ -1,4 +1,4 @@
-﻿/// <reference path="path.ts" />
+﻿/// <reference path="paths.ts" />
 
 module MakerJs.model {
 

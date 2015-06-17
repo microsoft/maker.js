@@ -51,36 +51,61 @@
         }
 
         /**
-         * Output the tag as a string.
+         * Get the opening tag.
+         * 
+         * @param selfClose Flag to determine if opening tag should be self closing.
          */
-        public toString(): string {
+
+        public getOpeningTag(selfClose: boolean) {
             var attrs = '';
 
+            function outputAttr(attrName, attrValue) {
+
+                if (attrValue == null || typeof attrValue === 'undefined') return;
+
+                if (typeof attrValue === 'string') {
+                    attrValue = XmlTag.escapeString(attrValue);
+                }
+
+                attrs += ' ' + attrName + '="' + attrValue + '"';
+            }
+
             for (var name in this.attrs) {
-                var value = this.attrs[name];
-
-                if (typeof value == 'string') {
-                    value = XmlTag.escapeString(value);
-                }
-
-                attrs += ' ' + name + '="' + value + '"';
+                outputAttr(name, this.attrs[name]);
             }
 
-            var closeTag = '/>';
-
-            if (this.innerText) {
-                closeTag = '>';
-
-                if (this.innerTextEscaped) {
-                    closeTag += this.innerText;
-                } else {
-                    closeTag += XmlTag.escapeString(this.innerText);
-                }
-
-                closeTag += '</' + this.name + '>';
-            }
-
-            return '<' + this.name + attrs + closeTag;
+            return '<' + this.name + attrs + (selfClose ? '/' : '') + '>';
         }
+
+        /**
+         * Get the inner text.
+         */
+        public getInnerText(): string {
+            if (this.innerTextEscaped) {
+                return this.innerText;
+            } else {
+                return XmlTag.escapeString(this.innerText);
+            }
+        }
+
+        /**
+         * Get the closing tag.
+         */
+        public getClosingTag() {
+            return '</' + this.name + '>';
+        }
+
+        /**
+         * Output the entire tag as a string.
+         */
+        public toString(): string {
+            var selfClose = !this.innerText;
+            if (selfClose) {
+                return this.getOpeningTag(true);
+            } else {
+                return this.getOpeningTag(false) + this.getInnerText() + this.getClosingTag();
+            }
+        }
+
     }
 }

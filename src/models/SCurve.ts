@@ -4,7 +4,7 @@
 
         public paths: IPath[] = [];
 
-        constructor(public width: number, public height: number) {
+        constructor(public id: string, width: number, height: number) {
 
             function findRadius(x: number, y: number) {
                 return x + (y * y - x * x) / (2 * x);
@@ -29,7 +29,7 @@
                 arcOrigin = [radius, 0];
             }
 
-            var curve = createArc('curve_start', arcOrigin, radius, startAngle, endAngle);
+            var curve = new paths.Arc('curve_start', arcOrigin, radius, startAngle, endAngle);
 
             this.paths.push(curve);
             this.paths.push(path.moveRelative(path.mirror(curve, true, true, 'curve_end'), [width, height]));
