@@ -547,6 +547,22 @@ declare module MakerJs.exporter {
     interface IDXFRenderOptions extends IExportOptions {
     }
 }
+declare module MakerJs.kit {
+    interface IMetaParameter {
+        title: string;
+        type: string;
+        min?: number;
+        max?: number;
+        step?: number;
+        value: any;
+    }
+    interface IModelConstructor {
+        new (...args: any[]): IModel;
+        metaParameters?: IMetaParameter[];
+    }
+    function construct(ctor: IModelConstructor, args: any): any;
+    function getParameterValues(ctor: IModelConstructor): any[];
+}
 declare module MakerJs.exporter {
     /**
      * Attributes for an XML tag.
@@ -686,6 +702,13 @@ declare module MakerJs.models {
     class Rectangle extends ConnectTheDots {
         id: string;
         constructor(id: string, width: number, height: number);
+    }
+}
+declare module MakerJs.models {
+    class Ring implements IModel {
+        id: string;
+        paths: IPath[];
+        constructor(id: string, outerRadius: number, innerRadius: number);
     }
 }
 declare module MakerJs.models {

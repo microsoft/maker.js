@@ -1,9 +1,11 @@
-﻿Viewer.Constructor = function (height, columnSpace, columnWidth, dropHigh, dropLow, dropConnect, innerSerifWidth, serifWidth, serifHeight) {
+﻿var makerjs = require('../target/node.maker.js');
+
+function M(height, columnSpace, columnWidth, dropHigh, dropLow, dropConnect, innerSerifWidth, serifWidth, serifHeight) {
 
     var columnRef = serifWidth + columnWidth;
     var halfColumnSpace = columnSpace / 2;
     var center = columnRef + halfColumnSpace;
-    var serifH = height / 2 * serifHeight;
+    var serifH = Math.min(height / 2, serifHeight);
 
     var points = [];
 
@@ -27,11 +29,10 @@
 
     this.id = 'M';
     this.units = makerjs.unitType.Inch;
-    this.origin = [.1, .1];
     this.models = [halfModel, otherHalf];
 }
 
-Viewer.Constructor.metaArguments = [
+M.metaParameters = [
     { title: "height", type: "range", min: .2, max: 6, step: .1, value: 1.5 },
     { title: "columnSpace", type: "range", min: .01, max: 4, step: .1, value: .7 },
     { title: "columnWidth", type: "range", min: .01, max: 2, step: .01, value: 0.46 },
@@ -40,5 +41,7 @@ Viewer.Constructor.metaArguments = [
     { title: "dropConnect", type: "range", min: 0, max: 1, step: .01, value: 0.65 },
     { title: "innerSerifWidth", type: "range", min: 0, max: 1, step: .01, value: .5 },
     { title: "serifWidth", type: "range", min: 0, max: 1, step: .01, value: 0.2 },
-    { title: "serifHeight", type: "range", min: 0, max: 1, step: .01, value: 0.2 },
+    { title: "serifHeight", type: "range", min: 0, max: 2, step: .01, value: 0.2 },
 ];
+
+module.exports = M;

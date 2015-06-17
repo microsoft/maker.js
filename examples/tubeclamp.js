@@ -1,4 +1,6 @@
-﻿Viewer.Constructor = function (tubediameter, thickness, distance, open, wing, lid, lidclearance) {
+﻿var makerjs = require('../target/node.maker.js');
+
+function tubeClamp(tubediameter, thickness, distance, open, wing, lid, lidclearance) {
 
     this.paths = [];
     this.models = [];
@@ -62,16 +64,19 @@
 
     this.models.push(body);
     this.models.push(lid);
-    this.id = 'tubeclamp',
+    this.id = 'tubeclamp';
+    this.units = makerjs.unitType.Inch;
     this.origin = [0, -cy];
 };
 
-Viewer.Constructor.metaArguments = [
-    {title:"tubediameter", type: "range", min: .5, max: 3, step: .0625, value: 0.875 },
-    {title:"thickness",  type: "range", min: .125, max: 1, step: .0625, value: .5 },
-    {title:"distance",  type: "range", min: .25, max: 2, step: .125, value: 1 },
-    {title:"open",  type: "range", min: 0, max: .25, step: .0625, value: .0625 },
-    {title:"wing",  type: "range", min: .25, max: 1.5, step: .0625, value: .5 },
-    {title:"lid",  type: "range", min: .125, max: .75, step: .0625, value: .25 },
-    {title:"lidclearance",  type: "range", min: 0, max: .13, step: .01, value: .01 }
+tubeClamp.metaParameters = [
+    { title: "tubediameter", type: "range", min: .5, max: 3, step: .0625, value: 0.875 },
+    { title: "thickness", type: "range", min: .125, max: 1, step: .0625, value: .5 },
+    { title: "distance", type: "range", min: .25, max: 2, step: .125, value: 1 },
+    { title: "open", type: "range", min: 0, max: .25, step: .0625, value: .0625 },
+    { title: "wing", type: "range", min: .25, max: 1.5, step: .0625, value: .5 },
+    { title: "lid", type: "range", min: .125, max: .75, step: .0625, value: .25 },
+    { title: "lidclearance", type: "range", min: 0, max: .13, step: .01, value: .01 }
 ];
+
+module.exports = tubeClamp;

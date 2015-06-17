@@ -34,8 +34,15 @@
     },
     "homepage": "https://github.com/Microsoft/Maker.js",
     "devDependencies": {
-        "browserify": "^10.2.3",
+        "browserify": "^10.2.4",
+        "browserify-shim": "^3.8.8",
         "tsd": "^0.6.1",
         "typescript": "^1.4.1"
+    },
+    "browserify": {
+        "transform": [ "browserify-shim" ]
+    },
+    "browserify-shim": {
+        "../target/node.maker.js": "global:makerjs"
     }
 }

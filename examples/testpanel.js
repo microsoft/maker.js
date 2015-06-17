@@ -1,4 +1,6 @@
-﻿Viewer.Constructor = function (count, height, width, radius, angle) {
+﻿var makerjs = require('../target/node.maker.js');
+
+function testPanel(count, height, width, radius, angle) {
 
     function myModelFactory() {
         this.id = 'factoryModel';
@@ -34,10 +36,12 @@
 
 }
 
-Viewer.Constructor.metaArguments = [
+testPanel.metaParameters =[
     { title: "count", type: "range", min: 1, max: 10, step: 1, value: 1 },
     { title: "height", type: "range", min: 1, max: 7, step: .1, value: 3 },
     { title: "width", type: "range", min: 1, max: 7, step: .1, value: 4 },
     { title: "radius", type: "range", min: 0, max: 2, step: .1, value: .25 },
     { title: "angle", type: "range", min: -90, max: 90, step: 2.5, value: 0 }
 ];
+
+module.exports = testPanel;

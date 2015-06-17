@@ -2,14 +2,8 @@
 var Viewer = {
     Params: [],
     ViewModel: null,
-    ViewScale: 100, //100 pixels per mm
-    construct: function(constructor, args) {
-        function F() {
-            return constructor.apply(this, args);
-        }
-        F.prototype = constructor.prototype;
-        return new F();
-    },
+    ViewScale: null,
+    scaleDelta: 10,
     Constructor: function () {},
     Refresh: function (index, arg) {
 
@@ -18,9 +12,14 @@ var Viewer = {
             Viewer.Params[index] = makerjs.round(arg, .001);
         }
 
-        var model = Viewer.construct(Viewer.Constructor, Viewer.Params);
+        var model = makerjs.kit.construct(Viewer.Constructor, Viewer.Params);
 
         Viewer.ViewModel = model;
+
+        if (Viewer.ViewScale == null) {
+            //measure the model to make it fit in the window
+            Viewer.Fit();
+        }
 
         //svg output
         var renderOptions = {
@@ -47,6 +46,24 @@ var Viewer = {
         var size = 250;
         var crossHairs = [new makerjs.paths.Line('v', [0, size], [0, -size]), new makerjs.paths.Line('h', [-size, 0], [size, 0]), ];
         document.getElementById("svg-guides").innerHTML = makerjs.exporter.toSVG(crossHairs, crosshairOptions);
+    },
+
+    Fit: function () {
+        var deltaFactor = 10;
+        var padding = 100;
+
+        //measure the model
+        var size = makerjs.measure.modelExtents(Viewer.ViewModel);
+        var width = size.high[0] - size.low[0];
+        var height = size.high[1] - size.low[1];
+
+        //measure the view
+        var svgRender = document.getElementById("svg-render");
+
+        //find the best scale to fit
+
+        Viewer.ViewScale = Math.min((svgRender.clientWidth - padding) / width, (svgRender.clientHeight - padding) / height);
+        Viewer.scaleDelta = Viewer.ViewScale/ deltaFactor;
     },
 
     getRaw: function (type) {
@@ -90,14 +107,14 @@ var Viewer = {
     },
 
     prepareView: function () {
-        Viewer.defaultViewScale = Viewer.ViewScale;
 
         //attach mousewheel
         var view = document.getElementById("view");
         view.onwheel = view.onmousewheel = function (ev) {
-            var scaleDelta = 10;
-            Viewer.ViewScale = Math.max(Viewer.ViewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * scaleDelta, 1);
-            Viewer.Refresh();
+            if (Viewer.ViewScale) {
+                Viewer.ViewScale = Math.max(Viewer.ViewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * Viewer.scaleDelta, 1);
+                Viewer.Refresh();
+            }
             return false;
         };
 
@@ -105,49 +122,67 @@ var Viewer = {
         Viewer.loadModelCode(selectModelCode.value);
     },
 
-    populateParams: function () {
+    populateParams: function (filename) {
         Viewer.Params = [];
+
         var paramsHtml = '';
-        for (var i = 0; i < Viewer.Constructor.metaArguments.length; i++) {
-            var attrs = Viewer.Constructor.metaArguments[i];
 
-            Viewer.Params.push(attrs.value);
+        if (Viewer.Constructor.metaParameters) {
+            for (var i = 0; i < Viewer.Constructor.metaParameters.length; i++) {
+                var attrs = Viewer.Constructor.metaParameters[i];
 
-            var id = 'input_' + i;
-            var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
-            label.innerText = attrs.title + ': ';
+                Viewer.Params.push(attrs.value);
 
-            if (attrs.type == 'range') {
-                attrs.title = attrs.value;
-                var input = new makerjs.exporter.XmlTag('input', attrs);
-                input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', this.valueAsNumber)';
-                input.attrs['id'] = id;
+                var id = 'input_' + i;
+                var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
+                label.innerText = attrs.title + ': ';
 
-                var div = new makerjs.exporter.XmlTag('div');
-                div.innerText = label.toString() + input.toString();
-                div.innerTextEscaped = true;
-                paramsHtml += div.toString();
+                if (attrs.type == 'range') {
+                    attrs.title = attrs.value;
+                    var input = new makerjs.exporter.XmlTag('input', attrs);
+                    input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', this.valueAsNumber)';
+                    input.attrs['id'] = id;
+
+                    var div = new makerjs.exporter.XmlTag('div');
+                    div.innerText = label.toString() + input.toString();
+                    div.innerTextEscaped = true;
+                    paramsHtml += div.toString();
+                }
             }
         }
-
         document.getElementById("params").innerHTML = paramsHtml;
-    },
-
-    newModelCode: function () {
-        Viewer.ViewScale = Viewer.defaultViewScale;
-        Viewer.populateParams();
-        Viewer.Refresh();
     },
 
     loadModelCode: function (filename) {
 
         if (filename) {
             var script = document.createElement('script');
-            script.setAttribute('src', filename);
+            script.setAttribute('src', '../examples/' + filename + '.js');
             
+            var _makerjs = makerjs;
+
+            function newModelCode() {
+                Viewer.ViewScale = null;
+
+                makerjs = _makerjs;
+
+                if (!Viewer.Constructor) {
+                    Viewer.Constructor = require(filename);
+                }
+
+                Viewer.populateParams(filename);
+                Viewer.Refresh();
+            }
+
             script.onload = function () {
-                setTimeout(Viewer.newModelCode, 0);
+                setTimeout(newModelCode, 0);
             };
+
+            
+            window.require = function (name) {
+                return module.exports;
+            };
+            Viewer.Constructor = null;
 
             document.getElementsByTagName('head')[0].appendChild(script);
         }

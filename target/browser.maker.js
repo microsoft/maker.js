@@ -1055,6 +1055,32 @@ var MakerJs;
         dxfUnit[MakerJs.unitType.Meter] = 6;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
+/// <reference path="model.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var kit;
+    (function (kit) {
+        function construct(ctor, args) {
+            function F() {
+                return ctor.apply(this, args);
+            }
+            F.prototype = ctor.prototype;
+            return new F();
+        }
+        kit.construct = construct;
+        function getParameterValues(ctor) {
+            var parameters = [];
+            var metaParams = ctor.metaParameters;
+            if (metaParams) {
+                for (var i = 0; i < metaParams.length; i++) {
+                    parameters.push(metaParams[i].value);
+                }
+            }
+            return parameters;
+        }
+        kit.getParameterValues = getParameterValues;
+    })(kit = MakerJs.kit || (MakerJs.kit = {}));
+})(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
     var exporter;
@@ -1289,7 +1315,11 @@ var MakerJs;
             }
             var size = MakerJs.measure.modelExtents(modelToMeasure);
             if (!opts.origin) {
-                opts.origin = [-size.low[0] * opts.scale, size.high[1] * opts.scale];
+                var left = 0;
+                if (size.low[0] < 0) {
+                    left = -size.low[0] * opts.scale;
+                }
+                opts.origin = [left, size.high[1] * opts.scale];
             }
             if (!opts.units) {
                 var unitSystem = exporter.tryGetModelUnits(itemToExport);
@@ -1517,6 +1547,27 @@ var MakerJs;
             return Rectangle;
         })(models.ConnectTheDots);
         models.Rectangle = Rectangle;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var Ring = (function () {
+            function Ring(id, outerRadius, innerRadius) {
+                this.id = id;
+                this.paths = [];
+                var radii = {
+                    "Ring_outer": outerRadius,
+                    "Ring_inner": innerRadius
+                };
+                for (var key in radii) {
+                    this.paths.push(new MakerJs.paths.Circle(key, MakerJs.point.zero(), radii[key]));
+                }
+            }
+            return Ring;
+        })();
+        models.Ring = Ring;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
