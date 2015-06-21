@@ -2,18 +2,190 @@
 
 module MakerJs.tools {
 
-    interface IPathPathFunctionMap {
-        [type: string]: (path1: IPath) => IPoint[];
+    export interface IPathIntersection {
+        intersectionPoints: IPoint[];
+        path1Angles?: number[];
+        path2Angles?: number[];
     }
 
-    export function intersection(path1: IPath, path2: IPath): IPoint {
+    interface IPathIntersectionMap {
+        [type: string]: { [type: string]: (path1: IPath, path2: IPath) => IPathIntersection };
+    }
 
-        //var fn = map[path1.type];
-        //if (fn) {
-        //    return fn(path1);
-        //}
+    var map: IPathIntersectionMap = {};
+
+    map[pathType.Arc] = {};
+    map[pathType.Circle] = {};
+    map[pathType.Line] = {};
+
+    map[pathType.Arc][pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc) {
+        var angles = circleToCircle(arc1, arc2);
+        if (angles) {
+            var arc1Angles = getAnglesWithinArc(angles[0], arc1);
+            var arc2Angles = getAnglesWithinArc(angles[1], arc2);
+            if (arc1Angles && arc2Angles) {
+                return {
+                    intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
+                    path1Angles: arc1Angles,
+                    path2Angles: arc2Angles
+                };
+            }
+        }
+        return null;
+    };
+
+    map[pathType.Arc][pathType.Circle] = function (arc: IPathArc, circle: IPathArc) {
+        var angles = circleToCircle(arc, circle);
+        if (angles) {
+            var arcAngles = getAnglesWithinArc(angles[0], arc);
+            if (arcAngles) {
+                var circleAngles: number[];
+
+                //if both point are on arc, use both on circle
+                if (arcAngles.length == 2) {
+                    circleAngles = angles[1];
+                } else {
+                    //use the corresponding point on circle 
+                    var index = findCorrespondingAngleIndex(angles, arcAngles);
+                    circleAngles = [angles[1][index]];
+                }
+
+                return {
+                    intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
+                    path1Angles: arcAngles,
+                    path2Angles: circleAngles
+                };
+            }
+        }
+        return null;
+    };
+
+    map[pathType.Arc][pathType.Line] = function (arc: IPathArc, line: IPathLine) {
+        var angles = lineToCircle(line, arc);
+        if (angles) {
+            var arcAngles = getAnglesWithinArc(angles, arc);
+            if (arcAngles) {
+                return {
+                    intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
+                    path1Angles: arcAngles
+                };
+            }
+        }
+        return null;
+    };
+
+    map[pathType.Circle][pathType.Arc] = function (circle: IPathCircle, arc: IPathArc) {
+        var result = map[pathType.Arc][pathType.Circle](arc, circle);
+        if (result) {
+            return swap(result);
+        }
+        return null;
+    };
+
+    map[pathType.Circle][pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle) {
+        var angles = circleToCircle(circle1, circle2);
+        if (angles) {
+            return {
+                intersectionPoints: pointsFromAnglesOnCircle(angles[0], circle1),
+                path1Angles: angles[0],
+                path2Angles: angles[1]
+            };
+        }
+        return null;
+    };
+
+    map[pathType.Circle][pathType.Line] = function (circle: IPathCircle, line: IPathLine) {
+        var angles = lineToCircle(line, circle);
+        if (angles) {
+            return {
+                intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
+                path1Angles: angles
+            };
+        }
+        return null;
+    };
+
+    map[pathType.Line][pathType.Arc] = function (line: IPathLine, arc: IPathArc) {
+        var result = map[pathType.Arc][pathType.Line](arc, line);
+        if (result) {
+            return swap(result);
+        }
+        return null;
+    };
+
+    map[pathType.Line][pathType.Circle] = function (line: IPathLine, circle: IPathCircle) {
+        var result = map[pathType.Circle][pathType.Line](circle, line);
+        if (result) {
+            return swap(result);
+        }
+        return null;
+    };
+
+    map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine) {
+        var intersectionPoint = lineToLine(line1, line2);
+        if (intersectionPoint) {
+            return {
+                intersectionPoints: [intersectionPoint]
+            };
+        }
+        return null;
+    };
+
+    function swap(result: IPathIntersection) {
+        var temp = result.path1Angles;
+        if (result.path2Angles) {
+            result.path1Angles = result.path2Angles;
+        } else {
+            delete result.path1Angles;
+        }
+        result.path2Angles = temp;
+
+        return result;
+    }
+
+    export function pathIntersection(path1: IPath, path2: IPath): IPathIntersection {
+
+        var fn = map[path1.type][path2.type];
+        if (fn) {
+            return fn(path1, path2);
+        }
 
         return null;
+    }
+
+    function findCorrespondingAngleIndex(circleAngles: number[][], arcAngle: number[]): number {
+        for (var i = 0; i < circleAngles.length; i++) {
+            if (circleAngles[i] === arcAngle) return i;
+        }
+    }
+
+    function pointFromAngleOnCircle(angleInDegrees: number, circle: IPathCircle): IPoint {
+        return point.add(circle.origin, point.fromPolar(angle.toRadians(angleInDegrees), circle.radius));
+    }
+
+    function pointsFromAnglesOnCircle(anglesInDegrees: number[], circle: IPathCircle): IPoint[] {
+        var result = [];
+        for (var i = 0; i < anglesInDegrees.length; i++) {
+            result.push(pointFromAngleOnCircle(anglesInDegrees[i], circle));
+        }
+        return result;
+    }
+
+    function getAnglesWithinArc(angles: number[], arc: IPathArc): number[] {
+
+        if (!angles) return null;
+
+        var anglesWithinArc: number[] = [];
+
+        for (var i = 0; i < angles.length; i++) {
+            if (isBetween(angles[i], arc.startAngle, arc.endAngle)) {
+                anglesWithinArc.push(angles[i]);
+            }
+        }
+
+        if (anglesWithinArc.length == 0) return null;
+
+        return anglesWithinArc;
     }
 
     interface ISlope {
@@ -44,7 +216,7 @@ module MakerJs.tools {
         };
     }
 
-    function verticalIntersectionPoint(verticalLine: IPathLine, nonVerticalSlope: ISlope ): IPoint {
+    function verticalIntersectionPoint(verticalLine: IPathLine, nonVerticalSlope: ISlope): IPoint {
         var x = verticalLine.origin[0];
         var y = nonVerticalSlope.slope * x + nonVerticalSlope.yIntercept;
         return [x, y];
@@ -61,7 +233,7 @@ module MakerJs.tools {
         return true;
     }
 
-    export function lineToLine(line1: IPathLine, line2: IPathLine): IPoint {
+    function lineToLine(line1: IPathLine, line2: IPathLine): IPoint {
 
         var slope1 = getSlope(line1);
         var slope2 = getSlope(line2);
@@ -91,13 +263,13 @@ module MakerJs.tools {
 
         //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
         if (isBetweenPoints(pointOfIntersection, line1) && isBetweenPoints(pointOfIntersection, line2)) {
-            return pointOfIntersection;
+            return { intersectionPoint: pointOfIntersection };
         }
 
         return null;
     }
 
-    export function lineToCircle(line: IPathLine, circle: IPathCircle): number[] {
+    function lineToCircle(line: IPathLine, circle: IPathCircle): number[] {
 
         function getLineAngle(p1: IPoint, p2: IPoint) {
             return angle.noRevolutions(angle.toDegrees(angle.fromPointToRadians(p1, p2)));
@@ -106,7 +278,7 @@ module MakerJs.tools {
         var radius = round(circle.radius);
 
         //clone the line
-        var clonedLine = new paths.Line('red', point.subtract(line.origin, circle.origin), point.subtract(line.end, circle.origin));
+        var clonedLine = new paths.Line('clone', point.subtract(line.origin, circle.origin), point.subtract(line.end, circle.origin));
 
         //get angle of line
         var lineAngleNormal = getLineAngle(line.origin, line.end);
@@ -131,46 +303,98 @@ module MakerJs.tools {
             return null;
         }
 
+        var anglesOfIntersection: number[] = [];
+
         //if horizontal Y is the same as the radius, we know it's 90 degrees
         if (lineY == radius) {
-            return [unRotate(90)];
-        }
 
-        var anglesOfIntersection = [];
+            anglesOfIntersection.push(unRotate(90));
 
-        function intersectionBetweenEndpoints(x: number, angleOfX: number) {
-            if (isBetween(x, clonedLine.origin[0], clonedLine.end[0])) {
-                anglesOfIntersection.push(unRotate(angleOfX));
+        } else {
+
+            function intersectionBetweenEndpoints(x: number, angleOfX: number) {
+                if (isBetween(x, clonedLine.origin[0], clonedLine.end[0])) {
+                    anglesOfIntersection.push(unRotate(angleOfX));
+                }
             }
+
+            //find angle where line intersects
+            var intersectRadians = Math.asin(lineY / radius);
+            var intersectDegrees = angle.toDegrees(intersectRadians);
+
+            //line may intersect in 2 places
+            var intersectX = Math.cos(intersectRadians) * radius;
+            intersectionBetweenEndpoints(-intersectX, 180 - intersectDegrees);
+            intersectionBetweenEndpoints(intersectX, intersectDegrees);
         }
-
-        //find angle where line intersects
-        var intersectRadians = Math.asin(lineY / radius);
-        var intersectDegrees = angle.toDegrees(intersectRadians);
-
-        //line may intersect in 2 places
-        var intersectX = Math.cos(intersectRadians) * radius;
-        intersectionBetweenEndpoints(-intersectX, 180 - intersectDegrees);
-        intersectionBetweenEndpoints(intersectX, intersectDegrees);
 
         return anglesOfIntersection;
     }
 
-    export function lineToArc(line: IPathLine, arc: IPathArc) {
-        var angles = lineToCircle(line, arc);
+    function circleToCircle(circle1: IPathCircle, circle2: IPathCircle): number[][] {
 
-        if (!angles) return null;
-
-        var anglesWithinArc = [];
-
-        for (var i = 0; i < angles.length; i++) {
-            if (isBetween(angles[i], arc.startAngle, arc.endAngle)) {
-                anglesWithinArc.push(angles[i]);
-            }
+        //see if circles are the same
+        if (circle1.radius == circle2.radius && point.areEqual(circle1.origin, circle2.origin)) {
+            return null;
         }
 
-        if (anglesWithinArc.length == 0) return null;
+        //get offset from origin
+        var offset = point.subtract(point.zero(), circle1.origin);
 
-        return anglesWithinArc;
+        //clone circle1 and move to origin
+        var c1 = new paths.Circle('c1', point.zero(), circle1.radius);
+
+        //clone circle2 and move relative to circle1
+        var c2 = new paths.Circle('c2', point.subtract(circle2.origin, circle1.origin), circle2.radius);
+
+        //rotate circle2 to horizontal, c2 will be to the right of the origin.
+        var c2Angle = angle.toDegrees(angle.fromPointToRadians(point.zero(), c2.origin));
+        path.rotate(c2, -c2Angle, point.zero());
+
+        function unRotate(resultAngle: number): number {
+            var unrotated = resultAngle + c2Angle;
+            return round(angle.noRevolutions(unrotated), .0001);
+        }
+
+        //get X of c2 origin
+        var x = c2.origin[0];
+
+        //see if c2 is outside of c1
+        if (x - c2.radius > c1.radius) {
+            return null;
+        }
+
+        //see if c2 is within c1
+        if (x + c2.radius < c1.radius) {
+            return null;
+        }
+
+        //see if c1 is within c2
+        if (x - c2.radius < -c1.radius) {
+            return null;
+        }
+
+        //see if circles are tangent interior
+        if (c2.radius - x == c1.radius) {
+            return [[unRotate(180)], [unRotate(180)]];
+        }
+
+        //see if circles are tangent exterior
+        if (x - c2.radius == c1.radius) {
+            return [[unRotate(0)], [unRotate(180)]];
+        }
+
+        function triangleSolver(a: number, b: number, c: number): number {
+            return angle.toDegrees(Math.acos((b * b + c * c - a * a) / (2 * b * c)));
+        }
+
+        function bothAngles(oneAngle: number): number[] {
+            return [unRotate(oneAngle), unRotate(angle.mirror(oneAngle, false, true))];
+        }
+
+        var c1IntersectionAngle = triangleSolver(c2.radius, c1.radius, x);
+        var c2IntersectionAngle = triangleSolver(c1.radius, x, c2.radius);
+
+        return [bothAngles(c1IntersectionAngle), bothAngles(180 - c2IntersectionAngle)];
     }
-} 
+}
