@@ -7,7 +7,6 @@ See a demo - [View the Documentation](https://github.com/Microsoft/Maker.js/wiki
 Maker.js can be used in a web page as a simple CAD drawing generator. It can be a core engine for a small CAD gui app. It can run in a Node.js environment to create drawings dynamically.
 
 ## Features
-* Lightweight with no dependencies.
 * Uses plain old JavaScript objects (POJO's) for its drawing model.
 * Exports to DXF or SVG format.
 * Support for a variety of unit systems:
@@ -40,7 +39,7 @@ Maker.js is written in TypeScript and compiled to JavaScript. Maker.js is releas
 We would love to accept your contributions to Maker.js. Before you consider making any changes, please review the tenets of this project, and the legal policy of Microsoft below.
 
 ### Maker.js project tenets
-* Lightweight - We do not want to bloat the code with every possible trigonometric function, generally just those which add broad utility.
+* Accessible - Maker.js wants to run everywhere JavaScript does. The Maker.js API strives toward simplicity and easy understandability to programmers with a wide range of experience. We do not wish to reinvent a new language, we want to leverage JavaScript as a language.
 * Compatible - Maker.js is primitive by design, to maintain the maximum compatibility with many types of "Maker" machines which may not have ellipse or Bezier curve ability. Target machines include but are not limited to:
  * Laser cutters
  * Vinyl cutters
@@ -48,9 +47,8 @@ We would love to accept your contributions to Maker.js. Before you consider maki
  * CNC routers
  * Plasma cutters
  * 2D engravers
-* Accessible - Maker.js wants to run everywhere JavaScript does. The Maker.js API strives toward simplicity and easy understandability to programmers with a wide range of experience. We do not wish to reinvent a new language, we want to leverage JavaScript as a language.
-* Reusability - We want to encourage an ecosystem of models and modeling plugins which may create dependencies on each other.
-* Interoperability - We want other CAD apps when possible to have easy access of importing from or to our data formats.
+* Reusable - We want to encourage an ecosystem of models and modeling plugins which may create dependencies on each other.
+* Interoperable - We want other CAD apps when possible to have easy access of importing from or to our data formats.
 
 ### How to contribute
 * Submit a CLA (below)
