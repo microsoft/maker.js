@@ -129,7 +129,13 @@ module MakerJs.tools {
                     } else {
                         append(secondBreak[1]);
                     }
-                } //todo add point else
+                } else {
+                    if (start) {
+                        ret.push(line.origin);
+                    } else {
+                        ret.push(line.end);
+                    }                    
+                }
             }
 
             chop(<IPathLine>firstBreak[0].newPath, true);
@@ -157,22 +163,31 @@ module MakerJs.tools {
             var firstBreak = breakPath(arc, breakAt);
             var halfGapAngle = angle.toDegrees(Math.asin(halfGap / arc.radius));
 
-            function chop(arc: IPathArc, start: boolean) {
+            function chop(chopArc: IPathArc, start: boolean) {
 
-                var totalAngle = measure.arcAngle(arc);
+                var totalAngle = measure.arcAngle(chopArc);
 
                 if (halfGapAngle < totalAngle) {
 
                     var chopDistance = start ? totalAngle - halfGapAngle : halfGapAngle;
 
-                    var secondBreak = breakPath(arc, chopDistance / totalAngle);
+                    var secondBreak = breakPath(chopArc, chopDistance / totalAngle);
 
                     if (start) {
                         append(secondBreak[0]);
                     } else {
                         append(secondBreak[1]);
                     }
-                }  //todo add point else
+                } else {
+
+                    var arcPoints = point.fromArc(arc);
+
+                    if (start) {
+                        ret.push(arcPoints[0]);
+                    } else {
+                        ret.push(arcPoints[1]);
+                    }
+                }
             }
 
             chop(<IPathArc>firstBreak[0].newPath, true);
@@ -187,4 +202,15 @@ module MakerJs.tools {
         return ret;
     }
 
+    export function bridgeGaps(gap1: IPoint[], gap2: IPoint[]): IPathLine[] {
+        var line1 = new paths.Line('bridge1', gap1[0], gap2[0]);
+        var line2 = new paths.Line('bridge2', gap1[1], gap2[1]);
+
+        if (pathIntersection(line1, line2)) {
+            line1 = new paths.Line('bridge1', gap1[0], gap2[1]);
+            line2 = new paths.Line('bridge2', gap1[1], gap2[0]);
+        }
+
+        return [line1, line2];
+    }
 }

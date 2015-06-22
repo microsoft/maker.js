@@ -17,7 +17,6 @@ function M(height, columnSpace, columnWidth, dropHigh, dropLow, dropConnect, inn
     points.push([serifWidth, serifH]);
     points.push([0, serifH]);
     points.push([0, 0]);
-    points.push([serifWidth, 0]);
     points.push([columnRef + halfColumnSpace * innerSerifWidth, 0]);
     points.push([columnRef + halfColumnSpace * innerSerifWidth, serifH]);
     points.push([columnRef, serifH]);

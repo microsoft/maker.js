@@ -21,8 +21,10 @@ module.exports = dependExample;
 console.log('dependExample is running!');
 console.log(makerjs.exporter.toSVG(new dependExample()));
 
-//to make this run from node, use this command line (from the root of your git):
-//node ./examples/dependExample_forNode.js
+/*to make this run from node, use this command line (from the root of your git):
+node ./examples/dependExample_forNode.js
+*/
 
-//to make this run in the browser, use this command line (from the root of your git):
-//browserify -r ./examples/dependExample_forNode.js:dependExample > ./examples/dependExample_forBrowser.js
+/*to make this run in the browser, use this command line (from the root of your git):
+browserify -r ./examples/dependExample_forNode.js:dependExample > ./examples/dependExample_forBrowser.js
+*/

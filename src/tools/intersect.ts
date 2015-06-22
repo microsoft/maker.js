@@ -186,10 +186,10 @@ module MakerJs.tools {
 
         //computed angles will not be negative, but the arc may have specified a negative angle
         var startAngle = arc.startAngle;
-        var endAngle = arc.endAngle;
+        var endAngle = angle.arcEndAnglePastZero(arc);
 
         for (var i = 0; i < angles.length; i++) {
-            if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360)) {
+            if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360) || isBetween(angles[i], startAngle - 360, endAngle - 360)) {
                 anglesWithinArc.push(angles[i]);
             }
         }
