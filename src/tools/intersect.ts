@@ -1,4 +1,4 @@
-﻿/// <reference path="../core/maker.ts" />
+﻿/// <reference path="solvers.ts" />
 
 module MakerJs.tools {
 
@@ -177,8 +177,12 @@ module MakerJs.tools {
 
         var anglesWithinArc: number[] = [];
 
+        //computed angles will not be negative, but the arc may have specified a negative angle
+        var startAngle = arc.startAngle;
+        var endAngle = arc.endAngle;
+
         for (var i = 0; i < angles.length; i++) {
-            if (isBetween(angles[i], arc.startAngle, arc.endAngle)) {
+            if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360)) {
                 anglesWithinArc.push(angles[i]);
             }
         }
@@ -196,14 +200,14 @@ module MakerJs.tools {
     }
 
     function getSlope(line: IPathLine): ISlope {
-        var dx = line.end[0] - line.origin[0];
+        var dx = round(line.end[0] - line.origin[0]);
         if (dx == 0) {
             return {
                 hasSlope: false
             };
         }
 
-        var dy = line.end[1] - line.origin[1];
+        var dy = round(line.end[1] - line.origin[1]);
 
         var slope = dy / dx;
         var yIntercept = line.origin[1] - slope * line.origin[0];
@@ -228,7 +232,7 @@ module MakerJs.tools {
 
     function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine): boolean {
         for (var i = 2; i--;) {
-            if (!isBetween(pointInQuestion[i], line.origin[i], line.end[i])) return false;
+            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]))) return false;
         }
         return true;
     }
@@ -263,7 +267,7 @@ module MakerJs.tools {
 
         //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
         if (isBetweenPoints(pointOfIntersection, line1) && isBetweenPoints(pointOfIntersection, line2)) {
-            return { intersectionPoint: pointOfIntersection };
+            return pointOfIntersection;
         }
 
         return null;
@@ -384,16 +388,12 @@ module MakerJs.tools {
             return [[unRotate(0)], [unRotate(180)]];
         }
 
-        function triangleSolver(a: number, b: number, c: number): number {
-            return angle.toDegrees(Math.acos((b * b + c * c - a * a) / (2 * b * c)));
-        }
-
         function bothAngles(oneAngle: number): number[] {
             return [unRotate(oneAngle), unRotate(angle.mirror(oneAngle, false, true))];
         }
 
-        var c1IntersectionAngle = triangleSolver(c2.radius, c1.radius, x);
-        var c2IntersectionAngle = triangleSolver(c1.radius, x, c2.radius);
+        var c1IntersectionAngle = solveTriangleSSS(c2.radius, c1.radius, x);
+        var c2IntersectionAngle = solveTriangleSSS(c1.radius, x, c2.radius);
 
         return [bothAngles(c1IntersectionAngle), bothAngles(180 - c2IntersectionAngle)];
     }
