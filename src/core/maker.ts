@@ -109,6 +109,19 @@ module MakerJs {
         return null;
     }
 
+    /**
+     * Search within an array to find an item by its id property, then remove it from the array.
+     * 
+     * @param arr Array to search.
+     * @param id Id of the item to find and remove.
+     */
+    export function removeById<T extends IHaveId>(arr: T[], id: string): void {
+        var found = findById<T>(arr, id);
+        if (found) {
+            arr.splice(found.index, 1);
+        }
+    }
+
     //points
 
     /**
@@ -159,6 +172,11 @@ module MakerJs {
          * The main point of reference for this path.
          */
         origin: IPoint;
+
+        /**
+         * Optional CSS style properties to be emitted into SVG. Useful for creating guidelines and debugging your model.
+         */
+        cssStyle?: string;
     }
 
     /**

@@ -56,6 +56,10 @@ module MakerJs.path {
             fn(pathToMirror);
         }
 
+        if (pathToMirror.cssStyle) {
+            newPath.cssStyle = pathToMirror.cssStyle;
+        }
+
         return newPath;
     }
 
