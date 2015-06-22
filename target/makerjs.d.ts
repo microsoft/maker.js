@@ -192,6 +192,13 @@ declare module MakerJs {
 }
 declare module MakerJs.angle {
     /**
+     * Ensures an angle is not greater than 360
+     *
+     * @param angleInDegrees Angle in degrees.
+     * @retiurns Same polar angle but not greater than 360 degrees.
+     */
+    function noRevolutions(angleInDegrees: number): number;
+    /**
      * Convert an angle from degrees to radians.
      *
      * @param angleInDegrees Angle in degrees.
@@ -219,7 +226,7 @@ declare module MakerJs.angle {
      * @param origin (Optional 0,0 implied) point of origin of the angle.
      * @returns Angle of the line throught the point.
      */
-    function fromPointToRadians(pointToFindAngle: IPoint, origin?: IPoint): number;
+    function fromPointToRadians(origin: IPoint, pointToFindAngle: IPoint): number;
     /**
      * Mirror an angle on either or both x and y axes.
      *
@@ -234,12 +241,20 @@ declare module MakerJs.point {
     /**
      * Add two points together and return the result as a new point object.
      *
-     * @param a First point, either as a point object, or as an array of numbers.
-     * @param b Second point, either as a point object, or as an array of numbers.
+     * @param a First point.
+     * @param b Second point.
      * @param subtract Optional boolean to subtract instead of add.
      * @returns A new point object.
      */
     function add(a: IPoint, b: IPoint, subtract?: boolean): IPoint;
+    /**
+     * Find out if two points are equal.
+     *
+     * @param a First point.
+     * @param b Second point.
+     * @returns true if points are the same, false if they are not
+     */
+    function areEqual(a: IPoint, b: IPoint): boolean;
     /**
      * Clone a point into a new point.
      *
@@ -291,14 +306,11 @@ declare module MakerJs.point {
     /**
      * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
      *
-     * @param a First point, either as a point object, or as an array of numbers.
-     * @param b Second point, either as a point object, or as an array of numbers.
+     * @param a First point.
+     * @param b Second point.
      * @returns A new point object.
      */
     function subtract(a: IPoint, b: IPoint): IPoint;
-    function subtract(a: IPoint, b: number[]): IPoint;
-    function subtract(a: number[], b: IPoint): IPoint;
-    function subtract(a: number[], b: number[]): IPoint;
     /**
      * A point at 0,0 coordinates.
      *
@@ -723,4 +735,54 @@ declare module MakerJs.models {
         id: string;
         constructor(id: string, side: number);
     }
+}
+declare module MakerJs.tools {
+    interface IBrokenPath {
+        newPath: IPath;
+        newPoint: IPoint;
+    }
+    function breakPath(path: IPath, breakAt?: number): IBrokenPath[];
+    /**
+     * Break a path and create a gap within it. Useful when connecting models together.
+     *
+     * @param modelToGap Model which will have a gap in one of its paths.
+     * @param pathId String id of the path in which to create a gap.
+     * @param gapLength Number length of the gap.
+     * @breakAt Number between 0 and 1 (default .5) where the gap will be centered along the path.
+     */
+    function gapPath(modelToGap: IModel, pathId: string, gapLength: number, breakAt?: number): IPoint[];
+}
+declare module MakerJs.tools {
+    /**
+     * Solves for the angle of a triangle when you know lengths of 3 sides.
+     *
+     * @param length1 Length of side of triangle, opposite of the angle you are trying to find.
+     * @param length2 Length of any other side of the triangle.
+     * @param length3 Length of the remaining side of the triangle.
+     * @returns Angle opposite of the side represented by the first parameter.
+     */
+    function solveTriangleSSS(length1: number, length2: number, length3: number): number;
+    /**
+     * Solves for the length of a side of a triangle when you know length of one side and 2 angles.
+     *
+     * @param oppositeAngleInDegrees Angle which is opposite of the side you are trying to find.
+     * @param otherAngleInDegrees An other angle of the triangle.
+     * @param lengthOfSideBetweenAngles Length of one side of the triangle which is between the provided angles.
+     */
+    function solveTriangleASA(oppositeAngleInDegrees: number, otherAngleInDegrees: number, lengthOfSideBetweenAngles: number): number;
+}
+declare module MakerJs.tools {
+    interface IPathIntersection {
+        intersectionPoints: IPoint[];
+        path1Angles?: number[];
+        path2Angles?: number[];
+    }
+    /**
+     * Find the point(s) where 2 paths intersect.
+     *
+     * @param path1 First path to find intersection.
+     * @param path2 Second path to find intersection.
+     * @result IPathIntersection object, with points(s) of intersection and angles (when a path is and arc or circle).
+     */
+    function pathIntersection(path1: IPath, path2: IPath): IPathIntersection;
 }

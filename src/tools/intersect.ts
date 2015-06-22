@@ -143,6 +143,13 @@ module MakerJs.tools {
         return result;
     }
 
+    /**
+     * Find the point(s) where 2 paths intersect.
+     * 
+     * @param path1 First path to find intersection.
+     * @param path2 Second path to find intersection.
+     * @result IPathIntersection object, with points(s) of intersection and angles (when a path is and arc or circle).
+     */
     export function pathIntersection(path1: IPath, path2: IPath): IPathIntersection {
 
         var fn = map[path1.type][path2.type];

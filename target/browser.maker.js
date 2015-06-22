@@ -125,16 +125,24 @@ var MakerJs;
     var angle;
     (function (angle) {
         /**
+         * Ensures an angle is not greater than 360
+         *
+         * @param angleInDegrees Angle in degrees.
+         * @retiurns Same polar angle but not greater than 360 degrees.
+         */
+        function noRevolutions(angleInDegrees) {
+            var revolutions = Math.floor(angleInDegrees / 360);
+            return angleInDegrees - (360 * revolutions);
+        }
+        angle.noRevolutions = noRevolutions;
+        /**
          * Convert an angle from degrees to radians.
          *
          * @param angleInDegrees Angle in degrees.
          * @returns Angle in radians.
          */
         function toRadians(angleInDegrees) {
-            if (angleInDegrees == 360) {
-                return 0;
-            }
-            return angleInDegrees * Math.PI / 180.0;
+            return noRevolutions(angleInDegrees) * Math.PI / 180.0;
         }
         angle.toRadians = toRadians;
         /**
@@ -169,9 +177,11 @@ var MakerJs;
          * @param origin (Optional 0,0 implied) point of origin of the angle.
          * @returns Angle of the line throught the point.
          */
-        function fromPointToRadians(pointToFindAngle, origin) {
+        function fromPointToRadians(origin, pointToFindAngle) {
             var d = MakerJs.point.subtract(pointToFindAngle, origin);
-            return Math.atan2(d[1], d[0]); //First param is Y, second is X
+            var x = d[0];
+            var y = d[1];
+            return Math.atan2(-y, -x) + Math.PI;
         }
         angle.fromPointToRadians = fromPointToRadians;
         /**
@@ -202,8 +212,8 @@ var MakerJs;
         /**
          * Add two points together and return the result as a new point object.
          *
-         * @param a First point, either as a point object, or as an array of numbers.
-         * @param b Second point, either as a point object, or as an array of numbers.
+         * @param a First point.
+         * @param b Second point.
          * @param subtract Optional boolean to subtract instead of add.
          * @returns A new point object.
          */
@@ -222,6 +232,17 @@ var MakerJs;
             return newPoint;
         }
         point.add = add;
+        /**
+         * Find out if two points are equal.
+         *
+         * @param a First point.
+         * @param b Second point.
+         * @returns true if points are the same, false if they are not
+         */
+        function areEqual(a, b) {
+            return a[0] == b[0] && a[1] == b[1];
+        }
+        point.areEqual = areEqual;
         /**
          * Clone a point into a new point.
          *
@@ -289,7 +310,7 @@ var MakerJs;
          * @returns A new point.
          */
         function rotate(pointToRotate, angleInDegrees, rotationOrigin) {
-            var pointAngleInRadians = MakerJs.angle.fromPointToRadians(pointToRotate, rotationOrigin);
+            var pointAngleInRadians = MakerJs.angle.fromPointToRadians(rotationOrigin, pointToRotate);
             var d = MakerJs.measure.pointDistance(rotationOrigin, pointToRotate);
             var rotatedPoint = fromPolar(pointAngleInRadians + MakerJs.angle.toRadians(angleInDegrees), d);
             return add(rotationOrigin, rotatedPoint);
@@ -310,6 +331,13 @@ var MakerJs;
             return p;
         }
         point.scale = scale;
+        /**
+         * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
+         *
+         * @param a First point.
+         * @param b Second point.
+         * @returns A new point object.
+         */
         function subtract(a, b) {
             return add(a, b, true);
         }
@@ -1623,6 +1651,498 @@ var MakerJs;
         })(models.Rectangle);
         models.Square = Square;
     })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+/// <reference path="../core/maker.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var tools;
+    (function (tools) {
+        function midPoint(a, b, breakAt) {
+            if (breakAt === void 0) { breakAt = .5; }
+            var mp = [];
+            for (var i = 0; i < 2; i++) {
+                mp.push(a[i] + (b[i] - a[i]) * breakAt);
+            }
+            return mp;
+        }
+        var breakPathFunctionMap = {};
+        breakPathFunctionMap[MakerJs.pathType.Line] = function (line, breakAt) {
+            var breakPoint = midPoint(line.origin, line.end, breakAt);
+            var ret = [];
+            function addLine(suffix, origin, end) {
+                ret.push({
+                    newPath: new MakerJs.paths.Line(line.id + suffix, MakerJs.point.clone(origin), MakerJs.point.clone(end)),
+                    newPoint: MakerJs.point.clone(breakPoint)
+                });
+            }
+            addLine("_1", line.origin, breakPoint);
+            addLine("_2", breakPoint, line.end);
+            return ret;
+        };
+        breakPathFunctionMap[MakerJs.pathType.Arc] = function (arc, breakAt) {
+            var breakAngle = MakerJs.measure.arcAngle(arc) * breakAt + arc.startAngle;
+            if (breakAngle >= 360) {
+                breakAngle -= 360;
+            }
+            var breakPoint = MakerJs.point.add(arc.origin, MakerJs.point.fromPolar(MakerJs.angle.toRadians(breakAngle), arc.radius));
+            var ret = [];
+            function addArc(suffix, startAngle, endAngle) {
+                ret.push({
+                    newPath: new MakerJs.paths.Arc(arc.id + suffix, MakerJs.point.clone(arc.origin), arc.radius, startAngle, endAngle),
+                    newPoint: MakerJs.point.clone(breakPoint)
+                });
+            }
+            addArc("_1", arc.startAngle, breakAngle);
+            addArc("_2", breakAngle, arc.endAngle);
+            return ret;
+        };
+        function breakPath(path, breakAt) {
+            if (breakAt === void 0) { breakAt = .5; }
+            var fn = breakPathFunctionMap[path.type];
+            if (fn) {
+                return fn(path, breakAt);
+            }
+            return null;
+        }
+        tools.breakPath = breakPath;
+        /**
+         * Break a path and create a gap within it. Useful when connecting models together.
+         *
+         * @param modelToGap Model which will have a gap in one of its paths.
+         * @param pathId String id of the path in which to create a gap.
+         * @param gapLength Number length of the gap.
+         * @breakAt Number between 0 and 1 (default .5) where the gap will be centered along the path.
+         */
+        function gapPath(modelToGap, pathId, gapLength, breakAt) {
+            if (breakAt === void 0) { breakAt = .5; }
+            var found = MakerJs.findById(modelToGap.paths, pathId);
+            if (!found)
+                return null;
+            modelToGap.paths.splice(found.index, 1); //remove the path from the array
+            var foundPath = found.item;
+            var halfGap = gapLength / 2;
+            var ret = [];
+            function append(brokenPath, extraPoint) {
+                modelToGap.paths.push(brokenPath.newPath);
+                ret.push(brokenPath.newPoint);
+                if (extraPoint) {
+                    ret.push(extraPoint);
+                }
+            }
+            var map = {};
+            map[MakerJs.pathType.Line] = function (line) {
+                var firstBreak = breakPath(line, breakAt);
+                function chop(line, start) {
+                    var len = MakerJs.measure.pathLength(line);
+                    if (halfGap < len) {
+                        var chopDistance = start ? len - halfGap : halfGap;
+                        var secondBreak = breakPath(line, chopDistance / len);
+                        if (start) {
+                            append(secondBreak[0]);
+                        }
+                        else {
+                            append(secondBreak[1]);
+                        }
+                    } //todo add point else
+                }
+                chop(firstBreak[0].newPath, true);
+                chop(firstBreak[1].newPath, false);
+            };
+            map[MakerJs.pathType.Circle] = function (circle) {
+                var breakAangle = 360 * breakAt;
+                var halfGapAngle = MakerJs.angle.toDegrees(Math.asin(halfGap / circle.radius));
+                var startAngle = breakAangle + halfGapAngle;
+                var endAngle = breakAangle - halfGapAngle;
+                var brokenPath = {
+                    newPath: new MakerJs.paths.Arc(circle.id + "_1", MakerJs.point.clone(circle.origin), circle.radius, startAngle, endAngle),
+                    newPoint: MakerJs.point.add(circle.origin, MakerJs.point.fromPolar(MakerJs.angle.toRadians(startAngle), circle.radius))
+                };
+                append(brokenPath, MakerJs.point.add(circle.origin, MakerJs.point.fromPolar(MakerJs.angle.toRadians(endAngle), circle.radius)));
+            };
+            map[MakerJs.pathType.Arc] = function (arc) {
+                var firstBreak = breakPath(arc, breakAt);
+                var halfGapAngle = MakerJs.angle.toDegrees(Math.asin(halfGap / arc.radius));
+                function chop(arc, start) {
+                    var totalAngle = MakerJs.measure.arcAngle(arc);
+                    if (halfGapAngle < totalAngle) {
+                        var chopDistance = start ? totalAngle - halfGapAngle : halfGapAngle;
+                        var secondBreak = breakPath(arc, chopDistance / totalAngle);
+                        if (start) {
+                            append(secondBreak[0]);
+                        }
+                        else {
+                            append(secondBreak[1]);
+                        }
+                    } //todo add point else
+                }
+                chop(firstBreak[0].newPath, true);
+                chop(firstBreak[1].newPath, false);
+            };
+            var fn = map[foundPath.type];
+            if (fn) {
+                fn(foundPath);
+            }
+            return ret;
+        }
+        tools.gapPath = gapPath;
+    })(tools = MakerJs.tools || (MakerJs.tools = {}));
+})(MakerJs || (MakerJs = {}));
+/// <reference path="../core/maker.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var tools;
+    (function (tools) {
+        /**
+         * Solves for the angle of a triangle when you know lengths of 3 sides.
+         *
+         * @param length1 Length of side of triangle, opposite of the angle you are trying to find.
+         * @param length2 Length of any other side of the triangle.
+         * @param length3 Length of the remaining side of the triangle.
+         * @returns Angle opposite of the side represented by the first parameter.
+         */
+        function solveTriangleSSS(length1, length2, length3) {
+            return MakerJs.angle.toDegrees(Math.acos((length2 * length2 + length3 * length3 - length1 * length1) / (2 * length2 * length3)));
+        }
+        tools.solveTriangleSSS = solveTriangleSSS;
+        /**
+         * Solves for the length of a side of a triangle when you know length of one side and 2 angles.
+         *
+         * @param oppositeAngleInDegrees Angle which is opposite of the side you are trying to find.
+         * @param otherAngleInDegrees An other angle of the triangle.
+         * @param lengthOfSideBetweenAngles Length of one side of the triangle which is between the provided angles.
+         */
+        function solveTriangleASA(oppositeAngleInDegrees, otherAngleInDegrees, lengthOfSideBetweenAngles) {
+            var angleOppositeSide = 180 - oppositeAngleInDegrees - otherAngleInDegrees;
+            return (lengthOfSideBetweenAngles * Math.sin(MakerJs.angle.toRadians(oppositeAngleInDegrees))) / Math.sin(MakerJs.angle.toRadians(angleOppositeSide));
+        }
+        tools.solveTriangleASA = solveTriangleASA;
+    })(tools = MakerJs.tools || (MakerJs.tools = {}));
+})(MakerJs || (MakerJs = {}));
+/// <reference path="solvers.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var tools;
+    (function (tools) {
+        var map = {};
+        map[MakerJs.pathType.Arc] = {};
+        map[MakerJs.pathType.Circle] = {};
+        map[MakerJs.pathType.Line] = {};
+        map[MakerJs.pathType.Arc][MakerJs.pathType.Arc] = function (arc1, arc2) {
+            var angles = circleToCircle(arc1, arc2);
+            if (angles) {
+                var arc1Angles = getAnglesWithinArc(angles[0], arc1);
+                var arc2Angles = getAnglesWithinArc(angles[1], arc2);
+                if (arc1Angles && arc2Angles) {
+                    return {
+                        intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
+                        path1Angles: arc1Angles,
+                        path2Angles: arc2Angles
+                    };
+                }
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Arc][MakerJs.pathType.Circle] = function (arc, circle) {
+            var angles = circleToCircle(arc, circle);
+            if (angles) {
+                var arcAngles = getAnglesWithinArc(angles[0], arc);
+                if (arcAngles) {
+                    var circleAngles;
+                    //if both point are on arc, use both on circle
+                    if (arcAngles.length == 2) {
+                        circleAngles = angles[1];
+                    }
+                    else {
+                        //use the corresponding point on circle 
+                        var index = findCorrespondingAngleIndex(angles, arcAngles);
+                        circleAngles = [angles[1][index]];
+                    }
+                    return {
+                        intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
+                        path1Angles: arcAngles,
+                        path2Angles: circleAngles
+                    };
+                }
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Arc][MakerJs.pathType.Line] = function (arc, line) {
+            var angles = lineToCircle(line, arc);
+            if (angles) {
+                var arcAngles = getAnglesWithinArc(angles, arc);
+                if (arcAngles) {
+                    return {
+                        intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
+                        path1Angles: arcAngles
+                    };
+                }
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Circle][MakerJs.pathType.Arc] = function (circle, arc) {
+            var result = map[MakerJs.pathType.Arc][MakerJs.pathType.Circle](arc, circle);
+            if (result) {
+                return swap(result);
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Circle][MakerJs.pathType.Circle] = function (circle1, circle2) {
+            var angles = circleToCircle(circle1, circle2);
+            if (angles) {
+                return {
+                    intersectionPoints: pointsFromAnglesOnCircle(angles[0], circle1),
+                    path1Angles: angles[0],
+                    path2Angles: angles[1]
+                };
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Circle][MakerJs.pathType.Line] = function (circle, line) {
+            var angles = lineToCircle(line, circle);
+            if (angles) {
+                return {
+                    intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
+                    path1Angles: angles
+                };
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Line][MakerJs.pathType.Arc] = function (line, arc) {
+            var result = map[MakerJs.pathType.Arc][MakerJs.pathType.Line](arc, line);
+            if (result) {
+                return swap(result);
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Line][MakerJs.pathType.Circle] = function (line, circle) {
+            var result = map[MakerJs.pathType.Circle][MakerJs.pathType.Line](circle, line);
+            if (result) {
+                return swap(result);
+            }
+            return null;
+        };
+        map[MakerJs.pathType.Line][MakerJs.pathType.Line] = function (line1, line2) {
+            var intersectionPoint = lineToLine(line1, line2);
+            if (intersectionPoint) {
+                return {
+                    intersectionPoints: [intersectionPoint]
+                };
+            }
+            return null;
+        };
+        function swap(result) {
+            var temp = result.path1Angles;
+            if (result.path2Angles) {
+                result.path1Angles = result.path2Angles;
+            }
+            else {
+                delete result.path1Angles;
+            }
+            result.path2Angles = temp;
+            return result;
+        }
+        /**
+         * Find the point(s) where 2 paths intersect.
+         *
+         * @param path1 First path to find intersection.
+         * @param path2 Second path to find intersection.
+         * @result IPathIntersection object, with points(s) of intersection and angles (when a path is and arc or circle).
+         */
+        function pathIntersection(path1, path2) {
+            var fn = map[path1.type][path2.type];
+            if (fn) {
+                return fn(path1, path2);
+            }
+            return null;
+        }
+        tools.pathIntersection = pathIntersection;
+        function findCorrespondingAngleIndex(circleAngles, arcAngle) {
+            for (var i = 0; i < circleAngles.length; i++) {
+                if (circleAngles[i] === arcAngle)
+                    return i;
+            }
+        }
+        function pointFromAngleOnCircle(angleInDegrees, circle) {
+            return MakerJs.point.add(circle.origin, MakerJs.point.fromPolar(MakerJs.angle.toRadians(angleInDegrees), circle.radius));
+        }
+        function pointsFromAnglesOnCircle(anglesInDegrees, circle) {
+            var result = [];
+            for (var i = 0; i < anglesInDegrees.length; i++) {
+                result.push(pointFromAngleOnCircle(anglesInDegrees[i], circle));
+            }
+            return result;
+        }
+        function getAnglesWithinArc(angles, arc) {
+            if (!angles)
+                return null;
+            var anglesWithinArc = [];
+            //computed angles will not be negative, but the arc may have specified a negative angle
+            var startAngle = arc.startAngle;
+            var endAngle = arc.endAngle;
+            for (var i = 0; i < angles.length; i++) {
+                if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360)) {
+                    anglesWithinArc.push(angles[i]);
+                }
+            }
+            if (anglesWithinArc.length == 0)
+                return null;
+            return anglesWithinArc;
+        }
+        function getSlope(line) {
+            var dx = MakerJs.round(line.end[0] - line.origin[0]);
+            if (dx == 0) {
+                return {
+                    hasSlope: false
+                };
+            }
+            var dy = MakerJs.round(line.end[1] - line.origin[1]);
+            var slope = dy / dx;
+            var yIntercept = line.origin[1] - slope * line.origin[0];
+            return {
+                line: line,
+                hasSlope: true,
+                slope: slope,
+                yIntercept: yIntercept
+            };
+        }
+        function verticalIntersectionPoint(verticalLine, nonVerticalSlope) {
+            var x = verticalLine.origin[0];
+            var y = nonVerticalSlope.slope * x + nonVerticalSlope.yIntercept;
+            return [x, y];
+        }
+        function isBetween(valueInQuestion, limit1, limit2) {
+            return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
+        }
+        function isBetweenPoints(pointInQuestion, line) {
+            for (var i = 2; i--;) {
+                if (!isBetween(MakerJs.round(pointInQuestion[i]), MakerJs.round(line.origin[i]), MakerJs.round(line.end[i])))
+                    return false;
+            }
+            return true;
+        }
+        function lineToLine(line1, line2) {
+            var slope1 = getSlope(line1);
+            var slope2 = getSlope(line2);
+            if (!slope1.hasSlope && !slope2.hasSlope) {
+                //lines are both vertical
+                return null;
+            }
+            if (slope1.hasSlope && slope2.hasSlope && (slope1.slope == slope2.slope)) {
+                //lines are parallel
+                return null;
+            }
+            var pointOfIntersection;
+            if (!slope1.hasSlope) {
+                pointOfIntersection = verticalIntersectionPoint(line1, slope2);
+            }
+            else if (!slope2.hasSlope) {
+                pointOfIntersection = verticalIntersectionPoint(line2, slope1);
+            }
+            else {
+                // find intersection by line equation
+                var x = (slope2.yIntercept - slope1.yIntercept) / (slope1.slope - slope2.slope);
+                var y = slope1.slope * x + slope1.yIntercept;
+                pointOfIntersection = [x, y];
+            }
+            //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
+            if (isBetweenPoints(pointOfIntersection, line1) && isBetweenPoints(pointOfIntersection, line2)) {
+                return pointOfIntersection;
+            }
+            return null;
+        }
+        function lineToCircle(line, circle) {
+            function getLineAngle(p1, p2) {
+                return MakerJs.angle.noRevolutions(MakerJs.angle.toDegrees(MakerJs.angle.fromPointToRadians(p1, p2)));
+            }
+            var radius = MakerJs.round(circle.radius);
+            //clone the line
+            var clonedLine = new MakerJs.paths.Line('clone', MakerJs.point.subtract(line.origin, circle.origin), MakerJs.point.subtract(line.end, circle.origin));
+            //get angle of line
+            var lineAngleNormal = getLineAngle(line.origin, line.end);
+            //use the positive horizontal angle
+            var lineAngle = (lineAngleNormal >= 180) ? lineAngleNormal - 360 : lineAngleNormal;
+            //rotate the line to horizontal
+            MakerJs.path.rotate(clonedLine, -lineAngle, MakerJs.point.zero());
+            //remember how to undo the rotation we just did
+            function unRotate(resultAngle) {
+                var unrotated = resultAngle + lineAngle;
+                return MakerJs.round(MakerJs.angle.noRevolutions(unrotated), .0001);
+            }
+            //line is horizontal, get the y value from any point
+            var lineY = MakerJs.round(clonedLine.origin[1]);
+            //if y is greater than radius, there is no intersection
+            if (lineY > radius) {
+                return null;
+            }
+            var anglesOfIntersection = [];
+            //if horizontal Y is the same as the radius, we know it's 90 degrees
+            if (lineY == radius) {
+                anglesOfIntersection.push(unRotate(90));
+            }
+            else {
+                function intersectionBetweenEndpoints(x, angleOfX) {
+                    if (isBetween(x, clonedLine.origin[0], clonedLine.end[0])) {
+                        anglesOfIntersection.push(unRotate(angleOfX));
+                    }
+                }
+                //find angle where line intersects
+                var intersectRadians = Math.asin(lineY / radius);
+                var intersectDegrees = MakerJs.angle.toDegrees(intersectRadians);
+                //line may intersect in 2 places
+                var intersectX = Math.cos(intersectRadians) * radius;
+                intersectionBetweenEndpoints(-intersectX, 180 - intersectDegrees);
+                intersectionBetweenEndpoints(intersectX, intersectDegrees);
+            }
+            return anglesOfIntersection;
+        }
+        function circleToCircle(circle1, circle2) {
+            //see if circles are the same
+            if (circle1.radius == circle2.radius && MakerJs.point.areEqual(circle1.origin, circle2.origin)) {
+                return null;
+            }
+            //get offset from origin
+            var offset = MakerJs.point.subtract(MakerJs.point.zero(), circle1.origin);
+            //clone circle1 and move to origin
+            var c1 = new MakerJs.paths.Circle('c1', MakerJs.point.zero(), circle1.radius);
+            //clone circle2 and move relative to circle1
+            var c2 = new MakerJs.paths.Circle('c2', MakerJs.point.subtract(circle2.origin, circle1.origin), circle2.radius);
+            //rotate circle2 to horizontal, c2 will be to the right of the origin.
+            var c2Angle = MakerJs.angle.toDegrees(MakerJs.angle.fromPointToRadians(MakerJs.point.zero(), c2.origin));
+            MakerJs.path.rotate(c2, -c2Angle, MakerJs.point.zero());
+            function unRotate(resultAngle) {
+                var unrotated = resultAngle + c2Angle;
+                return MakerJs.round(MakerJs.angle.noRevolutions(unrotated), .0001);
+            }
+            //get X of c2 origin
+            var x = c2.origin[0];
+            //see if c2 is outside of c1
+            if (x - c2.radius > c1.radius) {
+                return null;
+            }
+            //see if c2 is within c1
+            if (x + c2.radius < c1.radius) {
+                return null;
+            }
+            //see if c1 is within c2
+            if (x - c2.radius < -c1.radius) {
+                return null;
+            }
+            //see if circles are tangent interior
+            if (c2.radius - x == c1.radius) {
+                return [[unRotate(180)], [unRotate(180)]];
+            }
+            //see if circles are tangent exterior
+            if (x - c2.radius == c1.radius) {
+                return [[unRotate(0)], [unRotate(180)]];
+            }
+            function bothAngles(oneAngle) {
+                return [unRotate(oneAngle), unRotate(MakerJs.angle.mirror(oneAngle, false, true))];
+            }
+            var c1IntersectionAngle = tools.solveTriangleSSS(c2.radius, c1.radius, x);
+            var c2IntersectionAngle = tools.solveTriangleSSS(c1.radius, x, c2.radius);
+            return [bothAngles(c1IntersectionAngle), bothAngles(180 - c2IntersectionAngle)];
+        }
+    })(tools = MakerJs.tools || (MakerJs.tools = {}));
 })(MakerJs || (MakerJs = {}));
 
 },{}]},{},[]);
