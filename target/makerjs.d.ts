@@ -684,7 +684,7 @@ declare module MakerJs.models {
     class BoltCircle implements IModel {
         id: string;
         paths: IPath[];
-        constructor(id: string, boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngle?: number);
+        constructor(id: string, boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngleInDegrees?: number);
     }
 }
 declare module MakerJs.models {
@@ -719,6 +719,13 @@ declare module MakerJs.models {
         id: string;
         paths: IPath[];
         constructor(id: string, startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
+    }
+}
+declare module MakerJs.models {
+    class Polygon extends ConnectTheDots {
+        id: string;
+        constructor(id: string, numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number);
+        static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number): IPoint[];
     }
 }
 declare module MakerJs.models {
