@@ -56,6 +56,13 @@ declare module MakerJs {
      */
     function findById<T extends IHaveId>(arr: T[], id: string): IFound<T>;
     /**
+     * Search within an array to find an item by its id property, then remove it from the array.
+     *
+     * @param arr Array to search.
+     * @param id Id of the item to find and remove.
+     */
+    function removeById<T extends IHaveId>(arr: T[], id: string): void;
+    /**
      * An x-y point in a two-dimensional space.
      */
     interface IPoint {
@@ -92,6 +99,10 @@ declare module MakerJs {
          * The main point of reference for this path.
          */
         origin: IPoint;
+        /**
+         * Optional CSS style properties to be emitted into SVG. Useful for creating guidelines and debugging your model.
+         */
+        cssStyle?: string;
     }
     /**
      * Test to see if an object implements the required properties of a path.
