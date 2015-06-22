@@ -5,8 +5,8 @@ module MakerJs.point {
     /**
      * Add two points together and return the result as a new point object.
      * 
-     * @param a First point, either as a point object, or as an array of numbers.
-     * @param b Second point, either as a point object, or as an array of numbers.
+     * @param a First point.
+     * @param b Second point.
      * @param subtract Optional boolean to subtract instead of add.
      * @returns A new point object.
      */
@@ -23,6 +23,17 @@ module MakerJs.point {
             }
         }
         return newPoint;
+    }
+
+    /**
+     * Find out if two points are equal.
+     * 
+     * @param a First point.
+     * @param b Second point.
+     * @returns true if points are the same, false if they are not
+     */
+    export function areEqual(a: IPoint, b: IPoint): boolean {
+        return a[0] == b[0] && a[1] == b[1];
     }
 
     /**
@@ -96,7 +107,7 @@ module MakerJs.point {
      * @returns A new point.
      */
     export function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin: IPoint): IPoint {
-        var pointAngleInRadians = angle.fromPointToRadians(pointToRotate, rotationOrigin);
+        var pointAngleInRadians = angle.fromPointToRadians(rotationOrigin, pointToRotate);
         var d = measure.pointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = fromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
 
@@ -121,15 +132,11 @@ module MakerJs.point {
     /**
      * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
      * 
-     * @param a First point, either as a point object, or as an array of numbers.
-     * @param b Second point, either as a point object, or as an array of numbers.
+     * @param a First point.
+     * @param b Second point.
      * @returns A new point object.
      */
-    export function subtract(a: IPoint, b: IPoint): IPoint;
-    export function subtract(a: IPoint, b: number[]): IPoint;
-    export function subtract(a: number[], b: IPoint): IPoint;
-    export function subtract(a: number[], b: number[]): IPoint;
-    export function subtract(a: any, b: any): IPoint {
+    export function subtract(a: IPoint, b: IPoint): IPoint {
         return add(a, b, true);
     }
 

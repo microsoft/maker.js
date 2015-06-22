@@ -33,6 +33,8 @@
     <script src="../src/models/Square.js"></script>
     <script src="../src/models/SCurve.js"></script>
     <script src="../src/tools/gap.js"></script>
+    <script src="../src/tools/solvers.js"></script>
+    <script src="../src/tools/intersect.js"></script>
 
     <script>
         //pretend it's been required
@@ -49,6 +51,7 @@
     <div class="selectModelCode">
         <label for="selectModelCode">model: </label>
         <select id="selectModelCode" onchange="Viewer.loadModelCode(this.value)">
+            <option>logo</option>
             <option>smile</option>
             <option>m</option>
             <option>testPanel</option>

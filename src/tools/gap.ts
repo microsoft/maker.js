@@ -1,8 +1,8 @@
 ﻿/// <reference path="../core/maker.ts" />
 
-module MakerJs.Tools {
+module MakerJs.tools {
 
-    interface IBrokenPath {
+    export interface IBrokenPath {
         newPath: IPath;
         newPoint: IPoint;
     }
@@ -14,7 +14,7 @@ module MakerJs.Tools {
     function midPoint(a: IPoint, b: IPoint, breakAt: number= .5): IPoint {
         var mp = [];
 
-        for (var i = 2; i--;) {
+        for (var i = 0; i < 2; i++) {
             mp.push(a[i] + (b[i] - a[i]) * breakAt);
         }
 
@@ -67,7 +67,7 @@ module MakerJs.Tools {
         return ret;
     };
 
-    function breakPath(path: IPath, breakAt: number= .5): IBrokenPath[] {
+    export function breakPath(path: IPath, breakAt: number= .5): IBrokenPath[] {
 
         var fn = breakPathFunctionMap[path.type];
         if (fn) {
@@ -77,7 +77,15 @@ module MakerJs.Tools {
         return null;
     }
 
-    export function GapPath(modelToGap: IModel, pathId: string, gapLength: number, breakAt: number= .5): IPoint[] {
+    /**
+     * Break a path and create a gap within it. Useful when connecting models together.
+     * 
+     * @param modelToGap Model which will have a gap in one of its paths.
+     * @param pathId String id of the path in which to create a gap.
+     * @param gapLength Number length of the gap.
+     * @breakAt Number between 0 and 1 (default .5) where the gap will be centered along the path.
+     */
+    export function gapPath(modelToGap: IModel, pathId: string, gapLength: number, breakAt: number= .5): IPoint[] {
 
         var found = findById<IPath>(modelToGap.paths, pathId);
 

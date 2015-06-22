@@ -4,6 +4,9 @@
     padding: 0;
     font-family: sans-serif;
 }
+body {
+    overflow-y: scroll;
+}
 #paramBar {
     position: absolute;
     width: 140px;

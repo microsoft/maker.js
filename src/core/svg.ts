@@ -79,12 +79,13 @@ module MakerJs.exporter {
                 id);
         }
 
-        function drawPath(id: string, x: number, y: number, d: any[]) {
+        function drawPath(id: string, x: number, y: number, d: any[], cssStyle: string) {
             createElement(
                 "path",
                 {
                     "id": id,
-                    "d": ["M", round(x), round(y)].concat(d).join(" ")
+                    "d": ["M", round(x), round(y)].concat(d).join(" "),
+                    "style": cssStyle
                 });
 
             if (opts.annotate) {
@@ -100,7 +101,7 @@ module MakerJs.exporter {
             var end = line.end;
 
             if (opts.useSvgPathOnly) {
-                drawPath(line.id, start[0], start[1], [round(end[0]), round(end[1])]);
+                drawPath(line.id, start[0], start[1], [round(end[0]), round(end[1])], line.cssStyle);
             } else {
                 createElement(
                     "line",
@@ -109,7 +110,8 @@ module MakerJs.exporter {
                         "x1": round(start[0]),
                         "y1": round(start[1]),
                         "x2": round(end[0]),
-                        "y2": round(end[1])
+                        "y2": round(end[1]),
+                        "style": line.cssStyle
                     });
             }
 
@@ -135,7 +137,7 @@ module MakerJs.exporter {
                 halfCircle(1);
                 halfCircle(-1);
 
-                drawPath(circle.id, center[0], center[1], d);
+                drawPath(circle.id, center[0], center[1], d, circle.cssStyle);
 
             } else {
                 createElement(
@@ -144,7 +146,8 @@ module MakerJs.exporter {
                         "id": circle.id,
                         "r": circle.radius,
                         "cx": round(center[0]),
-                        "cy": round(center[1])
+                        "cy": round(center[1]),
+                        "style": circle.cssStyle
                     });
             }
 
@@ -175,7 +178,7 @@ module MakerJs.exporter {
                 arc.startAngle > arc.endAngle
             );
 
-            drawPath(arc.id, arcPoints[0][0], arcPoints[0][1], d);
+            drawPath(arc.id, arcPoints[0][0], arcPoints[0][1], d, arc.cssStyle);
         };
 
         //fixup options

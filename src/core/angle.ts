@@ -3,16 +3,24 @@
 module MakerJs.angle {
 
     /**
+     * Ensures an angle is not greater than 360
+     * 
+     * @param angleInDegrees Angle in degrees.
+     * @retiurns Same polar angle but not greater than 360 degrees.
+     */
+    export function noRevolutions(angleInDegrees: number) {
+        var revolutions = Math.floor(angleInDegrees / 360);
+        return angleInDegrees - (360 * revolutions);
+    }
+
+    /**
      * Convert an angle from degrees to radians.
      * 
      * @param angleInDegrees Angle in degrees.
      * @returns Angle in radians.
      */
     export function toRadians(angleInDegrees: number): number {
-        if (angleInDegrees == 360) {
-            return 0;
-        }
-        return angleInDegrees * Math.PI / 180.0;
+        return noRevolutions(angleInDegrees) * Math.PI / 180.0;
     }
 
     /**
@@ -47,9 +55,11 @@ module MakerJs.angle {
      * @param origin (Optional 0,0 implied) point of origin of the angle.
      * @returns Angle of the line throught the point.
      */
-    export function fromPointToRadians(pointToFindAngle: IPoint, origin?: IPoint): number {
+    export function fromPointToRadians(origin: IPoint, pointToFindAngle: IPoint): number {
         var d = point.subtract(pointToFindAngle, origin);
-        return Math.atan2(d[1], d[0]); //First param is Y, second is X
+        var x = d[0];
+        var y = d[1];
+        return Math.atan2(-y, -x) + Math.PI;
     }
 
     /**
