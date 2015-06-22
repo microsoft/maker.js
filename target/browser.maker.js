@@ -1437,15 +1437,13 @@ var MakerJs;
     var models;
     (function (models) {
         var BoltCircle = (function () {
-            function BoltCircle(id, boltRadius, holeRadius, boltCount, firstBoltAngle) {
-                if (firstBoltAngle === void 0) { firstBoltAngle = 0; }
+            function BoltCircle(id, boltRadius, holeRadius, boltCount, firstBoltAngleInDegrees) {
+                if (firstBoltAngleInDegrees === void 0) { firstBoltAngleInDegrees = 0; }
                 this.id = id;
                 this.paths = [];
-                var a1 = MakerJs.angle.toRadians(firstBoltAngle);
-                var a = 2 * Math.PI / boltCount;
+                var points = models.Polygon.getPoints(boltCount, boltRadius, firstBoltAngleInDegrees);
                 for (var i = 0; i < boltCount; i++) {
-                    var o = MakerJs.point.fromPolar(a * i + a1, boltRadius);
-                    this.paths.push(new MakerJs.paths.Circle("bolt " + i, o, holeRadius));
+                    this.paths.push(new MakerJs.paths.Circle("bolt " + i, points[i], holeRadius));
                 }
             }
             return BoltCircle;
@@ -1578,6 +1576,33 @@ var MakerJs;
             return OvalArc;
         })();
         models.OvalArc = OvalArc;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+/// <reference path="connectthedots.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var Polygon = (function (_super) {
+            __extends(Polygon, _super);
+            function Polygon(id, numberOfSides, radius, firstCornerAngleInDegrees) {
+                if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
+                _super.call(this, id, true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees));
+                this.id = id;
+            }
+            Polygon.getPoints = function (numberOfSides, radius, firstCornerAngleInDegrees) {
+                if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
+                var points = [];
+                var a1 = MakerJs.angle.toRadians(firstCornerAngleInDegrees);
+                var a = 2 * Math.PI / numberOfSides;
+                for (var i = 0; i < numberOfSides; i++) {
+                    points.push(MakerJs.point.fromPolar(a * i + a1, radius));
+                }
+                return points;
+            };
+            return Polygon;
+        })(models.ConnectTheDots);
+        models.Polygon = Polygon;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="connectthedots.ts" />
