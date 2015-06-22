@@ -1,8 +1,8 @@
 ﻿/// <reference path="../core/maker.ts" />
 
-module MakerJs.Tools {
+module MakerJs.tools {
 
-    interface IBrokenPath {
+    export interface IBrokenPath {
         newPath: IPath;
         newPoint: IPoint;
     }
@@ -14,7 +14,7 @@ module MakerJs.Tools {
     function midPoint(a: IPoint, b: IPoint, breakAt: number= .5): IPoint {
         var mp = [];
 
-        for (var i = 2; i--;) {
+        for (var i = 0; i < 2; i++) {
             mp.push(a[i] + (b[i] - a[i]) * breakAt);
         }
 
@@ -67,7 +67,7 @@ module MakerJs.Tools {
         return ret;
     };
 
-    function breakPath(path: IPath, breakAt: number= .5): IBrokenPath[] {
+    export function breakPath(path: IPath, breakAt: number= .5): IBrokenPath[] {
 
         var fn = breakPathFunctionMap[path.type];
         if (fn) {
