@@ -28,7 +28,7 @@
         "Water jet"
     ],
     "author": "Dan Marshall / Microsoft Corporation",
-    "license": "Apache 2.0",
+    "license": "Apache-2.0",
     "bugs": {
         "url": "https://github.com/Microsoft/Maker.js/issues"
     },
