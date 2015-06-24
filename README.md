@@ -1,7 +1,9 @@
 # Maker.js
-Maker.js is a JavaScript library for creating programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.
+Maker.js, a Microsoft Garage project, is a JavaScript library for creating programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.
 
 See a demo - [View the Documentation](https://github.com/Microsoft/Maker.js/wiki)
+
+The Microsoft Garage turns fresh ideas into real projects. Learn more at [http://microsoft.com/garage](http://microsoft.com/garage).
 
 ## Uses
 Maker.js can be used in a web page as a simple CAD drawing generator. It can be a core engine for a small CAD gui app. It can run in a Node.js environment to create drawings dynamically.
