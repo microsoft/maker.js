@@ -1,9 +1,10 @@
-///<reference path="../target/makerjs.d.ts"/>
+///<reference path="../target/ts/makerjs.d.ts"/>
 
-var makerjs: typeof MakerJs = require('../target/node.maker.js');
+var makerjs: typeof MakerJs = require('../target/js/node.maker.js');
 
 class Ventgrid implements MakerJs.IModel {
 		
+    public id = 'ventgridInstance';
 	public units = makerjs.unitType.Millimeter;
 	public paths: MakerJs.IPath[] = [];
 	

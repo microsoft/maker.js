@@ -1,11 +1,12 @@
-///<reference path="../target/makerjs.d.ts"/>
+///<reference path="../target/ts/makerjs.d.ts"/>
 ///<reference path="ventgrid.d.ts"/>
 
-var makerjs: typeof MakerJs = require('../target/node.maker.js');
+var makerjs: typeof MakerJs = require('../target/js/node.maker.js');
 var ventgrid: typeof Ventgrid = require('./ventgrid.js');
 
 class VentgridCircle implements MakerJs.IModel {
 		
+    public id = 'ventgridcircleInstance';
 	public units = makerjs.unitType.Millimeter;
 	public paths: MakerJs.IPath[] = [];
 	private rim: MakerJs.IPathCircle;
@@ -50,9 +51,9 @@ class VentgridCircle implements MakerJs.IModel {
 }
 
 (<MakerJs.kit.IModelConstructor>VentgridCircle).metaParameters = [
-    { title: "filterRadius", type: "range", min: 1, max: 20, value: 2 },
-	{ title: "spacing", type: "range", min: 10, max: 100, value: 10 },
-	{ title: "radius", type: "range", min: 20, max: 200, value: 24 }
+    { title: "filterRadius", type: "range", min: 1, max: 20, value: 6 },
+	{ title: "spacing", type: "range", min: 10, max: 100, value: 30 },
+	{ title: "radius", type: "range", min: 20, max: 200, value: 100 }
 ];
 
 module.exports = VentgridCircle;

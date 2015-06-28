@@ -1,4 +1,4 @@
-/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.ts" />
 declare module MakerJs {
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise.

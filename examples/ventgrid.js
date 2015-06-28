@@ -1,5 +1,5 @@
-///<reference path="../target/makerjs.d.ts"/>
-var makerjs = require('../target/node.maker.js');
+///<reference path="../target/ts/makerjs.d.ts"/>
+var makerjs = require('../target/js/node.maker.js');
 var Ventgrid = (function () {
     function Ventgrid(filterRadius, spacing, width, height) {
         var _this = this;
@@ -7,6 +7,7 @@ var Ventgrid = (function () {
         this.spacing = spacing;
         this.width = width;
         this.height = height;
+        this.id = 'ventgridInstance';
         this.units = makerjs.unitType.Millimeter;
         this.paths = [];
         var alternate = false;

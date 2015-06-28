@@ -1,4 +1,4 @@
-﻿var makerjs = require('../target/node.maker.js');
+﻿var makerjs = require('../target/js/node.maker.js');
 
 function M(height, columnSpace, columnWidth, dropHigh, dropLow, dropConnect, innerSerifWidth, serifWidth, serifHeight) {
 
