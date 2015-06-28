@@ -10,7 +10,7 @@
     "target-browser-platform": "cd target/js && browserify -o browser.maker.js -r ./node.maker.js:@danmarshall/privatetestmaker && cd ../..",
     "build": "npm run compile-typescript && npm run target-node-platform && npm run target-browser-platform",
     "predocs": "rm -r -f ./api",
-    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./api",
+    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./testapi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
