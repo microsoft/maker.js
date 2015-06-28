@@ -107,7 +107,7 @@ module MakerJs.point {
      * @returns A new point.
      */
     export function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin: IPoint): IPoint {
-        var pointAngleInRadians = angle.fromPointToRadians(rotationOrigin, pointToRotate);
+        var pointAngleInRadians = angle.ofPointInRadians(rotationOrigin, pointToRotate);
         var d = measure.pointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = fromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
 
@@ -142,6 +142,7 @@ module MakerJs.point {
 
     /**
      * A point at 0,0 coordinates.
+     * NOTE: It is important to call this as a method, with the empty parentheses.
      * 
      * @returns A new point.
      */

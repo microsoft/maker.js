@@ -4,11 +4,13 @@ module MakerJs.units {
 
     /**
      * The base type is arbitrary. Other conversions are then based off of this.
+     * @private
      */
     var base = unitType.Millimeter;
 
     /**
      * Initialize all known conversions here.
+     * @private
      */
     function init() {
         addBaseConversion(unitType.Centimeter, 10);
@@ -19,11 +21,13 @@ module MakerJs.units {
 
     /**
      * Table of conversions. Lazy load upon first conversion.
+     * @private
      */
     var table: { [unitType: string]: { [unitType: string]: number }; };
 
     /**
      * Add a conversion, and its inversion.
+     * @private
      */
     function addConversion(srcUnitType: string, destUnitType: string, value: number) {
 
@@ -40,14 +44,14 @@ module MakerJs.units {
 
     /**
      * Add a conversion of the base unit.
+     * @private
      */
     function addBaseConversion(destUnitType: string, value: number) {
         addConversion(destUnitType, base, value);
     }
 
     /**
-     * Get a conversion ratio between a source unit and a destination unit. This will lazy load the table with initial conversions, 
-     * then new cross-conversions will be cached in the table.
+     * Get a conversion ratio between a source unit and a destination unit. 
      * 
      * @param srcUnitType unitType converting from.
      * @param destUnitType unitType converting to.
@@ -59,12 +63,16 @@ module MakerJs.units {
             return 1;
         }
 
+        //This will lazy load the table with initial conversions.
         if (!table) {
             table = {};
             init();
         }
 
+        //look for a cached conversion in the table.
         if (!table[srcUnitType][destUnitType]) {
+            
+            //create a new conversionsand cache it in the table.
             addConversion(srcUnitType, destUnitType, table[srcUnitType][base] * table[base][destUnitType]);
         }
 

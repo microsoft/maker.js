@@ -3,29 +3,29 @@
 module MakerJs.model {
 
     /**
-     * Moves all children (models and paths, recursively) within a model to their absolute position. Useful when referencing points between children.
+     * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
      * 
-     * @param modelToFlatten The model to flatten.
+     * @param modelToOriginate The model to originate.
      * @param origin Optional offset reference point.
      */
-    export function flatten(modelToFlatten: IModel, origin?: IPoint) {
-        var newOrigin = point.add(modelToFlatten.origin, origin);
+    export function originate(modelToOriginate: IModel, origin?: IPoint) {
+        var newOrigin = point.add(modelToOriginate.origin, origin);
 
-        if (modelToFlatten.paths) {
-            for (var i = 0; i < modelToFlatten.paths.length; i++) {
-                path.moveRelative(modelToFlatten.paths[i], newOrigin);
+        if (modelToOriginate.paths) {
+            for (var i = 0; i < modelToOriginate.paths.length; i++) {
+                path.moveRelative(modelToOriginate.paths[i], newOrigin);
             }
         }
 
-        if (modelToFlatten.models) {
-            for (var i = 0; i < modelToFlatten.models.length; i++) {
-                flatten(modelToFlatten.models[i], newOrigin);
+        if (modelToOriginate.models) {
+            for (var i = 0; i < modelToOriginate.models.length; i++) {
+                originate(modelToOriginate.models[i], newOrigin);
             }
         }
 
-        modelToFlatten.origin = point.zero();
+        modelToOriginate.origin = point.zero();
 
-        return modelToFlatten;
+        return modelToOriginate;
     }
 
     /**
@@ -37,11 +37,9 @@ module MakerJs.model {
      * @returns Mirrored model.
      */
     export function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel {
-        var newModel: IModel = {};
-
-        if (modelToMirror.id) {
-            newModel.id = modelToMirror.id + '_mirror';
-        }
+        var newModel: IModel = {
+            id: modelToMirror.id + '_mirror'
+        };
 
         if (modelToMirror.origin) {
             newModel.origin = point.mirror(modelToMirror.origin, mirrorX, mirrorY);

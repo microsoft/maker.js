@@ -4,6 +4,9 @@
 
 module MakerJs.exporter {
 
+    /**
+     * @private
+     */
     export interface IExportOptions {
         /**
          * Unit system to embed in exported file.
@@ -13,6 +16,7 @@ module MakerJs.exporter {
 
     /**
      * Try to get the unit system from a model
+     * @private
      */
     export function tryGetModelUnits(itemToExport: any) {
         if (isModel(itemToExport)) {
@@ -22,6 +26,7 @@ module MakerJs.exporter {
 
     /**
      * Class to traverse an item 's models or paths and ultimately render each path.
+     * @private
      */
     export class Exporter {
 

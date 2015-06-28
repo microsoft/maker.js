@@ -2,15 +2,32 @@
 
 module MakerJs.tools {
 
+    /**
+     * A path which has been broken.
+     */
     export interface IBrokenPath {
+
+        /**
+         * The new path after breaking the source path.
+         */
         newPath: IPath;
+
+        /**
+         * The point where the break ocurred.
+         */
         newPoint: IPoint;
     }
 
+    /**
+     * @private
+     */
     interface IBreakPathFunctionMap {
         [type: string]: (path: IPath, breakAt: number) => IBrokenPath[];
     }
 
+    /**
+     * @private
+     */
     function midPoint(a: IPoint, b: IPoint, breakAt: number= .5): IPoint {
         var mp = [];
 
@@ -21,6 +38,9 @@ module MakerJs.tools {
         return mp;
     }
 
+    /**
+     * @private
+     */
     var breakPathFunctionMap: IBreakPathFunctionMap = {};
 
     breakPathFunctionMap[pathType.Line] = function (line: IPathLine, breakAt: number): IBrokenPath[] {
@@ -202,6 +222,13 @@ module MakerJs.tools {
         return ret;
     }
 
+    /**
+     * Given 2 pairs of points, will return lines that connect the first pair to the second.
+     * 
+     * @param gap1 First array of 2 point objects.
+     * @param gap2 Second array of 2 point objects.
+     * @returns Array containing 2 lines.
+     */
     export function bridgeGaps(gap1: IPoint[], gap2: IPoint[]): IPathLine[]{
         var lines: IPathLine[] = [];
 

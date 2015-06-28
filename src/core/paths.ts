@@ -8,11 +8,10 @@ module MakerJs.paths {
      * Class for arc path.
      * 
      * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param origin The center point of the arc.
      * @param radius The radius of the arc.
      * @param startAngle The start angle of the arc.
      * @param endAngle The end angle of the arc.
-     * @returns A new POJO representing an arc path.
      */
     export class Arc implements IPathArc {
         public type: string;
@@ -26,9 +25,8 @@ module MakerJs.paths {
      * Class for circle path.
      * 
      * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param origin The center point of the circle.
      * @param radius The radius of the circle.
-     * @returns A new POJO representing an circle path.
      */
     export class Circle implements IPathCircle {
         public type: string;
@@ -42,9 +40,8 @@ module MakerJs.paths {
      * Class for line path.
      * 
      * @param id The id of the new path.
-     * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+     * @param origin The origin point of the line.
      * @param end The end point of the line.
-     * @returns A new POJO representing an line path.
      */
     export class Line implements IPathLine {
         public type: string;

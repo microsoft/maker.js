@@ -132,11 +132,16 @@ module MakerJs.exporter {
         return dxf.join('\n');
     }
 
+    /**
+     * @private
+     */
+    var dxfUnit: { [unitType: string]: number } = {};
+
     //DXF format documentation:
     //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
     //Default drawing units for AutoCAD DesignCenter blocks:
     //0 = Unitless; 1 = Inches; 2 = Feet; 3 = Miles; 4 = Millimeters; 5 = Centimeters; 6 = Meters; 7 = Kilometers; 8 = Microinches;
-    var dxfUnit: { [unitType: string]: number } = {};
+
     dxfUnit[''] = 0;
     dxfUnit[unitType.Inch] = 1;
     dxfUnit[unitType.Foot] = 2;

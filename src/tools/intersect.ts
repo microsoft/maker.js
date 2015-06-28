@@ -2,16 +2,41 @@
 
 module MakerJs.tools {
 
+    /**
+     * An intersection of two paths.
+     */
     export interface IPathIntersection {
+
+        /**
+         * Array of points where the two paths intersected. The length of the array may be either 1 or 2 points.
+         */
         intersectionPoints: IPoint[];
+
+        /**
+         * This Array property will only be defined if the first parameter passed to pathIntersection is either an Arc or a Circle.
+         * It contains the angles of intersection relative to the first path parameter. 
+         * The length of the array may be either 1 or 2.
+         */
         path1Angles?: number[];
+
+        /**
+         * This Array property will only be defined if the second parameter passed to pathIntersection is either an Arc or a Circle.
+         * It contains the angles of intersection relative to the second path parameter. 
+         * The length of the array may be either 1 or 2.
+         */
         path2Angles?: number[];
     }
 
+    /**
+     * @private
+     */
     interface IPathIntersectionMap {
         [type: string]: { [type: string]: (path1: IPath, path2: IPath) => IPathIntersection };
     }
 
+    /**
+     * @private
+     */
     var map: IPathIntersectionMap = {};
 
     map[pathType.Arc] = {};
@@ -131,6 +156,9 @@ module MakerJs.tools {
         return null;
     };
 
+    /**
+     * @private
+     */
     function swap(result: IPathIntersection) {
         var temp = result.path1Angles;
         if (result.path2Angles) {
@@ -148,7 +176,7 @@ module MakerJs.tools {
      * 
      * @param path1 First path to find intersection.
      * @param path2 Second path to find intersection.
-     * @result IPathIntersection object, with points(s) of intersection and angles (when a path is and arc or circle).
+     * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
      */
     export function pathIntersection(path1: IPath, path2: IPath): IPathIntersection {
 
@@ -160,16 +188,25 @@ module MakerJs.tools {
         return null;
     }
 
+    /**
+     * @private
+     */
     function findCorrespondingAngleIndex(circleAngles: number[][], arcAngle: number[]): number {
         for (var i = 0; i < circleAngles.length; i++) {
             if (circleAngles[i] === arcAngle) return i;
         }
     }
 
+    /**
+     * @private
+     */
     function pointFromAngleOnCircle(angleInDegrees: number, circle: IPathCircle): IPoint {
         return point.add(circle.origin, point.fromPolar(angle.toRadians(angleInDegrees), circle.radius));
     }
 
+    /**
+     * @private
+     */
     function pointsFromAnglesOnCircle(anglesInDegrees: number[], circle: IPathCircle): IPoint[] {
         var result = [];
         for (var i = 0; i < anglesInDegrees.length; i++) {
@@ -178,6 +215,9 @@ module MakerJs.tools {
         return result;
     }
 
+    /**
+     * @private
+     */
     function getAnglesWithinArc(angles: number[], arc: IPathArc): number[] {
 
         if (!angles) return null;
@@ -186,7 +226,7 @@ module MakerJs.tools {
 
         //computed angles will not be negative, but the arc may have specified a negative angle
         var startAngle = arc.startAngle;
-        var endAngle = angle.arcEndAnglePastZero(arc);
+        var endAngle = angle.ofArcEnd(arc);
 
         for (var i = 0; i < angles.length; i++) {
             if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360) || isBetween(angles[i], startAngle - 360, endAngle - 360)) {
@@ -199,6 +239,9 @@ module MakerJs.tools {
         return anglesWithinArc;
     }
 
+    /**
+     * @private
+     */
     interface ISlope {
         hasSlope: boolean;
         slope?: number;
@@ -206,6 +249,9 @@ module MakerJs.tools {
         yIntercept?: number;
     }
 
+    /**
+     * @private
+     */
     function getSlope(line: IPathLine): ISlope {
         var dx = round(line.end[0] - line.origin[0]);
         if (dx == 0) {
@@ -227,16 +273,25 @@ module MakerJs.tools {
         };
     }
 
+    /**
+     * @private
+     */
     function verticalIntersectionPoint(verticalLine: IPathLine, nonVerticalSlope: ISlope): IPoint {
         var x = verticalLine.origin[0];
         var y = nonVerticalSlope.slope * x + nonVerticalSlope.yIntercept;
         return [x, y];
     }
 
+    /**
+     * @private
+     */
     function isBetween(valueInQuestion: number, limit1: number, limit2: number): boolean {
         return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
     }
 
+    /**
+     * @private
+     */
     function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine): boolean {
         for (var i = 2; i--;) {
             if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]))) return false;
@@ -244,6 +299,9 @@ module MakerJs.tools {
         return true;
     }
 
+    /**
+     * @private
+     */
     function lineToLine(line1: IPathLine, line2: IPathLine): IPoint {
 
         var slope1 = getSlope(line1);
@@ -280,10 +338,13 @@ module MakerJs.tools {
         return null;
     }
 
+    /**
+     * @private
+     */
     function lineToCircle(line: IPathLine, circle: IPathCircle): number[] {
 
         function getLineAngle(p1: IPoint, p2: IPoint) {
-            return angle.noRevolutions(angle.toDegrees(angle.fromPointToRadians(p1, p2)));
+            return angle.noRevolutions(angle.toDegrees(angle.ofPointInRadians(p1, p2)));
         }
 
         var radius = round(circle.radius);
@@ -342,6 +403,9 @@ module MakerJs.tools {
         return anglesOfIntersection;
     }
 
+    /**
+     * @private
+     */
     function circleToCircle(circle1: IPathCircle, circle2: IPathCircle): number[][] {
 
         //see if circles are the same
@@ -359,7 +423,7 @@ module MakerJs.tools {
         var c2 = new paths.Circle('c2', point.subtract(circle2.origin, circle1.origin), circle2.radius);
 
         //rotate circle2 to horizontal, c2 will be to the right of the origin.
-        var c2Angle = angle.toDegrees(angle.fromPointToRadians(point.zero(), c2.origin));
+        var c2Angle = angle.toDegrees(angle.ofPointInRadians(point.zero(), c2.origin));
         path.rotate(c2, -c2Angle, point.zero());
 
         function unRotate(resultAngle: number): number {
