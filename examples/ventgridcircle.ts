@@ -37,10 +37,6 @@ class VentgridCircle implements MakerJs.IModel {
 			//border
 			var arcIntersection = makerjs.tools.pathIntersection(circle, this.rim);
 			
-			if (arcIntersection.path1Angles.length == 1) {
-				console.log('whoa');
-			}
-			
 			if (arcIntersection && arcIntersection.path1Angles.length == 2) {
 				var filterArc = new makerjs.paths.Arc('filterArc', circle.origin, circle.radius, arcIntersection.path1Angles[1], arcIntersection.path1Angles[0]);
 				this.paths.push(filterArc);
