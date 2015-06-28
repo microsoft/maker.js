@@ -66,13 +66,15 @@ module MakerJs {
 
     /**
      * Things that may have an id.
+     * @private
      */
     export interface IHaveId {
-        id?: string;
+        id: string;
     }
 
     /**
      * An item found in an array.
+     * @private
      */
     export interface IFound<T> {
 
@@ -126,6 +128,7 @@ module MakerJs {
 
     /**
      * An x-y point in a two-dimensional space.
+     * Implemented as an array with 2 elements.
      */
     export interface IPoint {
         [index: number]: number;
@@ -228,6 +231,7 @@ module MakerJs {
 
     /**
      * A map of functions which accept a path as a parameter.
+     * @private
      */
     export interface IPathFunctionMap {
         
@@ -239,6 +243,7 @@ module MakerJs {
 
     /**
      * A map of functions which accept a path and an origin point as parameters.
+     * @private
      */
     export interface IPathOriginFunctionMap {
         

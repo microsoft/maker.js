@@ -1,0 +1,56 @@
+///<reference path="../target/ts/makerjs.d.ts"/>
+var makerjs = require('../target/js/node.maker.js');
+var Ventgrid = (function () {
+    function Ventgrid(filterRadius, spacing, width, height) {
+        var _this = this;
+        this.filterRadius = filterRadius;
+        this.spacing = spacing;
+        this.width = width;
+        this.height = height;
+        this.id = 'ventgridInstance';
+        this.units = makerjs.unitType.Millimeter;
+        this.paths = [];
+        var alternate = false;
+        var xDistance = 2 * filterRadius * (1 + spacing / 100);
+        var countX = Math.ceil(width / xDistance);
+        var yDistance = makerjs.tools.solveTriangleASA(60, 90, xDistance / 2);
+        var countY = Math.ceil(height / yDistance) + 1;
+        function checkBoundary(x, y) {
+            return y - filterRadius < height && x - filterRadius < width;
+        }
+        var row = function (iy) {
+            var total = countX;
+            if (!alternate) {
+                total++;
+            }
+            for (var i = 0; i < total; i++) {
+                var x = i * xDistance;
+                var y = iy * yDistance;
+                if (alternate) {
+                    x += xDistance / 2;
+                }
+                if (checkBoundary(Math.abs(x), Math.abs(y))) {
+                    _this.paths.push(new makerjs.paths.Circle('filter', [x, y], filterRadius));
+                    if (alternate || (!alternate && i > 0)) {
+                        _this.paths.push(new makerjs.paths.Circle('filter', [-x, y], filterRadius));
+                    }
+                }
+            }
+        };
+        for (var i = 0; i < countY; i++) {
+            row(i);
+            if (i > 0) {
+                row(-i);
+            }
+            alternate = !alternate;
+        }
+    }
+    return Ventgrid;
+})();
+Ventgrid.metaParameters = [
+    { title: "filterRadius", type: "range", min: 1, max: 20, value: 2 },
+    { title: "spacing", type: "range", min: 10, max: 100, value: 49 },
+    { title: "width", type: "range", min: 20, max: 200, value: 37 },
+    { title: "height", type: "range", min: 20, max: 200, value: 50 },
+];
+module.exports = Ventgrid;

@@ -2,15 +2,32 @@
 
 module MakerJs.tools {
 
+    /**
+     * A path which has been broken.
+     */
     export interface IBrokenPath {
+
+        /**
+         * The new path after breaking the source path.
+         */
         newPath: IPath;
+
+        /**
+         * The point where the break ocurred.
+         */
         newPoint: IPoint;
     }
 
+    /**
+     * @private
+     */
     interface IBreakPathFunctionMap {
         [type: string]: (path: IPath, breakAt: number) => IBrokenPath[];
     }
 
+    /**
+     * @private
+     */
     function midPoint(a: IPoint, b: IPoint, breakAt: number= .5): IPoint {
         var mp = [];
 
@@ -21,6 +38,9 @@ module MakerJs.tools {
         return mp;
     }
 
+    /**
+     * @private
+     */
     var breakPathFunctionMap: IBreakPathFunctionMap = {};
 
     breakPathFunctionMap[pathType.Line] = function (line: IPathLine, breakAt: number): IBrokenPath[] {
@@ -129,7 +149,13 @@ module MakerJs.tools {
                     } else {
                         append(secondBreak[1]);
                     }
-                } //todo add point else
+                } else {
+                    if (start) {
+                        ret.push(line.origin);
+                    } else {
+                        ret.push(line.end);
+                    }                    
+                }
             }
 
             chop(<IPathLine>firstBreak[0].newPath, true);
@@ -157,22 +183,31 @@ module MakerJs.tools {
             var firstBreak = breakPath(arc, breakAt);
             var halfGapAngle = angle.toDegrees(Math.asin(halfGap / arc.radius));
 
-            function chop(arc: IPathArc, start: boolean) {
+            function chop(chopArc: IPathArc, start: boolean) {
 
-                var totalAngle = measure.arcAngle(arc);
+                var totalAngle = measure.arcAngle(chopArc);
 
                 if (halfGapAngle < totalAngle) {
 
                     var chopDistance = start ? totalAngle - halfGapAngle : halfGapAngle;
 
-                    var secondBreak = breakPath(arc, chopDistance / totalAngle);
+                    var secondBreak = breakPath(chopArc, chopDistance / totalAngle);
 
                     if (start) {
                         append(secondBreak[0]);
                     } else {
                         append(secondBreak[1]);
                     }
-                }  //todo add point else
+                } else {
+
+                    var arcPoints = point.fromArc(arc);
+
+                    if (start) {
+                        ret.push(arcPoints[0]);
+                    } else {
+                        ret.push(arcPoints[1]);
+                    }
+                }
             }
 
             chop(<IPathArc>firstBreak[0].newPath, true);
@@ -187,4 +222,27 @@ module MakerJs.tools {
         return ret;
     }
 
+    /**
+     * Given 2 pairs of points, will return lines that connect the first pair to the second.
+     * 
+     * @param gap1 First array of 2 point objects.
+     * @param gap2 Second array of 2 point objects.
+     * @returns Array containing 2 lines.
+     */
+    export function bridgeGaps(gap1: IPoint[], gap2: IPoint[]): IPathLine[]{
+        var lines: IPathLine[] = [];
+
+        for (var i = 2; i--;) {
+            lines.push(new paths.Line('bridge' + i, gap1[i], gap2[i]));
+        }
+
+        if (pathIntersection(lines[0], lines[1])) {
+            //swap endpoints
+            for (var i = 2; i--;) {
+                lines[i].end = gap2[i];
+            }
+        }
+
+        return lines;
+    }
 }

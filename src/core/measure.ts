@@ -4,6 +4,8 @@ module MakerJs.measure {
 
     /**
      * Interface to Math.min and Math.max functions.
+     * 
+     * @private
      */
     interface IMathMinMax {
         (...values: number[]): number;
@@ -16,7 +18,7 @@ module MakerJs.measure {
      * @returns Angle of arc.
      */
     export function arcAngle(arc: IPathArc): number {
-        var endAngle = angle.arcEndAnglePastZero(arc);
+        var endAngle = angle.ofArcEnd(arc);
         return endAngle - arc.startAngle;
     }
 
@@ -33,6 +35,9 @@ module MakerJs.measure {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
+    /**
+     * @private
+     */
     function getExtremePoint(a: IPoint, b: IPoint, fn: IMathMinMax): IPoint {
         return [
             fn(a[0], b[0]),
@@ -67,7 +72,7 @@ module MakerJs.measure {
             var endPoint = point.fromPolar(angle.toRadians(arc.endAngle), r);
 
             var startAngle = arc.startAngle;
-            var endAngle = angle.arcEndAnglePastZero(arc);
+            var endAngle = angle.ofArcEnd(arc);
 
             if (startAngle < 0) {
                 startAngle += 360;

@@ -1,48 +1,53 @@
 {
-    "name": "@danmarshall/privatetestmaker",
-    "version": "1.0.1",
-    "description": "Maker.js is a JavaScript library for creating programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.",
-    "main": "target/node.maker.js",
-    "scripts": {
-        "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt && ls src/tools/*.ts >> build.txt",
-        "compile-typescript": "tsc --declaration --out target/makerjs.js @build.txt && rm build.txt",
-        "target-node-platform": "cd target && mv makerjs.js node.maker.js && cd ..",
-        "target-browser-platform": "cd target && browserify -o browser.maker.js -r ./node.maker.js:@danmarshall/privatetestmaker && cd ..",
-        "build": "npm run compile-typescript && npm run target-node-platform && npm run target-browser-platform",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Microsoft/Maker.js.git"
-    },
-    "keywords": [
-        "Maker",
-        "CAD",
-        "2D",
-        "vector",
-        "drawing",
-        "SVG",
-        "DXF",
-        "CNC",
-        "Laser cutter",
-        "Water jet"
-    ],
-    "author": "Dan Marshall / Microsoft Corporation",
-    "license": "Apache 2.0",
-    "bugs": {
-        "url": "https://github.com/Microsoft/Maker.js/issues"
-    },
-    "homepage": "https://github.com/Microsoft/Maker.js",
-    "devDependencies": {
-        "browserify": "^10.2.4",
-        "browserify-shim": "^3.8.8",
-        "tsd": "^0.6.1",
-        "typescript": "^1.4.1"
-    },
-    "browserify": {
-        "transform": [ "browserify-shim" ]
-    },
-    "browserify-shim": {
-        "../target/node.maker.js": "global:makerjs"
-    }
+  "name": "@danmarshall/privatetestmaker",
+  "version": "1.0.1",
+  "description": "Maker.js is a JavaScript library for creating programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.",
+  "main": "target/node.maker.js",
+  "scripts": {
+    "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt && ls src/tools/*.ts >> build.txt",
+    "compile-typescript": "tsc --declaration --out target/ts/makerjs.js @build.txt && rm build.txt",
+    "target-node-platform": "cd target && mv ts/makerjs.js js/node.maker.js && cd ..",
+    "target-browser-platform": "cd target/js && browserify -o browser.maker.js -r ./node.maker.js:@danmarshall/privatetestmaker && cd ../..",
+    "build": "npm run compile-typescript && npm run target-node-platform && npm run target-browser-platform",
+    "predocs": "rm -r -f ./target/docs",
+    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./target/docs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/Maker.js.git"
+  },
+  "keywords": [
+    "Maker",
+    "CAD",
+    "2D",
+    "vector",
+    "drawing",
+    "SVG",
+    "DXF",
+    "CNC",
+    "Laser cutter",
+    "Water jet"
+  ],
+  "author": "Dan Marshall / Microsoft Corporation",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Microsoft/Maker.js/issues"
+  },
+  "homepage": "https://github.com/Microsoft/Maker.js",
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "browserify-shim": "^3.8.8",
+    "tsd": "^0.6.1",
+    "typedoc": "^0.3.4",
+    "typescript": "^1.4.1"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "../target/node.maker.js": "global:makerjs"
+  }
 }

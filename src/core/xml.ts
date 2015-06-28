@@ -2,6 +2,7 @@
 
     /**
      * Attributes for an XML tag.
+     * @private
      */
     export interface IXmlTagAttrs {
         [name: string]: any;
@@ -9,6 +10,7 @@
 
     /**
      * Class for an XML tag.
+     * @private
      */
     export class XmlTag {
 

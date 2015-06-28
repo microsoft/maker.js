@@ -39,7 +39,7 @@ module MakerJs.path {
         map[pathType.Arc] = function (arc: IPathArc) {
 
             var startAngle = angle.mirror(arc.startAngle, mirrorX, mirrorY);
-            var endAngle = angle.mirror(angle.arcEndAnglePastZero(arc), mirrorX, mirrorY);
+            var endAngle = angle.mirror(angle.ofArcEnd(arc), mirrorX, mirrorY);
             var xor = mirrorX != mirrorY;
 
             newPath = new paths.Arc(

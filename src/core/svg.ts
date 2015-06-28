@@ -5,8 +5,9 @@ module MakerJs.exporter {
 
     /**
      * The default stroke width in millimeters.
+     * @private
      */
-    export var defaultStrokeWidth = 0.2;
+    export var svgDefaultStrokeWidth = 0.2;
 
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     export function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
@@ -192,10 +193,10 @@ module MakerJs.exporter {
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToMeasure = { paths: <IPath[]>itemToExport };
+            modelToMeasure = { id: 'modelToMeasure', paths: <IPath[]>itemToExport };
 
         } else if (isPath(itemToExport)) {
-            modelToMeasure = { paths: [(<IPath>itemToExport)] };
+            modelToMeasure = { id: 'modelToMeasure', paths: [(<IPath>itemToExport)] };
         }
 
         var size = measure.modelExtents(modelToMeasure);
@@ -217,9 +218,9 @@ module MakerJs.exporter {
 
         if (typeof opts.strokeWidth === 'undefined') {
             if (!opts.units) {
-                opts.strokeWidth = defaultStrokeWidth;
+                opts.strokeWidth = svgDefaultStrokeWidth;
             } else {
-                opts.strokeWidth = round(units.conversionScale(unitType.Millimeter, opts.units) * defaultStrokeWidth, .001);
+                opts.strokeWidth = round(units.conversionScale(unitType.Millimeter, opts.units) * svgDefaultStrokeWidth, .001);
             }
         }
 
@@ -276,10 +277,15 @@ module MakerJs.exporter {
         return elements.join('');
     }
 
+    /**
+     * @private
+     */
+    var svgUnit: { [unitType: string]: string } = {};
+
     //SVG Coordinate Systems, Transformations and Units documentation:
     //http://www.w3.org/TR/SVG/coords.html
     //The supported length unit identifiers are: em, ex, px, pt, pc, cm, mm, in, and percentages.
-    var svgUnit: { [unitType: string]: string } = {};
+
     svgUnit[unitType.Inch] = "in";
     svgUnit[unitType.Millimeter] = "mm";
     svgUnit[unitType.Centimeter] = "cm";
@@ -315,7 +321,7 @@ module MakerJs.exporter {
         origin: IPoint;
 
         /**
-         * Use SVG <path> elements instead of <line>, <circle> etc.
+         * Use SVG < path > elements instead of < line >, < circle > etc.
          */
         useSvgPathOnly: boolean;
 

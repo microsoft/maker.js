@@ -173,7 +173,7 @@ var MakerJs;
          * @param arc An arc path object.
          * @returns End angle of arc.
          */
-        function arcEndAnglePastZero(arc) {
+        function ofArcEnd(arc) {
             //compensate for values past zero. This allows easy compute of total angle size.
             //for example 0 = 360
             if (arc.endAngle < arc.startAngle) {
@@ -181,21 +181,21 @@ var MakerJs;
             }
             return arc.endAngle;
         }
-        angle.arcEndAnglePastZero = arcEndAnglePastZero;
+        angle.ofArcEnd = ofArcEnd;
         /**
          * Angle of a line through a point.
          *
          * @param pointToFindAngle The point to find the angle.
          * @param origin (Optional 0,0 implied) point of origin of the angle.
-         * @returns Angle of the line throught the point.
+         * @returns Angle of the line throught the point, in radians.
          */
-        function fromPointToRadians(origin, pointToFindAngle) {
+        function ofPointInRadians(origin, pointToFindAngle) {
             var d = MakerJs.point.subtract(pointToFindAngle, origin);
             var x = d[0];
             var y = d[1];
             return Math.atan2(-y, -x) + Math.PI;
         }
-        angle.fromPointToRadians = fromPointToRadians;
+        angle.ofPointInRadians = ofPointInRadians;
         /**
          * Mirror an angle on either or both x and y axes.
          *
@@ -322,7 +322,7 @@ var MakerJs;
          * @returns A new point.
          */
         function rotate(pointToRotate, angleInDegrees, rotationOrigin) {
-            var pointAngleInRadians = MakerJs.angle.fromPointToRadians(rotationOrigin, pointToRotate);
+            var pointAngleInRadians = MakerJs.angle.ofPointInRadians(rotationOrigin, pointToRotate);
             var d = MakerJs.measure.pointDistance(rotationOrigin, pointToRotate);
             var rotatedPoint = fromPolar(pointAngleInRadians + MakerJs.angle.toRadians(angleInDegrees), d);
             return add(rotationOrigin, rotatedPoint);
@@ -356,6 +356,7 @@ var MakerJs;
         point.subtract = subtract;
         /**
          * A point at 0,0 coordinates.
+         * NOTE: It is important to call this as a method, with the empty parentheses.
          *
          * @returns A new point.
          */
@@ -391,7 +392,7 @@ var MakerJs;
             };
             map[MakerJs.pathType.Arc] = function (arc) {
                 var startAngle = MakerJs.angle.mirror(arc.startAngle, mirrorX, mirrorY);
-                var endAngle = MakerJs.angle.mirror(MakerJs.angle.arcEndAnglePastZero(arc), mirrorX, mirrorY);
+                var endAngle = MakerJs.angle.mirror(MakerJs.angle.ofArcEnd(arc), mirrorX, mirrorY);
                 var xor = mirrorX != mirrorY;
                 newPath = new MakerJs.paths.Arc(newId || arc.id, origin, arc.radius, xor ? endAngle : startAngle, xor ? startAngle : endAngle);
             };
@@ -490,11 +491,10 @@ var MakerJs;
          * Class for arc path.
          *
          * @param id The id of the new path.
-         * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+         * @param origin The center point of the arc.
          * @param radius The radius of the arc.
          * @param startAngle The start angle of the arc.
          * @param endAngle The end angle of the arc.
-         * @returns A new POJO representing an arc path.
          */
         var Arc = (function () {
             function Arc(id, origin, radius, startAngle, endAngle) {
@@ -512,9 +512,8 @@ var MakerJs;
          * Class for circle path.
          *
          * @param id The id of the new path.
-         * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+         * @param origin The center point of the circle.
          * @param radius The radius of the circle.
-         * @returns A new POJO representing an circle path.
          */
         var Circle = (function () {
             function Circle(id, origin, radius) {
@@ -530,9 +529,8 @@ var MakerJs;
          * Class for line path.
          *
          * @param id The id of the new path.
-         * @param origin The origin of the new path, either as a point object, or as an array of numbers.
+         * @param origin The origin point of the line.
          * @param end The end point of the line.
-         * @returns A new POJO representing an line path.
          */
         var Line = (function () {
             function Line(id, origin, end) {
@@ -552,27 +550,27 @@ var MakerJs;
     var model;
     (function (model) {
         /**
-         * Moves all children (models and paths, recursively) within a model to their absolute position. Useful when referencing points between children.
+         * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
          *
-         * @param modelToFlatten The model to flatten.
+         * @param modelToOriginate The model to originate.
          * @param origin Optional offset reference point.
          */
-        function flatten(modelToFlatten, origin) {
-            var newOrigin = MakerJs.point.add(modelToFlatten.origin, origin);
-            if (modelToFlatten.paths) {
-                for (var i = 0; i < modelToFlatten.paths.length; i++) {
-                    MakerJs.path.moveRelative(modelToFlatten.paths[i], newOrigin);
+        function originate(modelToOriginate, origin) {
+            var newOrigin = MakerJs.point.add(modelToOriginate.origin, origin);
+            if (modelToOriginate.paths) {
+                for (var i = 0; i < modelToOriginate.paths.length; i++) {
+                    MakerJs.path.moveRelative(modelToOriginate.paths[i], newOrigin);
                 }
             }
-            if (modelToFlatten.models) {
-                for (var i = 0; i < modelToFlatten.models.length; i++) {
-                    flatten(modelToFlatten.models[i], newOrigin);
+            if (modelToOriginate.models) {
+                for (var i = 0; i < modelToOriginate.models.length; i++) {
+                    originate(modelToOriginate.models[i], newOrigin);
                 }
             }
-            modelToFlatten.origin = MakerJs.point.zero();
-            return modelToFlatten;
+            modelToOriginate.origin = MakerJs.point.zero();
+            return modelToOriginate;
         }
-        model.flatten = flatten;
+        model.originate = originate;
         /**
          * Create a clone of a model, mirrored on either or both x and y axes.
          *
@@ -582,10 +580,9 @@ var MakerJs;
          * @returns Mirrored model.
          */
         function mirror(modelToMirror, mirrorX, mirrorY) {
-            var newModel = {};
-            if (modelToMirror.id) {
-                newModel.id = modelToMirror.id + '_mirror';
-            }
+            var newModel = {
+                id: modelToMirror.id + '_mirror'
+            };
             if (modelToMirror.origin) {
                 newModel.origin = MakerJs.point.mirror(modelToMirror.origin, mirrorX, mirrorY);
             }
@@ -680,10 +677,12 @@ var MakerJs;
     (function (units) {
         /**
          * The base type is arbitrary. Other conversions are then based off of this.
+         * @private
          */
         var base = MakerJs.unitType.Millimeter;
         /**
          * Initialize all known conversions here.
+         * @private
          */
         function init() {
             addBaseConversion(MakerJs.unitType.Centimeter, 10);
@@ -693,10 +692,12 @@ var MakerJs;
         }
         /**
          * Table of conversions. Lazy load upon first conversion.
+         * @private
          */
         var table;
         /**
          * Add a conversion, and its inversion.
+         * @private
          */
         function addConversion(srcUnitType, destUnitType, value) {
             function row(unitType) {
@@ -710,13 +711,13 @@ var MakerJs;
         }
         /**
          * Add a conversion of the base unit.
+         * @private
          */
         function addBaseConversion(destUnitType, value) {
             addConversion(destUnitType, base, value);
         }
         /**
-         * Get a conversion ratio between a source unit and a destination unit. This will lazy load the table with initial conversions,
-         * then new cross-conversions will be cached in the table.
+         * Get a conversion ratio between a source unit and a destination unit.
          *
          * @param srcUnitType unitType converting from.
          * @param destUnitType unitType converting to.
@@ -726,11 +727,14 @@ var MakerJs;
             if (srcUnitType == destUnitType) {
                 return 1;
             }
+            //This will lazy load the table with initial conversions.
             if (!table) {
                 table = {};
                 init();
             }
+            //look for a cached conversion in the table.
             if (!table[srcUnitType][destUnitType]) {
+                //create a new conversionsand cache it in the table.
                 addConversion(srcUnitType, destUnitType, table[srcUnitType][base] * table[base][destUnitType]);
             }
             return table[srcUnitType][destUnitType];
@@ -750,7 +754,7 @@ var MakerJs;
          * @returns Angle of arc.
          */
         function arcAngle(arc) {
-            var endAngle = MakerJs.angle.arcEndAnglePastZero(arc);
+            var endAngle = MakerJs.angle.ofArcEnd(arc);
             return endAngle - arc.startAngle;
         }
         _measure.arcAngle = arcAngle;
@@ -767,6 +771,9 @@ var MakerJs;
             return Math.sqrt(dx * dx + dy * dy);
         }
         _measure.pointDistance = pointDistance;
+        /**
+         * @private
+         */
         function getExtremePoint(a, b, fn) {
             return [
                 fn(a[0], b[0]),
@@ -796,7 +803,7 @@ var MakerJs;
                 var startPoint = MakerJs.point.fromPolar(MakerJs.angle.toRadians(arc.startAngle), r);
                 var endPoint = MakerJs.point.fromPolar(MakerJs.angle.toRadians(arc.endAngle), r);
                 var startAngle = arc.startAngle;
-                var endAngle = MakerJs.angle.arcEndAnglePastZero(arc);
+                var endAngle = MakerJs.angle.ofArcEnd(arc);
                 if (startAngle < 0) {
                     startAngle += 360;
                     endAngle += 360;
@@ -893,6 +900,7 @@ var MakerJs;
     (function (exporter) {
         /**
          * Try to get the unit system from a model
+         * @private
          */
         function tryGetModelUnits(itemToExport) {
             if (MakerJs.isModel(itemToExport)) {
@@ -902,6 +910,7 @@ var MakerJs;
         exporter.tryGetModelUnits = tryGetModelUnits;
         /**
          * Class to traverse an item 's models or paths and ultimately render each path.
+         * @private
          */
         var Exporter = (function () {
             /**
@@ -1085,11 +1094,14 @@ var MakerJs;
             return dxf.join('\n');
         }
         _exporter.toDXF = toDXF;
+        /**
+         * @private
+         */
+        var dxfUnit = {};
         //DXF format documentation:
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
         //Default drawing units for AutoCAD DesignCenter blocks:
         //0 = Unitless; 1 = Inches; 2 = Feet; 3 = Miles; 4 = Millimeters; 5 = Centimeters; 6 = Meters; 7 = Kilometers; 8 = Microinches;
-        var dxfUnit = {};
         dxfUnit[''] = 0;
         dxfUnit[MakerJs.unitType.Inch] = 1;
         dxfUnit[MakerJs.unitType.Foot] = 2;
@@ -1130,6 +1142,7 @@ var MakerJs;
     (function (exporter) {
         /**
          * Class for an XML tag.
+         * @private
          */
         var XmlTag = (function () {
             /**
@@ -1220,8 +1233,9 @@ var MakerJs;
     (function (exporter) {
         /**
          * The default stroke width in millimeters.
+         * @private
          */
-        exporter.defaultStrokeWidth = 0.2;
+        exporter.svgDefaultStrokeWidth = 0.2;
         /**
          * Renders an item in SVG markup.
          *
@@ -1354,10 +1368,10 @@ var MakerJs;
             }
             else if (Array.isArray(itemToExport)) {
                 //issue: this won't handle an array of models
-                modelToMeasure = { paths: itemToExport };
+                modelToMeasure = { id: 'modelToMeasure', paths: itemToExport };
             }
             else if (MakerJs.isPath(itemToExport)) {
-                modelToMeasure = { paths: [itemToExport] };
+                modelToMeasure = { id: 'modelToMeasure', paths: [itemToExport] };
             }
             var size = MakerJs.measure.modelExtents(modelToMeasure);
             if (!opts.origin) {
@@ -1375,10 +1389,10 @@ var MakerJs;
             }
             if (typeof opts.strokeWidth === 'undefined') {
                 if (!opts.units) {
-                    opts.strokeWidth = exporter.defaultStrokeWidth;
+                    opts.strokeWidth = exporter.svgDefaultStrokeWidth;
                 }
                 else {
-                    opts.strokeWidth = MakerJs.round(MakerJs.units.conversionScale(MakerJs.unitType.Millimeter, opts.units) * exporter.defaultStrokeWidth, .001);
+                    opts.strokeWidth = MakerJs.round(MakerJs.units.conversionScale(MakerJs.unitType.Millimeter, opts.units) * exporter.svgDefaultStrokeWidth, .001);
                 }
             }
             //also pass back to options parameter
@@ -1422,10 +1436,13 @@ var MakerJs;
             return elements.join('');
         }
         exporter.toSVG = toSVG;
+        /**
+         * @private
+         */
+        var svgUnit = {};
         //SVG Coordinate Systems, Transformations and Units documentation:
         //http://www.w3.org/TR/SVG/coords.html
         //The supported length unit identifiers are: em, ex, px, pt, pc, cm, mm, in, and percentages.
-        var svgUnit = {};
         svgUnit[MakerJs.unitType.Inch] = "in";
         svgUnit[MakerJs.unitType.Millimeter] = "mm";
         svgUnit[MakerJs.unitType.Centimeter] = "cm";
@@ -1497,6 +1514,45 @@ var MakerJs;
         models.ConnectTheDots = ConnectTheDots;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
+/// <reference path="connectthedots.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var Rectangle = (function (_super) {
+            __extends(Rectangle, _super);
+            function Rectangle(id, width, height) {
+                _super.call(this, id, true, [[0, 0], [width, 0], [width, height], [0, height]]);
+                this.id = id;
+            }
+            return Rectangle;
+        })(models.ConnectTheDots);
+        models.Rectangle = Rectangle;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+/// <reference path="rectangle.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var GoldenRectangle = (function (_super) {
+            __extends(GoldenRectangle, _super);
+            function GoldenRectangle(id, width) {
+                _super.call(this, id, width, width * GoldenRectangle.GoldenRatio);
+                this.id = id;
+            }
+            GoldenRectangle.GoldenRatio = (1 + Math.sqrt(5)) / 2;
+            return GoldenRectangle;
+        })(models.Rectangle);
+        models.GoldenRectangle = GoldenRectangle;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -1530,12 +1586,6 @@ var MakerJs;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="roundrectangle.ts" />
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -1602,22 +1652,6 @@ var MakerJs;
             return Polygon;
         })(models.ConnectTheDots);
         models.Polygon = Polygon;
-    })(models = MakerJs.models || (MakerJs.models = {}));
-})(MakerJs || (MakerJs = {}));
-/// <reference path="connectthedots.ts" />
-var MakerJs;
-(function (MakerJs) {
-    var models;
-    (function (models) {
-        var Rectangle = (function (_super) {
-            __extends(Rectangle, _super);
-            function Rectangle(id, width, height) {
-                _super.call(this, id, true, [[0, 0], [width, 0], [width, height], [0, height]]);
-                this.id = id;
-            }
-            return Rectangle;
-        })(models.ConnectTheDots);
-        models.Rectangle = Rectangle;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -1700,6 +1734,9 @@ var MakerJs;
 (function (MakerJs) {
     var tools;
     (function (tools) {
+        /**
+         * @private
+         */
         function midPoint(a, b, breakAt) {
             if (breakAt === void 0) { breakAt = .5; }
             var mp = [];
@@ -1708,6 +1745,9 @@ var MakerJs;
             }
             return mp;
         }
+        /**
+         * @private
+         */
         var breakPathFunctionMap = {};
         breakPathFunctionMap[MakerJs.pathType.Line] = function (line, breakAt) {
             var breakPoint = midPoint(line.origin, line.end, breakAt);
@@ -1786,7 +1826,15 @@ var MakerJs;
                         else {
                             append(secondBreak[1]);
                         }
-                    } //todo add point else
+                    }
+                    else {
+                        if (start) {
+                            ret.push(line.origin);
+                        }
+                        else {
+                            ret.push(line.end);
+                        }
+                    }
                 }
                 chop(firstBreak[0].newPath, true);
                 chop(firstBreak[1].newPath, false);
@@ -1805,18 +1853,27 @@ var MakerJs;
             map[MakerJs.pathType.Arc] = function (arc) {
                 var firstBreak = breakPath(arc, breakAt);
                 var halfGapAngle = MakerJs.angle.toDegrees(Math.asin(halfGap / arc.radius));
-                function chop(arc, start) {
-                    var totalAngle = MakerJs.measure.arcAngle(arc);
+                function chop(chopArc, start) {
+                    var totalAngle = MakerJs.measure.arcAngle(chopArc);
                     if (halfGapAngle < totalAngle) {
                         var chopDistance = start ? totalAngle - halfGapAngle : halfGapAngle;
-                        var secondBreak = breakPath(arc, chopDistance / totalAngle);
+                        var secondBreak = breakPath(chopArc, chopDistance / totalAngle);
                         if (start) {
                             append(secondBreak[0]);
                         }
                         else {
                             append(secondBreak[1]);
                         }
-                    } //todo add point else
+                    }
+                    else {
+                        var arcPoints = MakerJs.point.fromArc(arc);
+                        if (start) {
+                            ret.push(arcPoints[0]);
+                        }
+                        else {
+                            ret.push(arcPoints[1]);
+                        }
+                    }
                 }
                 chop(firstBreak[0].newPath, true);
                 chop(firstBreak[1].newPath, false);
@@ -1828,6 +1885,26 @@ var MakerJs;
             return ret;
         }
         tools.gapPath = gapPath;
+        /**
+         * Given 2 pairs of points, will return lines that connect the first pair to the second.
+         *
+         * @param gap1 First array of 2 point objects.
+         * @param gap2 Second array of 2 point objects.
+         * @returns Array containing 2 lines.
+         */
+        function bridgeGaps(gap1, gap2) {
+            var lines = [];
+            for (var i = 2; i--;) {
+                lines.push(new MakerJs.paths.Line('bridge' + i, gap1[i], gap2[i]));
+            }
+            if (tools.pathIntersection(lines[0], lines[1])) {
+                for (var i = 2; i--;) {
+                    lines[i].end = gap2[i];
+                }
+            }
+            return lines;
+        }
+        tools.bridgeGaps = bridgeGaps;
     })(tools = MakerJs.tools || (MakerJs.tools = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="../core/maker.ts" />
@@ -1866,6 +1943,9 @@ var MakerJs;
 (function (MakerJs) {
     var tools;
     (function (tools) {
+        /**
+         * @private
+         */
         var map = {};
         map[MakerJs.pathType.Arc] = {};
         map[MakerJs.pathType.Circle] = {};
@@ -1973,6 +2053,9 @@ var MakerJs;
             }
             return null;
         };
+        /**
+         * @private
+         */
         function swap(result) {
             var temp = result.path1Angles;
             if (result.path2Angles) {
@@ -1989,7 +2072,7 @@ var MakerJs;
          *
          * @param path1 First path to find intersection.
          * @param path2 Second path to find intersection.
-         * @result IPathIntersection object, with points(s) of intersection and angles (when a path is and arc or circle).
+         * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
          */
         function pathIntersection(path1, path2) {
             var fn = map[path1.type][path2.type];
@@ -1999,15 +2082,24 @@ var MakerJs;
             return null;
         }
         tools.pathIntersection = pathIntersection;
+        /**
+         * @private
+         */
         function findCorrespondingAngleIndex(circleAngles, arcAngle) {
             for (var i = 0; i < circleAngles.length; i++) {
                 if (circleAngles[i] === arcAngle)
                     return i;
             }
         }
+        /**
+         * @private
+         */
         function pointFromAngleOnCircle(angleInDegrees, circle) {
             return MakerJs.point.add(circle.origin, MakerJs.point.fromPolar(MakerJs.angle.toRadians(angleInDegrees), circle.radius));
         }
+        /**
+         * @private
+         */
         function pointsFromAnglesOnCircle(anglesInDegrees, circle) {
             var result = [];
             for (var i = 0; i < anglesInDegrees.length; i++) {
@@ -2015,15 +2107,18 @@ var MakerJs;
             }
             return result;
         }
+        /**
+         * @private
+         */
         function getAnglesWithinArc(angles, arc) {
             if (!angles)
                 return null;
             var anglesWithinArc = [];
             //computed angles will not be negative, but the arc may have specified a negative angle
             var startAngle = arc.startAngle;
-            var endAngle = arc.endAngle;
+            var endAngle = MakerJs.angle.ofArcEnd(arc);
             for (var i = 0; i < angles.length; i++) {
-                if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360)) {
+                if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360) || isBetween(angles[i], startAngle - 360, endAngle - 360)) {
                     anglesWithinArc.push(angles[i]);
                 }
             }
@@ -2031,6 +2126,9 @@ var MakerJs;
                 return null;
             return anglesWithinArc;
         }
+        /**
+         * @private
+         */
         function getSlope(line) {
             var dx = MakerJs.round(line.end[0] - line.origin[0]);
             if (dx == 0) {
@@ -2048,14 +2146,23 @@ var MakerJs;
                 yIntercept: yIntercept
             };
         }
+        /**
+         * @private
+         */
         function verticalIntersectionPoint(verticalLine, nonVerticalSlope) {
             var x = verticalLine.origin[0];
             var y = nonVerticalSlope.slope * x + nonVerticalSlope.yIntercept;
             return [x, y];
         }
+        /**
+         * @private
+         */
         function isBetween(valueInQuestion, limit1, limit2) {
             return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
         }
+        /**
+         * @private
+         */
         function isBetweenPoints(pointInQuestion, line) {
             for (var i = 2; i--;) {
                 if (!isBetween(MakerJs.round(pointInQuestion[i]), MakerJs.round(line.origin[i]), MakerJs.round(line.end[i])))
@@ -2063,6 +2170,9 @@ var MakerJs;
             }
             return true;
         }
+        /**
+         * @private
+         */
         function lineToLine(line1, line2) {
             var slope1 = getSlope(line1);
             var slope2 = getSlope(line2);
@@ -2093,9 +2203,12 @@ var MakerJs;
             }
             return null;
         }
+        /**
+         * @private
+         */
         function lineToCircle(line, circle) {
             function getLineAngle(p1, p2) {
-                return MakerJs.angle.noRevolutions(MakerJs.angle.toDegrees(MakerJs.angle.fromPointToRadians(p1, p2)));
+                return MakerJs.angle.noRevolutions(MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(p1, p2)));
             }
             var radius = MakerJs.round(circle.radius);
             //clone the line
@@ -2138,6 +2251,9 @@ var MakerJs;
             }
             return anglesOfIntersection;
         }
+        /**
+         * @private
+         */
         function circleToCircle(circle1, circle2) {
             //see if circles are the same
             if (circle1.radius == circle2.radius && MakerJs.point.areEqual(circle1.origin, circle2.origin)) {
@@ -2150,7 +2266,7 @@ var MakerJs;
             //clone circle2 and move relative to circle1
             var c2 = new MakerJs.paths.Circle('c2', MakerJs.point.subtract(circle2.origin, circle1.origin), circle2.radius);
             //rotate circle2 to horizontal, c2 will be to the right of the origin.
-            var c2Angle = MakerJs.angle.toDegrees(MakerJs.angle.fromPointToRadians(MakerJs.point.zero(), c2.origin));
+            var c2Angle = MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(MakerJs.point.zero(), c2.origin));
             MakerJs.path.rotate(c2, -c2Angle, MakerJs.point.zero());
             function unRotate(resultAngle) {
                 var unrotated = resultAngle + c2Angle;
