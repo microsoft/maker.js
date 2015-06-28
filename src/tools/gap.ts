@@ -202,15 +202,20 @@ module MakerJs.tools {
         return ret;
     }
 
-    export function bridgeGaps(gap1: IPoint[], gap2: IPoint[]): IPathLine[] {
-        var line1 = new paths.Line('bridge1', gap1[0], gap2[0]);
-        var line2 = new paths.Line('bridge2', gap1[1], gap2[1]);
+    export function bridgeGaps(gap1: IPoint[], gap2: IPoint[]): IPathLine[]{
+        var lines: IPathLine[] = [];
 
-        if (pathIntersection(line1, line2)) {
-            line1 = new paths.Line('bridge1', gap1[0], gap2[1]);
-            line2 = new paths.Line('bridge2', gap1[1], gap2[0]);
+        for (var i = 2; i--;) {
+            lines.push(new paths.Line('bridge' + i, gap1[i], gap2[i]));
         }
 
-        return [line1, line2];
+        if (pathIntersection(lines[0], lines[1])) {
+            //swap endpoints
+            for (var i = 2; i--;) {
+                lines[i].end = gap2[i];
+            }
+        }
+
+        return lines;
     }
 }
