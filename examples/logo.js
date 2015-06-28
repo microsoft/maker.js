@@ -14,7 +14,7 @@ function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWid
         var hguide = new paths.Line('hguide', [0, bendTop - r], [100, bendTop - r]);
         var vguide = path.rotate(new paths.Line('vguide', [x, 0], [x, 100]), -speed, [x, 0]);
         var intersectionPoint = tools.pathIntersection(hguide, vguide).intersectionPoints[0];
-        var center = point.subtract(intersectionPoint, [tools.solveTriangleASA(90, speed, r), 0]);
+        var center = point.subtract(intersectionPoint, [tools.solveTriangleASA(90, r, speed), 0]);
 
         var arc = new paths.Arc('arc', center, r + outer, - speed, 90 + drop);
 
@@ -32,7 +32,7 @@ function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWid
 
         var arcPoints = point.fromArc(arc);
 
-        this.Vertical = new paths.Line('Vertical', [x + tools.solveTriangleASA(90, speed, outer), 0], arcPoints[0]);
+        this.Vertical = new paths.Line('Vertical', [x + tools.solveTriangleASA(90, outer, speed), 0], arcPoints[0]);
 
         if (!outer) {
             trimLine(this.Vertical, 'origin', bottomGuide);
@@ -58,7 +58,7 @@ function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWid
         ];
     }
 
-    var speedOutline = tools.solveTriangleASA(90, speed, outline);
+    var speedOutline = tools.solveTriangleASA(90, outline, speed);
 
     var bottomGuide = new paths.Line('bottomGuide', [0, outline], [100, outline]);
 

@@ -18,10 +18,11 @@ module MakerJs.tools {
      * Solves for the length of a side of a triangle when you know length of one side and 2 angles.
      * 
      * @param oppositeAngleInDegrees Angle which is opposite of the side you are trying to find.
-     * @param otherAngleInDegrees An other angle of the triangle.
      * @param lengthOfSideBetweenAngles Length of one side of the triangle which is between the provided angles.
+     * @param otherAngleInDegrees An other angle of the triangle.
+     * @returns Length of the side of the triangle which is opposite of the first angle parameter.
      */
-    export function solveTriangleASA(oppositeAngleInDegrees: number, otherAngleInDegrees: number, lengthOfSideBetweenAngles: number): number {
+    export function solveTriangleASA(oppositeAngleInDegrees: number, lengthOfSideBetweenAngles: number, otherAngleInDegrees: number): number {
         
         var angleOppositeSide = 180 - oppositeAngleInDegrees - otherAngleInDegrees;
 

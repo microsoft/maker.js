@@ -57,3 +57,13 @@ class VentgridCircle implements MakerJs.IModel {
 ];
 
 module.exports = VentgridCircle;
+
+/*
+ * To compile this: go to the root and:
+ 
+    cd examples
+    tsc ventgridcircle.ts
+    cp ventgridcircle.js temp.js  
+    browserify -r ./temp.js:ventgridcircle > ventgridcircle.js
+
+ */
