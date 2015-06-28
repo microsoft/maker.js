@@ -22,7 +22,7 @@ body {
     padding: 0;
 }
 #view {
-    border: 1px dashed silver;
+    background-color: #317CCF;
     position: fixed;
     top: 70px;
     bottom: 60px;
@@ -40,16 +40,16 @@ svg {
     padding: 20px 0 0 20px;
 }
 svg line, svg circle, svg path {
-    stroke: blue;
+    stroke: #fff;
     stroke-width: 2;
     fill: none;
 }
 #svg-guides svg line {
-    stroke: #00A8FF;
+    stroke: #4DD2FF;
     stroke-width: 1;
 }
 svg text {
-    fill: black;
+    fill: #0ff;
 }
 #export-zone {
     overflow: scroll;
