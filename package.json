@@ -48,6 +48,6 @@
     ]
   },
   "browserify-shim": {
-    "../target/node.maker.js": "global:makerjs"
+    "../target/js/node.maker.js": "global:makerjs"
   }
 }
