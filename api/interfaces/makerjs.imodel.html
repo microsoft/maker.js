@@ -9,7 +9,11 @@ title: Api - IModel Interface
 			<p>A model is a composite object which may contain an array of paths, or an array of models recursively.</p>
 		</div>
 		<p>Example:</p>
-		<pre><code>var m = { <span class="hljs-string">id:</span> <span class="hljs-string">'mymodel'</span>, <span class="hljs-string">paths:</span> [ { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'l1'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] }, { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'l2'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>] } ] };
+		<pre><code>var m = { <span class="hljs-string">id:</span> <span class="hljs-string">'mymodel'</span>,
+<span class="hljs-label">  paths:</span> [
+    { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'l1'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] },
+    { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'l2'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>] }
+  ] };
 </code></pre>
 	</div>
 </section>
@@ -79,7 +83,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L312">core/maker.ts:312</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L316">core/maker.ts:316</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -94,7 +98,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">notes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L322">core/maker.ts:322</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L326">core/maker.ts:326</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -109,7 +113,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L297">core/maker.ts:297</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L301">core/maker.ts:301</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -124,7 +128,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L307">core/maker.ts:307</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L311">core/maker.ts:311</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -139,7 +143,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L302">core/maker.ts:302</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L306">core/maker.ts:306</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -154,7 +158,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L317">core/maker.ts:317</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L321">core/maker.ts:321</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
