@@ -8,11 +8,8 @@ title: News
 {% for post in site.posts %}
 
 <section id="post" class="tsd-panel">
+  <span class="postdate">{{ post.date | date_to_string }}</span>
   <h2><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h2>
-
-  {{ post.date | date_to_string }}
-
-  <hr/>
 
   {{ post.excerpt }}
 
