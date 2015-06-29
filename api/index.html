@@ -8,7 +8,7 @@ title: Api - MakerJs Module
 		<div class="lead">
 			<p>Root module for Maker.js.</p>
 		</div>
-		<p>to get this:</p>
+		<p>Example: get a reference to Maker.js</p>
 		<pre><code><span class="hljs-reserved">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'makerjs'</span>);
 </code></pre>
 	</div>
@@ -83,13 +83,16 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L66">core/maker.ts:66</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L75">core/maker.ts:75</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Copy the properties from one object to another object.</p>
 					</div>
+					<p>Example:</p>
+					<pre><code><span class="hljs-tag">makerjs</span><span class="hljs-class">.extendObject</span>({ <span class="hljs-tag">abc</span>: <span class="hljs-tag">123</span> }, { <span class="hljs-attribute">xyz</span>: <span class="hljs-number">789</span> }); <span class="hljs-comment">//returns { abc: 123, xyz: 789 }</span>
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -121,16 +124,16 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L116">core/maker.ts:116</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L124">core/maker.ts:124</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Search within an array to find an item by its id property.</p>
 					</div>
-					<p>Examples:</p>
-					<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> s = <span class="hljs-string">"JavaScript syntax highlighting"</span>;
-alert(s);
+					<p>Examples: find a path with id of &#39;abc&#39;</p>
+					<pre><code><span class="hljs-keyword">var</span> found: IFound&lt;IPath&gt; = findById&lt;IPath&gt;(someModel.paths, <span class="hljs-string">'abc'</span>);   <span class="hljs-comment">//typescript</span>
+<span class="hljs-keyword">var</span> found = findById(someModel.paths, <span class="hljs-string">'abc'</span>);   <span class="hljs-comment">//javascript</span>
 </code></pre>
 				</div>
 				<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -169,7 +172,7 @@ alert(s);
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L323">core/maker.ts:323</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L376">core/maker.ts:376</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -197,7 +200,7 @@ alert(s);
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L207">core/maker.ts:207</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L227">core/maker.ts:227</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -228,7 +231,7 @@ alert(s);
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L159">core/maker.ts:159</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L179">core/maker.ts:179</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -259,13 +262,17 @@ alert(s);
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L137">core/maker.ts:137</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L151">core/maker.ts:151</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Search within an array to find an item by its id property, then remove it from the array.</p>
 					</div>
+					<p>Examples: remove a model with id of &#39;xyz&#39;</p>
+					<pre><code>removeById&lt;IModel&gt;<span class="hljs-list">(<span class="hljs-keyword">someModel</span>.models, <span class="hljs-quoted">'xyz</span>')</span><span class="hljs-comment">;   //typescript</span>
+removeById<span class="hljs-list">(<span class="hljs-keyword">someModel</span>.models, <span class="hljs-quoted">'xyz</span>')</span><span class="hljs-comment">;   //javascript</span>
+</code></pre>
 				</div>
 				<h4 class="tsd-type-parameters-title">Type parameters</h4>
 				<ul class="tsd-type-parameters">
@@ -302,13 +309,16 @@ alert(s);
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L54">core/maker.ts:54</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L58">core/maker.ts:58</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Numeric rounding</p>
 					</div>
+					<p>Example: round to 3 decimal places</p>
+					<pre><code>makerjs.<span class="hljs-built_in">round</span><span class="hljs-params">(<span class="hljs-number">3.14159</span>, .<span class="hljs-number">001</span>)</span>; <span class="hljs-comment">//returns 3.142</span>
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -338,13 +348,17 @@ alert(s);
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L276">core/maker.ts:276</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L320">core/maker.ts:320</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
 				<p>String-based enumeration of all paths types.</p>
 			</div>
+			<p>Examples: use pathType instead of string literal when creating a circle.</p>
+			<pre><code>var <span class="hljs-string">circle:</span> IPathCircle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">id:</span> <span class="hljs-string">'mycircle'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//typescript</span>
+var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">id:</span> <span class="hljs-string">'mycircle'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//javascript</span>
+</code></pre>
 		</div>
 		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
 			<a name="pathtype.arc" class="tsd-anchor"></a>
@@ -352,7 +366,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Arc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L279">core/maker.ts:279</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L323">core/maker.ts:323</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -362,7 +376,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Circle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L278">core/maker.ts:278</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L322">core/maker.ts:322</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -372,7 +386,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L277">core/maker.ts:277</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L321">core/maker.ts:321</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -383,7 +397,7 @@ alert(s);
 		<div class="tsd-signature tsd-kind-icon">unit<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L40">core/maker.ts:40</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L39">core/maker.ts:39</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -400,7 +414,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Centimeter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L41">core/maker.ts:41</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L40">core/maker.ts:40</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -410,7 +424,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Foot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L42">core/maker.ts:42</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L41">core/maker.ts:41</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -420,7 +434,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Inch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L43">core/maker.ts:43</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L42">core/maker.ts:42</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -430,7 +444,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Meter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L44">core/maker.ts:44</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L43">core/maker.ts:43</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -440,7 +454,7 @@ alert(s);
 			<div class="tsd-signature tsd-kind-icon">Millimeter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L45">core/maker.ts:45</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L44">core/maker.ts:44</a></li>
 				</ul>
 			</aside>
 		</section>

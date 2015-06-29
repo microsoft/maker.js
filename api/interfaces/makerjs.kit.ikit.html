@@ -1,13 +1,20 @@
 ---
 layout: page
-title: Api - IModelConstructor Interface
+title: Api - IKit Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-comment">
+	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>An IKit is a model-producing class with some sample parameters. Think of it as a packaged model with instructions on how to best use it.</p>
+		</div>
+	</div>
+</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IModelConstructor</span>
+			<span class="target">IKit</span>
 		</li>
 	</ul>
 </section>
@@ -18,13 +25,13 @@ title: Api - IModelConstructor Interface
 			<section class="tsd-index-section ">
 				<h3>Constructors</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-interface"><a href="makerjs.kit.imodelconstructor.html#constructor" class="tsd-kind-icon">constructor</a></li>
+					<li class="tsd-kind-constructor tsd-parent-kind-interface"><a href="makerjs.kit.ikit.html#constructor" class="tsd-kind-icon">constructor</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.kit.imodelconstructor.html#metaparameters" class="tsd-kind-icon">meta<wbr>Parameters</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.kit.ikit.html#metaparameters" class="tsd-kind-icon">meta<wbr>Parameters</a></li>
 				</ul>
 			</section>
 		</div>
@@ -36,22 +43,28 @@ title: Api - IModelConstructor Interface
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-interface">
-			<li class="tsd-signature tsd-kind-icon">new IModel<wbr>Constructor<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.kit.imodelconstructor.html" class="tsd-signature-type">IModelConstructor</a></li>
+			<li class="tsd-signature tsd-kind-icon">new IKit<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.kit.ikit.html" class="tsd-signature-type">IKit</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L15">core/kit.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L48">core/kit.ts:48</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The constructor. The kit must be &quot;new-able&quot; and it must produce an IModel.
+						It can have any number of any type of parameters.</p>
+					</div>
+				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
 						<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.kit.imodelconstructor.html" class="tsd-signature-type">IModelConstructor</a></h4>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.kit.ikit.html" class="tsd-signature-type">IKit</a></h4>
 			</li>
 		</ul>
 	</section>
@@ -64,9 +77,15 @@ title: Api - IModelConstructor Interface
 		<div class="tsd-signature tsd-kind-icon">meta<wbr>Parameters<span class="tsd-signature-symbol">:</span> <a href="makerjs.kit.imetaparameter.html" class="tsd-signature-type">IMetaParameter</a><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L17">core/kit.ts:17</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L60">core/kit.ts:60</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Attached to the constructor is a property named metaParameters which is an array of IMetaParameter objects.
+				Each element of the array corresponds to a parameter of the constructor, in order.</p>
+			</div>
+		</div>
 	</section>
 </section>
 </div>

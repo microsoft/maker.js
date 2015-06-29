@@ -3,6 +3,13 @@ layout: page
 title: Api - kit Module
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-comment">
+	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>Module for kit functions.</p>
+		</div>
+	</div>
+</section>
 <section class="tsd-panel-group tsd-index-group">
 	<h2>Index</h2>
 	<section class="tsd-panel tsd-index-panel">
@@ -10,8 +17,8 @@ title: Api - kit Module
 			<section class="tsd-index-section ">
 				<h3>Interfaces</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/makerjs.kit.ikit.html" class="tsd-kind-icon">IKit</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/makerjs.kit.imetaparameter.html" class="tsd-kind-icon">IMeta<wbr>Parameter</a></li>
-					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/makerjs.kit.imodelconstructor.html" class="tsd-kind-icon">IModel<wbr>Constructor</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
@@ -30,25 +37,37 @@ title: Api - kit Module
 		<a name="construct" class="tsd-anchor"></a>
 		<h3>construct</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">construct<span class="tsd-signature-symbol">(</span>ctor<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.kit.imodelconstructor.html" class="tsd-signature-type">IModelConstructor</a>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+			<li class="tsd-signature tsd-kind-icon">construct<span class="tsd-signature-symbol">(</span>ctor<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.kit.ikit.html" class="tsd-signature-type">IKit</a>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L20">core/kit.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L70">core/kit.ts:70</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Helper function to use the JavaScript &quot;apply&quot; function in conjunction with the &quot;new&quot; keyword.</p>
+					</div>
+				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>ctor: <a href="../interfaces/makerjs.kit.imodelconstructor.html" class="tsd-signature-type">IModelConstructor</a></h5>
+						<h5>ctor: <a href="../interfaces/makerjs.kit.ikit.html" class="tsd-signature-type">IKit</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The constructor for the class which is an IKit.</p>
+						</div>
 					</li>
 					<li>
 						<h5>args: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The array of parameters passed to the constructor.</p>
+						</div>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>A new instance of the class, which implements the IModel interface.</p>
 			</li>
 		</ul>
 	</section>
@@ -56,22 +75,31 @@ title: Api - kit Module
 		<a name="getparametervalues" class="tsd-anchor"></a>
 		<h3>get<wbr>Parameter<wbr>Values</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">get<wbr>Parameter<wbr>Values<span class="tsd-signature-symbol">(</span>ctor<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.kit.imodelconstructor.html" class="tsd-signature-type">IModelConstructor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Parameter<wbr>Values<span class="tsd-signature-symbol">(</span>ctor<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.kit.ikit.html" class="tsd-signature-type">IKit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L28">core/kit.ts:28</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/kit.ts#L84">core/kit.ts:84</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Extract just the initial sample values from a kit.</p>
+					</div>
+				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>ctor: <a href="../interfaces/makerjs.kit.imodelconstructor.html" class="tsd-signature-type">IModelConstructor</a></h5>
+						<h5>ctor: <a href="../interfaces/makerjs.kit.ikit.html" class="tsd-signature-type">IKit</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The constructor for the class which is an IKit.</p>
+						</div>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array of the inital sample values provided in the metaParameters array.</p>
 			</li>
 		</ul>
 	</section>
