@@ -1,16 +1,16 @@
 {
-  "name": "@danmarshall/privatetestmaker",
-  "version": "1.0.1",
+  "name": "makerjs",
+  "version": "0.1.0",
   "description": "Maker.js is a JavaScript library for creating programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.",
-  "main": "target/node.maker.js",
+  "main": "target/js/node.maker.js",
   "scripts": {
     "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt && ls src/tools/*.ts >> build.txt",
     "compile-typescript": "tsc --declaration --out target/ts/makerjs.js @build.txt && rm build.txt",
     "target-node-platform": "cd target && mv ts/makerjs.js js/node.maker.js && cd ..",
     "target-browser-platform": "cd target/js && browserify -o browser.maker.js -r ./node.maker.js:@danmarshall/privatetestmaker && cd ../..",
     "build": "npm run compile-typescript && npm run target-node-platform && npm run target-browser-platform",
-    "predocs": "rm -r -f ./target/docs",
-    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./target/docs",
+    "predocs": "rm -r -f ./api",
+    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./api",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
