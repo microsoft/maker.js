@@ -5,6 +5,8 @@ title: About
 
 Maker.js creates line drawings for two dimensional maker machines, like laser cutters and CNC routers. Using the Maker.js JavaScript library, a developer may create a small program that creates a line drawing. The program can accept parameters which can be used to alter the drawing. The program can be shared and re-used in other drawings. Lastly, the drawing can be exported to a file in either DXF or SVG format. The file can then be used directly by a maker machine, uploaded to a maker service, or imported into other CAD software.
 
+Maker.js can run in a [Node.js](https://nodejs.org/) environment or in a web browser.
+
 Services that make actual stuff from drawings:
 
 | Service | File format |
@@ -14,8 +16,6 @@ Services that make actual stuff from drawings:
 | [eMachineShop](http://www.emachineshop.com/) | DXF |
 
 Maker.js is an open source project created by the [Microsoft Garage](microsoft.com/garage) and [hosted on Github](https://github.com/Microsoft/maker.js).
-
-It can run in a [Node.js](https://nodejs.org/) environment or in your web browser.
 
 Sharing happens on [NPM](https://www.npmjs.com/search?q=makerjs).
 
