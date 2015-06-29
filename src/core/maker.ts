@@ -1,4 +1,4 @@
-﻿/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.ts" />
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved. 
@@ -17,6 +17,15 @@ and limitations under the License.
 
 //https://github.com/Microsoft/Maker.js
 
+/**
+ * Root module for Maker.js.
+ * 
+ * Example: get a reference to Maker.js
+ * ```
+ * var makerjs = require('makerjs');
+ * ```
+ * 
+ */
 module MakerJs {
 
     //units
@@ -38,6 +47,11 @@ module MakerJs {
     /**
      * Numeric rounding
      * 
+     * Example: round to 3 decimal places
+     * ```
+     * makerjs.round(3.14159, .001); //returns 3.142
+     * ```
+     * 
      * @param n The number to round off.
      * @param accuracy Optional exemplar of number of decimal places.
      */
@@ -48,6 +62,11 @@ module MakerJs {
 
     /**
      * Copy the properties from one object to another object.
+     * 
+     * Example:
+     * ```
+     * makerjs.extendObject({ abc: 123 }, { xyz: 789 }); //returns { abc: 123, xyz: 789 }
+     * ```
      * 
      * @param target The object to extend. It will receive the new properties.
      * @param other An object containing properties to merge in.
@@ -92,6 +111,12 @@ module MakerJs {
     /**
      * Search within an array to find an item by its id property.
      * 
+     * Examples: find a path with id of 'abc'
+     * ```
+     * var found: IFound<IPath> = findById<IPath>(someModel.paths, 'abc');   //typescript
+     * var found = findById(someModel.paths, 'abc');   //javascript
+     * ```
+     * 
      * @param arr Array to search.
      * @param id Id of the item to find.
      * @returns object with item and its position.
@@ -114,6 +139,12 @@ module MakerJs {
     /**
      * Search within an array to find an item by its id property, then remove it from the array.
      * 
+     * Examples: remove a model with id of 'xyz'
+     * ```
+     * removeById<IModel>(someModel.models, 'xyz');   //typescript
+     * removeById(someModel.models, 'xyz');   //javascript
+     * ```
+     * 
      * @param arr Array to search.
      * @param id Id of the item to find and remove.
      */
@@ -128,7 +159,13 @@ module MakerJs {
 
     /**
      * An x-y point in a two-dimensional space.
-     * Implemented as an array with 2 elements.
+     * Implemented as an array with 2 elements. The first element is x, the second element is y.
+     * 
+     * Examples:
+     * ```
+     * var p: IPoint = [0, 0];   //typescript
+     * var p = [0, 0];   //javascript
+     * ```
      */
     export interface IPoint {
         [index: number]: number;
@@ -193,6 +230,12 @@ module MakerJs {
 
     /**
      * A line path.
+     * 
+     * Examples:
+     * ```
+     * var line: IPathLine = { type: 'line', id: 'myline', origin: [0, 0], end: [1, 1] };   //typescript
+     * var line = { type: 'line', id: 'myline', origin: [0, 0], end: [1, 1] };   //javascript
+     * ```
      */
     export interface IPathLine extends IPath {
         
@@ -204,6 +247,12 @@ module MakerJs {
 
     /**
      * A circle path.
+     * 
+     * Examples:
+     * ```
+     * var circle: IPathCircle = { type: 'circle', id: 'mycircle', origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: 'circle', id: 'mycircle', origin: [0, 0], radius: 7 };   //javascript
+     * ```
      */
     export interface IPathCircle extends IPath {
         
@@ -215,6 +264,12 @@ module MakerJs {
 
     /**
      * An arc path.
+     * 
+     * Examples:
+     * ```
+     * var arc: IPathArc = { type: 'arc', id: 'myarc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //typescript
+     * var arc = { type: 'arc', id: 'myarc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //javascript
+     * ```
      */
     export interface IPathArc extends IPathCircle {
 
@@ -255,6 +310,12 @@ module MakerJs {
 
     /**
      * String-based enumeration of all paths types.
+     * 
+     * Examples: use pathType instead of string literal when creating a circle.
+     * ```
+     * var circle: IPathCircle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //javascript
+     * ```
      */
     export var pathType = {
         Line: "line",
@@ -266,6 +327,15 @@ module MakerJs {
 
     /**
      * A model is a composite object which may contain an array of paths, or an array of models recursively.
+     * 
+     * Example:
+     * ```
+     * var m = { id: 'mymodel', 
+     *   paths: [ 
+     *     { type: 'line', id: 'l1', origin: [0, 0], end: [1, 1] }, 
+     *     { type: 'line', id: 'l2', origin: [0, 0], end: [-1, -1] } 
+     *   ] };
+     * ```
      */
     export interface IModel extends IHaveId {
         

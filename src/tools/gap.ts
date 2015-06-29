@@ -1,5 +1,8 @@
-﻿/// <reference path="../core/maker.ts" />
+/// <reference path="../core/maker.ts" />
 
+/**
+ * Module for various functions.
+ */
 module MakerJs.tools {
 
     /**

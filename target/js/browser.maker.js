@@ -15,6 +15,15 @@ See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
 //https://github.com/Microsoft/Maker.js
+/**
+ * Root module for Maker.js.
+ *
+ * Example: get a reference to Maker.js
+ * ```
+ * var makerjs = require('makerjs');
+ * ```
+ *
+ */
 var MakerJs;
 (function (MakerJs) {
     //units
@@ -34,6 +43,11 @@ var MakerJs;
     /**
      * Numeric rounding
      *
+     * Example: round to 3 decimal places
+     * ```
+     * makerjs.round(3.14159, .001); //returns 3.142
+     * ```
+     *
      * @param n The number to round off.
      * @param accuracy Optional exemplar of number of decimal places.
      */
@@ -45,6 +59,11 @@ var MakerJs;
     MakerJs.round = round;
     /**
      * Copy the properties from one object to another object.
+     *
+     * Example:
+     * ```
+     * makerjs.extendObject({ abc: 123 }, { xyz: 789 }); //returns { abc: 123, xyz: 789 }
+     * ```
      *
      * @param target The object to extend. It will receive the new properties.
      * @param other An object containing properties to merge in.
@@ -63,6 +82,12 @@ var MakerJs;
     MakerJs.extendObject = extendObject;
     /**
      * Search within an array to find an item by its id property.
+     *
+     * Examples: find a path with id of 'abc'
+     * ```
+     * var found: IFound<IPath> = findById<IPath>(someModel.paths, 'abc');   //typescript
+     * var found = findById(someModel.paths, 'abc');   //javascript
+     * ```
      *
      * @param arr Array to search.
      * @param id Id of the item to find.
@@ -85,6 +110,12 @@ var MakerJs;
     MakerJs.findById = findById;
     /**
      * Search within an array to find an item by its id property, then remove it from the array.
+     *
+     * Examples: remove a model with id of 'xyz'
+     * ```
+     * removeById<IModel>(someModel.models, 'xyz');   //typescript
+     * removeById(someModel.models, 'xyz');   //javascript
+     * ```
      *
      * @param arr Array to search.
      * @param id Id of the item to find and remove.
@@ -116,6 +147,12 @@ var MakerJs;
     MakerJs.isPath = isPath;
     /**
      * String-based enumeration of all paths types.
+     *
+     * Examples: use pathType instead of string literal when creating a circle.
+     * ```
+     * var circle: IPathCircle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //javascript
+     * ```
      */
     MakerJs.pathType = {
         Line: "line",
@@ -133,6 +170,9 @@ var MakerJs;
 //CommonJs
 module.exports = MakerJs;
 /// <reference path="maker.ts" />
+/**
+ * Module for angle functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var angle;
@@ -218,6 +258,9 @@ var MakerJs;
     })(angle = MakerJs.angle || (MakerJs.angle = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="maker.ts" />
+/**
+ * Module for point functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var point;
@@ -368,6 +411,9 @@ var MakerJs;
     })(point = MakerJs.point || (MakerJs.point = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="point.ts" />
+/**
+ * Module for path functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var path;
@@ -483,6 +529,9 @@ var MakerJs;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="path.ts" />
+/**
+ * Module for IPath creation shortcuts.
+ */
 var MakerJs;
 (function (MakerJs) {
     var paths;
@@ -546,6 +595,9 @@ var MakerJs;
     })(paths = MakerJs.paths || (MakerJs.paths = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="paths.ts" />
+/**
+ * Module for model functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var model;
@@ -672,6 +724,9 @@ var MakerJs;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="maker.ts" />
+/**
+ * Module for unit conversion functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var units;
@@ -744,6 +799,9 @@ var MakerJs;
     })(units = MakerJs.units || (MakerJs.units = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="model.ts" />
+/**
+ * Module for measure functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var measure;
@@ -895,6 +953,9 @@ var MakerJs;
 /// <reference path="model.ts" />
 /// <reference path="units.ts" />
 /// <reference path="measure.ts" />
+/**
+ * Module for exporter functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var exporter;
@@ -1112,10 +1173,20 @@ var MakerJs;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="model.ts" />
+/**
+ * Module for kit functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var kit;
     (function (kit) {
+        /**
+         * Helper function to use the JavaScript "apply" function in conjunction with the "new" keyword.
+         *
+         * @param ctor The constructor for the class which is an IKit.
+         * @param args The array of parameters passed to the constructor.
+         * @returns A new instance of the class, which implements the IModel interface.
+         */
         function construct(ctor, args) {
             function F() {
                 return ctor.apply(this, args);
@@ -1124,6 +1195,12 @@ var MakerJs;
             return new F();
         }
         kit.construct = construct;
+        /**
+         * Extract just the initial sample values from a kit.
+         *
+         * @param ctor The constructor for the class which is an IKit.
+         * @returns Array of the inital sample values provided in the metaParameters array.
+         */
         function getParameterValues(ctor) {
             var parameters = [];
             var metaParams = ctor.metaParameters;
@@ -1449,6 +1526,9 @@ var MakerJs;
         svgUnit[MakerJs.unitType.Centimeter] = "cm";
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
+/**
+ * Module for primitive model classes.
+ */
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -1731,6 +1811,9 @@ var MakerJs;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="../core/maker.ts" />
+/**
+ * Module for various functions.
+ */
 var MakerJs;
 (function (MakerJs) {
     var tools;
@@ -1929,10 +2012,11 @@ var MakerJs;
          * Solves for the length of a side of a triangle when you know length of one side and 2 angles.
          *
          * @param oppositeAngleInDegrees Angle which is opposite of the side you are trying to find.
-         * @param otherAngleInDegrees An other angle of the triangle.
          * @param lengthOfSideBetweenAngles Length of one side of the triangle which is between the provided angles.
+         * @param otherAngleInDegrees An other angle of the triangle.
+         * @returns Length of the side of the triangle which is opposite of the first angle parameter.
          */
-        function solveTriangleASA(oppositeAngleInDegrees, otherAngleInDegrees, lengthOfSideBetweenAngles) {
+        function solveTriangleASA(oppositeAngleInDegrees, lengthOfSideBetweenAngles, otherAngleInDegrees) {
             var angleOppositeSide = 180 - oppositeAngleInDegrees - otherAngleInDegrees;
             return (lengthOfSideBetweenAngles * Math.sin(MakerJs.angle.toRadians(oppositeAngleInDegrees))) / Math.sin(MakerJs.angle.toRadians(angleOppositeSide));
         }
