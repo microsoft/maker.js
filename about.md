@@ -1,15 +1,18 @@
 ---
 layout: page
 title: About
-permalink: /about/
 ---
 
-Some information about you!
+Maker.js is an open source project created by Microsoft and hosted on Github.
 
-### More Information
+Maker.js can run in a Node.js environment or in your web browser.
 
-A place to include any other types of information that you'd like to include about yourself.
 
-### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+Issues or bugs to Github
+
+Help or questions on StackOverflow.
+
+Maker.js concept and inital version written by Dan Marshall (link to GitHub).
+
+Maker.js logo created by Greg Melander (link).
