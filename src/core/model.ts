@@ -1,5 +1,8 @@
-﻿/// <reference path="paths.ts" />
+/// <reference path="paths.ts" />
 
+/**
+ * Module for model functions.
+ */
 module MakerJs.model {
 
     /**

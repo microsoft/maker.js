@@ -1,7 +1,10 @@
-﻿/// <reference path="model.ts" />
+/// <reference path="model.ts" />
 /// <reference path="units.ts" />
 /// <reference path="measure.ts" />
 
+/**
+ * Module for exporter functions.
+ */
 module MakerJs.exporter {
 
     /**

@@ -1,4 +1,13 @@
 /// <reference path="../../typings/tsd.d.ts" />
+/**
+ * Root module for Maker.js.
+ *
+ * Example: get a reference to Maker.js
+ * ```
+ * var makerjs = require('makerjs');
+ * ```
+ *
+ */
 declare module MakerJs {
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise.
@@ -16,12 +25,22 @@ declare module MakerJs {
     /**
      * Numeric rounding
      *
+     * Example: round to 3 decimal places
+     * ```
+     * makerjs.round(3.14159, .001); //returns 3.142
+     * ```
+     *
      * @param n The number to round off.
      * @param accuracy Optional exemplar of number of decimal places.
      */
     function round(n: number, accuracy?: number): number;
     /**
      * Copy the properties from one object to another object.
+     *
+     * Example:
+     * ```
+     * makerjs.extendObject({ abc: 123 }, { xyz: 789 }); //returns { abc: 123, xyz: 789 }
+     * ```
      *
      * @param target The object to extend. It will receive the new properties.
      * @param other An object containing properties to merge in.
@@ -52,6 +71,12 @@ declare module MakerJs {
     /**
      * Search within an array to find an item by its id property.
      *
+     * Examples: find a path with id of 'abc'
+     * ```
+     * var found: IFound<IPath> = findById<IPath>(someModel.paths, 'abc');   //typescript
+     * var found = findById(someModel.paths, 'abc');   //javascript
+     * ```
+     *
      * @param arr Array to search.
      * @param id Id of the item to find.
      * @returns object with item and its position.
@@ -60,13 +85,25 @@ declare module MakerJs {
     /**
      * Search within an array to find an item by its id property, then remove it from the array.
      *
+     * Examples: remove a model with id of 'xyz'
+     * ```
+     * removeById<IModel>(someModel.models, 'xyz');   //typescript
+     * removeById(someModel.models, 'xyz');   //javascript
+     * ```
+     *
      * @param arr Array to search.
      * @param id Id of the item to find and remove.
      */
     function removeById<T extends IHaveId>(arr: T[], id: string): void;
     /**
      * An x-y point in a two-dimensional space.
-     * Implemented as an array with 2 elements.
+     * Implemented as an array with 2 elements. The first element is x, the second element is y.
+     *
+     * Examples:
+     * ```
+     * var p: IPoint = [0, 0];   //typescript
+     * var p = [0, 0];   //javascript
+     * ```
      */
     interface IPoint {
         [index: number]: number;
@@ -115,6 +152,12 @@ declare module MakerJs {
     function isPath(item: any): boolean;
     /**
      * A line path.
+     *
+     * Examples:
+     * ```
+     * var line: IPathLine = { type: 'line', id: 'myline', origin: [0, 0], end: [1, 1] };   //typescript
+     * var line = { type: 'line', id: 'myline', origin: [0, 0], end: [1, 1] };   //javascript
+     * ```
      */
     interface IPathLine extends IPath {
         /**
@@ -124,6 +167,12 @@ declare module MakerJs {
     }
     /**
      * A circle path.
+     *
+     * Examples:
+     * ```
+     * var circle: IPathCircle = { type: 'circle', id: 'mycircle', origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: 'circle', id: 'mycircle', origin: [0, 0], radius: 7 };   //javascript
+     * ```
      */
     interface IPathCircle extends IPath {
         /**
@@ -133,6 +182,12 @@ declare module MakerJs {
     }
     /**
      * An arc path.
+     *
+     * Examples:
+     * ```
+     * var arc: IPathArc = { type: 'arc', id: 'myarc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //typescript
+     * var arc = { type: 'arc', id: 'myarc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //javascript
+     * ```
      */
     interface IPathArc extends IPathCircle {
         /**
@@ -166,6 +221,12 @@ declare module MakerJs {
     }
     /**
      * String-based enumeration of all paths types.
+     *
+     * Examples: use pathType instead of string literal when creating a circle.
+     * ```
+     * var circle: IPathCircle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //javascript
+     * ```
      */
     var pathType: {
         Line: string;
@@ -174,6 +235,15 @@ declare module MakerJs {
     };
     /**
      * A model is a composite object which may contain an array of paths, or an array of models recursively.
+     *
+     * Example:
+     * ```
+     * var m = { id: 'mymodel',
+     *   paths: [
+     *     { type: 'line', id: 'l1', origin: [0, 0], end: [1, 1] },
+     *     { type: 'line', id: 'l2', origin: [0, 0], end: [-1, -1] }
+     *   ] };
+     * ```
      */
     interface IModel extends IHaveId {
         /**
@@ -206,6 +276,9 @@ declare module MakerJs {
      */
     function isModel(item: any): boolean;
 }
+/**
+ * Module for angle functions.
+ */
 declare module MakerJs.angle {
     /**
      * Ensures an angle is not greater than 360
@@ -253,6 +326,9 @@ declare module MakerJs.angle {
      */
     function mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number;
 }
+/**
+ * Module for point functions.
+ */
 declare module MakerJs.point {
     /**
      * Add two points together and return the result as a new point object.
@@ -335,6 +411,9 @@ declare module MakerJs.point {
      */
     function zero(): IPoint;
 }
+/**
+ * Module for path functions.
+ */
 declare module MakerJs.path {
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
@@ -372,6 +451,9 @@ declare module MakerJs.path {
      */
     function scale(pathToScale: IPath, scaleValue: number): IPath;
 }
+/**
+ * Module for IPath creation shortcuts.
+ */
 declare module MakerJs.paths {
     /**
      * Class for arc path.
@@ -420,6 +502,9 @@ declare module MakerJs.paths {
         constructor(id: string, origin: IPoint, end: IPoint);
     }
 }
+/**
+ * Module for model functions.
+ */
 declare module MakerJs.model {
     /**
      * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
@@ -464,6 +549,9 @@ declare module MakerJs.model {
      */
     function scale(modelToScale: IModel, scaleValue: number, scaleOrigin?: boolean): IModel;
 }
+/**
+ * Module for unit conversion functions.
+ */
 declare module MakerJs.units {
     /**
      * Get a conversion ratio between a source unit and a destination unit.
@@ -474,6 +562,9 @@ declare module MakerJs.units {
      */
     function conversionScale(srcUnitType: string, destUnitType: string): number;
 }
+/**
+ * Module for measure functions.
+ */
 declare module MakerJs.measure {
     /**
      * Total angle of an arc between its start and end angles.
@@ -512,6 +603,9 @@ declare module MakerJs.measure {
      */
     function modelExtents(modelToMeasure: IModel): IMeasure;
 }
+/**
+ * Module for exporter functions.
+ */
 declare module MakerJs.exporter {
     /**
      * @private
@@ -577,21 +671,69 @@ declare module MakerJs.exporter {
     interface IDXFRenderOptions extends IExportOptions {
     }
 }
+/**
+ * Module for kit functions.
+ */
 declare module MakerJs.kit {
+    /**
+     * Describes a parameter and its limits.
+     */
     interface IMetaParameter {
+        /**
+         * Display text of the parameter.
+         */
         title: string;
+        /**
+         * Type of the parameter. Currently supports "range".
+         */
         type: string;
+        /**
+         * Optional minimum value of the range.
+         */
         min?: number;
+        /**
+         * Optional maximum value of the range.
+         */
         max?: number;
+        /**
+         * Optional step value between min and max.
+         */
         step?: number;
+        /**
+         * Initial sample value for this parameter.
+         */
         value: any;
     }
-    interface IModelConstructor {
+    /**
+     * An IKit is a model-producing class with some sample parameters. Think of it as a packaged model with instructions on how to best use it.
+     */
+    interface IKit {
+        /**
+         * The constructor. The kit must be "new-able" and it must produce an IModel.
+         * It can have any number of any type of parameters.
+         */
         new (...args: any[]): IModel;
+        /**
+         * Attached to the constructor is a property named metaParameters which is an array of IMetaParameter objects.
+         * Each element of the array corresponds to a parameter of the constructor, in order.
+         */
         metaParameters?: IMetaParameter[];
     }
-    function construct(ctor: IModelConstructor, args: any): any;
-    function getParameterValues(ctor: IModelConstructor): any[];
+    /**
+     * Helper function to use the JavaScript "apply" function in conjunction with the "new" keyword.
+     *
+     * @param ctor The constructor for the class which is an IKit.
+     * @param args The array of parameters passed to the constructor.
+     * @returns A new instance of the class, which implements the IModel interface.
+     */
+    function construct(ctor: IKit, args: any): IModel;
+    /**
+     * Extract just the initial sample values from a kit.
+     *
+     * @param ctor The constructor for the class which is an IKit.
+     * @returns Array of the inital sample values provided in the metaParameters array.
+     */
+    function getParameterValues(ctor: IKit): any[];
 }
 declare module MakerJs.exporter {
     /**
@@ -690,6 +832,9 @@ declare module MakerJs.exporter {
         viewBox: boolean;
     }
 }
+/**
+ * Module for primitive model classes.
+ */
 declare module MakerJs.models {
     class BoltCircle implements IModel {
         id: string;
@@ -771,6 +916,9 @@ declare module MakerJs.models {
         constructor(id: string, side: number);
     }
 }
+/**
+ * Module for various functions.
+ */
 declare module MakerJs.tools {
     /**
      * A path which has been broken.
@@ -818,10 +966,11 @@ declare module MakerJs.tools {
      * Solves for the length of a side of a triangle when you know length of one side and 2 angles.
      *
      * @param oppositeAngleInDegrees Angle which is opposite of the side you are trying to find.
-     * @param otherAngleInDegrees An other angle of the triangle.
      * @param lengthOfSideBetweenAngles Length of one side of the triangle which is between the provided angles.
+     * @param otherAngleInDegrees An other angle of the triangle.
+     * @returns Length of the side of the triangle which is opposite of the first angle parameter.
      */
-    function solveTriangleASA(oppositeAngleInDegrees: number, otherAngleInDegrees: number, lengthOfSideBetweenAngles: number): number;
+    function solveTriangleASA(oppositeAngleInDegrees: number, lengthOfSideBetweenAngles: number, otherAngleInDegrees: number): number;
 }
 declare module MakerJs.tools {
     /**
