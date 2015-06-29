@@ -1,4 +1,4 @@
-var default = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+﻿var default = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.project : depth0)) != null ? stack1.name : stack1), depth0));
   },"3":function(depth0,helpers,partials,data) {
@@ -30,5 +30,5 @@ var default = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   buffer += "                </ul>\r\n            </nav>\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n";
   stack1 = this.invokePartial(partials.footer, '', 'footer', depth0, undefined, helpers, partials, data);
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "\r\n.";
+  return buffer;
 },"usePartial":true,"useData":true});
