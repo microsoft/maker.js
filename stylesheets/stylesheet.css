@@ -646,25 +646,12 @@ form {
   letter-spacing: -1px;
 }
 
-#main-content h1:before {
-  padding-right: 0.3em;
-  margin-left: -0.9em;
-  color: #9ddcff;
-  content: "/";
-}
-
 #main-content h2 {
   margin-bottom: 8px;
   font-size: 22px;
   font-weight: bold;
   color: #474747;
   text-indent: 4px;
-}
-#main-content h2:before {
-  padding-right: 0.3em;
-  margin-left: -1.5em;
-  content: "//";
-  color: #9ddcff;
 }
 
 #main-content h3 {
@@ -676,13 +663,6 @@ form {
   text-indent: 3px;
 }
 
-#main-content h3:before {
-  padding-right: 0.3em;
-  margin-left: -2em;
-  content: "///";
-  color: #9ddcff;
-}
-
 #main-content h4 {
   margin-bottom: 8px;
   font-size: 15px;
@@ -691,24 +671,11 @@ form {
   text-indent: 3px;
 }
 
-h4:before {
-  padding-right: 0.3em;
-  margin-left: -2.8em;
-  content: "////";
-  color: #9ddcff;
-}
-
 #main-content h5 {
   margin-bottom: 8px;
   font-size: 14px;
   color: #474747;
   text-indent: 3px;
-}
-h5:before {
-  padding-right: 0.3em;
-  margin-left: -3.2em;
-  content: "/////";
-  color: #9ddcff;
 }
 
 #main-content h6 {
@@ -716,12 +683,6 @@ h5:before {
   font-size: .8em;
   color: #474747;
   text-indent: 3px;
-}
-h6:before {
-  padding-right: 0.3em;
-  margin-left: -3.7em;
-  content: "//////";
-  color: #9ddcff;
 }
 
 p {
