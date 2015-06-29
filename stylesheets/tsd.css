@@ -8,7 +8,7 @@
 .tsd-kind-object-literal > .tsd-kind-icon:before { background-position: 0px -17px; }
 .tsd-kind-object-literal.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -17px; }
 .tsd-kind-object-literal.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -17px; }
-
+f
 .tsd-kind-class > .tsd-kind-icon:before { background-position: 0px -34px; }
 .tsd-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -34px; }
 .tsd-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -34px; }
@@ -336,6 +336,7 @@ dl.tsd-comment-tags p { margin: 0; }
 
 footer .tsd-legend-group { font-size: 0; }
 footer .tsd-legend { display: inline-block; width: 25%; padding: 0; font-size: 16px; list-style: none; line-height: 1.333em; vertical-align: top; }
+@media (max-width: 900px) { footer .tsd-legend { width: 50%; } }
 
 .tsd-hierarchy { list-style: square; padding: 0 0 0 20px; margin: 0; }
 .tsd-hierarchy .target { font-weight: bold; }
