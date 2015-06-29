@@ -483,6 +483,20 @@ header h2 {
   margin: 0 auto;
 }
 
+.inner ul {
+    padding-left: 0;
+}
+
+.inner ul li {
+    display: inline;
+    font-size: 24px;
+    margin-right: 43px;
+}
+
+.inner li a {
+    color: #fff;
+}
+
 #content-wrapper {
   padding-top: 30px;
   border-top: solid 1px #fff;
