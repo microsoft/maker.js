@@ -483,6 +483,10 @@ header h2 {
   margin: 0 auto;
 }
 
+header .inner img.logo {
+  margin-left: -18px;
+}
+
 header .inner ul {
     padding-left: 0;
 }
