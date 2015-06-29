@@ -487,6 +487,14 @@ header .inner img.logo {
   margin-left: -18px;
 }
 
+header h2 a {
+    color: #9ddcff;
+}
+
+header h2 a:hover {
+    color: #fff;
+}
+
 header .inner ul {
     padding-left: 0;
 }
