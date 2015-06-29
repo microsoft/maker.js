@@ -1,4 +1,4 @@
-﻿var header = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+var header = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1;
   stack1 = this.invokePartial(partials.breadcrumb, '', 'breadcrumb', depth0, undefined, helpers, partials, data);
   if (stack1 != null) { return stack1; }
