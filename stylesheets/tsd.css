@@ -337,6 +337,7 @@ dl.tsd-comment-tags p { margin: 0; }
 footer .tsd-legend-group { font-size: 0; }
 footer .tsd-legend { display: inline-block; width: 25%; padding: 0; font-size: 13px; list-style: none; line-height: 1.333em; vertical-align: top; }
 @media only screen and (max-width: 959px) and (min-width: 768px) { footer .tsd-legend { width: 50%; } }
+@media only screen and (max-width: 767px) { footer .tsd-legend { width: 50%; } }
 
 .tsd-hierarchy { list-style: square; padding: 0 0 0 20px; margin: 0; }
 .tsd-hierarchy .target { font-weight: bold; }
