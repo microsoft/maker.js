@@ -346,7 +346,7 @@ footer .tsd-legend { display: inline-block; width: 25%; padding: 0; font-size: 1
 .tsd-index-panel .tsd-index-section { margin-bottom: 30px !important; }
 .tsd-index-panel h3 { margin: 0 -20px 10px -20px; padding: 0 20px 10px 20px; border-bottom: 1px solid #eee; }
 .tsd-index-panel ul.tsd-index-list { -webkit-column-count: 3; -moz-column-count: 3; -ms-column-count: 3; column-count: 3; -webkit-column-gap: 20px; -moz-column-gap: 20px; -ms-column-gap: 20px; column-gap: 20px; padding: 0; list-style: none; line-height: 1.333em; }
-@media (min-width: 960px) and (max-width: 1024px) { .tsd-index-panel ul.tsd-index-list { -webkit-column-count: 2; -moz-column-count: 2; -ms-column-count: 2; column-count: 2; } }
+@media only screen and (max-width: 959px) and (min-width: 768px) { .tsd-index-panel ul.tsd-index-list { -webkit-column-count: 2; -moz-column-count: 2; -ms-column-count: 2; column-count: 2; } }
 @media only screen and (max-width: 767px) { .tsd-index-panel ul.tsd-index-list { -webkit-column-count: 2; -moz-column-count: 2; -ms-column-count: 2; column-count: 2; } }
 
 .tsd-index-panel ul.tsd-index-list li { -webkit-column-break-inside: avoid; -moz-column-break-inside: avoid; -ms-column-break-inside: avoid; -o-column-break-inside: avoid; column-break-inside: avoid; -webkit-page-break-inside: avoid; -moz-page-break-inside: avoid; -ms-page-break-inside: avoid; -o-page-break-inside: avoid; page-break-inside: avoid; }
