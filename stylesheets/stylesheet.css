@@ -615,6 +615,7 @@ hr {
 table {
   width: 100%;
   border: 1px solid #ebebeb;
+  margin-bottom: 20px;
 }
 
 th {
