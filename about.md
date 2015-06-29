@@ -13,6 +13,6 @@ Issues or bugs to Github
 
 Help or questions on StackOverflow.
 
-Maker.js concept and inital version written by Dan Marshall (link to GitHub).
+Maker.js concept and inital version written by Dan Marshall link to GitHub.
 
-Maker.js logo created by Greg Melander (link).
+Maker.js logo created by Greg Melander link.
