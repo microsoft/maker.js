@@ -583,9 +583,11 @@ code {
 pre {
   padding: 20px;
   overflow: auto;
+  background: #eee;  
 }
 pre code {
   padding: 0;
+  color: #2879d0;
   border: none;
 }
 
