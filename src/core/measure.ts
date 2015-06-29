@@ -1,5 +1,8 @@
-﻿/// <reference path="model.ts" />
+/// <reference path="model.ts" />
 
+/**
+ * Module for measure functions.
+ */
 module MakerJs.measure {
 
     /**

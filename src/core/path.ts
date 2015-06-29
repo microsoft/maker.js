@@ -1,5 +1,8 @@
-﻿/// <reference path="point.ts" />
+/// <reference path="point.ts" />
 
+/**
+ * Module for path functions.
+ */
 module MakerJs.path {
 
     /**
