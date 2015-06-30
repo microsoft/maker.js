@@ -10,12 +10,9 @@ Maker.js creates line drawings for two dimensional maker machines, like laser cu
 **Features**
 
 * Uses plain old JavaScript objects (POJO's) for its drawing model.
-* Support for a variety of unit systems:
- * Millimeter / Centimeter / Meter / Inch / Foot
-* Primitive paths:
- * Line / Circle / Arc
-* Transformations:
- * Mirror / Rotate / Scale
+* Support for a variety of unit systems: Millimeter / Centimeter / Meter / Inch / Foot
+* Primitive paths: Line / Circle / Arc
+* Transformations: Mirror / Rotate / Scale
 * Basic models:
  * Bolt circle
  * Bolt rectangle
