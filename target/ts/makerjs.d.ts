@@ -803,6 +803,10 @@ declare module MakerJs.exporter {
      */
     interface ISVGRenderOptions extends IExportOptions {
         /**
+         * Optional attributes to add to the root svg tag.
+         */
+        svgAttrs?: IXmlTagAttrs;
+        /**
          * SVG stroke width of paths. This is in the same unit system as the units property.
          */
         strokeWidth?: number;
