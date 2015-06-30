@@ -14,7 +14,7 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
-//https://github.com/Microsoft/Maker.js
+//https://github.com/Microsoft/maker.js
 /**
  * Root module for Maker.js.
  *
@@ -1498,7 +1498,7 @@ var MakerJs;
                     viewBox: viewBox.join(' ')
                 };
             }
-            var svgTag = new exporter.XmlTag('svg', svgAttrs);
+            var svgTag = new exporter.XmlTag('svg', MakerJs.extendObject(svgAttrs, opts.svgAttrs));
             append(svgTag.getOpeningTag(false));
             var svgGroup = new exporter.XmlTag('g', {
                 id: 'svgGroup',
