@@ -1,0 +1,8 @@
+.npmignore
+node_modules/
+debug/*
+examples/*
+src/*
+target/*
+typings/*
+tsd.json
