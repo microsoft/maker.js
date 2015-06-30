@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/Maker.js.git"
+    "url": "https://github.com/Microsoft/maker.js.git"
   },
   "keywords": [
     "Maker",
@@ -32,9 +32,9 @@
   "author": "Dan Marshall / Microsoft Corporation",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/Microsoft/Maker.js/issues"
+    "url": "https://github.com/Microsoft/maker.js/issues"
   },
-  "homepage": "https://github.com/Microsoft/Maker.js",
+  "homepage": "https://github.com/Microsoft/maker.js",
   "devDependencies": {
     "browserify": "^10.2.4",
     "browserify-shim": "^3.8.8",
