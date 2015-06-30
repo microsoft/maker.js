@@ -14,6 +14,7 @@ Maker.js creates line drawings for two dimensional maker machines, like laser cu
 * Primitive paths: Line / Circle / Arc
 * Transformations: Mirror / Rotate / Scale
 * Basic models:
+
  * Bolt circle
  * Bolt rectangle
  * Connect the dots
