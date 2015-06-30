@@ -1,36 +1,49 @@
 ---
-layout: posts
+layout: page
 title: Demos
 ---
 
+<script>
+    //pretend we are in node
+    var module = {};
+    var makerjs = require('makerjs');
+</script>
+
+<script src="viewer.js"></script>
+
 <section class="tsd-panel">
-    <h2>demo1</h2>
-    would be nice if we had a slider
+
+    <div class="selectModelCode">
+        <label for="selectModelCode">demo: </label>
+        <select id="selectModelCode" onchange="Viewer.loadModelCode(this.value)">
+            <option>logo</option>
+            <option>smile</option>
+            <option>m</option>
+            <option>testPanel</option>
+            <option>tubeclamp</option>
+            <option>smileAndM</option>
+            <option>ventgrid</option>
+            <option>ventgridcircle</option>
+        </select>
+    </div>
+
+    <div id="view">
+        <div id="svg-render" class="svg-zone"></div>
+        <div id="svg-guides" class="svg-zone"></div>
+        <div id="export-zone"></div>
+    </div>
+
+    <div id="paramBar">
+        <div id="params">
+        </div>
+    </div>
+
+    <div class="optionpanel">
+        <a href="#" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
+        <a href="#" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
+        <a href="#" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
+    </div>
+
 </section>
 
 
-<section class="tsd-panel">
-    <h2>demo2</h2>
-
-    something else
-</section>
-
-<section class="tsd-panel">
-    <h2>mashup</h2>
-
-    mashup 1 and 2
-    keep it interactive
-
-</section>
-
-<section class="tsd-panel">
-    <h2>demo4</h2>
-
-    something else
-</section>
-
-<section class="tsd-panel">
-    <h2>demo5</h2>
-
-    something else
-</section>

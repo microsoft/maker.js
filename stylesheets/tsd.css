@@ -451,3 +451,29 @@ ul.tsd-parameters .tsd-comment, ul.tsd-type-parameters .tsd-comment { margin-top
 .tsd-sources a { color: #808080; text-decoration: underline; }
 .tsd-sources ul, .tsd-sources p { margin: 0 !important; }
 .tsd-sources ul { list-style: none; padding: 0; }
+
+
+#view {
+    background-color: #317CCF;
+    overflow: hidden;
+    position: relative;
+    height: 400px;
+}
+#view svg, .svg-zone, #export-zone {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+#view svg {
+    padding: 20px 0 0 20px;
+}
+#view svg line, #view svg circle, #view svg path {
+    stroke: #fff;
+    stroke-width: 2;
+    fill: none;
+}
+#svg-guides svg line {
+    stroke: #4DD2FF;
+    stroke-width: 1;
+}
