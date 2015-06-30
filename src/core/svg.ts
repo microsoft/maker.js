@@ -1,4 +1,4 @@
-﻿/// <reference path="exporter.ts" />
+/// <reference path="exporter.ts" />
 /// <reference path="xml.ts" />
 
 module MakerJs.exporter {
@@ -256,7 +256,7 @@ module MakerJs.exporter {
             };
         }
 
-        var svgTag = new XmlTag('svg', svgAttrs);
+        var svgTag = new XmlTag('svg', <IXmlTagAttrs>extendObject(svgAttrs, opts.svgAttrs));
 
         append(svgTag.getOpeningTag(false));
 
@@ -294,6 +294,11 @@ module MakerJs.exporter {
      * SVG rendering options.
      */
     export interface ISVGRenderOptions extends IExportOptions {
+
+        /**
+         * Optional attributes to add to the root svg tag.
+         */
+        svgAttrs?: IXmlTagAttrs;
 
         /**
          * SVG stroke width of paths. This is in the same unit system as the units property.
