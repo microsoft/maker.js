@@ -1,6 +1,6 @@
 {
   "name": "makerjs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.",
   "main": "index.js",
   "scripts": {
