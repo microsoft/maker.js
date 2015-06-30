@@ -5,6 +5,14 @@ title: Examples
 
 1. demos
 
+<script>
+    var makerjs = require('makerjs');
+    var circle = new makerjs.paths.Circle('c1', [0, 0], 25);
+    var svg = makerjs.exporter.toSVG(circle);
+    document.write(svg);
+
+</script>
+
 2. how-to
 
 using points
@@ -17,7 +25,8 @@ advanced - node
 
 advanced - publishing
 
+advanced - npm
+
 expert - contributor
 
-link to wiki
 
