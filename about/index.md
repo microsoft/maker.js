@@ -8,6 +8,7 @@ title: About
 Maker.js creates line drawings for two dimensional maker machines, like laser cutters and CNC routers. Using the Maker.js JavaScript library, which can run in a [Node.js](https://nodejs.org/) environment or in a web browser, a developer may create a small program that creates a line drawing. The developer's program may accept parameters which can be used to alter the drawing. The program can be shared and re-used in other drawings. Lastly, the drawing can be exported to a file in either DXF or SVG format. The file can then be used directly by a maker machine, uploaded to a maker service, or imported into other 2D or 3D CAD software.
 
 **Features**
+
 * Uses plain old JavaScript objects (POJO's) for its drawing model.
 * Support for a variety of unit systems:
  * Millimeter / Centimeter / Meter / Inch / Foot
