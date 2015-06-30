@@ -15,7 +15,7 @@ See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
 
-//https://github.com/Microsoft/Maker.js
+//https://github.com/Microsoft/maker.js
 
 /**
  * Root module for Maker.js.
