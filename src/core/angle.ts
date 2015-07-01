@@ -1,8 +1,5 @@
 /// <reference path="maker.ts" />
 
-/**
- * Module for angle functions.
- */
 module MakerJs.angle {
 
     /**
