@@ -180,6 +180,9 @@ var Viewer = {
 
             
             window.require = function (name) {
+                if (name == 'makerjs' || name == '../target/js/node.maker.js') {
+                    return _makerjs;
+                }
                 return module.exports;
             };
             Viewer.Constructor = null;
