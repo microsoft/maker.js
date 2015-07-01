@@ -587,6 +587,7 @@ pre {
 }
 pre code {
   padding: 0;
+  color: #fff;
   border: none;
 }
 
