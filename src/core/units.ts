@@ -1,8 +1,5 @@
 /// <reference path="maker.ts" />
 
-/**
- * Module for unit conversion functions.
- */
 module MakerJs.units {
 
     /**

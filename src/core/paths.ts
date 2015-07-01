@@ -1,8 +1,5 @@
 /// <reference path="path.ts" />
 
-/**
- * Module for IPath creation shortcuts.
- */
 module MakerJs.paths {
     
     //shortcuts

@@ -1,8 +1,5 @@
 /// <reference path="maker.ts" />
 
-/**
- * Module for point functions.
- */
 module MakerJs.point {
 
     /**
