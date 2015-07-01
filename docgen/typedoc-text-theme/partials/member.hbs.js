@@ -1,5 +1,5 @@
 ﻿var member = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  var stack1, helperMissing=helpers.helperMissing, buffer = "        <h3 class=\"bbb\">";
+  var stack1, helperMissing=helpers.helperMissing, buffer = "        <h3>";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.flags : depth0), {"name":"each","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   stack1 = ((helpers.wbr || (depth0 && depth0.wbr) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"wbr","hash":{},"data":data}));
@@ -48,7 +48,7 @@
   if (stack1 != null) { buffer += stack1; }
   return buffer;
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<section class=\"tsd-panel tsd-member "
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<section class=\"tsd-panel tsd-index-panel "
     + escapeExpression(((helper = (helper = helpers.cssClasses || (depth0 != null ? depth0.cssClasses : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"cssClasses","hash":{},"data":data}) : helper)))
     + "\">\r\n    <a name=\""
     + escapeExpression(((helper = (helper = helpers.anchor || (depth0 != null ? depth0.anchor : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"anchor","hash":{},"data":data}) : helper)))

@@ -1,14 +1,12 @@
 ﻿var index = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<section class=\"tsd-panel-group tsd-index-group\">\r\n    <h2>Index</h2>\r\n    <section class=\"tsd-panel tsd-index-panel\">\r\n        <div class=\"tsd-index-content\">\r\n";
+  var stack1, buffer = "<section class=\"xtsd-panel-group tsd-index-group\">\r\n    <section class=\"tsd-panel tsd-index-panel\">\r\n        <div class=\"tsd-index-content\">\r\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.groups : depth0), {"name":"each","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "        </div>\r\n    </section>\r\n</section>\r\n";
 },"2":function(depth0,helpers,partials,data) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "                <section class=\"tsd-index-section "
     + escapeExpression(((helper = (helper = helpers.cssClasses || (depth0 != null ? depth0.cssClasses : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"cssClasses","hash":{},"data":data}) : helper)))
-    + "\">\r\n                    <h3 class=\"aaa\">"
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h3>\r\n                    <ul class=\"tsd-index-list\">\r\n";
+    + "\">\r\n                    <ul class=\"tsd-index-list\">\r\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.children : depth0), {"name":"each","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "                    </ul>\r\n                </section>\r\n";
