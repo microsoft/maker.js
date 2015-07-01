@@ -1,6 +1,3 @@
-/**
- * Module for primitive model classes.
- */
 module MakerJs.models {
 
     export class BoltCircle implements IModel {

@@ -1,8 +1,5 @@
 /// <reference path="model.ts" />
 
-/**
- * Module for kit functions.
- */
 module MakerJs.kit {
     //construct a model
 
