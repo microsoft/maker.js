@@ -1,0 +1,24 @@
+{{#compact}}
+    {{#if this}}
+        {{#if reflection}}
+            {{#if reflection.parent.url}}
+                <a href="{{relativeURL reflection.parent.url}}">{{reflection.parent.name}}</a>
+            {{else}}
+                {{reflection.parent.name}}
+            {{/if}}
+            .
+            {{#if reflection.url}}
+                <a href="{{relativeURL reflection.url}}">{{reflection.name}}</a>
+            {{else}}
+                {{reflection.name}}
+            {{/if}}
+            {{#if isArray}}
+                []
+            {{/if}}
+        {{else}}
+            {{this}}
+        {{/if}}
+    {{else}}
+        void
+    {{/if}}
+{{/compact}}
