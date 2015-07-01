@@ -3,34 +3,74 @@ layout: posts
 title: Getting Started
 ---
 
-<section class="tsd-panel">
-    <h2>For the browser</h2>
-
-    <p>Download the browser-based version of Maker.js, then upload it to your website:</p>
-
-    <div>
-        <a href="http://microsoft.github.io/maker.js/target/js/browser.maker.js">http://microsoft.github.io/maker.js/target/js/browser.maker.js</a>
-    </div>
-
-<hr/>
-
-    <p>Or you can link to it:</p>
-
-<pre><code class="xml hljs"><span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://microsoft.github.io/maker.js/target/js/browser.maker.js"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/javascript"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
-
-    <p>Then, in your JavaScript, use the require function to get a reference:</p>
-
-    <pre><code><span class="hljs-reserved">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'makerjs'</span>);
+<div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="xtsd-panel-group tsd-index-group">
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="documentation.getting_started.html#for_the_browser" class="tsd-kind-icon">For the browser</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="documentation.getting_started.html#for_node" class="tsd-kind-icon">For node</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group xxx tsd-member-group ">
+	<section class="tsd-panel tsd-index-panel tsd-kind-function tsd-parent-kind-module">
+		<a name="for_the_browser" class="tsd-anchor"></a>
+		<h3>For the browser</h3>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Download the browser-based version of Maker.js, then upload it to your website:</p>
+					</div>
+					<p><a href="http://microsoft.github.io/maker.js/target/js/browser.maker.js">http://microsoft.github.io/maker.js/target/js/browser.maker.js</a></p>
+					<p>Or you can link to it:</p>
+					<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://microsoft.github.io/maker.js/target/js/browser.maker.js"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/javascript"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
 </code></pre>
+					<hr>
+					<p>Then, in your JavaScript, use the require function to get a reference:</p>
+					<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'makerjs'</span>);
+</code></pre>
+				</div>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-index-panel tsd-kind-function tsd-parent-kind-module">
+		<a name="for_node" class="tsd-anchor"></a>
+		<h3>For node</h3>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>To depend on Maker.js, run this from the command line:</p>
+					</div>
+					<pre><code class="lang-bash">npm install makerjs --save
+</code></pre>
+					<hr>
+					<p>Then, in your JavaScript, use the require function to get a reference:</p>
+					<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'makerjs'</span>);
+</code></pre>
+				</div>
+			</li>
+		</ul>
+	</section>
+</section>
+</div>
+
+<section class="tsd-panel">
 
     <p>More tutorials are coming soon! Meanwhile you can check the <a href="https://github.com/Microsoft/maker.js/tree/master/examples">GitHub repo examples</a>.</p>
 
 </section>
 
 <!--
-<section class="tsd-panel">
-    <h2>require makerjs</h2>
-</section>
 
 
 <section class="tsd-panel">

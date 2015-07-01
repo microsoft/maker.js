@@ -28,6 +28,13 @@ module Documentation.Getting_Started {
      * ```bash
      * npm install makerjs --save
      * ```
+     * __________
+     * 
+     * Then, in your JavaScript, use the require function to get a reference:
+     * 
+     * ```javascript
+     * var makerjs = require('makerjs');
+     * ```
      */
     export function For_node() {
     }
