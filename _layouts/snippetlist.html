@@ -11,7 +11,7 @@ layout: posts
 {% for snippet_title in page.snippet_titles %}
   {% for snippet in site.snippets %}
     {% if snippet.title == snippet_title %}
-          <li class="tsd-kind-variable tsd-parent-kind-module"><a href="#{{ snippet.title }}" class="tsd-kind-icon">{{ snippet.title }}</a></li>
+          <li class="tsd-kind-variable tsd-parent-kind-module"><a href="#{{ forloop.index }}" class="tsd-kind-icon">{{ snippet.title }}</a></li>
     {% endif %}
   {% endfor %}
 {% endfor %}				
@@ -29,7 +29,7 @@ layout: posts
     
 <section class="tsd-panel tsd-index-panel tsd-kind-function tsd-parent-kind-module">
    <h3>{{ snippet.title }}</h3>
-   <a name="{{ snippet.title }}" class="tsd-anchor"></a>
+   <a name="{{ forloop.index }}" class="tsd-anchor"></a>
    <div class="tsd-comment tsd-typography">
 {{ snippet.content }}
    </div>
