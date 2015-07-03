@@ -11,7 +11,7 @@ layout: posts
 {% for snippet_title in page.snippet_titles %}
   {% for snippet in site.snippets %}
     {% if snippet.title == snippet_title %}
-          <li class="tsd-kind-function tsd-parent-kind-module"><a href="#{{ snippet.title }}" class="tsd-kind-icon">{{ snippet.title }}</a></li>
+          <li class="tsd-kind-variable tsd-parent-kind-module"><a href="#{{ snippet.title }}" class="tsd-kind-icon">{{ snippet.title }}</a></li>
     {% endif %}
   {% endfor %}
 {% endfor %}				
