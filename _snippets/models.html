@@ -181,6 +181,50 @@ document.write(svg);
 <p>Now we are better set up to look at <b>models</b> and <b>origin</b>.
 We will create a new model which has 2 instances of our model:</p>
 
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function myModel() {
+
+ var line = { 
+   id: 'myLineId', 
+   type: 'line', 
+   origin: [0, 0], 
+   end: [50, 50] 
+  };
+
+ var circle = { 
+   id: 'myCircleId', 
+   type: 'circle', 
+   origin: [0, 0],
+   radius: 50
+  };
+
+ var pathArray = [ line, circle ];
+ 
+//set properties using the "this" keyword
+ this.id = 'myModel';
+ this.paths = pathArray;
+}
+
+var model1 = new myModel();
+var model2 = new myModel();
+
+//they will be on top of each other, so let's move the origin
+model2.origin = [100, 0];
+
+var model = { 
+  id: 'iHave2models',
+  models: [ model1, model2 ] 
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<p>Example output:</p>
+
 <script>
 var makerjs = require('makerjs');
 
@@ -211,7 +255,7 @@ var model1 = new myModel();
 var model2 = new myModel();
 
 //they will be on top of each other, so let's move the origin
-model2.origin = [50, 0];
+model2.origin = [100, 0];
 
 var model = { 
   id: 'iHave2models',
@@ -222,6 +266,4 @@ var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 </script>
-
-
 
