@@ -11,7 +11,7 @@
   -webkit-text-size-adjust: none;
 }
 
-.hljs-keyword, .kd,
+.hljs-keyword, .kd, .hljs-reserved,
 .hljs-literal,
 .hljs-change,
 .hljs-winutils,
@@ -119,7 +119,7 @@
   color: #818e96;
 }
 
-.hljs-keyword, .kd,
+.hljs-keyword, .kd, .hljs-reserved,
 .hljs-literal,
 .css .hljs-id,
 .hljs-doctag,
