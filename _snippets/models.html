@@ -74,3 +74,105 @@ document.write(svg);
 </script>
 
 <p>Note the we can also pass a model to <b>makerjs.exporter.toSVG</b>.</p>
+
+<p>If we wrap our model code in a function we can call it multiple times. There are several ways to do this. 
+First we will leave the code as is, and return the <b>model</b> variable.</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function myModel() {
+
+ var line = { 
+   id: 'myLineId', 
+   type: 'line', 
+   origin: [0, 0], 
+   end: [50, 50] 
+  };
+
+ var circle = { 
+   id: 'myCircleId', 
+   type: 'circle', 
+   origin: [0, 0],
+   radius: 50
+  };
+
+ var pathArray = [ line, circle ];
+
+ var model = { id: 'myModel', paths: pathArray };
+ 
+ return model;
+}
+
+var svg = makerjs.exporter.toSVG(myModel());
+
+document.write(svg);
+{% endhighlight %}
+
+<p>Alternatively, we can change our function to be usable with the <b>new</b> operator:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function myModel() {
+
+ var line = { 
+   id: 'myLineId', 
+   type: 'line', 
+   origin: [0, 0], 
+   end: [50, 50] 
+  };
+
+ var circle = { 
+   id: 'myCircleId', 
+   type: 'circle', 
+   origin: [0, 0],
+   radius: 50
+  };
+
+ var pathArray = [ line, circle ];
+
+ this.id = 'myModel';
+ this.paths = pathArray;
+}
+
+var svg = makerjs.exporter.toSVG(new myModel());
+
+document.write(svg);
+{% endhighlight %}
+
+<p>Example output:</p>
+
+<script>
+var makerjs = require('makerjs');
+
+function myModel() {
+
+ var line = { 
+   id: 'myLineId', 
+   type: 'line', 
+   origin: [0, 0], 
+   end: [50, 50] 
+  };
+
+ var circle = { 
+   id: 'myCircleId', 
+   type: 'circle', 
+   origin: [0, 0],
+   radius: 50
+  };
+
+ var pathArray = [ line, circle ];
+
+ this.id = 'myModel';
+ this.paths = pathArray;
+}
+
+var svg = makerjs.exporter.toSVG(new myModel());
+
+document.write(svg);
+</script>
+
+
+<p>The example output:</p>
+
