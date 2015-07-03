@@ -44,7 +44,9 @@
   color: #b3b689;
 }
 
-.xml .hljs-tag .hljs-value {
+.hljs-tag .hljs-value,
+.language-html .s
+{
   color: #e8e2b7;
 }
 
