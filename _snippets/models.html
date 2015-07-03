@@ -138,7 +138,8 @@ function myModel() {
  this.paths = pathArray;
 }
 
-var svg = makerjs.exporter.toSVG(new myModel());  //note we are using the "new" operator
+//note we are using the "new" operator
+var svg = makerjs.exporter.toSVG(new myModel());
 
 document.write(svg);
 {% endhighlight %}
@@ -165,12 +166,14 @@ function myModel() {
   };
 
  var pathArray = [ line, circle ];
+ 
 //set properties using the "this" keyword
  this.id = 'myModel';
  this.paths = pathArray;
 }
 
-var svg = makerjs.exporter.toSVG(new myModel());  //note we are using the "new" operator
+//note we are using the "new" operator
+var svg = makerjs.exporter.toSVG(new myModel());
 
 document.write(svg);
 </script>
