@@ -13,6 +13,7 @@ Maker.js creates line drawings for two dimensional maker machines, like laser cu
 * Support for a variety of unit systems: Millimeter / Centimeter / Meter / Inch / Foot
 * Primitive paths: Line / Circle / Arc
 * Transformations: Mirror / Rotate / Scale
+* Functions: Break path / Bridge Path / Compute intersection / Triangle solvers
 * Basic models:
   * Bolt circle
   * Bolt rectangle
@@ -28,11 +29,13 @@ Maker.js creates line drawings for two dimensional maker machines, like laser cu
 
 **Community**
 
-Sharing happens on [NPM](https://www.npmjs.com/search?q=makerjs).
+Share your drawings on [NPM](https://www.npmjs.com/search?q=makerjs).
 
 File issues or bugs in the [Github repo](https://github.com/Microsoft/maker.js/issues).
 
 Help or questions on [StackOverflow](http://stackoverflow.com/questions/tagged/makerjs).
+
+Discussion on [Gitter](https://gitter.im/Microsoft/maker.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **Project info**
 
