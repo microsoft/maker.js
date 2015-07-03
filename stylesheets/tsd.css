@@ -455,6 +455,7 @@ ul.tsd-parameters .tsd-comment, ul.tsd-type-parameters .tsd-comment { margin-top
 svg {
     min-height: 100px;
     margin-bottom: 20px;
+    padding: 2px;
 }
 
 svg path {
