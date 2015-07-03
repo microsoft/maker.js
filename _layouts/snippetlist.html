@@ -27,19 +27,13 @@ layout: posts
   {% for snippet in site.snippets %}
     {% if snippet.title == snippet_title %}
     
-	<section class="tsd-panel tsd-index-panel tsd-kind-function tsd-parent-kind-module">
-		<a name="{{ snippet.title }}" class="tsd-anchor"></a>
-		<h3>{{ snippet.title }}</h3>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<div class="tsd-comment tsd-typography">
-
+<section class="tsd-panel tsd-index-panel tsd-kind-function tsd-parent-kind-module">
+   <a name="{{ snippet.title }}" class="tsd-anchor"></a>
+   <h3>{{ snippet.title }}</h3>
+     <div class="tsd-comment tsd-typography">
 {{ snippet.content }}
-
-				</div>
-			</li>
-		</ul>
-	</section>
+     </div>
+</section>
 
     {% endif %}
   {% endfor %}
