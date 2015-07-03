@@ -10,7 +10,7 @@ Maker.js creates line drawings for two dimensional maker machines, like laser cu
 **Features**
 
 * Export formats: DXF / SVG
-* Uses plain old JavaScript objects (POJO's) for its drawing model.
+* Uses plain old JavaScript objects (POJO's) for its drawing model
 * Import and modify other drawings
 * Support for conversion between unit systems: Millimeter / Centimeter / Meter / Inch / Foot / Unitless
 * Primitive paths: Line / Circle / Arc
