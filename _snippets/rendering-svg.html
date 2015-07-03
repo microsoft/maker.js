@@ -2,7 +2,7 @@
 title: Rendering SVG
 ---
 
-<p>Call the <b>makerjs.exporter.toSVG</b> function and pass your path as a parameter.</p>
+<p>Call the <b>makerjs.exporter.toSVG</b> function and pass your path as a parameter:</p>
 
 {% highlight javascript %}
 var makerjs = require('makerjs');
@@ -19,3 +19,19 @@ var svg = makerjs.exporter.toSVG(line);
 document.write(svg);
 {% endhighlight %}
 
+<p>Example output:</p>
+
+<script>
+var makerjs = require('makerjs');
+
+var line = { 
+  id: "myLineId", 
+  type: "line", 
+  origin: [0, 0], 
+  end: [1, 1] 
+ };
+ 
+var svg = makerjs.exporter.toSVG(line);
+
+document.write(svg);  
+</script>
