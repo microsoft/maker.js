@@ -11,7 +11,7 @@
   -webkit-text-size-adjust: none;
 }
 
-.hljs-keyword,
+.hljs-keyword, .kd,
 .hljs-literal,
 .hljs-change,
 .hljs-winutils,
