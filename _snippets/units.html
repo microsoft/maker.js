@@ -1,3 +1,27 @@
 ---
 title: Units
 ---
+
+<p>Until now we have been using examples with values like 50 and not specifying units. 
+Our examples were Unitless and that is just fine for abstract models. When you need to specify the units you can use
+<b>makerjs.unitType</b> which has these properties:
+</p>
+
+<ul>
+  <li>Centimeter</li>
+  <li>Foot</li>
+  <li>Inch</li>
+  <li>Meter</li>
+  <li>Millimeter</li>
+</ul>
+
+<p>These properties are case sensitive. They contain the values "cm", "foot", "inch", "m" and "mm" respectively. 
+It is your choice whether to use the named property or the string value directly.</p>
+
+<h4>Units and SVG rendering</h4>
+
+<p>SVG on the screen is displayed in a virtual viewbox so that you may see the whole drawing, 
+but in the SVG markup itself the units are preserved. Let's change our units to meters and see how they rnder on screen:</p>
+
+
+
