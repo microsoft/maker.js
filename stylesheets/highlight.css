@@ -108,7 +108,7 @@
   color: #ec7600;
 }
 
-.hljs-comment,
+.hljs-comment, .language-javascript .c1,
 .hljs-annotation,
 .hljs-blockquote,
 .hljs-horizontal_rule,
