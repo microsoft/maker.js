@@ -72,7 +72,7 @@ var Viewer = {
                 return makerjs.exporter.toDXF(Viewer.ViewModel);
 
             case "svg":
-                return makerjs.exporter.toSVG(Viewer.ViewModel, { svgAttrs: { viewBox: '342' } });
+                return makerjs.exporter.toSVG(Viewer.ViewModel);
 
             case "json":
                 return JSON.stringify(Viewer.ViewModel);
