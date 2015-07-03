@@ -73,7 +73,7 @@
 }
 
 .hljs-link_url,
-.hljs-tag,
+.hljs-tag, code.language-html,
 .hljs-tag .hljs-title,
 .hljs-bullet,
 .hljs-subst,
