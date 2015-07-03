@@ -37,6 +37,6 @@ var makerjs = require('makerjs');
 
 ===
 
-[Contribute to this project!](CONTRIBUTING.md)
+**[Contribute to this project!](CONTRIBUTING.md)**
 
 The Microsoft Garage turns fresh ideas into real projects. Learn more at [http://microsoft.com/garage](http://microsoft.com/garage).
