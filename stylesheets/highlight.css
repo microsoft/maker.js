@@ -35,7 +35,7 @@
   color: #d0d2b5;
 }
 
-.hljs-attribute,
+.hljs-attribute, .na,
 .hljs .hljs-constant {
   color: #668bb0;
 }
