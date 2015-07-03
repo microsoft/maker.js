@@ -82,7 +82,7 @@
 .hljs-preprocessor,
 .hljs-pragma,
 .ruby .hljs-class .hljs-parent,
-.hljs-built_in,
+.hljs-built_in, .nx,
 .django .hljs-template_tag,
 .django .hljs-variable,
 .smalltalk .hljs-class,
@@ -102,7 +102,7 @@
   color: #8cbbad;
 }
 
-.hljs-string {
+.hljs-string, .s1 {
   color: #ec7600;
 }
 
