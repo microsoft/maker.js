@@ -17,4 +17,60 @@ title: Models
   <li>models: array of models</li>
 </ul>
 
+<p>Let's look at <b>paths</b> first, using the example above.</p>
 
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var line = { 
+  id: 'myLineId', 
+  type: 'line', 
+  origin: [0, 0], 
+  end: [50, 50] 
+ };
+
+var circle = { 
+  id: 'myCircleId', 
+  type: 'circle', 
+  origin: [0, 0],
+  radius: 50
+ };
+
+var pathArray = [ line, circle ];
+
+var model = { paths: pathArray };
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<p>Example output:</p>
+
+<script>
+var makerjs = require('makerjs');
+
+var line = { 
+  id: 'myLineId', 
+  type: 'line', 
+  origin: [0, 0], 
+  end: [50, 50] 
+ };
+
+var circle = { 
+  id: 'myCircleId', 
+  type: 'circle', 
+  origin: [0, 0],
+  radius: 50
+ };
+
+var pathArray = [ line, circle ];
+
+var model = { paths: pathArray };
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
+
+<p>Note the we can also pass a model to <b>makerjs.exporter.toSVG</b>.</p>
