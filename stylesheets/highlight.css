@@ -22,7 +22,8 @@
   color: #93c763;
 }
 
-.hljs-number {
+.hljs-number, .language-javascript .mi,
+{
   color: #ffcd22;
 }
 
