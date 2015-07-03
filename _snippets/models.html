@@ -109,7 +109,8 @@ var svg = makerjs.exporter.toSVG(myModel());
 document.write(svg);
 {% endhighlight %}
 
-<p>Alternatively, we can change our function to be usable with the <b>new</b> operator:</p>
+<p>Alternatively, we can change our function to be usable with the <b>new</b> operator, 
+and our model properties are set using the <b>this</b> keyword:</p>
 
 {% highlight javascript %}
 var makerjs = require('makerjs');
@@ -132,16 +133,17 @@ function myModel() {
 
  var pathArray = [ line, circle ];
 
+//set properties using the "this" keyword
  this.id = 'myModel';
  this.paths = pathArray;
 }
 
-var svg = makerjs.exporter.toSVG(new myModel());
+var svg = makerjs.exporter.toSVG(new myModel());  //note we are using the "new" operator
 
 document.write(svg);
 {% endhighlight %}
 
-<p>Example output:</p>
+<p>The example output should be the same as above. While we changed the way we defined our model, we haven't yet changed the functionality:</p>
 
 <script>
 var makerjs = require('makerjs');
@@ -163,16 +165,12 @@ function myModel() {
   };
 
  var pathArray = [ line, circle ];
-
+//set properties using the "this" keyword
  this.id = 'myModel';
  this.paths = pathArray;
 }
 
-var svg = makerjs.exporter.toSVG(new myModel());
+var svg = makerjs.exporter.toSVG(new myModel());  //note we are using the "new" operator
 
 document.write(svg);
 </script>
-
-
-<p>The example output:</p>
-
