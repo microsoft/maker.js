@@ -119,7 +119,7 @@
   color: #818e96;
 }
 
-.hljs-keyword,
+.hljs-keyword, .kd,
 .hljs-literal,
 .css .hljs-id,
 .hljs-doctag,
