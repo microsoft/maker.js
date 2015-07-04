@@ -286,6 +286,9 @@ module MakerJs.exporter {
         return elements.join('');
     }
 
+    /**
+     * @private
+     */
     interface svgUnitConversion {
         [unitType: string]: { svgUnitType: string; scaleConversion: number; };
     }
