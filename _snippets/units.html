@@ -21,7 +21,7 @@ It is your choice whether to use the named property or the string value directly
 <h4>Units and SVG rendering</h4>
 
 <p>SVG on the screen is displayed in a virtual viewbox so that you may see the whole drawing, 
-but in the SVG markup itself the units are preserved. Let's change our units to meters and see how they render on screen:</p>
+but in the SVG markup itself the units are preserved. Let's change our units to Foot and see how they render on screen:</p>
 
 {% highlight javascript %}
 var makerjs = require('makerjs');
@@ -32,14 +32,14 @@ function myModel() {
    id: 'myLineId', 
    type: 'line', 
    origin: [0, 0], 
-   end: [50, 50] 
+   end: [1, 1] 
   };
 
  var circle = { 
    id: 'myCircleId', 
    type: 'circle', 
    origin: [0, 0],
-   radius: 50
+   radius: 1
   };
 
  var pathArray = [ line, circle ];
@@ -53,7 +53,7 @@ var model1 = new myModel();
 var model2 = new myModel();
 
 //they will be on top of each other, so let's move the origin
-model2.origin = [100, 0];
+model2.origin = [2, 0];
 
 var model = { 
   units: makerjs.unitType.Foot,
@@ -77,14 +77,14 @@ function myModel() {
    id: 'myLineId', 
    type: 'line', 
    origin: [0, 0], 
-   end: [50, 50] 
+   end: [1, 1] 
   };
 
  var circle = { 
    id: 'myCircleId', 
    type: 'circle', 
    origin: [0, 0],
-   radius: 50
+   radius: 1
   };
 
  var pathArray = [ line, circle ];
@@ -98,7 +98,7 @@ var model1 = new myModel();
 var model2 = new myModel();
 
 //they will be on top of each other, so let's move the origin
-model2.origin = [100, 0];
+model2.origin = [2, 0];
 
 var model = { 
   units: makerjs.unitType.Foot,
