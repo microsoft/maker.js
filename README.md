@@ -1,23 +1,42 @@
-# Maker.js
-Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing programmable 2D vector drawings that can be exported to SVG or DXF file formats for CNC and laser cutter machines.
+#Maker.js
 
-[About](http://microsoft.github.io/maker.js/about/) - [Blog](http://microsoft.github.io/maker.js/) -  [Demos](http://microsoft.github.io/maker.js/demos/) - [Documentation](http://microsoft.github.io/maker.js/docs/)
+Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters. Maker.js runs in both Node.js and web browsers.
+
+[About](http://microsoft.github.io/maker.js/about/) - [Blog](http://microsoft.github.io/maker.js/) -  [Demos](http://microsoft.github.io/maker.js/demos/) - [Documentation](http://microsoft.github.io/maker.js/docs/) - [Discussion](https://gitter.im/Microsoft/maker.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+##Getting Started
+
+###To use in a web browser
+
+Download the browser-based version of Maker.js, then upload it to your website:
+[http://microsoft.github.io/maker.js/target/js/browser.maker.js](http://microsoft.github.io/maker.js/target/js/browser.maker.js)
+
+Add a script tag in your HTML:
+```html
+<script src="http://microsoft.github.io/maker.js/target/js/browser.maker.js" type="text/javascript"></script>
+```
+
+In your JavaScript, use the require function to get a reference:
+ 
+```javascript
+var makerjs = require('makerjs');
+```
+
+###To use in Node.js
+
+To depend on Maker.js, run this from the command line:
+```bash
+npm install makerjs --save
+```
+
+In your JavaScript, use the require function to get a reference:
+ 
+```javascript
+var makerjs = require('makerjs');
+```
+
+===
+
+**[Contribute to this project!](CONTRIBUTING.md)**
 
 The Microsoft Garage turns fresh ideas into real projects. Learn more at [http://microsoft.com/garage](http://microsoft.com/garage).
-
-## Contributing
-We would love to accept your contributions to Maker.js. Before you consider making any changes, please review the legal policy of Microsoft below.
-
-### How to contribute
-* Submit a CLA (below)
-* Fork the repo.
-* Check the Wiki for [how to build](https://github.com/Microsoft/Maker.js/wiki/Contributors-Build) and [how to debug](https://github.com/Microsoft/Maker.js/wiki/Contributors-Debug)
-* Make sure you can build with no errors.
-* WE NEED UNIT TESTS :-)
-* Commit changes in your own repo.
-* Make a pull request.
-
-### Legal
-You will need to complete a Contributor License Agreement (CLA). Briefly, this agreement testifies that you are granting us permission to use the submitted change according to the terms of the project's license, and that the work being submitted is under appropriate copyright.
-
-Please submit a Contributor License Agreement (CLA) before submitting a pull request. You may visit https://cla.microsoft.com to sign digitally. Alternatively, download the agreement ([Microsoft Contribution License Agreement.docx](https://www.codeplex.com/Download?ProjectName=typescript&DownloadId=822190) or [Microsoft Contribution License Agreement.pdf](https://www.codeplex.com/Download?ProjectName=typescript&DownloadId=921298)), sign, scan, and email it back to <cla@microsoft.com>. Be sure to include your github user name along with the agreement. Once we have received the signed CLA, we'll review the request.

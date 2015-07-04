@@ -170,9 +170,6 @@ var MakerJs;
 //CommonJs
 module.exports = MakerJs;
 /// <reference path="maker.ts" />
-/**
- * Module for angle functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var angle;
@@ -258,9 +255,6 @@ var MakerJs;
     })(angle = MakerJs.angle || (MakerJs.angle = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="maker.ts" />
-/**
- * Module for point functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var point;
@@ -411,9 +405,6 @@ var MakerJs;
     })(point = MakerJs.point || (MakerJs.point = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="point.ts" />
-/**
- * Module for path functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var path;
@@ -529,9 +520,6 @@ var MakerJs;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="path.ts" />
-/**
- * Module for IPath creation shortcuts.
- */
 var MakerJs;
 (function (MakerJs) {
     var paths;
@@ -595,9 +583,6 @@ var MakerJs;
     })(paths = MakerJs.paths || (MakerJs.paths = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="paths.ts" />
-/**
- * Module for model functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var model;
@@ -724,9 +709,6 @@ var MakerJs;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="maker.ts" />
-/**
- * Module for unit conversion functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var units;
@@ -799,9 +781,6 @@ var MakerJs;
     })(units = MakerJs.units || (MakerJs.units = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="model.ts" />
-/**
- * Module for measure functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var measure;
@@ -953,9 +932,6 @@ var MakerJs;
 /// <reference path="model.ts" />
 /// <reference path="units.ts" />
 /// <reference path="measure.ts" />
-/**
- * Module for exporter functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var exporter;
@@ -1173,9 +1149,6 @@ var MakerJs;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="model.ts" />
-/**
- * Module for kit functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var kit;
@@ -1452,6 +1425,18 @@ var MakerJs;
                 modelToMeasure = { id: 'modelToMeasure', paths: [itemToExport] };
             }
             var size = MakerJs.measure.modelExtents(modelToMeasure);
+            //try to get the unit system from the itemToExport
+            if (!opts.units) {
+                var unitSystem = exporter.tryGetModelUnits(itemToExport);
+                if (unitSystem) {
+                    opts.units = unitSystem;
+                }
+            }
+            //convert unit system (if it exists) into SVG's units. scale if necessary.
+            var useSvgUnit = svgUnit[opts.units];
+            if (useSvgUnit && opts.viewBox) {
+                opts.scale *= useSvgUnit.scaleConversion;
+            }
             if (!opts.origin) {
                 var left = 0;
                 if (size.low[0] < 0) {
@@ -1459,18 +1444,12 @@ var MakerJs;
                 }
                 opts.origin = [left, size.high[1] * opts.scale];
             }
-            if (!opts.units) {
-                var unitSystem = exporter.tryGetModelUnits(itemToExport);
-                if (unitSystem) {
-                    opts.units = unitSystem;
-                }
-            }
             if (typeof opts.strokeWidth === 'undefined') {
                 if (!opts.units) {
                     opts.strokeWidth = exporter.svgDefaultStrokeWidth;
                 }
                 else {
-                    opts.strokeWidth = MakerJs.round(MakerJs.units.conversionScale(MakerJs.unitType.Millimeter, opts.units) * exporter.svgDefaultStrokeWidth, .001);
+                    opts.strokeWidth = MakerJs.round(MakerJs.units.conversionScale(MakerJs.unitType.Millimeter, opts.units) * opts.scale * exporter.svgDefaultStrokeWidth, .001);
                 }
             }
             //also pass back to options parameter
@@ -1488,10 +1467,10 @@ var MakerJs;
             }
             var svgAttrs;
             if (opts.viewBox) {
-                var width = MakerJs.round(size.high[0] - size.low[0]);
-                var height = MakerJs.round(size.high[1] - size.low[1]);
+                var width = MakerJs.round(size.high[0] - size.low[0]) * opts.scale;
+                var height = MakerJs.round(size.high[1] - size.low[1]) * opts.scale;
                 var viewBox = [0, 0, width, height];
-                var unit = svgUnit[opts.units] || '';
+                var unit = useSvgUnit ? useSvgUnit.svgUnitType : '';
                 svgAttrs = {
                     width: width + unit,
                     height: height + unit,
@@ -1521,14 +1500,14 @@ var MakerJs;
         //SVG Coordinate Systems, Transformations and Units documentation:
         //http://www.w3.org/TR/SVG/coords.html
         //The supported length unit identifiers are: em, ex, px, pt, pc, cm, mm, in, and percentages.
-        svgUnit[MakerJs.unitType.Inch] = "in";
-        svgUnit[MakerJs.unitType.Millimeter] = "mm";
-        svgUnit[MakerJs.unitType.Centimeter] = "cm";
+        svgUnit[MakerJs.unitType.Inch] = { svgUnitType: "in", scaleConversion: 1 };
+        svgUnit[MakerJs.unitType.Millimeter] = { svgUnitType: "mm", scaleConversion: 1 };
+        svgUnit[MakerJs.unitType.Centimeter] = { svgUnitType: "cm", scaleConversion: 1 };
+        //Add conversions for all unitTypes
+        svgUnit[MakerJs.unitType.Foot] = { svgUnitType: "in", scaleConversion: 12 };
+        svgUnit[MakerJs.unitType.Meter] = { svgUnitType: "cm", scaleConversion: 100 };
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
-/**
- * Module for primitive model classes.
- */
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -1811,9 +1790,6 @@ var MakerJs;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="../core/maker.ts" />
-/**
- * Module for various functions.
- */
 var MakerJs;
 (function (MakerJs) {
     var tools;
