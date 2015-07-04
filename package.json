@@ -11,7 +11,6 @@
     "build": "npm run compile-typescript && npm run target-node-platform && npm run target-browser-platform && cp target/js/node.maker.js ./index.js",
     "predocs": "rm -r -f ./docs/api",
     "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
-    "doctest": "typedoc ./doctest --mode file --entryPoint Documentation --readme none --theme ./docgen/typedoc-text-theme --out ./doctestout",
     "demo": "node ./docgen/demoify.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
