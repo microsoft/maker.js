@@ -453,7 +453,7 @@ ul.tsd-parameters .tsd-comment, ul.tsd-type-parameters .tsd-comment { margin-top
 .tsd-sources ul { list-style: none; padding: 0; }
 
 svg {
-    min-height: 100px;
+    height: 100px;
     margin-bottom: 20px;
     padding: 2px;
 }
