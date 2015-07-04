@@ -201,6 +201,20 @@ module MakerJs.exporter {
 
         var size = measure.modelExtents(modelToMeasure);
 
+        //try to get the unit system from the itemToExport
+        if (!opts.units) {
+            var unitSystem = tryGetModelUnits(itemToExport);
+            if (unitSystem) {
+                opts.units = unitSystem;
+            }
+        }
+
+        //convert unit system (if it exists) into SVG's units. scale if necessary.
+        var useSvgUnit = svgUnit[opts.units];
+        if (useSvgUnit && opts.viewBox) {
+            opts.scale *= useSvgUnit.scaleConversion;
+        }
+
         if (!opts.origin) {
             var left = 0;
             if (size.low[0] < 0) {
@@ -209,18 +223,11 @@ module MakerJs.exporter {
             opts.origin = [left, size.high[1] * opts.scale];
         }
 
-        if (!opts.units) {
-            var unitSystem = tryGetModelUnits(itemToExport);
-            if (unitSystem) {
-                opts.units = unitSystem;
-            }
-        }
-
         if (typeof opts.strokeWidth === 'undefined') {
             if (!opts.units) {
                 opts.strokeWidth = svgDefaultStrokeWidth;
             } else {
-                opts.strokeWidth = round(units.conversionScale(unitType.Millimeter, opts.units) * svgDefaultStrokeWidth, .001);
+                opts.strokeWidth = round(units.conversionScale(unitType.Millimeter, opts.units) * opts.scale * svgDefaultStrokeWidth, .001);
             }
         }
 
@@ -245,10 +252,12 @@ module MakerJs.exporter {
         var svgAttrs: IXmlTagAttrs;
 
         if (opts.viewBox) {
-            var width = round(size.high[0] - size.low[0]);
-            var height = round(size.high[1] - size.low[1]);
+            var width = round(size.high[0] - size.low[0]) * opts.scale;
+            var height = round(size.high[1] - size.low[1]) * opts.scale;
             var viewBox = [0, 0, width, height];
-            var unit = svgUnit[opts.units] || '';
+
+            var unit = useSvgUnit ? useSvgUnit.svgUnitType : '';
+
             svgAttrs = {
                 width: width + unit,
                 height: height + unit,
@@ -277,18 +286,26 @@ module MakerJs.exporter {
         return elements.join('');
     }
 
+    interface svgUnitConversion {
+        [unitType: string]: { svgUnitType: string; scaleConversion: number; };
+    }
+
     /**
      * @private
      */
-    var svgUnit: { [unitType: string]: string } = {};
+    var svgUnit: svgUnitConversion = {};
 
     //SVG Coordinate Systems, Transformations and Units documentation:
     //http://www.w3.org/TR/SVG/coords.html
     //The supported length unit identifiers are: em, ex, px, pt, pc, cm, mm, in, and percentages.
 
-    svgUnit[unitType.Inch] = "in";
-    svgUnit[unitType.Millimeter] = "mm";
-    svgUnit[unitType.Centimeter] = "cm";
+    svgUnit[unitType.Inch] = { svgUnitType: "in", scaleConversion: 1 };
+    svgUnit[unitType.Millimeter] = { svgUnitType: "mm", scaleConversion: 1 };
+    svgUnit[unitType.Centimeter] = { svgUnitType: "cm", scaleConversion: 1 };
+
+    //Add conversions for all unitTypes
+    svgUnit[unitType.Foot] = { svgUnitType: "in", scaleConversion: 12 };
+    svgUnit[unitType.Meter] = { svgUnitType: "cm", scaleConversion: 100 };
 
     /**
      * SVG rendering options.
