@@ -276,9 +276,6 @@ declare module MakerJs {
      */
     function isModel(item: any): boolean;
 }
-/**
- * Module for angle functions.
- */
 declare module MakerJs.angle {
     /**
      * Ensures an angle is not greater than 360
@@ -326,9 +323,6 @@ declare module MakerJs.angle {
      */
     function mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number;
 }
-/**
- * Module for point functions.
- */
 declare module MakerJs.point {
     /**
      * Add two points together and return the result as a new point object.
@@ -411,9 +405,6 @@ declare module MakerJs.point {
      */
     function zero(): IPoint;
 }
-/**
- * Module for path functions.
- */
 declare module MakerJs.path {
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
@@ -451,9 +442,6 @@ declare module MakerJs.path {
      */
     function scale(pathToScale: IPath, scaleValue: number): IPath;
 }
-/**
- * Module for IPath creation shortcuts.
- */
 declare module MakerJs.paths {
     /**
      * Class for arc path.
@@ -502,9 +490,6 @@ declare module MakerJs.paths {
         constructor(id: string, origin: IPoint, end: IPoint);
     }
 }
-/**
- * Module for model functions.
- */
 declare module MakerJs.model {
     /**
      * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
@@ -549,9 +534,6 @@ declare module MakerJs.model {
      */
     function scale(modelToScale: IModel, scaleValue: number, scaleOrigin?: boolean): IModel;
 }
-/**
- * Module for unit conversion functions.
- */
 declare module MakerJs.units {
     /**
      * Get a conversion ratio between a source unit and a destination unit.
@@ -562,9 +544,6 @@ declare module MakerJs.units {
      */
     function conversionScale(srcUnitType: string, destUnitType: string): number;
 }
-/**
- * Module for measure functions.
- */
 declare module MakerJs.measure {
     /**
      * Total angle of an arc between its start and end angles.
@@ -603,9 +582,6 @@ declare module MakerJs.measure {
      */
     function modelExtents(modelToMeasure: IModel): IMeasure;
 }
-/**
- * Module for exporter functions.
- */
 declare module MakerJs.exporter {
     /**
      * @private
@@ -671,9 +647,6 @@ declare module MakerJs.exporter {
     interface IDXFRenderOptions extends IExportOptions {
     }
 }
-/**
- * Module for kit functions.
- */
 declare module MakerJs.kit {
     /**
      * Describes a parameter and its limits.
@@ -836,9 +809,6 @@ declare module MakerJs.exporter {
         viewBox: boolean;
     }
 }
-/**
- * Module for primitive model classes.
- */
 declare module MakerJs.models {
     class BoltCircle implements IModel {
         id: string;
@@ -920,9 +890,6 @@ declare module MakerJs.models {
         constructor(id: string, side: number);
     }
 }
-/**
- * Module for various functions.
- */
 declare module MakerJs.tools {
     /**
      * A path which has been broken.
