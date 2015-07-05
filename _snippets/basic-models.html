@@ -71,6 +71,7 @@ function truckBolts(x, y) {
 }
 
 function deck(width, length, truckOffset) {
+  this.units = makerjs.unitType.Inch;
   this.id = 'deck';
   this.models = [
       new makerjs.models.Oval('board', length, width),
