@@ -523,5 +523,6 @@ svg path {
     text-decoration: none;
 }
 .fiddle:hover {
+    color: #add8e6;
     text-decoration: underline;
 }
