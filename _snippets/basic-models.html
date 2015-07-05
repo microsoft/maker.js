@@ -19,6 +19,8 @@ title: Basic models
 
 <p>Here are a few examples to illustrate how you might use these:</p>
 
+<p>Circular adapter plate:</p>
+
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
@@ -51,6 +53,60 @@ var model = {
 };
 
 var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
+
+<p>Skateboard deck:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function truckBolts(x, y) {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32);
+  bolts.origin = [x + tx / -2, y + ty / -2];
+  return bolts;
+}
+
+function deck(width, length, truckOffset) {
+  this.id = 'deck';
+  this.models = [
+      new makerjs.models.Oval('board', length, width),
+      new truckBolts(truckOffset, width / 2),
+      new truckBolts(length - truckOffset, width / 2)
+    ]
+}
+
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/grzm159o/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function truckBolts(x, y) {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32);
+  bolts.origin = [x + tx / -2, y + ty / -2];
+  return bolts;
+}
+
+function deck(width, length, truckOffset) {
+  this.id = 'deck';
+  this.models = [
+      new makerjs.models.Oval('board', length, width),
+      new truckBolts(truckOffset, width / 2),
+      new truckBolts(length - truckOffset, width / 2)
+    ]
+}
+
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
 
 document.write(svg);
 </script>
