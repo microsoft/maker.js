@@ -526,3 +526,16 @@ svg path {
     color: #add8e6;
     text-decoration: underline;
 }
+
+.coordinates svg {
+    height: 200px;
+}
+
+.coordinates svg line { 
+    stroke: red;
+    stroke-width: 3px;
+}
+
+.coordinates svg text { 
+    font-size: 16px;
+}
