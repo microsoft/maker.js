@@ -63,24 +63,25 @@ Instead, these should be passed as parameters.</p>
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var line = makerjs.paths.Line('myLineId', [0, 0], [100, 100]);
-var circle = makerjs.paths.Circle('myCircleId', [0, 0], 50);
-var arc = makerjs.paths.Arc('myLineId', [0, 0], 25, 0, 90);
+var line = new makerjs.paths.Line('myLineId', [0, 0], [50, 50]);
+var circle = new makerjs.paths.Circle('myCircleId', [0, 0], 50);
+var arc = new makerjs.paths.Arc('myLineId', [0, 0], 25, 0, 90);
  
 var svg = makerjs.exporter.toSVG([line, circle, arc]);
 
 document.write(svg);
 {% endhighlight %}
 
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/mc4pLsa3/" target="_blank">try it in JsFiddle &#8663;</a>
+
 <script>
 var makerjs = require('makerjs');
 
-var line = makerjs.paths.Line('myLineId', [0, 0], [100, 100]);
-var circle = makerjs.paths.Circle('myCircleId', [0, 0], 50);
-var arc = makerjs.paths.Arc('myLineId', [0, 0], 25, 0, 90);
+var line = new makerjs.paths.Line('myLineId', [0, 0], [50, 50]);
+var circle = new makerjs.paths.Circle('myCircleId', [0, 0], 50);
+var arc = new makerjs.paths.Arc('myLineId', [0, 0], 25, 0, 90);
  
 var svg = makerjs.exporter.toSVG([line, circle, arc]);
 
 document.write(svg);
-
 </script>
