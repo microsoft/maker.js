@@ -19,9 +19,9 @@ var makerjs = require('makerjs');
 function arrow(id) {
     this.id = id;
     this.paths = [
-        new makerjs.paths.Line(id, [0, 0], [200, 0]),
-        new makerjs.paths.Line('', [190, -10], [200, 0]),
-        new makerjs.paths.Line('', [190, 10], [200, 0])
+        new makerjs.paths.Line(id, [0, 0], [100, 0]),
+        new makerjs.paths.Line('', [90, -10], [100, 0]),
+        new makerjs.paths.Line('', [90, 10], [100, 0])
     ];
 }
 
@@ -39,6 +39,6 @@ var svg = makerjs.exporter.toSVG(model, { annotate: true, useSvgPathOnly: false 
 document.write('<div class="coordinates">' + svg + '</div>');
 </script>
 
-<p>Th</p>
+<p>Note that SVG coordinates is slightly different, but Maker.js will handle that for us automatically.</p>
 
 <i>(In this lesson our unit system will be abstract. We will cover unit systems in advanced lessons.)</i>
