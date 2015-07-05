@@ -11,7 +11,40 @@ To make these plain objects work with Maker.js, they needed to use the property 
 
 <p>
 We also illustrated 3 ways of defining an object: using a var, using a function that returns a var, 
-and using a constructor function (for use by the <b>new</b> keyword). Let's convert our simple line path into a constructor function.
+and using a constructor function (for use by the <b>new</b> keyword). Let's revisit our simple line path example, 
+and convert it to a constructor function.
 </p>
 
+{% highlight javascript %}
+var makerjs = require('makerjs');
 
+var line = { 
+  id: 'myLineId', 
+  type: 'line', 
+  origin: [0, 0], 
+  end: [50, 50] 
+ };
+ 
+var svg = makerjs.exporter.toSVG(line);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/bbh0y3tm/" target="_blank">try it in JsFiddle &#8663;</a>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function line() { 
+  this.id = 'myLineId', 
+  this.type = 'line', 
+  this.origin = [0, 0], 
+  this.end = [50, 50] 
+ }
+ 
+var svg = makerjs.exporter.toSVG(new line());
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="" target="_blank">try it in JsFiddle &#8663;</a>
