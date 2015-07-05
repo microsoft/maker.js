@@ -515,9 +515,11 @@ svg path {
 }
 
 .fiddle {
-    font-size: 13px;
+    color: #4682b4;
     float: right;
-    margin-top: -23px;
+    font-size: 13px;
+    margin-right: 4px;
+    margin-top: -36px;
     text-decoration: none;
 }
 .fiddle:hover {
