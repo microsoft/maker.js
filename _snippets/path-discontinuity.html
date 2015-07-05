@@ -1,3 +1,54 @@
 ---
 title: Path discontinuity
 ---
+
+<p>
+In Maker.js, path objects are not continuous to one another. Of course your paths will typically connect point-to-point both visually
+and mathematically, but Maker.js does not have a notion of their relationships. This gives the programmer great freedom,
+especially when modifying paths in external models.
+</p>
+
+<p>Example: these paths "connect"</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var model = { 
+  id: 'roundcorner',
+    paths: [
+      new makerjs.paths.Line('v', [0, 0], [0, 100]),
+      new makerjs.paths.Line('h', [0, 0], [100, 0]),
+      new makerjs.paths.Arc('arc', [0, 0], 100, 0, 90)
+    ]
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/0hxv1yez/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<p>Example output:</p>
+
+<script>
+var makerjs = require('makerjs');
+
+var model = { 
+  id: 'roundcorner',
+    paths: [
+      new makerjs.paths.Line('v', [0, 0], [0, 100]),
+      new makerjs.paths.Line('h', [0, 0], [100, 0]),
+      new makerjs.paths.Arc('arc', [0, 0], 100, 0, 90)
+    ]
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+
+</script>
+
+<p>
+When a maker machine uses your drawing, the machine's print driver will usually sort the paths prior to printing so that lines are cut continuously when they are connected point to point. 
+</p>
