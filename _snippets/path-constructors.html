@@ -47,4 +47,40 @@ var svg = makerjs.exporter.toSVG(new line());
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="" target="_blank">try it in JsFiddle &#8663;</a>
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/4m5f25rn/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<p>Of course this example is not very useful because it only produces a line with the same id, origin and end every time. 
+Instead, these should be passed as parameters.</p>
+
+<p>Since this is a common scenario, Maker.js provides constructors for all primitive paths: line, circle and arc:</p>
+
+<ul>
+  <li>makerjs.paths.Line(id: string, origin: point, end: point)</li>
+  <li>makerjs.paths.Circle(id: string, origin: point, radius: number)</li>
+  <li>makerjs.paths.Arc(id: string, origin: point, radius: number, startAngle: number, endAngle: number)</li>
+</ul>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var line = makerjs.paths.Line('myLineId', [0, 0], [100, 100]);
+var circle = makerjs.paths.Circle('myCircleId', [0, 0], 50);
+var arc = makerjs.paths.Arc('myLineId', [0, 0], 25, 0, 90);
+ 
+var svg = makerjs.exporter.toSVG([line, circle, arc]);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+var makerjs = require('makerjs');
+
+var line = makerjs.paths.Line('myLineId', [0, 0], [100, 100]);
+var circle = makerjs.paths.Circle('myCircleId', [0, 0], 50);
+var arc = makerjs.paths.Arc('myLineId', [0, 0], 25, 0, 90);
+ 
+var svg = makerjs.exporter.toSVG([line, circle, arc]);
+
+document.write(svg);
+
+</script>
