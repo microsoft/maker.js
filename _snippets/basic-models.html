@@ -13,6 +13,8 @@ title: Basic models
     <li>makerjs.models.OvalArc</li>
     <li>makerjs.models.Polygon</li>
     <li>makerjs.models.Ring</li>
+    <li>makerjs.models.Rectangle</li>
+    <li>makerjs.models.RoundRectangle</li>
     <li>makerjs.models.SCurve</li>
     <li>makerjs.models.Square</li>
 </ul>
@@ -71,7 +73,6 @@ function truckBolts(x, y) {
 }
 
 function deck(width, length, truckOffset) {
-  this.units = makerjs.unitType.Inch;
   this.id = 'deck';
   this.models = [
       new makerjs.models.Oval('board', length, width),
@@ -99,7 +100,6 @@ function truckBolts(x, y) {
 }
 
 function deck(width, length, truckOffset) {
-  this.units = makerjs.unitType.Inch;
   this.id = 'deck';
   this.models = [
       new makerjs.models.Oval('board', length, width),
@@ -108,7 +108,7 @@ function deck(width, length, truckOffset) {
     ]
 }
 
-var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 50 });
 
 document.write(svg);
 </script>
