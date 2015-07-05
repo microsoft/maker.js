@@ -533,11 +533,11 @@ svg path {
 
 .coordinates svg line { 
     stroke: red;
-    stroke-width: 3px;
+    stroke-width: 2px;
 }
 
 .coordinates svg text { 
-  font-size: 50px;
+  font-size: 24px;
   fill: black;
   stroke: none;
 }
