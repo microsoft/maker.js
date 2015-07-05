@@ -537,5 +537,7 @@ svg path {
 }
 
 .coordinates svg text { 
-    font-size: 16px;
+  font-size: 50px;
+  fill: black;
+  stroke: none;
 }
