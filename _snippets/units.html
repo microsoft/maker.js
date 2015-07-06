@@ -41,7 +41,10 @@ function deck(width, length, truckOffset) {
   this.id = 'deck';
   this.units = makerjs.unitType.Centimeter;
   
-  var inToCm = makerjs.units.conversionScale(makerjs.unitType.Inch, makerjs.unitType.Centimeter);
+  var inToCm = makerjs.units.conversionScale(
+    makerjs.unitType.Inch, 
+    makerjs.unitType.Centimeter
+  );
   
   var board = new makerjs.models.Oval('board', length, width);
   board.origin = [0, width / -2];
@@ -79,7 +82,10 @@ function deck(width, length, truckOffset) {
   this.id = 'deck';
   this.units = makerjs.unitType.Centimeter;
   
-  var inToCm = makerjs.units.conversionScale(makerjs.unitType.Inch, makerjs.unitType.Centimeter);
+  var inToCm = makerjs.units.conversionScale(
+    makerjs.unitType.Inch, 
+    makerjs.unitType.Centimeter
+  );
   
   var board = new makerjs.models.Oval('board', length, width);
   board.origin = [0, width / -2];
