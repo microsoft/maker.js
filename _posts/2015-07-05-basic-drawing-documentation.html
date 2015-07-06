@@ -5,6 +5,57 @@ title: Basic Drawing Documentation is live
 <p>
 Hi Makers, <br/>
 I've just wrapped up some documentation on <a href="/maker.js/docs/basic-drawing/#content">Basic Drawing</a>. 
-Please take a look and let me know what you think.
+There are many simple walkthroughs, code examples, and hands-on demos using <a href="https://jsfiddle.net">JsFiddle</a>.
+Please take a look and let me know what you think. I guarantee it will be worth your time - at the end, you'll
+know how to create your own skateboard deck!
 </p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function truckBolts(x, y) {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32);
+  bolts.origin = [x + tx / -2, y + ty / -2];
+  return bolts;
+}
+
+function deck(width, length, truckOffset) {
+  this.id = 'deck';
+  this.models = [
+      new makerjs.models.Oval('board', length, width),
+      new truckBolts(truckOffset, width / 2),
+      new truckBolts(length - truckOffset, width / 2)
+    ]
+}
+
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/grzm159o/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+function truckBolts(x, y) {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32);
+  bolts.origin = [x + tx / -2, y + ty / -2];
+  return bolts;
+}
+function deck(width, length, truckOffset) {
+  this.id = 'deck';
+  this.models = [
+      new makerjs.models.Oval('board', length, width),
+      new truckBolts(truckOffset, width / 2),
+      new truckBolts(length - truckOffset, width / 2)
+    ]
+}
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 20 });
+document.write(svg);
+</script>
+
 
