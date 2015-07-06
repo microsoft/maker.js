@@ -2,9 +2,10 @@
 title: Units
 ---
 
-<p>Until now we have been using examples with values like 50 and not specifying units. 
-Our examples were Unitless and that is just fine for abstract models. When you need to specify the units you can use
-<b>makerjs.unitType</b> which has these properties:
+<p>
+Paths and points are unitless. It is only when they are added to a model which has units that their values relate to units.
+Many models can remain abstract and unitless. However, when it comes time to make them on a laser cutter, you will 
+probably want to specify units. To do so, you can use <b>makerjs.unitType</b> which has these properties:
 </p>
 
 <ul>
@@ -18,9 +19,8 @@ Our examples were Unitless and that is just fine for abstract models. When you n
 <p>These properties are case sensitive. They contain the values "cm", "foot", "inch", "m" and "mm" respectively. 
 It is your choice whether to use the named property or the string value directly.</p>
 
-<p>You can convert between any two of these unit types with
-makerjs.units.conversionScale(sourceUnitType: string, destinationUnitType: string) which returns a number. 
-This number can then be used as the scale value.</p>
+<p>If a model that you wish to use has a different unit system than your own model, you can call 
+<b>makerjs.model.scaleUnits(modeltoScale: model, yourModel: model)</b>. to convert it. This function will return the scaled model for chaining.</p>
 
 <p>Let's use our skateboard example above and mix Inch and Centimeter units:</p>
 
