@@ -75,6 +75,60 @@ var svg = makerjs.exporter.toSVG(houseWithWindows);
 document.write(svg);
 </script>
 
+<p>Tablet mount:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var outer = new makerjs.models.RoundRectangle('outer', 200, 280, 8);
+
+var inner = new makerjs.models.RoundRectangle('inner', 160, 230, 8);   
+inner.origin = [20, 30];
+
+var buttonhole = new makerjs.paths.Circle('v', [0, 0], 8);
+buttonhole.origin = [100, 15];
+
+var bolts = new makerjs.models.BoltRectangle('bolts', 180, 260, 2);
+bolts.origin = [10, 10];
+
+var tabletFaceMount = { 
+  id: 'tabletFaceMount',
+  paths: [ buttonhole ],
+  models: [ inner, outer, bolts ]  
+};
+
+var svg = makerjs.exporter.toSVG(tabletFaceMount);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/mtjcv0k9/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+var outer = new makerjs.models.RoundRectangle('outer', 200, 280, 8);
+
+var inner = new makerjs.models.RoundRectangle('inner', 160, 230, 8);   
+inner.origin = [20, 30];
+
+var buttonhole = new makerjs.paths.Circle('v', [0, 0], 8);
+buttonhole.origin = [100, 15];
+
+var bolts = new makerjs.models.BoltRectangle('bolts', 180, 260, 2);
+bolts.origin = [10, 10];
+
+var tabletFaceMount = { 
+  id: 'tabletFaceMount',
+  paths: [ buttonhole ],
+  models: [ inner, outer, bolts ]  
+};
+
+var svg = makerjs.exporter.toSVG(tabletFaceMount);
+
+document.write(svg);
+</script>
+
 <p>Circular adapter plate:</p>
 
 {% highlight javascript %}
