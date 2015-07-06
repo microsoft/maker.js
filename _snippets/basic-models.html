@@ -21,6 +21,60 @@ title: Basic models
 
 <p>Here are a few examples to illustrate how you might use these:</p>
 
+<p>House:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var points = [
+  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0]
+];
+
+var house = new makerjs.models.ConnectTheDots('house', true, points);
+
+var window1 = new makerjs.models.Square('window1', 40);
+window1.origin = [30, 40];
+
+var window2 = new makerjs.models.Square('window2', 40);
+window2.origin = [-70, 40];
+
+var houseWithWindows = {
+  id: 'myHouse',
+  models: [ house, window1, window2 ]
+}
+
+var svg = makerjs.exporter.toSVG(houseWithWindows);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/hmf6koog/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+var points = [
+  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0]
+];
+
+var house = new makerjs.models.ConnectTheDots('house', true, points);
+
+var window1 = new makerjs.models.Square('window1', 40);
+window1.origin = [30, 40];
+
+var window2 = new makerjs.models.Square('window2', 40);
+window2.origin = [-70, 40];
+
+var houseWithWindows = {
+  id: 'myHouse',
+  models: [ house, window1, window2 ]
+}
+
+var svg = makerjs.exporter.toSVG(houseWithWindows);
+
+document.write(svg);
+</script>
+
 <p>Circular adapter plate:</p>
 
 {% highlight javascript %}
