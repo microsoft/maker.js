@@ -1,3 +1,54 @@
 ---
-title: scaling
+title: Scaling
 ---
+<p>
+You can proportionately scale paths and models with these functions:
+</p>
+
+<ul>
+  <li>makerjs.path.scale(path: object)</li>
+  <li>makerjs.model.scale(model: object)</li>
+</ul>
+
+<p>Each of these functions return the original object, so that we can "chain" on the same line of code.</p>
+
+<p>Scale path example:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var arc1 = new makerjs.paths.Arc('arc1', [0, 0], 25, 0, 90);
+var arc2 = new makerjs.paths.Arc('arc2', [0, 0], 25, 0, 90);
+ 
+var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/nrboLkLs/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+var arc1 = new makerjs.paths.Arc('arc1', [0, 0], 25, 0, 90);
+var arc2 = new makerjs.paths.Arc('arc2', [0, 0], 25, 0, 90);
+ 
+var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
+
+document.write(svg);
+</script>
+
+<p>Scale model example:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall//" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+document.write(svg);
+</script>
