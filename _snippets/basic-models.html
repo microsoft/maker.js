@@ -27,16 +27,16 @@ title: Basic models
 var makerjs = require('makerjs');
 
 var points = [
-  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0]
+  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0], [-20, 0], [-20, 80], [20, 80], [20, 0]
 ];
 
 var house = new makerjs.models.ConnectTheDots('house', true, points);
 
 var window1 = new makerjs.models.Square('window1', 40);
-window1.origin = [30, 40];
+window1.origin = [40, 40];
 
 var window2 = new makerjs.models.Square('window2', 40);
-window2.origin = [-70, 40];
+window2.origin = [-80, 40];
 
 var houseWithWindows = {
   id: 'myHouse',
@@ -54,16 +54,16 @@ document.write(svg);
 var makerjs = require('makerjs');
 
 var points = [
-  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0]
+  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0], [-20, 0], [-20, 80], [20, 80], [20, 0]
 ];
 
 var house = new makerjs.models.ConnectTheDots('house', true, points);
 
 var window1 = new makerjs.models.Square('window1', 40);
-window1.origin = [30, 40];
+window1.origin = [40, 40];
 
 var window2 = new makerjs.models.Square('window2', 40);
-window2.origin = [-70, 40];
+window2.origin = [-80, 40];
 
 var houseWithWindows = {
   id: 'myHouse',
