@@ -227,7 +227,7 @@ module MakerJs.exporter {
             if (!opts.units) {
                 opts.strokeWidth = svgDefaultStrokeWidth;
             } else {
-                opts.strokeWidth = 2;//round(units.conversionScale(unitType.Millimeter, opts.units) * opts.scale * svgDefaultStrokeWidth, .001);
+                opts.strokeWidth = round(units.conversionScale(unitType.Millimeter, opts.units) * opts.scale * svgDefaultStrokeWidth, .001);
             }
         }
 
