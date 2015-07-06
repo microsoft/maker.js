@@ -17,3 +17,82 @@ Our examples were Unitless and that is just fine for abstract models. When you n
 
 <p>These properties are case sensitive. They contain the values "cm", "foot", "inch", "m" and "mm" respectively. 
 It is your choice whether to use the named property or the string value directly.</p>
+
+<p>You can convert between any two of these unit types with
+makerjs.units.conversionScale(sourceUnitType: string, destinationUnitType: string) which returns a number.</p>
+
+<p>Let's use our skateboard example above and mix Inch and Centimeter units:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function truckBolts() {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32 / 2);
+  bolts.origin = [tx / -2, ty / -2];
+
+  this.units = makerjs.unitType.Inch;
+  this.models = [bolts];
+}
+
+function deck(width, length, truckOffset) {
+  this.id = 'deck';
+  this.units = makerjs.unitType.Centimeter;
+  
+  var inToCm = makerjs.units.conversionScale(makerjs.unitType.Inch, makerjs.unitType.Centimeter);
+  
+  var board = new makerjs.models.Oval('board', length, width);
+  board.origin = [0, width / -2];
+    
+  var truck1 = makerjs.model.scale(new truckBolts(), inToCm);
+  truck1.origin = [truckOffset, 0];
+    
+  var truck2 = makerjs.model.scale(new truckBolts(), inToCm);
+  truck2.origin = [length - truckOffset, 0];
+
+  this.models = [board, truck1, truck2];
+}
+
+var svg = makerjs.exporter.toSVG(new deck(20, 80, 18));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/p2ncfs4r/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function truckBolts() {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32 / 2);
+  bolts.origin = [tx / -2, ty / -2];
+
+  this.units = makerjs.unitType.Inch;
+  this.models = [bolts];
+}
+
+function deck(width, length, truckOffset) {
+  this.id = 'deck';
+  this.units = makerjs.unitType.Centimeter;
+  
+  var inToCm = makerjs.units.conversionScale(makerjs.unitType.Inch, makerjs.unitType.Centimeter);
+  
+  var board = new makerjs.models.Oval('board', length, width);
+  board.origin = [0, width / -2];
+    
+  var truck1 = makerjs.model.scale(new truckBolts(), inToCm);
+  truck1.origin = [truckOffset, 0];
+    
+  var truck2 = makerjs.model.scale(new truckBolts(), inToCm);
+  truck2.origin = [length - truckOffset, 0];
+
+  this.models = [board, truck1, truck2];
+}
+
+var svg = makerjs.exporter.toSVG(new deck(20, 80, 18));
+
+document.write(svg);
+</script>
