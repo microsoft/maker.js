@@ -230,7 +230,7 @@ function deck(width, length, truckOffset) {
   this.models = [board, truck1, truck2];
 }
 
-var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 25});
 
-document.write(svg, { scale: 25});
+document.write(svg);
 </script>
