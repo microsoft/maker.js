@@ -6,8 +6,8 @@ You can proportionately scale paths and models with these functions:
 </p>
 
 <ul>
-  <li>makerjs.path.scale(path: object)</li>
-  <li>makerjs.model.scale(model: object)</li>
+  <li>makerjs.path.scale(path: object, scaleValue: number)</li>
+  <li>makerjs.model.scale(model: object, scaleValue: number)</li>
 </ul>
 
 <p>Each of these functions return the original object, so that we can "chain" on the same line of code.</p>
@@ -43,12 +43,34 @@ document.write(svg);
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
+var model = { 
+  id: 'polygons',
+  models: [ 
+    new makerjs.models.Polygon('poly1', 6, 40),
+    makerjs.model.scale(new makerjs.models.Polygon('poly2', 6, 40), 1.7)
+  ] 
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall//" target="_blank">try it in JsFiddle &#8663;</a>
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/fyqpqyho/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
 var makerjs = require('makerjs');
+
+var model = { 
+  id: 'polygons',
+  models: [ 
+    new makerjs.models.Polygon('poly1', 6, 40),
+    makerjs.model.scale(new makerjs.models.Polygon('poly2', 6, 40), 1.7)
+  ] 
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
 document.write(svg);
 </script>
+
