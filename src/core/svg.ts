@@ -114,10 +114,10 @@ module MakerJs.exporter {
                         "y2": round(end[1]),
                         "style": line.cssStyle
                     });
-            }
 
-            if (opts.annotate) {
-                drawText(line.id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
+                if (opts.annotate) {
+                    drawText(line.id,(start[0] + end[0]) / 2,(start[1] + end[1]) / 2);
+                }
             }
         };
 
@@ -177,7 +177,7 @@ module MakerJs.exporter {
                 arcPoints[1],
                 Math.abs(arc.endAngle - arc.startAngle) > 180,
                 arc.startAngle > arc.endAngle
-            );
+                );
 
             drawPath(arc.id, arcPoints[0][0], arcPoints[0][1], d, arc.cssStyle);
         };
@@ -353,4 +353,4 @@ module MakerJs.exporter {
         viewBox: boolean;
     }
 
-} 
+}

@@ -533,6 +533,14 @@ declare module MakerJs.model {
      * @returns The original model (for chaining).
      */
     function scale(modelToScale: IModel, scaleValue: number, scaleOrigin?: boolean): IModel;
+    /**
+     * Scale a model to match the unit system of another model.
+     *
+     * @param modelToScale The model to scale.
+     * @param destinationModel The model of which to match its unit system.
+     * @returns The scaled model (for chaining).
+     */
+    function scaleUnits(modeltoScale: IModel, destinationModel: IModel): IModel;
 }
 declare module MakerJs.units {
     /**

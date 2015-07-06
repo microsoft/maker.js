@@ -706,6 +706,23 @@ var MakerJs;
             return modelToScale;
         }
         model.scale = scale;
+        /**
+         * Scale a model to match the unit system of another model.
+         *
+         * @param modelToScale The model to scale.
+         * @param destinationModel The model of which to match its unit system.
+         * @returns The scaled model (for chaining).
+         */
+        function scaleUnits(modeltoScale, destinationModel) {
+            if (modeltoScale.units && destinationModel.units) {
+                var ratio = MakerJs.units.conversionScale(modeltoScale.units, destinationModel.units);
+                if (ratio != 1) {
+                    scale(modeltoScale, ratio);
+                }
+            }
+            return modeltoScale;
+        }
+        model.scaleUnits = scaleUnits;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="maker.ts" />
@@ -1366,9 +1383,9 @@ var MakerJs;
                         "y2": MakerJs.round(end[1]),
                         "style": line.cssStyle
                     });
-                }
-                if (opts.annotate) {
-                    drawText(line.id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
+                    if (opts.annotate) {
+                        drawText(line.id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
+                    }
                 }
             };
             map[MakerJs.pathType.Circle] = function (circle, origin) {
