@@ -12,21 +12,28 @@ Please take a look, I guarantee it will be worth your time - at the end, you'll 
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-function truckBolts(x, y) {
+function truckBolts() {
   var tx = 1 + 5/8;
   var ty = 1 + 1/8;
-  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32);
-  bolts.origin = [x + tx / -2, y + ty / -2];
-  return bolts;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32 / 2);
+  bolts.origin = [tx / -2, ty / -2];
+
+  this.models = [bolts];
 }
 
 function deck(width, length, truckOffset) {
   this.id = 'deck';
-  this.models = [
-      new makerjs.models.Oval('board', length, width),
-      new truckBolts(truckOffset, width / 2),
-      new truckBolts(length - truckOffset, width / 2)
-    ]
+    
+  var board = new makerjs.models.Oval('board', length, width);
+  board.origin = [0, width / -2];
+    
+  var truck1 = new truckBolts();
+  truck1.origin = [truckOffset, 0];
+    
+  var truck2 = new truckBolts();
+  truck2.origin = [length - truckOffset, 0];
+
+  this.models = [board, truck1, truck2];
 }
 
 var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
@@ -38,22 +45,27 @@ document.write(svg);
 
 <script>
 var makerjs = require('makerjs');
-function truckBolts(x, y) {
+function truckBolts() {
   var tx = 1 + 5/8;
   var ty = 1 + 1/8;
-  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32);
-  bolts.origin = [x + tx / -2, y + ty / -2];
-  return bolts;
+  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32 / 2);
+  bolts.origin = [tx / -2, ty / -2];
+  this.models = [bolts];
 }
 function deck(width, length, truckOffset) {
   this.id = 'deck';
-  this.models = [
-      new makerjs.models.Oval('board', length, width),
-      new truckBolts(truckOffset, width / 2),
-      new truckBolts(length - truckOffset, width / 2)
-    ]
+    
+  var board = new makerjs.models.Oval('board', length, width);
+  board.origin = [0, width / -2];
+    
+  var truck1 = new truckBolts();
+  truck1.origin = [truckOffset, 0];
+    
+  var truck2 = new truckBolts();
+  truck2.origin = [length - truckOffset, 0];
+  this.models = [board, truck1, truck2];
 }
-var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 20 });
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 25});
 document.write(svg);
 </script>
 
