@@ -21,7 +21,9 @@ var makerjs = require('makerjs');
 var line1 = new makerjs.paths.Line('line1', [0, 0], [100, 0]);
 var line2 = new makerjs.paths.Line('line2', [0, 0], [100, 0]);
  
-var svg = makerjs.exporter.toSVG([line1, makerjs.path.rotate(line2, -30, [100, 0])]);
+var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
+
+var svg = makerjs.exporter.toSVG(paths);
 
 document.write(svg);
 {% endhighlight %}
@@ -34,7 +36,9 @@ var makerjs = require('makerjs');
 var line1 = new makerjs.paths.Line('line1', [0, 0], [100, 0]);
 var line2 = new makerjs.paths.Line('line2', [0, 0], [100, 0]);
  
-var svg = makerjs.exporter.toSVG([line1, makerjs.path.rotate(line2, -30, [100, 0])]);
+var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
+
+var svg = makerjs.exporter.toSVG(paths);
 
 document.write(svg);
 </script>
