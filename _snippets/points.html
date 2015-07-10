@@ -17,21 +17,19 @@ where x values increase from left to right, and y values increase from bottom to
 var makerjs = require('makerjs');
 
 function arrow(id) {
-    this.id = id;
-    this.paths = [
-        new makerjs.paths.Line(id, [0, 0], [100, 0]),
-        new makerjs.paths.Line('', [90, -10], [100, 0]),
-        new makerjs.paths.Line('', [90, 10], [100, 0])
-    ];
+    this.paths = {};
+    paths[id] = new makerjs.paths.Line([0, 0], [100, 0]);
+    paths[''] = new makerjs.paths.Line([90, -10], [100, 0]);
+    paths[' '] = new makerjs.paths.Line([90, 10], [100, 0]);
 }
 
 var model = {
-    id: 'myModel', models: [
-        new arrow('+x'),
-        makerjs.model.rotate(new arrow('+y'), 90, [0, 0]),
-        makerjs.model.rotate(new arrow('-x'), 180, [0, 0]),
-        makerjs.model.rotate(new arrow('-y'), 270, [0, 0])
-    ]
+    models: {
+        x1: new arrow('+x'),
+        y1: makerjs.model.rotate(new arrow('+y'), 90, [0, 0]),
+        x2: makerjs.model.rotate(new arrow('-x'), 180, [0, 0]),
+        y2: makerjs.model.rotate(new arrow('-y'), 270, [0, 0])
+    }
 };
 
 var svg = makerjs.exporter.toSVG(model, { annotate: true, useSvgPathOnly: false });
