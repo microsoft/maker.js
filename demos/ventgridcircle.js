@@ -69,19 +69,19 @@ var VentgridCircle = (function () {
         this.radius = radius;
         this.id = 'ventgridcircleInstance';
         this.units = makerjs.unitType.Millimeter;
-        this.paths = [];
-        this.rim = new makerjs.paths.Circle('container', [0, 0], radius);
+        this.paths = {};
+        this.rim = new makerjs.paths.Circle([0, 0], radius);
         var ventgridInstance = new ventgrid(filterRadius, spacing, radius, radius);
-        for (var i = 0; i < ventgridInstance.paths.length; i++) {
-            var circle = ventgridInstance.paths[i];
-            this.checkCircle(circle);
+        for (var id in ventgridInstance.paths) {
+            var circle = ventgridInstance.paths[id];
+            this.checkCircle(id, circle);
         }
     }
-    VentgridCircle.prototype.checkCircle = function (circle) {
+    VentgridCircle.prototype.checkCircle = function (id, circle) {
         var distanceToCenter = makerjs.measure.pointDistance([0, 0], circle.origin);
         if (makerjs.round(distanceToCenter + circle.radius) <= this.radius) {
             //inside
-            this.paths.push(circle);
+            this.paths[id] = circle;
         }
         else if (makerjs.round(distanceToCenter - circle.radius) > this.radius) {
         }
@@ -89,10 +89,10 @@ var VentgridCircle = (function () {
             //border
             var arcIntersection = makerjs.tools.pathIntersection(circle, this.rim);
             if (arcIntersection && arcIntersection.path1Angles.length == 2) {
-                var filterArc = new makerjs.paths.Arc('filterArc', circle.origin, circle.radius, arcIntersection.path1Angles[1], arcIntersection.path1Angles[0]);
-                this.paths.push(filterArc);
-                var rimArc = new makerjs.paths.Arc('filterArcRim', [0, 0], this.radius, arcIntersection.path2Angles[0], arcIntersection.path2Angles[1]);
-                this.paths.push(rimArc);
+                var filterArc = new makerjs.paths.Arc(circle.origin, circle.radius, arcIntersection.path1Angles[1], arcIntersection.path1Angles[0]);
+                this.paths[id] = filterArc;
+                var rimArc = new makerjs.paths.Arc([0, 0], this.radius, arcIntersection.path2Angles[0], arcIntersection.path2Angles[1]);
+                this.paths[id + '_rim'] = rimArc;
             }
         }
     };
