@@ -137,12 +137,15 @@ title: Api - Exporter Class
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-siganture">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
+											<li>
+												<h5>id: <span class="tsd-signature-type">string</span></h5>
+											</li>
 											<li>
 												<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
 											</li>
@@ -196,12 +199,15 @@ title: Api - Exporter Class
 			<ul class="tsd-parameters">
 				<li class="tsd-parameter-siganture">
 					<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <span class="tsd-signature-type">string</span></h5>
+								</li>
 								<li>
 									<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
 								</li>
@@ -342,7 +348,7 @@ title: Api - Exporter Class
 		<a name="exportitem" class="tsd-anchor"></a>
 		<h3>export<wbr>Item</h3>
 		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">export<wbr>Item<span class="tsd-signature-symbol">(</span>itemToExport<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+			<li class="tsd-signature tsd-kind-icon">export<wbr>Item<span class="tsd-signature-symbol">(</span>itemId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, itemToExport<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -359,6 +365,9 @@ title: Api - Exporter Class
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
+						<h5>itemId: <span class="tsd-signature-type">string</span></h5>
+					</li>
+					<li>
 						<h5>itemToExport: <span class="tsd-signature-type">any</span></h5>
 					</li>
 					<li>
@@ -373,7 +382,7 @@ title: Api - Exporter Class
 		<a name="exportmodel" class="tsd-anchor"></a>
 		<h3>export<wbr>Model</h3>
 		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">export<wbr>Model<span class="tsd-signature-symbol">(</span>modelToExport<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, offset<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+			<li class="tsd-signature tsd-kind-icon">export<wbr>Model<span class="tsd-signature-symbol">(</span>modelId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, modelToExport<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, offset<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -389,6 +398,9 @@ title: Api - Exporter Class
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
+					<li>
+						<h5>modelId: <span class="tsd-signature-type">string</span></h5>
+					</li>
 					<li>
 						<h5>modelToExport: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
 						<div class="tsd-comment tsd-typography">
@@ -410,7 +422,7 @@ title: Api - Exporter Class
 		<a name="exportpath" class="tsd-anchor"></a>
 		<h3>export<wbr>Path</h3>
 		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">export<wbr>Path<span class="tsd-signature-symbol">(</span>pathToExport<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, offset<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+			<li class="tsd-signature tsd-kind-icon">export<wbr>Path<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, pathToExport<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, offset<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -426,6 +438,9 @@ title: Api - Exporter Class
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
+					<li>
+						<h5>id: <span class="tsd-signature-type">string</span></h5>
+					</li>
 					<li>
 						<h5>pathToExport: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
 						<div class="tsd-comment tsd-typography">

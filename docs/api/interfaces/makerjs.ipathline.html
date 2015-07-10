@@ -9,8 +9,8 @@ title: Api - IPathLine Interface
 			<p>A line path.</p>
 		</div>
 		<p>Examples:</p>
-		<pre><code>var <span class="hljs-string">line:</span> IPathLine = { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'myline'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] };   <span class="hljs-comment">//typescript</span>
-var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'myline'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] };   <span class="hljs-comment">//javascript</span>
+		<pre><code>var <span class="hljs-string">line:</span> IPathLine = { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] };   <span class="hljs-comment">//typescript</span>
+var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] };   <span class="hljs-comment">//javascript</span>
 </code></pre>
 	</div>
 </section>
@@ -42,7 +42,6 @@ var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'l
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathline.html#cssstyle" class="tsd-kind-icon">css<wbr>Style</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathline.html#end" class="tsd-kind-icon">end</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathline.html#id" class="tsd-kind-icon">id</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathline.html#origin" class="tsd-kind-icon">origin</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathline.html#type" class="tsd-kind-icon">type</a></li>
 				</ul>
@@ -59,7 +58,7 @@ var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'l
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#cssstyle">cssStyle</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L219">core/maker.ts:219</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L147">core/maker.ts:147</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -74,7 +73,7 @@ var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'l
 		<div class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L245">core/maker.ts:245</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L173">core/maker.ts:173</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -84,24 +83,13 @@ var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'l
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="id" class="tsd-anchor"></a>
-		<h3>id</h3>
-		<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ihaveid.html">IHaveId</a>.<a href="makerjs.ihaveid.html#id">id</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L91">core/maker.ts:91</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="origin" class="tsd-anchor"></a>
 		<h3>origin</h3>
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L214">core/maker.ts:214</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L142">core/maker.ts:142</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -117,7 +105,7 @@ var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'l
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L209">core/maker.ts:209</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L137">core/maker.ts:137</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">

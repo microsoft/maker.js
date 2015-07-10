@@ -36,15 +36,15 @@ title: Api - MakerJs Module
 			<section class="tsd-index-section ">
 				<h3>Interfaces</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-private"><a href="interfaces/makerjs.ifound.html" class="tsd-kind-icon">IFound</a></li>
-					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="interfaces/makerjs.ihaveid.html" class="tsd-kind-icon">IHave<wbr>Id</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imeasure.html" class="tsd-kind-icon">IMeasure</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imodel.html" class="tsd-kind-icon">IModel</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imodelmap.html" class="tsd-kind-icon">IModel<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipath.html" class="tsd-kind-icon">IPath</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipatharc.html" class="tsd-kind-icon">IPath<wbr>Arc</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathcircle.html" class="tsd-kind-icon">IPath<wbr>Circle</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="interfaces/makerjs.ipathfunctionmap.html" class="tsd-kind-icon">IPath<wbr>Function<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathline.html" class="tsd-kind-icon">IPath<wbr>Line</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathmap.html" class="tsd-kind-icon">IPath<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="interfaces/makerjs.ipathoriginfunctionmap.html" class="tsd-kind-icon">IPath<wbr>Origin<wbr>Function<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipoint.html" class="tsd-kind-icon">IPoint</a></li>
 				</ul>
@@ -53,11 +53,9 @@ title: Api - MakerJs Module
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#extendobject" class="tsd-kind-icon">extend<wbr>Object</a></li>
-					<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="index.html#findbyid" class="tsd-kind-icon">find<wbr>ById</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ismodel" class="tsd-kind-icon">is<wbr>Model</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispath" class="tsd-kind-icon">is<wbr>Path</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispoint" class="tsd-kind-icon">is<wbr>Point</a></li>
-					<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="index.html#removebyid" class="tsd-kind-icon">remove<wbr>ById</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#round" class="tsd-kind-icon">round</a></li>
 				</ul>
 			</section>
@@ -114,54 +112,6 @@ title: Api - MakerJs Module
 			</li>
 		</ul>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-		<a name="findbyid" class="tsd-anchor"></a>
-		<h3>find<wbr>ById</h3>
-		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-			<li class="tsd-signature tsd-kind-icon">find<wbr>ById&lt;T&gt;<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.ifound.html" class="tsd-signature-type">IFound</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L124">core/maker.ts:124</a></li>
-					</ul>
-				</aside>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Search within an array to find an item by its id property.</p>
-					</div>
-					<p>Examples: find a path with id of &#39;abc&#39;</p>
-					<pre><code><span class="hljs-keyword">var</span> found: IFound&lt;IPath&gt; = findById&lt;IPath&gt;(someModel.paths, <span class="hljs-string">'abc'</span>);   <span class="hljs-comment">//typescript</span>
-<span class="hljs-keyword">var</span> found = findById(someModel.paths, <span class="hljs-string">'abc'</span>);   <span class="hljs-comment">//javascript</span>
-</code></pre>
-				</div>
-				<h4 class="tsd-type-parameters-title">Type parameters</h4>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.ihaveid.html" class="tsd-signature-type">IHaveId</a></h4>
-					</li>
-				</ul>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>arr: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<p>Array to search.</p>
-						</div>
-					</li>
-					<li>
-						<h5>id: <span class="tsd-signature-type">string</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<p>Id of the item to find.</p>
-						</div>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="interfaces/makerjs.ifound.html" class="tsd-signature-type">IFound</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-				<p>object with item and its position.</p>
-			</li>
-		</ul>
-	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="ismodel" class="tsd-anchor"></a>
 		<h3>is<wbr>Model</h3>
@@ -172,7 +122,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L376">core/maker.ts:376</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L313">core/maker.ts:313</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -200,7 +150,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L227">core/maker.ts:227</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L155">core/maker.ts:155</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -231,7 +181,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L179">core/maker.ts:179</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L107">core/maker.ts:107</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -249,53 +199,6 @@ title: Api - MakerJs Module
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-			</li>
-		</ul>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-		<a name="removebyid" class="tsd-anchor"></a>
-		<h3>remove<wbr>ById</h3>
-		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-			<li class="tsd-signature tsd-kind-icon">remove<wbr>ById&lt;T&gt;<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L151">core/maker.ts:151</a></li>
-					</ul>
-				</aside>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Search within an array to find an item by its id property, then remove it from the array.</p>
-					</div>
-					<p>Examples: remove a model with id of &#39;xyz&#39;</p>
-					<pre><code>removeById&lt;IModel&gt;<span class="hljs-list">(<span class="hljs-keyword">someModel</span>.models, <span class="hljs-quoted">'xyz</span>')</span><span class="hljs-comment">;   //typescript</span>
-removeById<span class="hljs-list">(<span class="hljs-keyword">someModel</span>.models, <span class="hljs-quoted">'xyz</span>')</span><span class="hljs-comment">;   //javascript</span>
-</code></pre>
-				</div>
-				<h4 class="tsd-type-parameters-title">Type parameters</h4>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.ihaveid.html" class="tsd-signature-type">IHaveId</a></h4>
-					</li>
-				</ul>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>arr: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<p>Array to search.</p>
-						</div>
-					</li>
-					<li>
-						<h5>id: <span class="tsd-signature-type">string</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<p>Id of the item to find and remove.</p>
-						</div>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 			</li>
 		</ul>
 	</section>
@@ -348,7 +251,7 @@ removeById<span class="hljs-list">(<span class="hljs-keyword">someModel</span>.m
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L320">core/maker.ts:320</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L248">core/maker.ts:248</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -356,8 +259,8 @@ removeById<span class="hljs-list">(<span class="hljs-keyword">someModel</span>.m
 				<p>String-based enumeration of all paths types.</p>
 			</div>
 			<p>Examples: use pathType instead of string literal when creating a circle.</p>
-			<pre><code>var <span class="hljs-string">circle:</span> IPathCircle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">id:</span> <span class="hljs-string">'mycircle'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//typescript</span>
-var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">id:</span> <span class="hljs-string">'mycircle'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//javascript</span>
+			<pre><code>var <span class="hljs-string">circle:</span> IPathCircle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//typescript</span>
+var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//javascript</span>
 </code></pre>
 		</div>
 		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -366,7 +269,7 @@ var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span cla
 			<div class="tsd-signature tsd-kind-icon">Arc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L323">core/maker.ts:323</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L251">core/maker.ts:251</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -376,7 +279,7 @@ var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span cla
 			<div class="tsd-signature tsd-kind-icon">Circle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L322">core/maker.ts:322</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L250">core/maker.ts:250</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -386,7 +289,7 @@ var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span cla
 			<div class="tsd-signature tsd-kind-icon">Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L321">core/maker.ts:321</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L249">core/maker.ts:249</a></li>
 				</ul>
 			</aside>
 		</section>

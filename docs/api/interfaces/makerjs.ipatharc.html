@@ -9,8 +9,8 @@ title: Api - IPathArc Interface
 			<p>An arc path.</p>
 		</div>
 		<p>Examples:</p>
-		<pre><code>var <span class="hljs-string">arc:</span> IPathArc = { <span class="hljs-string">type:</span> <span class="hljs-string">'arc'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'myarc'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span>, <span class="hljs-string">startAngle:</span> <span class="hljs-number">0</span>, <span class="hljs-string">endAngle:</span> <span class="hljs-number">45</span> };   <span class="hljs-comment">//typescript</span>
-var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'arc'</span>, <span class="hljs-string">id:</span> <span class="hljs-string">'myarc'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span>, <span class="hljs-string">startAngle:</span> <span class="hljs-number">0</span>, <span class="hljs-string">endAngle:</span> <span class="hljs-number">45</span> };   <span class="hljs-comment">//javascript</span>
+		<pre><code>var <span class="hljs-string">arc:</span> IPathArc = { <span class="hljs-string">type:</span> <span class="hljs-string">'arc'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span>, <span class="hljs-string">startAngle:</span> <span class="hljs-number">0</span>, <span class="hljs-string">endAngle:</span> <span class="hljs-number">45</span> };   <span class="hljs-comment">//typescript</span>
+var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'arc'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span>, <span class="hljs-string">startAngle:</span> <span class="hljs-number">0</span>, <span class="hljs-string">endAngle:</span> <span class="hljs-number">45</span> };   <span class="hljs-comment">//javascript</span>
 </code></pre>
 	</div>
 </section>
@@ -42,7 +42,6 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#cssstyle" class="tsd-kind-icon">css<wbr>Style</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipatharc.html#endangle" class="tsd-kind-icon">end<wbr>Angle</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#id" class="tsd-kind-icon">id</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#origin" class="tsd-kind-icon">origin</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#radius" class="tsd-kind-icon">radius</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipatharc.html#startangle" class="tsd-kind-icon">start<wbr>Angle</a></li>
@@ -61,7 +60,7 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#cssstyle">cssStyle</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L219">core/maker.ts:219</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L147">core/maker.ts:147</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -76,7 +75,7 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 		<div class="tsd-signature tsd-kind-icon">end<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L284">core/maker.ts:284</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L212">core/maker.ts:212</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -86,24 +85,13 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="id" class="tsd-anchor"></a>
-		<h3>id</h3>
-		<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ihaveid.html">IHaveId</a>.<a href="makerjs.ihaveid.html#id">id</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L91">core/maker.ts:91</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="origin" class="tsd-anchor"></a>
 		<h3>origin</h3>
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L214">core/maker.ts:214</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L142">core/maker.ts:142</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -119,7 +107,7 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipathcircle.html">IPathCircle</a>.<a href="makerjs.ipathcircle.html#radius">radius</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L262">core/maker.ts:262</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L190">core/maker.ts:190</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -134,7 +122,7 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 		<div class="tsd-signature tsd-kind-icon">start<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L279">core/maker.ts:279</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L207">core/maker.ts:207</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -150,7 +138,7 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L209">core/maker.ts:209</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L137">core/maker.ts:137</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
