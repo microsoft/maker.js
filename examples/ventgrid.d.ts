@@ -5,8 +5,7 @@ declare class Ventgrid implements MakerJs.IModel {
     spacing: number;
     width: number;
     height: number;
-    id: string;
     units: string;
-    paths: MakerJs.IPath[];
+    paths: MakerJs.IPathMap;
     constructor(filterRadius: number, spacing: number, width: number, height: number);
 }

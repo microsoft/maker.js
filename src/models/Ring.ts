@@ -1,18 +1,18 @@
-﻿module MakerJs.models {
+module MakerJs.models {
 
     export class Ring implements IModel {
 
-        public paths: IPath[] = [];
+        public paths: IPathMap = {};
 
-        constructor(public id: string, outerRadius: number, innerRadius: number) {
+        constructor(outerRadius: number, innerRadius: number) {
 
             var radii = {
                 "Ring_outer": outerRadius,
                 "Ring_inner": innerRadius
             };
 
-            for (var key in radii) {
-                this.paths.push(new paths.Circle(key, point.zero(), radii[key]));
+            for (var id in radii) {
+                this.paths[id] = new paths.Circle(point.zero(), radii[id]);
             }
         }
     }

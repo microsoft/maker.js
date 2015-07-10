@@ -49,15 +49,15 @@ module MakerJs.tools {
 
         var ret: IBrokenPath[] = [];
 
-        function addLine(suffix: string, origin: IPoint, end: IPoint) {
+        function addLine(origin: IPoint, end: IPoint) {
             ret.push({
-                newPath: new paths.Line(line.id + suffix, point.clone(origin), point.clone(end)),
+                newPath: new paths.Line(point.clone(origin), point.clone(end)),
                 newPoint: point.clone(breakPoint)
             });
         }
 
-        addLine("_1", line.origin, breakPoint);
-        addLine("_2", breakPoint, line.end);
+        addLine(line.origin, breakPoint);
+        addLine(breakPoint, line.end);
 
         return ret;
     };
@@ -74,15 +74,15 @@ module MakerJs.tools {
 
         var ret: IBrokenPath[] = [];
 
-        function addArc(suffix: string, startAngle: number, endAngle: number) {
+        function addArc(startAngle: number, endAngle: number) {
             ret.push({
-                newPath: new paths.Arc(arc.id + suffix, point.clone(arc.origin), arc.radius, startAngle, endAngle),
+                newPath: new paths.Arc(point.clone(arc.origin), arc.radius, startAngle, endAngle),
                 newPoint: point.clone(breakPoint)
             });
         }
 
-        addArc("_1", arc.startAngle, breakAngle);
-        addArc("_2", breakAngle, arc.endAngle);
+        addArc(arc.startAngle, breakAngle);
+        addArc(breakAngle, arc.endAngle);
 
         return ret;
     };
@@ -107,20 +107,18 @@ module MakerJs.tools {
      */
     export function gapPath(modelToGap: IModel, pathId: string, gapLength: number, breakAt: number= .5): IPoint[] {
 
-        var found = findById<IPath>(modelToGap.paths, pathId);
+        var foundPath = modelToGap.paths[pathId];
 
-        if (!found) return null;
+        if (!foundPath) return null;
 
-        modelToGap.paths.splice(found.index, 1); //remove the path from the array
-
-        var foundPath = found.item;
+        delete modelToGap.paths[pathId]; //remove the path from the array
 
         var halfGap = gapLength / 2;
 
         var ret: IPoint[] = [];
 
-        function append(brokenPath: IBrokenPath, extraPoint?: IPoint) {
-            modelToGap.paths.push(brokenPath.newPath);
+        function append(id: string, brokenPath: IBrokenPath, extraPoint?: IPoint) {
+            modelToGap.paths[id] = brokenPath.newPath;
             ret.push(brokenPath.newPoint);
 
             if (extraPoint) {
@@ -145,9 +143,9 @@ module MakerJs.tools {
                     var secondBreak = breakPath(line, chopDistance / len);
 
                     if (start) {
-                        append(secondBreak[0]);
+                        append(pathId + '_1', secondBreak[0]);
                     } else {
-                        append(secondBreak[1]);
+                        append(pathId + '_2', secondBreak[1]);
                     }
                 } else {
                     if (start) {
@@ -171,11 +169,11 @@ module MakerJs.tools {
             var endAngle = breakAangle - halfGapAngle;
 
             var brokenPath = {
-                newPath: new paths.Arc(circle.id + "_1", point.clone(circle.origin), circle.radius, startAngle, endAngle),
+                newPath: new paths.Arc(point.clone(circle.origin), circle.radius, startAngle, endAngle),
                 newPoint: point.add(circle.origin, point.fromPolar(angle.toRadians(startAngle), circle.radius))
             };
 
-            append(brokenPath, point.add(circle.origin, point.fromPolar(angle.toRadians(endAngle), circle.radius)));
+            append(pathId, brokenPath, point.add(circle.origin, point.fromPolar(angle.toRadians(endAngle), circle.radius)));
         };
 
         map[pathType.Arc] = function (arc: IPathArc) {
@@ -194,9 +192,9 @@ module MakerJs.tools {
                     var secondBreak = breakPath(chopArc, chopDistance / totalAngle);
 
                     if (start) {
-                        append(secondBreak[0]);
+                        append(pathId + '_1', secondBreak[0]);
                     } else {
-                        append(secondBreak[1]);
+                        append(pathId + '_2', secondBreak[1]);
                     }
                 } else {
 
@@ -233,7 +231,7 @@ module MakerJs.tools {
         var lines: IPathLine[] = [];
 
         for (var i = 2; i--;) {
-            lines.push(new paths.Line('bridge' + i, gap1[i], gap2[i]));
+            lines.push(new paths.Line(gap1[i], gap2[i]));
         }
 
         if (pathIntersection(lines[0], lines[1])) {

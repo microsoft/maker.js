@@ -16,7 +16,7 @@ module MakerJs.paths {
     export class Arc implements IPathArc {
         public type: string;
 
-        constructor(public id: string, public origin: IPoint, public radius: number, public startAngle: number, public endAngle: number) {
+        constructor(public origin: IPoint, public radius: number, public startAngle: number, public endAngle: number) {
             this.type = pathType.Arc;
         }
     }
@@ -31,7 +31,7 @@ module MakerJs.paths {
     export class Circle implements IPathCircle {
         public type: string;
 
-        constructor(public id: string, public origin: IPoint, public radius: number) {
+        constructor(public origin: IPoint, public radius: number) {
             this.type = pathType.Circle;
         }
     }
@@ -46,7 +46,7 @@ module MakerJs.paths {
     export class Line implements IPathLine {
         public type: string;
 
-        constructor(public id: string, public origin: IPoint, public end: IPoint) {
+        constructor(public origin: IPoint, public end: IPoint) {
             this.type = pathType.Line;
         }
     }

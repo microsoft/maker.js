@@ -1,4 +1,4 @@
-﻿var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('../target/js/node.maker.js');
 
 function M(height, columnSpace, columnWidth, dropHigh, dropLow, dropConnect, innerSerifWidth, serifWidth, serifHeight) {
 
@@ -23,10 +23,9 @@ function M(height, columnSpace, columnWidth, dropHigh, dropLow, dropConnect, inn
     points.push([columnRef, serifH + (height - serifH) * dropConnect]);
     points.push([center, height * dropLow]);
 
-    var halfModel = new makerjs.models.ConnectTheDots('halfModel', false, points);
+    var halfModel = new makerjs.models.ConnectTheDots(false, points);
     var otherHalf = makerjs.model.move(makerjs.model.mirror(halfModel, true, false), [center * 2, 0])
 
-    this.id = 'M';
     this.units = makerjs.unitType.Inch;
     this.models = [halfModel, otherHalf];
 }

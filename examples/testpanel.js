@@ -1,37 +1,35 @@
-﻿var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('../target/js/node.maker.js');
 
 function testPanel(count, height, width, radius, angle) {
 
     function myModelFactory() {
-        this.id = 'factoryModel';
-        this.paths = [];
-        this.models = [];
+        this.paths = {};
+        this.models = {};
 
-        var circle = new makerjs.paths.Circle('c1', [0, 0], Math.min(height, width) / 2 - .5);
+        var circle = new makerjs.paths.Circle([0, 0], Math.min(height, width) / 2 - .5);
 
         if (radius < 0.5) {
-            this.models.push(makerjs.model.move(new makerjs.models.BoltRectangle('boltrect', width - .4, height - .4, .07), [.2, .2]));
+            this.models['boltrect'] = makerjs.model.move(new makerjs.models.BoltRectangle(width - .4, height - .4, .07), [.2, .2]);
         }
 
-        this.paths.push(makerjs.path.moveRelative(circle, [width / 2, height / 2]));
+        this.paths['c1'] = makerjs.path.moveRelative(circle, [width / 2, height / 2]);
 
-        this.models.push(new makerjs.models.RoundRectangle('panel', width, height, radius));
+        this.models['panel'] = new makerjs.models.RoundRectangle(width, height, radius);
 
-        this.models.push(makerjs.model.move(new makerjs.models.BoltCircle('boltcircle', circle.radius + 0.25, .05, 6), [width / 2, height / 2]));
+        this.models['boltcircle'] = makerjs.model.move(new makerjs.models.BoltCircle(circle.radius + 0.25, .05, 6), [width / 2, height / 2]);
 
         makerjs.model.rotate(this, angle, makerjs.point.zero());
     }
 
     //modeling
-    this.id = 'myModel';
     this.units = makerjs.unitType.Inch;
-    this.models = [new myModelFactory()];
+    this.models = {'0': new myModelFactory()};
 
-    var m = makerjs.measure.modelExtents(this.models[0]);
+    var m = makerjs.measure.modelExtents(this.models['0']);
     var x = m.high[0] - m.low[0] + .025;
 
     for (var i = 1; i < count; i++) {
-        this.models.push(makerjs.model.move(new myModelFactory(), [x * i, 0]));
+        this.models[i + ''] = makerjs.model.move(new myModelFactory(), [x * i, 0]);
     }
 
 }

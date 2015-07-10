@@ -83,78 +83,6 @@ module MakerJs {
         return target;
     }
 
-    /**
-     * Things that may have an id.
-     * @private
-     */
-    export interface IHaveId {
-        id: string;
-    }
-
-    /**
-     * An item found in an array.
-     * @private
-     */
-    export interface IFound<T> {
-
-        /**
-         * Position of the item within the array.
-         */
-
-        index: number;
-        /**
-         * The found item.
-         */
-        item: T;
-    }
-
-    /**
-     * Search within an array to find an item by its id property.
-     * 
-     * Examples: find a path with id of 'abc'
-     * ```
-     * var found: IFound<IPath> = findById<IPath>(someModel.paths, 'abc');   //typescript
-     * var found = findById(someModel.paths, 'abc');   //javascript
-     * ```
-     * 
-     * @param arr Array to search.
-     * @param id Id of the item to find.
-     * @returns object with item and its position.
-     */
-    export function findById<T extends IHaveId>(arr: T[], id: string): IFound<T> {
-        if (arr) {
-            for (var i = 0; i < arr.length; i++) {
-                var item = arr[i];
-                if (item.id == id) {
-                    return {
-                        index: i,
-                        item: item
-                    };
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Search within an array to find an item by its id property, then remove it from the array.
-     * 
-     * Examples: remove a model with id of 'xyz'
-     * ```
-     * removeById<IModel>(someModel.models, 'xyz');   //typescript
-     * removeById(someModel.models, 'xyz');   //javascript
-     * ```
-     * 
-     * @param arr Array to search.
-     * @param id Id of the item to find and remove.
-     */
-    export function removeById<T extends IHaveId>(arr: T[], id: string): void {
-        var found = findById<T>(arr, id);
-        if (found) {
-            arr.splice(found.index, 1);
-        }
-    }
-
     //points
 
     /**
@@ -201,7 +129,7 @@ module MakerJs {
     /**
      * A line, curved line or other simple two dimensional shape.
      */
-    export interface IPath extends IHaveId {
+    export interface IPath {
         
         /**
          * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
@@ -233,8 +161,8 @@ module MakerJs {
      * 
      * Examples:
      * ```
-     * var line: IPathLine = { type: 'line', id: 'myline', origin: [0, 0], end: [1, 1] };   //typescript
-     * var line = { type: 'line', id: 'myline', origin: [0, 0], end: [1, 1] };   //javascript
+     * var line: IPathLine = { type: 'line', origin: [0, 0], end: [1, 1] };   //typescript
+     * var line = { type: 'line', origin: [0, 0], end: [1, 1] };   //javascript
      * ```
      */
     export interface IPathLine extends IPath {
@@ -250,8 +178,8 @@ module MakerJs {
      * 
      * Examples:
      * ```
-     * var circle: IPathCircle = { type: 'circle', id: 'mycircle', origin: [0, 0], radius: 7 };   //typescript
-     * var circle = { type: 'circle', id: 'mycircle', origin: [0, 0], radius: 7 };   //javascript
+     * var circle: IPathCircle = { type: 'circle', origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: 'circle', origin: [0, 0], radius: 7 };   //javascript
      * ```
      */
     export interface IPathCircle extends IPath {
@@ -267,8 +195,8 @@ module MakerJs {
      * 
      * Examples:
      * ```
-     * var arc: IPathArc = { type: 'arc', id: 'myarc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //typescript
-     * var arc = { type: 'arc', id: 'myarc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //javascript
+     * var arc: IPathArc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //typescript
+     * var arc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //javascript
      * ```
      */
     export interface IPathArc extends IPathCircle {
@@ -305,7 +233,7 @@ module MakerJs {
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
-        [type: string]: (pathValue: IPath, origin: IPoint) => void;
+        [type: string]: (id: string, pathValue: IPath, origin: IPoint) => void;
     }
 
     /**
@@ -313,8 +241,8 @@ module MakerJs {
      * 
      * Examples: use pathType instead of string literal when creating a circle.
      * ```
-     * var circle: IPathCircle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //typescript
-     * var circle = { type: pathType.Circle, id: 'mycircle', origin: [0, 0], radius: 7 };   //javascript
+     * var circle: IPathCircle = { type: pathType.Circle, origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: pathType.Circle, origin: [0, 0], radius: 7 };   //javascript
      * ```
      */
     export var pathType = {
@@ -325,19 +253,28 @@ module MakerJs {
 
     //models
 
+    export interface IPathMap {
+        [id: string]: IPath;
+    }
+
+    export interface IModelMap {
+        [id: string]: IModel;
+    }
+
     /**
      * A model is a composite object which may contain an array of paths, or an array of models recursively.
      * 
      * Example:
      * ```
-     * var m = { id: 'mymodel', 
-     *   paths: [ 
-     *     { type: 'line', id: 'l1', origin: [0, 0], end: [1, 1] }, 
-     *     { type: 'line', id: 'l2', origin: [0, 0], end: [-1, -1] } 
-     *   ] };
+     * var m = { 
+     *   paths: { 
+     *     "line1": { type: 'line', origin: [0, 0], end: [1, 1] }, 
+     *     "line2": { type: 'line', origin: [0, 0], end: [-1, -1] } 
+     *   } 
+     * };
      * ```
      */
-    export interface IModel extends IHaveId {
+    export interface IModel {
         
         /**
          * Optional origin location of this model.
@@ -352,12 +289,12 @@ module MakerJs {
         /**
          * Optional array of path objects in this model.
          */
-        paths?: IPath[];
+        paths?: IPathMap;
         
         /**
          * Optional array of models within this model.
          */
-        models?: IModel[];
+        models?: IModelMap;
         
         /**
          * Optional unit system of this model. See UnitType for possible values.

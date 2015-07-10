@@ -1,4 +1,4 @@
-﻿/// <reference path="solvers.ts" />
+/// <reference path="solvers.ts" />
 
 module MakerJs.tools {
 
@@ -350,7 +350,7 @@ module MakerJs.tools {
         var radius = round(circle.radius);
 
         //clone the line
-        var clonedLine = new paths.Line('clone', point.subtract(line.origin, circle.origin), point.subtract(line.end, circle.origin));
+        var clonedLine = new paths.Line(point.subtract(line.origin, circle.origin), point.subtract(line.end, circle.origin));
 
         //get angle of line
         var lineAngleNormal = getLineAngle(line.origin, line.end);
@@ -417,10 +417,10 @@ module MakerJs.tools {
         var offset = point.subtract(point.zero(), circle1.origin);
 
         //clone circle1 and move to origin
-        var c1 = new paths.Circle('c1', point.zero(), circle1.radius);
+        var c1 = new paths.Circle(point.zero(), circle1.radius);
 
         //clone circle2 and move relative to circle1
-        var c2 = new paths.Circle('c2', point.subtract(circle2.origin, circle1.origin), circle2.radius);
+        var c2 = new paths.Circle(point.subtract(circle2.origin, circle1.origin), circle2.radius);
 
         //rotate circle2 to horizontal, c2 will be to the right of the origin.
         var c2Angle = angle.toDegrees(angle.ofPointInRadians(point.zero(), c2.origin));
