@@ -2,18 +2,12 @@
 title: Models
 ---
 
-<p>Models are the heart of Maker.js. A model is represented by an object with this mandatory property:</p>
-
-<ul>
-  <li>id: string</li>
-</ul>
-
-<p>A model may have these optional properties:</p>
+<p>Models are the heart of Maker.js. A model is represented by an object with these optional properties:</p>
 
 <ul>
   <li>origin: point</li>
-  <li>paths: array of paths</li>
-  <li>models: array of models</li>
+  <li>paths: object map of paths</li>
+  <li>models: object map of models</li>
 </ul>
 
 <p>Let's look at <b>paths</b> first, using the example above.</p>
@@ -22,22 +16,20 @@ title: Models
 var makerjs = require('makerjs');
 
 var line = { 
-  id: 'myLineId', 
   type: 'line', 
   origin: [0, 0], 
   end: [50, 50] 
  };
 
 var circle = { 
-  id: 'myCircleId', 
   type: 'circle', 
   origin: [0, 0],
   radius: 50
  };
 
-var pathArray = [ line, circle ];
+var pathObject = { myLine: line, myCircle: circle };
 
-var model = { id: 'myModel', paths: pathArray };
+var model = { paths: pathObject };
 
 var svg = makerjs.exporter.toSVG(model);
 
@@ -52,22 +44,20 @@ document.write(svg);
 var makerjs = require('makerjs');
 
 var line = { 
-  id: 'myLineId', 
   type: 'line', 
   origin: [0, 0], 
   end: [50, 50] 
  };
 
 var circle = { 
-  id: 'myCircleId', 
   type: 'circle', 
   origin: [0, 0],
   radius: 50
  };
 
-var pathArray = [ line, circle ];
+var pathObject = { myLine: line, myCircle: circle };
 
-var model = { id: 'myModel', paths: pathArray };
+var model = { paths: pathObject };
 
 var svg = makerjs.exporter.toSVG(model);
 
@@ -85,22 +75,20 @@ var makerjs = require('makerjs');
 function myModel() {
 
  var line = { 
-   id: 'myLineId', 
    type: 'line', 
    origin: [0, 0], 
    end: [50, 50] 
   };
 
  var circle = { 
-   id: 'myCircleId', 
    type: 'circle', 
    origin: [0, 0],
    radius: 50
   };
 
- var pathArray = [ line, circle ];
+ var pathObject = { myLine: line, myCircle: circle };
 
- var model = { id: 'myModel', paths: pathArray };
+ var model = { paths: pathObject };
  
  return model;
 }
@@ -121,24 +109,21 @@ var makerjs = require('makerjs');
 function myModel() {
 
  var line = { 
-   id: 'myLineId', 
    type: 'line', 
    origin: [0, 0], 
    end: [50, 50] 
   };
 
  var circle = { 
-   id: 'myCircleId', 
    type: 'circle', 
    origin: [0, 0],
    radius: 50
   };
 
- var pathArray = [ line, circle ];
+ var pathObject = { myLine: line, myCircle: circle };
 
 //set properties using the "this" keyword
- this.id = 'myModel';
- this.paths = pathArray;
+ this.paths = pathObject;
 }
 
 //note we are using the "new" operator
@@ -158,24 +143,21 @@ var makerjs = require('makerjs');
 function myModel() {
 
  var line = { 
-   id: 'myLineId', 
    type: 'line', 
    origin: [0, 0], 
    end: [50, 50] 
   };
 
  var circle = { 
-   id: 'myCircleId', 
    type: 'circle', 
    origin: [0, 0],
    radius: 50
   };
 
- var pathArray = [ line, circle ];
- 
+ var pathObject = { myLine: line, myCircle: circle };
+
 //set properties using the "this" keyword
- this.id = 'myModel';
- this.paths = pathArray;
+ this.paths = pathObject;
 }
 
 //note we are using the "new" operator
@@ -193,24 +175,21 @@ var makerjs = require('makerjs');
 function myModel() {
 
  var line = { 
-   id: 'myLineId', 
    type: 'line', 
    origin: [0, 0], 
    end: [50, 50] 
   };
 
  var circle = { 
-   id: 'myCircleId', 
    type: 'circle', 
    origin: [0, 0],
    radius: 50
   };
 
- var pathArray = [ line, circle ];
+ var pathObject = { myLine: line, myCircle: circle };
  
 //set properties using the "this" keyword
- this.id = 'myModel';
- this.paths = pathArray;
+ this.paths = pathObject;
 }
 
 var model1 = new myModel();
@@ -220,8 +199,7 @@ var model2 = new myModel();
 model2.origin = [100, 0];
 
 var model = { 
-  id: 'iHave2models',
-  models: [ model1, model2 ] 
+  models: { "myModel1": model1, "myModel2": model2 }
 };
 
 var svg = makerjs.exporter.toSVG(model);
@@ -239,24 +217,21 @@ var makerjs = require('makerjs');
 function myModel() {
 
  var line = { 
-   id: 'myLineId', 
    type: 'line', 
    origin: [0, 0], 
    end: [50, 50] 
   };
 
  var circle = { 
-   id: 'myCircleId', 
    type: 'circle', 
    origin: [0, 0],
    radius: 50
   };
 
- var pathArray = [ line, circle ];
+ var pathObject = { myLine: line, myCircle: circle };
  
 //set properties using the "this" keyword
- this.id = 'myModel';
- this.paths = pathArray;
+ this.paths = pathObject;
 }
 
 var model1 = new myModel();
@@ -266,8 +241,7 @@ var model2 = new myModel();
 model2.origin = [100, 0];
 
 var model = { 
-  id: 'iHave2models',
-  models: [ model1, model2 ] 
+  models: { "myModel1": model1, "myModel2": model2 }
 };
 
 var svg = makerjs.exporter.toSVG(model);
