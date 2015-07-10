@@ -56,11 +56,5 @@ Ventgrid.metaParameters = [
     { title: "height", type: "range", min: 20, max: 200, value: 50 },
 ];
 module.exports = Ventgrid;
-<<<<<<< HEAD:demos/ventgrid.js
 
 },{"makerjs":undefined}]},{},[]);
-=======
-//To compile this: go to the root and:
-// cd examples
-// tsc ventgrid.ts --declaration
->>>>>>> origin/master:examples/ventgrid.js

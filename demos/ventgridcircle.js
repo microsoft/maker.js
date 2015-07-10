@@ -9,9 +9,8 @@ var Ventgrid = (function () {
         this.spacing = spacing;
         this.width = width;
         this.height = height;
-        this.id = 'ventgridInstance';
         this.units = makerjs.unitType.Millimeter;
-        this.paths = [];
+        this.paths = {};
         var alternate = false;
         var xDistance = 2 * filterRadius * (1 + spacing / 100);
         var countX = Math.ceil(width / xDistance);
@@ -32,9 +31,10 @@ var Ventgrid = (function () {
                     x += xDistance / 2;
                 }
                 if (checkBoundary(Math.abs(x), Math.abs(y))) {
-                    _this.paths.push(new makerjs.paths.Circle('filter', [x, y], filterRadius));
+                    var id = 'filter_' + i + '_' + iy;
+                    _this.paths[id] = new makerjs.paths.Circle([x, y], filterRadius);
                     if (alternate || (!alternate && i > 0)) {
-                        _this.paths.push(new makerjs.paths.Circle('filter', [-x, y], filterRadius));
+                        _this.paths[id + '_alt'] = new makerjs.paths.Circle([-x, y], filterRadius);
                     }
                 }
             }

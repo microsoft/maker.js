@@ -1,7 +1,4 @@
-<<<<<<< HEAD:demos/testPanel.js
-=======
-var makerjs = require('../target/js/node.maker.js');
->>>>>>> origin/master:examples/testpanel.js
+var makerjs = require('makerjs');
 
 function testPanel(count, height, width, radius, angle) {
 
