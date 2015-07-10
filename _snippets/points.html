@@ -18,9 +18,9 @@ var makerjs = require('makerjs');
 
 function arrow(id) {
     this.paths = {};
-    paths[id] = new makerjs.paths.Line([0, 0], [100, 0]);
-    paths[''] = new makerjs.paths.Line([90, -10], [100, 0]);
-    paths[' '] = new makerjs.paths.Line([90, 10], [100, 0]);
+    this.paths[id] = new makerjs.paths.Line([0, 0], [100, 0]);
+    this.paths[''] = new makerjs.paths.Line([90, -10], [100, 0]);
+    this.paths[' '] = new makerjs.paths.Line([90, 10], [100, 0]);
 }
 
 var model = {
