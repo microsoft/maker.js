@@ -14,12 +14,11 @@ especially when modifying paths in external models.
 var makerjs = require('makerjs');
 
 var model = { 
-  id: 'roundcorner',
-    paths: [
-      new makerjs.paths.Line('v', [0, 0], [0, 100]),
-      new makerjs.paths.Line('h', [0, 0], [100, 0]),
-      new makerjs.paths.Arc('arc', [0, 0], 100, 0, 90)
-    ]
+  paths: {
+    "v": new makerjs.paths.Line([0, 0], [0, 100]),
+    "h": new makerjs.paths.Line([0, 0], [100, 0]),
+    "arc":new makerjs.paths.Arc([0, 0], 100, 0, 90)
+  }
 };
 
 var svg = makerjs.exporter.toSVG(model);
@@ -35,18 +34,16 @@ document.write(svg);
 var makerjs = require('makerjs');
 
 var model = { 
-  id: 'roundcorner',
-    paths: [
-      new makerjs.paths.Line('v', [0, 0], [0, 100]),
-      new makerjs.paths.Line('h', [0, 0], [100, 0]),
-      new makerjs.paths.Arc('arc', [0, 0], 100, 0, 90)
-    ]
+  paths: {
+    "v": new makerjs.paths.Line([0, 0], [0, 100]),
+    "h": new makerjs.paths.Line([0, 0], [100, 0]),
+    "arc":new makerjs.paths.Arc([0, 0], 100, 0, 90)
+  }
 };
 
 var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
-
 </script>
 
 <p>

@@ -19,7 +19,6 @@ and convert it to a constructor function.
 var makerjs = require('makerjs');
 
 var line = { 
-  id: 'myLineId', 
   type: 'line', 
   origin: [0, 0], 
   end: [50, 50] 
@@ -36,7 +35,6 @@ document.write(svg);
 var makerjs = require('makerjs');
 
 function line() { 
-  this.id = 'myLineId', 
   this.type = 'line', 
   this.origin = [0, 0], 
   this.end = [50, 50] 
@@ -49,23 +47,23 @@ document.write(svg);
 
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/4m5f25rn/" target="_blank">try it in JsFiddle &#8663;</a>
 
-<p>Of course this example is not very useful because it only produces a line with the same id, origin and end every time. 
+<p>Of course this example is not very useful because it only produces a line with the same origin and end every time. 
 Instead, these should be passed as parameters.</p>
 
 <p>Since this is a common scenario, Maker.js provides constructors for all primitive paths: line, circle and arc:</p>
 
 <ul>
-  <li>makerjs.paths.Line(id: string, origin: point, end: point)</li>
-  <li>makerjs.paths.Circle(id: string, origin: point, radius: number)</li>
-  <li>makerjs.paths.Arc(id: string, origin: point, radius: number, startAngle: number, endAngle: number)</li>
+  <li>makerjs.paths.Line(origin: point, end: point)</li>
+  <li>makerjs.paths.Circle(origin: point, radius: number)</li>
+  <li>makerjs.paths.Arc(origin: point, radius: number, startAngle: number, endAngle: number)</li>
 </ul>
 
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var line = new makerjs.paths.Line('myLineId', [0, 0], [50, 50]);
-var circle = new makerjs.paths.Circle('myCircleId', [0, 0], 50);
-var arc = new makerjs.paths.Arc('myArcId', [0, 0], 25, 0, 90);
+var line = new makerjs.paths.Line([0, 0], [50, 50]);
+var circle = new makerjs.paths.Circle([0, 0], 50);
+var arc = new makerjs.paths.Arc([0, 0], 25, 0, 90);
  
 var svg = makerjs.exporter.toSVG([line, circle, arc]);
 
@@ -79,10 +77,10 @@ document.write(svg);
 <script>
 var makerjs = require('makerjs');
 
-var line = new makerjs.paths.Line('myLineId', [0, 0], [50, 50]);
-var circle = new makerjs.paths.Circle('myCircleId', [0, 0], 50);
-var arc = new makerjs.paths.Arc('myArcId', [0, 0], 25, 0, 90);
- 
+var line = new makerjs.paths.Line([0, 0], [50, 50]);
+var circle = new makerjs.paths.Circle([0, 0], 50);
+var arc = new makerjs.paths.Arc([0, 0], 25, 0, 90);
+
 var svg = makerjs.exporter.toSVG([line, circle, arc]);
 
 document.write(svg);
