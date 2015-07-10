@@ -1,13 +1,13 @@
-﻿module MakerJs.models {
+module MakerJs.models {
 
     export class ConnectTheDots implements IModel {
 
-        public paths: IPath[] = [];
+        public paths: IPathMap = {};
 
-        constructor(public id: string, isClosed: boolean, points: IPoint[]) {
+        constructor(isClosed: boolean, points: IPoint[]) {
 
             var connect = (a: number, b: number) => {
-                this.paths.push(new paths.Line("ShapeLine" + i, points[a], points[b]));
+                this.paths["ShapeLine" + i] = new paths.Line(points[a], points[b]);
             }
 
             for (var i = 1; i < points.length; i++) {

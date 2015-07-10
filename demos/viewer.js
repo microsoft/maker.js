@@ -44,7 +44,7 @@ var Viewer = {
         };
 
         var size = 250;
-        var crossHairs = [new makerjs.paths.Line('v', [0, size], [0, -size]), new makerjs.paths.Line('h', [-size, 0], [size, 0]), ];
+        var crossHairs = [new makerjs.paths.Line([0, size], [0, -size]), new makerjs.paths.Line([-size, 0], [size, 0]), ];
         document.getElementById("svg-guides").innerHTML = makerjs.exporter.toSVG(crossHairs, crosshairOptions);
     },
 

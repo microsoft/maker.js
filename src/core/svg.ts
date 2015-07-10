@@ -96,18 +96,18 @@ module MakerJs.exporter {
 
         var map: IPathOriginFunctionMap = {};
 
-        map[pathType.Line] = function (line: IPathLine, origin: IPoint) {
+        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint) {
 
             var start = line.origin;
             var end = line.end;
 
             if (opts.useSvgPathOnly) {
-                drawPath(line.id, start[0], start[1], [round(end[0]), round(end[1])], line.cssStyle);
+                drawPath(id, start[0], start[1], [round(end[0]), round(end[1])], line.cssStyle);
             } else {
                 createElement(
                     "line",
                     {
-                        "id": line.id,
+                        "id": id,
                         "x1": round(start[0]),
                         "y1": round(start[1]),
                         "x2": round(end[0]),
@@ -116,12 +116,12 @@ module MakerJs.exporter {
                     });
 
                 if (opts.annotate) {
-                    drawText(line.id,(start[0] + end[0]) / 2,(start[1] + end[1]) / 2);
+                    drawText(id,(start[0] + end[0]) / 2,(start[1] + end[1]) / 2);
                 }
             }
         };
 
-        map[pathType.Circle] = function (circle: IPathCircle, origin: IPoint) {
+        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint) {
 
             var center = circle.origin;
 
@@ -138,13 +138,13 @@ module MakerJs.exporter {
                 halfCircle(1);
                 halfCircle(-1);
 
-                drawPath(circle.id, center[0], center[1], d, circle.cssStyle);
+                drawPath(id, center[0], center[1], d, circle.cssStyle);
 
             } else {
                 createElement(
                     "circle",
                     {
-                        "id": circle.id,
+                        "id": id,
                         "r": circle.radius,
                         "cx": round(center[0]),
                         "cy": round(center[1]),
@@ -153,7 +153,7 @@ module MakerJs.exporter {
             }
 
             if (opts.annotate) {
-                drawText(circle.id, center[0], center[1]);
+                drawText(id, center[0], center[1]);
             }
         };
 
@@ -166,7 +166,7 @@ module MakerJs.exporter {
             d.push(round(end[0]), round(end[1]));
         }
 
-        map[pathType.Arc] = function (arc: IPathArc, origin: IPoint) {
+        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint) {
 
             var arcPoints = point.fromArc(arc);
 
@@ -179,7 +179,7 @@ module MakerJs.exporter {
                 arc.startAngle > arc.endAngle
                 );
 
-            drawPath(arc.id, arcPoints[0][0], arcPoints[0][1], d, arc.cssStyle);
+            drawPath(id, arcPoints[0][0], arcPoints[0][1], d, arc.cssStyle);
         };
 
         //fixup options
@@ -193,10 +193,10 @@ module MakerJs.exporter {
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToMeasure = { id: 'modelToMeasure', paths: <IPath[]>itemToExport };
+            modelToMeasure = { paths: <{ [id: string]: IPath }>itemToExport };
 
         } else if (isPath(itemToExport)) {
-            modelToMeasure = { id: 'modelToMeasure', paths: [(<IPath>itemToExport)] };
+            modelToMeasure = { paths: {modelToMeasure: <IPath>itemToExport } };
         }
 
         var size = measure.modelExtents(modelToMeasure);
@@ -238,10 +238,8 @@ module MakerJs.exporter {
 
         var modelGroup = new XmlTag('g');
 
-        function beginModel(modelContext: IModel) {
-            modelGroup.attrs = {
-                id: modelContext.id
-            };
+        function beginModel(id: string, modelContext: IModel) {
+            modelGroup.attrs = { id: id };
             append(modelGroup.getOpeningTag(false));
         }
 
@@ -278,7 +276,7 @@ module MakerJs.exporter {
         append(svgGroup.getOpeningTag(false));
 
         var exp = new Exporter(map, fixPoint, fixPath, beginModel, endModel);
-        exp.exportItem(itemToExport, opts.origin);
+        exp.exportItem('itemToExport', itemToExport, opts.origin);
 
         append(svgGroup.getClosingTag());
         append(svgTag.getClosingTag());

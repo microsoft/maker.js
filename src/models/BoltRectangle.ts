@@ -1,10 +1,10 @@
-﻿module MakerJs.models {
+module MakerJs.models {
 
     export class BoltRectangle implements IModel {
 
-        public paths: IPath[] = [];
+        public paths: IPathMap = {};
 
-        constructor(public id: string, width: number, height: number, holeRadius: number) {
+        constructor(width: number, height: number, holeRadius: number) {
 
             var holes: { [id2: string]: IPoint } = {
                 "BottomLeft": [0, 0],
@@ -14,7 +14,7 @@
             };
 
             for (var id2 in holes) {
-                this.paths.push(new paths.Circle(id2+ "_bolt", holes[id2], holeRadius));
+                this.paths[id2 + "_bolt"] = new paths.Circle(holes[id2], holeRadius);
             }
         }
     }

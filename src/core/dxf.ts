@@ -1,4 +1,4 @@
-﻿/// <reference path="exporter.ts" />
+/// <reference path="exporter.ts" />
 
 module MakerJs.exporter {
 
@@ -31,11 +31,11 @@ module MakerJs.exporter {
 
         var map: IPathOriginFunctionMap = {};
 
-        map[pathType.Line] = function (line: IPathLine, origin: IPoint) {
+        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint) {
             append("0");
             append("LINE");
             append("8");
-            append(line.id);
+            append(id);
             append("10");
             append(line.origin[0] + origin[0]);
             append("20");
@@ -46,11 +46,11 @@ module MakerJs.exporter {
             append(line.end[1] + origin[1]);
         };
 
-        map[pathType.Circle] = function (circle: IPathCircle, origin: IPoint) {
+        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint) {
             append("0");
             append("CIRCLE");
             append("8");
-            append(circle.id);
+            append(id);
             append("10");
             append(circle.origin[0] + origin[0]);
             append("20");
@@ -59,11 +59,11 @@ module MakerJs.exporter {
             append(circle.radius);
         };
 
-        map[pathType.Arc] = function (arc: IPathArc, origin: IPoint) {
+        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint) {
             append("0");
             append("ARC");
             append("8");
-            append(arc.id);
+            append(id);
             append("10");
             append(arc.origin[0] + origin[0]);
             append("20");
@@ -103,7 +103,7 @@ module MakerJs.exporter {
             append("ENTITIES");
 
             var exporter = new Exporter(map);
-            exporter.exportItem(itemToExport, point.zero());
+            exporter.exportItem('entities', itemToExport, point.zero());
         }
 
         //fixup options

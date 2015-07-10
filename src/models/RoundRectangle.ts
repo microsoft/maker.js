@@ -1,10 +1,10 @@
-﻿module MakerJs.models {
+module MakerJs.models {
 
     export class RoundRectangle implements IModel {
 
-        public paths: IPath[] = [];
+        public paths: IPathMap = {};
 
-        constructor(public id: string, width: number, height: number, radius: number) {
+        constructor(width: number, height: number, radius: number) {
 
             var maxRadius = Math.min(height, width) / 2;
 
@@ -14,20 +14,20 @@
             var hr = height - radius;
 
             if (radius > 0) {
-                this.paths.push(new paths.Arc("BottomLeft", [radius, radius], radius, 180, 270));
-                this.paths.push(new paths.Arc("BottomRight", [wr, radius], radius, 270, 0));
-                this.paths.push(new paths.Arc("TopRight", [wr, hr], radius, 0, 90));
-                this.paths.push(new paths.Arc("TopLeft", [radius, hr], radius, 90, 180));
+                this.paths["BottomLeft"] = new paths.Arc([radius, radius], radius, 180, 270);
+                this.paths["BottomRight"] = new paths.Arc([wr, radius], radius, 270, 0);
+                this.paths["TopRight"] = new paths.Arc([wr, hr], radius, 0, 90);
+                this.paths["TopLeft"] = new paths.Arc([radius, hr], radius, 90, 180);
             }
 
             if (wr - radius > 0) {
-                this.paths.push(new paths.Line("Bottom", [radius, 0], [wr, 0]));
-                this.paths.push(new paths.Line("Top", [wr, height], [radius, height]));
+                this.paths["Bottom"] = new paths.Line([radius, 0], [wr, 0]);
+                this.paths["Top"] = new paths.Line([wr, height], [radius, height]);
             }
 
             if (hr - radius > 0) {
-                this.paths.push(new paths.Line("Right", [width, radius], [width, hr]));
-                this.paths.push(new paths.Line("Left", [0, hr], [0, radius]));
+                this.paths["Right"] = new paths.Line([width, radius], [width, hr]);
+                this.paths["Left"] = new paths.Line([0, hr], [0, radius]);
             }
 
         }
