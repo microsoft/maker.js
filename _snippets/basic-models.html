@@ -31,17 +31,16 @@ var points = [
   [-20, 0], [-20, 80], [20, 80], [20, 0]
 ];
 
-var house = new makerjs.models.ConnectTheDots('house', true, points);
+var house = new makerjs.models.ConnectTheDots(true, points);
 
-var window1 = new makerjs.models.Square('window1', 40);
+var window1 = new makerjs.models.Square(40);
 window1.origin = [40, 40];
 
-var window2 = new makerjs.models.Square('window2', 40);
+var window2 = new makerjs.models.Square(40);
 window2.origin = [-80, 40];
 
 var houseWithWindows = {
-  id: 'myHouse',
-  models: [ house, window1, window2 ]
+  models: { "myHouse": house, "window1": window1, "window2": window2 }
 }
 
 var svg = makerjs.exporter.toSVG(houseWithWindows);
@@ -59,17 +58,16 @@ var points = [
   [-20, 0], [-20, 80], [20, 80], [20, 0]
 ];
 
-var house = new makerjs.models.ConnectTheDots('house', true, points);
+var house = new makerjs.models.ConnectTheDots(true, points);
 
-var window1 = new makerjs.models.Square('window1', 40);
+var window1 = new makerjs.models.Square(40);
 window1.origin = [40, 40];
 
-var window2 = new makerjs.models.Square('window2', 40);
+var window2 = new makerjs.models.Square(40);
 window2.origin = [-80, 40];
 
 var houseWithWindows = {
-  id: 'myHouse',
-  models: [ house, window1, window2 ]
+  models: { "myHouse": house, "window1": window1, "window2": window2 }
 }
 
 var svg = makerjs.exporter.toSVG(houseWithWindows);
@@ -82,20 +80,19 @@ document.write(svg);
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var outer = new makerjs.models.RoundRectangle('outer', 200, 280, 8);
+var outer = new makerjs.models.RoundRectangle(200, 280, 8);
 
-var inner = new makerjs.models.RoundRectangle('inner', 160, 230, 8);   
+var inner = new makerjs.models.RoundRectangle(160, 230, 8);   
 inner.origin = [20, 30];
 
-var buttonhole = new makerjs.paths.Circle('v', [100, 15], 8);
+var buttonhole = new makerjs.paths.Circle([100, 15], 8);
 
-var bolts = new makerjs.models.BoltRectangle('bolts', 180, 260, 2);
+var bolts = new makerjs.models.BoltRectangle(180, 260, 2);
 bolts.origin = [10, 10];
 
 var tabletFaceMount = { 
-  id: 'tabletFaceMount',
-  paths: [ buttonhole ],
-  models: [ inner, outer, bolts ]  
+  paths: { buttonhole: buttonhole },
+  models: { inner: inner, outer: outer, bolts: bolts }
 };
 
 var svg = makerjs.exporter.toSVG(tabletFaceMount);
@@ -108,20 +105,19 @@ document.write(svg);
 <script>
 var makerjs = require('makerjs');
 
-var outer = new makerjs.models.RoundRectangle('outer', 200, 280, 8);
+var outer = new makerjs.models.RoundRectangle(200, 280, 8);
 
-var inner = new makerjs.models.RoundRectangle('inner', 160, 230, 8);   
+var inner = new makerjs.models.RoundRectangle(160, 230, 8);   
 inner.origin = [20, 30];
 
-var buttonhole = new makerjs.paths.Circle('v', [100, 15], 8);
+var buttonhole = new makerjs.paths.Circle([100, 15], 8);
 
-var bolts = new makerjs.models.BoltRectangle('bolts', 180, 260, 2);
+var bolts = new makerjs.models.BoltRectangle(180, 260, 2);
 bolts.origin = [10, 10];
 
 var tabletFaceMount = { 
-  id: 'tabletFaceMount',
-  paths: [ buttonhole ],
-  models: [ inner, outer, bolts ]  
+  paths: { buttonhole: buttonhole },
+  models: { inner: inner, outer: outer, bolts: bolts }
 };
 
 var svg = makerjs.exporter.toSVG(tabletFaceMount);
@@ -135,12 +131,11 @@ document.write(svg);
 var makerjs = require('makerjs');
 
 var model = { 
-  id: 'adapter',
-  models: [ 
-    new makerjs.models.Ring('ring1', 40, 100),
-    new makerjs.models.BoltCircle('bc1', 90, 4, 10),
-    new makerjs.models.BoltCircle('bc2', 55, 7, 6, 30)
-  ] 
+  models: {
+    ring1: new makerjs.models.Ring(40, 100),
+    bc1: new makerjs.models.BoltCircle(90, 4, 10),
+    bc2: new makerjs.models.BoltCircle(55, 7, 6, 30)
+  }
 };
 
 var svg = makerjs.exporter.toSVG(model);
@@ -154,12 +149,11 @@ document.write(svg);
 var makerjs = require('makerjs');
 
 var model = { 
-  id: 'adapter',
-  models: [ 
-    new makerjs.models.Ring('ring1', 40, 100),
-    new makerjs.models.BoltCircle('bc1', 90, 4, 10),
-    new makerjs.models.BoltCircle('bc2', 55, 7, 6, 30)
-  ] 
+  models: {
+    ring1: new makerjs.models.Ring(40, 100),
+    bc1: new makerjs.models.BoltCircle(90, 4, 10),
+    bc2: new makerjs.models.BoltCircle(55, 7, 6, 30)
+  }
 };
 
 var svg = makerjs.exporter.toSVG(model);
@@ -175,16 +169,15 @@ var makerjs = require('makerjs');
 function truckBolts() {
   var tx = 1 + 5/8;
   var ty = 1 + 1/8;
-  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32 / 2);
+  var bolts = new makerjs.models.BoltRectangle(tx, ty, 7/32 / 2);
   bolts.origin = [tx / -2, ty / -2];
 
   this.models = [bolts];
 }
 
 function deck(width, length, truckOffset) {
-  this.id = 'deck';
     
-  var board = new makerjs.models.Oval('board', length, width);
+  var board = new makerjs.models.Oval(length, width);
   board.origin = [0, width / -2];
     
   var truck1 = new truckBolts();
@@ -193,10 +186,10 @@ function deck(width, length, truckOffset) {
   var truck2 = new truckBolts();
   truck2.origin = [length - truckOffset, 0];
 
-  this.models = [board, truck1, truck2];
+  this.models = { board: board, truck1: truck1, truck2: truck2 };
 }
 
-var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 25});
 
 document.write(svg);
 {% endhighlight %}
@@ -209,16 +202,15 @@ var makerjs = require('makerjs');
 function truckBolts() {
   var tx = 1 + 5/8;
   var ty = 1 + 1/8;
-  var bolts = new makerjs.models.BoltRectangle('truck', tx, ty, 7/32 / 2);
+  var bolts = new makerjs.models.BoltRectangle(tx, ty, 7/32 / 2);
   bolts.origin = [tx / -2, ty / -2];
 
   this.models = [bolts];
 }
 
 function deck(width, length, truckOffset) {
-  this.id = 'deck';
     
-  var board = new makerjs.models.Oval('board', length, width);
+  var board = new makerjs.models.Oval(length, width);
   board.origin = [0, width / -2];
     
   var truck1 = new truckBolts();
@@ -227,7 +219,7 @@ function deck(width, length, truckOffset) {
   var truck2 = new truckBolts();
   truck2.origin = [length - truckOffset, 0];
 
-  this.models = [board, truck1, truck2];
+  this.models = { board: board, truck1: truck1, truck2: truck2 };
 }
 
 var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 25});
