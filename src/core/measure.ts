@@ -162,14 +162,14 @@ module MakerJs.measure {
             var newOrigin = point.add(model.origin, offsetOrigin);
 
             if (model.paths) {
-                for (var i = 0; i < model.paths.length; i++) {
-                    lowerOrHigher(newOrigin, pathExtents(model.paths[i]));
+                for (var id in model.paths) {
+                    lowerOrHigher(newOrigin, pathExtents(model.paths[id]));
                 }
             }
 
             if (model.models) {
-                for (var i = 0; i < model.models.length; i++) {
-                    measure(model.models[i], newOrigin);
+                for (var id in model.models) {
+                    measure(model.models[id], newOrigin);
                 }
             }
         }

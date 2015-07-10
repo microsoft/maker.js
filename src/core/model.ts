@@ -12,14 +12,14 @@ module MakerJs.model {
         var newOrigin = point.add(modelToOriginate.origin, origin);
 
         if (modelToOriginate.paths) {
-            for (var i = 0; i < modelToOriginate.paths.length; i++) {
-                path.moveRelative(modelToOriginate.paths[i], newOrigin);
+            for (var id in modelToOriginate.paths) {
+                path.moveRelative(modelToOriginate.paths[id], newOrigin);
             }
         }
 
         if (modelToOriginate.models) {
-            for (var i = 0; i < modelToOriginate.models.length; i++) {
-                originate(modelToOriginate.models[i], newOrigin);
+            for (var id in modelToOriginate.models) {
+                originate(modelToOriginate.models[id], newOrigin);
             }
         }
 
@@ -37,9 +37,7 @@ module MakerJs.model {
      * @returns Mirrored model.
      */
     export function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel {
-        var newModel: IModel = {
-            id: modelToMirror.id + '_mirror'
-        };
+        var newModel: IModel = {};
 
         if (modelToMirror.origin) {
             newModel.origin = point.mirror(modelToMirror.origin, mirrorX, mirrorY);
@@ -54,16 +52,16 @@ module MakerJs.model {
         }
 
         if (modelToMirror.paths) {
-            newModel.paths = [];
-            for (var i = 0; i < modelToMirror.paths.length; i++) {
-                newModel.paths.push(path.mirror(modelToMirror.paths[i], mirrorX, mirrorY));
+            newModel.paths = {};
+            for (var id in modelToMirror.paths) {
+                newModel.paths[id] = path.mirror(modelToMirror.paths[id], mirrorX, mirrorY);
             }
         }
 
         if (modelToMirror.models) {
-            newModel.models = [];
-            for (var i = 0; i < modelToMirror.models.length; i++) {
-                newModel.models.push(model.mirror(modelToMirror.models[i], mirrorX, mirrorY));
+            newModel.models = {};
+            for (var id in modelToMirror.models) {
+                newModel.models[id] = model.mirror(modelToMirror.models[id], mirrorX, mirrorY);
             }
         }
 
@@ -95,14 +93,14 @@ module MakerJs.model {
         var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
 
         if (modelToRotate.paths) {
-            for (var i = 0; i < modelToRotate.paths.length; i++) {
-                path.rotate(modelToRotate.paths[i], angleInDegrees, offsetOrigin);
+            for (var id in modelToRotate.paths) {
+                path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
             }
         }
 
         if (modelToRotate.models) {
-            for (var i = 0; i < modelToRotate.models.length; i++) {
-                rotate(modelToRotate.models[i], angleInDegrees, offsetOrigin);
+            for (var id in modelToRotate.models) {
+                rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
             }
         }
 
@@ -124,14 +122,14 @@ module MakerJs.model {
         }
 
         if (modelToScale.paths) {
-            for (var i = 0; i < modelToScale.paths.length; i++) {
-                path.scale(modelToScale.paths[i], scaleValue);
+            for (var id in modelToScale.paths) {
+                path.scale(modelToScale.paths[id], scaleValue);
             }
         }
 
         if (modelToScale.models) {
-            for (var i = 0; i < modelToScale.models.length; i++) {
-                scale(modelToScale.models[i], scaleValue, true);
+            for (var id in modelToScale.models) {
+                scale(modelToScale.models[id], scaleValue, true);
             }
         }
 

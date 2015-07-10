@@ -1,24 +1,22 @@
-﻿var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('../target/js/node.maker.js');
 
 function smile(span, teeth, droop, dainty, gaze, heady) {
 
-    this.id = "smile";
-
     this.origin = [3, 3];
 
-    this.paths = [
-        new makerjs.paths.Circle('head', [0, 0], 2.7),
-        new makerjs.paths.Circle('rightEye', [1, heady], gaze),
-        new makerjs.paths.Circle('leftEye', [-1, heady], gaze)
-    ];
+    this.paths = {
+        head: new makerjs.paths.Circle([0, 0], 2.7),
+        rightEye: new makerjs.paths.Circle([1, heady], gaze),
+        leftEye: new makerjs.paths.Circle([-1, heady], gaze)
+    };
 
-    var mouth = new makerjs.models.OvalArc('mouth', 270 - span, 270 + span, dainty, teeth);
+    var mouth = new makerjs.models.OvalArc(270 - span, 270 + span, dainty, teeth);
     
     mouth.origin = [0, droop];
 
-    this.models = [
-        mouth
-    ];
+    this.models = {
+        mouth: mouth
+    };
 }
 
 smile.metaParameters = [

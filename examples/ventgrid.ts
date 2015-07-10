@@ -4,9 +4,8 @@ var makerjs: typeof MakerJs = require('../target/js/node.maker.js');
 
 class Ventgrid implements MakerJs.IModel {
 		
-    public id = 'ventgridInstance';
 	public units = makerjs.unitType.Millimeter;
-	public paths: MakerJs.IPath[] = [];
+    public paths: MakerJs.IPathMap = {};
 	
 	constructor(public filterRadius: number, public spacing: number, public width: number, public height: number) {
 		
@@ -35,11 +34,14 @@ class Ventgrid implements MakerJs.IModel {
 					x += xDistance / 2;
 				}
 				
-				if (checkBoundary(Math.abs(x), Math.abs(y))) {
-					this.paths.push(new makerjs.paths.Circle('filter', [x, y], filterRadius));
+                if (checkBoundary(Math.abs(x), Math.abs(y))) {
+
+                    var id = 'filter_' + i + '_' + iy;
+
+                    this.paths[id] = new makerjs.paths.Circle([x, y], filterRadius);
 					
 					if (alternate || (!alternate && i > 0)) {
-						this.paths.push(new makerjs.paths.Circle('filter', [-x, y], filterRadius));
+                        this.paths[id + '_alt'] = new makerjs.paths.Circle([-x, y], filterRadius);
 					}
 				}
 			}
@@ -59,7 +61,7 @@ class Ventgrid implements MakerJs.IModel {
 	
 }
 
-(<MakerJs.kit.IModelConstructor>Ventgrid).metaParameters = [
+(<MakerJs.kit.IKit>Ventgrid).metaParameters = [
     { title: "filterRadius", type: "range", min: 1, max: 20, value: 2 },
 	{ title: "spacing", type: "range", min: 10, max: 100, value: 49 },
 	{ title: "width", type: "range", min: 20, max: 200, value: 37 },
@@ -68,10 +70,8 @@ class Ventgrid implements MakerJs.IModel {
 
 module.exports = Ventgrid;
 
-/*
- * To compile this: go to the root and:
+  //To compile this: go to the root and:
 
-   cd examples
-   tsc ventgrid.ts --declaration
+  // cd examples
+  // tsc ventgrid.ts --declaration
 
- */

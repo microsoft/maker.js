@@ -40,7 +40,7 @@ module MakerJs.exporter {
             private map: IPathOriginFunctionMap,
             private fixPoint?: (pointToFix: IPoint) => IPoint,
             private fixPath?: (pathToFix: IPath, origin: IPoint) => IPath,
-            private beginModel?: (modelContext: IModel) => void,
+            private beginModel?: (id: string, modelContext: IModel) => void,
             private endModel?: (modelContext: IModel) => void
             ) {
         }
@@ -51,10 +51,10 @@ module MakerJs.exporter {
          * @param pathToExport The path to export.
          * @param offset The offset position of the path. 
          */
-        public exportPath(pathToExport: IPath, offset: IPoint) {
+        public exportPath(id: string, pathToExport: IPath, offset: IPoint) {
             var fn = this.map[pathToExport.type];
             if (fn) {
-                fn(this.fixPath? this.fixPath(pathToExport, offset) : pathToExport, offset);
+                fn(id, this.fixPath? this.fixPath(pathToExport, offset) : pathToExport, offset);
             }
         }
 
@@ -64,23 +64,23 @@ module MakerJs.exporter {
          * @param modelToExport The model to export.
          * @param offset The offset position of the model.
          */
-        public exportModel(modelToExport: IModel, offset: IPoint) {
+        public exportModel(modelId: string, modelToExport: IModel, offset: IPoint) {
 
             if (this.beginModel) {
-                this.beginModel(modelToExport);
+                this.beginModel(modelId, modelToExport);
             }
 
             var newOffset = point.add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
 
             if (modelToExport.paths) {
-                for (var i = 0; i < modelToExport.paths.length; i++) {
-                    this.exportPath(modelToExport.paths[i], newOffset);
+                for (var id in modelToExport.paths) {
+                    this.exportPath(id, modelToExport.paths[id], newOffset);
                 }
             }
 
             if (modelToExport.models) {
-                for (var i = 0; i < modelToExport.models.length; i++) {
-                    this.exportModel(modelToExport.models[i], newOffset);
+                for (var id in modelToExport.models) {
+                    this.exportModel(id, modelToExport.models[id], newOffset);
                 }
             }
 
@@ -96,19 +96,19 @@ module MakerJs.exporter {
          * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
          * @param offset The offset position of the object.
          */
-        public exportItem(itemToExport: any, origin: IPoint) {
+        public exportItem(itemId: string, itemToExport: any, origin: IPoint) {
 
             if (isModel(itemToExport)) {
-                this.exportModel(<IModel>itemToExport, origin);
-
-            } else if (Array.isArray(itemToExport)) {
-                var items: any[] = itemToExport;
-                for (var i = 0; i < items.length; i++) {
-                    this.exportItem(items[i], origin);
-                }
+                this.exportModel(itemId, <IModel>itemToExport, origin);
 
             } else if (isPath(itemToExport)) {
-                this.exportPath(<IPath>itemToExport, origin);
+                this.exportPath(itemId, <IPath>itemToExport, origin);
+
+            } else {
+                for (var id in itemToExport) {
+                    this.exportItem(id, itemToExport[id], origin);
+                }
+
             }
         }
 

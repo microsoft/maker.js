@@ -1,10 +1,10 @@
-﻿module MakerJs.models {
+module MakerJs.models {
 
     export class SCurve implements IModel {
 
-        public paths: IPath[] = [];
+        public paths: IPathMap = {};
 
-        constructor(public id: string, width: number, height: number) {
+        constructor(width: number, height: number) {
 
             function findRadius(x: number, y: number) {
                 return x + (y * y - x * x) / (2 * x);
@@ -29,10 +29,10 @@
                 arcOrigin = [radius, 0];
             }
 
-            var curve = new paths.Arc('curve_start', arcOrigin, radius, startAngle, endAngle);
+            var curve = new paths.Arc(arcOrigin, radius, startAngle, endAngle);
 
-            this.paths.push(curve);
-            this.paths.push(path.moveRelative(path.mirror(curve, true, true, 'curve_end'), [width, height]));
+            this.paths['curve_start'] = curve;
+            this.paths['curve_end'] = path.moveRelative(path.mirror(curve, true, true), [width, height]);
         }
     }
 } 
