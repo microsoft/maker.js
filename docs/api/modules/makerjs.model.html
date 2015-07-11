@@ -1,4 +1,4 @@
----
+﻿---
 layout: posts
 title: Api - model Module
 ---
@@ -10,12 +10,12 @@ title: Api - model Module
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#convertunits" class="tsd-kind-icon">convert<wbr>Units</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#mirror" class="tsd-kind-icon">mirror</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#move" class="tsd-kind-icon">move</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#originate" class="tsd-kind-icon">originate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#rotate" class="tsd-kind-icon">rotate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#scale" class="tsd-kind-icon">scale</a></li>
-					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#scaleunits" class="tsd-kind-icon">scale<wbr>Units</a></li>
 				</ul>
 			</section>
 		</div>
@@ -23,6 +23,44 @@ title: Api - model Module
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="convertunits" class="tsd-anchor"></a>
+		<h3>convert<wbr>Units</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">convert<wbr>Units<span class="tsd-signature-symbol">(</span>modeltoConvert<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, destUnitType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L146">core/model.ts:146</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Convert a model to match a different unit system.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modeltoConvert: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model to convert.</p>
+						</div>
+					</li>
+					<li>
+						<h5>destUnitType: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The unit system.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>The scaled model (for chaining).</p>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="mirror" class="tsd-anchor"></a>
 		<h3>mirror</h3>
@@ -227,41 +265,6 @@ title: Api - model Module
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
 				<p>The original model (for chaining).</p>
-			</li>
-		</ul>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-		<a name="scaleunits" class="tsd-anchor"></a>
-		<h3>scale<wbr>Units</h3>
-		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">scale<wbr>Units<span class="tsd-signature-symbol">(</span>modeltoScale<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, destinationModel<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L146">core/model.ts:146</a></li>
-					</ul>
-				</aside>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Scale a model to match the unit system of another model.</p>
-					</div>
-				</div>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>modeltoScale: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
-					</li>
-					<li>
-						<h5>destinationModel: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
-						<div class="tsd-comment tsd-typography">
-							<p>The model of which to match its unit system.</p>
-						</div>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
-				<p>The scaled model (for chaining).</p>
 			</li>
 		</ul>
 	</section>
