@@ -490,13 +490,13 @@ declare module MakerJs.model {
      */
     function scale(modelToScale: IModel, scaleValue: number, scaleOrigin?: boolean): IModel;
     /**
-     * Scale a model to match the unit system of another model.
+     * Convert a model to match a different unit system.
      *
-     * @param modelToScale The model to scale.
-     * @param destinationModel The model of which to match its unit system.
+     * @param modeltoConvert The model to convert.
+     * @param destUnitType The unit system.
      * @returns The scaled model (for chaining).
      */
-    function scaleUnits(modeltoScale: IModel, destinationModel: IModel): IModel;
+    function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel;
 }
 declare module MakerJs.units {
     /**
@@ -610,6 +610,57 @@ declare module MakerJs.exporter {
      */
     interface IDXFRenderOptions extends IExportOptions {
     }
+}
+declare module MakerJs.solvers {
+    /**
+     * Solves for the angle of a triangle when you know lengths of 3 sides.
+     *
+     * @param length1 Length of side of triangle, opposite of the angle you are trying to find.
+     * @param length2 Length of any other side of the triangle.
+     * @param length3 Length of the remaining side of the triangle.
+     * @returns Angle opposite of the side represented by the first parameter.
+     */
+    function solveTriangleSSS(length1: number, length2: number, length3: number): number;
+    /**
+     * Solves for the length of a side of a triangle when you know length of one side and 2 angles.
+     *
+     * @param oppositeAngleInDegrees Angle which is opposite of the side you are trying to find.
+     * @param lengthOfSideBetweenAngles Length of one side of the triangle which is between the provided angles.
+     * @param otherAngleInDegrees An other angle of the triangle.
+     * @returns Length of the side of the triangle which is opposite of the first angle parameter.
+     */
+    function solveTriangleASA(oppositeAngleInDegrees: number, lengthOfSideBetweenAngles: number, otherAngleInDegrees: number): number;
+}
+declare module MakerJs.path {
+    /**
+     * An intersection of two paths.
+     */
+    interface IPathIntersection {
+        /**
+         * Array of points where the two paths intersected. The length of the array may be either 1 or 2 points.
+         */
+        intersectionPoints: IPoint[];
+        /**
+         * This Array property will only be defined if the first parameter passed to pathIntersection is either an Arc or a Circle.
+         * It contains the angles of intersection relative to the first path parameter.
+         * The length of the array may be either 1 or 2.
+         */
+        path1Angles?: number[];
+        /**
+         * This Array property will only be defined if the second parameter passed to pathIntersection is either an Arc or a Circle.
+         * It contains the angles of intersection relative to the second path parameter.
+         * The length of the array may be either 1 or 2.
+         */
+        path2Angles?: number[];
+    }
+    /**
+     * Find the point(s) where 2 paths intersect.
+     *
+     * @param path1 First path to find intersection.
+     * @param path2 Second path to find intersection.
+     * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
+     */
+    function intersection(path1: IPath, path2: IPath): IPathIntersection;
 }
 declare module MakerJs.kit {
     /**
@@ -727,11 +778,6 @@ declare module MakerJs.exporter {
     }
 }
 declare module MakerJs.exporter {
-    /**
-     * The default stroke width in millimeters.
-     * @private
-     */
-    var svgDefaultStrokeWidth: number;
     function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
@@ -744,9 +790,9 @@ declare module MakerJs.exporter {
          */
         svgAttrs?: IXmlTagAttrs;
         /**
-         * SVG stroke width of paths. This is in the same unit system as the units property.
+         * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
          */
-        strokeWidth?: number;
+        strokeWidth?: string;
         /**
          * SVG color of the rendered paths.
          */
@@ -792,17 +838,6 @@ declare module MakerJs.models {
     }
 }
 declare module MakerJs.models {
-    class Rectangle extends ConnectTheDots {
-        constructor(width: number, height: number);
-    }
-}
-declare module MakerJs.models {
-    class GoldenRectangle extends Rectangle {
-        constructor(width: number);
-        static GoldenRatio: number;
-    }
-}
-declare module MakerJs.models {
     class RoundRectangle implements IModel {
         paths: IPathMap;
         constructor(width: number, height: number, radius: number);
@@ -826,6 +861,11 @@ declare module MakerJs.models {
     }
 }
 declare module MakerJs.models {
+    class Rectangle extends ConnectTheDots {
+        constructor(width: number, height: number);
+    }
+}
+declare module MakerJs.models {
     class Ring implements IModel {
         paths: IPathMap;
         constructor(outerRadius: number, innerRadius: number);
@@ -841,88 +881,4 @@ declare module MakerJs.models {
     class Square extends Rectangle {
         constructor(side: number);
     }
-}
-declare module MakerJs.tools {
-    /**
-     * A path which has been broken.
-     */
-    interface IBrokenPath {
-        /**
-         * The new path after breaking the source path.
-         */
-        newPath: IPath;
-        /**
-         * The point where the break ocurred.
-         */
-        newPoint: IPoint;
-    }
-    function breakPath(path: IPath, breakAt?: number): IBrokenPath[];
-    /**
-     * Break a path and create a gap within it. Useful when connecting models together.
-     *
-     * @param modelToGap Model which will have a gap in one of its paths.
-     * @param pathId String id of the path in which to create a gap.
-     * @param gapLength Number length of the gap.
-     * @breakAt Number between 0 and 1 (default .5) where the gap will be centered along the path.
-     */
-    function gapPath(modelToGap: IModel, pathId: string, gapLength: number, breakAt?: number): IPoint[];
-    /**
-     * Given 2 pairs of points, will return lines that connect the first pair to the second.
-     *
-     * @param gap1 First array of 2 point objects.
-     * @param gap2 Second array of 2 point objects.
-     * @returns Array containing 2 lines.
-     */
-    function bridgeGaps(gap1: IPoint[], gap2: IPoint[]): IPathLine[];
-}
-declare module MakerJs.tools {
-    /**
-     * Solves for the angle of a triangle when you know lengths of 3 sides.
-     *
-     * @param length1 Length of side of triangle, opposite of the angle you are trying to find.
-     * @param length2 Length of any other side of the triangle.
-     * @param length3 Length of the remaining side of the triangle.
-     * @returns Angle opposite of the side represented by the first parameter.
-     */
-    function solveTriangleSSS(length1: number, length2: number, length3: number): number;
-    /**
-     * Solves for the length of a side of a triangle when you know length of one side and 2 angles.
-     *
-     * @param oppositeAngleInDegrees Angle which is opposite of the side you are trying to find.
-     * @param lengthOfSideBetweenAngles Length of one side of the triangle which is between the provided angles.
-     * @param otherAngleInDegrees An other angle of the triangle.
-     * @returns Length of the side of the triangle which is opposite of the first angle parameter.
-     */
-    function solveTriangleASA(oppositeAngleInDegrees: number, lengthOfSideBetweenAngles: number, otherAngleInDegrees: number): number;
-}
-declare module MakerJs.tools {
-    /**
-     * An intersection of two paths.
-     */
-    interface IPathIntersection {
-        /**
-         * Array of points where the two paths intersected. The length of the array may be either 1 or 2 points.
-         */
-        intersectionPoints: IPoint[];
-        /**
-         * This Array property will only be defined if the first parameter passed to pathIntersection is either an Arc or a Circle.
-         * It contains the angles of intersection relative to the first path parameter.
-         * The length of the array may be either 1 or 2.
-         */
-        path1Angles?: number[];
-        /**
-         * This Array property will only be defined if the second parameter passed to pathIntersection is either an Arc or a Circle.
-         * It contains the angles of intersection relative to the second path parameter.
-         * The length of the array may be either 1 or 2.
-         */
-        path2Angles?: number[];
-    }
-    /**
-     * Find the point(s) where 2 paths intersect.
-     *
-     * @param path1 First path to find intersection.
-     * @param path2 Second path to find intersection.
-     * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
-     */
-    function pathIntersection(path1: IPath, path2: IPath): IPathIntersection;
 }

@@ -19,10 +19,10 @@ function skatedeck(width, length, truckOffset) {
     var board = new makerjs.models.Oval(length, width);
     board.origin = [0, width / -2];
 
-    var truck1 = makerjs.model.scaleUnits(new truckBolts(), this);
+    var truck1 = makerjs.model.convertUnits(new truckBolts(), this.units);
     truck1.origin = [truckOffset, 0];
 
-    var truck2 = makerjs.model.scaleUnits(new truckBolts(), this);
+    var truck2 = makerjs.model.convertUnits(new truckBolts(), this.units);
     truck2.origin = [length - truckOffset, 0];
 
     this.models = {

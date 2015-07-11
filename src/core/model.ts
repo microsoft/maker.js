@@ -137,23 +137,35 @@ module MakerJs.model {
     }
 
     /**
-     * Scale a model to match the unit system of another model.
+     * Convert a model to match a different unit system.
      * 
-     * @param modelToScale The model to scale.
-     * @param destinationModel The model of which to match its unit system.
+     * @param modeltoConvert The model to convert.
+     * @param destUnitType The unit system.
      * @returns The scaled model (for chaining).
      */
-    export function scaleUnits(modeltoScale: IModel, destinationModel: IModel): IModel {
+    export function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel {
 
-        if (modeltoScale.units && destinationModel.units) {
-            var ratio = units.conversionScale(modeltoScale.units, destinationModel.units);
+        var validUnitType = false;
 
-            if (ratio != 1) {
-                scale(modeltoScale, ratio);
+        for (var id in unitType) {
+            if (unitType[id] == destUnitType) {
+                validUnitType = true;
+                break;
             }
         }
 
-        return modeltoScale;
+        if (modeltoConvert.units && validUnitType) {
+            var ratio = units.conversionScale(modeltoConvert.units, destUnitType);
+
+            if (ratio != 1) {
+                scale(modeltoConvert, ratio);
+
+                //update the model with its new unit type
+                modeltoConvert.units = destUnitType;
+            }
+        }
+
+        return modeltoConvert;
     }
 
 }
