@@ -251,6 +251,31 @@ module MakerJs {
         Arc: "arc"
     };
 
+    /**
+     * An intersection of two paths.
+     */
+    export interface IPathIntersection {
+
+        /**
+         * Array of points where the two paths intersected. The length of the array may be either 1 or 2 points.
+         */
+        intersectionPoints: IPoint[];
+
+        /**
+         * This Array property will only be defined if the first parameter passed to pathIntersection is either an Arc or a Circle.
+         * It contains the angles of intersection relative to the first path parameter. 
+         * The length of the array may be either 1 or 2.
+         */
+        path1Angles?: number[];
+
+        /**
+         * This Array property will only be defined if the second parameter passed to pathIntersection is either an Arc or a Circle.
+         * It contains the angles of intersection relative to the second path parameter. 
+         * The length of the array may be either 1 or 2.
+         */
+        path2Angles?: number[];
+    }
+
     //models
 
     export interface IPathMap {
