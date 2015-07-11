@@ -20,6 +20,19 @@
     <script src="../target/js/browser.maker.js"></script>
     <script src="dependExample_forBrowser.js"></script>
 
+    <script>
+        var makerjs = require('makerjs');
+
+        var _require = window["require"];
+        var require = function(x) {
+            if (x == '../target/js/node.maker.js' || x == 'makerjs') {
+                return makerjs;
+            } else {
+                return _require(x);
+            }
+        }
+    </script>
+
 </head>
 <body>
 

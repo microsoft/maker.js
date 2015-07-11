@@ -4,7 +4,7 @@
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
   "main": "index.js",
   "scripts": {
-    "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt && ls src/tools/*.ts >> build.txt",
+    "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt",
     "compile-typescript": "tsc --declaration --out target/ts/makerjs.js @build.txt && rm build.txt",
     "target-node-platform": "cd target && mv ts/makerjs.js js/node.maker.js && cd ..",
     "target-browser-platform": "cd target/js && browserify -o browser.maker.js -r ./node.maker.js:makerjs && cd ../..",
