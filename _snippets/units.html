@@ -20,7 +20,7 @@ probably want to specify units. To do so, you can use <b>makerjs.unitType</b> wh
 It is your choice whether to use the named property or the string value directly.</p>
 
 <p>If a model that you wish to use has a different unit system than your own model, you can call 
-<b>makerjs.model.scaleUnits(modeltoScale: model, yourModel: model)</b>. to convert it. This function will return the scaled model for chaining.</p>
+<b>makerjs.model.convertUnits(modeltoScale: model, units: string)</b>. to convert it. This function will return the scaled model for chaining.</p>
 
 <p>Let's use our skateboard example above and mix Inch and Centimeter units:</p>
 
@@ -44,10 +44,10 @@ function deck(width, length, truckOffset) {
   var board = new makerjs.models.Oval(length, width);
   board.origin = [0, width / -2];
     
-  var truck1 = makerjs.model.scaleUnits(new truckBolts(), this);
+  var truck1 = makerjs.model.convertUnits(new truckBolts(), this.units);
   truck1.origin = [truckOffset, 0];
     
-  var truck2 = makerjs.model.scaleUnits(new truckBolts(), this);
+  var truck2 = makerjs.model.convertUnits(new truckBolts(), this.units);
   truck2.origin = [length - truckOffset, 0];
 
   this.models = { board: board, truck1: truck1, truck2: truck2 };
@@ -80,10 +80,10 @@ function deck(width, length, truckOffset) {
   var board = new makerjs.models.Oval(length, width);
   board.origin = [0, width / -2];
     
-  var truck1 = makerjs.model.scaleUnits(new truckBolts(), this);
+  var truck1 = makerjs.model.convertUnits(new truckBolts(), this.units);
   truck1.origin = [truckOffset, 0];
     
-  var truck2 = makerjs.model.scaleUnits(new truckBolts(), this);
+  var truck2 = makerjs.model.convertUnits(new truckBolts(), this.units);
   truck2.origin = [length - truckOffset, 0];
 
   this.models = { board: board, truck1: truck1, truck2: truck2 };
