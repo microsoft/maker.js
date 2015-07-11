@@ -1,6 +1,6 @@
 /// <reference path="solvers.ts" />
 
-module MakerJs.tools {
+module MakerJs.path {
 
     /**
      * An intersection of two paths.
@@ -178,7 +178,7 @@ module MakerJs.tools {
      * @param path2 Second path to find intersection.
      * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
      */
-    export function pathIntersection(path1: IPath, path2: IPath): IPathIntersection {
+    export function intersection(path1: IPath, path2: IPath): IPathIntersection {
 
         var fn = map[path1.type][path2.type];
         if (fn) {
@@ -359,7 +359,7 @@ module MakerJs.tools {
         var lineAngle = (lineAngleNormal >= 180) ? lineAngleNormal - 360 : lineAngleNormal;
 
         //rotate the line to horizontal
-        path.rotate(clonedLine, -lineAngle, point.zero());
+        rotate(clonedLine, -lineAngle, point.zero());
 
         //remember how to undo the rotation we just did
         function unRotate(resultAngle: number): number {
@@ -424,7 +424,7 @@ module MakerJs.tools {
 
         //rotate circle2 to horizontal, c2 will be to the right of the origin.
         var c2Angle = angle.toDegrees(angle.ofPointInRadians(point.zero(), c2.origin));
-        path.rotate(c2, -c2Angle, point.zero());
+        rotate(c2, -c2Angle, point.zero());
 
         function unRotate(resultAngle: number): number {
             var unrotated = resultAngle + c2Angle;
@@ -463,8 +463,8 @@ module MakerJs.tools {
             return [unRotate(oneAngle), unRotate(angle.mirror(oneAngle, false, true))];
         }
 
-        var c1IntersectionAngle = solveTriangleSSS(c2.radius, c1.radius, x);
-        var c2IntersectionAngle = solveTriangleSSS(c1.radius, x, c2.radius);
+        var c1IntersectionAngle = solvers.solveTriangleSSS(c2.radius, c1.radius, x);
+        var c2IntersectionAngle = solvers.solveTriangleSSS(c1.radius, x, c2.radius);
 
         return [bothAngles(c1IntersectionAngle), bothAngles(180 - c2IntersectionAngle)];
     }

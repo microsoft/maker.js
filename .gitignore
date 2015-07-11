@@ -6,3 +6,4 @@ src/models/*.js.map
 src/tools/*.js
 src/tools/*.js.map
 /docs/api/assets
+CONTRIBUTING.md

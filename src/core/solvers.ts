@@ -1,6 +1,6 @@
-﻿/// <reference path="../core/maker.ts" />
+/// <reference path="../core/maker.ts" />
 
-module MakerJs.tools {
+module MakerJs.solvers {
 
     /**
      * Solves for the angle of a triangle when you know lengths of 3 sides.
@@ -28,8 +28,5 @@ module MakerJs.tools {
 
         return (lengthOfSideBetweenAngles * Math.sin(angle.toRadians(oppositeAngleInDegrees))) / Math.sin(angle.toRadians(angleOppositeSide));
     }
-
-    
-
 
 }

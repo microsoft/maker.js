@@ -3,12 +3,6 @@
 
 module MakerJs.exporter {
 
-    /**
-     * The default stroke width in millimeters.
-     * @private
-     */
-    export var svgDefaultStrokeWidth = 0.2;
-
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     export function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     export function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
@@ -22,7 +16,7 @@ module MakerJs.exporter {
      * @param options.origin point object for the rendered reference origin.
      * @param options.scale Number to scale the SVG rendering.
      * @param options.stroke String color of the rendered paths.
-     * @param options.strokeWidth Number width of the rendered paths, in the same units as the units parameter.
+     * @param options.strokeWidth String numeric width and optional units of the rendered paths.
      * @param options.units String of the unit system. May be omitted. See makerjs.unitType for possible values.
      * @param options.useSvgPathOnly Boolean to use SVG path elements instead of line, circle etc.
      * @returns String of XML / SVG content.
@@ -34,6 +28,7 @@ module MakerJs.exporter {
             origin: null,
             scale: 1,
             stroke: "#000",
+            strokeWidth: '0.25mm',   //a somewhat average kerf of a laser cutter
             useSvgPathOnly: true,
             viewBox: true
         };
@@ -223,14 +218,6 @@ module MakerJs.exporter {
             opts.origin = [left, size.high[1] * opts.scale];
         }
 
-        if (typeof opts.strokeWidth === 'undefined') {
-            if (!opts.units) {
-                opts.strokeWidth = svgDefaultStrokeWidth;
-            } else {
-                opts.strokeWidth = round(units.conversionScale(unitType.Millimeter, opts.units) * opts.scale * svgDefaultStrokeWidth, .001);
-            }
-        }
-
         //also pass back to options parameter
         extendObject(options, opts);
 
@@ -271,6 +258,7 @@ module MakerJs.exporter {
             id: 'svgGroup',
             stroke: opts.stroke,
             "stroke-width": opts.strokeWidth,
+            "stroke-linecap": "round",
             "fill": "none"
         });
         append(svgGroup.getOpeningTag(false));
@@ -319,9 +307,9 @@ module MakerJs.exporter {
         svgAttrs?: IXmlTagAttrs;
 
         /**
-         * SVG stroke width of paths. This is in the same unit system as the units property.
+         * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
          */
-        strokeWidth?: number;
+        strokeWidth?: string;
 
         /**
          * SVG color of the rendered paths.
