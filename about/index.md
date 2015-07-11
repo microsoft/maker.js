@@ -20,7 +20,6 @@ Maker.js creates line drawings for two dimensional maker machines, like laser cu
   * Bolt circle
   * Bolt rectangle
   * Connect the dots
-  * Golden Rectangle
   * Oval
   * Oval Arc
   * Polygon
