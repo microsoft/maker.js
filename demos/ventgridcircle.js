@@ -14,7 +14,7 @@ var Ventgrid = (function () {
         var alternate = false;
         var xDistance = 2 * filterRadius * (1 + spacing / 100);
         var countX = Math.ceil(width / xDistance);
-        var yDistance = makerjs.tools.solveTriangleASA(60, xDistance / 2, 90);
+        var yDistance = makerjs.solvers.solveTriangleASA(60, xDistance / 2, 90);
         var countY = Math.ceil(height / yDistance) + 1;
         function checkBoundary(x, y) {
             return y - filterRadius < height && x - filterRadius < width;
@@ -87,7 +87,7 @@ var VentgridCircle = (function () {
         }
         else {
             //border
-            var arcIntersection = makerjs.tools.pathIntersection(circle, this.rim);
+            var arcIntersection = makerjs.path.intersection(circle, this.rim);
             if (arcIntersection && arcIntersection.path1Angles.length == 2) {
                 var filterArc = new makerjs.paths.Arc(circle.origin, circle.radius, arcIntersection.path1Angles[1], arcIntersection.path1Angles[0]);
                 this.paths[id] = filterArc;
