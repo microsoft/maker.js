@@ -43,8 +43,9 @@
     "typescript": "^1.4.1"
   },
   "dependencies": {
+    "makerjs-card": "^1.1.1",
     "makerjs-smile": "^1.1.0",
-    "makerjs-ventgrid": "^1.1.0",
-    "makerjs-ventgridcircle": "^1.1.1"
+    "makerjs-ventgrid": "^1.1.1",
+    "makerjs-ventgridcircle": "^1.1.2"
   }
 }
