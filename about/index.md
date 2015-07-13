@@ -15,7 +15,7 @@ Maker.js creates line drawings for two dimensional maker machines, like laser cu
 * Conversion between unit systems: Millimeter / Centimeter / Meter / Inch / Foot / Unitless
 * Primitive paths: Line / Circle / Arc
 * Transformations: Mirror / Rotate / Scale
-* Functions: Break path / Bridge Path / Compute intersection / Triangle solvers
+* Functions: Compute intersection / Triangle solvers
 * Basic models:
   * Bolt circle
   * Bolt rectangle
