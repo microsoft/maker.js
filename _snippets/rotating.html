@@ -18,8 +18,8 @@ You can rotate paths and models with these functions:
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var line1 = new makerjs.paths.Line('line1', [0, 0], [100, 0]);
-var line2 = new makerjs.paths.Line('line2', [0, 0], [100, 0]);
+var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
+var line2 = new makerjs.paths.Line([0, 0], [100, 0]);
  
 var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
 
@@ -33,8 +33,8 @@ document.write(svg);
 <script>
 var makerjs = require('makerjs');
 
-var line1 = new makerjs.paths.Line('line1', [0, 0], [100, 0]);
-var line2 = new makerjs.paths.Line('line2', [0, 0], [100, 0]);
+var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
+var line2 = new makerjs.paths.Line([0, 0], [100, 0]);
  
 var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
 
@@ -48,7 +48,7 @@ document.write(svg);
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var rect1 = new makerjs.models.Rectangle('rect1', 40, 80);
+var rect1 = new makerjs.models.Rectangle(40, 80);
 
 makerjs.model.rotate(rect1, 45, [0, 0]);
 
@@ -62,7 +62,7 @@ document.write(svg);
 <script>
 var makerjs = require('makerjs');
 
-var rect1 = new makerjs.models.Rectangle('rect1', 40, 80);
+var rect1 = new makerjs.models.Rectangle(40, 80);
 
 makerjs.model.rotate(rect1, 45, [0, 0]);
 
