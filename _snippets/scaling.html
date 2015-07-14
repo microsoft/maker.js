@@ -17,8 +17,8 @@ You can proportionately scale paths and models with these functions:
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var arc1 = new makerjs.paths.Arc('arc1', [0, 0], 25, 0, 90);
-var arc2 = new makerjs.paths.Arc('arc2', [0, 0], 25, 0, 90);
+var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
+var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
  
 var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
 
@@ -30,8 +30,8 @@ document.write(svg);
 <script>
 var makerjs = require('makerjs');
 
-var arc1 = new makerjs.paths.Arc('arc1', [0, 0], 25, 0, 90);
-var arc2 = new makerjs.paths.Arc('arc2', [0, 0], 25, 0, 90);
+var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
+var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
  
 var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
 
@@ -43,12 +43,11 @@ document.write(svg);
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var model = { 
-  id: 'polygons',
-  models: [ 
-    new makerjs.models.Polygon('poly1', 6, 40),
-    makerjs.model.scale(new makerjs.models.Polygon('poly2', 6, 40), 1.7)
-  ] 
+var model = {
+  models: { 
+    inner: new makerjs.models.Polygon(6, 40),
+    outer: makerjs.model.scale(new makerjs.models.Polygon(6, 40), 1.7)
+  }
 };
 
 var svg = makerjs.exporter.toSVG(model);
@@ -61,12 +60,11 @@ document.write(svg);
 <script>
 var makerjs = require('makerjs');
 
-var model = { 
-  id: 'polygons',
-  models: [ 
-    new makerjs.models.Polygon('poly1', 6, 40),
-    makerjs.model.scale(new makerjs.models.Polygon('poly2', 6, 40), 1.7)
-  ] 
+var model = {
+  models: { 
+    inner: new makerjs.models.Polygon(6, 40),
+    outer: makerjs.model.scale(new makerjs.models.Polygon(6, 40), 1.7)
+  }
 };
 
 var svg = makerjs.exporter.toSVG(model);
