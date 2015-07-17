@@ -20,7 +20,7 @@ title: Mirroring
 var makerjs = require('makerjs');
 
 var line1 = new makerjs.paths.Line([0, 0], [100, 100]);
-var line2 = makerjs.path.mirror(line1, false, true);
+var line2 = makerjs.path.mirror(line1, true, false);
 
 var paths = [line1, line2];
 
@@ -29,13 +29,13 @@ var svg = makerjs.exporter.toSVG(paths);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall//" target="_blank">try it in JsFiddle &#8663;</a>
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/p6aj2ky6/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
 var makerjs = require('makerjs');
 
 var line1 = new makerjs.paths.Line([0, 0], [100, 100]);
-var line2 = makerjs.path.mirror(line1, false, true);
+var line2 = makerjs.path.mirror(line1, true, false);
 
 var paths = [line1, line2];
 
@@ -49,12 +49,12 @@ document.write(svg);
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var ovalArc1 = new makerjs.models.OvalArc(0, 90, 50, 10);
+var ovalArc1 = new makerjs.models.OvalArc(45, 135, 50, 10);
 
 var model = {
     models: {
         ovalArc1: ovalArc1,
-        ovalArc2: makerjs.model.mirror(ovalArc1, true, true)
+        ovalArc2: makerjs.model.mirror(ovalArc1, false, true)
     }
 };
 
@@ -63,17 +63,17 @@ var svg = makerjs.exporter.toSVG(model);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall//" target="_blank">try it in JsFiddle &#8663;</a>
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/h9fysusv/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
 var makerjs = require('makerjs');
 
-var ovalArc1 = new makerjs.models.OvalArc(0, 90, 50, 10);
+var ovalArc1 = new makerjs.models.OvalArc(45, 135, 50, 10);
 
 var model = {
     models: {
         ovalArc1: ovalArc1,
-        ovalArc2: makerjs.model.mirror(ovalArc1, true, true)
+        ovalArc2: makerjs.model.mirror(ovalArc1, false, true)
     }
 };
 
@@ -81,3 +81,7 @@ var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 </script>
+
+<p>
+    Hint: When creating symmetrical models, it may be easier to create one half, and then use mirror to generate the other half.
+</p>
