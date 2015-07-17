@@ -1,0 +1,83 @@
+---
+title: Mirroring
+---
+
+<p>
+    You can create a mirrored copy of paths and models with the following functions.
+    The mirroring can occur on the x axis, the y axis, or both.
+</p>
+
+<ul>
+    <li>makerjs.path.mirror(path: object, mirrorX: boolean, mirrorY: boolean)</li>
+    <li>makerjs.model.mirror(model: object, mirrorX: boolean, mirrorY: boolean)</li>
+</ul>
+
+<p>Each of these functions returns a new object and does not modify the original.</p>
+
+<p>Mirror path example:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var line1 = new makerjs.paths.Line([0, 0], [100, 100]);
+var line2 = makerjs.path.mirror(line1, false, true);
+
+var paths = [line1, line2];
+
+var svg = makerjs.exporter.toSVG(paths);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall//" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+var line1 = new makerjs.paths.Line([0, 0], [100, 100]);
+var line2 = makerjs.path.mirror(line1, false, true);
+
+var paths = [line1, line2];
+
+var svg = makerjs.exporter.toSVG(paths);
+
+document.write(svg);
+</script>
+
+<p>Mirror model example:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var ovalArc1 = new makerjs.models.OvalArc(0, 90, 50, 10);
+
+var model = {
+    models: {
+        ovalArc1: ovalArc1,
+        ovalArc2: makerjs.model.mirror(ovalArc1, true, true)
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall//" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+var ovalArc1 = new makerjs.models.OvalArc(0, 90, 50, 10);
+
+var model = {
+    models: {
+        ovalArc1: ovalArc1,
+        ovalArc2: makerjs.model.mirror(ovalArc1, true, true)
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
