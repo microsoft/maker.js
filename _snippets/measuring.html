@@ -1,0 +1,128 @@
+---
+title: Measuring
+---
+
+<p>
+    Browse to the <a href="../api/modules/makerjs.measure.html">makerjs.measure</a> module documentation to see all functions related to measuring.
+</p>
+
+<p>
+To get the bounding rectangle of a path or a model, use:
+</p>
+
+<ul>
+  <li>makerjs.measure.pathExtents(path: object)</li>
+  <li>makerjs.model.rotate(model: object)</li>
+</ul>
+
+<p>These functions return an object with <b>high</b> and <b>low</b> points.</p>
+
+<p>Measure path example:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var arc = new makerjs.paths.Arc([0, 0], 50, 45, 135);
+var m = makerjs.measure.pathExtents(arc);
+
+var totalWidth = m.high[0] - m.low[0];
+var totalHeight = m.high[1] - m.low[1];
+
+var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+rect.origin = m.low;
+
+var model = {
+    paths: {
+        arc: arc
+    },
+    models: {
+        rect: rect
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/1yvfzmgn/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+var arc = new makerjs.paths.Arc([0, 0], 50, 45, 135);
+var m = makerjs.measure.pathExtents(arc);
+
+var totalWidth = m.high[0] - m.low[0];
+var totalHeight = m.high[1] - m.low[1];
+
+var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+rect.origin = m.low;
+
+var model = {
+    paths: {
+        arc: arc
+    },
+    models: {
+        rect: rect
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
+
+<p>Measure model example:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var oval = new makerjs.models.Oval(100, 20);
+makerjs.model.rotate(oval, 30);
+var m = makerjs.measure.modelExtents(oval);
+
+var totalWidth = m.high[0] - m.low[0];
+var totalHeight = m.high[1] - m.low[1];
+
+var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+rect.origin = m.low;
+
+var model = {
+    models: {
+        rect: rect,
+        oval: oval
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/9hyo87d8/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+var oval = new makerjs.models.Oval(100, 20);
+makerjs.model.rotate(oval, 30);
+var m = makerjs.measure.modelExtents(oval);
+
+var totalWidth = m.high[0] - m.low[0];
+var totalHeight = m.high[1] - m.low[1];
+
+var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+rect.origin = m.low;
+
+var model = {
+    models: {
+        rect: rect,
+        oval: oval
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
