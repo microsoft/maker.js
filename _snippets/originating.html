@@ -1,0 +1,131 @@
+---
+title: Originating
+---
+
+<p>
+    To move a model or a path, you simply change it's <b>origin</b> property. A path within a model is referenced relatively to its parent model. There may be times when you want all objects to be within the same coordinate space.
+    Let's create a simple demonstration model:
+</p>
+
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function box(origin) {
+    this.models = {
+        outer: new makerjs.models.RoundRectangle(100, 100, 1),
+        inner: new makerjs.models.RoundRectangle(50, 50, 1)
+    };
+    this.models.inner.origin = [25, 25];
+    this.origin = origin;
+}
+
+var box1 = new box([0, 0]);
+var box2 = new box([150, 0]);
+
+var model = {
+    models: {
+        box1: box1,
+        box2: box2
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/o0rfn400/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+    var makerjs = require('makerjs');
+
+    function box(origin) {
+        this.models = {
+            outer: new makerjs.models.RoundRectangle(100, 100, 1),
+            inner: new makerjs.models.RoundRectangle(50, 50, 1)
+        };
+        this.models.inner.origin = [25, 25];
+        this.origin = origin;
+    }
+
+    var box1 = new box([0, 0]);
+    var box2 = new box([150, 0]);
+
+    var model = {
+        models: {
+            box1: box1,
+            box2: box2
+        }
+    };
+
+    var svg = makerjs.exporter.toSVG(model);
+
+    document.write(svg);
+</script>
+
+<p>
+    In this example, both <code>box1.models.inner.paths.Left.origin</code> and <code>box2.models.inner.paths.Left.origin</code> have an origin of <code>[0, 49]</code>
+    even though they are not in the same place, because they are located relative to the model that contains them. To make all models and paths occupy a singular coordinate space,
+    we can use <a href="../api/modules/makerjs.model.html#originate">makerjs.model.originate</a>:
+</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function box(origin) {
+    this.models = {
+        outer: new makerjs.models.RoundRectangle(100, 100, 1),
+        inner: new makerjs.models.RoundRectangle(50, 50, 1)
+    };
+    this.models.inner.origin = [25, 25];
+    this.origin = origin;
+}
+
+var box1 = new box([0, 0]);
+var box2 = new box([150, 0]);
+
+var model = makerjs.model.originate({
+    models: {
+        box1: box1,
+        box2: box2
+    }
+});
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/kb8xt4yn/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+    var makerjs = require('makerjs');
+
+    function box(origin) {
+        this.models = {
+            outer: new makerjs.models.RoundRectangle(100, 100, 1),
+            inner: new makerjs.models.RoundRectangle(50, 50, 1)
+        };
+        this.models.inner.origin = [25, 25];
+        this.origin = origin;
+    }
+
+    var box1 = new box([0, 0]);
+    var box2 = new box([150, 0]);
+
+    var model = makerjs.model.originate({
+        models: {
+            box1: box1,
+            box2: box2
+        }
+    });
+
+    var svg = makerjs.exporter.toSVG(model);
+
+    document.write(svg);
+</script>
+
+<p>
+    Now <code>box1.models.inner.paths.Left.origin</code> and <code>box2.models.inner.paths.Left.origin</code> have the origins <code>[25, 74]</code> and <code>[175, 74]</code>.
+</p>
