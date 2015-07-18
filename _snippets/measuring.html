@@ -22,7 +22,7 @@ To get the bounding rectangle of a path or a model, use:
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
-var arc = new makerjs.paths.Arc([0, 0], 50, 45, 135);
+var arc = new makerjs.paths.Arc([0, 0], 100, 45, 135);
 var m = makerjs.measure.pathExtents(arc);
 
 var totalWidth = m.high[0] - m.low[0];
@@ -50,7 +50,7 @@ document.write(svg);
 <script>
 var makerjs = require('makerjs');
 
-var arc = new makerjs.paths.Arc([0, 0], 50, 45, 135);
+var arc = new makerjs.paths.Arc([0, 0], 100, 45, 135);
 var m = makerjs.measure.pathExtents(arc);
 
 var totalWidth = m.high[0] - m.low[0];
