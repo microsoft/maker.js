@@ -4,7 +4,7 @@ title: SVG Styling
 
 <p>
     It may be helpful to add visual styles to your drawing when debugging.
-    You can do this using CSS and reference elements in your SVG.
+    You can do this using CSS and referencing elements in your SVG.
     Of course this will only add style in the browser,
     it will not affect SVG exported to a file for the laser cutter.
 </p>
@@ -22,15 +22,16 @@ var model = {
         circle1: new makerjs.paths.Circle([0, 0], 30)
     },
     models: {
-        ovalArc1: new makerjs.models.OvalArc(120, 60, 50, 10)
+        bigOvalArc: new makerjs.models.OvalArc(120, 60, 50, 10)
     }
 };
 
 var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
-document.write('<hr/>');
-document.write(svg.replace(/</g, '&lt;'));
+document.write('<hr/><code>');
+document.write(svg.replace(/</g, '&lt;')); //show raw xml in browser
+document.write('</code><hr/>');
 {% endhighlight %}
 
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/5u7Lr02n/" target="_blank">try it in JsFiddle &#8663;</a>
@@ -43,20 +44,21 @@ var model = {
         circle1: new makerjs.paths.Circle([0, 0], 30)
     },
     models: {
-        ovalArc1: new makerjs.models.OvalArc(120, 60, 50, 10)
+        bigOvalArc: new makerjs.models.OvalArc(120, 60, 50, 10)
     }
 };
 
 var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
-document.write('<hr/>');
-document.write(svg.replace(/</g, '&lt;'));
+document.write('<hr/><code>');
+document.write(svg.replace(/</g, '&lt;')); //show raw xml in browser
+document.write('</code><hr/>');
 </script>
 
 <p>
     We see that <i>circle1</i> was a key within our <b>paths</b> collection and was translated into an <b>id</b>
-    in an SVG element. We also see that the model <i>ovalArc1</i> has geen translated to an SVG group with that id.
+    in an SVG element. We also see that the model <i>bigOvalArc</i> has geen translated to an SVG group with that id.
 </p>
 
 <p>
@@ -69,7 +71,7 @@ document.write(svg.replace(/</g, '&lt;'));
         stroke: lime;
     }
 
-    svg #ovalArc1 {
+    svg #bigOvalArc {
         stroke: orange;
     }
 
@@ -84,7 +86,7 @@ document.write(svg.replace(/</g, '&lt;'));
         stroke: lime;
     }
 
-    svg #ovalArc1 {
+    svg #bigOvalArc {
         stroke: orange;
     }
 
