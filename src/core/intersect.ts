@@ -155,11 +155,12 @@ module MakerJs.path {
      */
     export function intersection(path1: IPath, path2: IPath): IPathIntersection {
 
-        var fn = map[path1.type][path2.type];
-        if (fn) {
-            return fn(path1, path2);
+        if (path1 && path2) {
+            var fn = map[path1.type][path2.type];
+            if (fn) {
+                return fn(path1, path2);
+            }
         }
-
         return null;
     }
 
