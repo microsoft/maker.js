@@ -3,12 +3,17 @@ title: Rotating
 ---
 
 <p>
-You can rotate paths and models with these functions:
+    To rotate a single point, see <a href="../api/modules/makerjs.point.html#frompolar">makerjs.point.fromPolar</a>
+    and <a href="../api/modules/makerjs.point.html#rotate">makerjs.point.rotate</a> depending on what you are trying to achieve.
+</p>
+
+<p>
+    You can rotate paths and models with these functions:
 </p>
 
 <ul>
-  <li>makerjs.path.rotate(path: object, angleInDegrees: number, rotationOrigin: point)</li>
-  <li>makerjs.model.rotate(model: object, angleInDegrees: number, rotationOrigin: point)</li>
+    <li><a href="../api/modules/makerjs.path.html#rotate">makerjs.path.rotate(path: object, angleInDegrees: number, rotationOrigin: point)</a></li>
+    <li><a href="../api/modules/makerjs.model.html#rotate">makerjs.model.rotate(model: object, angleInDegrees: number, rotationOrigin: point)</a></li>
 </ul>
 
 <p>Each of these functions return the original object, so that we can "chain" on the same line of code.</p>
@@ -20,7 +25,7 @@ var makerjs = require('makerjs');
 
 var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
 var line2 = new makerjs.paths.Line([0, 0], [100, 0]);
- 
+
 var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
 
 var svg = makerjs.exporter.toSVG(paths);
@@ -31,16 +36,16 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/vj7uewyk/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-var makerjs = require('makerjs');
+    var makerjs = require('makerjs');
 
-var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
-var line2 = new makerjs.paths.Line([0, 0], [100, 0]);
- 
-var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
+    var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
+    var line2 = new makerjs.paths.Line([0, 0], [100, 0]);
 
-var svg = makerjs.exporter.toSVG(paths);
+    var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
 
-document.write(svg);
+    var svg = makerjs.exporter.toSVG(paths);
+
+    document.write(svg);
 </script>
 
 <p>Rotate model example:</p>
@@ -60,13 +65,13 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/8g6r3yjq/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-var makerjs = require('makerjs');
+    var makerjs = require('makerjs');
 
-var rect1 = new makerjs.models.Rectangle(40, 80);
+    var rect1 = new makerjs.models.Rectangle(40, 80);
 
-makerjs.model.rotate(rect1, 45, [0, 0]);
+    makerjs.model.rotate(rect1, 45, [0, 0]);
 
-var svg = makerjs.exporter.toSVG(rect1);
+    var svg = makerjs.exporter.toSVG(rect1);
 
-document.write(svg);
+    document.write(svg);
 </script>
