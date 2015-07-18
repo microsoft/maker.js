@@ -1,13 +1,15 @@
 ---
 title: Scaling
 ---
+
 <p>
-You can proportionately scale paths and models with these functions:
+    To proportionately scale a simple point, use <a href="../api/modules/makerjs.point.html#content">makerjs.point.scale</a>.
+    To proportionately scale paths and models, use these functions:
 </p>
 
 <ul>
-  <li>makerjs.path.scale(path: object, scaleValue: number)</li>
-  <li>makerjs.model.scale(model: object, scaleValue: number)</li>
+    <li><a href="../api/modules/makerjs.path.html#scale">makerjs.path.scale</a>(path: object, scaleValue: number)</li>
+    <li><a href="../api/modules/makerjs.model.html#scale">makerjs.model.scale</a>(model: object, scaleValue: number)</li>
 </ul>
 
 <p>Each of these functions return the original object, so that we can "chain" on the same line of code.</p>
@@ -19,7 +21,7 @@ var makerjs = require('makerjs');
 
 var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
 var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
- 
+
 var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
 
 document.write(svg);
@@ -28,14 +30,14 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/nrboLkLs/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-var makerjs = require('makerjs');
+    var makerjs = require('makerjs');
 
-var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
-var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
- 
-var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
+    var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
+    var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
 
-document.write(svg);
+    var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
+
+    document.write(svg);
 </script>
 
 <p>Scale model example:</p>
@@ -44,7 +46,7 @@ document.write(svg);
 var makerjs = require('makerjs');
 
 var model = {
-  models: { 
+  models: {
     inner: new makerjs.models.Polygon(6, 40),
     outer: makerjs.model.scale(new makerjs.models.Polygon(6, 40), 1.7)
   }
@@ -58,17 +60,16 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/fyqpqyho/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-var makerjs = require('makerjs');
+    var makerjs = require('makerjs');
 
-var model = {
-  models: { 
-    inner: new makerjs.models.Polygon(6, 40),
-    outer: makerjs.model.scale(new makerjs.models.Polygon(6, 40), 1.7)
-  }
-};
+    var model = {
+        models: {
+            inner: new makerjs.models.Polygon(6, 40),
+            outer: makerjs.model.scale(new makerjs.models.Polygon(6, 40), 1.7)
+        }
+    };
 
-var svg = makerjs.exporter.toSVG(model);
+    var svg = makerjs.exporter.toSVG(model);
 
-document.write(svg);
+    document.write(svg);
 </script>
-
