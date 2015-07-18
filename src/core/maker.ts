@@ -140,11 +140,6 @@ module MakerJs {
          * The main point of reference for this path.
          */
         origin: IPoint;
-
-        /**
-         * Optional CSS style properties to be emitted into SVG. Useful for creating guidelines and debugging your model.
-         */
-        cssStyle?: string;
     }
 
     /**

@@ -390,9 +390,6 @@ var MakerJs;
             if (fn) {
                 fn(pathToMirror);
             }
-            if (pathToMirror.cssStyle) {
-                newPath.cssStyle = pathToMirror.cssStyle;
-            }
             return newPath;
         }
         path.mirror = mirror;
@@ -1289,9 +1286,11 @@ var MakerJs;
          * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
          */
         function intersection(path1, path2) {
-            var fn = map[path1.type][path2.type];
-            if (fn) {
-                return fn(path1, path2);
+            if (path1 && path2) {
+                var fn = map[path1.type][path2.type];
+                if (fn) {
+                    return fn(path1, path2);
+                }
             }
             return null;
         }
@@ -1705,11 +1704,10 @@ var MakerJs;
                     "y": y
                 }, id);
             }
-            function drawPath(id, x, y, d, cssStyle) {
+            function drawPath(id, x, y, d) {
                 createElement("path", {
                     "id": id,
-                    "d": ["M", MakerJs.round(x), MakerJs.round(y)].concat(d).join(" "),
-                    "style": cssStyle
+                    "d": ["M", MakerJs.round(x), MakerJs.round(y)].concat(d).join(" ")
                 });
                 if (opts.annotate) {
                     drawText(id, x, y);
@@ -1720,7 +1718,7 @@ var MakerJs;
                 var start = line.origin;
                 var end = line.end;
                 if (opts.useSvgPathOnly) {
-                    drawPath(id, start[0], start[1], [MakerJs.round(end[0]), MakerJs.round(end[1])], line.cssStyle);
+                    drawPath(id, start[0], start[1], [MakerJs.round(end[0]), MakerJs.round(end[1])]);
                 }
                 else {
                     createElement("line", {
@@ -1728,8 +1726,7 @@ var MakerJs;
                         "x1": MakerJs.round(start[0]),
                         "y1": MakerJs.round(start[1]),
                         "x2": MakerJs.round(end[0]),
-                        "y2": MakerJs.round(end[1]),
-                        "style": line.cssStyle
+                        "y2": MakerJs.round(end[1])
                     });
                     if (opts.annotate) {
                         drawText(id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
@@ -1747,15 +1744,14 @@ var MakerJs;
                     }
                     halfCircle(1);
                     halfCircle(-1);
-                    drawPath(id, center[0], center[1], d, circle.cssStyle);
+                    drawPath(id, center[0], center[1], d);
                 }
                 else {
                     createElement("circle", {
                         "id": id,
                         "r": circle.radius,
                         "cx": MakerJs.round(center[0]),
-                        "cy": MakerJs.round(center[1]),
-                        "style": circle.cssStyle
+                        "cy": MakerJs.round(center[1])
                     });
                 }
                 if (opts.annotate) {
@@ -1774,7 +1770,7 @@ var MakerJs;
                 var arcPoints = MakerJs.point.fromArc(arc);
                 var d = ['A'];
                 svgArcData(d, arc.radius, arcPoints[1], Math.abs(arc.endAngle - arc.startAngle) > 180, arc.startAngle > arc.endAngle);
-                drawPath(id, arcPoints[0][0], arcPoints[0][1], d, arc.cssStyle);
+                drawPath(id, arcPoints[0][0], arcPoints[0][1], d);
             };
             //fixup options
             //measure the item to move it into svg area

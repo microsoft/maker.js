@@ -91,10 +91,6 @@ declare module MakerJs {
          * The main point of reference for this path.
          */
         origin: IPoint;
-        /**
-         * Optional CSS style properties to be emitted into SVG. Useful for creating guidelines and debugging your model.
-         */
-        cssStyle?: string;
     }
     /**
      * Test to see if an object implements the required properties of a path.
