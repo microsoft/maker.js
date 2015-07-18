@@ -19,12 +19,6 @@ To get the bounding rectangle of a path or a model, use:
 
 <p>Measure path example:</p>
 
-<style>
-    svg g #rect {
-        stroke: lightblue;
-    }
-</style>
-
 {% highlight javascript %}
 var makerjs = require('makerjs');
 
@@ -34,15 +28,15 @@ var m = makerjs.measure.pathExtents(arc);
 var totalWidth = m.high[0] - m.low[0];
 var totalHeight = m.high[1] - m.low[1];
 
-var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
-rect.origin = m.low;
+var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+measureRect.origin = m.low;
 
 var model = {
     paths: {
         arc: arc
     },
     models: {
-        rect: rect
+        measureRect: measureRect
     }
 };
 
@@ -62,15 +56,15 @@ var m = makerjs.measure.pathExtents(arc);
 var totalWidth = m.high[0] - m.low[0];
 var totalHeight = m.high[1] - m.low[1];
 
-var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
-rect.origin = m.low;
+var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+measureRect.origin = m.low;
 
 var model = {
     paths: {
         arc: arc
     },
     models: {
-        rect: rect
+        measureRect: measureRect
     }
 };
 
@@ -91,12 +85,12 @@ var m = makerjs.measure.modelExtents(oval);
 var totalWidth = m.high[0] - m.low[0];
 var totalHeight = m.high[1] - m.low[1];
 
-var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
-rect.origin = m.low;
+var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+measureRect.origin = m.low;
 
 var model = {
     models: {
-        rect: rect,
+        measureRect: measureRect,
         oval: oval
     }
 };
@@ -118,12 +112,12 @@ var m = makerjs.measure.modelExtents(oval);
 var totalWidth = m.high[0] - m.low[0];
 var totalHeight = m.high[1] - m.low[1];
 
-var rect = new makerjs.models.Rectangle(totalWidth, totalHeight);
-rect.origin = m.low;
+var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+measureRect.origin = m.low;
 
 var model = {
     models: {
-        rect: rect,
+        measureRect: measureRect,
         oval: oval
     }
 };
@@ -132,3 +126,22 @@ var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 </script>
+
+<p>
+    We can highlight the bounding box with some CSS:
+</p>
+
+{% highlight html %}
+<style type="text/css">
+    svg g #measureRect {
+        stroke: lightblue;
+    }
+</style>
+{% endhighlight %}
+
+<style type="text/css">
+    svg g #measureRect {
+        stroke: lightblue;
+    }
+</style>
+
