@@ -120,3 +120,124 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
 document.write(svg);
 </script>
+
+<p>
+    The next step is to eliminate the overlap in the lines. Here are two approaches to do this:
+</p>
+
+<ol>
+    <li>
+        Adjust only the x or y component of the point:
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
+
+    //move the x of the horizontal's top
+    ovalH.paths.Top.end[0] = thickness;
+    
+    //move the y of the vertical's right
+    ovalV.paths.Right.origin[1] = thickness;
+    
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
+
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/2/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
+
+    //move the x of the horizontal's top
+    ovalH.paths.Top.end[0] = thickness;
+    
+    //move the y of the vertical's right
+    ovalV.paths.Right.origin[1] = thickness;
+    
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
+
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+document.write(svg);
+</script>
+
+    </li>
+    <li>
+        Share a point on both lines:
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
+
+    //set to the same point
+    ovalH.paths.Top.end = ovalV.paths.Right.origin = [thickness, thickness];
+    
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
+
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/3/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
+
+    //set to the same point
+    ovalH.paths.Top.end = ovalV.paths.Right.origin = [thickness, thickness];
+    
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
+
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+document.write(svg);
+</script>
+
+    </li>
+</ol>
