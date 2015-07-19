@@ -259,20 +259,20 @@ function ovalL(width, height, thickness) {
     delete ovalV.paths.BottomLeft;
     delete ovalV.paths.BottomRight;
     delete ovalH.paths.TopLeft;
-    ovalH.paths.Top.end = 
-        ovalV.paths.Right.origin = 
+    ovalH.paths.Top.end =
+        ovalV.paths.Right.origin =
             [thickness, thickness];
     this.models = { h: ovalH, v: ovalV };
 }
 
 function ovalC(width, height, thickness) {
-    
+
     //assume the same models as L
     this.models = new ovalL(width, height, thickness).models;
-    
+
     //add another oval
     this.models.h2 = new makerjs.models.Oval(width, thickness);
-    
+
     //move it to the top
     this.models.h2.origin = [0, height - thickness];
 }
@@ -286,6 +286,43 @@ document.write(svg);
 <a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/5/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
+    var makerjs = require('makerjs');
+
+    function ovalL(width, height, thickness) {
+        var ovalH = new makerjs.models.Oval(width, thickness);
+        var ovalV = new makerjs.models.Oval(thickness, height);
+        delete ovalV.paths.BottomLeft;
+        delete ovalV.paths.BottomRight;
+        delete ovalH.paths.TopLeft;
+        ovalH.paths.Top.end =
+            ovalV.paths.Right.origin =
+                [thickness, thickness];
+        this.models = { h: ovalH, v: ovalV };
+    }
+
+    function ovalC(width, height, thickness) {
+
+        //assume the same models as L
+        this.models = new ovalL(width, height, thickness).models;
+
+        //add another oval
+        this.models.h2 = new makerjs.models.Oval(width, thickness);
+
+        //move it to the top
+        this.models.h2.origin = [0, height - thickness];
+    }
+
+    //using C instead of L
+    var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
+
+    document.write(svg);
+</script>
+
+<p>
+    Just as before, we need to delete the overlapping paths using the <b>delete</b> keyword. Let us also make a short alias for <i>this.models</i> to save us some keystrokes:
+</p>
+
+{% highlight javascript %}
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -294,32 +331,74 @@ function ovalL(width, height, thickness) {
     delete ovalV.paths.BottomLeft;
     delete ovalV.paths.BottomRight;
     delete ovalH.paths.TopLeft;
-    ovalH.paths.Top.end = 
-        ovalV.paths.Right.origin = 
+    ovalH.paths.Top.end =
+        ovalV.paths.Right.origin =
             [thickness, thickness];
     this.models = { h: ovalH, v: ovalV };
 }
 
 function ovalC(width, height, thickness) {
-    
-    //assume the same models as L
-    this.models = new ovalL(width, height, thickness).models;
-    
-    //add another oval
-    this.models.h2 = new makerjs.models.Oval(width, thickness);
-    
-    //move it to the top
-    this.models.h2.origin = [0, height - thickness];
+
+    //set local var m for easy typing
+    var m =
+        this.models =
+            new ovalL(width, height, thickness).models;
+
+    m.h2 = new makerjs.models.Oval(width, thickness);
+    m.h2.origin = [0, height - thickness];
+
+    //delete overlapping arcs again
+    delete m.h2.paths.TopLeft;
+    delete m.h2.paths.BottomLeft;
+    delete m.v.paths.TopRight;
 }
 
-//using C instead of L
+var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/6/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
+    ovalH.paths.Top.end =
+        ovalV.paths.Right.origin =
+            [thickness, thickness];
+    this.models = { h: ovalH, v: ovalV };
+}
+
+function ovalC(width, height, thickness) {
+
+    //set local var m for easy typing
+    var m =
+        this.models =
+            new ovalL(width, height, thickness).models;
+
+    m.h2 = new makerjs.models.Oval(width, thickness);
+    m.h2.origin = [0, height - thickness];
+
+    //delete overlapping arcs again
+    delete m.h2.paths.TopLeft;
+    delete m.h2.paths.BottomLeft;
+    delete m.v.paths.TopRight;
+}
+
 var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
 
 document.write(svg);
 </script>
 
 <p>
-    Just as before, we need to delete the overlapping paths using the <b>delete</b> keyword. Let us also make a short alias for <i>this.models</i> to save us some keystrokes:
+    Lastly, we will share the point of our overlapping lines. Notice the the new oval <i>h2</i> has a different origin the the previous ovals.
+    So, we must <b>originate</b> for the point to be shared in the same coordinate space. In the JSFiddle, try removing the call to originate to see the result without it.
 </p>
 
 {% highlight javascript %}
@@ -338,19 +417,23 @@ function ovalL(width, height, thickness) {
 }
 
 function ovalC(width, height, thickness) {
-    
-    //set local var m for easy typing
     var m = 
         this.models = 
             new ovalL(width, height, thickness).models;
-    
     m.h2 = new makerjs.models.Oval(width, thickness);
     m.h2.origin = [0, height - thickness];
-
-    //delete overlapping arcs again
     delete m.h2.paths.TopLeft;
     delete m.h2.paths.BottomLeft;
     delete m.v.paths.TopRight;
+    
+    //h2 has paths relative to h2 origin, 
+    //we need to originate to share the point
+    makerjs.model.originate(this);
+    
+    //share the point
+    m.h2.paths.Bottom.origin = 
+        m.v.paths.Right.end =
+            [thickness, height - thickness];
 }
 
 var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
@@ -358,7 +441,7 @@ var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/g/" target="_blank">try it in JsFiddle &#8663;</a>
+<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/6/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
 var makerjs = require('makerjs');
@@ -376,19 +459,23 @@ function ovalL(width, height, thickness) {
 }
 
 function ovalC(width, height, thickness) {
-    
-    //set local var m for easy typing
     var m = 
         this.models = 
             new ovalL(width, height, thickness).models;
-    
     m.h2 = new makerjs.models.Oval(width, thickness);
     m.h2.origin = [0, height - thickness];
-
-    //delete overlapping arcs again
     delete m.h2.paths.TopLeft;
     delete m.h2.paths.BottomLeft;
     delete m.v.paths.TopRight;
+    
+    //h2 has paths relative to h2 origin, 
+    //we need to originate to share the point
+    makerjs.model.originate(this);
+    
+    //share the point
+    m.h2.paths.Bottom.origin = 
+        m.v.paths.Right.end =
+            [thickness, height - thickness];
 }
 
 var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
