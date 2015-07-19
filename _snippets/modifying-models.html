@@ -10,7 +10,6 @@ title: Modifying models
 
 <p>
     For this example we will use ovals to make an oval L shape. We begin by creating a model function that has two ovals:
-
 </p>
 
 {% highlight javascript %}
@@ -19,7 +18,7 @@ var makerjs = require('makerjs');
 function ovalL(width, height, thickness) {
     var ovalH = new makerjs.models.Oval(width, thickness);
     var ovalV = new makerjs.models.Oval(thickness, height);
-    
+
     this.models = {
         h: ovalH, v: ovalV
     };
@@ -33,11 +32,84 @@ document.write(svg);
 <a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
+    var makerjs = require('makerjs');
+
+    function ovalL(width, height, thickness) {
+        var ovalH = new makerjs.models.Oval(width, thickness);
+        var ovalV = new makerjs.models.Oval(thickness, height);
+
+        this.models = {
+            h: ovalH, v: ovalV
+        };
+    }
+
+    var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+    document.write(svg);
+</script>
+
+<p>
+    There are overlapping arcs in the lower left corner. We can remove them if we know their id and position in the
+    heirarchy. There are several ways we can inspect this model, here are a few:
+</p>
+
+<ul>
+    <li>
+        Look at the code which created it. This may involve deep lookups. For example, the <a href="https://github.com/Microsoft/maker.js/blob/master/src/models/Oval.ts">Oval source code</a>
+        references the <a href="https://github.com/Microsoft/maker.js/blob/master/src/models/RoundRectangle.ts">RoundRectangle source code</a>.
+    </li>
+    <li>Use the browser's JavaScript debugger to set a breakpoint in your model.</li>
+    <li>Use the browser's DOM inspector to traverse the rendered SVG.</li>
+</ul>
+
+<p>
+    By looking at the source code we know that an Oval is a RoundRectangle and that the ids for arcs are <i>BottomLeft</i>, <i>BottomRight</i>, <i>TopLeft</i> and <i>TopRight</i>.
+    The ids for the sides are <i>Left</i>, <i>Right</i>, <i>Top</i> and <i>Bottom</i>.
+</p>
+
+<p>
+    To remove a path we use the JavaScript <b>delete</b> keyword:
+</p>
+
+{% highlight javascript %}
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
     var ovalH = new makerjs.models.Oval(width, thickness);
     var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    //delete the lower arcs from the vertical oval
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+
+    //delete the inside arc of the horizontal
+    delete ovalH.paths.TopLeft;
+    
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
+
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/1/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    //delete the lower arcs from the vertical oval
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+
+    //delete the inside arc of the horizontal
+    delete ovalH.paths.TopLeft;
     
     this.models = {
         h: ovalH, v: ovalV
@@ -48,4 +120,3 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
 document.write(svg);
 </script>
-
