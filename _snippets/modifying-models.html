@@ -397,8 +397,11 @@ document.write(svg);
 </script>
 
 <p>
-    Lastly, we will share the point of our overlapping lines. Notice the the new oval <i>h2</i> has a different origin the the previous ovals.
-    So, we must <b>originate</b> for the point to be shared in the same coordinate space. In the JSFiddle, try removing the call to originate to see the result without it.
+    Lastly, we need our overlapping lines to meet at a common point. Notice that the new oval <i>h2</i> has a different origin the the previous ovals.
+    So, we must <b>originate</b> for all of the ovals to share the same coordinate space. Afterwards, we can assign the common point to both lines. 
+</p>
+<p>
+    In the JSFiddle, try removing the call to originate to see the results without it.
 </p>
 
 {% highlight javascript %}
