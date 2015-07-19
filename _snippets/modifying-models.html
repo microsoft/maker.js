@@ -1,0 +1,51 @@
+---
+title: Modifying models
+---
+
+<p>
+    We know that models are relatively simple objects with a well known recursive structure.
+    This allows us to modify them for different purposes. Let's modify and combine two different models
+    in one drawing.
+</p>
+
+<p>
+    For this example we will use ovals to make an oval L shape. We begin by creating a model function that has two ovals:
+
+</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
+
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
+
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+
+document.write(svg);
+</script>
+
