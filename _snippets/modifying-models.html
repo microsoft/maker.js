@@ -125,9 +125,9 @@ document.write(svg);
     The next step is to eliminate the overlap in the lines. Here are two approaches to do this:
 </p>
 
-<ol>
-    <li>
-        Adjust only the x or y component of the point:
+<p>
+    Adjust only the x or y component of the point:
+</p>
 
 {% highlight javascript %}
 var makerjs = require('makerjs');
@@ -185,9 +185,9 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 document.write(svg);
 </script>
 
-    </li>
-    <li>
-        Share a point on both lines:
+<p>
+    Share a point on both lines:
+</p>
 
 {% highlight javascript %}
 var makerjs = require('makerjs');
@@ -201,7 +201,9 @@ function ovalL(width, height, thickness) {
     delete ovalH.paths.TopLeft;
 
     //set to the same point
-    ovalH.paths.Top.end = ovalV.paths.Right.origin = [thickness, thickness];
+    ovalH.paths.Top.end = 
+        ovalV.paths.Right.origin = 
+            [thickness, thickness];
     
     this.models = {
         h: ovalH, v: ovalV
@@ -227,7 +229,9 @@ function ovalL(width, height, thickness) {
     delete ovalH.paths.TopLeft;
 
     //set to the same point
-    ovalH.paths.Top.end = ovalV.paths.Right.origin = [thickness, thickness];
+    ovalH.paths.Top.end =
+        ovalV.paths.Right.origin =
+            [thickness, thickness];
     
     this.models = {
         h: ovalH, v: ovalV
@@ -238,6 +242,3 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
 document.write(svg);
 </script>
-
-    </li>
-</ol>
