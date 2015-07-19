@@ -32,20 +32,20 @@ document.write(svg);
 <a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
+var makerjs = require('makerjs');
 
-    function ovalL(width, height, thickness) {
-        var ovalH = new makerjs.models.Oval(width, thickness);
-        var ovalV = new makerjs.models.Oval(thickness, height);
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
 
-        this.models = {
-            h: ovalH, v: ovalV
-        };
-    }
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
 
-    var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
-    document.write(svg);
+document.write(svg);
 </script>
 
 <p>
@@ -64,7 +64,7 @@ document.write(svg);
 
 <p>
     By looking at the source code we know that an Oval is a RoundRectangle and that the ids for arcs are <i>BottomLeft</i>, <i>BottomRight</i>, <i>TopLeft</i> and <i>TopRight</i>.
-    The ids for the sides are <i>Left</i>, <i>Right</i>, <i>Top</i> and <i>Bottom</i>.
+    The ids for the sides are <i>Left</i>, <i>Right</i>, <i>Top</i> and <i>Bottom</i>. Also, we need to note the orientation of these lines so we know which are origin and end points.
 </p>
 
 <p>
@@ -98,27 +98,27 @@ document.write(svg);
 <a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/1/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
+var makerjs = require('makerjs');
 
-    function ovalL(width, height, thickness) {
-        var ovalH = new makerjs.models.Oval(width, thickness);
-        var ovalV = new makerjs.models.Oval(thickness, height);
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
 
-        //delete the lower arcs from the vertical oval
-        delete ovalV.paths.BottomLeft;
-        delete ovalV.paths.BottomRight;
+    //delete the lower arcs from the vertical oval
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
 
-        //delete the inside arc of the horizontal
-        delete ovalH.paths.TopLeft;
+    //delete the inside arc of the horizontal
+    delete ovalH.paths.TopLeft;
 
-        this.models = {
-            h: ovalH, v: ovalV
-        };
-    }
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
 
-    var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
-    document.write(svg);
+document.write(svg);
 </script>
 
 <p>
@@ -159,30 +159,30 @@ document.write(svg);
 <a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/2/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
+var makerjs = require('makerjs');
 
-    function ovalL(width, height, thickness) {
-        var ovalH = new makerjs.models.Oval(width, thickness);
-        var ovalV = new makerjs.models.Oval(thickness, height);
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
 
-        delete ovalV.paths.BottomLeft;
-        delete ovalV.paths.BottomRight;
-        delete ovalH.paths.TopLeft;
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
 
-        //move the x of the horizontal's top
-        ovalH.paths.Top.end[0] = thickness;
+    //move the x of the horizontal's top
+    ovalH.paths.Top.end[0] = thickness;
 
-        //move the y of the vertical's right
-        ovalV.paths.Right.origin[1] = thickness;
+    //move the y of the vertical's right
+    ovalV.paths.Right.origin[1] = thickness;
 
-        this.models = {
-            h: ovalH, v: ovalV
-        };
-    }
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
 
-    var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
-    document.write(svg);
+document.write(svg);
 </script>
 
 <p>
@@ -218,29 +218,29 @@ document.write(svg);
 <a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/3/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
+var makerjs = require('makerjs');
 
-    function ovalL(width, height, thickness) {
-        var ovalH = new makerjs.models.Oval(width, thickness);
-        var ovalV = new makerjs.models.Oval(thickness, height);
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
 
-        delete ovalV.paths.BottomLeft;
-        delete ovalV.paths.BottomRight;
-        delete ovalH.paths.TopLeft;
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
 
-        //set to the same point
-        ovalH.paths.Top.end =
-            ovalV.paths.Right.origin =
-                [thickness, thickness];
+    //set to the same point
+    ovalH.paths.Top.end =
+        ovalV.paths.Right.origin =
+            [thickness, thickness];
 
-        this.models = {
-            h: ovalH, v: ovalV
-        };
-    }
+    this.models = {
+        h: ovalH, v: ovalV
+    };
+}
 
-    var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
+var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
-    document.write(svg);
+document.write(svg);
 </script>
 
 <hr />
@@ -286,36 +286,36 @@ document.write(svg);
 <a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/5/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
+var makerjs = require('makerjs');
 
-    function ovalL(width, height, thickness) {
-        var ovalH = new makerjs.models.Oval(width, thickness);
-        var ovalV = new makerjs.models.Oval(thickness, height);
-        delete ovalV.paths.BottomLeft;
-        delete ovalV.paths.BottomRight;
-        delete ovalH.paths.TopLeft;
-        ovalH.paths.Top.end =
-            ovalV.paths.Right.origin =
-                [thickness, thickness];
-        this.models = { h: ovalH, v: ovalV };
-    }
+function ovalL(width, height, thickness) {
+    var ovalH = new makerjs.models.Oval(width, thickness);
+    var ovalV = new makerjs.models.Oval(thickness, height);
+    delete ovalV.paths.BottomLeft;
+    delete ovalV.paths.BottomRight;
+    delete ovalH.paths.TopLeft;
+    ovalH.paths.Top.end =
+        ovalV.paths.Right.origin =
+            [thickness, thickness];
+    this.models = { h: ovalH, v: ovalV };
+}
 
-    function ovalC(width, height, thickness) {
+function ovalC(width, height, thickness) {
 
-        //assume the same models as L
-        this.models = new ovalL(width, height, thickness).models;
+    //assume the same models as L
+    this.models = new ovalL(width, height, thickness).models;
 
-        //add another oval
-        this.models.h2 = new makerjs.models.Oval(width, thickness);
+    //add another oval
+    this.models.h2 = new makerjs.models.Oval(width, thickness);
 
-        //move it to the top
-        this.models.h2.origin = [0, height - thickness];
-    }
+    //move it to the top
+    this.models.h2.origin = [0, height - thickness];
+}
 
-    //using C instead of L
-    var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
+//using C instead of L
+var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
 
-    document.write(svg);
+document.write(svg);
 </script>
 
 <p>
