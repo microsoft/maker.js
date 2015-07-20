@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts" />
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -121,7 +120,6 @@ var MakerJs;
 })(MakerJs || (MakerJs = {}));
 //CommonJs
 module.exports = MakerJs;
-/// <reference path="maker.ts" />
 var MakerJs;
 (function (MakerJs) {
     var angle;
@@ -206,7 +204,6 @@ var MakerJs;
         angle.mirror = mirror;
     })(angle = MakerJs.angle || (MakerJs.angle = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="maker.ts" />
 var MakerJs;
 (function (MakerJs) {
     var point;
@@ -356,7 +353,6 @@ var MakerJs;
         point.zero = zero;
     })(point = MakerJs.point || (MakerJs.point = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="point.ts" />
 var MakerJs;
 (function (MakerJs) {
     var path;
@@ -470,7 +466,6 @@ var MakerJs;
         path.scale = scale;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="path.ts" />
 var MakerJs;
 (function (MakerJs) {
     var path;
@@ -505,6 +500,7 @@ var MakerJs;
          *
          * @param pathToBreak The path to break.
          * @param pointOfBreak The point at which to break the path.
+         * @returns A new path of the same type, when path type is line or arc. Returns null for circle.
          */
         function breakAtPoint(pathToBreak, pointOfBreak) {
             var fn = breakPathFunctionMap[pathToBreak.type];
@@ -516,7 +512,6 @@ var MakerJs;
         _path.breakAtPoint = breakAtPoint;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="path.ts" />
 var MakerJs;
 (function (MakerJs) {
     var paths;
@@ -576,7 +571,6 @@ var MakerJs;
         paths.Line = Line;
     })(paths = MakerJs.paths || (MakerJs.paths = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="paths.ts" />
 var MakerJs;
 (function (MakerJs) {
     var model;
@@ -726,7 +720,6 @@ var MakerJs;
         model.convertUnits = convertUnits;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="maker.ts" />
 var MakerJs;
 (function (MakerJs) {
     var units;
@@ -798,7 +791,6 @@ var MakerJs;
         units.conversionScale = conversionScale;
     })(units = MakerJs.units || (MakerJs.units = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="model.ts" />
 var MakerJs;
 (function (MakerJs) {
     var measure;
@@ -949,9 +941,6 @@ var MakerJs;
         _measure.modelExtents = modelExtents;
     })(measure = MakerJs.measure || (MakerJs.measure = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="model.ts" />
-/// <reference path="units.ts" />
-/// <reference path="measure.ts" />
 var MakerJs;
 (function (MakerJs) {
     var exporter;
@@ -1047,7 +1036,6 @@ var MakerJs;
         exporter.Exporter = Exporter;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="exporter.ts" />
 var MakerJs;
 (function (MakerJs) {
     var exporter;
@@ -1169,7 +1157,6 @@ var MakerJs;
         dxfUnit[MakerJs.unitType.Meter] = 6;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="../core/maker.ts" />
 var MakerJs;
 (function (MakerJs) {
     var solvers;
@@ -1201,7 +1188,6 @@ var MakerJs;
         solvers.solveTriangleASA = solveTriangleASA;
     })(solvers = MakerJs.solvers || (MakerJs.solvers = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="solvers.ts" />
 var MakerJs;
 (function (MakerJs) {
     var path;
@@ -1335,7 +1321,7 @@ var MakerJs;
          *
          * @param path1 First path to find intersection.
          * @param path2 Second path to find intersection.
-         * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
+         * @returns IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
          */
         function intersection(path1, path2) {
             if (path1 && path2) {
@@ -1568,7 +1554,6 @@ var MakerJs;
         }
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="model.ts" />
 var MakerJs;
 (function (MakerJs) {
     var kit;
@@ -1696,8 +1681,6 @@ var MakerJs;
         exporter.XmlTag = XmlTag;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="exporter.ts" />
-/// <reference path="xml.ts" />
 var MakerJs;
 (function (MakerJs) {
     var exporter;
@@ -2014,7 +1997,6 @@ var MakerJs;
         models.RoundRectangle = RoundRectangle;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="roundrectangle.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -2060,7 +2042,6 @@ var MakerJs;
         models.OvalArc = OvalArc;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="connectthedots.ts" />
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -2086,7 +2067,6 @@ var MakerJs;
         models.Polygon = Polygon;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="connectthedots.ts" />
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -2158,7 +2138,6 @@ var MakerJs;
         models.SCurve = SCurve;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-/// <reference path="rectangle.ts" />
 var MakerJs;
 (function (MakerJs) {
     var models;
