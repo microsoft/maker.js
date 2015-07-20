@@ -95,9 +95,11 @@ module MakerJs.measure {
             measurement.high = extremeAngle([360, 90], r, Math.max);
         }
 
-        var fn = map[pathToMeasure.type];
-        if (fn) {
-            fn(pathToMeasure);
+        if (pathToMeasure) {
+            var fn = map[pathToMeasure.type];
+            if (fn) {
+                fn(pathToMeasure);
+            }
         }
 
         return measurement;

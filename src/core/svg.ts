@@ -55,6 +55,8 @@ module MakerJs.exporter {
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null) {
 
+            attrs['vector-effect'] = 'non-scaling-stroke';
+
             var tag = new XmlTag(tagname, attrs);
 
             if (innerText) {
@@ -120,18 +122,7 @@ module MakerJs.exporter {
 
             if (opts.useSvgPathOnly) {
 
-                var r = circle.radius;
-                var d = ['m', -r, 0];
-
-                function halfCircle(sign: number) {
-                    d.push('a');
-                    svgArcData(d, r, [2 * r * sign, 0]);
-                }
-
-                halfCircle(1);
-                halfCircle(-1);
-
-                drawPath(id, center[0], center[1], d);
+                circleInPaths(id, center, circle.radius);
 
             } else {
                 createElement(
@@ -149,6 +140,20 @@ module MakerJs.exporter {
             }
         };
 
+        function circleInPaths(id: string, center: IPoint, radius: number) {
+            var d = ['m', -radius, 0];
+
+            function halfCircle(sign: number) {
+                d.push('a');
+                svgArcData(d, radius, [2 * radius * sign, 0]);
+            }
+
+            halfCircle(1);
+            halfCircle(-1);
+
+            drawPath(id, center[0], center[1], d);
+        }
+
         function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
             var end: IPoint = endPoint;
             d.push(radius, radius);
@@ -162,16 +167,21 @@ module MakerJs.exporter {
 
             var arcPoints = point.fromArc(arc);
 
-            var d = ['A'];
-            svgArcData(
-                d,
-                arc.radius,
-                arcPoints[1],
-                Math.abs(arc.endAngle - arc.startAngle) > 180,
-                arc.startAngle > arc.endAngle
-                );
+            if (point.areEqual(arcPoints[0], arcPoints[1])) {
+                circleInPaths(id, arc.origin, arc.radius);
+            } else {
 
-            drawPath(id, arcPoints[0][0], arcPoints[0][1], d);
+                var d = ['A'];
+                svgArcData(
+                    d,
+                    arc.radius,
+                    arcPoints[1],
+                    Math.abs(arc.endAngle - arc.startAngle) > 180,
+                    arc.startAngle > arc.endAngle
+                    );
+
+                drawPath(id, arcPoints[0][0], arcPoints[0][1], d);
+            }
         };
 
         //fixup options
