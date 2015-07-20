@@ -151,7 +151,7 @@ module MakerJs.path {
      * 
      * @param path1 First path to find intersection.
      * @param path2 Second path to find intersection.
-     * @result IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
+     * @returns IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
      */
     export function intersection(path1: IPath, path2: IPath): IPathIntersection {
 
