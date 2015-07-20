@@ -475,6 +475,9 @@ var MakerJs;
 (function (MakerJs) {
     var path;
     (function (_path) {
+        /**
+         * @private
+         */
         var breakPathFunctionMap = {};
         breakPathFunctionMap[MakerJs.pathType.Arc] = function (arc, pointOfBreak) {
             var angleAtBreakPoint = MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(arc.origin, pointOfBreak));
