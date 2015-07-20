@@ -9,6 +9,9 @@ module MakerJs.path {
         [type: string]: (path: IPath, pointOfBreak: IPoint) => IPath;
     }
 
+    /**
+     * @private
+     */
     var breakPathFunctionMap: IBreakPathFunctionMap = {};
 
     breakPathFunctionMap[pathType.Arc] = function (arc: IPathArc, pointOfBreak: IPoint): IPath {
