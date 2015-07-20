@@ -65,17 +65,19 @@ module MakerJs.path {
      */
     export function moveRelative(pathToMove: IPath, adjust: IPoint): IPath {
 
-        var map: IPathFunctionMap = {};
+        if (pathToMove) {
+            var map: IPathFunctionMap = {};
 
-        map[pathType.Line] = function (line: IPathLine) {
-            line.end = point.add(line.end, adjust);
-        };
+            map[pathType.Line] = function (line: IPathLine) {
+                line.end = point.add(line.end, adjust);
+            };
 
-        pathToMove.origin = point.add(pathToMove.origin, adjust);
+            pathToMove.origin = point.add(pathToMove.origin, adjust);
 
-        var fn = map[pathToMove.type];
-        if (fn) {
-            fn(pathToMove);
+            var fn = map[pathToMove.type];
+            if (fn) {
+                fn(pathToMove);
+            }
         }
 
         return pathToMove;
