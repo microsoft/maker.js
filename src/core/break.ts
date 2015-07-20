@@ -54,6 +54,7 @@ module MakerJs.path {
      * 
      * @param pathToBreak The path to break.
      * @param pointOfBreak The point at which to break the path.
+     * @returns A new path of the same type, when path type is line or arc. Returns null for circle.
      */
     export function breakAtPoint(pathToBreak: IPath, pointOfBreak: IPoint): IPath {
 
