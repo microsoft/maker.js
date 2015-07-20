@@ -45,8 +45,8 @@ module MakerJs.path {
     };
 
     /**
-     * Breaks a path in 2. The original path will end at the supplied pointOfBreak, 
-     * a new path is returned which begins at the pointOfBreak and ends at the original end point.
+     * Breaks a path in two. The supplied path will end at the supplied pointOfBreak, 
+     * a new path is returned which begins at the pointOfBreak and ends at the supplied path's initial end point.
      * For Circle, the original path will be converted in place to an Arc, and null is returned.
      * 
      * @param pathToBreak The path to break.
