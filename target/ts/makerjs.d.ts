@@ -418,6 +418,17 @@ declare module MakerJs.path {
      */
     function scale(pathToScale: IPath, scaleValue: number): IPath;
 }
+declare module MakerJs.path {
+    /**
+     * Breaks a path in two. The supplied path will end at the supplied pointOfBreak,
+     * a new path is returned which begins at the pointOfBreak and ends at the supplied path's initial end point.
+     * For Circle, the original path will be converted in place to an Arc, and null is returned.
+     *
+     * @param pathToBreak The path to break.
+     * @param pointOfBreak The point at which to break the path.
+     */
+    function breakAtPoint(pathToBreak: IPath, pointOfBreak: IPoint): IPath;
+}
 declare module MakerJs.paths {
     /**
      * Class for arc path.
