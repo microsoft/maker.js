@@ -52,9 +52,11 @@ module MakerJs.exporter {
          * @param offset The offset position of the path. 
          */
         public exportPath(id: string, pathToExport: IPath, offset: IPoint) {
-            var fn = this.map[pathToExport.type];
-            if (fn) {
-                fn(id, this.fixPath? this.fixPath(pathToExport, offset) : pathToExport, offset);
+            if (pathToExport) {
+                var fn = this.map[pathToExport.type];
+                if (fn) {
+                    fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset);
+                }
             }
         }
 

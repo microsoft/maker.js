@@ -401,14 +401,16 @@ var MakerJs;
          * @returns The original path (for chaining).
          */
         function moveRelative(pathToMove, adjust) {
-            var map = {};
-            map[MakerJs.pathType.Line] = function (line) {
-                line.end = MakerJs.point.add(line.end, adjust);
-            };
-            pathToMove.origin = MakerJs.point.add(pathToMove.origin, adjust);
-            var fn = map[pathToMove.type];
-            if (fn) {
-                fn(pathToMove);
+            if (pathToMove) {
+                var map = {};
+                map[MakerJs.pathType.Line] = function (line) {
+                    line.end = MakerJs.point.add(line.end, adjust);
+                };
+                pathToMove.origin = MakerJs.point.add(pathToMove.origin, adjust);
+                var fn = map[pathToMove.type];
+                if (fn) {
+                    fn(pathToMove);
+                }
             }
             return pathToMove;
         }
@@ -466,6 +468,49 @@ var MakerJs;
             return pathToScale;
         }
         path.scale = scale;
+    })(path = MakerJs.path || (MakerJs.path = {}));
+})(MakerJs || (MakerJs = {}));
+/// <reference path="path.ts" />
+var MakerJs;
+(function (MakerJs) {
+    var path;
+    (function (_path) {
+        var breakPathFunctionMap = {};
+        breakPathFunctionMap[MakerJs.pathType.Arc] = function (arc, pointOfBreak) {
+            var angleAtBreakPoint = MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(arc.origin, pointOfBreak));
+            var savedEndAngle = arc.endAngle;
+            arc.endAngle = angleAtBreakPoint;
+            return new MakerJs.paths.Arc(arc.origin, arc.radius, angleAtBreakPoint, savedEndAngle);
+        };
+        breakPathFunctionMap[MakerJs.pathType.Circle] = function (circle, pointOfBreak) {
+            circle.type = MakerJs.pathType.Arc;
+            var arc = circle;
+            var angleAtBreakPoint = MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(circle.origin, pointOfBreak));
+            arc.startAngle = angleAtBreakPoint;
+            arc.endAngle = angleAtBreakPoint + 360;
+            return null;
+        };
+        breakPathFunctionMap[MakerJs.pathType.Line] = function (line, pointOfBreak) {
+            var savedEndPoint = line.end;
+            line.end = pointOfBreak;
+            return new MakerJs.paths.Line(pointOfBreak, savedEndPoint);
+        };
+        /**
+         * Breaks a path in two. The supplied path will end at the supplied pointOfBreak,
+         * a new path is returned which begins at the pointOfBreak and ends at the supplied path's initial end point.
+         * For Circle, the original path will be converted in place to an Arc, and null is returned.
+         *
+         * @param pathToBreak The path to break.
+         * @param pointOfBreak The point at which to break the path.
+         */
+        function breakAtPoint(pathToBreak, pointOfBreak) {
+            var fn = breakPathFunctionMap[pathToBreak.type];
+            if (fn) {
+                return fn(pathToBreak, pointOfBreak);
+            }
+            return null;
+        }
+        _path.breakAtPoint = breakAtPoint;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 /// <reference path="path.ts" />
@@ -828,9 +873,11 @@ var MakerJs;
                 measurement.low = extremeAngle([180, 270], -r, Math.min);
                 measurement.high = extremeAngle([360, 90], r, Math.max);
             };
-            var fn = map[pathToMeasure.type];
-            if (fn) {
-                fn(pathToMeasure);
+            if (pathToMeasure) {
+                var fn = map[pathToMeasure.type];
+                if (fn) {
+                    fn(pathToMeasure);
+                }
             }
             return measurement;
         }
@@ -941,9 +988,11 @@ var MakerJs;
              * @param offset The offset position of the path.
              */
             Exporter.prototype.exportPath = function (id, pathToExport, offset) {
-                var fn = this.map[pathToExport.type];
-                if (fn) {
-                    fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset);
+                if (pathToExport) {
+                    var fn = this.map[pathToExport.type];
+                    if (fn) {
+                        fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset);
+                    }
                 }
             };
             /**
@@ -1691,6 +1740,7 @@ var MakerJs;
             }
             function createElement(tagname, attrs, innerText) {
                 if (innerText === void 0) { innerText = null; }
+                attrs['vector-effect'] = 'non-scaling-stroke';
                 var tag = new exporter.XmlTag(tagname, attrs);
                 if (innerText) {
                     tag.innerText = innerText;
@@ -1736,15 +1786,7 @@ var MakerJs;
             map[MakerJs.pathType.Circle] = function (id, circle, origin) {
                 var center = circle.origin;
                 if (opts.useSvgPathOnly) {
-                    var r = circle.radius;
-                    var d = ['m', -r, 0];
-                    function halfCircle(sign) {
-                        d.push('a');
-                        svgArcData(d, r, [2 * r * sign, 0]);
-                    }
-                    halfCircle(1);
-                    halfCircle(-1);
-                    drawPath(id, center[0], center[1], d);
+                    circleInPaths(id, center, circle.radius);
                 }
                 else {
                     createElement("circle", {
@@ -1758,6 +1800,16 @@ var MakerJs;
                     drawText(id, center[0], center[1]);
                 }
             };
+            function circleInPaths(id, center, radius) {
+                var d = ['m', -radius, 0];
+                function halfCircle(sign) {
+                    d.push('a');
+                    svgArcData(d, radius, [2 * radius * sign, 0]);
+                }
+                halfCircle(1);
+                halfCircle(-1);
+                drawPath(id, center[0], center[1], d);
+            }
             function svgArcData(d, radius, endPoint, largeArc, decreasing) {
                 var end = endPoint;
                 d.push(radius, radius);
@@ -1768,9 +1820,14 @@ var MakerJs;
             }
             map[MakerJs.pathType.Arc] = function (id, arc, origin) {
                 var arcPoints = MakerJs.point.fromArc(arc);
-                var d = ['A'];
-                svgArcData(d, arc.radius, arcPoints[1], Math.abs(arc.endAngle - arc.startAngle) > 180, arc.startAngle > arc.endAngle);
-                drawPath(id, arcPoints[0][0], arcPoints[0][1], d);
+                if (MakerJs.point.areEqual(arcPoints[0], arcPoints[1])) {
+                    circleInPaths(id, arc.origin, arc.radius);
+                }
+                else {
+                    var d = ['A'];
+                    svgArcData(d, arc.radius, arcPoints[1], Math.abs(arc.endAngle - arc.startAngle) > 180, arc.startAngle > arc.endAngle);
+                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d);
+                }
             };
             //fixup options
             //measure the item to move it into svg area
