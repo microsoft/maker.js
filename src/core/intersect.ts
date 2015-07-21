@@ -6,7 +6,7 @@ module MakerJs.path {
      * @private
      */
     interface IPathIntersectionMap {
-        [type: string]: { [type: string]: (path1: IPath, path2: IPath) => IPathIntersection };
+        [type: string]: { [type: string]: (path1: IPath, path2: IPath, deep: boolean) => IPathIntersection };
     }
 
     /**
@@ -18,11 +18,11 @@ module MakerJs.path {
     map[pathType.Circle] = {};
     map[pathType.Line] = {};
 
-    map[pathType.Arc][pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc) {
-        var angles = circleToCircle(arc1, arc2);
+    map[pathType.Arc][pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc, deep: boolean) {
+        var angles = circleToCircle(arc1, arc2, deep);
         if (angles) {
-            var arc1Angles = getAnglesWithinArc(angles[0], arc1);
-            var arc2Angles = getAnglesWithinArc(angles[1], arc2);
+            var arc1Angles = getAnglesWithinArc(angles[0], arc1, deep);
+            var arc2Angles = getAnglesWithinArc(angles[1], arc2, deep);
             if (arc1Angles && arc2Angles) {
                 return {
                     intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
@@ -34,10 +34,10 @@ module MakerJs.path {
         return null;
     };
 
-    map[pathType.Arc][pathType.Circle] = function (arc: IPathArc, circle: IPathArc) {
-        var angles = circleToCircle(arc, circle);
+    map[pathType.Arc][pathType.Circle] = function (arc: IPathArc, circle: IPathArc, deep: boolean) {
+        var angles = circleToCircle(arc, circle, deep);
         if (angles) {
-            var arcAngles = getAnglesWithinArc(angles[0], arc);
+            var arcAngles = getAnglesWithinArc(angles[0], arc, deep);
             if (arcAngles) {
                 var circleAngles: number[];
 
@@ -60,10 +60,10 @@ module MakerJs.path {
         return null;
     };
 
-    map[pathType.Arc][pathType.Line] = function (arc: IPathArc, line: IPathLine) {
-        var angles = lineToCircle(line, arc);
+    map[pathType.Arc][pathType.Line] = function (arc: IPathArc, line: IPathLine, deep: boolean) {
+        var angles = lineToCircle(line, arc, deep);
         if (angles) {
-            var arcAngles = getAnglesWithinArc(angles, arc);
+            var arcAngles = getAnglesWithinArc(angles, arc, deep);
             if (arcAngles) {
                 return {
                     intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
@@ -74,16 +74,16 @@ module MakerJs.path {
         return null;
     };
 
-    map[pathType.Circle][pathType.Arc] = function (circle: IPathCircle, arc: IPathArc) {
-        var result = map[pathType.Arc][pathType.Circle](arc, circle);
+    map[pathType.Circle][pathType.Arc] = function (circle: IPathCircle, arc: IPathArc, deep: boolean) {
+        var result = map[pathType.Arc][pathType.Circle](arc, circle, deep);
         if (result) {
             return swap(result);
         }
         return null;
     };
 
-    map[pathType.Circle][pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle) {
-        var angles = circleToCircle(circle1, circle2);
+    map[pathType.Circle][pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle, deep: boolean) {
+        var angles = circleToCircle(circle1, circle2, deep);
         if (angles) {
             return {
                 intersectionPoints: pointsFromAnglesOnCircle(angles[0], circle1),
@@ -94,8 +94,8 @@ module MakerJs.path {
         return null;
     };
 
-    map[pathType.Circle][pathType.Line] = function (circle: IPathCircle, line: IPathLine) {
-        var angles = lineToCircle(line, circle);
+    map[pathType.Circle][pathType.Line] = function (circle: IPathCircle, line: IPathLine, deep: boolean) {
+        var angles = lineToCircle(line, circle, deep);
         if (angles) {
             return {
                 intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
@@ -105,27 +105,27 @@ module MakerJs.path {
         return null;
     };
 
-    map[pathType.Line][pathType.Arc] = function (line: IPathLine, arc: IPathArc) {
-        var result = map[pathType.Arc][pathType.Line](arc, line);
+    map[pathType.Line][pathType.Arc] = function (line: IPathLine, arc: IPathArc, deep: boolean) {
+        var result = map[pathType.Arc][pathType.Line](arc, line, deep);
         if (result) {
             return swap(result);
         }
         return null;
     };
 
-    map[pathType.Line][pathType.Circle] = function (line: IPathLine, circle: IPathCircle) {
-        var result = map[pathType.Circle][pathType.Line](circle, line);
+    map[pathType.Line][pathType.Circle] = function (line: IPathLine, circle: IPathCircle, deep: boolean) {
+        var result = map[pathType.Circle][pathType.Line](circle, line, deep);
         if (result) {
             return swap(result);
         }
         return null;
     };
 
-    map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine) {
-        var intersectionPoint = lineToLine(line1, line2);
-        if (intersectionPoint) {
+    map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine, deep: boolean) {
+        var intersectionPoints = lineToLine(line1, line2, deep);
+        if (intersectionPoints) {
             return {
-                intersectionPoints: [intersectionPoint]
+                intersectionPoints: intersectionPoints
             };
         }
         return null;
@@ -151,14 +151,15 @@ module MakerJs.path {
      * 
      * @param path1 First path to find intersection.
      * @param path2 Second path to find intersection.
+     * @param deep Optional boolean to only return deep intersections, i.e. not on an end point or tangent.
      * @returns IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
      */
-    export function intersection(path1: IPath, path2: IPath): IPathIntersection {
+    export function intersection(path1: IPath, path2: IPath, deep?: boolean): IPathIntersection {
 
         if (path1 && path2) {
             var fn = map[path1.type][path2.type];
             if (fn) {
-                return fn(path1, path2);
+                return fn(path1, path2, deep);
             }
         }
         return null;
@@ -194,7 +195,7 @@ module MakerJs.path {
     /**
      * @private
      */
-    function getAnglesWithinArc(angles: number[], arc: IPathArc): number[] {
+    function getAnglesWithinArc(angles: number[], arc: IPathArc, deep: boolean): number[] {
 
         if (!angles) return null;
 
@@ -205,7 +206,7 @@ module MakerJs.path {
         var endAngle = angle.ofArcEnd(arc);
 
         for (var i = 0; i < angles.length; i++) {
-            if (isBetween(angles[i], startAngle, endAngle) || isBetween(angles[i], startAngle + 360, endAngle + 360) || isBetween(angles[i], startAngle - 360, endAngle - 360)) {
+            if (isBetween(angles[i], startAngle, endAngle, deep) || isBetween(angles[i], startAngle + 360, endAngle + 360, deep) || isBetween(angles[i], startAngle - 360, endAngle - 360, deep)) {
                 anglesWithinArc.push(angles[i]);
             }
         }
@@ -261,16 +262,20 @@ module MakerJs.path {
     /**
      * @private
      */
-    function isBetween(valueInQuestion: number, limit1: number, limit2: number): boolean {
-        return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
+    function isBetween(valueInQuestion: number, limit1: number, limit2: number, deep: boolean): boolean {
+        if (deep) {
+            return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
+        } else {
+            return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
+        }
     }
 
     /**
      * @private
      */
-    function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine): boolean {
+    function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, deep: boolean): boolean {
         for (var i = 2; i--;) {
-            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]))) return false;
+            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]), deep)) return false;
         }
         return true;
     }
@@ -278,7 +283,7 @@ module MakerJs.path {
     /**
      * @private
      */
-    function lineToLine(line1: IPathLine, line2: IPathLine): IPoint {
+    function lineToLine(line1: IPathLine, line2: IPathLine, deep: boolean): IPoint[] {
 
         var slope1 = getSlope(line1);
         var slope2 = getSlope(line2);
@@ -290,6 +295,31 @@ module MakerJs.path {
 
         if (slope1.hasSlope && slope2.hasSlope && (slope1.slope == slope2.slope)) {
             //lines are parallel
+
+            if (slope1.yIntercept == slope2.yIntercept) {
+                //parallel lines may intersect if they are on the same line, and either endpoints are within the other's segment.
+
+                var pointsOfIntersection: IPoint[] = [];
+
+                function checkPoints(index: number, a: IPathLine, b: IPathLine) {
+                    function checkPoint(p: IPoint) {
+                        if (isBetweenPoints(p, a, deep)) {
+                            pointsOfIntersection[index] = p;
+                        }
+                    }
+
+                    checkPoint(b.origin);
+                    checkPoint(b.end);
+                }
+
+                checkPoints(0, line1, line2);
+                checkPoints(1, line2, line1);
+
+                if (pointsOfIntersection.length > 0) {
+                    return pointsOfIntersection;
+                }
+            }
+
             return null;
         }
 
@@ -307,8 +337,8 @@ module MakerJs.path {
         }
 
         //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
-        if (isBetweenPoints(pointOfIntersection, line1) && isBetweenPoints(pointOfIntersection, line2)) {
-            return pointOfIntersection;
+        if (isBetweenPoints(pointOfIntersection, line1, deep) && isBetweenPoints(pointOfIntersection, line2, deep)) {
+            return [pointOfIntersection];
         }
 
         return null;
@@ -317,7 +347,7 @@ module MakerJs.path {
     /**
      * @private
      */
-    function lineToCircle(line: IPathLine, circle: IPathCircle): number[] {
+    function lineToCircle(line: IPathLine, circle: IPathCircle, deep: boolean): number[] {
 
         function getLineAngle(p1: IPoint, p2: IPoint) {
             return angle.noRevolutions(angle.toDegrees(angle.ofPointInRadians(p1, p2)));
@@ -356,12 +386,16 @@ module MakerJs.path {
         //if horizontal Y is the same as the radius, we know it's 90 degrees
         if (lineY == radius) {
 
+            if (deep) {
+                return null;
+            }
+
             anglesOfIntersection.push(unRotate(90));
 
         } else {
 
             function intersectionBetweenEndpoints(x: number, angleOfX: number) {
-                if (isBetween(x, clonedLine.origin[0], clonedLine.end[0])) {
+                if (isBetween(x, clonedLine.origin[0], clonedLine.end[0], deep)) {
                     anglesOfIntersection.push(unRotate(angleOfX));
                 }
             }
@@ -382,7 +416,7 @@ module MakerJs.path {
     /**
      * @private
      */
-    function circleToCircle(circle1: IPathCircle, circle2: IPathCircle): number[][] {
+    function circleToCircle(circle1: IPathCircle, circle2: IPathCircle, deep: boolean): number[][] {
 
         //see if circles are the same
         if (circle1.radius == circle2.radius && point.areEqual(circle1.origin, circle2.origin)) {
@@ -427,11 +461,21 @@ module MakerJs.path {
 
         //see if circles are tangent interior
         if (c2.radius - x == c1.radius) {
+
+            if (deep) {
+                return null;
+            }
+
             return [[unRotate(180)], [unRotate(180)]];
         }
 
         //see if circles are tangent exterior
         if (x - c2.radius == c1.radius) {
+
+            if (deep) {
+                return null;
+            }
+
             return [[unRotate(0)], [unRotate(180)]];
         }
 
