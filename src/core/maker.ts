@@ -269,19 +269,6 @@ module MakerJs {
          * The length of the array may be either 1 or 2.
          */
         path2Angles?: number[];
-
-        /**
-         * This Point property will only be defined if both parameters are line segments on the same line.
-         * It contains the point of intersection relative to the first line path parameter. 
-         */
-        path1Point?: IPoint;
-
-        /**
-         * This Point property will only be defined if both parameters are line segments on the same line.
-         * It contains the point of intersection relative to the second line path parameter. 
-         */
-        path2Point?: IPoint;
-
     }
 
     //models

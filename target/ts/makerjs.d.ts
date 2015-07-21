@@ -669,9 +669,10 @@ declare module MakerJs.path {
      *
      * @param path1 First path to find intersection.
      * @param path2 Second path to find intersection.
+     * @param deep Optional boolean to only return deep intersections, i.e. not on an end point or tangent.
      * @returns IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
      */
-    function intersection(path1: IPath, path2: IPath): IPathIntersection;
+    function intersection(path1: IPath, path2: IPath, deep?: boolean): IPathIntersection;
 }
 declare module MakerJs.kit {
     /**
