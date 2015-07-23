@@ -247,6 +247,22 @@ module MakerJs {
     };
 
     /**
+     * Options to pass to path.intersection()
+     */
+    export interface IPathIntersectionOptions {
+
+        /**
+         * Optional boolean to only return deep intersections, i.e. not on an end point or tangent.
+         */
+        excludeTangents?: boolean;
+
+        /**
+         * Optional output variable which will be set to true if the paths are overlapped.
+         */
+        out_AreOverlapped?: boolean;
+    }
+
+    /**
      * An intersection of two paths.
      */
     export interface IPathIntersection {
