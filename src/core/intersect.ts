@@ -130,11 +130,16 @@ module MakerJs.path {
     };
 
     map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions) {
-        var intersectionPoints = lineToLine(line1, line2, options);
-        if (intersectionPoints) {
-            return {
-                intersectionPoints: [intersectionPoints]
-            };
+        var intersectionPoint = slopeIntersectionPoint(line1, line2, options);
+        if (intersectionPoint) {
+
+            //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
+            if (isBetweenPoints(intersectionPoint, line1, options.excludeTangents) && isBetweenPoints(intersectionPoint, line2, options.excludeTangents)) {
+                return {
+                    intersectionPoints: [intersectionPoint]
+                };
+            }
+
         }
         return null;
     };
@@ -334,9 +339,14 @@ module MakerJs.path {
     }
 
     /**
-     * @private
+     * Calculates the intersection of slopes of two lines.
+     * 
+     * @param line1 First line to use for slope.
+     * @param line2 Second line to use for slope.
+     * @param options Optional IPathIntersectionOptions.
+     * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
      */
-    function lineToLine(line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions): IPoint {
+    export function slopeIntersectionPoint(line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions = {}): IPoint {
 
         var slope1 = getSlope(line1);
         var slope2 = getSlope(line2);
@@ -378,12 +388,7 @@ module MakerJs.path {
             pointOfIntersection = [x, y];
         }
 
-        //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
-        if (isBetweenPoints(pointOfIntersection, line1, options.excludeTangents) && isBetweenPoints(pointOfIntersection, line2, options.excludeTangents)) {
-            return pointOfIntersection;
-        }
-
-        return null;
+        return pointOfIntersection;
     }
 
     /**
