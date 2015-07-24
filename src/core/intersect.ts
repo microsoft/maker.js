@@ -389,17 +389,13 @@ module MakerJs.path {
      */
     function lineToCircle(line: IPathLine, circle: IPathCircle, options: IPathIntersectionOptions): number[] {
 
-        function getLineAngle(p1: IPoint, p2: IPoint) {
-            return angle.noRevolutions(angle.toDegrees(angle.ofPointInRadians(p1, p2)));
-        }
-
         var radius = round(circle.radius);
 
         //clone the line
         var clonedLine = new paths.Line(point.subtract(line.origin, circle.origin), point.subtract(line.end, circle.origin));
 
         //get angle of line
-        var lineAngleNormal = getLineAngle(line.origin, line.end);
+        var lineAngleNormal = angle.ofLineInDegrees(line);
 
         //use the positive horizontal angle
         var lineAngle = (lineAngleNormal >= 180) ? lineAngleNormal - 360 : lineAngleNormal;

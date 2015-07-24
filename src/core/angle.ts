@@ -49,6 +49,16 @@ module MakerJs.angle {
     }
 
     /**
+     * Angle of a line path.
+     * 
+     * @param line The line path to find the angle of.
+     * @returns Angle of the line path, in degrees.
+     */
+    export function ofLineInDegrees(line: IPathLine) {
+        return noRevolutions(toDegrees(ofPointInRadians(line.origin, line.end)));
+    }
+
+    /**
      * Angle of a line through a point.
      * 
      * @param pointToFindAngle The point to find the angle.
