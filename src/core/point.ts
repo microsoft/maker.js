@@ -62,18 +62,23 @@ module MakerJs.point {
     }
 
     /**
+     * Get a point on a circle or arc path, at a given angle.
+     * @param angleInDegrees The angle at which you want to find the point, in degrees.
+     * @param circle A circle or arc.
+     * @returns A new point object.
+     */
+    export function fromAngleOnCircle(angleInDegrees: number, circle: IPathCircle): IPoint {
+        return add(circle.origin, fromPolar(angle.toRadians(angleInDegrees), circle.radius));
+    }
+
+    /**
      * Get the two end points of an arc path.
      * 
      * @param arc The arc path object.
      * @returns Array with 2 elements: [0] is the point object corresponding to the start angle, [1] is the point object corresponding to the end angle.
      */
     export function fromArc(arc: IPathArc): IPoint[] {
-
-        function getPointFromAngle(a: number) {
-            return add(arc.origin, fromPolar(angle.toRadians(a), arc.radius));
-        }
-
-        return [getPointFromAngle(arc.startAngle), getPointFromAngle(arc.endAngle)];
+        return [fromAngleOnCircle(arc.startAngle, arc), fromAngleOnCircle(arc.endAngle, arc)];
     }
 
     /**

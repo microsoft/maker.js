@@ -190,17 +190,10 @@ module MakerJs.path {
     /**
      * @private
      */
-    function pointFromAngleOnCircle(angleInDegrees: number, circle: IPathCircle): IPoint {
-        return point.add(circle.origin, point.fromPolar(angle.toRadians(angleInDegrees), circle.radius));
-    }
-
-    /**
-     * @private
-     */
     function pointsFromAnglesOnCircle(anglesInDegrees: number[], circle: IPathCircle): IPoint[] {
         var result = [];
         for (var i = 0; i < anglesInDegrees.length; i++) {
-            result.push(pointFromAngleOnCircle(anglesInDegrees[i], circle));
+            result.push(point.fromAngleOnCircle(anglesInDegrees[i], circle));
         }
         return result;
     }

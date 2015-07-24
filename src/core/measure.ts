@@ -68,8 +68,7 @@ module MakerJs.measure {
 
         map[pathType.Arc] = function (arc: IPathArc) {
             var r = arc.radius;
-            var startPoint = point.fromPolar(angle.toRadians(arc.startAngle), r);
-            var endPoint = point.fromPolar(angle.toRadians(arc.endAngle), r);
+            var arcPoints = point.fromArc(arc);
 
             var startAngle = arc.startAngle;
             var endAngle = angle.ofArcEnd(arc);
@@ -80,15 +79,15 @@ module MakerJs.measure {
             }
 
             function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
-                var extremePoint = getExtremePoint(startPoint, endPoint, fn);
+                var extremePoint = getExtremePoint(arcPoints[0], arcPoints[1], fn);
 
                 for (var i = 2; i--;) {
                     if (startAngle < xyAngle[i] && xyAngle[i] < endAngle) {
-                        extremePoint[i] = value;
+                        extremePoint[i] = value + arc.origin[i];
                     }
                 }
 
-                return point.add(arc.origin, extremePoint);
+                return extremePoint;
             }
 
             measurement.low = extremeAngle([180, 270], -r, Math.min);
