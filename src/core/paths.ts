@@ -7,7 +7,6 @@ module MakerJs.paths {
     /**
      * Class for arc path.
      * 
-     * @param id The id of the new path.
      * @param origin The center point of the arc.
      * @param radius The radius of the arc.
      * @param startAngle The start angle of the arc.
@@ -24,7 +23,6 @@ module MakerJs.paths {
     /**
      * Class for circle path.
      * 
-     * @param id The id of the new path.
      * @param origin The center point of the circle.
      * @param radius The radius of the circle.
      */
@@ -39,7 +37,6 @@ module MakerJs.paths {
     /**
      * Class for line path.
      * 
-     * @param id The id of the new path.
      * @param origin The origin point of the line.
      * @param end The end point of the line.
      */
@@ -50,4 +47,34 @@ module MakerJs.paths {
             this.type = pathType.Line;
         }
     }
+
+    /**
+     * Class for a parallel line path.
+     * 
+     * @param toLine A line to be parallel to.
+     * @param distance Distance between parallel and original line.
+     * @param nearPoint Any point to determine which side of the line to place the parallel.
+     */
+    export class Parallel extends Line {
+        constructor(toLine: IPathLine, distance: number, nearPoint: IPoint) {
+            super(point.clone(toLine.origin), point.clone(toLine.end));
+
+            var angleOfLine = angle.ofLineInDegrees(this);
+
+            function getNewOrigin(offsetAngle: number) {
+                var origin = point.add(toLine.origin, point.fromPolar(angle.toRadians(angleOfLine + offsetAngle), distance));
+                return {
+                    origin: origin,
+                    nearness: measure.pointDistance(origin, nearPoint)
+                };
+            }
+
+            var newOrigins = [getNewOrigin(-90), getNewOrigin(90)];
+            var newOrigin = (newOrigins[0].nearness < newOrigins[1].nearness) ? newOrigins[0].origin : newOrigins[1].origin;
+
+            path.move(this, newOrigin);
+
+        }
+    }
+
 }
