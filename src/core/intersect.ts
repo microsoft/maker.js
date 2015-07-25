@@ -134,7 +134,7 @@ module MakerJs.path {
         if (intersectionPoint) {
 
             //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
-            if (isBetweenPoints(intersectionPoint, line1, options.excludeTangents) && isBetweenPoints(intersectionPoint, line2, options.excludeTangents)) {
+            if (measure.isBetweenPoints(intersectionPoint, line1, options.excludeTangents) && measure.isBetweenPoints(intersectionPoint, line2, options.excludeTangents)) {
                 return {
                     intersectionPoints: [intersectionPoint]
                 };
@@ -208,7 +208,7 @@ module MakerJs.path {
         var anglesWithinArc: number[] = [];
 
         for (var i = 0; i < angles.length; i++) {
-            if (isBetweenAngles(angles[i], arc, options.excludeTangents)) {
+            if (measure.isBetweenArcAngles(angles[i], arc, options.excludeTangents)) {
                 anglesWithinArc.push(angles[i]);
             }
         }
@@ -264,43 +264,13 @@ module MakerJs.path {
     /**
      * @private
      */
-    function isBetween(valueInQuestion: number, limit1: number, limit2: number, excludeTangents: boolean): boolean {
-        if (excludeTangents) {
-            return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
-        } else {
-            return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
-        }
-    }
-
-    function isBetweenAngles(angleInQuestion: number, arc: IPathArc, excludeTangents: boolean) : boolean {
-        
-        var startAngle = arc.startAngle;
-        var endAngle = angle.ofArcEnd(arc);
-
-        //computed angles will not be negative, but the arc may have specified a negative angle, so check against one revolution forward and backward
-        return (isBetween(angleInQuestion, startAngle, endAngle, excludeTangents) || isBetween(angleInQuestion, startAngle + 360, endAngle + 360, excludeTangents) || isBetween(angleInQuestion, startAngle - 360, endAngle - 360, excludeTangents))
-    }
-
-    /**
-     * @private
-     */
-    function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, excludeTangents: boolean): boolean {
-        for (var i = 2; i--;) {
-            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]), excludeTangents)) return false;
-        }
-        return true;
-    }
-
-    /**
-     * @private
-     */
     function checkAngleOverlap(arc1: IPathArc, arc2: IPathArc, options: IPathIntersectionOptions): void {
         var pointsOfIntersection: IPoint[] = [];
 
         function checkAngles(index: number, a: IPathArc, b: IPathArc) {
 
             function checkAngle(n: number) {
-                return isBetweenAngles(n, a, options.excludeTangents);
+                return measure.isBetweenArcAngles(n, a, options.excludeTangents);
             }
 
             return checkAngle(b.startAngle) || checkAngle(b.endAngle);
@@ -320,7 +290,7 @@ module MakerJs.path {
         function checkPoints(index: number, a: IPathLine, b: IPathLine) {
 
             function checkPoint(p: IPoint) {
-                return isBetweenPoints(p, a, options.excludeTangents);
+                return measure.isBetweenPoints(p, a, options.excludeTangents);
             }
 
             return checkPoint(b.origin) || checkPoint(b.end);
@@ -431,7 +401,7 @@ module MakerJs.path {
         } else {
 
             function intersectionBetweenEndpoints(x: number, angleOfX: number) {
-                if (isBetween(x, clonedLine.origin[0], clonedLine.end[0], options.excludeTangents)) {
+                if (measure.isBetween(x, clonedLine.origin[0], clonedLine.end[0], options.excludeTangents)) {
                     anglesOfIntersection.push(unRotate(angleOfX));
                 }
             }
@@ -446,7 +416,11 @@ module MakerJs.path {
             intersectionBetweenEndpoints(intersectX, intersectDegrees);
         }
 
-        return anglesOfIntersection;
+        if (anglesOfIntersection.length > 0) {
+            return anglesOfIntersection;
+        }
+
+        return null;
     }
 
     /**

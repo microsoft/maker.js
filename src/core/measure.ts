@@ -22,6 +22,30 @@ module MakerJs.measure {
         return endAngle - arc.startAngle;
     }
 
+    export function isBetween(valueInQuestion: number, limit1: number, limit2: number, excludeTangents: boolean): boolean {
+        if (excludeTangents) {
+            return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
+        } else {
+            return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
+        }
+    }
+
+    export function isBetweenArcAngles(angleInQuestion: number, arc: IPathArc, excludeTangents: boolean): boolean {
+
+        var startAngle = arc.startAngle;
+        var endAngle = angle.ofArcEnd(arc);
+
+        //computed angles will not be negative, but the arc may have specified a negative angle, so check against one revolution forward and backward
+        return (isBetween(angleInQuestion, startAngle, endAngle, excludeTangents) || isBetween(angleInQuestion, startAngle + 360, endAngle + 360, excludeTangents) || isBetween(angleInQuestion, startAngle - 360, endAngle - 360, excludeTangents))
+    }
+
+    export function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, excludeTangents: boolean): boolean {
+        for (var i = 2; i--;) {
+            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]), excludeTangents)) return false;
+        }
+        return true;
+    }
+
     /**
      * Calculates the distance between two points.
      * 
@@ -70,19 +94,11 @@ module MakerJs.measure {
             var r = arc.radius;
             var arcPoints = point.fromArc(arc);
 
-            var startAngle = arc.startAngle;
-            var endAngle = angle.ofArcEnd(arc);
-
-            if (startAngle < 0) {
-                startAngle += 360;
-                endAngle += 360;
-            }
-
             function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
                 var extremePoint = getExtremePoint(arcPoints[0], arcPoints[1], fn);
 
                 for (var i = 2; i--;) {
-                    if (startAngle < xyAngle[i] && xyAngle[i] < endAngle) {
+                    if (isBetweenArcAngles(xyAngle[i], arc, false)) {
                         extremePoint[i] = value + arc.origin[i];
                     }
                 }
