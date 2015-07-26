@@ -22,6 +22,25 @@ module MakerJs.measure {
         return endAngle - arc.startAngle;
     }
 
+    export function isArcConcaveTowardsPoint(arc: IPathArc, towardsPoint: IPoint): boolean {
+
+        if (pointDistance(arc.origin, towardsPoint) < arc.radius) {
+            return true;
+        }
+
+        var halfAngle = arc.startAngle + measure.arcAngle(arc) / 2;
+        var halfAnglePoint = point.add(arc.origin, point.fromPolar(angle.toRadians(halfAngle), arc.radius));
+        var halfPointToNearPoint = new paths.Line(halfAnglePoint, towardsPoint);
+        var options: IPathIntersectionOptions = {};
+        var intersectionPoint = path.intersection(halfPointToNearPoint, new paths.ArcChord(arc), options);
+
+        if (intersectionPoint || options.out_AreOverlapped) {
+            return true;
+        }
+
+        return false;
+    }
+
     export function isBetween(valueInQuestion: number, limit1: number, limit2: number, excludeTangents: boolean): boolean {
         if (excludeTangents) {
             return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
