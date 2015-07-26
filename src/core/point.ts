@@ -37,6 +37,17 @@ module MakerJs.point {
     }
 
     /**
+     * Find out if two points are equal after rounding.
+     * 
+     * @param a First point.
+     * @param b Second point.
+     * @returns true if points are the same, false if they are not
+     */
+    export function areEqualRounded(a: IPoint, b: IPoint): boolean {
+        return round(a[0]) == round(b[0]) && round(a[1]) == round(b[1]);
+    }
+
+    /**
      * Clone a point into a new point.
      * 
      * @param pointToClone The point to clone.
