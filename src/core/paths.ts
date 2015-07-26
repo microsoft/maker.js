@@ -49,15 +49,40 @@ module MakerJs.paths {
     }
 
     /**
+     * Class for arc chord, which is simply a line path.
+     * 
+     * @param arc Arc to use as the basic for the chord.
+     */
+    export class ArcChord implements IPathLine {
+        public type: string;
+        public origin: IPoint;
+        public end: IPoint;
+
+        constructor(arc: IPathArc) {
+            var arcPoints = point.fromArc(arc);
+
+            this.type = pathType.Line;
+            this.origin = arcPoints[0];
+            this.end = arcPoints[1];
+        }
+    }
+
+    /**
      * Class for a parallel line path.
      * 
      * @param toLine A line to be parallel to.
      * @param distance Distance between parallel and original line.
      * @param nearPoint Any point to determine which side of the line to place the parallel.
      */
-    export class Parallel extends Line {
+    export class Parallel implements IPathLine {
+        public type: string;
+        public origin: IPoint;
+        public end: IPoint;
+
         constructor(toLine: IPathLine, distance: number, nearPoint: IPoint) {
-            super(point.clone(toLine.origin), point.clone(toLine.end));
+            this.type = pathType.Line;
+            this.origin = point.clone(toLine.origin);
+            this.end = point.clone(toLine.end);
 
             var angleOfLine = angle.ofLineInDegrees(this);
 
@@ -73,7 +98,6 @@ module MakerJs.paths {
             var newOrigin = (newOrigins[0].nearness < newOrigins[1].nearness) ? newOrigins[0].origin : newOrigins[1].origin;
 
             path.move(this, newOrigin);
-
         }
     }
 
