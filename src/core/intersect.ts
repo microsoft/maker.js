@@ -183,7 +183,7 @@ module MakerJs.path {
      */
     function findCorrespondingAngleIndex(circleAngles: number[][], arcAngle: number[]): number {
         for (var i = 0; i < circleAngles.length; i++) {
-            if (circleAngles[i] === arcAngle) return i;
+            if (circleAngles[i][0] == arcAngle[0]) return i;
         }
     }
 
