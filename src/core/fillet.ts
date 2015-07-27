@@ -184,6 +184,14 @@ module MakerJs.path {
 
                 var pathsToFillet = [path1, path2];
 
+                //special case when both ends touch each other, as in the case of 2 arcs or an arc chord
+                if (point.areEqualRounded(commonProperty[0].oppositePoint, commonProperty[1].oppositePoint)) {
+                    for (var i = 2; i--;) {
+                        //use halfway point instead of endpoint for the opposite
+                        commonProperty[i].oppositePoint = point.middle(pathsToFillet[i]);
+                    }
+                }
+
                 //get "parallel" guidelines
                 var guidePaths: IPath[] = [];
                 for (var i = 0; i < 2; i++) {
@@ -193,7 +201,13 @@ module MakerJs.path {
                 var intersectionPoint = intersection(guidePaths[0], guidePaths[1]);
                 if (intersectionPoint) {
 
-                    var center = intersectionPoint.intersectionPoints[0];
+                    var center: IPoint;
+
+                    if (intersectionPoint.intersectionPoints.length == 1) {
+                        center = intersectionPoint.intersectionPoints[0];
+                    } else {
+                        center = point.closest(commonProperty[0].point, intersectionPoint.intersectionPoints);
+                    }
 
                     var results: IFilletResult[] = [];
                     for (var i = 0; i < 2; i++) {
@@ -204,15 +218,20 @@ module MakerJs.path {
                         results.push(result);
                     }
 
-                    results[0].clipPath();
-                    results[1].clipPath();
-
                     var arc = new paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
+
+                    //the algorithm is only valid for fillet is less than 180 degrees
+                    if (measure.arcAngle(arc) == 180) {
+                        return null;
+                    }
 
                     if (measure.arcAngle(arc) > 180) {
                         arc.startAngle = results[1].filletAngle;
                         arc.endAngle = results[0].filletAngle;
                     }
+
+                    results[0].clipPath();
+                    results[1].clipPath();
 
                     return arc;
                 }
