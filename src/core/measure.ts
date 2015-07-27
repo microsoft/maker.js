@@ -22,6 +22,13 @@ module MakerJs.measure {
         return endAngle - arc.startAngle;
     }
 
+    /**
+     * Check for arc being concave or convex towards a given point.
+     * 
+     * @param arc The arc to test.
+     * @param towardsPoint The point to test.
+     * @returns Boolean true if arc is concave towards point.
+     */
     export function isArcConcaveTowardsPoint(arc: IPathArc, towardsPoint: IPoint): boolean {
 
         if (pointDistance(arc.origin, towardsPoint) <= arc.radius) {
@@ -39,26 +46,51 @@ module MakerJs.measure {
         return false;
     }
 
-    export function isBetween(valueInQuestion: number, limit1: number, limit2: number, excludeTangents: boolean): boolean {
-        if (excludeTangents) {
+    /**
+     * Check if a given number is between two given limits.
+     * 
+     * @param valueInQuestion The number to test.
+     * @param limit1 First limit.
+     * @param limit2 Second limit.
+     * @param exclusive Flag to exclude equaling the limits.
+     * @returns Boolean true if value is between (or equal to) the limits.
+     */
+    export function isBetween(valueInQuestion: number, limit1: number, limit2: number, exclusive: boolean): boolean {
+        if (exclusive) {
             return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
         } else {
             return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
         }
     }
 
-    export function isBetweenArcAngles(angleInQuestion: number, arc: IPathArc, excludeTangents: boolean): boolean {
+    /**
+     * Check if a given angle is between an arc's start and end angles.
+     * 
+     * @param angleInQuestion The angle to test.
+     * @param arc Arc to test against.
+     * @param exclusive Flag to exclude equaling the start or end angles.
+     * @returns Boolean true if angle is between (or equal to) the arc's start and end angles.
+     */
+    export function isBetweenArcAngles(angleInQuestion: number, arc: IPathArc, exclusive: boolean): boolean {
 
         var startAngle = arc.startAngle;
         var endAngle = angle.ofArcEnd(arc);
 
         //computed angles will not be negative, but the arc may have specified a negative angle, so check against one revolution forward and backward
-        return (isBetween(angleInQuestion, startAngle, endAngle, excludeTangents) || isBetween(angleInQuestion, startAngle + 360, endAngle + 360, excludeTangents) || isBetween(angleInQuestion, startAngle - 360, endAngle - 360, excludeTangents))
+        return (isBetween(angleInQuestion, startAngle, endAngle, exclusive) || isBetween(angleInQuestion, startAngle + 360, endAngle + 360, exclusive) || isBetween(angleInQuestion, startAngle - 360, endAngle - 360, exclusive))
     }
 
-    export function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, excludeTangents: boolean): boolean {
+    /**
+     * Check if a given point is between a line's end points.
+     * 
+     * @param pointInQuestion The point to test.
+     * @param line Line to test against.
+     * @param exclusive Flag to exclude equaling the origin or end points.
+     * @returns Boolean true if point is between (or equal to) the line's origin and end points.
+     */
+    export function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, exclusive: boolean): boolean {
         for (var i = 2; i--;) {
-            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]), excludeTangents)) return false;
+            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]), exclusive)) return false;
         }
         return true;
     }
