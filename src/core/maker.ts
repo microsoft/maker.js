@@ -289,10 +289,16 @@ module MakerJs {
 
     //models
 
+    /**
+     * Path objects by id.
+     */
     export interface IPathMap {
         [id: string]: IPath;
     }
 
+    /**
+     * Model objects by id.
+     */
     export interface IModelMap {
         [id: string]: IModel;
     }
