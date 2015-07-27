@@ -51,7 +51,7 @@ function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWid
         };
 
         this.paths = {
-            legBottom: new paths.Line(point.clone(this.models.b1.paths.Vertical.origin), point.clone(this.models.b2.paths.Vertical.origin))
+            legBottom: new paths.Line(this.models.b1.paths.Vertical.origin, this.models.b2.paths.Vertical.origin)
         };
     }
 
@@ -65,7 +65,7 @@ function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWid
     var leg2 = new leg(mHeight - step, columnWidth + spacing, leg1.models.b2.paths.Vertical);
     var leg3 = new leg(mHeight - 2 * step, 2 * (columnWidth + spacing), leg2.models.b2.paths.Vertical);
 
-    var outBottom = new paths.Line([0, 0], point.clone(leg3.models.b3.paths.Vertical.origin));
+    var outBottom = new paths.Line([0, 0], leg3.models.b3.paths.Vertical.origin);
 
     var earPivot = leg1.models.b1.paths.Horizontal.origin;
     var earH = path.rotate(new paths.Line(point.subtract(earPivot, [100, outline]), point.subtract(earPivot, [-100, outline])), drop, earPivot);
@@ -78,12 +78,12 @@ function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWid
     trimBends(leg2.models.b3, leg3.models.b3);
 
     this.paths = {
-        ear: new paths.Line(point.clone(leg1.models.b1.paths.Horizontal.origin), point.clone(leg1.models.b2.paths.Horizontal.origin)),
-        leg1bottom: new paths.Line(point.clone(leg1.models.b2.paths.Vertical.origin), point.clone(leg2.models.b1.paths.Horizontal.origin)),
-        leg2bottom: new paths.Line(point.clone(leg2.models.b2.paths.Vertical.origin), point.clone(leg3.models.b1.paths.Horizontal.origin)),
+        ear: new paths.Line(leg1.models.b1.paths.Horizontal.origin, leg1.models.b2.paths.Horizontal.origin),
+        leg1bottom: new paths.Line(leg1.models.b2.paths.Vertical.origin, leg2.models.b1.paths.Horizontal.origin),
+        leg2bottom: new paths.Line(leg2.models.b2.paths.Vertical.origin, leg3.models.b1.paths.Horizontal.origin),
         outHome: outHome,
         earOutline: earOutline,
-        earOutH: new paths.Line(point.clone(earOutline.origin), point.clone(outHome.end)),
+        earOutH: new paths.Line(earOutline.origin, outHome.end),
         outBottom: outBottom
     };
 
@@ -93,8 +93,8 @@ function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWid
         leg3: leg3
     };
 
-    leg1.models.b2.paths.Vertical.origin = point.clone(leg2.models.b2.paths.Horizontal.origin);
-    leg2.models.b2.paths.Vertical.origin = point.clone(leg3.models.b2.paths.Horizontal.origin);
+    leg1.models.b2.paths.Vertical.origin = leg2.models.b2.paths.Horizontal.origin;
+    leg2.models.b2.paths.Vertical.origin = leg3.models.b2.paths.Horizontal.origin;
 }
 
 function trimLine(line, propertyName, trimToPath) {

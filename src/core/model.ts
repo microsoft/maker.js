@@ -89,21 +89,22 @@ module MakerJs.model {
      * @returns The original model (for chaining).
      */
     export function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint): IModel {
+        if (modelToRotate) {
 
-        var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
+            var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
 
-        if (modelToRotate.paths) {
-            for (var id in modelToRotate.paths) {
-                path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
+            if (modelToRotate.paths) {
+                for (var id in modelToRotate.paths) {
+                    path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
+                }
+            }
+
+            if (modelToRotate.models) {
+                for (var id in modelToRotate.models) {
+                    rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
+                }
             }
         }
-
-        if (modelToRotate.models) {
-            for (var id in modelToRotate.models) {
-                rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
-            }
-        }
-
         return modelToRotate;
     }
 
