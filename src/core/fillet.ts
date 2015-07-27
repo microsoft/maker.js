@@ -90,6 +90,9 @@ module MakerJs.path {
         return result;
     }
 
+    /**
+     * @private
+     */
     function getGuidePath(originalPath: IPath, delta: number, nearPoint: IPoint): IPath {
         var result: IPath = null;
 
@@ -112,6 +115,9 @@ module MakerJs.path {
         return result;
     }
 
+    /**
+     * @private
+     */
     function getFilletResult(pathToFillet: IPath, propertyName: string, filletRadius: number, filletCenter: IPoint): IFilletResult {
 
         var result: IFilletResult = null;
@@ -220,12 +226,13 @@ module MakerJs.path {
 
                     var arc = new paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
 
-                    //the algorithm is only valid for fillet is less than 180 degrees
+                    //the algorithm is only valid for fillet less than 180 degrees
                     if (measure.arcAngle(arc) == 180) {
                         return null;
                     }
 
                     if (measure.arcAngle(arc) > 180) {
+                        //swap to make smallest angle
                         arc.startAngle = results[1].filletAngle;
                         arc.endAngle = results[0].filletAngle;
                     }
