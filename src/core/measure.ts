@@ -24,15 +24,13 @@ module MakerJs.measure {
 
     export function isArcConcaveTowardsPoint(arc: IPathArc, towardsPoint: IPoint): boolean {
 
-        if (pointDistance(arc.origin, towardsPoint) < arc.radius) {
+        if (pointDistance(arc.origin, towardsPoint) <= arc.radius) {
             return true;
         }
 
-        var halfAngle = arc.startAngle + measure.arcAngle(arc) / 2;
-        var halfAnglePoint = point.add(arc.origin, point.fromPolar(angle.toRadians(halfAngle), arc.radius));
-        var halfPointToNearPoint = new paths.Line(halfAnglePoint, towardsPoint);
+        var midPointToNearPoint = new paths.Line(point.middle(arc), towardsPoint);
         var options: IPathIntersectionOptions = {};
-        var intersectionPoint = path.intersection(halfPointToNearPoint, new paths.ArcChord(arc), options);
+        var intersectionPoint = path.intersection(midPointToNearPoint, new paths.ArcChord(arc), options);
 
         if (intersectionPoint || options.out_AreOverlapped) {
             return true;

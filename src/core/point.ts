@@ -58,6 +58,21 @@ module MakerJs.point {
         return [pointToClone[0], pointToClone[1]];
     }
 
+    export function closest(referencePoint: IPoint, pointChoices: IPoint[]): IPoint {
+        var smallest = {
+            index: 0,
+            distance: -1
+        };
+        for (var i = 0; i < pointChoices.length; i++) {
+            var distance = measure.pointDistance(referencePoint, pointChoices[i]);
+            if (smallest.distance == -1 || distance < smallest.distance) {
+                smallest.distance = distance;
+                smallest.index = i;
+            }
+        }
+        return pointChoices[smallest.index];
+    }
+
     /**
      * Get a point from its polar coordinates.
      * 
@@ -90,6 +105,36 @@ module MakerJs.point {
      */
     export function fromArc(arc: IPathArc): IPoint[] {
         return [fromAngleOnCircle(arc.startAngle, arc), fromAngleOnCircle(arc.endAngle, arc)];
+    }
+
+    export function middle(path: IPath): IPoint {
+        var midPoint: IPoint = null;
+
+        var map: IPathFunctionMap = {};
+
+        map[pathType.Arc] = function (arc: IPathArc) {
+            var halfAngle = arc.startAngle + measure.arcAngle(arc) / 2;
+            midPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(halfAngle), arc.radius));
+        };
+
+        map[pathType.Line] = function (line: IPathLine) {
+
+            function avg(a: number, b: number): number {
+                return (a + b) / 2;
+            };
+
+            midPoint = [
+                avg(line.origin[0], line.end[0]),
+                avg(line.origin[1], line.end[1])
+            ];
+        };
+
+        var fn = map[path.type];
+        if (fn) {
+            fn(path);
+        }
+
+        return midPoint;
     }
 
     /**
