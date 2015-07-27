@@ -37,7 +37,7 @@ module MakerJs.measure {
 
         var midPointToNearPoint = new paths.Line(point.middle(arc), towardsPoint);
         var options: IPathIntersectionOptions = {};
-        var intersectionPoint = path.intersection(midPointToNearPoint, new paths.ArcChord(arc), options);
+        var intersectionPoint = path.intersection(midPointToNearPoint, new paths.Chord(arc), options);
 
         if (intersectionPoint || options.out_AreOverlapped) {
             return true;
