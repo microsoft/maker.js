@@ -57,22 +57,50 @@ module MakerJs.path {
     }
 
     /**
-     * Move a path's origin by a relative amount. Note: to move absolute, just set the origin property directly.
+     * Move a path to an absolute origin.
      * 
      * @param pathToMove The path to move.
-     * @param adjust The x & y adjustments, either as a point object, or as an array of numbers.
+     * @param origin The new origin for the path.
      * @returns The original path (for chaining).
      */
-    export function moveRelative(pathToMove: IPath, adjust: IPoint): IPath {
+    export function move(pathToMove: IPath, origin: IPoint): IPath {
 
         if (pathToMove) {
             var map: IPathFunctionMap = {};
 
             map[pathType.Line] = function (line: IPathLine) {
-                line.end = point.add(line.end, adjust);
+                var delta = point.subtract(line.end, line.origin);
+                line.end = point.add(origin, delta);
             };
 
-            pathToMove.origin = point.add(pathToMove.origin, adjust);
+            var fn = map[pathToMove.type];
+            if (fn) {
+                fn(pathToMove);
+            }
+
+            pathToMove.origin = origin;
+        }
+
+        return pathToMove;
+    }
+
+    /**
+     * Move a path's origin by a relative amount.
+     * 
+     * @param pathToMove The path to move.
+     * @param delta The x & y adjustments, either as a point object, or as an array of numbers.
+     * @returns The original path (for chaining).
+     */
+    export function moveRelative(pathToMove: IPath, delta: IPoint): IPath {
+
+        if (pathToMove) {
+            var map: IPathFunctionMap = {};
+
+            map[pathType.Line] = function (line: IPathLine) {
+                line.end = point.add(line.end, delta);
+            };
+
+            pathToMove.origin = point.add(pathToMove.origin, delta);
 
             var fn = map[pathToMove.type];
             if (fn) {

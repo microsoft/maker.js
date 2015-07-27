@@ -23,6 +23,79 @@ module MakerJs.measure {
     }
 
     /**
+     * Check for arc being concave or convex towards a given point.
+     * 
+     * @param arc The arc to test.
+     * @param towardsPoint The point to test.
+     * @returns Boolean true if arc is concave towards point.
+     */
+    export function isArcConcaveTowardsPoint(arc: IPathArc, towardsPoint: IPoint): boolean {
+
+        if (pointDistance(arc.origin, towardsPoint) <= arc.radius) {
+            return true;
+        }
+
+        var midPointToNearPoint = new paths.Line(point.middle(arc), towardsPoint);
+        var options: IPathIntersectionOptions = {};
+        var intersectionPoint = path.intersection(midPointToNearPoint, new paths.ArcChord(arc), options);
+
+        if (intersectionPoint || options.out_AreOverlapped) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if a given number is between two given limits.
+     * 
+     * @param valueInQuestion The number to test.
+     * @param limit1 First limit.
+     * @param limit2 Second limit.
+     * @param exclusive Flag to exclude equaling the limits.
+     * @returns Boolean true if value is between (or equal to) the limits.
+     */
+    export function isBetween(valueInQuestion: number, limit1: number, limit2: number, exclusive: boolean): boolean {
+        if (exclusive) {
+            return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
+        } else {
+            return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
+        }
+    }
+
+    /**
+     * Check if a given angle is between an arc's start and end angles.
+     * 
+     * @param angleInQuestion The angle to test.
+     * @param arc Arc to test against.
+     * @param exclusive Flag to exclude equaling the start or end angles.
+     * @returns Boolean true if angle is between (or equal to) the arc's start and end angles.
+     */
+    export function isBetweenArcAngles(angleInQuestion: number, arc: IPathArc, exclusive: boolean): boolean {
+
+        var startAngle = arc.startAngle;
+        var endAngle = angle.ofArcEnd(arc);
+
+        //computed angles will not be negative, but the arc may have specified a negative angle, so check against one revolution forward and backward
+        return (isBetween(angleInQuestion, startAngle, endAngle, exclusive) || isBetween(angleInQuestion, startAngle + 360, endAngle + 360, exclusive) || isBetween(angleInQuestion, startAngle - 360, endAngle - 360, exclusive))
+    }
+
+    /**
+     * Check if a given point is between a line's end points.
+     * 
+     * @param pointInQuestion The point to test.
+     * @param line Line to test against.
+     * @param exclusive Flag to exclude equaling the origin or end points.
+     * @returns Boolean true if point is between (or equal to) the line's origin and end points.
+     */
+    export function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, exclusive: boolean): boolean {
+        for (var i = 2; i--;) {
+            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]), exclusive)) return false;
+        }
+        return true;
+    }
+
+    /**
      * Calculates the distance between two points.
      * 
      * @param a First point.
@@ -68,27 +141,18 @@ module MakerJs.measure {
 
         map[pathType.Arc] = function (arc: IPathArc) {
             var r = arc.radius;
-            var startPoint = point.fromPolar(angle.toRadians(arc.startAngle), r);
-            var endPoint = point.fromPolar(angle.toRadians(arc.endAngle), r);
-
-            var startAngle = arc.startAngle;
-            var endAngle = angle.ofArcEnd(arc);
-
-            if (startAngle < 0) {
-                startAngle += 360;
-                endAngle += 360;
-            }
+            var arcPoints = point.fromArc(arc);
 
             function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
-                var extremePoint = getExtremePoint(startPoint, endPoint, fn);
+                var extremePoint = getExtremePoint(arcPoints[0], arcPoints[1], fn);
 
                 for (var i = 2; i--;) {
-                    if (startAngle < xyAngle[i] && xyAngle[i] < endAngle) {
-                        extremePoint[i] = value;
+                    if (isBetweenArcAngles(xyAngle[i], arc, false)) {
+                        extremePoint[i] = value + arc.origin[i];
                     }
                 }
 
-                return point.add(arc.origin, extremePoint);
+                return extremePoint;
             }
 
             measurement.low = extremeAngle([180, 270], -r, Math.min);
