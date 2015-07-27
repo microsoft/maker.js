@@ -57,7 +57,7 @@ module MakerJs.path {
     }
 
     /**
-     * Move a path to an absolute origin.
+     * Move a path to an absolute point.
      * 
      * @param pathToMove The path to move.
      * @param origin The new origin for the path.
@@ -88,7 +88,7 @@ module MakerJs.path {
      * Move a path's origin by a relative amount.
      * 
      * @param pathToMove The path to move.
-     * @param delta The x & y adjustments, either as a point object, or as an array of numbers.
+     * @param delta The x & y adjustments as a point object.
      * @returns The original path (for chaining).
      */
     export function moveRelative(pathToMove: IPath, delta: IPoint): IPath {
