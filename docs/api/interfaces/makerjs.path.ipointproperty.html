@@ -1,20 +1,22 @@
 ---
 layout: posts
-title: Api - IPathIntersection Interface
+title: Api - IPointProperty Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>An intersection of two paths.</p>
-		</div>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IPathIntersection</span>
+			<span class="target">IPointProperty</span>
+			<ul class="tsd-hierarchy">
+				<li>
+					<a href="makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a>
+				</li>
+			</ul>
 		</li>
 	</ul>
 </section>
@@ -25,9 +27,8 @@ title: Api - IPathIntersection Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersection.html#intersectionpoints" class="tsd-kind-icon">intersection<wbr>Points</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersection.html#path1angles" class="tsd-kind-icon">path1<wbr>Angles</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersection.html#path2angles" class="tsd-kind-icon">path2<wbr>Angles</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.path.ipointproperty.html#point" class="tsd-kind-icon">point</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.path.ipointproperty.html#propertyname" class="tsd-kind-icon">property<wbr>Name</a></li>
 				</ul>
 			</section>
 		</div>
@@ -36,53 +37,24 @@ title: Api - IPathIntersection Interface
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="intersectionpoints" class="tsd-anchor"></a>
-		<h3>intersection<wbr>Points</h3>
-		<div class="tsd-signature tsd-kind-icon">intersection<wbr>Points<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></div>
+		<a name="point" class="tsd-anchor"></a>
+		<h3>point</h3>
+		<div class="tsd-signature tsd-kind-icon">point<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L273">core/maker.ts:273</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L9">core/fillet.ts:9</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Array of points where the two paths intersected. The length of the array may be either 1 or 2 points.</p>
-			</div>
-		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="path1angles" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> path1<wbr>Angles</h3>
-		<div class="tsd-signature tsd-kind-icon">path1<wbr>Angles<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+		<a name="propertyname" class="tsd-anchor"></a>
+		<h3>property<wbr>Name</h3>
+		<div class="tsd-signature tsd-kind-icon">property<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L280">core/maker.ts:280</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L10">core/fillet.ts:10</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>This Array property will only be defined if the first parameter passed to pathIntersection is either an Arc or a Circle.
-					It contains the angles of intersection relative to the first path parameter.
-				The length of the array may be either 1 or 2.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="path2angles" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> path2<wbr>Angles</h3>
-		<div class="tsd-signature tsd-kind-icon">path2<wbr>Angles<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L287">core/maker.ts:287</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>This Array property will only be defined if the second parameter passed to pathIntersection is either an Arc or a Circle.
-					It contains the angles of intersection relative to the second path parameter.
-				The length of the array may be either 1 or 2.</p>
-			</div>
-		</div>
 	</section>
 </section>
 </div>

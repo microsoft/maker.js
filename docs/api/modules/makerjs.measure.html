@@ -18,6 +18,10 @@ title: Api - measure Module
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#arcangle" class="tsd-kind-icon">arc<wbr>Angle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.measure.html#getextremepoint" class="tsd-kind-icon">get<wbr>Extreme<wbr>Point</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcconcavetowardspoint" class="tsd-kind-icon">is<wbr>Arc<wbr>Concave<wbr>Towards<wbr>Point</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetween" class="tsd-kind-icon">is<wbr>Between</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenarcangles" class="tsd-kind-icon">is<wbr>Between<wbr>Arc<wbr>Angles</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenpoints" class="tsd-kind-icon">is<wbr>Between<wbr>Points</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#modelextents" class="tsd-kind-icon">model<wbr>Extents</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#pathextents" class="tsd-kind-icon">path<wbr>Extents</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#pathlength" class="tsd-kind-icon">path<wbr>Length</a></li>
@@ -71,7 +75,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L41">core/measure.ts:41</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L114">core/measure.ts:114</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -93,6 +97,182 @@ title: Api - measure Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isarcconcavetowardspoint" class="tsd-anchor"></a>
+		<h3>is<wbr>Arc<wbr>Concave<wbr>Towards<wbr>Point</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Arc<wbr>Concave<wbr>Towards<wbr>Point<span class="tsd-signature-symbol">(</span>arc<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, towardsPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L32">core/measure.ts:32</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check for arc being concave or convex towards a given point.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>arc: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The arc to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>towardsPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The point to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if arc is concave towards point.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isbetween" class="tsd-anchor"></a>
+		<h3>is<wbr>Between</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Between<span class="tsd-signature-symbol">(</span>valueInQuestion<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limit1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limit2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, exclusive<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L58">core/measure.ts:58</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check if a given number is between two given limits.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>valueInQuestion: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The number to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>limit1: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First limit.</p>
+						</div>
+					</li>
+					<li>
+						<h5>limit2: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second limit.</p>
+						</div>
+					</li>
+					<li>
+						<h5>exclusive: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to exclude equaling the limits.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if value is between (or equal to) the limits.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isbetweenarcangles" class="tsd-anchor"></a>
+		<h3>is<wbr>Between<wbr>Arc<wbr>Angles</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Between<wbr>Arc<wbr>Angles<span class="tsd-signature-symbol">(</span>angleInQuestion<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, arc<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, exclusive<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L74">core/measure.ts:74</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check if a given angle is between an arc&#39;s start and end angles.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>angleInQuestion: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The angle to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>arc: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Arc to test against.</p>
+						</div>
+					</li>
+					<li>
+						<h5>exclusive: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to exclude equaling the start or end angles.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if angle is between (or equal to) the arc&#39;s start and end angles.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isbetweenpoints" class="tsd-anchor"></a>
+		<h3>is<wbr>Between<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Between<wbr>Points<span class="tsd-signature-symbol">(</span>pointInQuestion<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, line<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, exclusive<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L91">core/measure.ts:91</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check if a given point is between a line&#39;s end points.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pointInQuestion: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The point to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>line: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Line to test against.</p>
+						</div>
+					</li>
+					<li>
+						<h5>exclusive: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to exclude equaling the origin or end points.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if point is between (or equal to) the line&#39;s origin and end points.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="modelextents" class="tsd-anchor"></a>
 		<h3>model<wbr>Extents</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -102,7 +282,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L146">core/measure.ts:146</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L210">core/measure.ts:210</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -134,7 +314,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L54">core/measure.ts:54</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L127">core/measure.ts:127</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -166,7 +346,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L114">core/measure.ts:114</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L178">core/measure.ts:178</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -198,7 +378,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L32">core/measure.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L105">core/measure.ts:105</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
