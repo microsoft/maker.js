@@ -58,19 +58,26 @@ module MakerJs.point {
         return [pointToClone[0], pointToClone[1]];
     }
 
-    export function closest(referencePoint: IPoint, pointChoices: IPoint[]): IPoint {
+    /**
+     * From an array of points, find the closest point to a given reference point.
+     * 
+     * @param referencePoint The reference point.
+     * @param pointOptions Array of points to choose from.
+     * @returns The first closest point from the pointOptions.
+     */
+    export function closest(referencePoint: IPoint, pointOptions: IPoint[]): IPoint {
         var smallest = {
             index: 0,
             distance: -1
         };
-        for (var i = 0; i < pointChoices.length; i++) {
-            var distance = measure.pointDistance(referencePoint, pointChoices[i]);
+        for (var i = 0; i < pointOptions.length; i++) {
+            var distance = measure.pointDistance(referencePoint, pointOptions[i]);
             if (smallest.distance == -1 || distance < smallest.distance) {
                 smallest.distance = distance;
                 smallest.index = i;
             }
         }
-        return pointChoices[smallest.index];
+        return pointOptions[smallest.index];
     }
 
     /**
@@ -107,6 +114,12 @@ module MakerJs.point {
         return [fromAngleOnCircle(arc.startAngle, arc), fromAngleOnCircle(arc.endAngle, arc)];
     }
 
+    /**
+     * Get the middle point of a path. Currently only supports Arc and Line paths.
+     * 
+     * @param path The path object.
+     * @returns Point on the path, in the middle of the path.
+     */
     export function middle(path: IPath): IPoint {
         var midPoint: IPoint = null;
 
