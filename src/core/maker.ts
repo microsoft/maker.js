@@ -60,6 +60,11 @@ module MakerJs {
         return Math.round(n * places) / places;
     }
 
+    export function cloneObject<T>(objectToClone: T): T {
+        var serialized = JSON.stringify(objectToClone);
+        return JSON.parse(serialized);
+    }
+
     /**
      * Copy the properties from one object to another object.
      * 
