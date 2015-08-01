@@ -1,4 +1,4 @@
-/// <reference path="../core/maker.ts" />
+/// <reference path="maker.ts" />
 
 module MakerJs.solvers {
 
