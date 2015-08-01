@@ -49,11 +49,11 @@ module MakerJs.paths {
     }
 
     /**
-     * Class for arc chord, which is simply a line path.
+     * Class for chord, which is simply a line path that connects the endpoints of an arc.
      * 
      * @param arc Arc to use as the basic for the chord.
      */
-    export class ArcChord implements IPathLine {
+    export class Chord implements IPathLine {
         public type: string;
         public origin: IPoint;
         public end: IPoint;

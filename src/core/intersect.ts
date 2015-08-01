@@ -224,7 +224,7 @@ module MakerJs.path {
     interface ISlope {
         hasSlope: boolean;
         slope?: number;
-        line?: IPathLine;
+        line: IPathLine;
         yIntercept?: number;
     }
 
@@ -235,6 +235,7 @@ module MakerJs.path {
         var dx = round(line.end[0] - line.origin[0]);
         if (dx == 0) {
             return {
+                line: line,
                 hasSlope: false
             };
         }
@@ -276,7 +277,7 @@ module MakerJs.path {
             return checkAngle(b.startAngle) || checkAngle(b.endAngle);
         }
 
-        if (checkAngles(0, arc1, arc2) || checkAngles(1, arc2, arc1)) {
+        if (checkAngles(0, arc1, arc2) || checkAngles(1, arc2, arc1) || (arc1.startAngle == arc2.startAngle && arc1.endAngle == arc2.endAngle)) {
             options.out_AreOverlapped = true;
         }
     }
@@ -376,7 +377,7 @@ module MakerJs.path {
         //remember how to undo the rotation we just did
         function unRotate(resultAngle: number): number {
             var unrotated = resultAngle + lineAngle;
-            return round(angle.noRevolutions(unrotated), .0001);
+            return angle.noRevolutions(unrotated);
         }
 
         //line is horizontal, get the y value from any point
@@ -449,7 +450,7 @@ module MakerJs.path {
 
         function unRotate(resultAngle: number): number {
             var unrotated = resultAngle + c2Angle;
-            return round(angle.noRevolutions(unrotated), .0001);
+            return angle.noRevolutions(unrotated);
         }
 
         //get X of c2 origin

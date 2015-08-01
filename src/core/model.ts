@@ -69,7 +69,7 @@ module MakerJs.model {
     }
 
     /**
-     * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
+     * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for chaining.
      * 
      * @param modelToMove The model to move.
      * @param origin The new position of the model.
@@ -77,6 +77,22 @@ module MakerJs.model {
      */
     export function move(modelToMove: IModel, origin: IPoint): IModel {
         modelToMove.origin = point.clone(origin);
+        return modelToMove;
+    }
+
+    /**
+     * Move a model's origin by a relative amount.
+     * 
+     * @param modelToMove The model to move.
+     * @param delta The x & y adjustments as a point object.
+     * @returns The original model (for chaining).
+     */
+    export function moveRelative(modelToMove: IModel, delta: IPoint): IModel {
+
+        if (modelToMove) {
+            modelToMove.origin = point.add(modelToMove.origin || point.zero(), delta);
+        }
+
         return modelToMove;
     }
 
