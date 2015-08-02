@@ -14,6 +14,7 @@ title: Api - angle Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#norevolutions" class="tsd-kind-icon">no<wbr>Revolutions</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofarcend" class="tsd-kind-icon">of<wbr>Arc<wbr>End</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#oflineindegrees" class="tsd-kind-icon">of<wbr>Line<wbr>InDegrees</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofpointindegrees" class="tsd-kind-icon">of<wbr>Point<wbr>InDegrees</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofpointinradians" class="tsd-kind-icon">of<wbr>Point<wbr>InRadians</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#todegrees" class="tsd-kind-icon">to<wbr>Degrees</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#toradians" class="tsd-kind-icon">to<wbr>Radians</a></li>
@@ -34,7 +35,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L83">core/angle.ts:83</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L94">core/angle.ts:94</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -169,10 +170,10 @@ title: Api - angle Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-		<a name="ofpointinradians" class="tsd-anchor"></a>
-		<h3>of<wbr>Point<wbr>InRadians</h3>
+		<a name="ofpointindegrees" class="tsd-anchor"></a>
+		<h3>of<wbr>Point<wbr>InDegrees</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">of<wbr>Point<wbr>InRadians<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointToFindAngle<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+			<li class="tsd-signature tsd-kind-icon">of<wbr>Point<wbr>InDegrees<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointToFindAngle<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -183,7 +184,7 @@ title: Api - angle Module
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Angle of a line through a point.</p>
+						<p>Angle of a line through a point, in degrees.</p>
 					</div>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -191,7 +192,45 @@ title: Api - angle Module
 					<li>
 						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
-							<p>(Optional 0,0 implied) point of origin of the angle.</p>
+							<p>Point of origin of the angle.</p>
+						</div>
+					</li>
+					<li>
+						<h5>pointToFindAngle: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The point to find the angle.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+				<p>Angle of the line throught the point, in degrees.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ofpointinradians" class="tsd-anchor"></a>
+		<h3>of<wbr>Point<wbr>InRadians</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">of<wbr>Point<wbr>InRadians<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointToFindAngle<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L79">core/angle.ts:79</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Angle of a line through a point, in radians.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Point of origin of the angle.</p>
 						</div>
 					</li>
 					<li>

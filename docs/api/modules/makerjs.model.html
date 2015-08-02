@@ -13,6 +13,7 @@ title: Api - model Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#convertunits" class="tsd-kind-icon">convert<wbr>Units</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#mirror" class="tsd-kind-icon">mirror</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#move" class="tsd-kind-icon">move</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#moverelative" class="tsd-kind-icon">move<wbr>Relative</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#originate" class="tsd-kind-icon">originate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#rotate" class="tsd-kind-icon">rotate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#scale" class="tsd-kind-icon">scale</a></li>
@@ -33,7 +34,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L147">core/model.ts:147</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L163">core/model.ts:163</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -120,7 +121,7 @@ title: Api - model Module
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.</p>
+						<p>Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for chaining.</p>
 					</div>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -135,6 +136,44 @@ title: Api - model Module
 						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The new position of the model.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>The original model (for chaining).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="moverelative" class="tsd-anchor"></a>
+		<h3>move<wbr>Relative</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">move<wbr>Relative<span class="tsd-signature-symbol">(</span>modelToMove<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, delta<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L90">core/model.ts:90</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Move a model&#39;s origin by a relative amount.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelToMove: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model to move.</p>
+						</div>
+					</li>
+					<li>
+						<h5>delta: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The x &amp; y adjustments as a point object.</p>
 						</div>
 					</li>
 				</ul>
@@ -190,7 +229,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L91">core/model.ts:91</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L107">core/model.ts:107</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -234,7 +273,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L119">core/model.ts:119</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L135">core/model.ts:135</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

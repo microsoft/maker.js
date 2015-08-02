@@ -32,9 +32,12 @@ title: Api - path Module
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#checkangleoverlap" class="tsd-kind-icon">check<wbr>Angle<wbr>Overlap</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#checklineoverlap" class="tsd-kind-icon">check<wbr>Line<wbr>Overlap</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#circletocircle" class="tsd-kind-icon">circle<wbr>ToCircle</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#cloneandbreakpath" class="tsd-kind-icon">clone<wbr>And<wbr>Break<wbr>Path</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#dogbone" class="tsd-kind-icon">dogbone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#fillet" class="tsd-kind-icon">fillet</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#findcorrespondingangleindex" class="tsd-kind-icon">find<wbr>Corresponding<wbr>Angle<wbr>Index</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#getangleswithinarc" class="tsd-kind-icon">get<wbr>Angles<wbr>Within<wbr>Arc</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#getdogboneresult" class="tsd-kind-icon">get<wbr>Dogbone<wbr>Result</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#getfilletresult" class="tsd-kind-icon">get<wbr>Fillet<wbr>Result</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#getguidepath" class="tsd-kind-icon">get<wbr>Guide<wbr>Path</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#getmatchingpointproperties" class="tsd-kind-icon">get<wbr>Matching<wbr>Point<wbr>Properties</a></li>
@@ -46,10 +49,12 @@ title: Api - path Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#move" class="tsd-kind-icon">move</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#moverelative" class="tsd-kind-icon">move<wbr>Relative</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#pointsfromanglesoncircle" class="tsd-kind-icon">points<wbr>From<wbr>Angles<wbr>OnCircle</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#populateshardpointsfromreferencecircle" class="tsd-kind-icon">populate<wbr>Shard<wbr>Points<wbr>From<wbr>Reference<wbr>Circle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#rotate" class="tsd-kind-icon">rotate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#scale" class="tsd-kind-icon">scale</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#slopeintersectionpoint" class="tsd-kind-icon">slope<wbr>Intersection<wbr>Point</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#swap" class="tsd-kind-icon">swap</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#testfilletresult" class="tsd-kind-icon">test<wbr>Fillet<wbr>Result</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#verticalintersectionpoint" class="tsd-kind-icon">vertical<wbr>Intersection<wbr>Point</a></li>
 				</ul>
 			</section>
@@ -95,7 +100,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/break.ts#L59">core/break.ts:59</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/break.ts#L67">core/break.ts:67</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -135,7 +140,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L267">core/intersect.ts:267</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L268">core/intersect.ts:268</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -166,7 +171,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L287">core/intersect.ts:287</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L288">core/intersect.ts:288</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -197,7 +202,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L429">core/intersect.ts:429</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L430">core/intersect.ts:430</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -218,17 +223,86 @@ title: Api - path Module
 			</li>
 		</ul>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-		<a name="fillet" class="tsd-anchor"></a>
-		<h3>fillet</h3>
-		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">fillet<span class="tsd-signature-symbol">(</span>path1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, path2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="cloneandbreakpath" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> clone<wbr>And<wbr>Break<wbr>Path</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">clone<wbr>And<wbr>Break<wbr>Path<span class="tsd-signature-symbol">(</span>pathToShard<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, shardPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L183">core/fillet.ts:183</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L117">core/fillet.ts:117</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pathToShard: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+					</li>
+					<li>
+						<h5>shardPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="dogbone" class="tsd-anchor"></a>
+		<h3>dogbone</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">dogbone<span class="tsd-signature-symbol">(</span>line1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, line2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L267">core/fillet.ts:267</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a round corner to the outside angle between 2 lines. The lines must meet at one point.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>line1: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First line to fillet, which will be modified to fit the fillet.</p>
+						</div>
+					</li>
+					<li>
+						<h5>line2: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second line to fillet, which will be modified to fit the fillet.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h4>
+				<p>Arc path object of the new fillet.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="fillet" class="tsd-anchor"></a>
+		<h3>fillet</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">fillet<span class="tsd-signature-symbol">(</span>path1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, path2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L323">core/fillet.ts:323</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -254,7 +328,7 @@ title: Api - path Module
 						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h4>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h4>
 				<p>Arc path object of the new fillet.</p>
 			</li>
 		</ul>
@@ -319,16 +393,16 @@ title: Api - path Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
-		<a name="getfilletresult" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Fillet<wbr>Result</h3>
+		<a name="getdogboneresult" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Dogbone<wbr>Result</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
-			<li class="tsd-signature tsd-kind-icon">get<wbr>Fillet<wbr>Result<span class="tsd-signature-symbol">(</span>pathToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, propertyName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, filletCenter<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.ifilletresult.html" class="tsd-signature-type">IFilletResult</a></li>
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Dogbone<wbr>Result<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a>, filletCenter<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.ifilletresult.html" class="tsd-signature-type">IFilletResult</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L121">core/fillet.ts:121</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L221">core/fillet.ts:221</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -336,10 +410,35 @@ title: Api - path Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>pathToFillet: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<h5>context: <a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a></h5>
 					</li>
 					<li>
-						<h5>propertyName: <span class="tsd-signature-type">string</span></h5>
+						<h5>filletCenter: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.path.ifilletresult.html" class="tsd-signature-type">IFilletResult</a></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="getfilletresult" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Fillet<wbr>Result</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Fillet<wbr>Result<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, filletCenter<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.ifilletresult.html" class="tsd-signature-type">IFilletResult</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L162">core/fillet.ts:162</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>context: <a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a></h5>
 					</li>
 					<li>
 						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
@@ -356,13 +455,13 @@ title: Api - path Module
 		<a name="getguidepath" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Guide<wbr>Path</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
-			<li class="tsd-signature tsd-kind-icon">get<wbr>Guide<wbr>Path<span class="tsd-signature-symbol">(</span>originalPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, delta<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, nearPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Guide<wbr>Path<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, nearPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L96">core/fillet.ts:96</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L126">core/fillet.ts:126</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -370,10 +469,10 @@ title: Api - path Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>originalPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<h5>context: <a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a></h5>
 					</li>
 					<li>
-						<h5>delta: <span class="tsd-signature-type">number</span></h5>
+						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
 					</li>
 					<li>
 						<h5>nearPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
@@ -393,7 +492,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L63">core/fillet.ts:63</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L66">core/fillet.ts:66</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -421,7 +520,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L31">core/fillet.ts:31</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L34">core/fillet.ts:34</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -515,7 +614,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L360">core/intersect.ts:360</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L361">core/intersect.ts:361</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -601,7 +700,7 @@ title: Api - path Module
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Move a path to an absolute origin.</p>
+						<p>Move a path to an absolute point.</p>
 					</div>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -653,7 +752,7 @@ title: Api - path Module
 					<li>
 						<h5>delta: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
-							<p>The x &amp; y adjustments, either as a point object, or as an array of numbers.</p>
+							<p>The x &amp; y adjustments as a point object.</p>
 						</div>
 					</li>
 				</ul>
@@ -687,6 +786,37 @@ title: Api - path Module
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="populateshardpointsfromreferencecircle" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> populate<wbr>Shard<wbr>Points<wbr>From<wbr>Reference<wbr>Circle</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">populate<wbr>Shard<wbr>Points<wbr>From<wbr>Reference<wbr>Circle<span class="tsd-signature-symbol">(</span>filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, center<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, properties<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L101">core/fillet.ts:101</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>center: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5>properties: <a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 			</li>
 		</ul>
 	</section>
@@ -782,7 +912,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L312">core/intersect.ts:312</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L313">core/intersect.ts:313</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -842,6 +972,34 @@ title: Api - path Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="testfilletresult" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> test<wbr>Fillet<wbr>Result</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">test<wbr>Fillet<wbr>Result<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a>, result<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.path.ifilletresult.html" class="tsd-signature-type">IFilletResult</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L239">core/fillet.ts:239</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>context: <a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a></h5>
+					</li>
+					<li>
+						<h5>result: <a href="../interfaces/makerjs.path.ifilletresult.html" class="tsd-signature-type">IFilletResult</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
 		<a name="verticalintersectionpoint" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> vertical<wbr>Intersection<wbr>Point</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
@@ -851,7 +1009,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L258">core/intersect.ts:258</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L259">core/intersect.ts:259</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
