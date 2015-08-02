@@ -37,6 +37,7 @@ declare module MakerJs {
      * @param accuracy Optional exemplar of number of decimal places.
      */
     function round(n: number, accuracy?: number): number;
+    function cloneObject<T>(objectToClone: T): T;
     /**
      * Copy the properties from one object to another object.
      *
@@ -117,6 +118,12 @@ declare module MakerJs {
         end: IPoint;
     }
     /**
+     * Test to see if an object implements the required properties of a line.
+     *
+     * @param item The item to test.
+     */
+    function isPathLine(item: any): boolean;
+    /**
      * A circle path.
      *
      * Examples:
@@ -131,6 +138,12 @@ declare module MakerJs {
          */
         radius: number;
     }
+    /**
+     * Test to see if an object implements the required properties of a circle.
+     *
+     * @param item The item to test.
+     */
+    function isPathCircle(item: any): boolean;
     /**
      * An arc path.
      *
@@ -150,6 +163,12 @@ declare module MakerJs {
          */
         endAngle: number;
     }
+    /**
+     * Test to see if an object implements the required properties of an arc.
+     *
+     * @param item The item to test.
+     */
+    function isPathArc(item: any): boolean;
     /**
      * A map of functions which accept a path as a parameter.
      * @private
@@ -311,10 +330,18 @@ declare module MakerJs.angle {
      */
     function ofLineInDegrees(line: IPathLine): number;
     /**
-     * Angle of a line through a point.
+     * Angle of a line through a point, in degrees.
      *
      * @param pointToFindAngle The point to find the angle.
-     * @param origin (Optional 0,0 implied) point of origin of the angle.
+     * @param origin Point of origin of the angle.
+     * @returns Angle of the line throught the point, in degrees.
+     */
+    function ofPointInDegrees(origin: IPoint, pointToFindAngle: IPoint): number;
+    /**
+     * Angle of a line through a point, in radians.
+     *
+     * @param pointToFindAngle The point to find the angle.
+     * @param origin Point of origin of the angle.
      * @returns Angle of the line throught the point, in radians.
      */
     function ofPointInRadians(origin: IPoint, pointToFindAngle: IPoint): number;
@@ -452,7 +479,7 @@ declare module MakerJs.path {
      */
     function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IPath;
     /**
-     * Move a path to an absolute origin.
+     * Move a path to an absolute point.
      *
      * @param pathToMove The path to move.
      * @param origin The new origin for the path.
@@ -463,7 +490,7 @@ declare module MakerJs.path {
      * Move a path's origin by a relative amount.
      *
      * @param pathToMove The path to move.
-     * @param delta The x & y adjustments, either as a point object, or as an array of numbers.
+     * @param delta The x & y adjustments as a point object.
      * @returns The original path (for chaining).
      */
     function moveRelative(pathToMove: IPath, delta: IPoint): IPath;
@@ -539,11 +566,11 @@ declare module MakerJs.paths {
         constructor(origin: IPoint, end: IPoint);
     }
     /**
-     * Class for arc chord, which is simply a line path.
+     * Class for chord, which is simply a line path that connects the endpoints of an arc.
      *
      * @param arc Arc to use as the basic for the chord.
      */
-    class ArcChord implements IPathLine {
+    class Chord implements IPathLine {
         type: string;
         origin: IPoint;
         end: IPoint;
@@ -581,13 +608,21 @@ declare module MakerJs.model {
      */
     function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel;
     /**
-     * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
+     * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for chaining.
      *
      * @param modelToMove The model to move.
      * @param origin The new position of the model.
      * @returns The original model (for chaining).
      */
     function move(modelToMove: IModel, origin: IPoint): IModel;
+    /**
+     * Move a model's origin by a relative amount.
+     *
+     * @param modelToMove The model to move.
+     * @param delta The x & y adjustments as a point object.
+     * @returns The original model (for chaining).
+     */
+    function moveRelative(modelToMove: IModel, delta: IPoint): IModel;
     /**
      * Rotate a model.
      *
@@ -806,13 +841,21 @@ declare module MakerJs.path {
 }
 declare module MakerJs.path {
     /**
+     * Adds a round corner to the outside angle between 2 lines. The lines must meet at one point.
+     *
+     * @param line1 First line to fillet, which will be modified to fit the fillet.
+     * @param line2 Second line to fillet, which will be modified to fit the fillet.
+     * @returns Arc path object of the new fillet.
+     */
+    function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number): IPathArc;
+    /**
      * Adds a round corner to the inside angle between 2 paths. The paths must meet at one point.
      *
      * @param path1 First path to fillet, which will be modified to fit the fillet.
      * @param path2 Second path to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    function fillet(path1: IPath, path2: IPath, filletRadius: number): IPath;
+    function fillet(path1: IPath, path2: IPath, filletRadius: number): IPathArc;
 }
 declare module MakerJs.kit {
     /**
