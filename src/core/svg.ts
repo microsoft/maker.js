@@ -151,7 +151,7 @@ module MakerJs.exporter {
             halfCircle(1);
             halfCircle(-1);
 
-            drawPath(id, center[0], center[1], d);
+            drawPath(id, center[0], center[1], d, center);
         }
 
         function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
