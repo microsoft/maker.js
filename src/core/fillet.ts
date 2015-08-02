@@ -16,6 +16,7 @@ module MakerJs.path {
     interface IMatchPointProperty extends IPointProperty {
         path: IPath;
         isStart: boolean;
+        oppositePoint: IPoint;
         shardPoint?: IPoint;
     }
 
@@ -73,7 +74,8 @@ module MakerJs.path {
                 path: pathContext,
                 isStart: index == 0,
                 propertyName: pointProperties[index].propertyName,
-                point: pointProperties[index].point
+                point: pointProperties[index].point,
+                oppositePoint: pointProperties[1 - index].point
             };
         }
 
@@ -91,6 +93,22 @@ module MakerJs.path {
         check(0, 0) || check(0, 1) || check(1, 0) || check(1, 1);
 
         return result;
+    }
+
+    /**
+     * @private
+     */
+    function populateShardPointsFromReferenceCircle(filletRadius: number, center: IPoint, properties: IMatchPointProperty[]) {
+        var referenceCircle = new paths.Circle(center, filletRadius);
+
+        //get reference circle intersection points
+        for (var i = 0; i < 2; i++) {
+            var circleIntersection = intersection(referenceCircle, properties[i].path);
+            if (!circleIntersection) {
+                return null;
+            }
+            properties[i].shardPoint = circleIntersection.intersectionPoints[0];
+        }
     }
 
     /**
@@ -177,7 +195,7 @@ module MakerJs.path {
             var intersectionPoint = slopeIntersectionPoint(line, guideLine);
             if (intersectionPoint) {
                 result = {
-                    filletAngle: angle.toDegrees(angle.ofPointInRadians(filletCenter, intersectionPoint)),
+                    filletAngle: angle.ofPointInDegrees(filletCenter, intersectionPoint),
                     clipPath: function () {
                         line[context.propertyName] = intersectionPoint;
                     }
@@ -190,6 +208,37 @@ module MakerJs.path {
             fn(context.path);
         }
 
+        if (!testFilletResult(context, result)) {
+            result = null;
+        }
+
+        return result;
+    }
+
+    /**
+     * @private
+     */
+    function getDogboneResult(context: IMatchPointProperty, filletCenter: IPoint): IFilletResult {
+        var result: IFilletResult = {
+            filletAngle: angle.ofPointInDegrees(filletCenter, context.shardPoint),
+            clipPath: function () {
+                context.path[context.propertyName] = context.shardPoint;
+            }
+        };
+
+        if (!testFilletResult(context, result)) {
+            result = null;
+        }
+
+        return result;
+    }
+
+    /**
+     * @private
+     */
+    function testFilletResult(context: IMatchPointProperty, result: IFilletResult): boolean {
+        var test = false;
+
         if (result) {
 
             //temporarily clip the path.
@@ -197,15 +246,71 @@ module MakerJs.path {
             result.clipPath();
 
             //don't allow a fillet which effectivly eliminates the path.
-            if (measure.pathLength(context.path) == 0) {
-                result = null;
+            if (measure.pathLength(context.path) > 0) {
+                test = true;
             }
 
             //revert the clipping we just did.
             context.path[context.propertyName] = originalValue;
         }
 
-        return result;
+        return test;
+    }
+
+    /**
+     * Adds a round corner to the outside angle between 2 lines. The lines must meet at one point.
+     *
+     * @param line1 First line to fillet, which will be modified to fit the fillet.
+     * @param line2 Second line to fillet, which will be modified to fit the fillet.
+     * @returns Arc path object of the new fillet.
+     */
+    export function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number): IPathArc {
+
+        if (isPathLine(line1) && isPathLine(line2) && filletRadius && filletRadius > 0) {
+
+            //first find the common point
+            var commonProperty = getMatchingPointProperties(line1, line2);
+            if (commonProperty) {
+
+                var angles: number[] = [];
+                for (var i = 0; i < 2; i++) {
+                    var lineAngle = angle.ofPointInDegrees(commonProperty[i].point, commonProperty[i].oppositePoint);
+                    angles.push(lineAngle);
+                }
+
+                var bisectionAngle = (angles[0] + angles[1]) / 2;
+
+                var center = point.add(commonProperty[0].point, point.fromPolar(angle.toRadians(bisectionAngle), filletRadius));
+
+                populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty);
+
+                //get the angles of the fillet and a function which clips the path to the fillet.
+                var results: IFilletResult[] = [];
+                for (var i = 0; i < 2; i++) {
+                    var result = getDogboneResult(commonProperty[i], center);
+                    if (!result) {
+                        return null;
+                    }
+                    results.push(result);
+                }
+
+                var filletArc = new paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
+                var filletSpan = measure.arcAngle(filletArc);
+
+                //make sure midpoint of fillet is outside of the angle
+                if (round(angle.noRevolutions(filletArc.startAngle + filletSpan / 2)) == round(bisectionAngle)) {
+                    filletArc.startAngle = results[1].filletAngle;
+                    filletArc.endAngle = results[0].filletAngle;
+                }
+
+                //clip the paths and return the fillet arc.
+                results[0].clipPath();
+                results[1].clipPath();
+
+                return filletArc;
+            }
+        }
+        return null;
     }
 
     /**
@@ -215,7 +320,7 @@ module MakerJs.path {
      * @param path2 Second path to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    export function fillet(path1: IPath, path2: IPath, filletRadius: number): IPath {
+    export function fillet(path1: IPath, path2: IPath, filletRadius: number): IPathArc {
 
         if (path1 && path2 && filletRadius && filletRadius > 0) {
 
@@ -225,16 +330,7 @@ module MakerJs.path {
 
                 //since arcs can curl beyond, we need a local reference point. 
                 //An intersection with a circle of the same radius as the desired fillet should suffice.
-                var shardCircle = new paths.Circle(commonProperty[0].point, filletRadius);
-
-                //get shard circle intersection points
-                for (var i = 0; i < 2; i++) {
-                    var shardCircleIntersection = intersection(shardCircle, commonProperty[i].path);
-                    if (!shardCircleIntersection) {
-                        return null;
-                    }
-                    commonProperty[i].shardPoint = shardCircleIntersection.intersectionPoints[0];
-                }
+                populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty);
 
                 //get "parallel" guidelines
                 var guidePaths: IPath[] = [];
@@ -260,7 +356,7 @@ module MakerJs.path {
                     //get the angles of the fillet and a function which clips the path to the fillet.
                     var results: IFilletResult[] = [];
                     for (var i = 0; i < 2; i++) {
-                        var result = getFilletResult(commonProperty[i], filletRadius, center)
+                        var result = getFilletResult(commonProperty[i], filletRadius, center);
                         if (!result) {
                             return null;
                         }
