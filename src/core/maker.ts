@@ -390,7 +390,5 @@ module MakerJs {
 
 }
 
-declare var module; 
-
 //CommonJs
 module.exports = MakerJs;
