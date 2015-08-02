@@ -445,7 +445,7 @@ module MakerJs.path {
         var c2 = new paths.Circle(point.subtract(circle2.origin, circle1.origin), circle2.radius);
 
         //rotate circle2 to horizontal, c2 will be to the right of the origin.
-        var c2Angle = angle.toDegrees(angle.ofPointInRadians(point.zero(), c2.origin));
+        var c2Angle = angle.ofPointInDegrees(point.zero(), c2.origin);
         rotate(c2, -c2Angle, point.zero());
 
         function unRotate(resultAngle: number): number {
