@@ -59,10 +59,21 @@ module MakerJs.angle {
     }
 
     /**
-     * Angle of a line through a point.
+     * Angle of a line through a point, in degrees.
      * 
      * @param pointToFindAngle The point to find the angle.
-     * @param origin (Optional 0,0 implied) point of origin of the angle.
+     * @param origin Point of origin of the angle.
+     * @returns Angle of the line throught the point, in degrees.
+     */
+    export function ofPointInDegrees(origin: IPoint, pointToFindAngle: IPoint): number {
+        return toDegrees(ofPointInRadians(origin, pointToFindAngle));
+    }
+
+    /**
+     * Angle of a line through a point, in radians.
+     * 
+     * @param pointToFindAngle The point to find the angle.
+     * @param origin Point of origin of the angle.
      * @returns Angle of the line throught the point, in radians.
      */
     export function ofPointInRadians(origin: IPoint, pointToFindAngle: IPoint): number {

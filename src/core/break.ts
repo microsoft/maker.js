@@ -16,7 +16,11 @@ module MakerJs.path {
 
     breakPathFunctionMap[pathType.Arc] = function (arc: IPathArc, pointOfBreak: IPoint): IPath {
 
-        var angleAtBreakPoint = angle.toDegrees(angle.ofPointInRadians(arc.origin, pointOfBreak));
+        var angleAtBreakPoint = angle.ofPointInDegrees(arc.origin, pointOfBreak);
+
+        if (angleAtBreakPoint == arc.startAngle || angleAtBreakPoint == arc.endAngle) {
+            return null;
+        }
 
         var savedEndAngle = arc.endAngle;
 
@@ -30,7 +34,7 @@ module MakerJs.path {
 
         var arc: IPathArc = <IPathArc>circle;
 
-        var angleAtBreakPoint = angle.toDegrees(angle.ofPointInRadians(circle.origin, pointOfBreak));
+        var angleAtBreakPoint = angle.ofPointInDegrees(circle.origin, pointOfBreak);
 
         arc.startAngle = angleAtBreakPoint;
         arc.endAngle = angleAtBreakPoint + 360;
@@ -39,6 +43,10 @@ module MakerJs.path {
     };
 
     breakPathFunctionMap[pathType.Line] = function (line: IPathLine, pointOfBreak: IPoint): IPath {
+
+        if (point.areEqual(line.origin, pointOfBreak) || point.areEqual(line.end, pointOfBreak)) {
+            return null;
+        }
 
         var savedEndPoint = line.end;
 

@@ -60,6 +60,11 @@ module MakerJs {
         return Math.round(n * places) / places;
     }
 
+    export function cloneObject<T>(objectToClone: T): T {
+        var serialized = JSON.stringify(objectToClone);
+        return JSON.parse(serialized);
+    }
+
     /**
      * Copy the properties from one object to another object.
      * 
@@ -169,6 +174,15 @@ module MakerJs {
     }
 
     /**
+     * Test to see if an object implements the required properties of a line.
+     * 
+     * @param item The item to test.
+     */
+    export function isPathLine(item: any): boolean {
+        return isPath(item) && item.type == pathType.Line && item.end;
+    }
+
+    /**
      * A circle path.
      * 
      * Examples:
@@ -183,6 +197,15 @@ module MakerJs {
          * The radius of the circle.
          */
         radius: number;
+    }
+
+    /**
+     * Test to see if an object implements the required properties of a circle.
+     * 
+     * @param item The item to test.
+     */
+    export function isPathCircle(item: any): boolean {
+        return isPath(item) && item.type == pathType.Circle && item.radius;
     }
 
     /**
@@ -205,6 +228,15 @@ module MakerJs {
          * The angle (in degrees) to end drawing the arc, in polar (counter-clockwise) direction. May be less than start angle if it past 360.
          */
         endAngle: number;
+    }
+
+    /**
+     * Test to see if an object implements the required properties of an arc.
+     * 
+     * @param item The item to test.
+     */
+    export function isPathArc(item: any): boolean {
+        return isPath(item) && item.type == pathType.Arc && item.radius && item.startAngle && item.endAngle;
     }
 
     /**

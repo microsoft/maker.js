@@ -56,6 +56,11 @@ var MakerJs;
         return Math.round(n * places) / places;
     }
     MakerJs.round = round;
+    function cloneObject(objectToClone) {
+        var serialized = JSON.stringify(objectToClone);
+        return JSON.parse(serialized);
+    }
+    MakerJs.cloneObject = cloneObject;
     /**
      * Copy the properties from one object to another object.
      *
@@ -97,6 +102,33 @@ var MakerJs;
         return item && item.type && item.origin;
     }
     MakerJs.isPath = isPath;
+    /**
+     * Test to see if an object implements the required properties of a line.
+     *
+     * @param item The item to test.
+     */
+    function isPathLine(item) {
+        return isPath(item) && item.type == MakerJs.pathType.Line && item.end;
+    }
+    MakerJs.isPathLine = isPathLine;
+    /**
+     * Test to see if an object implements the required properties of a circle.
+     *
+     * @param item The item to test.
+     */
+    function isPathCircle(item) {
+        return isPath(item) && item.type == MakerJs.pathType.Circle && item.radius;
+    }
+    MakerJs.isPathCircle = isPathCircle;
+    /**
+     * Test to see if an object implements the required properties of an arc.
+     *
+     * @param item The item to test.
+     */
+    function isPathArc(item) {
+        return isPath(item) && item.type == MakerJs.pathType.Arc && item.radius && item.startAngle && item.endAngle;
+    }
+    MakerJs.isPathArc = isPathArc;
     /**
      * String-based enumeration of all paths types.
      *
@@ -182,10 +214,21 @@ var MakerJs;
         }
         angle.ofLineInDegrees = ofLineInDegrees;
         /**
-         * Angle of a line through a point.
+         * Angle of a line through a point, in degrees.
          *
          * @param pointToFindAngle The point to find the angle.
-         * @param origin (Optional 0,0 implied) point of origin of the angle.
+         * @param origin Point of origin of the angle.
+         * @returns Angle of the line throught the point, in degrees.
+         */
+        function ofPointInDegrees(origin, pointToFindAngle) {
+            return toDegrees(ofPointInRadians(origin, pointToFindAngle));
+        }
+        angle.ofPointInDegrees = ofPointInDegrees;
+        /**
+         * Angle of a line through a point, in radians.
+         *
+         * @param pointToFindAngle The point to find the angle.
+         * @param origin Point of origin of the angle.
          * @returns Angle of the line throught the point, in radians.
          */
         function ofPointInRadians(origin, pointToFindAngle) {
@@ -471,7 +514,7 @@ var MakerJs;
         }
         path.mirror = mirror;
         /**
-         * Move a path to an absolute origin.
+         * Move a path to an absolute point.
          *
          * @param pathToMove The path to move.
          * @param origin The new origin for the path.
@@ -497,7 +540,7 @@ var MakerJs;
          * Move a path's origin by a relative amount.
          *
          * @param pathToMove The path to move.
-         * @param delta The x & y adjustments, either as a point object, or as an array of numbers.
+         * @param delta The x & y adjustments as a point object.
          * @returns The original path (for chaining).
          */
         function moveRelative(pathToMove, delta) {
@@ -579,7 +622,10 @@ var MakerJs;
          */
         var breakPathFunctionMap = {};
         breakPathFunctionMap[MakerJs.pathType.Arc] = function (arc, pointOfBreak) {
-            var angleAtBreakPoint = MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(arc.origin, pointOfBreak));
+            var angleAtBreakPoint = MakerJs.angle.ofPointInDegrees(arc.origin, pointOfBreak);
+            if (angleAtBreakPoint == arc.startAngle || angleAtBreakPoint == arc.endAngle) {
+                return null;
+            }
             var savedEndAngle = arc.endAngle;
             arc.endAngle = angleAtBreakPoint;
             return new MakerJs.paths.Arc(arc.origin, arc.radius, angleAtBreakPoint, savedEndAngle);
@@ -587,12 +633,15 @@ var MakerJs;
         breakPathFunctionMap[MakerJs.pathType.Circle] = function (circle, pointOfBreak) {
             circle.type = MakerJs.pathType.Arc;
             var arc = circle;
-            var angleAtBreakPoint = MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(circle.origin, pointOfBreak));
+            var angleAtBreakPoint = MakerJs.angle.ofPointInDegrees(circle.origin, pointOfBreak);
             arc.startAngle = angleAtBreakPoint;
             arc.endAngle = angleAtBreakPoint + 360;
             return null;
         };
         breakPathFunctionMap[MakerJs.pathType.Line] = function (line, pointOfBreak) {
+            if (MakerJs.point.areEqual(line.origin, pointOfBreak) || MakerJs.point.areEqual(line.end, pointOfBreak)) {
+                return null;
+            }
             var savedEndPoint = line.end;
             line.end = pointOfBreak;
             return new MakerJs.paths.Line(pointOfBreak, savedEndPoint);
@@ -671,20 +720,20 @@ var MakerJs;
         })();
         paths.Line = Line;
         /**
-         * Class for arc chord, which is simply a line path.
+         * Class for chord, which is simply a line path that connects the endpoints of an arc.
          *
          * @param arc Arc to use as the basic for the chord.
          */
-        var ArcChord = (function () {
-            function ArcChord(arc) {
+        var Chord = (function () {
+            function Chord(arc) {
                 var arcPoints = MakerJs.point.fromArc(arc);
                 this.type = MakerJs.pathType.Line;
                 this.origin = arcPoints[0];
                 this.end = arcPoints[1];
             }
-            return ArcChord;
+            return Chord;
         })();
-        paths.ArcChord = ArcChord;
+        paths.Chord = Chord;
         /**
          * Class for a parallel line path.
          *
@@ -775,7 +824,7 @@ var MakerJs;
         }
         model.mirror = mirror;
         /**
-         * Move a model to an absolute position. Note that this is also accomplished by directly setting the origin property. This function exists because the origin property is optional.
+         * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for chaining.
          *
          * @param modelToMove The model to move.
          * @param origin The new position of the model.
@@ -786,6 +835,20 @@ var MakerJs;
             return modelToMove;
         }
         model.move = move;
+        /**
+         * Move a model's origin by a relative amount.
+         *
+         * @param modelToMove The model to move.
+         * @param delta The x & y adjustments as a point object.
+         * @returns The original model (for chaining).
+         */
+        function moveRelative(modelToMove, delta) {
+            if (modelToMove) {
+                modelToMove.origin = MakerJs.point.add(modelToMove.origin || MakerJs.point.zero(), delta);
+            }
+            return modelToMove;
+        }
+        model.moveRelative = moveRelative;
         /**
          * Rotate a model.
          *
@@ -964,7 +1027,7 @@ var MakerJs;
             }
             var midPointToNearPoint = new MakerJs.paths.Line(MakerJs.point.middle(arc), towardsPoint);
             var options = {};
-            var intersectionPoint = MakerJs.path.intersection(midPointToNearPoint, new MakerJs.paths.ArcChord(arc), options);
+            var intersectionPoint = MakerJs.path.intersection(midPointToNearPoint, new MakerJs.paths.Chord(arc), options);
             if (intersectionPoint || options.out_AreOverlapped) {
                 return true;
             }
@@ -1014,7 +1077,12 @@ var MakerJs;
          */
         function isBetweenPoints(pointInQuestion, line, exclusive) {
             for (var i = 2; i--;) {
-                if (!isBetween(MakerJs.round(pointInQuestion[i]), MakerJs.round(line.origin[i]), MakerJs.round(line.end[i]), exclusive))
+                var origin_value = MakerJs.round(line.origin[i]);
+                var end_value = MakerJs.round(line.end[i]);
+                if (origin_value == end_value) {
+                    continue;
+                }
+                if (!isBetween(MakerJs.round(pointInQuestion[i]), origin_value, end_value, exclusive))
                     return false;
             }
             return true;
@@ -1594,6 +1662,7 @@ var MakerJs;
             var dx = MakerJs.round(line.end[0] - line.origin[0]);
             if (dx == 0) {
                 return {
+                    line: line,
                     hasSlope: false
                 };
             }
@@ -1626,7 +1695,7 @@ var MakerJs;
                 }
                 return checkAngle(b.startAngle) || checkAngle(b.endAngle);
             }
-            if (checkAngles(0, arc1, arc2) || checkAngles(1, arc2, arc1)) {
+            if (checkAngles(0, arc1, arc2) || checkAngles(1, arc2, arc1) || (arc1.startAngle == arc2.startAngle && arc1.endAngle == arc2.endAngle)) {
                 options.out_AreOverlapped = true;
             }
         }
@@ -1705,7 +1774,7 @@ var MakerJs;
             //remember how to undo the rotation we just did
             function unRotate(resultAngle) {
                 var unrotated = resultAngle + lineAngle;
-                return MakerJs.round(MakerJs.angle.noRevolutions(unrotated), .0001);
+                return MakerJs.angle.noRevolutions(unrotated);
             }
             //line is horizontal, get the y value from any point
             var lineY = MakerJs.round(clonedLine.origin[1]);
@@ -1756,11 +1825,11 @@ var MakerJs;
             //clone circle2 and move relative to circle1
             var c2 = new MakerJs.paths.Circle(MakerJs.point.subtract(circle2.origin, circle1.origin), circle2.radius);
             //rotate circle2 to horizontal, c2 will be to the right of the origin.
-            var c2Angle = MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(MakerJs.point.zero(), c2.origin));
+            var c2Angle = MakerJs.angle.ofPointInDegrees(MakerJs.point.zero(), c2.origin);
             path.rotate(c2, -c2Angle, MakerJs.point.zero());
             function unRotate(resultAngle) {
                 var unrotated = resultAngle + c2Angle;
-                return MakerJs.round(MakerJs.angle.noRevolutions(unrotated), .0001);
+                return MakerJs.angle.noRevolutions(unrotated);
             }
             //get X of c2 origin
             var x = c2.origin[0];
@@ -1835,8 +1904,10 @@ var MakerJs;
             var path1Properties = getPointProperties(path1);
             var path2Properties = getPointProperties(path2);
             var result = null;
-            function makeMatch(pointProperties, index) {
+            function makeMatch(pathContext, pointProperties, index) {
                 return {
+                    path: pathContext,
+                    isStart: index == 0,
                     propertyName: pointProperties[index].propertyName,
                     point: pointProperties[index].point,
                     oppositePoint: pointProperties[1 - index].point
@@ -1845,8 +1916,8 @@ var MakerJs;
             function check(i1, i2) {
                 if (MakerJs.point.areEqualRounded(path1Properties[i1].point, path2Properties[i2].point)) {
                     result = [
-                        makeMatch(path1Properties, i1),
-                        makeMatch(path2Properties, i2)
+                        makeMatch(path1, path1Properties, i1),
+                        makeMatch(path2, path2Properties, i2)
                     ];
                     return true;
                 }
@@ -1858,67 +1929,179 @@ var MakerJs;
         /**
          * @private
          */
-        function getGuidePath(originalPath, delta, nearPoint) {
+        function populateShardPointsFromReferenceCircle(filletRadius, center, properties) {
+            var referenceCircle = new MakerJs.paths.Circle(center, filletRadius);
+            for (var i = 0; i < 2; i++) {
+                var circleIntersection = path.intersection(referenceCircle, properties[i].path);
+                if (!circleIntersection) {
+                    return null;
+                }
+                properties[i].shardPoint = circleIntersection.intersectionPoints[0];
+            }
+        }
+        /**
+         * @private
+         */
+        function cloneAndBreakPath(pathToShard, shardPoint) {
+            var shardStart = MakerJs.cloneObject(pathToShard);
+            var shardEnd = path.breakAtPoint(shardStart, shardPoint);
+            return [shardStart, shardEnd];
+        }
+        /**
+         * @private
+         */
+        function getGuidePath(context, filletRadius, nearPoint) {
             var result = null;
             var map = {};
             map[MakerJs.pathType.Arc] = function (arc) {
-                var radius = arc.radius + delta * (MakerJs.measure.isArcConcaveTowardsPoint(arc, nearPoint) ? -1 : 1);
-                result = new MakerJs.paths.Arc(arc.origin, radius, arc.startAngle, arc.endAngle);
+                var guideRadius = arc.radius;
+                //see if the guideline should be external or internal to the context arc.
+                var guideArcShard = cloneAndBreakPath(arc, context.shardPoint)[context.isStart ? 0 : 1];
+                if (guideArcShard) {
+                    if (MakerJs.measure.isArcConcaveTowardsPoint(guideArcShard, nearPoint)) {
+                        guideRadius -= filletRadius;
+                    }
+                    else {
+                        guideRadius += filletRadius;
+                    }
+                    result = new MakerJs.paths.Arc(arc.origin, guideRadius, arc.startAngle, arc.endAngle);
+                }
             };
             map[MakerJs.pathType.Line] = function (line) {
-                result = new MakerJs.paths.Parallel(line, delta, nearPoint);
+                result = new MakerJs.paths.Parallel(line, filletRadius, nearPoint);
             };
-            var fn = map[originalPath.type];
+            var fn = map[context.path.type];
             if (fn) {
-                fn(originalPath);
+                fn(context.path);
             }
             return result;
         }
         /**
          * @private
          */
-        function getFilletResult(pathToFillet, propertyName, filletRadius, filletCenter) {
+        function getFilletResult(context, filletRadius, filletCenter) {
             var result = null;
             var map = {};
             map[MakerJs.pathType.Arc] = function (arc) {
                 var guideLine = new MakerJs.paths.Line(arc.origin, filletCenter);
                 var guideLineAngle = MakerJs.angle.ofLineInDegrees(guideLine);
+                var filletAngle = guideLineAngle;
+                //the context is an arc and the fillet is an arc so they will be tangent. If the fillet is external to the arc then the tangent is opposite.
+                if (!MakerJs.measure.isArcConcaveTowardsPoint(arc, filletCenter)) {
+                    filletAngle += 180;
+                }
                 result = {
-                    filletAngle: guideLineAngle + (MakerJs.measure.isArcConcaveTowardsPoint(arc, filletCenter) ? 0 : 180),
+                    filletAngle: filletAngle,
                     clipPath: function () {
-                        arc[propertyName] = guideLineAngle;
+                        arc[context.propertyName] = guideLineAngle;
                     }
                 };
             };
             map[MakerJs.pathType.Line] = function (line) {
+                //make a small vertical line
+                var guideLine = new MakerJs.paths.Line([0, 0], [0, 1]);
+                //rotate this vertical line the same angle as the line context. It will be perpendicular.
                 var lineAngle = MakerJs.angle.ofLineInDegrees(line);
-                var guideLine = new MakerJs.paths.Line([-filletRadius - 1, 0], [filletRadius + 1, 0]);
+                path.rotate(guideLine, lineAngle, [0, 0]);
                 path.moveRelative(guideLine, filletCenter);
-                path.rotate(guideLine, lineAngle + 90, filletCenter);
-                var intersectionPoint = path.intersection(line, guideLine);
+                //get the intersection point of the slopes of the context line and the perpendicular line. This is where the fillet meets the line.
+                var intersectionPoint = path.slopeIntersectionPoint(line, guideLine);
                 if (intersectionPoint) {
                     result = {
-                        filletAngle: MakerJs.angle.toDegrees(MakerJs.angle.ofPointInRadians(filletCenter, intersectionPoint.intersectionPoints[0])),
+                        filletAngle: MakerJs.angle.ofPointInDegrees(filletCenter, intersectionPoint),
                         clipPath: function () {
-                            line[propertyName] = intersectionPoint.intersectionPoints[0];
+                            line[context.propertyName] = intersectionPoint;
                         }
                     };
                 }
             };
-            var fn = map[pathToFillet.type];
+            var fn = map[context.path.type];
             if (fn) {
-                fn(pathToFillet);
+                fn(context.path);
             }
-            if (result) {
-                var originalValue = pathToFillet[propertyName];
-                result.clipPath();
-                if (MakerJs.measure.pathLength(pathToFillet) == 0) {
-                    result = null;
-                }
-                pathToFillet[propertyName] = originalValue;
+            if (!testFilletResult(context, result)) {
+                result = null;
             }
             return result;
         }
+        /**
+         * @private
+         */
+        function getDogboneResult(context, filletCenter) {
+            var result = {
+                filletAngle: MakerJs.angle.ofPointInDegrees(filletCenter, context.shardPoint),
+                clipPath: function () {
+                    context.path[context.propertyName] = context.shardPoint;
+                }
+            };
+            if (!testFilletResult(context, result)) {
+                result = null;
+            }
+            return result;
+        }
+        /**
+         * @private
+         */
+        function testFilletResult(context, result) {
+            var test = false;
+            if (result) {
+                //temporarily clip the path.
+                var originalValue = context.path[context.propertyName];
+                result.clipPath();
+                //don't allow a fillet which effectivly eliminates the path.
+                if (MakerJs.measure.pathLength(context.path) > 0) {
+                    test = true;
+                }
+                //revert the clipping we just did.
+                context.path[context.propertyName] = originalValue;
+            }
+            return test;
+        }
+        /**
+         * Adds a round corner to the outside angle between 2 lines. The lines must meet at one point.
+         *
+         * @param line1 First line to fillet, which will be modified to fit the fillet.
+         * @param line2 Second line to fillet, which will be modified to fit the fillet.
+         * @returns Arc path object of the new fillet.
+         */
+        function dogbone(line1, line2, filletRadius) {
+            if (MakerJs.isPathLine(line1) && MakerJs.isPathLine(line2) && filletRadius && filletRadius > 0) {
+                //first find the common point
+                var commonProperty = getMatchingPointProperties(line1, line2);
+                if (commonProperty) {
+                    var angles = [];
+                    for (var i = 0; i < 2; i++) {
+                        var lineAngle = MakerJs.angle.ofPointInDegrees(commonProperty[i].point, commonProperty[i].oppositePoint);
+                        angles.push(lineAngle);
+                    }
+                    var bisectionAngle = (angles[0] + angles[1]) / 2;
+                    var center = MakerJs.point.add(commonProperty[0].point, MakerJs.point.fromPolar(MakerJs.angle.toRadians(bisectionAngle), filletRadius));
+                    populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty);
+                    //get the angles of the fillet and a function which clips the path to the fillet.
+                    var results = [];
+                    for (var i = 0; i < 2; i++) {
+                        var result = getDogboneResult(commonProperty[i], center);
+                        if (!result) {
+                            return null;
+                        }
+                        results.push(result);
+                    }
+                    var filletArc = new MakerJs.paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
+                    var filletSpan = MakerJs.measure.arcAngle(filletArc);
+                    //make sure midpoint of fillet is outside of the angle
+                    if (MakerJs.round(MakerJs.angle.noRevolutions(filletArc.startAngle + filletSpan / 2)) == MakerJs.round(bisectionAngle)) {
+                        filletArc.startAngle = results[1].filletAngle;
+                        filletArc.endAngle = results[0].filletAngle;
+                    }
+                    //clip the paths and return the fillet arc.
+                    results[0].clipPath();
+                    results[1].clipPath();
+                    return filletArc;
+                }
+            }
+            return null;
+        }
+        path.dogbone = dogbone;
         /**
          * Adds a round corner to the inside angle between 2 paths. The paths must meet at one point.
          *
@@ -1927,53 +2110,55 @@ var MakerJs;
          * @returns Arc path object of the new fillet.
          */
         function fillet(path1, path2, filletRadius) {
-            if (path1 && path2 && filletRadius) {
+            if (path1 && path2 && filletRadius && filletRadius > 0) {
                 //first find the common point
                 var commonProperty = getMatchingPointProperties(path1, path2);
                 if (commonProperty) {
-                    var pathsToFillet = [path1, path2];
-                    //special case when both ends touch each other, as in the case of 2 arcs or an arc chord
-                    if (MakerJs.point.areEqualRounded(commonProperty[0].oppositePoint, commonProperty[1].oppositePoint)) {
-                        for (var i = 2; i--;) {
-                            //use halfway point instead of endpoint for the opposite
-                            commonProperty[i].oppositePoint = MakerJs.point.middle(pathsToFillet[i]);
-                        }
-                    }
+                    //since arcs can curl beyond, we need a local reference point. 
+                    //An intersection with a circle of the same radius as the desired fillet should suffice.
+                    populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty);
                     //get "parallel" guidelines
                     var guidePaths = [];
                     for (var i = 0; i < 2; i++) {
-                        guidePaths.push(getGuidePath(pathsToFillet[i], filletRadius, commonProperty[1 - i].oppositePoint));
+                        var otherPathShardPoint = commonProperty[1 - i].shardPoint;
+                        var guidePath = getGuidePath(commonProperty[i], filletRadius, otherPathShardPoint);
+                        guidePaths.push(guidePath);
                     }
+                    //the center of the fillet is the point where the guidelines intersect.
                     var intersectionPoint = path.intersection(guidePaths[0], guidePaths[1]);
                     if (intersectionPoint) {
                         var center;
+                        //if guidelines intersect in more than one place, choose the closest one.
                         if (intersectionPoint.intersectionPoints.length == 1) {
                             center = intersectionPoint.intersectionPoints[0];
                         }
                         else {
                             center = MakerJs.point.closest(commonProperty[0].point, intersectionPoint.intersectionPoints);
                         }
+                        //get the angles of the fillet and a function which clips the path to the fillet.
                         var results = [];
                         for (var i = 0; i < 2; i++) {
-                            var result = getFilletResult(pathsToFillet[i], commonProperty[i].propertyName, filletRadius, center);
+                            var result = getFilletResult(commonProperty[i], filletRadius, center);
                             if (!result) {
                                 return null;
                             }
                             results.push(result);
                         }
-                        var arc = new MakerJs.paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
+                        var filletArc = new MakerJs.paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
+                        var filletSpan = MakerJs.measure.arcAngle(filletArc);
                         //the algorithm is only valid for fillet less than 180 degrees
-                        if (MakerJs.measure.arcAngle(arc) == 180) {
+                        if (filletSpan == 180) {
                             return null;
                         }
-                        if (MakerJs.measure.arcAngle(arc) > 180) {
+                        if (filletSpan > 180) {
                             //swap to make smallest angle
-                            arc.startAngle = results[1].filletAngle;
-                            arc.endAngle = results[0].filletAngle;
+                            filletArc.startAngle = results[1].filletAngle;
+                            filletArc.endAngle = results[0].filletAngle;
                         }
+                        //clip the paths and return the fillet arc.
                         results[0].clipPath();
                         results[1].clipPath();
-                        return arc;
+                        return filletArc;
                     }
                 }
             }

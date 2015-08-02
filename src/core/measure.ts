@@ -37,7 +37,7 @@ module MakerJs.measure {
 
         var midPointToNearPoint = new paths.Line(point.middle(arc), towardsPoint);
         var options: IPathIntersectionOptions = {};
-        var intersectionPoint = path.intersection(midPointToNearPoint, new paths.ArcChord(arc), options);
+        var intersectionPoint = path.intersection(midPointToNearPoint, new paths.Chord(arc), options);
 
         if (intersectionPoint || options.out_AreOverlapped) {
             return true;
@@ -90,7 +90,12 @@ module MakerJs.measure {
      */
     export function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, exclusive: boolean): boolean {
         for (var i = 2; i--;) {
-            if (!isBetween(round(pointInQuestion[i]), round(line.origin[i]), round(line.end[i]), exclusive)) return false;
+            var origin_value = round(line.origin[i]);
+            var end_value = round(line.end[i]);
+            if (origin_value == end_value) {
+                continue;
+            }
+            if (!isBetween(round(pointInQuestion[i]), origin_value, end_value, exclusive)) return false;
         }
         return true;
     }
