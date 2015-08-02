@@ -188,7 +188,7 @@ var MakerJs;
         }
         angle.toDegrees = toDegrees;
         /**
-         * Gets an arc's end angle, ensured to be greater than its start angle.
+         * Get an arc's end angle, ensured to be greater than its start angle.
          *
          * @param arc An arc path object.
          * @returns End angle of arc.
@@ -202,6 +202,18 @@ var MakerJs;
             return arc.endAngle;
         }
         angle.ofArcEnd = ofArcEnd;
+        /**
+         * Get the angle in the middle of an arc's start and end angles.
+         *
+         * @param arc An arc path object.
+         * @param ratio Optional number between 0 and 1 specifying percentage between start and end angles. Default is .5
+         * @returns Middle angle of arc.
+         */
+        function ofArcMiddle(arc, ratio) {
+            if (ratio === void 0) { ratio = .5; }
+            return arc.startAngle + MakerJs.measure.arcAngle(arc) * ratio;
+        }
+        angle.ofArcMiddle = ofArcMiddle;
         /**
          * Angle of a line path.
          *
@@ -378,23 +390,25 @@ var MakerJs;
          * Get the middle point of a path. Currently only supports Arc and Line paths.
          *
          * @param path The path object.
+         * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
          * @returns Point on the path, in the middle of the path.
          */
-        function middle(path) {
+        function middle(path, ratio) {
+            if (ratio === void 0) { ratio = .5; }
             var midPoint = null;
             var map = {};
             map[MakerJs.pathType.Arc] = function (arc) {
-                var halfAngle = arc.startAngle + MakerJs.measure.arcAngle(arc) / 2;
-                midPoint = point.add(arc.origin, point.fromPolar(MakerJs.angle.toRadians(halfAngle), arc.radius));
+                var midAngle = MakerJs.angle.ofArcMiddle(arc, ratio);
+                midPoint = point.add(arc.origin, point.fromPolar(MakerJs.angle.toRadians(midAngle), arc.radius));
             };
             map[MakerJs.pathType.Line] = function (line) {
-                function avg(a, b) {
-                    return (a + b) / 2;
+                function ration(a, b) {
+                    return a + (b - a) * ratio;
                 }
                 ;
                 midPoint = [
-                    avg(line.origin[0], line.end[0]),
-                    avg(line.origin[1], line.end[1])
+                    ration(line.origin[0], line.end[0]),
+                    ration(line.origin[1], line.end[1])
                 ];
             };
             var fn = map[path.type];
@@ -1933,10 +1947,19 @@ var MakerJs;
             for (var i = 0; i < 2; i++) {
                 var circleIntersection = path.intersection(referenceCircle, properties[i].path);
                 if (!circleIntersection) {
-                    return null;
+                    return false;
                 }
                 properties[i].shardPoint = circleIntersection.intersectionPoints[0];
+                if (MakerJs.point.areEqualRounded(properties[1].point, circleIntersection.intersectionPoints[0])) {
+                    if (circleIntersection.intersectionPoints.length > 1) {
+                        properties[i].shardPoint = circleIntersection.intersectionPoints[1];
+                    }
+                    else {
+                        return false;
+                    }
+                }
             }
+            return true;
         }
         /**
          * @private
@@ -2057,6 +2080,19 @@ var MakerJs;
             return test;
         }
         /**
+         * @private
+         */
+        function getLineRatio(lines) {
+            var totalLength = 0;
+            var lengths = [];
+            for (var i = 0; i < lines.length; i++) {
+                var length = MakerJs.measure.pathLength(lines[i]);
+                lengths.push(length);
+                totalLength += length;
+            }
+            return lengths[0] / totalLength;
+        }
+        /**
          * Adds a round corner to the outside angle between 2 lines. The lines must meet at one point.
          *
          * @param line1 First line to fillet, which will be modified to fit the fillet.
@@ -2068,14 +2104,17 @@ var MakerJs;
                 //first find the common point
                 var commonProperty = getMatchingPointProperties(line1, line2);
                 if (commonProperty) {
-                    var angles = [];
-                    for (var i = 0; i < 2; i++) {
-                        var lineAngle = MakerJs.angle.ofPointInDegrees(commonProperty[i].point, commonProperty[i].oppositePoint);
-                        angles.push(lineAngle);
-                    }
-                    var bisectionAngle = (angles[0] + angles[1]) / 2;
+                    //get the ratio comparison of the two lines
+                    var ratio = getLineRatio([line1, line2]);
+                    //draw a line between the two endpoints, and get the bisection point at the ratio
+                    var span = new MakerJs.paths.Line(commonProperty[0].oppositePoint, commonProperty[1].oppositePoint);
+                    var midRatioPoint = MakerJs.point.middle(span, ratio);
+                    //use the bisection theorem to get the angle bisecting the lines
+                    var bisectionAngle = MakerJs.angle.ofPointInDegrees(commonProperty[0].point, midRatioPoint);
                     var center = MakerJs.point.add(commonProperty[0].point, MakerJs.point.fromPolar(MakerJs.angle.toRadians(bisectionAngle), filletRadius));
-                    populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty);
+                    if (!populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty)) {
+                        return null;
+                    }
                     //get the angles of the fillet and a function which clips the path to the fillet.
                     var results = [];
                     for (var i = 0; i < 2; i++) {
@@ -2086,9 +2125,8 @@ var MakerJs;
                         results.push(result);
                     }
                     var filletArc = new MakerJs.paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
-                    var filletSpan = MakerJs.measure.arcAngle(filletArc);
                     //make sure midpoint of fillet is outside of the angle
-                    if (MakerJs.round(MakerJs.angle.noRevolutions(filletArc.startAngle + filletSpan / 2)) == MakerJs.round(bisectionAngle)) {
+                    if (MakerJs.round(MakerJs.angle.noRevolutions(MakerJs.angle.ofArcMiddle(filletArc))) == MakerJs.round(bisectionAngle)) {
                         filletArc.startAngle = results[1].filletAngle;
                         filletArc.endAngle = results[0].filletAngle;
                     }
@@ -2115,11 +2153,16 @@ var MakerJs;
                 if (commonProperty) {
                     //since arcs can curl beyond, we need a local reference point. 
                     //An intersection with a circle of the same radius as the desired fillet should suffice.
-                    populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty);
+                    if (!populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty)) {
+                        return null;
+                    }
                     //get "parallel" guidelines
                     var guidePaths = [];
                     for (var i = 0; i < 2; i++) {
                         var otherPathShardPoint = commonProperty[1 - i].shardPoint;
+                        if (!otherPathShardPoint) {
+                            return null;
+                        }
                         var guidePath = getGuidePath(commonProperty[i], filletRadius, otherPathShardPoint);
                         guidePaths.push(guidePath);
                     }
@@ -2345,20 +2388,20 @@ var MakerJs;
                 }
                 append(tag.toString());
             }
-            function drawText(id, x, y) {
+            function drawText(id, textPoint) {
                 createElement("text", {
                     "id": id + "_text",
-                    "x": x,
-                    "y": y
+                    "x": textPoint[0],
+                    "y": textPoint[1]
                 }, id);
             }
-            function drawPath(id, x, y, d) {
+            function drawPath(id, x, y, d, textPoint) {
                 createElement("path", {
                     "id": id,
                     "d": ["M", MakerJs.round(x), MakerJs.round(y)].concat(d).join(" ")
                 });
                 if (opts.annotate) {
-                    drawText(id, x, y);
+                    drawText(id, textPoint);
                 }
             }
             var map = {};
@@ -2366,7 +2409,7 @@ var MakerJs;
                 var start = line.origin;
                 var end = line.end;
                 if (opts.useSvgPathOnly) {
-                    drawPath(id, start[0], start[1], [MakerJs.round(end[0]), MakerJs.round(end[1])]);
+                    drawPath(id, start[0], start[1], [MakerJs.round(end[0]), MakerJs.round(end[1])], MakerJs.point.middle(line));
                 }
                 else {
                     createElement("line", {
@@ -2377,7 +2420,7 @@ var MakerJs;
                         "y2": MakerJs.round(end[1])
                     });
                     if (opts.annotate) {
-                        drawText(id, (start[0] + end[0]) / 2, (start[1] + end[1]) / 2);
+                        drawText(id, MakerJs.point.middle(line));
                     }
                 }
             };
@@ -2395,7 +2438,7 @@ var MakerJs;
                     });
                 }
                 if (opts.annotate) {
-                    drawText(id, center[0], center[1]);
+                    drawText(id, center);
                 }
             };
             function circleInPaths(id, center, radius) {
@@ -2406,7 +2449,7 @@ var MakerJs;
                 }
                 halfCircle(1);
                 halfCircle(-1);
-                drawPath(id, center[0], center[1], d);
+                drawPath(id, center[0], center[1], d, center);
             }
             function svgArcData(d, radius, endPoint, largeArc, decreasing) {
                 var end = endPoint;
@@ -2424,7 +2467,7 @@ var MakerJs;
                 else {
                     var d = ['A'];
                     svgArcData(d, arc.radius, arcPoints[1], Math.abs(arc.endAngle - arc.startAngle) > 180, arc.startAngle > arc.endAngle);
-                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d);
+                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, MakerJs.point.middle(arc));
                 }
             };
             //fixup options
