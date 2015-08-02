@@ -66,18 +66,18 @@ module MakerJs.exporter {
             append(tag.toString());
         }
 
-        function drawText(id: string, x: number, y: number) {
+        function drawText(id: string, textPoint: IPoint) {
             createElement(
                 "text",
                 {
                     "id": id + "_text",
-                    "x": x,
-                    "y": y,
+                    "x": textPoint[0],
+                    "y": textPoint[1]
                 },
                 id);
         }
 
-        function drawPath(id: string, x: number, y: number, d: any[]) {
+        function drawPath(id: string, x: number, y: number, d: any[], textPoint: IPoint) {
             createElement(
                 "path",
                 {
@@ -86,7 +86,7 @@ module MakerJs.exporter {
                 });
 
             if (opts.annotate) {
-                drawText(id, x, y);
+                drawText(id, textPoint);
             }
         }
 
@@ -98,7 +98,7 @@ module MakerJs.exporter {
             var end = line.end;
 
             if (opts.useSvgPathOnly) {
-                drawPath(id, start[0], start[1], [round(end[0]), round(end[1])]);
+                drawPath(id, start[0], start[1], [round(end[0]), round(end[1])], point.middle(line));
             } else {
                 createElement(
                     "line",
@@ -111,7 +111,7 @@ module MakerJs.exporter {
                     });
 
                 if (opts.annotate) {
-                    drawText(id,(start[0] + end[0]) / 2,(start[1] + end[1]) / 2);
+                    drawText(id, point.middle(line));
                 }
             }
         };
@@ -136,7 +136,7 @@ module MakerJs.exporter {
             }
 
             if (opts.annotate) {
-                drawText(id, center[0], center[1]);
+                drawText(id, center);
             }
         };
 
@@ -151,7 +151,7 @@ module MakerJs.exporter {
             halfCircle(1);
             halfCircle(-1);
 
-            drawPath(id, center[0], center[1], d);
+            drawPath(id, center[0], center[1], d, center);
         }
 
         function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
@@ -180,7 +180,7 @@ module MakerJs.exporter {
                     arc.startAngle > arc.endAngle
                     );
 
-                drawPath(id, arcPoints[0][0], arcPoints[0][1], d);
+                drawPath(id, arcPoints[0][0], arcPoints[0][1], d, point.middle(arc));
             }
         };
 

@@ -42,6 +42,8 @@ function tubeClamp(tubediameter, thickness, distance, open, wing, lid, lidcleara
         }
     };
 
+    halfBody.paths.dogbone = makerjs.path.dogbone(halfBody.paths.boxottom, halfBody.paths.boxside, .03);
+
     var lidAngle = makerjs.angle.toDegrees(Math.acos((radius - lidclearance) / radius));
     var arc2 = new arc([0, -radius], radius, lidAngle, 90);
     var arc2Points = point.fromArc(arc2);

@@ -34,7 +34,7 @@ module MakerJs.angle {
     }
 
     /**
-     * Gets an arc's end angle, ensured to be greater than its start angle.
+     * Get an arc's end angle, ensured to be greater than its start angle.
      * 
      * @param arc An arc path object.
      * @returns End angle of arc.
@@ -46,6 +46,17 @@ module MakerJs.angle {
             return 360 + arc.endAngle;
         }
         return arc.endAngle;
+    }
+
+    /**
+     * Get the angle in the middle of an arc's start and end angles.
+     * 
+     * @param arc An arc path object.
+     * @param ratio Optional number between 0 and 1 specifying percentage between start and end angles. Default is .5
+     * @returns Middle angle of arc.
+     */
+    export function ofArcMiddle(arc: IPathArc, ratio = .5): number {
+        return arc.startAngle + measure.arcAngle(arc) * ratio;
     }
 
     /**
