@@ -13,6 +13,7 @@ title: Api - angle Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#mirror" class="tsd-kind-icon">mirror</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#norevolutions" class="tsd-kind-icon">no<wbr>Revolutions</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofarcend" class="tsd-kind-icon">of<wbr>Arc<wbr>End</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofarcmiddle" class="tsd-kind-icon">of<wbr>Arc<wbr>Middle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#oflineindegrees" class="tsd-kind-icon">of<wbr>Line<wbr>InDegrees</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofpointindegrees" class="tsd-kind-icon">of<wbr>Point<wbr>InDegrees</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofpointinradians" class="tsd-kind-icon">of<wbr>Point<wbr>InRadians</a></li>
@@ -35,7 +36,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L94">core/angle.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L105">core/angle.ts:105</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -120,7 +121,7 @@ title: Api - angle Module
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Gets an arc&#39;s end angle, ensured to be greater than its start angle.</p>
+						<p>Get an arc&#39;s end angle, ensured to be greater than its start angle.</p>
 					</div>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -138,6 +139,44 @@ title: Api - angle Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ofarcmiddle" class="tsd-anchor"></a>
+		<h3>of<wbr>Arc<wbr>Middle</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">of<wbr>Arc<wbr>Middle<span class="tsd-signature-symbol">(</span>arc<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, ratio<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L58">core/angle.ts:58</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get the angle in the middle of an arc&#39;s start and end angles.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>arc: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>An arc path object.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> ratio: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0.5</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional number between 0 and 1 specifying percentage between start and end angles. Default is .5</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+				<p>Middle angle of arc.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="oflineindegrees" class="tsd-anchor"></a>
 		<h3>of<wbr>Line<wbr>InDegrees</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -147,7 +186,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L57">core/angle.ts:57</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L68">core/angle.ts:68</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -179,7 +218,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L68">core/angle.ts:68</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L79">core/angle.ts:79</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -217,7 +256,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L79">core/angle.ts:79</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/angle.ts#L90">core/angle.ts:90</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
