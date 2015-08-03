@@ -316,12 +316,20 @@ declare module MakerJs.angle {
      */
     function toDegrees(angleInRadians: number): number;
     /**
-     * Gets an arc's end angle, ensured to be greater than its start angle.
+     * Get an arc's end angle, ensured to be greater than its start angle.
      *
      * @param arc An arc path object.
      * @returns End angle of arc.
      */
     function ofArcEnd(arc: IPathArc): number;
+    /**
+     * Get the angle in the middle of an arc's start and end angles.
+     *
+     * @param arc An arc path object.
+     * @param ratio Optional number between 0 and 1 specifying percentage between start and end angles. Default is .5
+     * @returns Middle angle of arc.
+     */
+    function ofArcMiddle(arc: IPathArc, ratio?: number): number;
     /**
      * Angle of a line path.
      *
@@ -422,9 +430,10 @@ declare module MakerJs.point {
      * Get the middle point of a path. Currently only supports Arc and Line paths.
      *
      * @param path The path object.
+     * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
      * @returns Point on the path, in the middle of the path.
      */
-    function middle(path: IPath): IPoint;
+    function middle(path: IPath, ratio?: number): IPoint;
     /**
      * Create a clone of a point, mirrored on either or both x and y axes.
      *

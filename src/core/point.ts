@@ -118,27 +118,28 @@ module MakerJs.point {
      * Get the middle point of a path. Currently only supports Arc and Line paths.
      * 
      * @param path The path object.
+     * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
      * @returns Point on the path, in the middle of the path.
      */
-    export function middle(path: IPath): IPoint {
+    export function middle(path: IPath, ratio = .5): IPoint {
         var midPoint: IPoint = null;
 
         var map: IPathFunctionMap = {};
 
         map[pathType.Arc] = function (arc: IPathArc) {
-            var halfAngle = arc.startAngle + measure.arcAngle(arc) / 2;
-            midPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(halfAngle), arc.radius));
+            var midAngle = angle.ofArcMiddle(arc, ratio);
+            midPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(midAngle), arc.radius));
         };
 
         map[pathType.Line] = function (line: IPathLine) {
 
-            function avg(a: number, b: number): number {
-                return (a + b) / 2;
+            function ration(a: number, b: number): number {
+                return a + (b - a) * ratio;
             };
 
             midPoint = [
-                avg(line.origin[0], line.end[0]),
-                avg(line.origin[1], line.end[1])
+                ration(line.origin[0], line.end[0]),
+                ration(line.origin[1], line.end[1])
             ];
         };
 
