@@ -478,20 +478,21 @@ svg path {
 }
 
 #view svg, .svg-zone, #export-zone {
-    position: absolute;
-    top: 0;
     height: 100%;
     width: 100%;
 }
-#view svg {
-    padding: 20px 0 0 20px;
+
+#export-zone {
+    position: absolute;
+    top: 0;
 }
+
 #view svg line, #view svg circle, #view svg path {
     stroke: #fff;
     stroke-width: 2;
     fill: none;
 }
-#svg-guides svg line {
+#svg-guides svg line, #view #crosshairs-vertical, #view #crosshairs-horizontal  {
     stroke: #4DD2FF;
     stroke-width: 1;
 }
