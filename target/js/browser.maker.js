@@ -2527,7 +2527,7 @@ var MakerJs;
                     viewBox: viewBox.join(' ')
                 };
             }
-            var svgTag = new exporter.XmlTag('svg', MakerJs.extendObject(svgAttrs, opts.svgAttrs));
+            var svgTag = new exporter.XmlTag('svg', MakerJs.extendObject(svgAttrs || {}, opts.svgAttrs));
             append(svgTag.getOpeningTag(false));
             var svgGroup = new exporter.XmlTag('g', {
                 id: 'svgGroup',
