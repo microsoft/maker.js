@@ -1,5 +1,6 @@
 
 var Viewer = {
+    panZoom: null,
     Params: [],
     ViewModel: null,
     ViewScale: null,
@@ -16,36 +17,49 @@ var Viewer = {
 
         Viewer.ViewModel = model;
 
-        if (Viewer.ViewScale == null) {
-            //measure the model to make it fit in the window
-            Viewer.Fit();
-        }
+        //measure the model to make it fit in the window
+        var measureSize = Viewer.Fit();
+
+        var svgOrigin = [-150,0];
 
         //svg output
         var renderOptions = {
+            origin: svgOrigin,
             viewBox: false,
             stroke: null,
             strokeWidth: null,
             annotate: document.getElementById('checkAnnotate').checked,
-            scale: Viewer.ViewScale,
-            useSvgPathOnly: false
+            scale: Viewer.ViewScale * .8,
+            useSvgPathOnly: false,
+            svgAttrs: { id: 'svg1' }
         };
-
-        var svg = makerjs.exporter.toSVG(model, renderOptions);
-        document.getElementById("svg-render").innerHTML = svg;
 
         //show crosshairs
-        var crosshairOptions = {
-            viewBox: false,
-            origin: renderOptions.origin,
-            stroke: null,
-            strokeWidth: null,
-            useSvgPathOnly: false
+        var crossHairSize = 150 / Viewer.ViewScale;
+
+        var svgModel = {
+            paths: {
+                'crosshairs-vertical': new makerjs.paths.Line([0, crossHairSize], [0, -crossHairSize]),
+                'crosshairs-horizontal': new makerjs.paths.Line([-crossHairSize, 0], [crossHairSize, 0])
+            },
+            models: {
+                viewModel: model
+            }
         };
 
-        var size = 250;
-        var crossHairs = [new makerjs.paths.Line([0, size], [0, -size]), new makerjs.paths.Line([-size, 0], [size, 0]), ];
-        document.getElementById("svg-guides").innerHTML = makerjs.exporter.toSVG(crossHairs, crosshairOptions);
+        var svg = makerjs.exporter.toSVG(svgModel, renderOptions);
+        document.getElementById("svg-render").innerHTML = svg;
+
+        if (Viewer.panZoom) {
+            Viewer.panZoom.reset();
+        }
+
+        Viewer.panZoom = svgPanZoom('#svg1', {
+            zoomEnabled: true,
+            controlIconsEnabled: true,
+            fit: false,
+            center: true
+        });
     },
 
     Fit: function () {
@@ -63,7 +77,9 @@ var Viewer = {
         //find the best scale to fit
 
         Viewer.ViewScale = Math.min((svgRender.clientWidth - padding) / width, (svgRender.clientHeight - padding) / height);
-        Viewer.scaleDelta = Viewer.ViewScale/ deltaFactor;
+        Viewer.scaleDelta = Viewer.ViewScale / deltaFactor;
+
+        return size;
     },
 
     getRaw: function (type) {
@@ -110,6 +126,7 @@ var Viewer = {
 
         //attach mousewheel
         var view = document.getElementById("view");
+        /*
         view.onwheel = view.onmousewheel = function (ev) {
             if (Viewer.ViewScale) {
                 Viewer.ViewScale = Math.max(Viewer.ViewScale + ((ev.wheelDelta || ev.deltaY) > 0 ? 1 : -1) * Viewer.scaleDelta, 1);
@@ -117,6 +134,7 @@ var Viewer = {
             }
             return false;
         };
+        */
 
         var selectModelCode = document.getElementById('selectModelCode');
         Viewer.loadModelCode(selectModelCode.value);

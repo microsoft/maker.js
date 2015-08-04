@@ -31,22 +31,25 @@ body {
     overflow: hidden;
 }
 svg, .svg-zone, #export-zone {
-    position: absolute;
-    top: 0;
     height: 100%;
     width: 100%;
-}
-svg {
-    padding: 20px 0 0 20px;
 }
 svg line, svg circle, svg path {
     stroke: #fff;
     stroke-width: 2;
     fill: none;
 }
-#svg-guides svg line {
+#svg-guides svg line, #crosshairs-vertical, #crosshairs-horizontal {
     stroke: #4DD2FF;
     stroke-width: 1;
+}
+#svg-pan-zoom-controls .svg-pan-zoom-control-background {
+    fill: none;
+}
+#svg-pan-zoom-controls path {
+    stroke-width: 0;
+    fill: #fff;
+    opacity: 1;
 }
 svg text {
     fill: #0ff;
