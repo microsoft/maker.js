@@ -479,7 +479,6 @@ svg path {
 
 #view svg, .svg-zone, #export-zone {
     height: 100%;
-    width: 100%;
 }
 
 #export-zone {
@@ -492,7 +491,7 @@ svg path {
     stroke-width: 2;
     fill: none;
 }
-#svg-guides svg line, #view #crosshairs-vertical, #view #crosshairs-horizontal  {
+#view #crosshairs-vertical, #view #crosshairs-horizontal  {
     stroke: #4DD2FF;
     stroke-width: 1;
 }
