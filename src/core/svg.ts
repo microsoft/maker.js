@@ -257,7 +257,7 @@ module MakerJs.exporter {
             };
         }
 
-        var svgTag = new XmlTag('svg', <IXmlTagAttrs>extendObject(svgAttrs, opts.svgAttrs));
+        var svgTag = new XmlTag('svg', <IXmlTagAttrs>extendObject(svgAttrs || {}, opts.svgAttrs));
 
         append(svgTag.getOpeningTag(false));
 
