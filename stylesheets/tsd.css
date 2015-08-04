@@ -495,6 +495,17 @@ svg path {
     stroke: #4DD2FF;
     stroke-width: 1;
 }
+
+#view .svg-pan-zoom-control-background {
+    fill: none;
+}
+
+#view #svg-pan-zoom-controls path {
+    stroke-width: 0;
+    fill: #fff;
+    opacity: 1;
+}
+
 .selectModelCode {
      margin-bottom: 20px;
 }
