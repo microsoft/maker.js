@@ -6,7 +6,7 @@ module MakerJs.models {
             super(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees));
         }
 
-        public static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees: number = 0): IPoint[]{
+        public static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees: number = 0): IPoint[] {
             var points = [];
 
             var a1 = angle.toRadians(firstCornerAngleInDegrees);
@@ -19,4 +19,4 @@ module MakerJs.models {
             return points;
         }
     }
-} 
+}
