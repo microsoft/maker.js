@@ -1024,6 +1024,18 @@ declare module MakerJs.exporter {
     }
 }
 declare module MakerJs.models {
+    class ConnectTheDots implements IModel {
+        paths: IPathMap;
+        constructor(isClosed: boolean, points: IPoint[]);
+    }
+}
+declare module MakerJs.models {
+    class Polygon extends ConnectTheDots {
+        constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number);
+        static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number): IPoint[];
+    }
+}
+declare module MakerJs.models {
     class BoltCircle implements IModel {
         paths: IPathMap;
         constructor(boltRadius: number, holeRadius: number, boltCount: number, firstBoltAngleInDegrees?: number);
@@ -1033,12 +1045,6 @@ declare module MakerJs.models {
     class BoltRectangle implements IModel {
         paths: IPathMap;
         constructor(width: number, height: number, holeRadius: number);
-    }
-}
-declare module MakerJs.models {
-    class ConnectTheDots implements IModel {
-        paths: IPathMap;
-        constructor(isClosed: boolean, points: IPoint[]);
     }
 }
 declare module MakerJs.models {
@@ -1056,12 +1062,6 @@ declare module MakerJs.models {
     class OvalArc implements IModel {
         paths: IPathMap;
         constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
-    }
-}
-declare module MakerJs.models {
-    class Polygon extends ConnectTheDots {
-        constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number);
-        static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number): IPoint[];
     }
 }
 declare module MakerJs.models {
@@ -1084,5 +1084,12 @@ declare module MakerJs.models {
 declare module MakerJs.models {
     class Square extends Rectangle {
         constructor(side: number);
+    }
+}
+declare module MakerJs.models {
+    class Star implements IModel {
+        paths: IPathMap;
+        constructor(numberOfPoints: number, outerRadius: number, innerRadius?: number, skipPoints?: number);
+        static InnerRadiusRatio(numberOfPoints: number, skipPoints: number): number;
     }
 }

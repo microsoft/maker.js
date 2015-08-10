@@ -2563,6 +2563,60 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
+        var ConnectTheDots = (function () {
+            function ConnectTheDots(isClosed, points) {
+                var _this = this;
+                this.paths = {};
+                var connect = function (a, b) {
+                    _this.paths["ShapeLine" + i] = new MakerJs.paths.Line(points[a], points[b]);
+                };
+                for (var i = 1; i < points.length; i++) {
+                    connect(i - 1, i);
+                }
+                if (isClosed && points.length > 2) {
+                    connect(points.length - 1, 0);
+                }
+            }
+            return ConnectTheDots;
+        })();
+        models.ConnectTheDots = ConnectTheDots;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var Polygon = (function (_super) {
+            __extends(Polygon, _super);
+            function Polygon(numberOfSides, radius, firstCornerAngleInDegrees) {
+                if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
+                _super.call(this, true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees));
+            }
+            Polygon.getPoints = function (numberOfSides, radius, firstCornerAngleInDegrees) {
+                if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
+                var points = [];
+                var a1 = MakerJs.angle.toRadians(firstCornerAngleInDegrees);
+                var a = 2 * Math.PI / numberOfSides;
+                for (var i = 0; i < numberOfSides; i++) {
+                    points.push(MakerJs.point.fromPolar(a * i + a1, radius));
+                }
+                return points;
+            };
+            return Polygon;
+        })(models.ConnectTheDots);
+        models.Polygon = Polygon;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
         var BoltCircle = (function () {
             function BoltCircle(boltRadius, holeRadius, boltCount, firstBoltAngleInDegrees) {
                 if (firstBoltAngleInDegrees === void 0) { firstBoltAngleInDegrees = 0; }
@@ -2603,29 +2657,6 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var ConnectTheDots = (function () {
-            function ConnectTheDots(isClosed, points) {
-                var _this = this;
-                this.paths = {};
-                var connect = function (a, b) {
-                    _this.paths["ShapeLine" + i] = new MakerJs.paths.Line(points[a], points[b]);
-                };
-                for (var i = 1; i < points.length; i++) {
-                    connect(i - 1, i);
-                }
-                if (isClosed && points.length > 2) {
-                    connect(points.length - 1, 0);
-                }
-            }
-            return ConnectTheDots;
-        })();
-        models.ConnectTheDots = ConnectTheDots;
-    })(models = MakerJs.models || (MakerJs.models = {}));
-})(MakerJs || (MakerJs = {}));
-var MakerJs;
-(function (MakerJs) {
-    var models;
-    (function (models) {
         var RoundRectangle = (function () {
             function RoundRectangle(width, height, radius) {
                 this.paths = {};
@@ -2653,12 +2684,6 @@ var MakerJs;
         models.RoundRectangle = RoundRectangle;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -2696,31 +2721,6 @@ var MakerJs;
             return OvalArc;
         })();
         models.OvalArc = OvalArc;
-    })(models = MakerJs.models || (MakerJs.models = {}));
-})(MakerJs || (MakerJs = {}));
-var MakerJs;
-(function (MakerJs) {
-    var models;
-    (function (models) {
-        var Polygon = (function (_super) {
-            __extends(Polygon, _super);
-            function Polygon(numberOfSides, radius, firstCornerAngleInDegrees) {
-                if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
-                _super.call(this, true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees));
-            }
-            Polygon.getPoints = function (numberOfSides, radius, firstCornerAngleInDegrees) {
-                if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
-                var points = [];
-                var a1 = MakerJs.angle.toRadians(firstCornerAngleInDegrees);
-                var a = 2 * Math.PI / numberOfSides;
-                for (var i = 0; i < numberOfSides; i++) {
-                    points.push(MakerJs.point.fromPolar(a * i + a1, radius));
-                }
-                return points;
-            };
-            return Polygon;
-        })(models.ConnectTheDots);
-        models.Polygon = Polygon;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -2806,6 +2806,41 @@ var MakerJs;
             return Square;
         })(models.Rectangle);
         models.Square = Square;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var Star = (function () {
+            function Star(numberOfPoints, outerRadius, innerRadius, skipPoints) {
+                if (skipPoints === void 0) { skipPoints = 2; }
+                this.paths = {};
+                if (!innerRadius) {
+                    innerRadius = outerRadius * Star.InnerRadiusRatio(numberOfPoints, skipPoints);
+                }
+                var outerPoints = models.Polygon.getPoints(numberOfPoints, outerRadius);
+                var innerPoints = models.Polygon.getPoints(numberOfPoints, innerRadius, 180 / numberOfPoints);
+                var allPoints = [];
+                for (var i = 0; i < numberOfPoints; i++) {
+                    allPoints.push(outerPoints[i]);
+                    allPoints.push(innerPoints[i]);
+                }
+                var model = new models.ConnectTheDots(true, allPoints);
+                this.paths = model.paths;
+                delete model.paths;
+            }
+            Star.InnerRadiusRatio = function (numberOfPoints, skipPoints) {
+                //formula from http://www.jdawiseman.com/papers/easymath/surds_star_inner_radius.html
+                //Cos(Pi()*m/n) / Cos(Pi()*(m-1)/n)
+                if (numberOfPoints > 0 && skipPoints > 1 && skipPoints < numberOfPoints / 2) {
+                    return Math.cos(Math.PI * skipPoints / numberOfPoints) / Math.cos(Math.PI * (skipPoints - 1) / numberOfPoints);
+                }
+                return 0;
+            };
+            return Star;
+        })();
+        models.Star = Star;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 
