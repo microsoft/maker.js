@@ -1,3 +1,5 @@
+/// <reference path="polygon.ts" />
+
 module MakerJs.models {
 
     export class BoltCircle implements IModel {

@@ -5,6 +5,8 @@
 
     <link href="viewer.css" rel="stylesheet" />
 
+    <script src="svg-pan-zoom.min.js"></script>
+
     <script>
         //pretend we are in node
         var module = {};
@@ -37,6 +39,7 @@
     <script src="../src/models/Polygon.js"></script>
     <script src="../src/models/Square.js"></script>
     <script src="../src/models/SCurve.js"></script>
+    <script src="../src/models/Star.js"></script>
 
     <script>
         //pretend it's been required
@@ -62,6 +65,7 @@
             <option>ventgrid</option>
             <option>ventgridcircle</option>
             <option>fillets</option>
+            <option>filletstar</option>
         </select>
     </div>
 
@@ -83,6 +87,9 @@
         <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="Viewer.Refresh()" />
     </div>
 
+    <script>
+        
+    </script>
 </body>
 
 </html>
