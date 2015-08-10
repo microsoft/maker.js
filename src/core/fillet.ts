@@ -110,7 +110,7 @@ module MakerJs.path {
 
             properties[i].shardPoint = circleIntersection.intersectionPoints[0];
 
-            if (point.areEqualRounded(properties[1].point, circleIntersection.intersectionPoints[0])) {
+            if (point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
                 if (circleIntersection.intersectionPoints.length > 1) {
                     properties[i].shardPoint = circleIntersection.intersectionPoints[1];
                 } else {

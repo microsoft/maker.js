@@ -43,8 +43,8 @@ module MakerJs.point {
      * @param b Second point.
      * @returns true if points are the same, false if they are not
      */
-    export function areEqualRounded(a: IPoint, b: IPoint): boolean {
-        return round(a[0]) == round(b[0]) && round(a[1]) == round(b[1]);
+    export function areEqualRounded(a: IPoint, b: IPoint, accuracy = .0000001): boolean {
+        return round(a[0], accuracy) == round(b[0], accuracy) && round(a[1], accuracy) == round(b[1], accuracy);
     }
 
     /**
