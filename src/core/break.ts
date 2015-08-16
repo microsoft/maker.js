@@ -82,12 +82,12 @@ module MakerJs.path {
      * @returns A new path of the same type, when path type is line or arc. Returns null for circle.
      */
     export function breakAtPoint(pathToBreak: IPath, pointOfBreak: IPoint): IPath {
-
-        var fn = breakPathFunctionMap[pathToBreak.type];
-        if (fn) {
-            return fn(pathToBreak, pointOfBreak);
+        if (pathToBreak && pointOfBreak) {
+            var fn = breakPathFunctionMap[pathToBreak.type];
+            if (fn) {
+                return fn(pathToBreak, pointOfBreak);
+            }
         }
-
         return null;
     }
 
