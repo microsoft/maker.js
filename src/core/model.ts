@@ -2,6 +2,16 @@
 
 module MakerJs.model {
 
+    export function getSimilarPathId(model: IModel, pathId: string): string {
+        var i = 0;
+        var newPathId = pathId;
+        while (newPathId in model.paths) {
+            i++;
+            newPathId = pathId + '_' + i;
+        }
+        return newPathId;
+    }
+
     /**
      * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
      * 
@@ -183,6 +193,26 @@ module MakerJs.model {
         }
 
         return modeltoConvert;
+    }
+
+    export interface IModelPathCallback {
+        (modelContext: IModel, pathId: string, pathContext: IPath): void;
+    }
+
+    export function walkPaths(modelContext: IModel, callback: IModelPathCallback) {
+
+        if (modelContext.paths) {
+            for (var pathId in modelContext.paths) {
+                callback(modelContext, pathId, modelContext.paths[pathId]);
+            }
+        }
+
+        if (modelContext.models) {
+            for (var id in modelContext.models) {
+                walkPaths(modelContext.models[id], callback);
+            }
+        }
+
     }
 
 }
