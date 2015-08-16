@@ -65,6 +65,10 @@ module MakerJs.path {
             return null;
         }
 
+        if (!measure.isBetweenPoints(pointOfBreak, line, true)) {
+            return null;
+        }
+
         var savedEndPoint = line.end;
 
         line.end = pointOfBreak;
