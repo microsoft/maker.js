@@ -9,7 +9,7 @@ module MakerJs.model {
         if (segment2) {
             var segments: IPath[] = [segment1, segment2];
             for (var i = 2; i--;) {
-                if (round(measure.pathLength(segments[i]), .000001) == 0) {
+                if (round(measure.pathLength(segments[i]), .00001) == 0) {
                     return null;
                 }
             }
@@ -18,32 +18,65 @@ module MakerJs.model {
         return null;
     }
 
-    function breakAlongForeignPath(segments: ICrossedPathSegment[], foreignPath: IPath, rememberOverlaps: boolean) {
+    function breakAlongForeignPath(crossedPath: ICrossedPath, foreignPath: IPath) {
+
+        var segments = crossedPath.segments;
+
+        var foreignPathEndPoints: IPoint[] = null;
 
         for (var i = 0; i < segments.length; i++) {
+
+            if (path.areEqual(segments[i].path, foreignPath)) {
+                segments[i].overlapped = true;
+                segments[i].overlappedEqual = true;
+                segments[i].overlappedWith = foreignPath;
+
+                crossedPath.overlappedSegments.push(segments[i]);
+                continue;
+            }
 
             //see if any of the paths intsersect with the foreign path
             var options: IPathIntersectionOptions = {};
             var foreignIntersection = path.intersection(segments[i].path, foreignPath, options);
 
-            if (rememberOverlaps && options.out_AreOverlapped) {
-                segments[i].overlapped = true;
-                segments[i].overlappedWith = foreignPath;
-            }
+            var pointsToCheck: IPoint[] = null;
 
             if (foreignIntersection) {
+                pointsToCheck = foreignIntersection.intersectionPoints;
+
+            } else if (options.out_AreOverlapped) {
+                segments[i].overlapped = true;
+                segments[i].overlappedWith = foreignPath;
+
+                crossedPath.overlappedSegments.push(segments[i]);
+
+                if (!foreignPathEndPoints) {
+                    foreignPathEndPoints = point.fromPathEnds(foreignPath);
+                }
+
+                pointsToCheck = foreignPathEndPoints;
+            }
                 
+            if (pointsToCheck) {
+
                 //break the path which intersected, and add the shard to the end of the array so it can also be checked in this loop for further sharding.
                 var subSegments: IPath[] = null;
                 var p = 0;
-                while (!subSegments && p < foreignIntersection.intersectionPoints.length) {
-                    subSegments = getNonZeroSegments(segments[i].path, foreignIntersection.intersectionPoints[p]);
+                while (!subSegments && p < pointsToCheck.length) {
+                    subSegments = getNonZeroSegments(segments[i].path, pointsToCheck[p]);
                     p++;
                 }
 
                 if (subSegments) {
                     segments[i].path = subSegments[0];
-                    segments.push({ path: subSegments[1], overlapped: false, uniqueForeignIntersectionPoints: [] });
+
+                    var newSegment = { path: subSegments[1], overlapped: segments[i].overlapped, uniqueForeignIntersectionPoints: [] };
+
+                    if (segments[i].overlapped) {
+                        crossedPath.overlappedSegments.push(newSegment);
+                    }
+
+                    segments.push(newSegment);
 
                     //re-check this segment for another deep intersection
                     i--;
@@ -72,7 +105,7 @@ module MakerJs.model {
         return added;
     }
 
-    function checkInsideForeign(segments: ICrossedPathSegment[], foreignPath: IPath, farPoint: IPoint = [1000000, 1000000]) {
+    function checkInsideForeign(segments: ICrossedPathSegment[], foreignPath: IPath, farPoint: IPoint = [7654321, 1234567]) {
         for (var i = 0; i < segments.length; i++) {
             var origin = point.middle(segments[i].path) || segments[i].path.origin;
             var lineToFarPoint = new paths.Line(origin, farPoint);
@@ -94,6 +127,7 @@ module MakerJs.model {
         insideForeign?: boolean;
         uniqueForeignIntersectionPoints: IPoint[];
         overlapped: boolean;
+        overlappedEqual?: boolean;
         overlappedWith?: IPath;
     }
 
@@ -101,13 +135,22 @@ module MakerJs.model {
         modelContext: IModel;
         pathId: string;
         segments: ICrossedPathSegment[];
+        overlappedSegments: ICrossedPathSegment[];
     }
 
-    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, rememberOverlaps: boolean, farPoint: IPoint): ICrossedPath[] {
+    interface ICombinedModel {
+        crossedPaths: ICrossedPath[];
+        overlappedSegments: ICrossedPathSegment[];
+    }
+
+    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, farPoint: IPoint): ICombinedModel {
 
         var crossedPaths: ICrossedPath[] = [];
+        var overlappedSegments: ICrossedPathSegment[] = [];
 
         walkPaths(modelToBreak, function (modelContext: IModel, pathId1: string, path1: IPath) {
+
+            if (!path1) return;
 
             //clone this path and make it the first segment
             var segment: ICrossedPathSegment = {
@@ -116,36 +159,68 @@ module MakerJs.model {
                 uniqueForeignIntersectionPoints: []
             };
 
-            var segments: ICrossedPathSegment[] = [segment];
+            var thisPath: ICrossedPath = {
+                modelContext: modelContext,
+                pathId: pathId1,
+                segments: [segment],
+                overlappedSegments: []
+            };
 
             //keep breaking the segments anywhere they intersect with paths of the other model
             walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
-                breakAlongForeignPath(segments, path2, rememberOverlaps);
+                if (path2) {
+                    breakAlongForeignPath(thisPath, path2);
+                }
             });
 
             //check each segment whether it is inside or outside
             walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
-                checkInsideForeign(segments, path2, farPoint);
+                if (path2) {
+                    checkInsideForeign(thisPath.segments, path2, farPoint);
+                }
             });
 
-            var thisPath: ICrossedPath = {
-                modelContext: modelContext,
-                pathId: pathId1,
-                segments: segments
-            };
-
             crossedPaths.push(thisPath);
+            overlappedSegments = overlappedSegments.concat(thisPath.overlappedSegments);
+
         });
 
-        return crossedPaths;
+        return { crossedPaths: crossedPaths, overlappedSegments: overlappedSegments };
     }
 
-    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean) {
+
+    function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[]) {
+
+        function compareSegments(seg1: ICrossedPathSegment, seg2: ICrossedPathSegment) {
+            if (path.areEqual(seg1.path, seg2.path)) {
+                seg1.overlappedEqual = seg2.overlappedEqual = true;
+            }
+        }
+
+        function checkForEqualOverlapsA(seg: ICrossedPathSegment) {
+
+            for (var i = 0; i < crossedPathsB.length; i++) {
+                compareSegments(crossedPathsB[i], seg);
+            }
+
+        }
+
+        for (var i = 0; i < crossedPathsA.length; i++) {
+            checkForEqualOverlapsA(crossedPathsA[i]);
+        }
+
+    }
+
+    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, firstPass?: boolean) {
 
         function addSegment(model: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
+            var id = getSimilarPathId(model, pathIdBase);
+            model.paths[id] = segment.path;
+        }
+
+        function checkAddSegment(model: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             if (segment.insideForeign && includeInside || !segment.insideForeign && includeOutside) {
-                var id = getSimilarPathId(model, pathIdBase);
-                model.paths[id] = segment.path;
+                addSegment(model, pathIdBase, segment);
             }
         }
 
@@ -153,21 +228,29 @@ module MakerJs.model {
         delete crossedPath.modelContext.paths[crossedPath.pathId];
 
         for (var i = 0; i < crossedPath.segments.length; i++) {
-            addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
+            if (crossedPath.segments[i].overlappedEqual) {
+                if (firstPass) {
+                    addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
+                }
+            } else {
+                checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
+            }
         }
     }
 
     export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean, includeAOutsideB: boolean, includeBInsideA: boolean, includeBOutsideA: boolean, farPoint?: IPoint) {
 
-        var pathsA = breakAllPathsAtIntersections(modelA, modelB, false, farPoint);
-        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, farPoint);
+        var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
+        var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);
 
-        for (var i = 0; i < pathsA.length; i++) {
-            addOrDeleteSegments(pathsA[i], includeAInsideB, includeAOutsideB);
+        checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments);
+
+        for (var i = 0; i < pathsA.crossedPaths.length; i++) {
+            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true);
         }
 
-        for (var i = 0; i < pathsB.length; i++) {
-            addOrDeleteSegments(pathsB[i], includeBInsideA, includeBOutsideA);
+        for (var i = 0; i < pathsB.crossedPaths.length; i++) {
+            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA);
         }
 
     }
