@@ -18,15 +18,32 @@ module MakerJs.path {
 
         var angleAtBreakPoint = angle.ofPointInDegrees(arc.origin, pointOfBreak);
 
-        if (angleAtBreakPoint == arc.startAngle || angleAtBreakPoint == arc.endAngle) {
+        if (angle.areEqual(angleAtBreakPoint, arc.startAngle) || angle.areEqual(angleAtBreakPoint, arc.endAngle)) {
+            return null;
+        }
+
+        function getAngleStrictlyBetweenArcAngles() {
+            var endAngle = angle.ofArcEnd(arc);
+            var tries = [0, 1, -1];
+            for (var i = 0; i < tries.length; i++) {
+                var add = + 360 * tries[i];
+                if (measure.isBetween(angleAtBreakPoint + add, arc.startAngle, endAngle, true)) {
+                    return angleAtBreakPoint + add;
+                }
+            }
+            return null;
+        }
+
+        var angleAtBreakPointBetween = getAngleStrictlyBetweenArcAngles();
+        if (angleAtBreakPointBetween == null) {
             return null;
         }
 
         var savedEndAngle = arc.endAngle;
 
-        arc.endAngle = angleAtBreakPoint;
+        arc.endAngle = angleAtBreakPointBetween;
 
-        return new paths.Arc(arc.origin, arc.radius, angleAtBreakPoint, savedEndAngle);
+        return new paths.Arc(arc.origin, arc.radius, angleAtBreakPointBetween, savedEndAngle);
     };
 
     breakPathFunctionMap[pathType.Circle] = function (circle: IPathCircle, pointOfBreak: IPoint): IPath {
