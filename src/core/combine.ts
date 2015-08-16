@@ -41,47 +41,51 @@ module MakerJs.model {
         return false;
     }
 
+    function getNonZeroSegments(pathToSegment: IPath, breakPoint: IPoint): IPath[] {
+        var segment1 = cloneObject<IPath>(pathToSegment);
+        var segment2 = path.breakAtPoint(segment1, breakPoint);
+
+        if (segment2) {
+            var segments: IPath[] = [segment1, segment2];
+            for (var i = 2; i--;) {
+                if (round(measure.pathLength(segments[i]), .000001) == 0) {
+                    return null;
+                }
+            }
+            return [segment1, segment2];
+        }
+        return null;
+    }
+
     function breakAlongForeignPath(segments: ICrossedPathSegment[], foreignPath: IPath, rememberOverlaps: boolean) {
 
         for (var i = 0; i < segments.length; i++) {
 
             //see if any of the paths intsersect with the foreign path
-            var options: IPathIntersectionOptions = { excludeTangents: false };
-            var deepIntersection = path.intersection(segments[i].path, foreignPath, options);
+            var options: IPathIntersectionOptions = {};
+            var foreignIntersection = path.intersection(segments[i].path, foreignPath, options);
 
             if (rememberOverlaps && options.out_AreOverlapped) {
                 segments[i].overlapped = true;
                 segments[i].overlappedWith = foreignPath;
             }
 
-            if (deepIntersection) {
+            if (foreignIntersection) {
                 
-                var clone = cloneObject<IPath>(segments[i].path);
-
                 //break the path which intersected, and add the shard to the end of the array so it can also be checked in this loop for further sharding.
-                var newPath = path.breakAtPoint(clone, deepIntersection.intersectionPoints[0]);
-
-                var d1 = round(measure.pathLength(clone), .0001);
-
-                if ((!newPath || !d1) && deepIntersection.intersectionPoints.length > 1) {
-                    clone = cloneObject<IPath>(segments[i].path);
-                    newPath = path.breakAtPoint(clone, deepIntersection.intersectionPoints[1]);
-                    d1 = round(measure.pathLength(clone), .0001);
+                var subSegments: IPath[] = null;
+                var p = 0;
+                while (!subSegments && p < foreignIntersection.intersectionPoints.length) {
+                    subSegments = getNonZeroSegments(segments[i].path, foreignIntersection.intersectionPoints[p]);
+                    p++;
                 }
 
-                if (newPath) {
+                if (subSegments) {
+                    segments[i].path = subSegments[0];
+                    segments.push({ path: subSegments[1], overlapped: false });
 
-                    var d2 = round(measure.pathLength(newPath), .0001);
-
-                    if (d1 && d2) {
-
-                        segments[i].path = clone;
-
-                        segments.push({ path: newPath, overlapped: false });
-
-                        //re-check this segment for another deep intersection
-                        i--;
-                    }
+                    //re-check this segment for another deep intersection
+                    i--;
                 }
             }
         }
