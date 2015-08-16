@@ -3,6 +3,53 @@
 module MakerJs.path {
 
     /**
+     * @private
+     */
+    interface IPathAreEqualMap {
+        [type: string]: (path1: IPath, path2: IPath) => boolean;
+    }
+
+    /**
+     * @private
+     */
+    var pathAreEqualMap: IPathAreEqualMap = {};
+
+    pathAreEqualMap[pathType.Line] = function (line1: IPathLine, line2: IPathLine): boolean {
+        return point.areEqual(line1.end, line2.end);
+    };
+
+    pathAreEqualMap[pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle): boolean {
+        return circle1.radius == circle2.radius;
+    };
+
+    pathAreEqualMap[pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc): boolean {
+        return pathAreEqualMap[pathType.Circle](arc1, arc2) && angle.areEqual(arc1.startAngle, arc2.startAngle) && angle.areEqual(arc1.endAngle, arc2.endAngle);
+    };
+
+    /**
+     * Find out if two paths are equal.
+     * 
+     * @param a First path.
+     * @param b Second path.
+     * @returns true if paths are the same, false if they are not
+     */
+    export function areEqual(path1: IPath, path2: IPath): boolean {
+
+        var result = false;
+
+        if (path1.type == path2.type && point.areEqual(path1.origin, path2.origin)) {
+
+            var fn = pathAreEqualMap[path1.type];
+            if (fn) {
+                result = fn(path1, path2);
+            }
+
+        }
+
+        return result;
+    }
+
+    /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      * 
      * @param pathToMirror The path to mirror.
