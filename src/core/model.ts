@@ -2,10 +2,16 @@
 
 module MakerJs.model {
 
-    export function getSimilarPathId(model: IModel, pathId: string): string {
+    /**
+     * Get an unused id in the paths map with the same prefix.
+     * 
+     * @param modelContext The model containing the paths map.
+     * @param pathId The pathId to use directly (if unused), or as a prefix.
+     */
+    export function getSimilarPathId(modelContext: IModel, pathId: string): string {
         var i = 0;
         var newPathId = pathId;
-        while (newPathId in model.paths) {
+        while (newPathId in modelContext.paths) {
             i++;
             newPathId = pathId + '_' + i;
         }
@@ -195,10 +201,19 @@ module MakerJs.model {
         return modeltoConvert;
     }
 
+    /**
+     * Callback signature for walkPaths.
+     */
     export interface IModelPathCallback {
         (modelContext: IModel, pathId: string, pathContext: IPath): void;
     }
 
+    /**
+     * Recursively walk through all paths for a given model.
+     * 
+     * @param modelContext The model to walk.
+     * @param callback Callback for each path.
+     */
     export function walkPaths(modelContext: IModel, callback: IModelPathCallback) {
 
         if (modelContext.paths) {
@@ -212,7 +227,6 @@ module MakerJs.model {
                 walkPaths(modelContext.models[id], callback);
             }
         }
-
     }
 
 }

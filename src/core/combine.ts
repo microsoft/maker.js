@@ -2,6 +2,9 @@
 
 module MakerJs.model {
 
+    /**
+     * @private
+     */
     function getNonZeroSegments(pathToSegment: IPath, breakPoint: IPoint): IPath[] {
         var segment1 = cloneObject<IPath>(pathToSegment);
         var segment2 = path.breakAtPoint(segment1, breakPoint);
@@ -18,6 +21,9 @@ module MakerJs.model {
         return null;
     }
 
+    /**
+     * @private
+     */
     function breakAlongForeignPath(segments: ICrossedPathSegment[], overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
 
         if (path.areEqual(segments[0].path, foreignPath)) {
@@ -79,6 +85,9 @@ module MakerJs.model {
         }
     }
 
+    /**
+     * @private
+     */
     function addUniquePoints(pointArray: IPoint[], pointsToAdd: IPoint[]): number {
 
         var added = 0;
@@ -100,6 +109,9 @@ module MakerJs.model {
         return added;
     }
 
+    /**
+     * @private
+     */
     function checkInsideForeign(segments: ICrossedPathSegment[], foreignPath: IPath, farPoint: IPoint = [7654321, 1234567]) {
         for (var i = 0; i < segments.length; i++) {
             var origin = point.middle(segments[i].path) || segments[i].path.origin;
@@ -117,6 +129,9 @@ module MakerJs.model {
         }
     }
 
+    /**
+     * @private
+     */
     interface ICrossedPathSegment {
         path: IPath;
         insideForeign?: boolean;
@@ -125,17 +140,26 @@ module MakerJs.model {
         overlappedEqual?: boolean;
     }
 
+    /**
+     * @private
+     */
     interface ICrossedPath {
         modelContext: IModel;
         pathId: string;
         segments: ICrossedPathSegment[];
     }
 
+    /**
+     * @private
+     */
     interface ICombinedModel {
         crossedPaths: ICrossedPath[];
         overlappedSegments: ICrossedPathSegment[];
     }
 
+    /**
+     * @private
+     */
     function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, farPoint: IPoint): ICombinedModel {
 
         var crossedPaths: ICrossedPath[] = [];
@@ -178,6 +202,9 @@ module MakerJs.model {
         return { crossedPaths: crossedPaths, overlappedSegments: overlappedSegments };
     }
 
+    /**
+     * @private
+     */
     function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[]) {
 
         function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
@@ -198,6 +225,9 @@ module MakerJs.model {
 
     }
 
+    /**
+     * @private
+     */
     function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, firstPass?: boolean) {
 
         function addSegment(model: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
@@ -225,6 +255,17 @@ module MakerJs.model {
         }
     }
 
+    /**
+     * Combine 2 models. The models should be originated.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     * @param includeAInsideB Flag to include paths from modelA which are inside of modelB.
+     * @param includeAOutsideB Flag to include paths from modelA which are outside of modelB.
+     * @param includeBInsideA Flag to include paths from modelB which are inside of modelA.
+     * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
+     * @param farPoint Optional point of reference which is outside the bounds of both models.
+     */
     export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean, includeAOutsideB: boolean, includeBInsideA: boolean, includeBOutsideA: boolean, farPoint?: IPoint) {
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);

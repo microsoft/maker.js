@@ -80,28 +80,6 @@ module MakerJs.point {
         return pointOptions[smallest.index];
     }
 
-    export function fromPathEnds(pathContext: IPath): IPoint[] {
-
-        var result: IPoint[] = null;
-
-        var map: IPathFunctionMap = {};
-
-        map[pathType.Arc] = function (arc: IPathArc) {
-            result = point.fromArc(arc);
-        };
-
-        map[pathType.Line] = function (line: IPathLine) {
-            result = [line.origin, line.end];
-        }
-
-        var fn = map[pathContext.type];
-        if (fn) {
-            fn(pathContext);
-        }
-
-        return result;
-    }
-
     /**
      * Get a point from its polar coordinates.
      * 
@@ -134,6 +112,34 @@ module MakerJs.point {
      */
     export function fromArc(arc: IPathArc): IPoint[] {
         return [fromAngleOnCircle(arc.startAngle, arc), fromAngleOnCircle(arc.endAngle, arc)];
+    }
+
+    /**
+     * Get the two end points of a path.
+     * 
+     * @param pathContext The path object.
+     * @returns Array with 2 elements: [0] is the point object corresponding to the origin, [1] is the point object corresponding to the end.
+     */
+    export function fromPathEnds(pathContext: IPath): IPoint[] {
+
+        var result: IPoint[] = null;
+
+        var map: IPathFunctionMap = {};
+
+        map[pathType.Arc] = function (arc: IPathArc) {
+            result = point.fromArc(arc);
+        };
+
+        map[pathType.Line] = function (line: IPathLine) {
+            result = [line.origin, line.end];
+        }
+
+        var fn = map[pathContext.type];
+        if (fn) {
+            fn(pathContext);
+        }
+
+        return result;
     }
 
     /**
