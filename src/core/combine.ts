@@ -18,9 +18,7 @@ module MakerJs.model {
         return null;
     }
 
-    function breakAlongForeignPath(crossedPath: ICrossedPath, overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
-
-        var segments = crossedPath.segments;
+    function breakAlongForeignPath(segments: ICrossedPathSegment[], overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
 
         if (path.areEqual(segments[0].path, foreignPath)) {
             segments[0].overlapped = true;
@@ -81,23 +79,24 @@ module MakerJs.model {
         }
     }
 
-    function addUniquePoint(pointArray: IPoint[], pointToAdd: IPoint): boolean {
-        for (var i = 0; i < pointArray.length; i++) {
-            if (point.areEqualRounded(pointArray[i], pointToAdd)) {
-                return false;
-            }
-        }
-        pointArray.push(pointToAdd);
-        return true;
-    }
-
     function addUniquePoints(pointArray: IPoint[], pointsToAdd: IPoint[]): number {
+
         var added = 0;
-        for (var i = 0; i < pointsToAdd.length; i++) {
-            if (addUniquePoint(pointArray, pointsToAdd[i])) {
-                added++;
+
+        function addUniquePoint(pointToAdd: IPoint) {
+            for (var i = 0; i < pointArray.length; i++) {
+                if (point.areEqualRounded(pointArray[i], pointToAdd)) {
+                    return;
+                }
             }
+            pointArray.push(pointToAdd);
+            added++;
         }
+
+        for (var i = 0; i < pointsToAdd.length; i++) {
+            addUniquePoint(pointsToAdd[i]);
+        }
+
         return added;
     }
 
@@ -162,7 +161,7 @@ module MakerJs.model {
             //keep breaking the segments anywhere they intersect with paths of the other model
             walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
                 if (path2) {
-                    breakAlongForeignPath(thisPath, overlappedSegments, path2);
+                    breakAlongForeignPath(thisPath.segments, overlappedSegments, path2);
                 }
             });
 
@@ -179,25 +178,22 @@ module MakerJs.model {
         return { crossedPaths: crossedPaths, overlappedSegments: overlappedSegments };
     }
 
-
     function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[]) {
 
-        function compareSegments(seg1: ICrossedPathSegment, seg2: ICrossedPathSegment) {
-            if (path.areEqual(seg1.path, seg2.path)) {
-                seg1.overlappedEqual = seg2.overlappedEqual = true;
+        function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
+            if (path.areEqual(segment1.path, segment2.path)) {
+                segment1.overlappedEqual = segment2.overlappedEqual = true;
             }
         }
 
-        function checkForEqualOverlapsA(seg: ICrossedPathSegment) {
-
+        function compareAll(segment: ICrossedPathSegment) {
             for (var i = 0; i < crossedPathsB.length; i++) {
-                compareSegments(crossedPathsB[i], seg);
+                compareSegments(crossedPathsB[i], segment);
             }
-
         }
 
         for (var i = 0; i < crossedPathsA.length; i++) {
-            checkForEqualOverlapsA(crossedPathsA[i]);
+            compareAll(crossedPathsA[i]);
         }
 
     }
@@ -243,6 +239,6 @@ module MakerJs.model {
         for (var i = 0; i < pathsB.crossedPaths.length; i++) {
             addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA);
         }
-
     }
+
 }
