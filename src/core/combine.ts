@@ -18,37 +18,33 @@ module MakerJs.model {
         return null;
     }
 
-    function breakAlongForeignPath(crossedPath: ICrossedPath, foreignPath: IPath) {
+    function breakAlongForeignPath(crossedPath: ICrossedPath, overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
 
         var segments = crossedPath.segments;
 
-        var foreignPathEndPoints: IPoint[] = null;
+        if (path.areEqual(segments[0].path, foreignPath)) {
+            segments[0].overlapped = true;
+            segments[0].overlappedEqual = true;
+
+            overlappedSegments.push(segments[0]);
+            return;
+        }
+
+        var foreignPathEndPoints: IPoint[];
 
         for (var i = 0; i < segments.length; i++) {
 
-            if (path.areEqual(segments[i].path, foreignPath)) {
-                segments[i].overlapped = true;
-                segments[i].overlappedEqual = true;
-                segments[i].overlappedWith = foreignPath;
-
-                crossedPath.overlappedSegments.push(segments[i]);
-                continue;
-            }
-
-            //see if any of the paths intsersect with the foreign path
+            var pointsToCheck: IPoint[];
             var options: IPathIntersectionOptions = {};
             var foreignIntersection = path.intersection(segments[i].path, foreignPath, options);
-
-            var pointsToCheck: IPoint[] = null;
 
             if (foreignIntersection) {
                 pointsToCheck = foreignIntersection.intersectionPoints;
 
             } else if (options.out_AreOverlapped) {
                 segments[i].overlapped = true;
-                segments[i].overlappedWith = foreignPath;
 
-                crossedPath.overlappedSegments.push(segments[i]);
+                overlappedSegments.push(segments[i]);
 
                 if (!foreignPathEndPoints) {
                     foreignPathEndPoints = point.fromPathEnds(foreignPath);
@@ -56,7 +52,7 @@ module MakerJs.model {
 
                 pointsToCheck = foreignPathEndPoints;
             }
-                
+
             if (pointsToCheck) {
 
                 //break the path which intersected, and add the shard to the end of the array so it can also be checked in this loop for further sharding.
@@ -73,7 +69,7 @@ module MakerJs.model {
                     var newSegment = { path: subSegments[1], overlapped: segments[i].overlapped, uniqueForeignIntersectionPoints: [] };
 
                     if (segments[i].overlapped) {
-                        crossedPath.overlappedSegments.push(newSegment);
+                        overlappedSegments.push(newSegment);
                     }
 
                     segments.push(newSegment);
@@ -128,14 +124,12 @@ module MakerJs.model {
         uniqueForeignIntersectionPoints: IPoint[];
         overlapped: boolean;
         overlappedEqual?: boolean;
-        overlappedWith?: IPath;
     }
 
     interface ICrossedPath {
         modelContext: IModel;
         pathId: string;
         segments: ICrossedPathSegment[];
-        overlappedSegments: ICrossedPathSegment[];
     }
 
     interface ICombinedModel {
@@ -163,13 +157,12 @@ module MakerJs.model {
                 modelContext: modelContext,
                 pathId: pathId1,
                 segments: [segment],
-                overlappedSegments: []
             };
 
             //keep breaking the segments anywhere they intersect with paths of the other model
             walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
                 if (path2) {
-                    breakAlongForeignPath(thisPath, path2);
+                    breakAlongForeignPath(thisPath, overlappedSegments, path2);
                 }
             });
 
@@ -181,8 +174,6 @@ module MakerJs.model {
             });
 
             crossedPaths.push(thisPath);
-            overlappedSegments = overlappedSegments.concat(thisPath.overlappedSegments);
-
         });
 
         return { crossedPaths: crossedPaths, overlappedSegments: overlappedSegments };
