@@ -21,6 +21,7 @@
     <script src="../src/core/break.js"></script>
     <script src="../src/core/paths.js"></script>
     <script src="../src/core/model.js"></script>
+    <script src="../src/core/combine.js"></script>
     <script src="../src/core/kit.js"></script>
     <script src="../src/core/exporter.js"></script>
     <script src="../src/core/dxf.js"></script>
@@ -56,6 +57,8 @@
     <div class="selectModelCode">
         <label for="selectModelCode">model: </label>
         <select id="selectModelCode" onchange="Viewer.loadModelCode(this.value)">
+            <option>stackbox</option>
+            <option>combine</option>
             <option>logo</option>
             <option>smile</option>
             <option>m</option>

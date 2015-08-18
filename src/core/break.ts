@@ -18,15 +18,32 @@ module MakerJs.path {
 
         var angleAtBreakPoint = angle.ofPointInDegrees(arc.origin, pointOfBreak);
 
-        if (angleAtBreakPoint == arc.startAngle || angleAtBreakPoint == arc.endAngle) {
+        if (angle.areEqual(angleAtBreakPoint, arc.startAngle) || angle.areEqual(angleAtBreakPoint, arc.endAngle)) {
+            return null;
+        }
+
+        function getAngleStrictlyBetweenArcAngles() {
+            var endAngle = angle.ofArcEnd(arc);
+            var tries = [0, 1, -1];
+            for (var i = 0; i < tries.length; i++) {
+                var add = + 360 * tries[i];
+                if (measure.isBetween(angleAtBreakPoint + add, arc.startAngle, endAngle, true)) {
+                    return angleAtBreakPoint + add;
+                }
+            }
+            return null;
+        }
+
+        var angleAtBreakPointBetween = getAngleStrictlyBetweenArcAngles();
+        if (angleAtBreakPointBetween == null) {
             return null;
         }
 
         var savedEndAngle = arc.endAngle;
 
-        arc.endAngle = angleAtBreakPoint;
+        arc.endAngle = angleAtBreakPointBetween;
 
-        return new paths.Arc(arc.origin, arc.radius, angleAtBreakPoint, savedEndAngle);
+        return new paths.Arc(arc.origin, arc.radius, angleAtBreakPointBetween, savedEndAngle);
     };
 
     breakPathFunctionMap[pathType.Circle] = function (circle: IPathCircle, pointOfBreak: IPoint): IPath {
@@ -48,6 +65,10 @@ module MakerJs.path {
             return null;
         }
 
+        if (!measure.isBetweenPoints(pointOfBreak, line, true)) {
+            return null;
+        }
+
         var savedEndPoint = line.end;
 
         line.end = pointOfBreak;
@@ -65,12 +86,12 @@ module MakerJs.path {
      * @returns A new path of the same type, when path type is line or arc. Returns null for circle.
      */
     export function breakAtPoint(pathToBreak: IPath, pointOfBreak: IPoint): IPath {
-
-        var fn = breakPathFunctionMap[pathToBreak.type];
-        if (fn) {
-            return fn(pathToBreak, pointOfBreak);
+        if (pathToBreak && pointOfBreak) {
+            var fn = breakPathFunctionMap[pathToBreak.type];
+            if (fn) {
+                return fn(pathToBreak, pointOfBreak);
+            }
         }
-
         return null;
     }
 
