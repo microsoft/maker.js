@@ -13,6 +13,7 @@ title: Api - path Module
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.path.ibreakpathfunctionmap.html" class="tsd-kind-icon">IBreak<wbr>Path<wbr>Function<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.path.ifilletresult.html" class="tsd-kind-icon">IFillet<wbr>Result</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.path.imatchpointproperty.html" class="tsd-kind-icon">IMatch<wbr>Point<wbr>Property</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.path.ipathareequalmap.html" class="tsd-kind-icon">IPath<wbr>Are<wbr>Equal<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.path.ipathintersectionmap.html" class="tsd-kind-icon">IPath<wbr>Intersection<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.path.ipointproperty.html" class="tsd-kind-icon">IPoint<wbr>Property</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.path.islope.html" class="tsd-kind-icon">ISlope</a></li>
@@ -23,11 +24,13 @@ title: Api - path Module
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#breakpathfunctionmap" class="tsd-kind-icon">break<wbr>Path<wbr>Function<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#map" class="tsd-kind-icon">map</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#pathareequalmap" class="tsd-kind-icon">path<wbr>Are<wbr>Equal<wbr>Map</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#areequal" class="tsd-kind-icon">are<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#breakatpoint" class="tsd-kind-icon">break<wbr>AtPoint</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#checkangleoverlap" class="tsd-kind-icon">check<wbr>Angle<wbr>Overlap</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.path.html#checklineoverlap" class="tsd-kind-icon">check<wbr>Line<wbr>Overlap</a></li>
@@ -88,9 +91,53 @@ title: Api - path Module
 		<div class="tsd-comment tsd-typography">
 		</div>
 	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private">
+		<a name="pathareequalmap" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> path<wbr>Are<wbr>Equal<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">path<wbr>Are<wbr>Equal<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.path.ipathareequalmap.html" class="tsd-signature-type">IPathAreEqualMap</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L15">core/path.ts:15</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+		</div>
+	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="areequal" class="tsd-anchor"></a>
+		<h3>are<wbr>Equal</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">are<wbr>Equal<span class="tsd-signature-symbol">(</span>path1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, path2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L36">core/path.ts:36</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Find out if two paths are equal.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>path1: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+					</li>
+					<li>
+						<h5>path2: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>true if paths are the same, false if they are not</p>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="breakatpoint" class="tsd-anchor"></a>
 		<h3>break<wbr>AtPoint</h3>
@@ -101,7 +148,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/break.ts#L67">core/break.ts:67</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/break.ts#L88">core/break.ts:88</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -671,7 +718,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L14">core/path.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L61">core/path.ts:61</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -721,7 +768,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L66">core/path.ts:66</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L113">core/path.ts:113</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -759,7 +806,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L94">core/path.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L141">core/path.ts:141</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -856,7 +903,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L122">core/path.ts:122</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L169">core/path.ts:169</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -900,7 +947,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L153">core/path.ts:153</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L200">core/path.ts:200</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

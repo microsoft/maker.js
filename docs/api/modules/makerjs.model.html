@@ -8,15 +8,34 @@ title: Api - model Module
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
+				<h3>Interfaces</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.model.icombinedmodel.html" class="tsd-kind-icon">ICombined<wbr>Model</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.model.icrossedpath.html" class="tsd-kind-icon">ICrossed<wbr>Path</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-kind-icon">ICrossed<wbr>Path<wbr>Segment</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/makerjs.model.imodelpathcallback.html" class="tsd-kind-icon">IModel<wbr>Path<wbr>Callback</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#addordeletesegments" class="tsd-kind-icon">add<wbr>OrDelete<wbr>Segments</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#adduniquepoints" class="tsd-kind-icon">add<wbr>Unique<wbr>Points</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#breakallpathsatintersections" class="tsd-kind-icon">break<wbr>All<wbr>Paths<wbr>AtIntersections</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#breakalongforeignpath" class="tsd-kind-icon">break<wbr>Along<wbr>Foreign<wbr>Path</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#checkforequaloverlaps" class="tsd-kind-icon">check<wbr>For<wbr>Equal<wbr>Overlaps</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#checkinsideforeign" class="tsd-kind-icon">check<wbr>Inside<wbr>Foreign</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#combine" class="tsd-kind-icon">combine</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#convertunits" class="tsd-kind-icon">convert<wbr>Units</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#getnonzerosegments" class="tsd-kind-icon">get<wbr>Non<wbr>Zero<wbr>Segments</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#getsimilarpathid" class="tsd-kind-icon">get<wbr>Similar<wbr>Path<wbr>Id</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#mirror" class="tsd-kind-icon">mirror</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#move" class="tsd-kind-icon">move</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#moverelative" class="tsd-kind-icon">move<wbr>Relative</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#originate" class="tsd-kind-icon">originate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#rotate" class="tsd-kind-icon">rotate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#scale" class="tsd-kind-icon">scale</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#walkpaths" class="tsd-kind-icon">walk<wbr>Paths</a></li>
 				</ul>
 			</section>
 		</div>
@@ -24,6 +43,256 @@ title: Api - model Module
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="addordeletesegments" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> add<wbr>OrDelete<wbr>Segments</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">add<wbr>OrDelete<wbr>Segments<span class="tsd-signature-symbol">(</span>crossedPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.icrossedpath.html" class="tsd-signature-type">ICrossedPath</a>, includeInside<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, includeOutside<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, firstPass<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L231">core/combine.ts:231</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>crossedPath: <a href="../interfaces/makerjs.model.icrossedpath.html" class="tsd-signature-type">ICrossedPath</a></h5>
+					</li>
+					<li>
+						<h5>includeInside: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5>includeOutside: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> firstPass: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="adduniquepoints" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> add<wbr>Unique<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">add<wbr>Unique<wbr>Points<span class="tsd-signature-symbol">(</span>pointArray<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, pointsToAdd<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L91">core/combine.ts:91</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pointArray: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>pointsToAdd: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="breakallpathsatintersections" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> break<wbr>All<wbr>Paths<wbr>AtIntersections</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">break<wbr>All<wbr>Paths<wbr>AtIntersections<span class="tsd-signature-symbol">(</span>modelToBreak<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, modelToIntersect<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, farPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.icombinedmodel.html" class="tsd-signature-type">ICombinedModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L163">core/combine.ts:163</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelToBreak: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+					</li>
+					<li>
+						<h5>modelToIntersect: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+					</li>
+					<li>
+						<h5>farPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.model.icombinedmodel.html" class="tsd-signature-type">ICombinedModel</a></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="breakalongforeignpath" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> break<wbr>Along<wbr>Foreign<wbr>Path</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">break<wbr>Along<wbr>Foreign<wbr>Path<span class="tsd-signature-symbol">(</span>segments<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span>, overlappedSegments<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span>, foreignPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L27">core/combine.ts:27</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>segments: <a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>overlappedSegments: <a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>foreignPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="checkforequaloverlaps" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> check<wbr>For<wbr>Equal<wbr>Overlaps</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">check<wbr>For<wbr>Equal<wbr>Overlaps<span class="tsd-signature-symbol">(</span>crossedPathsA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span>, crossedPathsB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L208">core/combine.ts:208</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>crossedPathsA: <a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>crossedPathsB: <a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="checkinsideforeign" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> check<wbr>Inside<wbr>Foreign</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">check<wbr>Inside<wbr>Foreign<span class="tsd-signature-symbol">(</span>segments<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span>, foreignPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, farPoint<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L115">core/combine.ts:115</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>segments: <a href="../interfaces/makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>foreignPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> farPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol"> =&nbsp;[7654321, 1234567]</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="combine" class="tsd-anchor"></a>
+		<h3>combine</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">combine<span class="tsd-signature-symbol">(</span>modelA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, modelB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, includeAInsideB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, includeAOutsideB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, includeBInsideA<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, includeBOutsideA<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, farPoint<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L269">core/combine.ts:269</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Combine 2 models. The models should be originated.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelA: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First model to combine.</p>
+						</div>
+					</li>
+					<li>
+						<h5>modelB: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second model to combine.</p>
+						</div>
+					</li>
+					<li>
+						<h5>includeAInsideB: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to include paths from modelA which are inside of modelB.</p>
+						</div>
+					</li>
+					<li>
+						<h5>includeAOutsideB: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to include paths from modelA which are outside of modelB.</p>
+						</div>
+					</li>
+					<li>
+						<h5>includeBInsideA: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to include paths from modelB which are inside of modelA.</p>
+						</div>
+					</li>
+					<li>
+						<h5>includeBOutsideA: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to include paths from modelB which are outside of modelA.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> farPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional point of reference which is outside the bounds of both models.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="convertunits" class="tsd-anchor"></a>
 		<h3>convert<wbr>Units</h3>
@@ -34,7 +303,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L163">core/model.ts:163</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L179">core/model.ts:179</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -62,6 +331,71 @@ title: Api - model Module
 			</li>
 		</ul>
 	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="getnonzerosegments" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Non<wbr>Zero<wbr>Segments</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Non<wbr>Zero<wbr>Segments<span class="tsd-signature-symbol">(</span>pathToSegment<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, breakPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L8">core/combine.ts:8</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pathToSegment: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+					</li>
+					<li>
+						<h5>breakPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="getsimilarpathid" class="tsd-anchor"></a>
+		<h3>get<wbr>Similar<wbr>Path<wbr>Id</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Similar<wbr>Path<wbr>Id<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, pathId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L11">core/model.ts:11</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get an unused id in the paths map with the same prefix.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model containing the paths map.</p>
+						</div>
+					</li>
+					<li>
+						<h5>pathId: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The pathId to use directly (if unused), or as a prefix.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="mirror" class="tsd-anchor"></a>
 		<h3>mirror</h3>
@@ -72,7 +406,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L39">core/model.ts:39</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L55">core/model.ts:55</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -116,7 +450,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L78">core/model.ts:78</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L94">core/model.ts:94</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -154,7 +488,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L90">core/model.ts:90</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L106">core/model.ts:106</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -192,7 +526,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L11">core/model.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L27">core/model.ts:27</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -229,7 +563,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L107">core/model.ts:107</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L123">core/model.ts:123</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -273,7 +607,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L135">core/model.ts:135</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L151">core/model.ts:151</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -304,6 +638,43 @@ title: Api - model Module
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
 				<p>The original model (for chaining).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="walkpaths" class="tsd-anchor"></a>
+		<h3>walk<wbr>Paths</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">walk<wbr>Paths<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.imodelpathcallback.html" class="tsd-signature-type">IModelPathCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/model.ts#L217">core/model.ts:217</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Recursively walk through all paths for a given model.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model to walk.</p>
+						</div>
+					</li>
+					<li>
+						<h5>callback: <a href="../interfaces/makerjs.model.imodelpathcallback.html" class="tsd-signature-type">IModelPathCallback</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Callback for each path.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 			</li>
 		</ul>
 	</section>

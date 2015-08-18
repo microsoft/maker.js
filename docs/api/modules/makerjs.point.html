@@ -17,6 +17,7 @@ title: Api - point Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#closest" class="tsd-kind-icon">closest</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#fromangleoncircle" class="tsd-kind-icon">from<wbr>Angle<wbr>OnCircle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#fromarc" class="tsd-kind-icon">from<wbr>Arc</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#frompathends" class="tsd-kind-icon">from<wbr>Path<wbr>Ends</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#frompolar" class="tsd-kind-icon">from<wbr>Polar</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#middle" class="tsd-kind-icon">middle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#mirror" class="tsd-kind-icon">mirror</a></li>
@@ -117,7 +118,7 @@ title: Api - point Module
 		<a name="areequalrounded" class="tsd-anchor"></a>
 		<h3>are<wbr>Equal<wbr>Rounded</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">are<wbr>Equal<wbr>Rounded<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">are<wbr>Equal<wbr>Rounded<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -144,6 +145,9 @@ title: Api - point Module
 						<div class="tsd-comment tsd-typography">
 							<p>Second point.</p>
 						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> accuracy: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1e-7</span></h5>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -292,6 +296,38 @@ title: Api - point Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="frompathends" class="tsd-anchor"></a>
+		<h3>from<wbr>Path<wbr>Ends</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">from<wbr>Path<wbr>Ends<span class="tsd-signature-symbol">(</span>pathContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L123">core/point.ts:123</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get the two end points of a path.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pathContext: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The path object.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array with 2 elements: [0] is the point object corresponding to the origin, [1] is the point object corresponding to the end.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="frompolar" class="tsd-anchor"></a>
 		<h3>from<wbr>Polar</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -333,13 +369,13 @@ title: Api - point Module
 		<a name="middle" class="tsd-anchor"></a>
 		<h3>middle</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">middle<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, ratio<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></li>
+			<li class="tsd-signature tsd-kind-icon">middle<span class="tsd-signature-symbol">(</span>pathContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, ratio<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L124">core/point.ts:124</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L152">core/point.ts:152</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -350,7 +386,7 @@ title: Api - point Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>path: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<h5>pathContext: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The path object.</p>
 						</div>
@@ -377,7 +413,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L162">core/point.ts:162</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L190">core/point.ts:190</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -421,7 +457,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L184">core/point.ts:184</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L212">core/point.ts:212</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -465,7 +501,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L199">core/point.ts:199</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L227">core/point.ts:227</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -503,7 +539,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L214">core/point.ts:214</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L242">core/point.ts:242</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -541,7 +577,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L224">core/point.ts:224</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L252">core/point.ts:252</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
