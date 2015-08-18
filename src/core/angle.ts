@@ -3,6 +3,20 @@
 module MakerJs.angle {
 
     /**
+     * Find out if two angles are equal.
+     * 
+     * @param a First angle.
+     * @param b Second angle.
+     * @returns true if angles are the same, false if they are not
+     */
+    export function areEqual(angle1: number, angle2: number) {
+        var a1 = noRevolutions(round(angle1));
+        var a2 = noRevolutions(round(angle2));
+
+        return a1 == a2 || a1 + 360 == a2 || a1 - 360 == a2;
+    }
+
+    /**
      * Ensures an angle is not greater than 360
      * 
      * @param angleInDegrees Angle in degrees.

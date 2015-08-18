@@ -31,33 +31,33 @@ module MakerJs.path {
     /**
      * @private
      */
-    function getPointProperties(pathToInspect: IPath): IPointProperty[]{
+    function getPointProperties(pathToInspect: IPath): IPointProperty[] {
+        var points = point.fromPathEnds(pathToInspect);
+        if (points) {
 
-        var result: IPointProperty[] = null;
+            function pointProperty(index: number): IPointProperty {
+                return { point: points[index], propertyName: propertyNames[index] };
+            }
 
-        var map: IPathFunctionMap = {};
+            var propertyNames: string[] = null;
+            var map: IPathFunctionMap = {};
 
-        map[pathType.Arc] = function (arc: IPathArc) {
-            var arcPoints = point.fromArc(arc);
-            result = [
-                { point: arcPoints[0], propertyName: 'startAngle' },
-                { point: arcPoints[1], propertyName: 'endAngle' }
-            ];
-        };
+            map[pathType.Arc] = function (arc: IPathArc) {
+                propertyNames = ['startAngle', 'endAngle'];
+            };
 
-        map[pathType.Line] = function (line: IPathLine) {
-            result = [
-                { point: line.origin, propertyName: 'origin' },
-                { point: line.end, propertyName: 'end' }
-            ];
+            map[pathType.Line] = function (line: IPathLine) {
+                propertyNames = ['origin', 'end'];
+            }
+
+            var fn = map[pathToInspect.type];
+            if (fn) {
+                fn(pathToInspect);
+
+                return [pointProperty(0), pointProperty(1)];
+            }
         }
-
-        var fn = map[pathToInspect.type];
-        if (fn) {
-            fn(pathToInspect);
-        }
-
-        return result;
+        return null;
     }
 
     /**
@@ -110,7 +110,7 @@ module MakerJs.path {
 
             properties[i].shardPoint = circleIntersection.intersectionPoints[0];
 
-            if (point.areEqualRounded(properties[1].point, circleIntersection.intersectionPoints[0])) {
+            if (point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
                 if (circleIntersection.intersectionPoints.length > 1) {
                     properties[i].shardPoint = circleIntersection.intersectionPoints[1];
                 } else {

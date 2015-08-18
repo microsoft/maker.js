@@ -43,8 +43,8 @@ module MakerJs.point {
      * @param b Second point.
      * @returns true if points are the same, false if they are not
      */
-    export function areEqualRounded(a: IPoint, b: IPoint): boolean {
-        return round(a[0]) == round(b[0]) && round(a[1]) == round(b[1]);
+    export function areEqualRounded(a: IPoint, b: IPoint, accuracy = .0000001): boolean {
+        return round(a[0], accuracy) == round(b[0], accuracy) && round(a[1], accuracy) == round(b[1], accuracy);
     }
 
     /**
@@ -115,13 +115,41 @@ module MakerJs.point {
     }
 
     /**
+     * Get the two end points of a path.
+     * 
+     * @param pathContext The path object.
+     * @returns Array with 2 elements: [0] is the point object corresponding to the origin, [1] is the point object corresponding to the end.
+     */
+    export function fromPathEnds(pathContext: IPath): IPoint[] {
+
+        var result: IPoint[] = null;
+
+        var map: IPathFunctionMap = {};
+
+        map[pathType.Arc] = function (arc: IPathArc) {
+            result = point.fromArc(arc);
+        };
+
+        map[pathType.Line] = function (line: IPathLine) {
+            result = [line.origin, line.end];
+        }
+
+        var fn = map[pathContext.type];
+        if (fn) {
+            fn(pathContext);
+        }
+
+        return result;
+    }
+
+    /**
      * Get the middle point of a path. Currently only supports Arc and Line paths.
      * 
-     * @param path The path object.
+     * @param pathContext The path object.
      * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
      * @returns Point on the path, in the middle of the path.
      */
-    export function middle(path: IPath, ratio = .5): IPoint {
+    export function middle(pathContext: IPath, ratio = .5): IPoint {
         var midPoint: IPoint = null;
 
         var map: IPathFunctionMap = {};
@@ -143,9 +171,9 @@ module MakerJs.point {
             ];
         };
 
-        var fn = map[path.type];
+        var fn = map[pathContext.type];
         if (fn) {
-            fn(path);
+            fn(pathContext);
         }
 
         return midPoint;
