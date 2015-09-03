@@ -380,16 +380,10 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 	this.paths = {};
 	
 	var plus = {
-		origin: [(w - conn) / 2, (h - conn) / 2],
-		paths: {
-			n1: new makerjs.paths.Line([0, 0], [0, h]),
-			n2: new makerjs.paths.Line([conn, 0], [conn, h]),
-			s1: new makerjs.paths.Line([0, -h], [0, 0]),
-			s2: new makerjs.paths.Line([conn, -h], [conn, 0]),
-			w1: new makerjs.paths.Line([-w, 0], [0, 0]),
-			w2: new makerjs.paths.Line([-w, conn], [0, conn]),
-			e1: new makerjs.paths.Line([0, 0], [w, 0]),
-			e2: new makerjs.paths.Line([0, conn], [w, conn])
+		origin: [w / 2, h / 2],
+		models: {
+			v: makerjs.model.move(new makerjs.models.Rectangle(conn, h * 2), [conn / -2, -h]),
+			h: makerjs.model.move(new makerjs.models.Rectangle(w * 2, conn), [-w, conn / -2])
 		}
 	}
 	
