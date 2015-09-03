@@ -395,9 +395,10 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 
 	makerjs.model.originate(this);
 
+	makerjs.model.combine(plus.models.h, plus.models.v, false, true, false, true);
+	makerjs.model.combine(plus, logo.models.outline, false, true, false, true);
 	makerjs.model.combine(tab, inner, true, false, false, true);
 	makerjs.model.combine(plus, { models: { inner: inner, tab: tab} }, true, false, false, true);
-	makerjs.model.combine(plus, logo.models.outline, false, true, false, true);
 }
 
 card.metaParameters = [
