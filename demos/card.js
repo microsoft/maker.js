@@ -1,243 +1,146 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/// <reference path="typings/tsd.d.ts" />
 var makerjs = require('makerjs');
-function doubleBisection(transversal, bisectors) {
-    //we want to have 3 resulting paths
-    var result = [];
-    var errors = [];
-    var intersections = [];
-    for (var i = 2; i--;) {
-        var intersection = makerjs.path.intersection(transversal, bisectors[i]);
-        if (!intersection) {
-            errors.push('doubleBisection: bisector ' + i + ' does not intersect.');
-        }
-        else {
-            intersections.push(intersection);
-        }
-    }
-    if (errors.length == 0) {
-        var map = {};
-        map[makerjs.pathType.Arc] = function (arc) {
-            //tbd
-            errors.push('arc not yet implemented :/');
-        };
-        map[makerjs.pathType.Line] = function (line) {
-            var ips = [];
-            function findError(index) {
-                if (intersections[index].intersectionPoints.length > 1) {
-                    errors.push('bisector ' + index + ' intersects in more than one place.');
-                }
-                else {
-                    ips.push(intersections[index].intersectionPoints[0]);
-                }
-            }
-            findError(0);
-            findError(1);
-            if (errors.length == 0) {
-                function newLine(a, b) {
-                    result.push(new makerjs.paths.Line(ips[a], ips[b]));
-                    result.push(new makerjs.paths.Line(ips[b], line.end));
-                }
-                var test1 = new makerjs.paths.Line(line.origin, ips[0]);
-                var test2 = new makerjs.paths.Line(line.origin, ips[1]);
-                if (makerjs.measure.pathLength(test1) < makerjs.measure.pathLength(test2)) {
-                    result.push(test1);
-                    newLine(0, 1);
-                }
-                else {
-                    result.push(test2);
-                    newLine(1, 0);
-                }
-            }
-        };
-        var fn = map[transversal.type];
-        if (fn) {
-            fn(transversal);
-        }
-        else {
-            errors.push('doubleBisection: path type ' + transversal.type + ' not supported.');
-        }
-    }
-    if (errors.length > 0) {
-        for (var i = 0; i < errors.length; i++) {
-            console.log(errors[i]);
-        }
-        return null;
-    }
-    else {
-        return result;
-    }
-}
-module.exports = doubleBisection;
 
-},{"makerjs":undefined}],2:[function(require,module,exports){
-var makerjs = require('makerjs');
+var point = makerjs.point;
+var path = makerjs.path;
+var paths = makerjs.paths;
+var Line = paths.Line;
+var Parallel = paths.Parallel;
+var model = makerjs.model;
 
 function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWidth, spacing, step) {
 
-    or = or || 1.06;
-    ir = ir || .3;
-    ear = ear || .35;
-    outline = outline || 1.06;
-    mHeight = mHeight || 8.3;
-    serifHeight = serifHeight || .65;
-    speed = speed || 19.01;
-    drop = drop || 1;
-    columnWidth = columnWidth || 2.7;
-    spacing = spacing || 1.32;
-    step = step || 2.31;
-
-    var point = makerjs.point;
-    var path = makerjs.path;
-    var paths = makerjs.paths;
-
-    function bend(r, bendTop, x, trimTo, outer) {
-
-        outer = outer || 0;
-
-        var hguide = new paths.Line([0, bendTop - r], [100, bendTop - r]);
-        var vguide = path.rotate(new paths.Line([x, 0], [x, 100]), -speed, [x, 0]);
-        var intersectionPoint = path.intersection(hguide, vguide).intersectionPoints[0];
-        var center = point.subtract(intersectionPoint, [makerjs.solvers.solveTriangleASA(90, r, speed), 0]);
-
-        var arc = new paths.Arc(center, r + outer, - speed, 90 + drop);
-
-        var Horizontal = path.rotate(
-                new paths.Line([-10, arc.origin[1] + r + outer], point.add(arc.origin, [0, r + outer])),
-                drop,
-                arc.origin
-            );
-        
-        if (!outer) {
-            trimLine(Horizontal, 'origin', trimTo);
-        }
-
-        var arcPoints = point.fromArc(arc);
-
-        var Vertical = new paths.Line([x + makerjs.solvers.solveTriangleASA(90, outer, speed), 0], arcPoints[0]);
-
-        if (!outer) {
-            trimLine(Vertical, 'origin', bottomGuide);
-        }
-
-        this.paths = {
-            arc: arc,
-            Horizontal: Horizontal,
-            Vertical: Vertical
-        };
+    if (arguments.length == 0) {
+        var v = makerjs.kit.getParameterValues(logo);
+        or = v.shift();
+        ir = v.shift();
+        ear = v.shift();
+        outline = v.shift();
+        mHeight = v.shift();
+        serifHeight = v.shift();
+        speed = v.shift();
+        drop = v.shift();
+        columnWidth = v.shift();
+        spacing = v.shift();
+        step = v.shift();
     }
 
-    function leg(legTop, xOffset, trimTo) {
-
+    function M() {
         this.models = {
-            b1: new bend(ir, outline + legTop - serifHeight, speedOutline + xOffset, trimTo),
-            b2: new bend(or, outline + legTop, speedOutline + columnWidth + xOffset, trimTo),
-            b3: new bend(or, outline + legTop, speedOutline + columnWidth + xOffset, trimTo, outline)
-        };
-
-        this.paths = {
-            legBottom: new paths.Line(point.clone(this.models.b1.paths.Vertical.origin), point.clone(this.models.b2.paths.Vertical.origin))
+            base: {
+                paths: {}
+            },
+            legs: {
+                models: {}
+            }
         };
     }
 
-    var speedOutline = makerjs.solvers.solveTriangleASA(90, outline, speed);
+    var m_letter = new M();
+    var m_outline = new M();
+    
+    var legModels = m_letter.models.legs.models;
+    var outlineModels = m_outline.models.legs.models;
 
-    var bottomGuide = new paths.Line([0, outline], [100, outline]);
+    var far = 100;
 
-    var earline = path.rotate(new paths.Line([-ear, 0], [-ear, 100]), -speed, [-ear, 0]);
+    function addLeg(id, leftRef, leftSpace, topRef, topSpace, topPoint, trimToLeftRef, earDistance) {
+        var leg = {
+            paths: {}
+        };
 
-    var leg1 = new leg(mHeight, 0, earline);
-    var leg2 = new leg(mHeight - step, columnWidth + spacing, leg1.models.b2.paths.Vertical);
-    var leg3 = new leg(mHeight - 2 * step, 2 * (columnWidth + spacing), leg2.models.b2.paths.Vertical);
+        leg.paths.top = new Parallel(topRef, topSpace, topPoint);
+        leg.paths.left = new Parallel(leftRef, leftSpace, [far, 0]);
+        leg.paths.serif = new Parallel(leg.paths.top, serifHeight, [0, 0]);
+        leg.paths.right = new Parallel(leg.paths.left, columnWidth, [far, 0]);
+        leg.paths.ear = new Parallel(leg.paths.left, earDistance, [0, 0]);
 
-    var outBottom = new paths.Line([0, 0], point.clone(leg3.models.b3.paths.Vertical.origin));
+        legModels[id] = leg;
 
-    var earPivot = leg1.models.b1.paths.Horizontal.origin;
-    var earH = path.rotate(new paths.Line(point.subtract(earPivot, [100, outline]), point.subtract(earPivot, [-100, outline])), drop, earPivot);
-    var outHome = trimLine(path.rotate(new paths.Line([0, 0], [0, 100]), -speed, [0, 0]), 'end', earH);
-    var earOutline = trimLine(path.rotate(new paths.Line([-ear - speedOutline, 0], [-ear - speedOutline, 100]), -speed, [-ear - speedOutline, 0]), 'origin', earH);
+        var outleg = {
+            paths: {}
+        };
 
-    trimLines(earOutline, 'end', leg1.models.b3.paths.Horizontal, 'origin');
+        outleg.paths.top = new Parallel(leg.paths.top, outline, [0, far]);
+        outleg.paths.left = new Parallel(leg.paths.left, outline, [-far, 0]);
+        outleg.paths.serif = new Parallel(leg.paths.serif, outline, [0, 0]);
+        outleg.paths.right = new Parallel(leg.paths.right, outline, [far, 0]);
+        outleg.paths.ear = new Parallel(leg.paths.ear, outline, [-far, 0]);
 
-    trimBends(leg1.models.b3, leg2.models.b3);
-    trimBends(leg2.models.b3, leg3.models.b3);
+        outlineModels[id] = outleg;
+    }
 
-    this.paths = {
-        ear: new paths.Line(point.clone(leg1.models.b1.paths.Horizontal.origin), point.clone(leg1.models.b2.paths.Horizontal.origin)),
-        leg1bottom: new paths.Line(point.clone(leg1.models.b2.paths.Vertical.origin), point.clone(leg2.models.b1.paths.Horizontal.origin)),
-        leg2bottom: new paths.Line(point.clone(leg2.models.b2.paths.Vertical.origin), point.clone(leg3.models.b1.paths.Horizontal.origin)),
-        outHome: outHome,
-        earOutline: earOutline,
-        earOutH: new paths.Line(point.clone(earOutline.origin), point.clone(outHome.end)),
-        outBottom: outBottom
-    };
+    function trimLeg(id) {
+
+        function trimLegPart(leg, innerRadius, outerRadius) {
+            trimLines(leg.paths.top, leg.paths.right);
+            trimLines(leg.paths.serif, leg.paths.left);
+            leg.paths.innerFillet = path.fillet(leg.paths.left, leg.paths.serif, innerRadius);
+            leg.paths.outerFillet = path.fillet(leg.paths.top, leg.paths.right, outerRadius);
+            trimLines(leg.paths.top, leg.paths.ear, true);
+            trimLines(leg.paths.serif, leg.paths.ear, true, true);
+        }
+
+        trimLegPart(legModels[id], ir, or);
+        trimLegPart(outlineModels[id], ir - outline, or + outline);
+    }
+
+    function combineM(m) {
+        var legs = m.models.legs;
+        model.combine(legs.models['1'], legs.models['2'], false, true, false, true);
+        model.combine(legs.models['2'], legs.models['3'], false, true, false, true);
+        model.combine(m.models.base, legs, true, false, false, true);
+    }
+
+    m_outline.models.base.paths.bottom = new Line([0, 0], [far, 0]);
+    m_letter.models.base.paths.bottom = new Parallel(m_outline.models.base.paths.bottom, outline, [0, far]);
+
+    var rotatedLeft = path.rotate(new Line([0, 0], [0, far]), -speed, [0, 0]);
+    var rotatedBottom = path.rotate(new Line([-far, outline], [far, outline]), drop, [0, outline]);
+
+    addLeg('1', rotatedLeft, outline, rotatedBottom, mHeight, [0, far], false, ear + ir);
+    addLeg('2', legModels['1'].paths.right, spacing, legModels['1'].paths.top, step, [0, 0], true, spacing + columnWidth / 2);
+    addLeg('3', legModels['2'].paths.right, spacing, legModels['2'].paths.top, step, [0, 0], true, spacing + columnWidth / 2);
+
+    trimLeg('1', false);
+    trimLeg('2', true);
+    trimLeg('3', true);
+
+    combineM(m_letter);
+    combineM(m_outline);
 
     this.models = {
-        leg1: leg1,
-        leg2: leg2,
-        leg3: leg3
+        letter: m_letter,
+        outline: m_outline
     };
 
-    leg1.models.b2.paths.Vertical.origin = point.clone(leg2.models.b2.paths.Horizontal.origin);
-    leg2.models.b2.paths.Vertical.origin = point.clone(leg3.models.b2.paths.Horizontal.origin);
 }
 
-function trimLine(line, propertyName, trimToPath) {
-    var intersection = makerjs.path.intersection(line, trimToPath);
-    if (intersection) {
-        line[propertyName] = intersection.intersectionPoints[0];
-    }
-    return line;
-}
-
-function trimLines(line1, propertyName1, line2, propertyName2) {
-    var intersection = makerjs.path.intersection(line1, line2);
-    if (intersection) {
-        line1[propertyName1] = intersection.intersectionPoints[0];
-        line2[propertyName2] = intersection.intersectionPoints[0];
-    }
-    return intersection;
-}
-
-function trimBends(b1, b2) {
-    var intersection = trimLines(b1.paths.Vertical, 'origin', b2.paths.Horizontal, 'origin');
-    if (intersection) return;
-
-    intersection = makerjs.path.intersection(b1.paths.arc, b2.paths.Horizontal);
-    if (intersection) {
-        b1.paths.arc.startAngle = intersection.path1Angles[0];
-        b2.paths.Horizontal.origin = intersection.intersectionPoints[0];
-        delete b1.paths.Vertical;
-        return;
-    }
-
-    intersection = makerjs.path.intersection(b1.paths.arc, b2.paths.arc);
-    if (intersection) {
-        b1.paths.arc.startAngle = intersection.path1Angles[0];
-        b2.paths.arc.endAngle = intersection.path2Angles[0];
-        delete b1.paths.Vertical;
-        delete b2.paths.Horizontal;
-        return;
+function trimLines(line1, line2, useLine1Origin, useLine2Origin) {
+    var int = path.slopeIntersectionPoint(line1, line2);
+    if (int) {
+        line1[useLine1Origin ? 'origin' : 'end'] = int;
+        line2[useLine2Origin ? 'origin' : 'end'] = int;
     }
 }
 
 logo.metaParameters = [
     { title: "outer radius", type: "range", min: 0, max: 1.7, step: .1, value: 1.06 },
     { title: "inner radius", type: "range", min: 0, max: .9, step: .1, value: .3 },
-    { title: "ear", type: "range", min: .3, max: 2, step: .1, value: .35 },
+    { title: "ear", type: "range", min: 0, max: 2, step: .1, value: 1.1 },
     { title: "outline", type: "range", min: 0.2, max: 2, step: .1, value: 1.06 },
-    { title: "m height", type: "range", min: 7, max: 10, step: .1, value: 8.3 },
+    { title: "m height", type: "range", min: 7, max: 20, step: .1, value: 8.3 },
     { title: "serif height", type: "range", min: .1, max: 1.9, step: .1, value: .65 },
     { title: "speed", type: "range", min: 0, max: 45, step: 1, value: 19.01 },
-    { title: "drop", type: "range", min: 0, max: 12, step: 1, value: 1 },
-    { title: "column width", type: "range", min: .4, max: 5, step: .1, value: 2.7 },
-    { title: "spacing", type: "range", min: 1.3, max: 5, step: .1, value: 1.32 },
-    { title: "step", type: "range", min: 1.5, max: 2.7, step: .1, value: 2.31 },
+    { title: "drop", type: "range", min: 0, max: 30, step: 1, value: 1 },
+    { title: "column width", type: "range", min: .4, max: 5, step: .1, value: 2.59 },
+    { title: "spacing", type: "range", min: 1.3, max: 5, step: .1, value: 1.25 },
+    { title: "step", type: "range", min: 0, max: 4, step: .1, value: 2.385 },
 ];
 
 module.exports = logo;
 
-},{"makerjs":undefined}],3:[function(require,module,exports){
+},{"makerjs":undefined}],2:[function(require,module,exports){
 var makerjs = require('makerjs');
 
 function monotext() {
@@ -402,7 +305,6 @@ module.exports = monotext;
 var makerjs = require('makerjs');
 var makerjs_logo = require('makerjs-logo');
 var makerjs_monotext = require('makerjs-monotext');
-var doubleBisection = require('double-bisection');
 
 function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, logoY, logoAngle, textScale, textY, tabMargin, tabHeight, tabR ) {
 
@@ -452,85 +354,6 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 	    findAndFlip('TopRight', [innerW, innerH]);
 	}
 	
-	function trimLines(line1, line1prop, line2, line2prop) {
-		var intersection = makerjs.path.intersection(line1, line2);
-		if (intersection) {
-			var point = intersection.intersectionPoints[0];
-	
-			return {
-				create: function () {
-					line1[line1prop] = point;
-					line2[line2prop] = point;
-				},
-				point: point 
-			};
-		}
-	}
-	
-	function trimArcAndLine(arc, arcProp, line, lineProp) {
-		var intersection = makerjs.path.intersection(arc, line);
-		if (intersection) {
-			var point = intersection.intersectionPoints[0];
-			return {
-				create: function() {
-					arc[arcProp] = intersection.path1Angles[0];
-					line[lineProp] = point;
-				},
-				point: point
-			};
-		}
-	}
-	
-	function gap(paths, prop, lines) {
-		var sections = doubleBisection(paths[prop], lines);
-		if (sections) {
-			return {
-				create: function () {
-					delete paths[prop];
-					paths[prop + '1'] = sections[0];
-					paths[prop + '2'] = sections[2];
-				}, 
-				points: [sections[1].origin, sections[1].end] 
-			};
-		}
-	}
-
-    function bridgeGaps(gap1, gap2) {
-        var lines = [];
-
-        for (var i = 2; i--;) {
-            lines.push(new makerjs.paths.Line(gap1[i], gap2[i]));
-        }
-
-        if (makerjs.path.intersection(lines[0], lines[1])) {
-            //swap endpoints
-            for (var i = 2; i--;) {
-                lines[i].end = gap2[i];
-            }
-        }
-
-        return lines;
-    }
-
-	function gapAndBridge(model1, pathId1, model2, pathId2, lineModel, lineIds){
-		var lines = [
-			lineModel.paths[lineIds[0]], 
-			lineModel.paths[lineIds[1]]
-		];
-		var gap1 = gap(model1.paths, pathId1, lines);
-		var gap2 = gap(model2.paths, pathId2, lines);
-	
-		if (gap1 && gap2) {
-			gap1.create();
-			gap2.create();
-			
-			var bridge = bridgeGaps(gap1.points, gap2.points);
-			
-			model1.paths[lineIds[0]] = bridge[0];
-			model1.paths[lineIds[1]] = bridge[1];
-		}
-	}
-		
 	var outer = new makerjs.models.RoundRectangle(w, h, outerRadius);
 
 	var bolts = new makerjs.models.BoltRectangle(w - 2 * rim, h - 2 * rim, boltRadius);
@@ -546,10 +369,6 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 	var tab = new makerjs.models.RoundRectangle(tabW, tabHeight, tabR);
 	hCenter(tab, rim - tabR);
 
-	delete tab.paths['BottomLeft'];
-	delete tab.paths['Bottom'];
-	delete tab.paths['BottomRight'];
-
 	var innerW = w - 2 * rim;
 	var innerH = h - 2 * rim;
 
@@ -559,12 +378,7 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 
 	this.units = makerjs.unitType.Millimeter;
 	this.paths = {};
-	this.models = {
-		logo: logo, text: text, outer: outer, bolts: bolts, inner: inner, tab: tab
-	};
 	
-	makerjs.model.originate(this);
-
 	var plus = {
 		origin: [(w - conn) / 2, (h - conn) / 2],
 		paths: {
@@ -580,35 +394,16 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 	}
 	
 	makerjs.model.rotate(plus, -logoAngle, plus.origin);
-	makerjs.model.originate(plus);
 
-	var bottom1 = new makerjs.paths.Line(inner.paths['Bottom'].origin, tab.paths['Left'].end);
-    var bottom2 = new makerjs.paths.Line(inner.paths['Bottom'].end, tab.paths['Right'].origin)
+	this.models = {
+		logo: logo, text: text, outer: outer, bolts: bolts, inner: inner, tab: tab, plus: plus
+	};
 
-	delete inner.paths['Bottom'];
+	makerjs.model.originate(this);
 
-    this.paths.bottom1 = bottom1; 
-	this.paths.bottom2 = bottom2;
-
- 	var p1 = trimLines(plus.paths.n1, 'origin', logo.models.leg2.models.b3.paths.Horizontal, 'end');
- 	var p2 = trimArcAndLine(logo.models.leg2.models.b3.paths.arc, 'endAngle', plus.paths.n2, 'origin');
-	var g1 = gap(inner.paths, 'Top', [plus.paths.n1, plus.paths.n2]);
-
-	if (p1 && p2 && g1) {
-		p1.create();
-		p2.create();
-		g1.create();
-		var b1 = bridgeGaps([p1.point, p2.point], g1.points);
-		inner.paths['n1'] = b1[0];
-		inner.paths['n2'] = b1[1];	
-	} else {
-		gapAndBridge(inner, 'Top', logo.models.leg2.models.b3, 'Horizontal', plus, ['n1', 'n2']);	
-	}
-	
-	gapAndBridge(tab, 'Top', logo, 'outBottom', plus, ['s1', 's2']);
-	gapAndBridge(inner, 'Left', logo, 'outHome', plus, ['w1', 'w2']);
-	gapAndBridge(inner, 'Right', logo.models.leg3.models.b3, 'Vertical', plus, ['e1', 'e2']);
-
+	makerjs.model.combine(tab, inner, true, false, false, true);
+	makerjs.model.combine(plus, { models: { inner: inner, tab: tab} }, true, false, false, true);
+	makerjs.model.combine(plus, logo.models.outline, false, true, false, true);
 }
 
 card.metaParameters = [
@@ -631,4 +426,4 @@ card.metaParameters = [
 
 module.exports = card;
 
-},{"double-bisection":1,"makerjs":undefined,"makerjs-logo":2,"makerjs-monotext":3}]},{},[]);
+},{"makerjs":undefined,"makerjs-logo":1,"makerjs-monotext":2}]},{},[]);

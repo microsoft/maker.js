@@ -5,6 +5,16 @@ var makerjs = require('makerjs');
 
 function smile(span, teeth, droop, dainty, gaze, heady) {
 
+	if (arguments.length == 0) {    
+		var defaultValues = makerjs.kit.getParameterValues(smile);
+        span = defaultValues.shift();
+        teeth = defaultValues.shift();
+        droop = defaultValues.shift();
+        dainty = defaultValues.shift();
+        gaze = defaultValues.shift();
+        heady = defaultValues.shift();
+	}
+    
     this.paths = {
         head: new makerjs.paths.Circle([0, 0], 2.7),
         rightEye: new makerjs.paths.Circle([1, heady], gaze),
