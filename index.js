@@ -653,7 +653,7 @@ var MakerJs;
          * @returns The original path (for chaining).
          */
         function rotate(pathToRotate, angleInDegrees, rotationOrigin) {
-            if (angleInDegrees == 0)
+            if (!pathToRotate || angleInDegrees == 0)
                 return pathToRotate;
             var map = {};
             map[MakerJs.pathType.Line] = function (line) {
@@ -679,7 +679,7 @@ var MakerJs;
          * @returns The original path (for chaining).
          */
         function scale(pathToScale, scaleValue) {
-            if (scaleValue == 1)
+            if (!pathToScale || scaleValue == 1)
                 return pathToScale;
             var map = {};
             map[MakerJs.pathType.Line] = function (line) {

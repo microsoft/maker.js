@@ -167,7 +167,7 @@ module MakerJs.path {
      * @returns The original path (for chaining).
      */
     export function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint): IPath {
-        if (angleInDegrees == 0) return pathToRotate;
+        if (!pathToRotate || angleInDegrees == 0) return pathToRotate;
 
         var map: IPathFunctionMap = {};
 
@@ -198,7 +198,7 @@ module MakerJs.path {
      * @returns The original path (for chaining).
      */
     export function scale(pathToScale: IPath, scaleValue: number): IPath {
-        if (scaleValue == 1) return pathToScale;
+        if (!pathToScale || scaleValue == 1) return pathToScale;
 
         var map: IPathFunctionMap = {};
 
