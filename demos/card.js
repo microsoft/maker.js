@@ -390,7 +390,21 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 	makerjs.model.rotate(plus, -logoAngle, plus.origin);
 
 	this.models = {
-		logo: logo, text: text, outer: outer, bolts: bolts, inner: inner, tab: tab, plus: plus
+		text: text, 
+		outer: outer, 
+		bolts: bolts,
+		innerTab: {
+			models: {
+				inner: inner, 
+				tab: tab
+			}
+		},
+		logoPlus: {
+			models: { 
+				plus: plus,
+				logo: logo
+			}
+		} 
 	};
 
 	makerjs.model.originate(this);
@@ -398,7 +412,7 @@ function card(w, h, outerRadius, rim, boltRadius, conn, logoOutline, logoScale, 
 	makerjs.model.combine(plus.models.h, plus.models.v, false, true, false, true);
 	makerjs.model.combine(plus, logo.models.outline, false, true, false, true);
 	makerjs.model.combine(tab, inner, true, false, false, true);
-	makerjs.model.combine(plus, { models: { inner: inner, tab: tab} }, true, false, false, true);
+	makerjs.model.combine(this.models.logoPlus, this.models.innerTab, true, false, false, true);
 }
 
 card.metaParameters = [
