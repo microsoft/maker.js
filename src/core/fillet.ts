@@ -186,7 +186,7 @@ module MakerJs.path {
             }
 
             result = {
-                filletAngle: filletAngle,
+                filletAngle: angle.noRevolutions(filletAngle),
                 clipPath: function () {
                     arc[context.propertyName] = guideLineAngle;
                 }
