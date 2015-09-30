@@ -29,13 +29,17 @@ module MakerJs.exporter {
             dxf.push(value);
         }
 
+        function defaultLayer(pathContext: IPath, layer: string) {
+            return pathContext.layer || layer || 0;
+        }
+
         var map: IPathOriginFunctionMap = {};
 
-        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint) {
+        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string) {
             append("0");
             append("LINE");
             append("8");
-            append(id);
+            append(defaultLayer(line, layer));
             append("10");
             append(line.origin[0] + origin[0]);
             append("20");
@@ -46,11 +50,11 @@ module MakerJs.exporter {
             append(line.end[1] + origin[1]);
         };
 
-        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint) {
+        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string) {
             append("0");
             append("CIRCLE");
             append("8");
-            append(id);
+            append(defaultLayer(circle, layer));
             append("10");
             append(circle.origin[0] + origin[0]);
             append("20");
@@ -59,11 +63,11 @@ module MakerJs.exporter {
             append(circle.radius);
         };
 
-        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint) {
+        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string) {
             append("0");
             append("ARC");
             append("8");
-            append(id);
+            append(defaultLayer(arc, layer));
             append("10");
             append(arc.origin[0] + origin[0]);
             append("20");
