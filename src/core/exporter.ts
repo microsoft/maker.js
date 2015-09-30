@@ -51,11 +51,11 @@ module MakerJs.exporter {
          * @param pathToExport The path to export.
          * @param offset The offset position of the path. 
          */
-        public exportPath(id: string, pathToExport: IPath, offset: IPoint) {
+        public exportPath(id: string, pathToExport: IPath, offset: IPoint, layer: string) {
             if (pathToExport) {
                 var fn = this.map[pathToExport.type];
                 if (fn) {
-                    fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset);
+                    fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset, layer);
                 }
             }
         }
@@ -76,7 +76,7 @@ module MakerJs.exporter {
 
             if (modelToExport.paths) {
                 for (var id in modelToExport.paths) {
-                    this.exportPath(id, modelToExport.paths[id], newOffset);
+                    this.exportPath(id, modelToExport.paths[id], newOffset, modelToExport.layer);
                 }
             }
 
@@ -104,7 +104,7 @@ module MakerJs.exporter {
                 this.exportModel(itemId, <IModel>itemToExport, origin);
 
             } else if (isPath(itemToExport)) {
-                this.exportPath(itemId, <IPath>itemToExport, origin);
+                this.exportPath(itemId, <IPath>itemToExport, origin, null);
 
             } else {
                 for (var id in itemToExport) {

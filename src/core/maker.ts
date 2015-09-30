@@ -145,12 +145,17 @@ module MakerJs {
         /**
          * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
          */
-        type: string;
+        "type": string;
         
         /**
          * The main point of reference for this path.
          */
         origin: IPoint;
+
+        /**
+         * Optional layer of this path.
+         */
+        layer?: string;
     }
 
     /**
@@ -266,7 +271,7 @@ module MakerJs {
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
-        [type: string]: (id: string, pathValue: IPath, origin: IPoint) => void;
+        [type: string]: (id: string, pathValue: IPath, origin: IPoint, layer: string) => void;
     }
 
     /**
@@ -364,7 +369,7 @@ module MakerJs {
         /**
          * A model may want to specify its type, but this value is not employed yet.
          */
-        type?: string;
+        "type"?: string;
         
         /**
          * Optional array of path objects in this model.
@@ -385,6 +390,11 @@ module MakerJs {
          * An author may wish to add notes to this model instance.
          */
         notes?: string;
+
+        /**
+         * Optional layer of this model.
+         */
+        layer?: string;
     }
 
     /**

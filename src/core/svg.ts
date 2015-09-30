@@ -36,9 +36,20 @@ module MakerJs.exporter {
         extendObject(opts, options);
 
         var elements: string[] = [];
+        var layers: ILayerElements = {};
 
-        function append(value) {
-            elements.push(value);
+        function append(value: string, layer?: string) {
+            if (layer) {
+
+                if (!(layer in layers)) {
+                    layers[layer] = [];
+                }
+
+                layers[layer].push(value);
+
+            } else {
+                elements.push(value);
+            }
         }
 
         function fixPoint(pointToFix: IPoint): IPoint {
@@ -53,7 +64,7 @@ module MakerJs.exporter {
             return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
         }
 
-        function createElement(tagname: string, attrs: IXmlTagAttrs, innerText: string = null) {
+        function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null) {
 
             attrs['vector-effect'] = 'non-scaling-stroke';
 
@@ -63,7 +74,7 @@ module MakerJs.exporter {
                 tag.innerText = innerText;
             }
 
-            append(tag.toString());
+            append(tag.toString(), layer);
         }
 
         function drawText(id: string, textPoint: IPoint) {
@@ -74,16 +85,18 @@ module MakerJs.exporter {
                     "x": textPoint[0],
                     "y": textPoint[1]
                 },
+                null,
                 id);
         }
 
-        function drawPath(id: string, x: number, y: number, d: any[], textPoint: IPoint) {
+        function drawPath(id: string, x: number, y: number, d: any[], layer: string, textPoint: IPoint) {
             createElement(
                 "path",
                 {
                     "id": id,
                     "d": ["M", round(x), round(y)].concat(d).join(" ")
-                });
+                },
+                layer);
 
             if (opts.annotate) {
                 drawText(id, textPoint);
@@ -92,13 +105,13 @@ module MakerJs.exporter {
 
         var map: IPathOriginFunctionMap = {};
 
-        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint) {
+        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string) {
 
             var start = line.origin;
             var end = line.end;
 
             if (opts.useSvgPathOnly) {
-                drawPath(id, start[0], start[1], [round(end[0]), round(end[1])], point.middle(line));
+                drawPath(id, start[0], start[1], [round(end[0]), round(end[1])], layer, point.middle(line));
             } else {
                 createElement(
                     "line",
@@ -108,7 +121,8 @@ module MakerJs.exporter {
                         "y1": round(start[1]),
                         "x2": round(end[0]),
                         "y2": round(end[1])
-                    });
+                    },
+                    layer);
 
                 if (opts.annotate) {
                     drawText(id, point.middle(line));
@@ -116,13 +130,13 @@ module MakerJs.exporter {
             }
         };
 
-        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint) {
+        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string) {
 
             var center = circle.origin;
 
             if (opts.useSvgPathOnly) {
 
-                circleInPaths(id, center, circle.radius);
+                circleInPaths(id, center, circle.radius, layer);
 
             } else {
                 createElement(
@@ -132,7 +146,8 @@ module MakerJs.exporter {
                         "r": circle.radius,
                         "cx": round(center[0]),
                         "cy": round(center[1])
-                    });
+                    },
+                    layer);
             }
 
             if (opts.annotate) {
@@ -140,7 +155,7 @@ module MakerJs.exporter {
             }
         };
 
-        function circleInPaths(id: string, center: IPoint, radius: number) {
+        function circleInPaths(id: string, center: IPoint, radius: number, layer: string) {
             var d = ['m', -radius, 0];
 
             function halfCircle(sign: number) {
@@ -151,7 +166,7 @@ module MakerJs.exporter {
             halfCircle(1);
             halfCircle(-1);
 
-            drawPath(id, center[0], center[1], d, center);
+            drawPath(id, center[0], center[1], d, layer, center);
         }
 
         function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
@@ -163,12 +178,12 @@ module MakerJs.exporter {
             d.push(round(end[0]), round(end[1]));
         }
 
-        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint) {
+        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string) {
 
             var arcPoints = point.fromArc(arc);
 
             if (point.areEqual(arcPoints[0], arcPoints[1])) {
-                circleInPaths(id, arc.origin, arc.radius);
+                circleInPaths(id, arc.origin, arc.radius, layer);
             } else {
 
                 var d = ['A'];
@@ -180,7 +195,7 @@ module MakerJs.exporter {
                     arc.startAngle > arc.endAngle
                     );
 
-                drawPath(id, arcPoints[0][0], arcPoints[0][1], d, point.middle(arc));
+                drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, point.middle(arc));
             }
         };
 
@@ -195,7 +210,7 @@ module MakerJs.exporter {
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToMeasure = { paths: <{ [id: string]: IPath }>itemToExport };
+            modelToMeasure = { paths: <IPathMap>itemToExport };
 
         } else if (isPath(itemToExport)) {
             modelToMeasure = { paths: {modelToMeasure: <IPath>itemToExport } };
@@ -234,11 +249,11 @@ module MakerJs.exporter {
 
         function beginModel(id: string, modelContext: IModel) {
             modelGroup.attrs = { id: id };
-            append(modelGroup.getOpeningTag(false));
+            append(modelGroup.getOpeningTag(false), modelContext.layer);
         }
 
         function endModel(modelContext: IModel) {
-            append(modelGroup.getClosingTag());
+            append(modelGroup.getClosingTag(), modelContext.layer);
         }
 
         var svgAttrs: IXmlTagAttrs;
@@ -271,7 +286,20 @@ module MakerJs.exporter {
         append(svgGroup.getOpeningTag(false));
 
         var exp = new Exporter(map, fixPoint, fixPath, beginModel, endModel);
-        exp.exportItem('itemToExport', itemToExport, opts.origin);
+        exp.exportItem('0', itemToExport, opts.origin);
+
+        //export layers as groups
+        for (var layer in layers) {
+
+            var layerGroup = new XmlTag('g', { id: layer });
+
+            for (var i = 0; i < layers[layer].length; i++) {
+                layerGroup.innerText += layers[layer][i];
+            }
+
+            layerGroup.innerTextEscaped = true;
+            append(layerGroup.toString());
+        }
 
         append(svgGroup.getClosingTag());
         append(svgTag.getClosingTag());
@@ -284,6 +312,10 @@ module MakerJs.exporter {
      */
     interface svgUnitConversion {
         [unitType: string]: { svgUnitType: string; scaleConversion: number; };
+    }
+
+    interface ILayerElements {
+        [id: string]: string[];
     }
 
     /**
