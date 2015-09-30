@@ -1606,11 +1606,11 @@ var MakerJs;
              * @param pathToExport The path to export.
              * @param offset The offset position of the path.
              */
-            Exporter.prototype.exportPath = function (id, pathToExport, offset) {
+            Exporter.prototype.exportPath = function (id, pathToExport, offset, layer) {
                 if (pathToExport) {
                     var fn = this.map[pathToExport.type];
                     if (fn) {
-                        fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset);
+                        fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset, layer);
                     }
                 }
             };
@@ -1627,7 +1627,7 @@ var MakerJs;
                 var newOffset = MakerJs.point.add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
                 if (modelToExport.paths) {
                     for (var id in modelToExport.paths) {
-                        this.exportPath(id, modelToExport.paths[id], newOffset);
+                        this.exportPath(id, modelToExport.paths[id], newOffset, modelToExport.layer);
                     }
                 }
                 if (modelToExport.models) {
@@ -1650,7 +1650,7 @@ var MakerJs;
                     this.exportModel(itemId, itemToExport, origin);
                 }
                 else if (MakerJs.isPath(itemToExport)) {
-                    this.exportPath(itemId, itemToExport, origin);
+                    this.exportPath(itemId, itemToExport, origin, null);
                 }
                 else {
                     for (var id in itemToExport) {
@@ -1684,12 +1684,15 @@ var MakerJs;
             function append(value) {
                 dxf.push(value);
             }
+            function defaultLayer(pathContext, layer) {
+                return pathContext.layer || layer || 0;
+            }
             var map = {};
-            map[MakerJs.pathType.Line] = function (id, line, origin) {
+            map[MakerJs.pathType.Line] = function (id, line, origin, layer) {
                 append("0");
                 append("LINE");
                 append("8");
-                append(id);
+                append(defaultLayer(line, layer));
                 append("10");
                 append(line.origin[0] + origin[0]);
                 append("20");
@@ -1699,11 +1702,11 @@ var MakerJs;
                 append("21");
                 append(line.end[1] + origin[1]);
             };
-            map[MakerJs.pathType.Circle] = function (id, circle, origin) {
+            map[MakerJs.pathType.Circle] = function (id, circle, origin, layer) {
                 append("0");
                 append("CIRCLE");
                 append("8");
-                append(id);
+                append(defaultLayer(circle, layer));
                 append("10");
                 append(circle.origin[0] + origin[0]);
                 append("20");
@@ -1711,11 +1714,11 @@ var MakerJs;
                 append("40");
                 append(circle.radius);
             };
-            map[MakerJs.pathType.Arc] = function (id, arc, origin) {
+            map[MakerJs.pathType.Arc] = function (id, arc, origin, layer) {
                 append("0");
                 append("ARC");
                 append("8");
-                append(id);
+                append(defaultLayer(arc, layer));
                 append("10");
                 append(arc.origin[0] + origin[0]);
                 append("20");
@@ -2602,6 +2605,10 @@ var MakerJs;
             function XmlTag(name, attrs) {
                 this.name = name;
                 this.attrs = attrs;
+                /**
+                 * Text between the opening and closing tags.
+                 */
+                this.innerText = '';
             }
             /**
              * Escapes certain characters within a string so that it can appear in a tag or its attribute.
@@ -2705,8 +2712,17 @@ var MakerJs;
             };
             MakerJs.extendObject(opts, options);
             var elements = [];
-            function append(value) {
-                elements.push(value);
+            var layers = {};
+            function append(value, layer) {
+                if (layer) {
+                    if (!(layer in layers)) {
+                        layers[layer] = [];
+                    }
+                    layers[layer].push(value);
+                }
+                else {
+                    elements.push(value);
+                }
             }
             function fixPoint(pointToFix) {
                 //in DXF Y increases upward. in SVG, Y increases downward
@@ -2718,37 +2734,37 @@ var MakerJs;
                 var mirrorY = MakerJs.path.mirror(pathToFix, false, true);
                 return MakerJs.path.moveRelative(MakerJs.path.scale(mirrorY, opts.scale), origin);
             }
-            function createElement(tagname, attrs, innerText) {
+            function createElement(tagname, attrs, layer, innerText) {
                 if (innerText === void 0) { innerText = null; }
                 attrs['vector-effect'] = 'non-scaling-stroke';
                 var tag = new exporter.XmlTag(tagname, attrs);
                 if (innerText) {
                     tag.innerText = innerText;
                 }
-                append(tag.toString());
+                append(tag.toString(), layer);
             }
             function drawText(id, textPoint) {
                 createElement("text", {
                     "id": id + "_text",
                     "x": textPoint[0],
                     "y": textPoint[1]
-                }, id);
+                }, null, id);
             }
-            function drawPath(id, x, y, d, textPoint) {
+            function drawPath(id, x, y, d, layer, textPoint) {
                 createElement("path", {
                     "id": id,
                     "d": ["M", MakerJs.round(x), MakerJs.round(y)].concat(d).join(" ")
-                });
+                }, layer);
                 if (opts.annotate) {
                     drawText(id, textPoint);
                 }
             }
             var map = {};
-            map[MakerJs.pathType.Line] = function (id, line, origin) {
+            map[MakerJs.pathType.Line] = function (id, line, origin, layer) {
                 var start = line.origin;
                 var end = line.end;
                 if (opts.useSvgPathOnly) {
-                    drawPath(id, start[0], start[1], [MakerJs.round(end[0]), MakerJs.round(end[1])], MakerJs.point.middle(line));
+                    drawPath(id, start[0], start[1], [MakerJs.round(end[0]), MakerJs.round(end[1])], layer, MakerJs.point.middle(line));
                 }
                 else {
                     createElement("line", {
@@ -2757,16 +2773,16 @@ var MakerJs;
                         "y1": MakerJs.round(start[1]),
                         "x2": MakerJs.round(end[0]),
                         "y2": MakerJs.round(end[1])
-                    });
+                    }, layer);
                     if (opts.annotate) {
                         drawText(id, MakerJs.point.middle(line));
                     }
                 }
             };
-            map[MakerJs.pathType.Circle] = function (id, circle, origin) {
+            map[MakerJs.pathType.Circle] = function (id, circle, origin, layer) {
                 var center = circle.origin;
                 if (opts.useSvgPathOnly) {
-                    circleInPaths(id, center, circle.radius);
+                    circleInPaths(id, center, circle.radius, layer);
                 }
                 else {
                     createElement("circle", {
@@ -2774,13 +2790,13 @@ var MakerJs;
                         "r": circle.radius,
                         "cx": MakerJs.round(center[0]),
                         "cy": MakerJs.round(center[1])
-                    });
+                    }, layer);
                 }
                 if (opts.annotate) {
                     drawText(id, center);
                 }
             };
-            function circleInPaths(id, center, radius) {
+            function circleInPaths(id, center, radius, layer) {
                 var d = ['m', -radius, 0];
                 function halfCircle(sign) {
                     d.push('a');
@@ -2788,7 +2804,7 @@ var MakerJs;
                 }
                 halfCircle(1);
                 halfCircle(-1);
-                drawPath(id, center[0], center[1], d, center);
+                drawPath(id, center[0], center[1], d, layer, center);
             }
             function svgArcData(d, radius, endPoint, largeArc, decreasing) {
                 var end = endPoint;
@@ -2798,15 +2814,15 @@ var MakerJs;
                 d.push(decreasing ? 0 : 1); //sweep-flag 0=decreasing, 1=increasing 
                 d.push(MakerJs.round(end[0]), MakerJs.round(end[1]));
             }
-            map[MakerJs.pathType.Arc] = function (id, arc, origin) {
+            map[MakerJs.pathType.Arc] = function (id, arc, origin, layer) {
                 var arcPoints = MakerJs.point.fromArc(arc);
                 if (MakerJs.point.areEqual(arcPoints[0], arcPoints[1])) {
-                    circleInPaths(id, arc.origin, arc.radius);
+                    circleInPaths(id, arc.origin, arc.radius, layer);
                 }
                 else {
                     var d = ['A'];
                     svgArcData(d, arc.radius, arcPoints[1], Math.abs(arc.endAngle - arc.startAngle) > 180, arc.startAngle > arc.endAngle);
-                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, MakerJs.point.middle(arc));
+                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, MakerJs.point.middle(arc));
                 }
             };
             //fixup options
@@ -2848,10 +2864,10 @@ var MakerJs;
             var modelGroup = new exporter.XmlTag('g');
             function beginModel(id, modelContext) {
                 modelGroup.attrs = { id: id };
-                append(modelGroup.getOpeningTag(false));
+                append(modelGroup.getOpeningTag(false), modelContext.layer);
             }
             function endModel(modelContext) {
-                append(modelGroup.getClosingTag());
+                append(modelGroup.getClosingTag(), modelContext.layer);
             }
             var svgAttrs;
             if (opts.viewBox) {
@@ -2876,7 +2892,15 @@ var MakerJs;
             });
             append(svgGroup.getOpeningTag(false));
             var exp = new exporter.Exporter(map, fixPoint, fixPath, beginModel, endModel);
-            exp.exportItem('itemToExport', itemToExport, opts.origin);
+            exp.exportItem('0', itemToExport, opts.origin);
+            for (var layer in layers) {
+                var layerGroup = new exporter.XmlTag('g', { id: layer });
+                for (var i = 0; i < layers[layer].length; i++) {
+                    layerGroup.innerText += layers[layer][i];
+                }
+                layerGroup.innerTextEscaped = true;
+                append(layerGroup.toString());
+            }
             append(svgGroup.getClosingTag());
             append(svgTag.getClosingTag());
             return elements.join('');
