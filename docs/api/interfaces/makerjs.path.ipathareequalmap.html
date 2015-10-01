@@ -1,54 +1,40 @@
 ---
 layout: posts
-title: Api - IPathOriginFunctionMap Interface
+title: Api - IPathAreEqualMap Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>A map of functions which accept a path and an origin point as parameters.</p>
-		</div>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IPathOriginFunctionMap</span>
+			<span class="target">IPathAreEqualMap</span>
 		</li>
 	</ul>
 </section>
 <section class="tsd-panel tsd-kind-interface tsd-parent-kind-module tsd-is-private">
 	<h3 class="tsd-before-signature">Indexable</h3>
 	<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>type: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">function</span></div>
-	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>Key is the type of a path, value is a function which accepts a path object a point object as its parameters.</p>
-		</div>
-	</div>
 	<ul class="tsd-parameters">
 		<li class="tsd-parameter-siganture">
 			<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-				<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, pathValue<span class="tsd-signature-symbol">: </span><a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a>, origin<span class="tsd-signature-symbol">: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, layer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>path1<span class="tsd-signature-symbol">: </span><a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a>, path2<span class="tsd-signature-symbol">: </span><a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 			</ul>
 			<ul class="tsd-descriptions">
 				<li class="tsd-description">
 					<h4 class="tsd-parameters-title">Parameters</h4>
 					<ul class="tsd-parameters">
 						<li>
-							<h5>id: <span class="tsd-signature-type">string</span></h5>
+							<h5>path1: <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
 						</li>
 						<li>
-							<h5>pathValue: <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
-						</li>
-						<li>
-							<h5>origin: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-						</li>
-						<li>
-							<h5>layer: <span class="tsd-signature-type">string</span></h5>
+							<h5>path2: <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
 						</li>
 					</ul>
-					<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 				</li>
 			</ul>
 		</li>

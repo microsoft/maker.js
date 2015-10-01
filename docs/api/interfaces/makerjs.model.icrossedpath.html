@@ -1,41 +1,18 @@
 ---
 layout: posts
-title: Api - IPathCircle Interface
+title: Api - ICrossedPath Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>A circle path.</p>
-		</div>
-		<p>Examples:</p>
-		<pre><code>var <span class="hljs-string">circle:</span> IPathCircle = { <span class="hljs-string">type:</span> <span class="hljs-string">'circle'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//typescript</span>
-var circle = { <span class="hljs-string">type:</span> <span class="hljs-string">'circle'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//javascript</span>
-</code></pre>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a>
-			<ul class="tsd-hierarchy">
-				<li>
-					<span class="target">IPathCircle</span>
-					<ul class="tsd-hierarchy">
-						<li>
-							<a href="makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
+			<span class="target">ICrossedPath</span>
 		</li>
-	</ul>
-</section>
-<section class="tsd-panel">
-	<h3>Implemented by</h3>
-	<ul class="tsd-hierarchy">
-		<li><a href="../classes/makerjs.paths.circle.html" class="tsd-signature-type">Circle</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -45,10 +22,9 @@ var circle = { <span class="hljs-string">type:</span> <span class="hljs-string">
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathcircle.html#layer" class="tsd-kind-icon">layer</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathcircle.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathcircle.html#radius" class="tsd-kind-icon">radius</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathcircle.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.model.icrossedpath.html#modelcontext" class="tsd-kind-icon">model<wbr>Context</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.model.icrossedpath.html#pathid" class="tsd-kind-icon">path<wbr>Id</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.model.icrossedpath.html#segments" class="tsd-kind-icon">segments</a></li>
 				</ul>
 			</section>
 		</div>
@@ -56,68 +32,35 @@ var circle = { <span class="hljs-string">type:</span> <span class="hljs-string">
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="layer" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> layer</h3>
-		<div class="tsd-signature tsd-kind-icon">layer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="modelcontext" class="tsd-anchor"></a>
+		<h3>model<wbr>Context</h3>
+		<div class="tsd-signature tsd-kind-icon">model<wbr>Context<span class="tsd-signature-symbol">:</span> <a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#layer">layer</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L158">core/maker.ts:158</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L147">core/combine.ts:147</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Optional layer of this path.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="origin" class="tsd-anchor"></a>
-		<h3>origin</h3>
-		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L153">core/maker.ts:153</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>The main point of reference for this path.</p>
-			</div>
-		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="radius" class="tsd-anchor"></a>
-		<h3>radius</h3>
-		<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<a name="pathid" class="tsd-anchor"></a>
+		<h3>path<wbr>Id</h3>
+		<div class="tsd-signature tsd-kind-icon">path<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L210">core/maker.ts:210</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L148">core/combine.ts:148</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>The radius of the circle.</p>
-			</div>
-		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="type" class="tsd-anchor"></a>
-		<h3>type</h3>
-		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="segments" class="tsd-anchor"></a>
+		<h3>segments</h3>
+		<div class="tsd-signature tsd-kind-icon">segments<span class="tsd-signature-symbol">:</span> <a href="makerjs.model.icrossedpathsegment.html" class="tsd-signature-type">ICrossedPathSegment</a><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L148">core/maker.ts:148</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/combine.ts#L149">core/combine.ts:149</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>The type of the path, e.g. &quot;line&quot;, &quot;circle&quot;, or &quot;arc&quot;. These strings are enumerated in pathType.</p>
-			</div>
-		</div>
 	</section>
 </section>
 </div>
