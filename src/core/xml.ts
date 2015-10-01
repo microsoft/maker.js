@@ -17,7 +17,7 @@
         /**
          * Text between the opening and closing tags.
          */
-        public innerText: string;
+        public innerText = '';
 
         /**
          * Boolean to indicate that the innerText has been escaped.
