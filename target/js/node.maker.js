@@ -331,6 +331,7 @@ var MakerJs;
          *
          * @param a First point.
          * @param b Second point.
+         * @param accuracy Optional exemplar of number of decimal places.
          * @returns true if points are the same, false if they are not
          */
         function areEqualRounded(a, b, accuracy) {
@@ -429,7 +430,7 @@ var MakerJs;
         }
         point.fromPathEnds = fromPathEnds;
         /**
-         * Get the middle point of a path. Currently only supports Arc and Line paths.
+         * Get the middle point of a path.
          *
          * @param pathContext The path object.
          * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
@@ -442,6 +443,9 @@ var MakerJs;
             map[MakerJs.pathType.Arc] = function (arc) {
                 var midAngle = MakerJs.angle.ofArcMiddle(arc, ratio);
                 midPoint = point.add(arc.origin, point.fromPolar(MakerJs.angle.toRadians(midAngle), arc.radius));
+            };
+            map[MakerJs.pathType.Circle] = function (circle) {
+                midPoint = point.add(circle.origin, [-circle.radius, 0]);
             };
             map[MakerJs.pathType.Line] = function (line) {
                 function ration(a, b) {
@@ -509,6 +513,17 @@ var MakerJs;
             return p;
         }
         point.scale = scale;
+        /**
+         * Get a string representation of a point.
+         *
+         * @param pointContext The point to serialize.
+         * @param accuracy Optional exemplar of number of decimal places.
+         * @returns Number of child models.
+         */
+        function serialize(pointContext, accuracy) {
+            return MakerJs.round(pointContext[0], accuracy) + ',' + MakerJs.round(pointContext[1], accuracy);
+        }
+        point.serialize = serialize;
         /**
          * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
          *
@@ -874,6 +889,22 @@ var MakerJs;
     var model;
     (function (model) {
         /**
+         * Count the number of child models within a given model.
+         *
+         * @param modelContext The model containing other models.
+         * @returns Number of child models.
+         */
+        function countChildModels(modelContext) {
+            var count = 0;
+            if (modelContext.models) {
+                for (var id in modelContext.models) {
+                    count++;
+                }
+            }
+            return count;
+        }
+        model.countChildModels = countChildModels;
+        /**
          * Get an unused id in the paths map with the same prefix.
          *
          * @param modelContext The model containing the paths map.
@@ -1159,21 +1190,47 @@ var MakerJs;
         /**
          * @private
          */
-        function checkInsideForeign(segments, foreignPath, farPoint) {
+        function checkInsideForeignPath(segment, foreignPath, farPoint) {
             if (farPoint === void 0) { farPoint = [7654321, 1234567]; }
-            for (var i = 0; i < segments.length; i++) {
-                var origin = MakerJs.point.middle(segments[i].path) || segments[i].path.origin;
-                var lineToFarPoint = new MakerJs.paths.Line(origin, farPoint);
-                var farInt = MakerJs.path.intersection(lineToFarPoint, foreignPath);
-                if (farInt) {
-                    var added = addUniquePoints(segments[i].uniqueForeignIntersectionPoints, farInt.intersectionPoints);
-                    //if number of intersections is an odd number, flip the flag.
-                    if (added % 2 == 1) {
-                        segments[i].insideForeign = !!!segments[i].insideForeign;
-                    }
+            var origin = MakerJs.point.middle(segment.path);
+            var lineToFarPoint = new MakerJs.paths.Line(origin, farPoint);
+            var farInt = MakerJs.path.intersection(lineToFarPoint, foreignPath);
+            if (farInt) {
+                var added = addUniquePoints(segment.uniqueForeignIntersectionPoints, farInt.intersectionPoints);
+                //if number of intersections is an odd number, flip the flag.
+                if (added % 2 == 1) {
+                    segment.isInside = !!!segment.isInside;
                 }
             }
         }
+        /**
+         * @private
+         */
+        function checkInsideForeignModel(segment, modelToIntersect, farPoint) {
+            _model.walkPaths(modelToIntersect, function (mx, pathId2, path2) {
+                if (path2) {
+                    checkInsideForeignPath(segment, path2, farPoint);
+                }
+            });
+        }
+        /**
+         * Check to see if a path is inside of a model.
+         *
+         * @param pathContext The path to check.
+         * @param modelContext The model to check against.
+         * @param farPoint Optional point of reference which is outside the bounds of the modelContext.
+         * @returns Boolean true if the path is inside of the modelContext.
+         */
+        function isPathInsideModel(pathContext, modelContext, farPoint) {
+            var segment = {
+                path: pathContext,
+                isInside: false,
+                uniqueForeignIntersectionPoints: []
+            };
+            checkInsideForeignModel(segment, modelContext, farPoint);
+            return !!segment.isInside;
+        }
+        _model.isPathInsideModel = isPathInsideModel;
         /**
          * @private
          */
@@ -1200,12 +1257,9 @@ var MakerJs;
                         breakAlongForeignPath(thisPath.segments, overlappedSegments, path2);
                     }
                 });
-                //check each segment whether it is inside or outside
-                _model.walkPaths(modelToIntersect, function (mx, pathId2, path2) {
-                    if (path2) {
-                        checkInsideForeign(thisPath.segments, path2, farPoint);
-                    }
-                });
+                for (var i = 0; i < thisPath.segments.length; i++) {
+                    checkInsideForeignModel(thisPath.segments[i], modelToIntersect);
+                }
                 crossedPaths.push(thisPath);
             });
             return { crossedPaths: crossedPaths, overlappedSegments: overlappedSegments };
@@ -1237,7 +1291,7 @@ var MakerJs;
                 model.paths[id] = segment.path;
             }
             function checkAddSegment(model, pathIdBase, segment) {
-                if (segment.insideForeign && includeInside || !segment.insideForeign && includeOutside) {
+                if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
                     addSegment(model, pathIdBase, segment);
                 }
             }
@@ -2587,6 +2641,145 @@ var MakerJs;
         }
         kit.getParameterValues = getParameterValues;
     })(kit = MakerJs.kit || (MakerJs.kit = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var model;
+    (function (model) {
+        /**
+         * @private
+         */
+        function getOtherPath(pathsOnPoint, pathContext) {
+            if (pathsOnPoint[0].path === pathContext) {
+                return pathsOnPoint[1];
+            }
+            return pathsOnPoint[0];
+        }
+        /**
+         * @private
+         */
+        function getFirstPathFromModel(modelContext) {
+            if (!modelContext.paths)
+                return null;
+            for (var pathId in modelContext.paths) {
+                return modelContext.paths[pathId];
+            }
+            return null;
+        }
+        /**
+         * @private
+         */
+        function follow(points, loops) {
+            for (var p in points) {
+                var pathsOnPoint = points[p];
+                if (pathsOnPoint) {
+                    var loopModel = {
+                        paths: {},
+                        insideCount: 0
+                    };
+                    var firstPath = pathsOnPoint[0];
+                    var currPath = firstPath;
+                    while (true) {
+                        var id = model.getSimilarPathId(loopModel, currPath.id);
+                        loopModel.paths[id] = currPath.path;
+                        if (!points[currPath.nextPoint])
+                            break;
+                        var nextPath = getOtherPath(points[currPath.nextPoint], currPath.path);
+                        points[currPath.nextPoint] = null;
+                        if (!nextPath)
+                            break;
+                        currPath = nextPath;
+                        if (currPath.path === firstPath.path) {
+                            //loop is closed
+                            loops.push(loopModel);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        /**
+         * Find paths that have common endpoints and form loops.
+         *
+         * @param modelContext The model to search for loops.
+         * @param accuracy Optional exemplar of number of decimal places.
+         * @returns A new model with child models ranked according to their containment within other found loops.
+         */
+        function findLoops(modelContext, accuracy) {
+            var loops = [];
+            var points = {};
+            var result = { models: {} };
+            function getArrayOfPathsOnPoint(p) {
+                var serializedPoint = MakerJs.point.serialize(p, accuracy);
+                if (!(serializedPoint in points)) {
+                    points[serializedPoint] = [];
+                }
+                return points[serializedPoint];
+            }
+            function spin(callback) {
+                for (var i = 0; i < loops.length; i++) {
+                    callback(loops[i]);
+                }
+            }
+            function getModelByDepth(depth) {
+                var id = depth.toString();
+                if (!(id in result.models)) {
+                    var newModel = { models: {} };
+                    result.models[id] = newModel;
+                }
+                return result.models[id];
+            }
+            model.originate(modelContext);
+            //find loops by looking at all paths in this model
+            model.walkPaths(modelContext, function (modelContext, pathId, pathContext) {
+                //circles are loops by nature
+                if (pathContext.type == MakerJs.pathType.Circle) {
+                    var loopModel = {
+                        paths: {},
+                        insideCount: 0
+                    };
+                    loopModel.paths[pathId] = pathContext;
+                    loops.push(loopModel);
+                }
+                else {
+                    //gather both endpoints from all non-circle segments
+                    var endpoints = MakerJs.point.fromPathEnds(pathContext);
+                    for (var i = 2; i--;) {
+                        var pathOnPoint = {
+                            id: pathId,
+                            path: pathContext,
+                            nextPoint: MakerJs.point.serialize(endpoints[1 - i], accuracy)
+                        };
+                        getArrayOfPathsOnPoint(endpoints[i]).push(pathOnPoint);
+                    }
+                }
+            });
+            //follow paths to find loops
+            follow(points, loops);
+            //now we have all loops, we need to see which are inside of each other
+            spin(function (firstLoop) {
+                var firstPath = getFirstPathFromModel(firstLoop);
+                if (!firstPath)
+                    return;
+                spin(function (secondLoop) {
+                    if (firstLoop === secondLoop)
+                        return;
+                    if (model.isPathInsideModel(firstPath, secondLoop)) {
+                        firstLoop.insideCount++;
+                    }
+                });
+            });
+            //now we can group similar loops by their nested level
+            spin(function (loop) {
+                var depthModel = getModelByDepth(loop.insideCount);
+                var id = model.countChildModels(depthModel).toString();
+                delete loop.insideCount;
+                depthModel.models[id] = loop;
+            });
+            return result;
+        }
+        model.findLoops = findLoops;
+    })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {

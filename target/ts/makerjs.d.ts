@@ -408,6 +408,7 @@ declare module MakerJs.point {
      *
      * @param a First point.
      * @param b Second point.
+     * @param accuracy Optional exemplar of number of decimal places.
      * @returns true if points are the same, false if they are not
      */
     function areEqualRounded(a: IPoint, b: IPoint, accuracy?: number): boolean;
@@ -456,7 +457,7 @@ declare module MakerJs.point {
      */
     function fromPathEnds(pathContext: IPath): IPoint[];
     /**
-     * Get the middle point of a path. Currently only supports Arc and Line paths.
+     * Get the middle point of a path.
      *
      * @param pathContext The path object.
      * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
@@ -489,6 +490,14 @@ declare module MakerJs.point {
      * @returns A new point.
      */
     function scale(pointToScale: IPoint, scaleValue: number): IPoint;
+    /**
+     * Get a string representation of a point.
+     *
+     * @param pointContext The point to serialize.
+     * @param accuracy Optional exemplar of number of decimal places.
+     * @returns Number of child models.
+     */
+    function serialize(pointContext: IPoint, accuracy?: number): string;
     /**
      * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
      *
@@ -638,6 +647,13 @@ declare module MakerJs.paths {
 }
 declare module MakerJs.model {
     /**
+     * Count the number of child models within a given model.
+     *
+     * @param modelContext The model containing other models.
+     * @returns Number of child models.
+     */
+    function countChildModels(modelContext: IModel): number;
+    /**
      * Get an unused id in the paths map with the same prefix.
      *
      * @param modelContext The model containing the paths map.
@@ -717,6 +733,15 @@ declare module MakerJs.model {
     function walkPaths(modelContext: IModel, callback: IModelPathCallback): void;
 }
 declare module MakerJs.model {
+    /**
+     * Check to see if a path is inside of a model.
+     *
+     * @param pathContext The path to check.
+     * @param modelContext The model to check against.
+     * @param farPoint Optional point of reference which is outside the bounds of the modelContext.
+     * @returns Boolean true if the path is inside of the modelContext.
+     */
+    function isPathInsideModel(pathContext: IPath, modelContext: IModel, farPoint?: IPoint): boolean;
     /**
      * Combine 2 models. The models should be originated.
      *
@@ -997,6 +1022,16 @@ declare module MakerJs.kit {
      * @returns Array of the inital sample values provided in the metaParameters array.
      */
     function getParameterValues(ctor: IKit): any[];
+}
+declare module MakerJs.model {
+    /**
+     * Find paths that have common endpoints and form loops.
+     *
+     * @param modelContext The model to search for loops.
+     * @param accuracy Optional exemplar of number of decimal places.
+     * @returns A new model with child models ranked according to their containment within other found loops.
+     */
+    function findLoops(modelContext: IModel, accuracy?: number): IModel;
 }
 declare module MakerJs.exporter {
     /**
