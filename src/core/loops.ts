@@ -116,7 +116,7 @@ module MakerJs.model {
      * 
      * @param modelContext The model to search for loops.
      * @param accuracy Optional exemplar of number of decimal places.
-     * @returns A new model with child models ranked according to their containment within other found loops.
+     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
      */
     export function findLoops(modelContext: IModel, accuracy?: number): IModel {
         var loops: ILoopModel[] = [];
