@@ -3,19 +3,36 @@
 module MakerJs.model {
 
     /**
-     * @private
+     * A path that may be indicated to "flow" in either direction between its endpoints.
      */
-    interface IPathOnPoint {
-        id: string;
-        path: IPath;
-        nextPoint: string;
+    export interface IPathDirectional extends IPath {
+
+        /**
+         * The endpoints of the path.
+         */
+        endPoints: IPoint[];
+
+        /**
+         * Path flows forwards or reverse.
+         */
+        reversed?: boolean;
     }
 
     /**
      * @private
      */
-    interface IPointConnection {
-        [serializedPoint: string]: IPathOnPoint[];
+    interface ILinkedPath {
+        id: string;
+        path: IPath;
+        nextConnection: string;
+        reversed: boolean;
+    }
+
+    /**
+     * @private
+     */
+    interface IConnectionMap {
+        [serializedPoint: string]: ILinkedPath[];
     }
 
     /**
@@ -28,11 +45,11 @@ module MakerJs.model {
     /**
      * @private
      */
-    function getOtherPath(pathsOnPoint: IPathOnPoint[], pathContext: IPath): IPathOnPoint {
-        if (pathsOnPoint[0].path === pathContext) {
-            return pathsOnPoint[1];
+    function getOpposedLink(linkedPaths: ILinkedPath[], pathContext: IPath): ILinkedPath {
+        if (linkedPaths[0].path === pathContext) {
+            return linkedPaths[1];
         }
-        return pathsOnPoint[0];
+        return linkedPaths[0];
     }
 
     /**
@@ -51,35 +68,39 @@ module MakerJs.model {
     /**
      * @private
      */
-    function follow(points: IPointConnection, loops: ILoopModel[]) {
+    function follow(connections: IConnectionMap, loops: ILoopModel[]) {
         //for a given point, follow the paths that connect to each other to form loops
-        for (var p in points) {
-            var pathsOnPoint: IPathOnPoint[] = points[p];
+        for (var p in connections) {
+            var linkedPaths: ILinkedPath[] = connections[p];
 
-            if (pathsOnPoint) {
+            if (linkedPaths) {
 
                 var loopModel: ILoopModel = {
                     paths: {},
                     insideCount: 0
                 };
 
-                var firstPath = pathsOnPoint[0];
-                var currPath = firstPath;
+                var firstLink = linkedPaths[0];
+                var currLink = firstLink;
 
                 while (true) {
-                    var id = model.getSimilarPathId(loopModel, currPath.id);
-                    loopModel.paths[id] = currPath.path;
 
-                    if (!points[currPath.nextPoint]) break;
+                    var currPath = <IPathDirectional>currLink.path;
+                    currPath.reversed = currLink.reversed;
 
-                    var nextPath = getOtherPath(points[currPath.nextPoint], currPath.path);
-                    points[currPath.nextPoint] = null;
+                    var id = model.getSimilarPathId(loopModel, currLink.id);
+                    loopModel.paths[id] = currPath;
 
-                    if (!nextPath) break;
+                    if (!connections[currLink.nextConnection]) break;
 
-                    currPath = nextPath;
+                    var nextLink = getOpposedLink(connections[currLink.nextConnection], currLink.path);
+                    connections[currLink.nextConnection] = null;
 
-                    if (currPath.path === firstPath.path) {
+                    if (!nextLink) break;
+
+                    currLink = nextLink;
+
+                    if (currLink.path === firstLink.path) {
 
                         //loop is closed
                         loops.push(loopModel);
@@ -99,17 +120,17 @@ module MakerJs.model {
      */
     export function findLoops(modelContext: IModel, accuracy?: number): IModel {
         var loops: ILoopModel[] = [];
-        var points: IPointConnection = {};
+        var connections: IConnectionMap = {};
         var result: IModel = { models: {} };
 
-        function getArrayOfPathsOnPoint(p: IPoint) {
+        function getLinkedPathsOnConnectionPoint(p: IPoint) {
             var serializedPoint = point.serialize(p, accuracy);
 
-            if (!(serializedPoint in points)) {
-                points[serializedPoint] = [];
+            if (!(serializedPoint in connections)) {
+                connections[serializedPoint] = [];
             }
 
-            return points[serializedPoint];
+            return connections[serializedPoint];
         }
 
         function spin(callback: (loop: ILoopModel) => void) {
@@ -134,32 +155,35 @@ module MakerJs.model {
         //find loops by looking at all paths in this model
         model.walkPaths(modelContext, function (modelContext: IModel, pathId: string, pathContext: IPath) {
 
+            var safePath = <IPathDirectional>cloneObject(pathContext);
+
             //circles are loops by nature
-            if (pathContext.type == pathType.Circle) {
+            if (safePath.type == pathType.Circle) {
                 var loopModel: ILoopModel = {
                     paths: {},
                     insideCount: 0
                 };
-                loopModel.paths[pathId] = pathContext;
+                loopModel.paths[pathId] = safePath;
                 loops.push(loopModel);
 
             } else {
                 //gather both endpoints from all non-circle segments
-                var endpoints = point.fromPathEnds(pathContext);
+                safePath.endPoints = point.fromPathEnds(safePath);
 
                 for (var i = 2; i--;) {
-                    var pathOnPoint: IPathOnPoint = {
+                    var linkedPath: ILinkedPath = {
                         id: pathId,
-                        path: pathContext,
-                        nextPoint: point.serialize(endpoints[1 - i], accuracy)
+                        path: safePath,
+                        nextConnection: point.serialize(safePath.endPoints[1 - i], accuracy),
+                        reversed: i != 0
                     };
-                    getArrayOfPathsOnPoint(endpoints[i]).push(pathOnPoint);
+                    getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
                 }
             }
         });
 
         //follow paths to find loops
-        follow(points, loops);
+        follow(connections, loops);
 
         //now we have all loops, we need to see which are inside of each other
         spin(function (firstLoop: ILoopModel) {
