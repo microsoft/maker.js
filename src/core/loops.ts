@@ -3,22 +3,6 @@
 module MakerJs.model {
 
     /**
-     * A path that may be indicated to "flow" in either direction between its endpoints.
-     */
-    export interface IPathDirectional extends IPath {
-
-        /**
-         * The endpoints of the path.
-         */
-        endPoints: IPoint[];
-
-        /**
-         * Path flows forwards or reverse.
-         */
-        reversed?: boolean;
-    }
-
-    /**
      * @private
      */
     interface ILinkedPath {
