@@ -248,6 +248,19 @@ declare module MakerJs {
         path2Angles?: number[];
     }
     /**
+     * A path that may be indicated to "flow" in either direction between its endpoints.
+     */
+    interface IPathDirectional extends IPath {
+        /**
+         * The endpoints of the path.
+         */
+        endPoints: IPoint[];
+        /**
+         * Path flows forwards or reverse.
+         */
+        reversed?: boolean;
+    }
+    /**
      * Path objects by id.
      */
     interface IPathMap {
@@ -474,6 +487,14 @@ declare module MakerJs.point {
      */
     function mirror(pointToMirror: IPoint, mirrorX: boolean, mirrorY: boolean): IPoint;
     /**
+     * Round the values of a point.
+     *
+     * @param pointContext The point to serialize.
+     * @param accuracy Optional exemplar number of decimal places.
+     * @returns A new point with the values rounded.
+     */
+    function rounded(pointContext: IPoint, accuracy?: number): IPoint;
+    /**
      * Rotate a point.
      *
      * @param pointToRotate The point to rotate.
@@ -495,7 +516,7 @@ declare module MakerJs.point {
      *
      * @param pointContext The point to serialize.
      * @param accuracy Optional exemplar of number of decimal places.
-     * @returns Number of child models.
+     * @returns String representing the point.
      */
     function serialize(pointContext: IPoint, accuracy?: number): string;
     /**
@@ -1029,7 +1050,7 @@ declare module MakerJs.model {
      *
      * @param modelContext The model to search for loops.
      * @param accuracy Optional exemplar of number of decimal places.
-     * @returns A new model with child models ranked according to their containment within other found loops.
+     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
      */
     function findLoops(modelContext: IModel, accuracy?: number): IModel;
 }
@@ -1085,6 +1106,34 @@ declare module MakerJs.exporter {
          * Output the entire tag as a string.
          */
         toString(): string;
+    }
+}
+declare module MakerJs.exporter {
+    function toOpenJsCad(modelToExport: IModel, options?: IOpenJsCadOptions): string;
+    function toOpenJsCad(pathsToExport: IPath[], options?: IOpenJsCadOptions): string;
+    function toOpenJsCad(pathToExport: IPath, options?: IOpenJsCadOptions): string;
+    /**
+     * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
+     *
+     * @param modelToExport Model object to export.
+     * @param options Export options object.
+     * @param options.extrusion Height of 3D extrusion.
+     * @param options.resolution Size of facets.
+     * @returns String of STL format of 3D object.
+     */
+    function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions): string;
+    /**
+     * OpenJsCad export options.
+     */
+    interface IOpenJsCadOptions extends IExportOptions {
+        /**
+         * Optional depth of 3D extrusion.
+         */
+        extrusion?: number;
+        /**
+         * Optional size of curve facets.
+         */
+        facetSize?: number;
     }
 }
 declare module MakerJs.exporter {

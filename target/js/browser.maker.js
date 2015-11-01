@@ -485,6 +485,17 @@ var MakerJs;
         }
         point.mirror = mirror;
         /**
+         * Round the values of a point.
+         *
+         * @param pointContext The point to serialize.
+         * @param accuracy Optional exemplar number of decimal places.
+         * @returns A new point with the values rounded.
+         */
+        function rounded(pointContext, accuracy) {
+            return [MakerJs.round(pointContext[0], accuracy), MakerJs.round(pointContext[1], accuracy)];
+        }
+        point.rounded = rounded;
+        /**
          * Rotate a point.
          *
          * @param pointToRotate The point to rotate.
@@ -519,10 +530,11 @@ var MakerJs;
          *
          * @param pointContext The point to serialize.
          * @param accuracy Optional exemplar of number of decimal places.
-         * @returns Number of child models.
+         * @returns String representing the point.
          */
         function serialize(pointContext, accuracy) {
-            return MakerJs.round(pointContext[0], accuracy) + ',' + MakerJs.round(pointContext[1], accuracy);
+            var roundedPoint = rounded(pointContext, accuracy);
+            return roundedPoint[0] + ',' + roundedPoint[1];
         }
         point.serialize = serialize;
         /**
@@ -2650,11 +2662,11 @@ var MakerJs;
         /**
          * @private
          */
-        function getOtherPath(pathsOnPoint, pathContext) {
-            if (pathsOnPoint[0].path === pathContext) {
-                return pathsOnPoint[1];
+        function getOpposedLink(linkedPaths, pathContext) {
+            if (linkedPaths[0].path === pathContext) {
+                return linkedPaths[1];
             }
-            return pathsOnPoint[0];
+            return linkedPaths[0];
         }
         /**
          * @private
@@ -2670,27 +2682,29 @@ var MakerJs;
         /**
          * @private
          */
-        function follow(points, loops) {
-            for (var p in points) {
-                var pathsOnPoint = points[p];
-                if (pathsOnPoint) {
+        function follow(connections, loops) {
+            for (var p in connections) {
+                var linkedPaths = connections[p];
+                if (linkedPaths) {
                     var loopModel = {
                         paths: {},
                         insideCount: 0
                     };
-                    var firstPath = pathsOnPoint[0];
-                    var currPath = firstPath;
+                    var firstLink = linkedPaths[0];
+                    var currLink = firstLink;
                     while (true) {
-                        var id = model.getSimilarPathId(loopModel, currPath.id);
-                        loopModel.paths[id] = currPath.path;
-                        if (!points[currPath.nextPoint])
+                        var currPath = currLink.path;
+                        currPath.reversed = currLink.reversed;
+                        var id = model.getSimilarPathId(loopModel, currLink.id);
+                        loopModel.paths[id] = currPath;
+                        if (!connections[currLink.nextConnection])
                             break;
-                        var nextPath = getOtherPath(points[currPath.nextPoint], currPath.path);
-                        points[currPath.nextPoint] = null;
-                        if (!nextPath)
+                        var nextLink = getOpposedLink(connections[currLink.nextConnection], currLink.path);
+                        connections[currLink.nextConnection] = null;
+                        if (!nextLink)
                             break;
-                        currPath = nextPath;
-                        if (currPath.path === firstPath.path) {
+                        currLink = nextLink;
+                        if (currLink.path === firstLink.path) {
                             //loop is closed
                             loops.push(loopModel);
                             break;
@@ -2704,18 +2718,18 @@ var MakerJs;
          *
          * @param modelContext The model to search for loops.
          * @param accuracy Optional exemplar of number of decimal places.
-         * @returns A new model with child models ranked according to their containment within other found loops.
+         * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
          */
         function findLoops(modelContext, accuracy) {
             var loops = [];
-            var points = {};
+            var connections = {};
             var result = { models: {} };
-            function getArrayOfPathsOnPoint(p) {
+            function getLinkedPathsOnConnectionPoint(p) {
                 var serializedPoint = MakerJs.point.serialize(p, accuracy);
-                if (!(serializedPoint in points)) {
-                    points[serializedPoint] = [];
+                if (!(serializedPoint in connections)) {
+                    connections[serializedPoint] = [];
                 }
-                return points[serializedPoint];
+                return connections[serializedPoint];
             }
             function spin(callback) {
                 for (var i = 0; i < loops.length; i++) {
@@ -2733,30 +2747,34 @@ var MakerJs;
             model.originate(modelContext);
             //find loops by looking at all paths in this model
             model.walkPaths(modelContext, function (modelContext, pathId, pathContext) {
+                if (!pathContext)
+                    return;
+                var safePath = MakerJs.cloneObject(pathContext);
                 //circles are loops by nature
-                if (pathContext.type == MakerJs.pathType.Circle) {
+                if (safePath.type == MakerJs.pathType.Circle) {
                     var loopModel = {
                         paths: {},
                         insideCount: 0
                     };
-                    loopModel.paths[pathId] = pathContext;
+                    loopModel.paths[pathId] = safePath;
                     loops.push(loopModel);
                 }
                 else {
                     //gather both endpoints from all non-circle segments
-                    var endpoints = MakerJs.point.fromPathEnds(pathContext);
+                    safePath.endPoints = MakerJs.point.fromPathEnds(safePath);
                     for (var i = 2; i--;) {
-                        var pathOnPoint = {
+                        var linkedPath = {
                             id: pathId,
-                            path: pathContext,
-                            nextPoint: MakerJs.point.serialize(endpoints[1 - i], accuracy)
+                            path: safePath,
+                            nextConnection: MakerJs.point.serialize(safePath.endPoints[1 - i], accuracy),
+                            reversed: i != 0
                         };
-                        getArrayOfPathsOnPoint(endpoints[i]).push(pathOnPoint);
+                        getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
                     }
                 }
             });
             //follow paths to find loops
-            follow(points, loops);
+            follow(connections, loops);
             //now we have all loops, we need to see which are inside of each other
             spin(function (firstLoop) {
                 var firstPath = getFirstPathFromModel(firstLoop);
@@ -2873,6 +2891,160 @@ var MakerJs;
             return XmlTag;
         })();
         exporter.XmlTag = XmlTag;
+    })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var exporter;
+    (function (exporter) {
+        /**
+         * @private
+         */
+        function wrap(prefix, content, condition) {
+            if (condition) {
+                return prefix + '(' + content + ')';
+            }
+            else {
+                return content;
+            }
+        }
+        /**
+         * @private
+         */
+        function facetSizeToResolution(arcOrCircle, facetSize) {
+            if (!facetSize)
+                return;
+            var circle = new MakerJs.paths.Circle([0, 0], arcOrCircle.radius);
+            var length = MakerJs.measure.pathLength(circle);
+            if (!length)
+                return;
+            return length / facetSize;
+        }
+        /**
+         * @private
+         */
+        function pathsToOpenJsCad(modelContext, facetSize) {
+            var head = '';
+            var tail = '';
+            var first = true;
+            var exit = false;
+            var reverseTail = false;
+            var beginMap = {};
+            beginMap[MakerJs.pathType.Circle] = function (circle, dirPath) {
+                var circleOptions = {
+                    center: MakerJs.point.rounded(circle.origin),
+                    radius: circle.radius,
+                    resolution: facetSizeToResolution(circle, facetSize)
+                };
+                head = wrap('CAG.circle', JSON.stringify(circleOptions), true);
+                exit = true;
+            };
+            beginMap[MakerJs.pathType.Line] = function (line, dirPath) {
+                head = wrap('new CSG.Path2D', JSON.stringify(dirPath.reversed ? [dirPath.endPoints[1], dirPath.endPoints[0]] : dirPath.endPoints), true);
+            };
+            beginMap[MakerJs.pathType.Arc] = function (arc, dirPath) {
+                var endAngle = MakerJs.angle.ofArcEnd(arc);
+                if (dirPath.reversed) {
+                    reverseTail = true;
+                }
+                var arcOptions = {
+                    center: MakerJs.point.rounded(arc.origin),
+                    radius: arc.radius,
+                    startangle: arc.startAngle,
+                    endangle: endAngle,
+                    resolution: facetSizeToResolution(arc, facetSize)
+                };
+                head = wrap('new CSG.Path2D.arc', JSON.stringify(arcOptions), true);
+            };
+            var appendMap = {};
+            appendMap[MakerJs.pathType.Line] = function (line, dirPath) {
+                var reverse = (reverseTail != dirPath.reversed);
+                var endPoint = MakerJs.point.rounded(dirPath.endPoints[reverse ? 0 : 1]);
+                append(wrap('.appendPoint', JSON.stringify(endPoint), true));
+            };
+            appendMap[MakerJs.pathType.Arc] = function (arc, dirPath) {
+                var reverse = (reverseTail != dirPath.reversed);
+                var endAngle = MakerJs.angle.ofArcEnd(arc);
+                var arcOptions = {
+                    radius: arc.radius,
+                    clockwise: reverse,
+                    large: Math.abs(endAngle - arc.startAngle) > 180,
+                    resolution: facetSizeToResolution(arc, facetSize)
+                };
+                var endPoint = MakerJs.point.rounded(dirPath.endPoints[reverse ? 0 : 1]);
+                append(wrap('.appendArc', JSON.stringify(endPoint) + ',' + JSON.stringify(arcOptions), true));
+            };
+            function append(s) {
+                if (reverseTail) {
+                    tail = s + tail;
+                }
+                else {
+                    tail += s;
+                }
+            }
+            for (var pathId in modelContext.paths) {
+                var pathContext = modelContext.paths[pathId];
+                var fn = first ? beginMap[pathContext.type] : appendMap[pathContext.type];
+                if (fn) {
+                    fn(pathContext, pathContext);
+                }
+                if (exit) {
+                    return head;
+                }
+                first = false;
+            }
+            return head + tail + '.close().innerToCAG()';
+        }
+        /**
+         * Creates a string of JavaScript code for execution with the OpenJsCad engine.
+         *
+         * @param modelToExport Model object to export.
+         * @param options Export options object.
+         * @param options.extrusion Height of 3D extrusion.
+         * @param options.resolution Size of facets.
+         * @returns String of JavaScript containing a main() function for OpenJsCad.
+         */
+        function toOpenJsCad(modelToExport, options) {
+            var all = '';
+            var depth = 0;
+            var depthModel;
+            var opts = {
+                extrusion: 1
+            };
+            MakerJs.extendObject(opts, options);
+            var loops = MakerJs.model.findLoops(modelToExport);
+            while (depthModel = loops.models[depth]) {
+                var union = '';
+                for (var modelId in depthModel.models) {
+                    var subModel = depthModel.models[modelId];
+                    union += wrap('.union', pathsToOpenJsCad(subModel, opts.facetSize), union);
+                }
+                var operator = (depth % 2 == 0) ? '.union' : '.subtract';
+                all += wrap(operator, union, all);
+                depth++;
+            }
+            var extrudeOptions = { offset: [0, 0, opts.extrusion] };
+            var extrude = wrap('.extrude', JSON.stringify(extrudeOptions), true);
+            return 'function main(){return ' + all + extrude + ';}';
+        }
+        exporter.toOpenJsCad = toOpenJsCad;
+        /**
+         * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
+         *
+         * @param modelToExport Model object to export.
+         * @param options Export options object.
+         * @param options.extrusion Height of 3D extrusion.
+         * @param options.resolution Size of facets.
+         * @returns String of STL format of 3D object.
+         */
+        function toSTL(modelToExport, options) {
+            var script = toOpenJsCad(modelToExport, options);
+            script += 'return main();';
+            var f = new Function(script);
+            var csg = f();
+            return csg.toStlString();
+        }
+        exporter.toSTL = toSTL;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
