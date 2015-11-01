@@ -92,6 +92,12 @@ var Viewer = {
 
             case "json":
                 return JSON.stringify(Viewer.ViewModel);
+
+            case "openjscad":
+                return makerjs.exporter.toOpenJsCad(Viewer.ViewModel);
+
+            case "stl":
+                return makerjs.exporter.toSTL(Viewer.ViewModel);
         }
     },
 
@@ -107,19 +113,13 @@ var Viewer = {
 
             case "json":
                 return "data:application/json," + encoded;
+
+            case "openjscad":
+                return "data:text/javascript," + encoded;
+
+            case "stl":
+                return "data:application/stl," +encoded;
         }
-    },
-
-    hideExport: function () {
-        var zone = document.getElementById("export-zone");
-        zone.style.display = 'none';
-    },
-
-    showExport: function (type) {
-        var raw = Viewer.getRaw(type);
-        var zone = document.getElementById("export-zone");
-        zone.innerText = raw;
-        zone.style.display = 'block';
     },
 
     prepareView: function () {

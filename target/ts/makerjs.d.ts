@@ -96,11 +96,15 @@ declare module MakerJs {
         /**
          * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
          */
-        type: string;
+        "type": string;
         /**
          * The main point of reference for this path.
          */
         origin: IPoint;
+        /**
+         * Optional layer of this path.
+         */
+        layer?: string;
     }
     /**
      * Test to see if an object implements the required properties of a path.
@@ -193,7 +197,7 @@ declare module MakerJs {
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
-        [type: string]: (id: string, pathValue: IPath, origin: IPoint) => void;
+        [type: string]: (id: string, pathValue: IPath, origin: IPoint, layer: string) => void;
     }
     /**
      * String-based enumeration of all paths types.
@@ -244,6 +248,19 @@ declare module MakerJs {
         path2Angles?: number[];
     }
     /**
+     * A path that may be indicated to "flow" in either direction between its endpoints.
+     */
+    interface IPathDirectional extends IPath {
+        /**
+         * The endpoints of the path.
+         */
+        endPoints: IPoint[];
+        /**
+         * Path flows forwards or reverse.
+         */
+        reversed?: boolean;
+    }
+    /**
      * Path objects by id.
      */
     interface IPathMap {
@@ -276,7 +293,7 @@ declare module MakerJs {
         /**
          * A model may want to specify its type, but this value is not employed yet.
          */
-        type?: string;
+        "type"?: string;
         /**
          * Optional array of path objects in this model.
          */
@@ -293,6 +310,10 @@ declare module MakerJs {
          * An author may wish to add notes to this model instance.
          */
         notes?: string;
+        /**
+         * Optional layer of this model.
+         */
+        layer?: string;
     }
     /**
      * Test to see if an object implements the required properties of a model.
@@ -400,6 +421,7 @@ declare module MakerJs.point {
      *
      * @param a First point.
      * @param b Second point.
+     * @param accuracy Optional exemplar of number of decimal places.
      * @returns true if points are the same, false if they are not
      */
     function areEqualRounded(a: IPoint, b: IPoint, accuracy?: number): boolean;
@@ -448,7 +470,7 @@ declare module MakerJs.point {
      */
     function fromPathEnds(pathContext: IPath): IPoint[];
     /**
-     * Get the middle point of a path. Currently only supports Arc and Line paths.
+     * Get the middle point of a path.
      *
      * @param pathContext The path object.
      * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
@@ -464,6 +486,14 @@ declare module MakerJs.point {
      * @returns Mirrored point.
      */
     function mirror(pointToMirror: IPoint, mirrorX: boolean, mirrorY: boolean): IPoint;
+    /**
+     * Round the values of a point.
+     *
+     * @param pointContext The point to serialize.
+     * @param accuracy Optional exemplar number of decimal places.
+     * @returns A new point with the values rounded.
+     */
+    function rounded(pointContext: IPoint, accuracy?: number): IPoint;
     /**
      * Rotate a point.
      *
@@ -481,6 +511,14 @@ declare module MakerJs.point {
      * @returns A new point.
      */
     function scale(pointToScale: IPoint, scaleValue: number): IPoint;
+    /**
+     * Get a string representation of a point.
+     *
+     * @param pointContext The point to serialize.
+     * @param accuracy Optional exemplar of number of decimal places.
+     * @returns String representing the point.
+     */
+    function serialize(pointContext: IPoint, accuracy?: number): string;
     /**
      * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
      *
@@ -630,6 +668,13 @@ declare module MakerJs.paths {
 }
 declare module MakerJs.model {
     /**
+     * Count the number of child models within a given model.
+     *
+     * @param modelContext The model containing other models.
+     * @returns Number of child models.
+     */
+    function countChildModels(modelContext: IModel): number;
+    /**
      * Get an unused id in the paths map with the same prefix.
      *
      * @param modelContext The model containing the paths map.
@@ -709,6 +754,15 @@ declare module MakerJs.model {
     function walkPaths(modelContext: IModel, callback: IModelPathCallback): void;
 }
 declare module MakerJs.model {
+    /**
+     * Check to see if a path is inside of a model.
+     *
+     * @param pathContext The path to check.
+     * @param modelContext The model to check against.
+     * @param farPoint Optional point of reference which is outside the bounds of the modelContext.
+     * @returns Boolean true if the path is inside of the modelContext.
+     */
+    function isPathInsideModel(pathContext: IPath, modelContext: IModel, farPoint?: IPoint): boolean;
     /**
      * Combine 2 models. The models should be originated.
      *
@@ -844,7 +898,7 @@ declare module MakerJs.exporter {
          * @param pathToExport The path to export.
          * @param offset The offset position of the path.
          */
-        exportPath(id: string, pathToExport: IPath, offset: IPoint): void;
+        exportPath(id: string, pathToExport: IPath, offset: IPoint, layer: string): void;
         /**
          * Export a model.
          *
@@ -990,6 +1044,16 @@ declare module MakerJs.kit {
      */
     function getParameterValues(ctor: IKit): any[];
 }
+declare module MakerJs.model {
+    /**
+     * Find paths that have common endpoints and form loops.
+     *
+     * @param modelContext The model to search for loops.
+     * @param accuracy Optional exemplar of number of decimal places.
+     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
+     */
+    function findLoops(modelContext: IModel, accuracy?: number): IModel;
+}
 declare module MakerJs.exporter {
     /**
      * Attributes for an XML tag.
@@ -1042,6 +1106,34 @@ declare module MakerJs.exporter {
          * Output the entire tag as a string.
          */
         toString(): string;
+    }
+}
+declare module MakerJs.exporter {
+    function toOpenJsCad(modelToExport: IModel, options?: IOpenJsCadOptions): string;
+    function toOpenJsCad(pathsToExport: IPath[], options?: IOpenJsCadOptions): string;
+    function toOpenJsCad(pathToExport: IPath, options?: IOpenJsCadOptions): string;
+    /**
+     * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
+     *
+     * @param modelToExport Model object to export.
+     * @param options Export options object.
+     * @param options.extrusion Height of 3D extrusion.
+     * @param options.resolution Size of facets.
+     * @returns String of STL format of 3D object.
+     */
+    function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions): string;
+    /**
+     * OpenJsCad export options.
+     */
+    interface IOpenJsCadOptions extends IExportOptions {
+        /**
+         * Optional depth of 3D extrusion.
+         */
+        extrusion?: number;
+        /**
+         * Optional size of curve facets.
+         */
+        facetSize?: number;
     }
 }
 declare module MakerJs.exporter {

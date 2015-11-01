@@ -112,19 +112,17 @@ module MakerJs.model {
     /**
      * @private
      */
-    function checkInsideForeign(segments: ICrossedPathSegment[], foreignPath: IPath, farPoint: IPoint = [7654321, 1234567]) {
-        for (var i = 0; i < segments.length; i++) {
-            var origin = point.middle(segments[i].path) || segments[i].path.origin;
-            var lineToFarPoint = new paths.Line(origin, farPoint);
-            var farInt = path.intersection(lineToFarPoint, foreignPath);
+    function checkInsideForeignPath(segment: IPathInside, foreignPath: IPath, farPoint: IPoint = [7654321, 1234567]) {
+        var origin = point.middle(segment.path);
+        var lineToFarPoint = new paths.Line(origin, farPoint);
+        var farInt = path.intersection(lineToFarPoint, foreignPath);
 
-            if (farInt) {
-                var added = addUniquePoints(segments[i].uniqueForeignIntersectionPoints, farInt.intersectionPoints);
+        if (farInt) {
+            var added = addUniquePoints(segment.uniqueForeignIntersectionPoints, farInt.intersectionPoints);
 
-                //if number of intersections is an odd number, flip the flag.
-                if (added % 2 == 1) {
-                    segments[i].insideForeign = !!!segments[i].insideForeign;
-                }
+            //if number of intersections is an odd number, flip the flag.
+            if (added % 2 == 1) {
+                segment.isInside = !!!segment.isInside;
             }
         }
     }
@@ -132,10 +130,47 @@ module MakerJs.model {
     /**
      * @private
      */
-    interface ICrossedPathSegment {
+    function checkInsideForeignModel(segment: IPathInside, modelToIntersect: IModel, farPoint?: IPoint) {
+        walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
+            if (path2) {
+                checkInsideForeignPath(segment, path2, farPoint);
+            }
+        });
+    }
+
+    /**
+     * Check to see if a path is inside of a model.
+     * 
+     * @param pathContext The path to check.
+     * @param modelContext The model to check against.
+     * @param farPoint Optional point of reference which is outside the bounds of the modelContext.
+     * @returns Boolean true if the path is inside of the modelContext.
+     */
+    export function isPathInsideModel(pathContext: IPath, modelContext: IModel, farPoint?: IPoint): boolean {
+        var segment: IPathInside = {
+            path: pathContext,
+            isInside: false,
+            uniqueForeignIntersectionPoints: []
+        };
+
+        checkInsideForeignModel(segment, modelContext, farPoint);
+
+        return !!segment.isInside;
+    }
+
+    /**
+     * @private
+     */
+    interface IPathInside {
         path: IPath;
-        insideForeign?: boolean;
+        isInside?: boolean;
         uniqueForeignIntersectionPoints: IPoint[];
+    }
+
+    /**
+     * @private
+     */
+    interface ICrossedPathSegment extends IPathInside {
         overlapped: boolean;
         overlappedEqual?: boolean;
     }
@@ -190,11 +225,9 @@ module MakerJs.model {
             });
 
             //check each segment whether it is inside or outside
-            walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
-                if (path2) {
-                    checkInsideForeign(thisPath.segments, path2, farPoint);
-                }
-            });
+            for (var i = 0; i < thisPath.segments.length; i++) {
+                checkInsideForeignModel(thisPath.segments[i], modelToIntersect);
+            }
 
             crossedPaths.push(thisPath);
         });
@@ -236,7 +269,7 @@ module MakerJs.model {
         }
 
         function checkAddSegment(model: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
-            if (segment.insideForeign && includeInside || !segment.insideForeign && includeOutside) {
+            if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
                 addSegment(model, pathIdBase, segment);
             }
         }
