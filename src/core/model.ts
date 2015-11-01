@@ -3,6 +3,24 @@
 module MakerJs.model {
 
     /**
+     * Count the number of child models within a given model.
+     * 
+     * @param modelContext The model containing other models.
+     * @returns Number of child models.
+     */
+    export function countChildModels(modelContext: IModel): number {
+        var count = 0;
+
+        if (modelContext.models) {
+            for (var id in modelContext.models) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    /**
      * Get an unused id in the paths map with the same prefix.
      * 
      * @param modelContext The model containing the paths map.

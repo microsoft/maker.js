@@ -41,6 +41,7 @@ module MakerJs.point {
      * 
      * @param a First point.
      * @param b Second point.
+     * @param accuracy Optional exemplar of number of decimal places.
      * @returns true if points are the same, false if they are not
      */
     export function areEqualRounded(a: IPoint, b: IPoint, accuracy = .0000001): boolean {
@@ -143,7 +144,7 @@ module MakerJs.point {
     }
 
     /**
-     * Get the middle point of a path. Currently only supports Arc and Line paths.
+     * Get the middle point of a path.
      * 
      * @param pathContext The path object.
      * @param ratio Optional ratio (between 0 and 1) of point along the path. Default is .5 for middle.
@@ -157,6 +158,10 @@ module MakerJs.point {
         map[pathType.Arc] = function (arc: IPathArc) {
             var midAngle = angle.ofArcMiddle(arc, ratio);
             midPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(midAngle), arc.radius));
+        };
+
+        map[pathType.Circle] = function (circle: IPathCircle) {
+            midPoint = point.add(circle.origin, [-circle.radius, 0]);
         };
 
         map[pathType.Line] = function (line: IPathLine) {
@@ -202,6 +207,17 @@ module MakerJs.point {
     }
 
     /**
+     * Round the values of a point.
+     * 
+     * @param pointContext The point to serialize.
+     * @param accuracy Optional exemplar number of decimal places.
+     * @returns A new point with the values rounded.
+     */
+    export function rounded(pointContext: IPoint, accuracy?: number): IPoint {
+        return [ round(pointContext[0], accuracy) , round(pointContext[1], accuracy) ];
+    }
+
+    /**
      * Rotate a point.
      * 
      * @param pointToRotate The point to rotate.
@@ -230,6 +246,18 @@ module MakerJs.point {
             p[i] *= scaleValue;
         }
         return p;
+    }
+
+    /**
+     * Get a string representation of a point.
+     * 
+     * @param pointContext The point to serialize.
+     * @param accuracy Optional exemplar of number of decimal places.
+     * @returns String representing the point.
+     */
+    export function serialize(pointContext: IPoint, accuracy?: number) {
+        var roundedPoint = rounded(pointContext, accuracy);
+        return roundedPoint[0] + ',' + roundedPoint[1];
     }
 
     /**
