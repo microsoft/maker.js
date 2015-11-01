@@ -207,6 +207,17 @@ module MakerJs.point {
     }
 
     /**
+     * Round the values of a point.
+     * 
+     * @param pointContext The point to serialize.
+     * @param accuracy Optional exemplar number of decimal places.
+     * @returns A new point with the values rounded.
+     */
+    export function rounded(pointContext: IPoint, accuracy?: number): IPoint {
+        return [ round(pointContext[0], accuracy) , round(pointContext[1], accuracy) ];
+    }
+
+    /**
      * Rotate a point.
      * 
      * @param pointToRotate The point to rotate.
@@ -242,10 +253,11 @@ module MakerJs.point {
      * 
      * @param pointContext The point to serialize.
      * @param accuracy Optional exemplar of number of decimal places.
-     * @returns Number of child models.
+     * @returns String representing the point.
      */
     export function serialize(pointContext: IPoint, accuracy?: number) {
-        return round(pointContext[0], accuracy) + ',' + round(pointContext[1], accuracy);
+        var roundedPoint = rounded(pointContext, accuracy);
+        return roundedPoint[0] + ',' + roundedPoint[1];
     }
 
     /**
