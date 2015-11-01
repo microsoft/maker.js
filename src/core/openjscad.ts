@@ -139,7 +139,7 @@ module MakerJs.exporter {
     /**
      * Creates a string of JavaScript code for execution with the OpenJsCad engine.
      * 
-     * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
+     * @param modelToExport Model object to export.
      * @param options Export options object.
      * @param options.extrusion Height of 3D extrusion.
      * @param options.resolution Size of facets.
@@ -150,26 +150,50 @@ module MakerJs.exporter {
         var depth = 0;
         var depthModel: IModel;
 
-        options = options || { facetSize: 2, extrusion: 10};
+        var opts: IOpenJsCadOptions = {
+            extrusion: 1
+        };
 
-        while (depthModel = modelToExport.models[depth]) {
+        extendObject(opts, options);
+
+        var loops = model.findLoops(modelToExport);
+
+        while (depthModel = loops.models[depth]) {
             var union = '';
             for (var modelId in depthModel.models) {
                 var subModel = depthModel.models[modelId];
-                union += wrap('.union', pathsToOpenJsCad(subModel, options.facetSize), union);
+                union += wrap('.union', pathsToOpenJsCad(subModel, opts.facetSize), union);
             }
             var operator = (depth % 2 == 0) ? '.union' : '.subtract';
             all += wrap(operator, union, all);
             depth++;
         }
 
-        var extrude = '';
-        if (options.extrusion) {
-            var extrudeOptions: CAG.CAG_extrude_options = { offset: [0, 0, options.extrusion] };
-            extrude = wrap('.extrude', JSON.stringify(extrudeOptions), true);
-        }
+        var extrudeOptions: CAG.CAG_extrude_options = { offset: [0, 0, opts.extrusion] };
+        var extrude = wrap('.extrude', JSON.stringify(extrudeOptions), true);
 
         return 'function main(){return ' + all + extrude + ';}';
+    }
+
+    /**
+     * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
+     * 
+     * @param modelToExport Model object to export.
+     * @param options Export options object.
+     * @param options.extrusion Height of 3D extrusion.
+     * @param options.resolution Size of facets.
+     * @returns String of STL format of 3D object.
+     */
+    export function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions) {
+
+        var script = toOpenJsCad(modelToExport, options);
+
+        script += 'return main();';
+
+        var f = new Function(script);
+        var csg = <CSG>f();
+
+        return csg.toStlString();
     }
 
     /**

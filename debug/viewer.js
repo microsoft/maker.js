@@ -94,8 +94,10 @@ var Viewer = {
                 return JSON.stringify(Viewer.ViewModel);
 
             case "openjscad":
-                var loops = makerjs.model.findLoops(Viewer.ViewModel);
-                return makerjs.exporter.toOpenJsCad(loops);
+                return makerjs.exporter.toOpenJsCad(Viewer.ViewModel);
+
+            case "stl":
+                return makerjs.exporter.toSTL(Viewer.ViewModel);
         }
     },
 
@@ -114,6 +116,9 @@ var Viewer = {
 
             case "openjscad":
                 return "data:text/javascript," + encoded;
+
+            case "stl":
+                return "data:application/stl," +encoded;
         }
     },
 

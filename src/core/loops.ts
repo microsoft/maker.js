@@ -139,6 +139,8 @@ module MakerJs.model {
         //find loops by looking at all paths in this model
         model.walkPaths(modelContext, function (modelContext: IModel, pathId: string, pathContext: IPath) {
 
+            if (!pathContext) return;
+
             var safePath = <IPathDirectional>cloneObject(pathContext);
 
             //circles are loops by nature
