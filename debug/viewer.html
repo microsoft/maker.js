@@ -28,6 +28,7 @@
     <script src="../src/core/dxf.js"></script>
     <script src="../src/core/xml.js"></script>
     <script src="../src/core/svg.js"></script>
+    <script src="../src/core/openjscad.js"></script>
     <script src="../src/core/solvers.js"></script>
     <script src="../src/core/fillet.js"></script>
     <script src="../src/core/intersect.js"></script>
@@ -82,18 +83,18 @@
     <div id="view">
         <div id="svg-render" class="svg-zone"></div>
         <div id="svg-guides" class="svg-zone"></div>
-        <div id="export-zone"></div>
     </div>
 
     <div class="optionpanel">
-        <a href="#" onmouseover="Viewer.showExport('dxf')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
-        <a href="#" onmouseover="Viewer.showExport('svg')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
-        <a href="#" onmouseover="Viewer.showExport('json')" onmouseout="Viewer.hideExport()" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
+        <a href="#" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
+        <a href="#" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
+        <a href="#" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
+        <a href="#" onclick="this.href = Viewer.getExport('openjscad');" title="Download works in Chrome and Firefox" download="main.txt">download openjscad</a>
         <label for="checkAnnotate"> annotate:</label> <input id="checkAnnotate" type="checkbox" onclick="Viewer.Refresh()" />
     </div>
 
     <script>
-        
+
     </script>
 </body>
 

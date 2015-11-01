@@ -92,6 +92,10 @@ var Viewer = {
 
             case "json":
                 return JSON.stringify(Viewer.ViewModel);
+
+            case "openjscad":
+                var loops = makerjs.model.findLoops(Viewer.ViewModel);
+                return makerjs.exporter.toOpenJsCad(loops);
         }
     },
 
@@ -107,19 +111,10 @@ var Viewer = {
 
             case "json":
                 return "data:application/json," + encoded;
+
+            case "openjscad":
+                return "data:text/javascript," + encoded;
         }
-    },
-
-    hideExport: function () {
-        var zone = document.getElementById("export-zone");
-        zone.style.display = 'none';
-    },
-
-    showExport: function (type) {
-        var raw = Viewer.getRaw(type);
-        var zone = document.getElementById("export-zone");
-        zone.innerText = raw;
-        zone.style.display = 'block';
     },
 
     prepareView: function () {
