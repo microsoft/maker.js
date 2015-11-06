@@ -1,7 +1,7 @@
 /// <reference path="typings/tsd.d.ts" />
 var makerjs = require('makerjs');
-var stackboxCorner = (function () {
-    function stackboxCorner(holeRadius, rimThickness) {
+var starboxCorner = (function () {
+    function starboxCorner(holeRadius, rimThickness) {
         var rim = Math.min(rimThickness, holeRadius);
         var hr = holeRadius + rim;
         this.paths = {
@@ -10,12 +10,12 @@ var stackboxCorner = (function () {
             wFillet: new makerjs.paths.Arc([hr + holeRadius, 0], holeRadius, 180, 270)
         };
     }
-    return stackboxCorner;
+    return starboxCorner;
 })();
-var stackboxInner = (function () {
-    function stackboxInner(width, height, holeRadius, rimThickness) {
+var starboxInner = (function () {
+    function starboxInner(width, height, holeRadius, rimThickness) {
         var mm = makerjs.model;
-        var corner = new stackboxCorner(holeRadius, rimThickness);
+        var corner = new starboxCorner(holeRadius, rimThickness);
         this.models = {
             bottomLeft: corner,
             bottomRight: mm.move(mm.mirror(corner, true, false), [width, 0]),
@@ -32,12 +32,12 @@ var stackboxInner = (function () {
             right: new line([width + holeRadius, d], [width + holeRadius, height - d])
         };
     }
-    return stackboxInner;
+    return starboxInner;
 })();
-var stackbox = (function () {
-    function stackbox(width, height, holeRadius, rimThickness, angle) {
+var starbox = (function () {
+    function starbox(width, height, holeRadius, rimThickness, angle) {
         if (arguments.length == 0) {
-            var defaultValues = makerjs.kit.getParameterValues(stackbox);
+            var defaultValues = makerjs.kit.getParameterValues(starbox);
             width = defaultValues.shift();
             height = defaultValues.shift();
             holeRadius = defaultValues.shift();
@@ -49,7 +49,7 @@ var stackbox = (function () {
         this.models = {
             bolts: new mm.BoltRectangle(width, height, holeRadius),
             outer: new mm.RoundRectangle(width + c2, height + c2, cornerRadius),
-            inner: new stackboxInner(width, height, holeRadius, rimThickness)
+            inner: new starboxInner(width, height, holeRadius, rimThickness)
         };
         this.models['outer'].origin = [-cornerRadius, -cornerRadius];
 
@@ -64,13 +64,13 @@ var stackbox = (function () {
 
         makerjs.model.combine(this.models.inner, star, false, true, true, false);
     }
-    return stackbox;
+    return starbox;
 })();
-stackbox.metaParameters = [
+starbox.metaParameters = [
     { title: "width", type: "range", min: 10, max: 500, value: 120 },
     { title: "height", type: "range", min: 10, max: 500, value: 100 },
     { title: "holeRadius", type: "range", min: 1, max: 20, value: 3 },
     { title: "rimThickness", type: "range", min: 1, max: 20, value: 2 },
     { title: "angle", type: "range", min: -180, max: 180, value: 45 }
 ];
-module.exports = stackbox;
+module.exports = starbox;
