@@ -730,7 +730,7 @@ var MakerJs;
 var MakerJs;
 (function (MakerJs) {
     var path;
-    (function (_path) {
+    (function (path_1) {
         /**
          * @private
          */
@@ -796,7 +796,7 @@ var MakerJs;
             }
             return null;
         }
-        _path.breakAtPoint = breakAtPoint;
+        path_1.breakAtPoint = breakAtPoint;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -1116,7 +1116,7 @@ var MakerJs;
 var MakerJs;
 (function (MakerJs) {
     var model;
-    (function (_model) {
+    (function (model_1) {
         /**
          * @private
          */
@@ -1220,7 +1220,7 @@ var MakerJs;
          * @private
          */
         function checkInsideForeignModel(segment, modelToIntersect, farPoint) {
-            _model.walkPaths(modelToIntersect, function (mx, pathId2, path2) {
+            model_1.walkPaths(modelToIntersect, function (mx, pathId2, path2) {
                 if (path2) {
                     checkInsideForeignPath(segment, path2, farPoint);
                 }
@@ -1243,14 +1243,14 @@ var MakerJs;
             checkInsideForeignModel(segment, modelContext, farPoint);
             return !!segment.isInside;
         }
-        _model.isPathInsideModel = isPathInsideModel;
+        model_1.isPathInsideModel = isPathInsideModel;
         /**
          * @private
          */
         function breakAllPathsAtIntersections(modelToBreak, modelToIntersect, farPoint) {
             var crossedPaths = [];
             var overlappedSegments = [];
-            _model.walkPaths(modelToBreak, function (modelContext, pathId1, path1) {
+            model_1.walkPaths(modelToBreak, function (modelContext, pathId1, path1) {
                 if (!path1)
                     return;
                 //clone this path and make it the first segment
@@ -1265,11 +1265,12 @@ var MakerJs;
                     segments: [segment]
                 };
                 //keep breaking the segments anywhere they intersect with paths of the other model
-                _model.walkPaths(modelToIntersect, function (mx, pathId2, path2) {
+                model_1.walkPaths(modelToIntersect, function (mx, pathId2, path2) {
                     if (path2) {
                         breakAlongForeignPath(thisPath.segments, overlappedSegments, path2);
                     }
                 });
+                //check each segment whether it is inside or outside
                 for (var i = 0; i < thisPath.segments.length; i++) {
                     checkInsideForeignModel(thisPath.segments[i], modelToIntersect);
                 }
@@ -1300,7 +1301,7 @@ var MakerJs;
          */
         function addOrDeleteSegments(crossedPath, includeInside, includeOutside, firstPass) {
             function addSegment(model, pathIdBase, segment) {
-                var id = _model.getSimilarPathId(model, pathIdBase);
+                var id = model_1.getSimilarPathId(model, pathIdBase);
                 model.paths[id] = segment.path;
             }
             function checkAddSegment(model, pathIdBase, segment) {
@@ -1343,7 +1344,7 @@ var MakerJs;
                 addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA);
             }
         }
-        _model.combine = combine;
+        model_1.combine = combine;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -1420,7 +1421,7 @@ var MakerJs;
 var MakerJs;
 (function (MakerJs) {
     var measure;
-    (function (_measure) {
+    (function (measure_1) {
         /**
          * Total angle of an arc between its start and end angles.
          *
@@ -1431,7 +1432,7 @@ var MakerJs;
             var endAngle = MakerJs.angle.ofArcEnd(arc);
             return endAngle - arc.startAngle;
         }
-        _measure.arcAngle = arcAngle;
+        measure_1.arcAngle = arcAngle;
         /**
          * Check for arc being concave or convex towards a given point.
          *
@@ -1451,7 +1452,7 @@ var MakerJs;
             }
             return false;
         }
-        _measure.isArcConcaveTowardsPoint = isArcConcaveTowardsPoint;
+        measure_1.isArcConcaveTowardsPoint = isArcConcaveTowardsPoint;
         /**
          * Check if a given number is between two given limits.
          *
@@ -1469,7 +1470,7 @@ var MakerJs;
                 return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
             }
         }
-        _measure.isBetween = isBetween;
+        measure_1.isBetween = isBetween;
         /**
          * Check if a given angle is between an arc's start and end angles.
          *
@@ -1484,7 +1485,7 @@ var MakerJs;
             //computed angles will not be negative, but the arc may have specified a negative angle, so check against one revolution forward and backward
             return (isBetween(angleInQuestion, startAngle, endAngle, exclusive) || isBetween(angleInQuestion, startAngle + 360, endAngle + 360, exclusive) || isBetween(angleInQuestion, startAngle - 360, endAngle - 360, exclusive));
         }
-        _measure.isBetweenArcAngles = isBetweenArcAngles;
+        measure_1.isBetweenArcAngles = isBetweenArcAngles;
         /**
          * Check if a given point is between a line's end points.
          *
@@ -1505,7 +1506,7 @@ var MakerJs;
             }
             return true;
         }
-        _measure.isBetweenPoints = isBetweenPoints;
+        measure_1.isBetweenPoints = isBetweenPoints;
         /**
          * Calculates the distance between two points.
          *
@@ -1518,7 +1519,7 @@ var MakerJs;
             var dy = b[1] - a[1];
             return Math.sqrt(dx * dx + dy * dy);
         }
-        _measure.pointDistance = pointDistance;
+        measure_1.pointDistance = pointDistance;
         /**
          * @private
          */
@@ -1569,7 +1570,7 @@ var MakerJs;
             }
             return measurement;
         }
-        _measure.pathExtents = pathExtents;
+        measure_1.pathExtents = pathExtents;
         /**
          * Measures the length of a path.
          *
@@ -1596,7 +1597,7 @@ var MakerJs;
             }
             return value;
         }
-        _measure.pathLength = pathLength;
+        measure_1.pathLength = pathLength;
         /**
          * Measures the smallest rectangle which contains a model.
          *
@@ -1631,7 +1632,7 @@ var MakerJs;
             measure(modelToMeasure);
             return totalMeasurement;
         }
-        _measure.modelExtents = modelExtents;
+        measure_1.modelExtents = modelExtents;
     })(measure = MakerJs.measure || (MakerJs.measure = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -1732,7 +1733,7 @@ var MakerJs;
 var MakerJs;
 (function (MakerJs) {
     var exporter;
-    (function (_exporter) {
+    (function (exporter_1) {
         /**
          * Renders an item in AutoDesk DFX file format.
          *
@@ -1815,12 +1816,12 @@ var MakerJs;
             function entities() {
                 append("2");
                 append("ENTITIES");
-                var exporter = new _exporter.Exporter(map);
+                var exporter = new exporter_1.Exporter(map);
                 exporter.exportItem('entities', itemToExport, MakerJs.point.zero());
             }
             //fixup options
             if (!opts.units) {
-                var units = _exporter.tryGetModelUnits(itemToExport);
+                var units = exporter_1.tryGetModelUnits(itemToExport);
                 if (units) {
                     opts.units = units;
                 }
@@ -1836,7 +1837,7 @@ var MakerJs;
             append("EOF");
             return dxf.join('\n');
         }
-        _exporter.toDXF = toDXF;
+        exporter_1.toDXF = toDXF;
         /**
          * @private
          */
@@ -2352,6 +2353,7 @@ var MakerJs;
          */
         function populateShardPointsFromReferenceCircle(filletRadius, center, properties) {
             var referenceCircle = new MakerJs.paths.Circle(center, filletRadius);
+            //get reference circle intersection points
             for (var i = 0; i < 2; i++) {
                 var circleIntersection = path.intersection(referenceCircle, properties[i].path);
                 if (!circleIntersection) {
@@ -2683,6 +2685,7 @@ var MakerJs;
          * @private
          */
         function follow(connections, loops) {
+            //for a given point, follow the paths that connect to each other to form loops
             for (var p in connections) {
                 var linkedPaths = connections[p];
                 if (linkedPaths) {
@@ -3258,6 +3261,7 @@ var MakerJs;
             append(svgGroup.getOpeningTag(false));
             var exp = new exporter.Exporter(map, fixPoint, fixPath, beginModel, endModel);
             exp.exportItem('0', itemToExport, opts.origin);
+            //export layers as groups
             for (var layer in layers) {
                 var layerGroup = new exporter.XmlTag('g', { id: layer });
                 for (var i = 0; i < layers[layer].length; i++) {
@@ -3309,11 +3313,10 @@ var MakerJs;
         models.ConnectTheDots = ConnectTheDots;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var MakerJs;
 (function (MakerJs) {
