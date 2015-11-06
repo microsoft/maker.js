@@ -1,5 +1,5 @@
 ﻿
-function combine(angle) {
+function combine(angle, add) {
 
     var star1 = new makerjs.models.Oval(50, 100);
 
@@ -31,11 +31,12 @@ function combine(angle) {
         star2: star2
     };
 
-    makerjs.model.combine(star1, star2, false, true, false, true);
+    makerjs.model.combine(star1, star2, false, true, !add, add);
 }
 
 combine.metaParameters = [
-    { title: "angle", type: "range", min: -180, max: 180, step: 1, value: 40 }
+    { title: "angle", type: "range", min: -180, max: 180, step: 1, value: 40 },
+    { title: "add", type: "bool", value: true }
 ];
 
 
