@@ -31,7 +31,7 @@ function combine(angle, add) {
         star2: star2
     };
 
-    makerjs.model.combine(star1, star2, false, true, !add, add);
+    makerjs.model.combine(star1, star2, false, true, !add, add, add);
 }
 
 combine.metaParameters = [

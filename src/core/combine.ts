@@ -28,7 +28,7 @@ module MakerJs.model {
 
         if (path.areEqual(segments[0].path, foreignPath)) {
             segments[0].overlapped = true;
-            segments[0].overlappedEqual = true;
+            segments[0].duplicate = true;
 
             overlappedSegments.push(segments[0]);
             return;
@@ -172,7 +172,7 @@ module MakerJs.model {
      */
     interface ICrossedPathSegment extends IPathInside {
         overlapped: boolean;
-        overlappedEqual?: boolean;
+        duplicate?: boolean;
     }
 
     /**
@@ -242,7 +242,7 @@ module MakerJs.model {
 
         function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
             if (path.areEqual(segment1.path, segment2.path)) {
-                segment1.overlappedEqual = segment2.overlappedEqual = true;
+                segment1.duplicate = segment2.duplicate = true;
             }
         }
 
@@ -261,7 +261,7 @@ module MakerJs.model {
     /**
      * @private
      */
-    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, firstPass?: boolean) {
+    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates?: boolean) {
 
         function addSegment(model: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(model, pathIdBase);
@@ -278,8 +278,8 @@ module MakerJs.model {
         delete crossedPath.modelContext.paths[crossedPath.pathId];
 
         for (var i = 0; i < crossedPath.segments.length; i++) {
-            if (crossedPath.segments[i].overlappedEqual) {
-                if (firstPass) {
+            if (crossedPath.segments[i].duplicate) {
+                if (keepDuplicates) {
                     addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
                 }
             } else {
@@ -297,9 +297,10 @@ module MakerJs.model {
      * @param includeAOutsideB Flag to include paths from modelA which are outside of modelB.
      * @param includeBInsideA Flag to include paths from modelB which are inside of modelA.
      * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
+     * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
      */
-    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean, includeAOutsideB: boolean, includeBInsideA: boolean, includeBOutsideA: boolean, farPoint?: IPoint) {
+    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean, includeAOutsideB: boolean, includeBInsideA: boolean, includeBOutsideA: boolean, keepDuplicates: boolean = true, farPoint?: IPoint) {
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
         var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);
@@ -307,7 +308,7 @@ module MakerJs.model {
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments);
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true);
+            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, keepDuplicates);
         }
 
         for (var i = 0; i < pathsB.crossedPaths.length; i++) {
