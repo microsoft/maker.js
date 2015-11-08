@@ -568,10 +568,10 @@ var MakerJs;
          */
         var pathAreEqualMap = {};
         pathAreEqualMap[MakerJs.pathType.Line] = function (line1, line2) {
-            return MakerJs.point.areEqual(line1.end, line2.end);
+            return (MakerJs.point.areEqual(line1.origin, line2.origin) && MakerJs.point.areEqual(line1.end, line2.end)) || (MakerJs.point.areEqual(line1.origin, line2.end) && MakerJs.point.areEqual(line1.end, line2.origin));
         };
         pathAreEqualMap[MakerJs.pathType.Circle] = function (circle1, circle2) {
-            return circle1.radius == circle2.radius;
+            return MakerJs.point.areEqual(circle1.origin, circle2.origin) && circle1.radius == circle2.radius;
         };
         pathAreEqualMap[MakerJs.pathType.Arc] = function (arc1, arc2) {
             return pathAreEqualMap[MakerJs.pathType.Circle](arc1, arc2) && MakerJs.angle.areEqual(arc1.startAngle, arc2.startAngle) && MakerJs.angle.areEqual(arc1.endAngle, arc2.endAngle);
@@ -585,7 +585,7 @@ var MakerJs;
          */
         function areEqual(path1, path2) {
             var result = false;
-            if (path1.type == path2.type && MakerJs.point.areEqual(path1.origin, path2.origin)) {
+            if (path1.type == path2.type) {
                 var fn = pathAreEqualMap[path1.type];
                 if (fn) {
                     result = fn(path1, path2);
@@ -1139,7 +1139,7 @@ var MakerJs;
         function breakAlongForeignPath(segments, overlappedSegments, foreignPath) {
             if (MakerJs.path.areEqual(segments[0].path, foreignPath)) {
                 segments[0].overlapped = true;
-                segments[0].overlappedEqual = true;
+                segments[0].duplicate = true;
                 overlappedSegments.push(segments[0]);
                 return;
             }
@@ -1283,7 +1283,7 @@ var MakerJs;
         function checkForEqualOverlaps(crossedPathsA, crossedPathsB) {
             function compareSegments(segment1, segment2) {
                 if (MakerJs.path.areEqual(segment1.path, segment2.path)) {
-                    segment1.overlappedEqual = segment2.overlappedEqual = true;
+                    segment1.duplicate = segment2.duplicate = true;
                 }
             }
             function compareAll(segment) {
@@ -1298,7 +1298,7 @@ var MakerJs;
         /**
          * @private
          */
-        function addOrDeleteSegments(crossedPath, includeInside, includeOutside, firstPass) {
+        function addOrDeleteSegments(crossedPath, includeInside, includeOutside, keepDuplicates) {
             function addSegment(model, pathIdBase, segment) {
                 var id = model_1.getSimilarPathId(model, pathIdBase);
                 model.paths[id] = segment.path;
@@ -1311,8 +1311,8 @@ var MakerJs;
             //delete the original, its segments will be added
             delete crossedPath.modelContext.paths[crossedPath.pathId];
             for (var i = 0; i < crossedPath.segments.length; i++) {
-                if (crossedPath.segments[i].overlappedEqual) {
-                    if (firstPass) {
+                if (crossedPath.segments[i].duplicate) {
+                    if (keepDuplicates) {
                         addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
                     }
                 }
@@ -1330,14 +1330,16 @@ var MakerJs;
          * @param includeAOutsideB Flag to include paths from modelA which are outside of modelB.
          * @param includeBInsideA Flag to include paths from modelB which are inside of modelA.
          * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
+         * @param keepDuplicates Flag to include paths which are duplicate in both models.
          * @param farPoint Optional point of reference which is outside the bounds of both models.
          */
-        function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, farPoint) {
+        function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, keepDuplicates, farPoint) {
+            if (keepDuplicates === void 0) { keepDuplicates = true; }
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments);
             for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-                addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true);
+                addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, keepDuplicates);
             }
             for (var i = 0; i < pathsB.crossedPaths.length; i++) {
                 addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA);
@@ -3380,6 +3382,35 @@ var MakerJs;
             return BoltRectangle;
         })();
         models.BoltRectangle = BoltRectangle;
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var Dome = (function () {
+            function Dome(width, height, radius) {
+                if (radius === void 0) { radius = Math.min(width / 2, height); }
+                this.paths = {};
+                var w2 = width / 2;
+                var wt = Math.max(w2 - radius, 0);
+                var hr = Math.max(height - radius, 0);
+                this.paths["Bottom"] = new MakerJs.paths.Line([-w2, 0], [w2, 0]);
+                if (hr) {
+                    this.paths["Left"] = new MakerJs.paths.Line([-w2, 0], [-w2, hr]);
+                    this.paths["Right"] = new MakerJs.paths.Line([w2, 0], [w2, hr]);
+                }
+                if (radius > 0) {
+                    this.paths["TopLeft"] = new MakerJs.paths.Arc([-wt, hr], radius, 90, 180);
+                    this.paths["TopRight"] = new MakerJs.paths.Arc([wt, hr], radius, 0, 90);
+                }
+                if (wt) {
+                    this.paths["Top"] = new MakerJs.paths.Line([-wt, height], [wt, height]);
+                }
+            }
+            return Dome;
+        })();
+        models.Dome = Dome;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;

@@ -10,7 +10,7 @@ var Viewer = {
 
         //apply slider parameters
         if (typeof index !== 'undefined') {
-            Viewer.Params[index] = makerjs.round(arg, .001);
+            Viewer.Params[index] = arg;
         }
 
         var model = makerjs.kit.construct(Viewer.Constructor, Viewer.Params);
@@ -153,17 +153,35 @@ var Viewer = {
                 var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
                 label.innerText = attrs.title + ': ';
 
-                if (attrs.type == 'range') {
-                    attrs.title = attrs.value;
-                    var input = new makerjs.exporter.XmlTag('input', attrs);
-                    input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', this.valueAsNumber)';
-                    input.attrs['id'] = id;
+                var input = null;
 
-                    var div = new makerjs.exporter.XmlTag('div');
-                    div.innerText = label.toString() + input.toString();
-                    div.innerTextEscaped = true;
-                    paramsHtml += div.toString();
+                switch (attrs.type) {
+
+                    case 'range':
+                        attrs.title = attrs.value;
+                        input = new makerjs.exporter.XmlTag('input', attrs);
+                        input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', makerjs.round(this.valueAsNumber, .001))';
+                        input.attrs['id'] = id;
+
+                        break;
+
+                    case 'bool':
+                        input = new makerjs.exporter.XmlTag('input', {
+                            id: id,
+                            type: 'checkbox',
+                            checked: attrs.value ? 'checked' : '',
+                            onchange: 'Viewer.Refresh(' + i + ', this.checked)'
+                        });
+
+                        break;
                 }
+
+                if (!input) continue;
+
+                var div = new makerjs.exporter.XmlTag('div');
+                div.innerText = label.toString() + input.toString();
+                div.innerTextEscaped = true;
+                paramsHtml += div.toString();
             }
         }
         document.getElementById("params").innerHTML = paramsHtml;
