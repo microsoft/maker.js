@@ -1135,6 +1135,10 @@ declare module MakerJs.exporter {
          * Optional size of curve facets.
          */
         facetSize?: number;
+        /**
+         * Optional accuracy of points.
+         */
+        accuracy?: number;
     }
 }
 declare module MakerJs.exporter {
