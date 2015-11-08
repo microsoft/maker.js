@@ -3013,10 +3013,11 @@ var MakerJs;
             var depth = 0;
             var depthModel;
             var opts = {
-                extrusion: 1
+                extrusion: 1,
+                accuracy: .0001
             };
             MakerJs.extendObject(opts, options);
-            var loops = MakerJs.model.findLoops(modelToExport);
+            var loops = MakerJs.model.findLoops(modelToExport, options.accuracy);
             while (depthModel = loops.models[depth]) {
                 var union = '';
                 for (var modelId in depthModel.models) {

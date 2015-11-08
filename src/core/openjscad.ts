@@ -151,12 +151,13 @@ module MakerJs.exporter {
         var depthModel: IModel;
 
         var opts: IOpenJsCadOptions = {
-            extrusion: 1
+            extrusion: 1,
+            accuracy: .0001
         };
 
         extendObject(opts, options);
 
-        var loops = model.findLoops(modelToExport);
+        var loops = model.findLoops(modelToExport, options.accuracy);
 
         while (depthModel = loops.models[depth]) {
             var union = '';
@@ -210,6 +211,11 @@ module MakerJs.exporter {
          * Optional size of curve facets.
          */
         facetSize?: number;
+
+        /**
+         * Optional accuracy of points.
+         */
+        accuracy?: number
     }
 }
  
