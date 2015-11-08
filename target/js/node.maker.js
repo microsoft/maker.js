@@ -3017,7 +3017,7 @@ var MakerJs;
                 accuracy: .0001
             };
             MakerJs.extendObject(opts, options);
-            var loops = MakerJs.model.findLoops(modelToExport, options.accuracy);
+            var loops = MakerJs.model.findLoops(modelToExport, opts.accuracy);
             while (depthModel = loops.models[depth]) {
                 var union = '';
                 for (var modelId in depthModel.models) {
