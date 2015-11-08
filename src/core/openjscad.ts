@@ -157,7 +157,7 @@ module MakerJs.exporter {
 
         extendObject(opts, options);
 
-        var loops = model.findLoops(modelToExport, options.accuracy);
+        var loops = model.findLoops(modelToExport, opts.accuracy);
 
         while (depthModel = loops.models[depth]) {
             var union = '';
