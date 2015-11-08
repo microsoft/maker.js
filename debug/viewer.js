@@ -10,7 +10,7 @@ var Viewer = {
 
         //apply slider parameters
         if (typeof index !== 'undefined') {
-            Viewer.Params[index] = makerjs.round(arg, .001);
+            Viewer.Params[index] = arg;
         }
 
         var model = makerjs.kit.construct(Viewer.Constructor, Viewer.Params);
@@ -162,7 +162,7 @@ var Viewer = {
                     case 'range':
                         attrs.title = attrs.value;
                         input = new makerjs.exporter.XmlTag('input', attrs);
-                        input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', this.valueAsNumber)';
+                        input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', makerjs.round(this.valueAsNumber, .001))';
                         input.attrs['id'] = id;
 
                         break;
