@@ -3,11 +3,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 var makerjs = require('makerjs');
 
-<<<<<<< HEAD:demos/smile.js
 function smile(span, teeth, droop, dainty, gaze, heady) {
-=======
-    //this.origin = [3, 3];
->>>>>>> origin/master:examples/smile.js
 
 	if (arguments.length == 0) {    
 		var defaultValues = makerjs.kit.getParameterValues(smile);
