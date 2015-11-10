@@ -168,12 +168,18 @@ var Viewer = {
                         break;
 
                     case 'bool':
-                        input = new makerjs.exporter.XmlTag('input', {
+
+                        var checkboxAttrs = {
                             id: id,
                             type: 'checkbox',
-                            checked: attrs.value ? 'checked' : '',
                             onchange: 'Viewer.Refresh(' + i + ', this.checked)'
-                        });
+                        };
+
+                        if (attrs.value) {
+                            checkboxAttrs['checked'] = true;
+                        }
+
+                        input = new makerjs.exporter.XmlTag('input', checkboxAttrs);
 
                         break;
                 }
