@@ -230,7 +230,7 @@ module MakerJs.point {
         var d = measure.pointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = fromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
 
-        return add(rotationOrigin, rotatedPoint);
+        return rounded(add(rotationOrigin, rotatedPoint));
     }
 
     /**
