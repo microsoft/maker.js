@@ -331,6 +331,28 @@ module MakerJs {
     }
 
     /**
+     * Options when matching points
+     */
+    export interface IPointMatchOptions {
+
+        /**
+         * Optional exemplar of number of decimal places.
+         */
+        accuracy?: number;
+    }
+
+    /**
+     * Options to pass to model.findLoops.
+     */
+    export interface IFindLoopsOptions extends IPointMatchOptions {
+
+        /**
+         * Flag to remove looped paths from the original model.
+         */
+        removeFromOriginal?: boolean;
+    }
+
+    /**
      * A path that may be indicated to "flow" in either direction between its endpoints.
      */
     export interface IPathDirectional extends IPath {

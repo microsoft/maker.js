@@ -231,19 +231,4 @@ module MakerJs.model {
         return result;
     }
 
-    /**
-     * Options to pass to model.findLoops.
-     */
-    export interface IFindLoopsOptions {
-
-        /**
-         * Optional exemplar of number of decimal places.
-         */
-        accuracy?: number;
-
-        /**
-         * Flag to remove looped paths from the original model.
-         */
-        removeFromOriginal?: boolean;
-    }
 }
