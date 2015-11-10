@@ -1050,10 +1050,23 @@ declare module MakerJs.model {
      * Find paths that have common endpoints and form loops.
      *
      * @param modelContext The model to search for loops.
-     * @param accuracy Optional exemplar of number of decimal places.
-     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
+     * @param options Optional options object.
+     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
      */
-    function findLoops(modelContext: IModel, accuracy?: number): IModel;
+    function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel;
+    /**
+     * Options to pass to model.findLoops.
+     */
+    interface IFindLoopsOptions {
+        /**
+         * Optional exemplar of number of decimal places.
+         */
+        accuracy?: number;
+        /**
+         * Flag to remove looped paths from the original model.
+         */
+        removeFromOriginal?: boolean;
+    }
 }
 declare module MakerJs.exporter {
     /**

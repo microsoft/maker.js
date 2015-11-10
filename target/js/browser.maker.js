@@ -507,7 +507,7 @@ var MakerJs;
             var pointAngleInRadians = MakerJs.angle.ofPointInRadians(rotationOrigin, pointToRotate);
             var d = MakerJs.measure.pointDistance(rotationOrigin, pointToRotate);
             var rotatedPoint = fromPolar(pointAngleInRadians + MakerJs.angle.toRadians(angleInDegrees), d);
-            return add(rotationOrigin, rotatedPoint);
+            return rounded(add(rotationOrigin, rotatedPoint));
         }
         point.rotate = rotate;
         /**
@@ -1336,6 +1336,8 @@ var MakerJs;
          */
         function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, keepDuplicates, farPoint) {
             if (keepDuplicates === void 0) { keepDuplicates = true; }
+            model.originate(modelA);
+            model.originate(modelB);
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments);
@@ -2686,7 +2688,19 @@ var MakerJs;
         /**
          * @private
          */
-        function follow(connections, loops) {
+        function collectLoop(loop, loops, removeFromOriginal) {
+            loops.push(loop);
+            if (!removeFromOriginal)
+                return;
+            for (var id in loop.paths) {
+                var pathDirectionalWithOriginalContext = loop.paths[id];
+                delete pathDirectionalWithOriginalContext.primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+            }
+        }
+        /**
+         * @private
+         */
+        function follow(connections, loops, removeFromOriginal) {
             //for a given point, follow the paths that connect to each other to form loops
             for (var p in connections) {
                 var linkedPaths = connections[p];
@@ -2700,7 +2714,7 @@ var MakerJs;
                     while (true) {
                         var currPath = currLink.path;
                         currPath.reversed = currLink.reversed;
-                        var id = model.getSimilarPathId(loopModel, currLink.id);
+                        var id = model.getSimilarPathId(loopModel, currPath.primePathId);
                         loopModel.paths[id] = currPath;
                         if (!connections[currLink.nextConnection])
                             break;
@@ -2711,7 +2725,7 @@ var MakerJs;
                         currLink = nextLink;
                         if (currLink.path === firstLink.path) {
                             //loop is closed
-                            loops.push(loopModel);
+                            collectLoop(loopModel, loops, removeFromOriginal);
                             break;
                         }
                     }
@@ -2722,15 +2736,19 @@ var MakerJs;
          * Find paths that have common endpoints and form loops.
          *
          * @param modelContext The model to search for loops.
-         * @param accuracy Optional exemplar of number of decimal places.
-         * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
+         * @param options Optional options object.
+         * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
          */
-        function findLoops(modelContext, accuracy) {
+        function findLoops(modelContext, options) {
             var loops = [];
             var connections = {};
             var result = { models: {} };
+            var opts = {
+                accuracy: .0001
+            };
+            MakerJs.extendObject(opts, options);
             function getLinkedPathsOnConnectionPoint(p) {
-                var serializedPoint = MakerJs.point.serialize(p, accuracy);
+                var serializedPoint = MakerJs.point.serialize(p, opts.accuracy);
                 if (!(serializedPoint in connections)) {
                     connections[serializedPoint] = [];
                 }
@@ -2755,6 +2773,8 @@ var MakerJs;
                 if (!pathContext)
                     return;
                 var safePath = MakerJs.cloneObject(pathContext);
+                safePath.primePathId = pathId;
+                safePath.primeModel = modelContext;
                 //circles are loops by nature
                 if (safePath.type == MakerJs.pathType.Circle) {
                     var loopModel = {
@@ -2762,16 +2782,15 @@ var MakerJs;
                         insideCount: 0
                     };
                     loopModel.paths[pathId] = safePath;
-                    loops.push(loopModel);
+                    collectLoop(loopModel, loops, opts.removeFromOriginal);
                 }
                 else {
                     //gather both endpoints from all non-circle segments
                     safePath.endPoints = MakerJs.point.fromPathEnds(safePath);
                     for (var i = 2; i--;) {
                         var linkedPath = {
-                            id: pathId,
                             path: safePath,
-                            nextConnection: MakerJs.point.serialize(safePath.endPoints[1 - i], accuracy),
+                            nextConnection: MakerJs.point.serialize(safePath.endPoints[1 - i], opts.accuracy),
                             reversed: i != 0
                         };
                         getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
@@ -2779,7 +2798,7 @@ var MakerJs;
                 }
             });
             //follow paths to find loops
-            follow(connections, loops);
+            follow(connections, loops, opts.removeFromOriginal);
             //now we have all loops, we need to see which are inside of each other
             spin(function (firstLoop) {
                 var firstPath = getFirstPathFromModel(firstLoop);
