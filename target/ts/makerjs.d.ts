@@ -248,6 +248,24 @@ declare module MakerJs {
         path2Angles?: number[];
     }
     /**
+     * Options when matching points
+     */
+    interface IPointMatchOptions {
+        /**
+         * Optional exemplar of number of decimal places.
+         */
+        accuracy?: number;
+    }
+    /**
+     * Options to pass to model.findLoops.
+     */
+    interface IFindLoopsOptions extends IPointMatchOptions {
+        /**
+         * Flag to remove looped paths from the original model.
+         */
+        removeFromOriginal?: boolean;
+    }
+    /**
      * A path that may be indicated to "flow" in either direction between its endpoints.
      */
     interface IPathDirectional extends IPath {
@@ -974,7 +992,7 @@ declare module MakerJs.path {
      * @param line2 Second line to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number): IPathArc;
+    function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number, options?: IPointMatchOptions): IPathArc;
     /**
      * Adds a round corner to the inside angle between 2 paths. The paths must meet at one point.
      *
@@ -982,7 +1000,7 @@ declare module MakerJs.path {
      * @param path2 Second path to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    function fillet(path1: IPath, path2: IPath, filletRadius: number): IPathArc;
+    function fillet(path1: IPath, path2: IPath, filletRadius: number, options?: IPointMatchOptions): IPathArc;
 }
 declare module MakerJs.kit {
     /**
@@ -1054,19 +1072,6 @@ declare module MakerJs.model {
      * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
      */
     function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel;
-    /**
-     * Options to pass to model.findLoops.
-     */
-    interface IFindLoopsOptions {
-        /**
-         * Optional exemplar of number of decimal places.
-         */
-        accuracy?: number;
-        /**
-         * Flag to remove looped paths from the original model.
-         */
-        removeFromOriginal?: boolean;
-    }
 }
 declare module MakerJs.exporter {
     /**
@@ -1139,7 +1144,7 @@ declare module MakerJs.exporter {
     /**
      * OpenJsCad export options.
      */
-    interface IOpenJsCadOptions extends IExportOptions {
+    interface IOpenJsCadOptions extends IFindLoopsOptions {
         /**
          * Optional depth of 3D extrusion.
          */
@@ -1148,10 +1153,6 @@ declare module MakerJs.exporter {
          * Optional size of curve facets.
          */
         facetSize?: number;
-        /**
-         * Optional accuracy of points.
-         */
-        accuracy?: number;
     }
 }
 declare module MakerJs.exporter {

@@ -2355,7 +2355,7 @@ var MakerJs;
         /**
          * @private
          */
-        function populateShardPointsFromReferenceCircle(filletRadius, center, properties) {
+        function populateShardPointsFromReferenceCircle(filletRadius, center, properties, options) {
             var referenceCircle = new MakerJs.paths.Circle(center, filletRadius);
             //get reference circle intersection points
             for (var i = 0; i < 2; i++) {
@@ -2364,7 +2364,7 @@ var MakerJs;
                     return false;
                 }
                 properties[i].shardPoint = circleIntersection.intersectionPoints[0];
-                if (MakerJs.point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
+                if (MakerJs.point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], options.accuracy)) {
                     if (circleIntersection.intersectionPoints.length > 1) {
                         properties[i].shardPoint = circleIntersection.intersectionPoints[1];
                     }
@@ -2513,8 +2513,12 @@ var MakerJs;
          * @param line2 Second line to fillet, which will be modified to fit the fillet.
          * @returns Arc path object of the new fillet.
          */
-        function dogbone(line1, line2, filletRadius) {
+        function dogbone(line1, line2, filletRadius, options) {
             if (MakerJs.isPathLine(line1) && MakerJs.isPathLine(line2) && filletRadius && filletRadius > 0) {
+                var opts = {
+                    accuracy: .0001
+                };
+                MakerJs.extendObject(opts, options);
                 //first find the common point
                 var commonProperty = getMatchingPointProperties(line1, line2);
                 if (commonProperty) {
@@ -2526,7 +2530,7 @@ var MakerJs;
                     //use the bisection theorem to get the angle bisecting the lines
                     var bisectionAngle = MakerJs.angle.ofPointInDegrees(commonProperty[0].point, midRatioPoint);
                     var center = MakerJs.point.add(commonProperty[0].point, MakerJs.point.fromPolar(MakerJs.angle.toRadians(bisectionAngle), filletRadius));
-                    if (!populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty)) {
+                    if (!populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty, opts)) {
                         return null;
                     }
                     //get the angles of the fillet and a function which clips the path to the fillet.
@@ -2560,14 +2564,18 @@ var MakerJs;
          * @param path2 Second path to fillet, which will be modified to fit the fillet.
          * @returns Arc path object of the new fillet.
          */
-        function fillet(path1, path2, filletRadius) {
+        function fillet(path1, path2, filletRadius, options) {
             if (path1 && path2 && filletRadius && filletRadius > 0) {
+                var opts = {
+                    accuracy: .0001
+                };
+                MakerJs.extendObject(opts, options);
                 //first find the common point
                 var commonProperty = getMatchingPointProperties(path1, path2);
                 if (commonProperty) {
                     //since arcs can curl beyond, we need a local reference point. 
                     //An intersection with a circle of the same radius as the desired fillet should suffice.
-                    if (!populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty)) {
+                    if (!populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty, opts)) {
                         return null;
                     }
                     //get "parallel" guidelines
@@ -3037,7 +3045,7 @@ var MakerJs;
                 accuracy: .0001
             };
             MakerJs.extendObject(opts, options);
-            var loops = MakerJs.model.findLoops(modelToExport, opts.accuracy);
+            var loops = MakerJs.model.findLoops(modelToExport, opts);
             while (depthModel = loops.models[depth]) {
                 var union = '';
                 for (var modelId in depthModel.models) {
