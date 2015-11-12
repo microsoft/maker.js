@@ -1335,8 +1335,6 @@ var MakerJs;
          */
         function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, keepDuplicates, farPoint) {
             if (keepDuplicates === void 0) { keepDuplicates = true; }
-            model.originate(modelA);
-            model.originate(modelB);
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments);
@@ -2695,19 +2693,16 @@ var MakerJs;
         /**
          * @private
          */
-        function collectLoop(loop, loops, removeFromOriginal) {
+        function collectLoop(loop, loops, detach) {
             loops.push(loop);
-            if (!removeFromOriginal)
-                return;
-            for (var id in loop.paths) {
-                var pathDirectionalWithOriginalContext = loop.paths[id];
-                delete pathDirectionalWithOriginalContext.primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+            if (detach) {
+                detachLoop(loop);
             }
         }
         /**
          * @private
          */
-        function follow(connections, loops, removeFromOriginal) {
+        function follow(connections, loops, detach) {
             //for a given point, follow the paths that connect to each other to form loops
             for (var p in connections) {
                 var linkedPaths = connections[p];
@@ -2732,7 +2727,7 @@ var MakerJs;
                         currLink = nextLink;
                         if (currLink.path === firstLink.path) {
                             //loop is closed
-                            collectLoop(loopModel, loops, removeFromOriginal);
+                            collectLoop(loopModel, loops, detach);
                             break;
                         }
                     }
@@ -2829,6 +2824,21 @@ var MakerJs;
             return result;
         }
         model.findLoops = findLoops;
+        /**
+         * Remove all paths in a loop model from the model(s) which contained them.
+         *
+         * @param loopToDetach The model to search for loops.
+         */
+        function detachLoop(loopToDetach) {
+            for (var id in loopToDetach.paths) {
+                var pathDirectionalWithOriginalContext = loopToDetach.paths[id];
+                var primeModel = pathDirectionalWithOriginalContext.primeModel;
+                if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.primePathId) {
+                    delete primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+                }
+            }
+        }
+        model.detachLoop = detachLoop;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;

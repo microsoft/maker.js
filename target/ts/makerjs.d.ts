@@ -1072,6 +1072,12 @@ declare module MakerJs.model {
      * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
      */
     function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel;
+    /**
+     * Remove all paths in a loop model from the model(s) which contained them.
+     *
+     * @param loopToDetach The model to search for loops.
+     */
+    function detachLoop(loopToDetach: IModel): void;
 }
 declare module MakerJs.exporter {
     /**
