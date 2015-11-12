@@ -9,7 +9,7 @@ title: Api - MakerJs Module
 			<p>Root module for Maker.js.</p>
 		</div>
 		<p>Example: get a reference to Maker.js</p>
-		<pre><code><span class="hljs-reserved">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'makerjs'</span>);
+		<pre><code><span class="hljs-keyword">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'makerjs'</span>);
 </code></pre>
 	</div>
 </section>
@@ -42,6 +42,7 @@ title: Api - MakerJs Module
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipath.html" class="tsd-kind-icon">IPath</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipatharc.html" class="tsd-kind-icon">IPath<wbr>Arc</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathcircle.html" class="tsd-kind-icon">IPath<wbr>Circle</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathdirectional.html" class="tsd-kind-icon">IPath<wbr>Directional</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private"><a href="interfaces/makerjs.ipathfunctionmap.html" class="tsd-kind-icon">IPath<wbr>Function<wbr>Map</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathintersection.html" class="tsd-kind-icon">IPath<wbr>Intersection</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathintersectionoptions.html" class="tsd-kind-icon">IPath<wbr>Intersection<wbr>Options</a></li>
@@ -166,7 +167,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L403">core/maker.ts:403</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L419">core/maker.ts:419</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -357,7 +358,7 @@ title: Api - MakerJs Module
 						<p>Numeric rounding</p>
 					</div>
 					<p>Example: round to 3 decimal places</p>
-					<pre><code>makerjs.<span class="hljs-built_in">round</span><span class="hljs-params">(<span class="hljs-number">3.14159</span>, .<span class="hljs-number">001</span>)</span>; <span class="hljs-comment">//returns 3.142</span>
+					<pre><code>makerjs.round(<span class="hljs-number">3.14159</span>, <span class="hljs-number">.001</span>); <span class="hljs-comment">//returns 3.142</span>
 </code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>

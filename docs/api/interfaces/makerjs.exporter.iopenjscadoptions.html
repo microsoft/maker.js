@@ -1,20 +1,23 @@
 ---
 layout: posts
-title: Api - IPointProperty Interface
+title: Api - IOpenJsCadOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>OpenJsCad export options.</p>
+		</div>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IPointProperty</span>
+			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
 			<ul class="tsd-hierarchy">
 				<li>
-					<a href="makerjs.path.imatchpointproperty.html" class="tsd-signature-type">IMatchPointProperty</a>
+					<span class="target">IOpenJsCadOptions</span>
 				</li>
 			</ul>
 		</li>
@@ -24,37 +27,80 @@ title: Api - IPointProperty Interface
 	<h2>Index</h2>
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
-			<section class="tsd-index-section tsd-is-not-exported">
+			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.path.ipointproperty.html#point" class="tsd-kind-icon">point</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.path.ipointproperty.html#propertyname" class="tsd-kind-icon">property<wbr>Name</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#extrusion" class="tsd-kind-icon">extrusion</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#facetsize" class="tsd-kind-icon">facet<wbr>Size</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#units" class="tsd-kind-icon">units</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
-<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="point" class="tsd-anchor"></a>
-		<h3>point</h3>
-		<div class="tsd-signature tsd-kind-icon">point<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="accuracy" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> accuracy</h3>
+		<div class="tsd-signature tsd-kind-icon">accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L9">core/fillet.ts:9</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L218">core/openjscad.ts:218</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional accuracy of points.</p>
+			</div>
+		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="propertyname" class="tsd-anchor"></a>
-		<h3>property<wbr>Name</h3>
-		<div class="tsd-signature tsd-kind-icon">property<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="extrusion" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> extrusion</h3>
+		<div class="tsd-signature tsd-kind-icon">extrusion<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/fillet.ts#L10">core/fillet.ts:10</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L208">core/openjscad.ts:208</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional depth of 3D extrusion.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="facetsize" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> facet<wbr>Size</h3>
+		<div class="tsd-signature tsd-kind-icon">facet<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L213">core/openjscad.ts:213</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional size of curve facets.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="units" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
+		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#units">units</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/exporter.ts#L14">core/exporter.ts:14</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Unit system to embed in exported file.</p>
+			</div>
+		</div>
 	</section>
 </section>
 </div>
