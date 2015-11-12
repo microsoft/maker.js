@@ -59,22 +59,18 @@ module MakerJs.model {
     /**
      * @private
      */
-    function collectLoop(loop: ILoopModel, loops: ILoopModel[], removeFromOriginal: boolean) {
+    function collectLoop(loop: ILoopModel, loops: ILoopModel[], detach: boolean) {
         loops.push(loop);
 
-        if (!removeFromOriginal) return;
-
-        for (var id in loop.paths) {
-            var pathDirectionalWithOriginalContext = <IPathDirectionalWithPrimeContext>loop.paths[id];
-
-            delete pathDirectionalWithOriginalContext.primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+        if (detach) {
+            detachLoop(loop);
         }
     }
 
     /**
      * @private
      */
-    function follow(connections: IConnectionMap, loops: ILoopModel[], removeFromOriginal: boolean) {
+    function follow(connections: IConnectionMap, loops: ILoopModel[], detach: boolean) {
         //for a given point, follow the paths that connect to each other to form loops
         for (var p in connections) {
             var linkedPaths: ILinkedPath[] = connections[p];
@@ -109,7 +105,7 @@ module MakerJs.model {
                     if (currLink.path === firstLink.path) {
 
                         //loop is closed
-                        collectLoop(loopModel, loops, removeFromOriginal);
+                        collectLoop(loopModel, loops, detach);
                         break;
                     }
                 }
@@ -231,4 +227,18 @@ module MakerJs.model {
         return result;
     }
 
+    /**
+     * Remove all paths in a loop model from the model(s) which contained them.
+     * 
+     * @param loopToDetach The model to search for loops.
+     */
+    export function detachLoop(loopToDetach: IModel) {
+        for (var id in loopToDetach.paths) {
+            var pathDirectionalWithOriginalContext = <IPathDirectionalWithPrimeContext>loopToDetach.paths[id];
+            var primeModel = pathDirectionalWithOriginalContext.primeModel;
+            if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.primePathId) {
+                delete primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+            }
+        }
+    }
 }
