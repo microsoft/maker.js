@@ -1335,6 +1335,10 @@ var MakerJs;
          * @param farPoint Optional point of reference which is outside the bounds of both models.
          */
         function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, keepDuplicates, farPoint) {
+            if (includeAInsideB === void 0) { includeAInsideB = false; }
+            if (includeAOutsideB === void 0) { includeAOutsideB = true; }
+            if (includeBInsideA === void 0) { includeBInsideA = false; }
+            if (includeBOutsideA === void 0) { includeBOutsideA = true; }
             if (keepDuplicates === void 0) { keepDuplicates = true; }
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);
