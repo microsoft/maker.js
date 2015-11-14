@@ -436,6 +436,13 @@ module MakerJs {
     }
 
     /**
+     * Callback signature for model.walkPaths().
+     */
+    export interface IModelPathCallback {
+        (modelContext: IModel, pathId: string, pathContext: IPath): void;
+    }
+
+    /**
      * Test to see if an object implements the required properties of a model.
      */
     export function isModel(item: any): boolean {

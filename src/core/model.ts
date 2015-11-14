@@ -220,13 +220,6 @@ module MakerJs.model {
     }
 
     /**
-     * Callback signature for walkPaths.
-     */
-    export interface IModelPathCallback {
-        (modelContext: IModel, pathId: string, pathContext: IPath): void;
-    }
-
-    /**
      * Recursively walk through all paths for a given model.
      * 
      * @param modelContext The model to walk.
