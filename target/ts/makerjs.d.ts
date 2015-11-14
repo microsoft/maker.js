@@ -334,6 +334,12 @@ declare module MakerJs {
         layer?: string;
     }
     /**
+     * Callback signature for model.walkPaths().
+     */
+    interface IModelPathCallback {
+        (modelContext: IModel, pathId: string, pathContext: IPath): void;
+    }
+    /**
      * Test to see if an object implements the required properties of a model.
      */
     function isModel(item: any): boolean;
@@ -757,12 +763,6 @@ declare module MakerJs.model {
      * @returns The scaled model (for chaining).
      */
     function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel;
-    /**
-     * Callback signature for walkPaths.
-     */
-    interface IModelPathCallback {
-        (modelContext: IModel, pathId: string, pathContext: IPath): void;
-    }
     /**
      * Recursively walk through all paths for a given model.
      *
