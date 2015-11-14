@@ -507,7 +507,7 @@ var MakerJs;
             var pointAngleInRadians = MakerJs.angle.ofPointInRadians(rotationOrigin, pointToRotate);
             var d = MakerJs.measure.pointDistance(rotationOrigin, pointToRotate);
             var rotatedPoint = fromPolar(pointAngleInRadians + MakerJs.angle.toRadians(angleInDegrees), d);
-            return add(rotationOrigin, rotatedPoint);
+            return rounded(add(rotationOrigin, rotatedPoint));
         }
         point.rotate = rotate;
         /**
@@ -1335,6 +1335,10 @@ var MakerJs;
          * @param farPoint Optional point of reference which is outside the bounds of both models.
          */
         function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, keepDuplicates, farPoint) {
+            if (includeAInsideB === void 0) { includeAInsideB = false; }
+            if (includeAOutsideB === void 0) { includeAOutsideB = true; }
+            if (includeBInsideA === void 0) { includeBInsideA = false; }
+            if (includeBOutsideA === void 0) { includeBOutsideA = true; }
             if (keepDuplicates === void 0) { keepDuplicates = true; }
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);
@@ -2353,7 +2357,7 @@ var MakerJs;
         /**
          * @private
          */
-        function populateShardPointsFromReferenceCircle(filletRadius, center, properties) {
+        function populateShardPointsFromReferenceCircle(filletRadius, center, properties, options) {
             var referenceCircle = new MakerJs.paths.Circle(center, filletRadius);
             //get reference circle intersection points
             for (var i = 0; i < 2; i++) {
@@ -2362,7 +2366,7 @@ var MakerJs;
                     return false;
                 }
                 properties[i].shardPoint = circleIntersection.intersectionPoints[0];
-                if (MakerJs.point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
+                if (MakerJs.point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], options.accuracy)) {
                     if (circleIntersection.intersectionPoints.length > 1) {
                         properties[i].shardPoint = circleIntersection.intersectionPoints[1];
                     }
@@ -2511,8 +2515,12 @@ var MakerJs;
          * @param line2 Second line to fillet, which will be modified to fit the fillet.
          * @returns Arc path object of the new fillet.
          */
-        function dogbone(line1, line2, filletRadius) {
+        function dogbone(line1, line2, filletRadius, options) {
             if (MakerJs.isPathLine(line1) && MakerJs.isPathLine(line2) && filletRadius && filletRadius > 0) {
+                var opts = {
+                    accuracy: .0001
+                };
+                MakerJs.extendObject(opts, options);
                 //first find the common point
                 var commonProperty = getMatchingPointProperties(line1, line2);
                 if (commonProperty) {
@@ -2524,7 +2532,7 @@ var MakerJs;
                     //use the bisection theorem to get the angle bisecting the lines
                     var bisectionAngle = MakerJs.angle.ofPointInDegrees(commonProperty[0].point, midRatioPoint);
                     var center = MakerJs.point.add(commonProperty[0].point, MakerJs.point.fromPolar(MakerJs.angle.toRadians(bisectionAngle), filletRadius));
-                    if (!populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty)) {
+                    if (!populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty, opts)) {
                         return null;
                     }
                     //get the angles of the fillet and a function which clips the path to the fillet.
@@ -2558,14 +2566,18 @@ var MakerJs;
          * @param path2 Second path to fillet, which will be modified to fit the fillet.
          * @returns Arc path object of the new fillet.
          */
-        function fillet(path1, path2, filletRadius) {
+        function fillet(path1, path2, filletRadius, options) {
             if (path1 && path2 && filletRadius && filletRadius > 0) {
+                var opts = {
+                    accuracy: .0001
+                };
+                MakerJs.extendObject(opts, options);
                 //first find the common point
                 var commonProperty = getMatchingPointProperties(path1, path2);
                 if (commonProperty) {
                     //since arcs can curl beyond, we need a local reference point. 
                     //An intersection with a circle of the same radius as the desired fillet should suffice.
-                    if (!populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty)) {
+                    if (!populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty, opts)) {
                         return null;
                     }
                     //get "parallel" guidelines
@@ -2686,7 +2698,16 @@ var MakerJs;
         /**
          * @private
          */
-        function follow(connections, loops) {
+        function collectLoop(loop, loops, detach) {
+            loops.push(loop);
+            if (detach) {
+                detachLoop(loop);
+            }
+        }
+        /**
+         * @private
+         */
+        function follow(connections, loops, detach) {
             //for a given point, follow the paths that connect to each other to form loops
             for (var p in connections) {
                 var linkedPaths = connections[p];
@@ -2700,7 +2721,7 @@ var MakerJs;
                     while (true) {
                         var currPath = currLink.path;
                         currPath.reversed = currLink.reversed;
-                        var id = model.getSimilarPathId(loopModel, currLink.id);
+                        var id = model.getSimilarPathId(loopModel, currPath.primePathId);
                         loopModel.paths[id] = currPath;
                         if (!connections[currLink.nextConnection])
                             break;
@@ -2711,7 +2732,7 @@ var MakerJs;
                         currLink = nextLink;
                         if (currLink.path === firstLink.path) {
                             //loop is closed
-                            loops.push(loopModel);
+                            collectLoop(loopModel, loops, detach);
                             break;
                         }
                     }
@@ -2722,15 +2743,19 @@ var MakerJs;
          * Find paths that have common endpoints and form loops.
          *
          * @param modelContext The model to search for loops.
-         * @param accuracy Optional exemplar of number of decimal places.
-         * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
+         * @param options Optional options object.
+         * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
          */
-        function findLoops(modelContext, accuracy) {
+        function findLoops(modelContext, options) {
             var loops = [];
             var connections = {};
             var result = { models: {} };
+            var opts = {
+                accuracy: .0001
+            };
+            MakerJs.extendObject(opts, options);
             function getLinkedPathsOnConnectionPoint(p) {
-                var serializedPoint = MakerJs.point.serialize(p, accuracy);
+                var serializedPoint = MakerJs.point.serialize(p, opts.accuracy);
                 if (!(serializedPoint in connections)) {
                     connections[serializedPoint] = [];
                 }
@@ -2755,6 +2780,8 @@ var MakerJs;
                 if (!pathContext)
                     return;
                 var safePath = MakerJs.cloneObject(pathContext);
+                safePath.primePathId = pathId;
+                safePath.primeModel = modelContext;
                 //circles are loops by nature
                 if (safePath.type == MakerJs.pathType.Circle) {
                     var loopModel = {
@@ -2762,16 +2789,15 @@ var MakerJs;
                         insideCount: 0
                     };
                     loopModel.paths[pathId] = safePath;
-                    loops.push(loopModel);
+                    collectLoop(loopModel, loops, opts.removeFromOriginal);
                 }
                 else {
                     //gather both endpoints from all non-circle segments
                     safePath.endPoints = MakerJs.point.fromPathEnds(safePath);
                     for (var i = 2; i--;) {
                         var linkedPath = {
-                            id: pathId,
                             path: safePath,
-                            nextConnection: MakerJs.point.serialize(safePath.endPoints[1 - i], accuracy),
+                            nextConnection: MakerJs.point.serialize(safePath.endPoints[1 - i], opts.accuracy),
                             reversed: i != 0
                         };
                         getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
@@ -2779,7 +2805,7 @@ var MakerJs;
                 }
             });
             //follow paths to find loops
-            follow(connections, loops);
+            follow(connections, loops, opts.removeFromOriginal);
             //now we have all loops, we need to see which are inside of each other
             spin(function (firstLoop) {
                 var firstPath = getFirstPathFromModel(firstLoop);
@@ -2803,6 +2829,21 @@ var MakerJs;
             return result;
         }
         model.findLoops = findLoops;
+        /**
+         * Remove all paths in a loop model from the model(s) which contained them.
+         *
+         * @param loopToDetach The model to search for loops.
+         */
+        function detachLoop(loopToDetach) {
+            for (var id in loopToDetach.paths) {
+                var pathDirectionalWithOriginalContext = loopToDetach.paths[id];
+                var primeModel = pathDirectionalWithOriginalContext.primeModel;
+                if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.primePathId) {
+                    delete primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+                }
+            }
+        }
+        model.detachLoop = detachLoop;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3018,7 +3059,7 @@ var MakerJs;
                 accuracy: .0001
             };
             MakerJs.extendObject(opts, options);
-            var loops = MakerJs.model.findLoops(modelToExport, opts.accuracy);
+            var loops = MakerJs.model.findLoops(modelToExport, opts);
             while (depthModel = loops.models[depth]) {
                 var union = '';
                 for (var modelId in depthModel.models) {

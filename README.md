@@ -1,8 +1,54 @@
 # Maker.js
 
-Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters. Maker.js runs in both Node.js and web browsers.
+Maker.js, a Microsoft Garage project, is a JavaScript library for creating line drawings for CNC and laser cutters. It runs in both Node.js and web browsers.
 
-[About](http://microsoft.github.io/maker.js/about/) - [Blog](http://microsoft.github.io/maker.js/) -  [Demos](http://microsoft.github.io/maker.js/demos/) - [Documentation](http://microsoft.github.io/maker.js/docs/) - [Discussion](https://gitter.im/Microsoft/maker.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[Demos](http://microsoft.github.io/maker.js/demos/) - [Documentation](http://microsoft.github.io/maker.js/docs/)
+
+## Features
+
+### Drawing with JavaScript code
+
+Draw using three primitive paths: [Line, Circle, and Arc](http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths).
+
+Paths can be [grouped into Models](http://microsoft.github.io/maker.js/docs/basic-drawing/#Models) to form more complex drawings.
+
+Behind the scenes, drawings are a [simple Javascript object](http://microsoft.github.io/maker.js/docs/basic-drawing/#It%27s%20Just%20JSON) which can be serialized / deserialized conventionally with JSON.
+
+Other people's Models can be imported, [modified](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Modifying%20models), and re-exported.
+
+Models can be [scaled](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Scaling), [measured](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](http://microsoft.github.io/maker.js/docs/basic-drawing/#Units).
+
+Models can be [rotated](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Rotating) or [mirrored](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Mirroring).
+
+Find [intersection points or intersection angles](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#intersection) of paths.
+
+Easily add a curvature at the joint between any 2 paths, using a [traditional fillet](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#fillet) or a [dogbone fillet](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#dogbone).
+
+[Combine models](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#combine) with boolean operations to get unions, intersections, or punches.
+
+[Detect loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
+
+### Output formats
+
+2D: [DXF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf), [SVG](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg)
+
+3D: [OpenJsCad script](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#toopenjscad), [STL](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tostl) (Must include [OpenJsCad](http://joostn.github.io/OpenJsCad/) or [openjscad-csg](https://www.npmjs.com/package/openjscad-csg))
+
+### Built-in models
+
+* Bolt Circle
+* Bolt Rectangle
+* Connect the dots
+* Dome
+* Oval
+* OvalArc
+* Polygon
+* Rectangle
+* Ring
+* RoundRectangle
+* S curve
+* Square
+* Star
 
 ## Getting Started
 

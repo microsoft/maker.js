@@ -300,7 +300,7 @@ module MakerJs.model {
      * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
      */
-    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean, includeAOutsideB: boolean, includeBInsideA: boolean, includeBOutsideA: boolean, keepDuplicates: boolean = true, farPoint?: IPoint) {
+    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, keepDuplicates: boolean = true, farPoint?: IPoint) {
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, farPoint);
         var pathsB = breakAllPathsAtIntersections(modelB, modelA, farPoint);

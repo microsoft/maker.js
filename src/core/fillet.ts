@@ -98,7 +98,7 @@ module MakerJs.path {
     /**
      * @private
      */
-    function populateShardPointsFromReferenceCircle(filletRadius: number, center: IPoint, properties: IMatchPointProperty[]): boolean {
+    function populateShardPointsFromReferenceCircle(filletRadius: number, center: IPoint, properties: IMatchPointProperty[], options: IPointMatchOptions): boolean {
         var referenceCircle = new paths.Circle(center, filletRadius);
 
         //get reference circle intersection points
@@ -110,7 +110,7 @@ module MakerJs.path {
 
             properties[i].shardPoint = circleIntersection.intersectionPoints[0];
 
-            if (point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
+            if (point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], options.accuracy)) {
                 if (circleIntersection.intersectionPoints.length > 1) {
                     properties[i].shardPoint = circleIntersection.intersectionPoints[1];
                 } else {
@@ -291,9 +291,14 @@ module MakerJs.path {
      * @param line2 Second line to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    export function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number): IPathArc {
+    export function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number, options?: IPointMatchOptions): IPathArc {
 
         if (isPathLine(line1) && isPathLine(line2) && filletRadius && filletRadius > 0) {
+
+            var opts: IPointMatchOptions = {
+                accuracy: .0001
+            };
+            extendObject(opts, options);
 
             //first find the common point
             var commonProperty = getMatchingPointProperties(line1, line2);
@@ -311,7 +316,7 @@ module MakerJs.path {
 
                 var center = point.add(commonProperty[0].point, point.fromPolar(angle.toRadians(bisectionAngle), filletRadius));
 
-                if (!populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty)) {
+                if (!populateShardPointsFromReferenceCircle(filletRadius, center, commonProperty, opts)) {
                     return null;
                 }
 
@@ -350,9 +355,14 @@ module MakerJs.path {
      * @param path2 Second path to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    export function fillet(path1: IPath, path2: IPath, filletRadius: number): IPathArc {
+    export function fillet(path1: IPath, path2: IPath, filletRadius: number, options?: IPointMatchOptions): IPathArc {
 
         if (path1 && path2 && filletRadius && filletRadius > 0) {
+
+            var opts: IPointMatchOptions = {
+                accuracy: .0001
+            };
+            extendObject(opts, options);
 
             //first find the common point
             var commonProperty = getMatchingPointProperties(path1, path2);
@@ -360,7 +370,7 @@ module MakerJs.path {
 
                 //since arcs can curl beyond, we need a local reference point. 
                 //An intersection with a circle of the same radius as the desired fillet should suffice.
-                if (!populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty)) {
+                if (!populateShardPointsFromReferenceCircle(filletRadius, commonProperty[0].point, commonProperty, opts)) {
                     return null;
                 }
 

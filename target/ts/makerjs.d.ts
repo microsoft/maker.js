@@ -248,6 +248,24 @@ declare module MakerJs {
         path2Angles?: number[];
     }
     /**
+     * Options when matching points
+     */
+    interface IPointMatchOptions {
+        /**
+         * Optional exemplar of number of decimal places.
+         */
+        accuracy?: number;
+    }
+    /**
+     * Options to pass to model.findLoops.
+     */
+    interface IFindLoopsOptions extends IPointMatchOptions {
+        /**
+         * Flag to remove looped paths from the original model.
+         */
+        removeFromOriginal?: boolean;
+    }
+    /**
      * A path that may be indicated to "flow" in either direction between its endpoints.
      */
     interface IPathDirectional extends IPath {
@@ -314,6 +332,12 @@ declare module MakerJs {
          * Optional layer of this model.
          */
         layer?: string;
+    }
+    /**
+     * Callback signature for model.walkPaths().
+     */
+    interface IModelPathCallback {
+        (modelContext: IModel, pathId: string, pathContext: IPath): void;
     }
     /**
      * Test to see if an object implements the required properties of a model.
@@ -740,12 +764,6 @@ declare module MakerJs.model {
      */
     function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel;
     /**
-     * Callback signature for walkPaths.
-     */
-    interface IModelPathCallback {
-        (modelContext: IModel, pathId: string, pathContext: IPath): void;
-    }
-    /**
      * Recursively walk through all paths for a given model.
      *
      * @param modelContext The model to walk.
@@ -775,7 +793,7 @@ declare module MakerJs.model {
      * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
      */
-    function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean, includeAOutsideB: boolean, includeBInsideA: boolean, includeBOutsideA: boolean, keepDuplicates?: boolean, farPoint?: IPoint): void;
+    function combine(modelA: IModel, modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, keepDuplicates?: boolean, farPoint?: IPoint): void;
 }
 declare module MakerJs.units {
     /**
@@ -974,7 +992,7 @@ declare module MakerJs.path {
      * @param line2 Second line to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number): IPathArc;
+    function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number, options?: IPointMatchOptions): IPathArc;
     /**
      * Adds a round corner to the inside angle between 2 paths. The paths must meet at one point.
      *
@@ -982,7 +1000,7 @@ declare module MakerJs.path {
      * @param path2 Second path to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    function fillet(path1: IPath, path2: IPath, filletRadius: number): IPathArc;
+    function fillet(path1: IPath, path2: IPath, filletRadius: number, options?: IPointMatchOptions): IPathArc;
 }
 declare module MakerJs.kit {
     /**
@@ -1050,10 +1068,16 @@ declare module MakerJs.model {
      * Find paths that have common endpoints and form loops.
      *
      * @param modelContext The model to search for loops.
-     * @param accuracy Optional exemplar of number of decimal places.
-     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
+     * @param options Optional options object.
+     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
      */
-    function findLoops(modelContext: IModel, accuracy?: number): IModel;
+    function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel;
+    /**
+     * Remove all paths in a loop model from the model(s) which contained them.
+     *
+     * @param loopToDetach The model to search for loops.
+     */
+    function detachLoop(loopToDetach: IModel): void;
 }
 declare module MakerJs.exporter {
     /**
@@ -1126,7 +1150,7 @@ declare module MakerJs.exporter {
     /**
      * OpenJsCad export options.
      */
-    interface IOpenJsCadOptions extends IExportOptions {
+    interface IOpenJsCadOptions extends IFindLoopsOptions {
         /**
          * Optional depth of 3D extrusion.
          */
@@ -1135,10 +1159,6 @@ declare module MakerJs.exporter {
          * Optional size of curve facets.
          */
         facetSize?: number;
-        /**
-         * Optional accuracy of points.
-         */
-        accuracy?: number;
     }
 }
 declare module MakerJs.exporter {
