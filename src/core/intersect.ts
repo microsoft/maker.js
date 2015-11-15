@@ -268,7 +268,7 @@ module MakerJs.path {
     function checkAngleOverlap(arc1: IPathArc, arc2: IPathArc, options: IPathIntersectionOptions): void {
         var pointsOfIntersection: IPoint[] = [];
 
-        function checkAngles(index: number, a: IPathArc, b: IPathArc) {
+        function checkAngles(a: IPathArc, b: IPathArc) {
 
             function checkAngle(n: number) {
                 return measure.isBetweenArcAngles(n, a, options.excludeTangents);
@@ -277,7 +277,7 @@ module MakerJs.path {
             return checkAngle(b.startAngle) || checkAngle(b.endAngle);
         }
 
-        if (checkAngles(0, arc1, arc2) || checkAngles(1, arc2, arc1) || (arc1.startAngle == arc2.startAngle && arc1.endAngle == arc2.endAngle)) {
+        if (checkAngles(arc1, arc2) || checkAngles(arc2, arc1) || (arc1.startAngle == arc2.startAngle && arc1.endAngle == arc2.endAngle)) {
             options.out_AreOverlapped = true;
         }
     }
