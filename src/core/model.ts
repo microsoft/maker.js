@@ -21,12 +21,32 @@ module MakerJs.model {
     }
 
     /**
+     * Get an unused id in the models map with the same prefix.
+     * 
+     * @param modelContext The model containing the models map.
+     * @param modelId The id to use directly (if unused), or as a prefix.
+     */
+    export function getSimilarModelId(modelContext: IModel, modelId: string): string {
+        if (!modelContext.models) return modelId;
+
+        var i = 0;
+        var newModelId = modelId;
+        while (newModelId in modelContext.models) {
+            i++;
+            newModelId = modelId + '_' + i;
+        }
+        return newModelId;
+    }
+
+    /**
      * Get an unused id in the paths map with the same prefix.
      * 
      * @param modelContext The model containing the paths map.
-     * @param pathId The pathId to use directly (if unused), or as a prefix.
+     * @param pathId The id to use directly (if unused), or as a prefix.
      */
     export function getSimilarPathId(modelContext: IModel, pathId: string): string {
+        if (!modelContext.paths) return pathId;
+
         var i = 0;
         var newPathId = pathId;
         while (newPathId in modelContext.paths) {
