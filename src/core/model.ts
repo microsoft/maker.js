@@ -43,6 +43,8 @@ module MakerJs.model {
      * @param origin Optional offset reference point.
      */
     export function originate(modelToOriginate: IModel, origin?: IPoint) {
+        if (!modelToOriginate) return;
+
         var newOrigin = point.add(modelToOriginate.origin, origin);
 
         if (modelToOriginate.paths) {
@@ -229,12 +231,14 @@ module MakerJs.model {
 
         if (modelContext.paths) {
             for (var pathId in modelContext.paths) {
+                if (!modelContext.paths[pathId]) continue;
                 callback(modelContext, pathId, modelContext.paths[pathId]);
             }
         }
 
         if (modelContext.models) {
             for (var id in modelContext.models) {
+                if (!modelContext.models[id]) continue;
                 walkPaths(modelContext.models[id], callback);
             }
         }

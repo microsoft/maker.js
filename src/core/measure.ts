@@ -228,19 +228,20 @@ module MakerJs.measure {
             getExtreme(totalMeasurement.high, pathMeasurement.high, Math.max);
         }
 
-        function measure(model: IModel, offsetOrigin?: IPoint) {
+        function measure(modelToMeasure: IModel, offsetOrigin?: IPoint) {
+            if (!modelToMeasure) return;
 
-            var newOrigin = point.add(model.origin, offsetOrigin);
+            var newOrigin = point.add(modelToMeasure.origin, offsetOrigin);
 
-            if (model.paths) {
-                for (var id in model.paths) {
-                    lowerOrHigher(newOrigin, pathExtents(model.paths[id]));
+            if (modelToMeasure.paths) {
+                for (var id in modelToMeasure.paths) {
+                    lowerOrHigher(newOrigin, pathExtents(modelToMeasure.paths[id]));
                 }
             }
 
-            if (model.models) {
-                for (var id in model.models) {
-                    measure(model.models[id], newOrigin);
+            if (modelToMeasure.models) {
+                for (var id in modelToMeasure.models) {
+                    measure(modelToMeasure.models[id], newOrigin);
                 }
             }
         }
