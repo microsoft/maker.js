@@ -76,13 +76,17 @@ module MakerJs.exporter {
 
             if (modelToExport.paths) {
                 for (var id in modelToExport.paths) {
-                    this.exportPath(id, modelToExport.paths[id], newOffset, modelToExport.layer);
+                    var currPath = modelToExport.paths[id];
+                    if (!currPath) continue;
+                    this.exportPath(id, currPath, newOffset, modelToExport.layer);
                 }
             }
 
             if (modelToExport.models) {
                 for (var id in modelToExport.models) {
-                    this.exportModel(id, modelToExport.models[id], newOffset);
+                    var currModel = modelToExport.models[id];
+                    if (!currModel) continue;
+                    this.exportModel(id, currModel, newOffset);
                 }
             }
 
