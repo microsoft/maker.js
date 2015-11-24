@@ -430,7 +430,7 @@ module MakerJs.path {
     function circleToCircle(circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions): number[][] {
 
         //see if circles are the same
-        if (circle1.radius == circle2.radius && point.areEqual(circle1.origin, circle2.origin)) {
+        if (circle1.radius == circle2.radius && point.areEqualRounded(circle1.origin, circle2.origin)) {
             options.out_AreOverlapped = true;
             return null;
         }

@@ -15,11 +15,12 @@ module MakerJs.path {
     var pathAreEqualMap: IPathAreEqualMap = {};
 
     pathAreEqualMap[pathType.Line] = function (line1: IPathLine, line2: IPathLine): boolean {
-        return (point.areEqual(line1.origin, line2.origin) && point.areEqual(line1.end, line2.end)) || (point.areEqual(line1.origin, line2.end) && point.areEqual(line1.end, line2.origin));
+        return (point.areEqualRounded(line1.origin, line2.origin) && point.areEqualRounded(line1.end, line2.end))
+            || (point.areEqualRounded(line1.origin, line2.end) && point.areEqualRounded(line1.end, line2.origin));
     };
 
     pathAreEqualMap[pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle): boolean {
-        return point.areEqual(circle1.origin, circle2.origin) && circle1.radius == circle2.radius;
+        return point.areEqualRounded(circle1.origin, circle2.origin) && circle1.radius == circle2.radius;
     };
 
     pathAreEqualMap[pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc): boolean {
