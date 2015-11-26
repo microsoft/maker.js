@@ -175,8 +175,8 @@ module MakerJs.path {
         }
 
         map[pathType.Arc] = function (arc: IPathArc) {
-            arc.startAngle += angleInDegrees;
-            arc.endAngle += angleInDegrees;
+            arc.startAngle = angle.noRevolutions(arc.startAngle + angleInDegrees);
+            arc.endAngle = angle.noRevolutions(arc.endAngle + angleInDegrees);
         }
 
         pathToRotate.origin = point.rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
