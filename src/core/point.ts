@@ -32,8 +32,13 @@ module MakerJs.point {
      * @param b Second point.
      * @returns true if points are the same, false if they are not
      */
-    export function areEqual(a: IPoint, b: IPoint): boolean {
-        return a[0] == b[0] && a[1] == b[1];
+    export function areEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean {
+        if (!withinDistance) {
+            return a[0] == b[0] && a[1] == b[1];
+        } else {
+            var distance = measure.pointDistance(a, b);
+            return distance <= withinDistance;
+        }
     }
 
     /**
@@ -257,7 +262,7 @@ module MakerJs.point {
      */
     export function serialize(pointContext: IPoint, accuracy?: number) {
         var roundedPoint = rounded(pointContext, accuracy);
-        return roundedPoint[0] + ',' + roundedPoint[1];
+        return JSON.stringify(roundedPoint);
     }
 
     /**
