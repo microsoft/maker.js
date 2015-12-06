@@ -6,7 +6,7 @@ module MakerJs.path {
      * @private
      */
     interface IPathAreEqualMap {
-        [type: string]: (path1: IPath, path2: IPath) => boolean;
+        [type: string]: (path1: IPath, path2: IPath, withinPointDistance?: number) => boolean;
     }
 
     /**
@@ -14,17 +14,17 @@ module MakerJs.path {
      */
     var pathAreEqualMap: IPathAreEqualMap = {};
 
-    pathAreEqualMap[pathType.Line] = function (line1: IPathLine, line2: IPathLine): boolean {
-        return (point.areEqualRounded(line1.origin, line2.origin) && point.areEqualRounded(line1.end, line2.end))
-            || (point.areEqualRounded(line1.origin, line2.end) && point.areEqualRounded(line1.end, line2.origin));
+    pathAreEqualMap[pathType.Line] = function (line1: IPathLine, line2: IPathLine, withinPointDistance?: number): boolean {
+        return (point.areEqual(line1.origin, line2.origin, withinPointDistance) && point.areEqual(line1.end, line2.end, withinPointDistance))
+            || (point.areEqual(line1.origin, line2.end, withinPointDistance) && point.areEqual(line1.end, line2.origin, withinPointDistance));
     };
 
-    pathAreEqualMap[pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle): boolean {
-        return point.areEqualRounded(circle1.origin, circle2.origin) && circle1.radius == circle2.radius;
+    pathAreEqualMap[pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle, withinPointDistance): boolean {
+        return point.areEqual(circle1.origin, circle2.origin, withinPointDistance) && circle1.radius == circle2.radius;
     };
 
-    pathAreEqualMap[pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc): boolean {
-        return pathAreEqualMap[pathType.Circle](arc1, arc2) && angle.areEqual(arc1.startAngle, arc2.startAngle) && angle.areEqual(arc1.endAngle, arc2.endAngle);
+    pathAreEqualMap[pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc, withinPointDistance): boolean {
+        return pathAreEqualMap[pathType.Circle](arc1, arc2, withinPointDistance) && angle.areEqual(arc1.startAngle, arc2.startAngle) && angle.areEqual(arc1.endAngle, arc2.endAngle);
     };
 
     /**
@@ -34,14 +34,14 @@ module MakerJs.path {
      * @param b Second path.
      * @returns true if paths are the same, false if they are not
      */
-    export function areEqual(path1: IPath, path2: IPath): boolean {
+    export function areEqual(path1: IPath, path2: IPath, withinPointDistance?: number): boolean {
 
         var result = false;
 
         if (path1.type == path2.type) {
             var fn = pathAreEqualMap[path1.type];
             if (fn) {
-                result = fn(path1, path2);
+                result = fn(path1, path2, withinPointDistance);
             }
         }
 
