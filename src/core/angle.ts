@@ -9,7 +9,7 @@ module MakerJs.angle {
      * @param b Second angle.
      * @returns true if angles are the same, false if they are not
      */
-    export function areEqual(angle1: number, angle2: number, accuracy?: number) {
+    export function areEqual(angle1: number, angle2: number, accuracy: number = .0001) {
         var a1 = round(noRevolutions(angle1), accuracy);
         var a2 = round(noRevolutions(angle2), accuracy);
 
