@@ -318,7 +318,7 @@ module MakerJs.path {
         if (!slope1.hasSlope && !slope2.hasSlope) {
 
             //lines are both vertical, see if x are the same
-            if (slope1.line.origin[0] == slope2.line.origin[0]) {
+            if (round(slope1.line.origin[0] - slope2.line.origin[0]) == 0) {
 
                 //check for overlap
                 checkLineOverlap(line1, line2, options);
@@ -327,10 +327,10 @@ module MakerJs.path {
             return null;
         }
 
-        if (slope1.hasSlope && slope2.hasSlope && (slope1.slope == slope2.slope)) {
+        if (slope1.hasSlope && slope2.hasSlope && (round(slope1.slope - slope2.slope, .00001) == 0)) {
 
             //lines are parallel, but not vertical, see if y-intercept is the same
-            if (slope1.yIntercept == slope2.yIntercept) {
+            if (round(slope1.yIntercept - slope2.yIntercept, .00001) == 0) {
 
                 //check for overlap
                 checkLineOverlap(line1, line2, options);
