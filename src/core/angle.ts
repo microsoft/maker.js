@@ -10,10 +10,10 @@ module MakerJs.angle {
      * @returns true if angles are the same, false if they are not
      */
     export function areEqual(angle1: number, angle2: number, accuracy: number = .0001) {
-        var a1 = round(noRevolutions(angle1), accuracy);
-        var a2 = round(noRevolutions(angle2), accuracy);
-
-        return a1 == a2 || a1 + 360 == a2 || a1 - 360 == a2;
+        var a1 = noRevolutions(angle1);
+        var a2 = noRevolutions(angle2);
+        var d = noRevolutions(round(a2 - a1, accuracy));
+        return d == 0;
     }
 
     /**
