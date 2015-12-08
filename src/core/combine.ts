@@ -1,4 +1,4 @@
-﻿/// <reference path="model.ts" />
+﻿/// <reference path="deadends.ts" />
 
 module MakerJs.model {
 
@@ -12,7 +12,7 @@ module MakerJs.model {
         if (segment2) {
             var segments: IPath[] = [segment1, segment2];
             for (var i = 2; i--;) {
-                if (round(measure.pathLength(segments[i]), .00001) == 0) {
+                if (round(measure.pathLength(segments[i]), .0001) == 0) {
                     return null;
                 }
             }
@@ -26,7 +26,7 @@ module MakerJs.model {
      */
     function breakAlongForeignPath(segments: ICrossedPathSegment[], overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
 
-        if (path.areEqual(segments[0].path, foreignPath)) {
+        if (path.areEqual(segments[0].path, foreignPath, .0001)) {
             segments[0].overlapped = true;
             segments[0].duplicate = true;
 
@@ -98,7 +98,7 @@ module MakerJs.model {
 
         function addUniquePoint(pointToAdd: IPoint) {
             for (var i = 0; i < pointArray.length; i++) {
-                if (point.areEqualRounded(pointArray[i], pointToAdd)) {
+                if (point.areEqual(pointArray[i], pointToAdd, .00001)) {
                     return;
                 }
             }
@@ -182,9 +182,7 @@ module MakerJs.model {
     /**
      * @private
      */
-    interface ICrossedPath {
-        modelContext: IModel;
-        pathId: string;
+    interface ICrossedPath extends IRefPathIdInModel {
         segments: ICrossedPathSegment[];
     }
 
@@ -257,7 +255,7 @@ module MakerJs.model {
     function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[]) {
 
         function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
-            if (path.areEqual(segment1.path, segment2.path)) {
+            if (path.areEqual(segment1.path, segment2.path, .0001)) {
                 segment1.duplicate = segment2.duplicate = true;
             }
         }
@@ -277,7 +275,7 @@ module MakerJs.model {
     /**
      * @private
      */
-    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates?: boolean) {
+    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean) {
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(modelContext, pathIdBase);
@@ -316,7 +314,7 @@ module MakerJs.model {
      * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
      */
-    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, keepDuplicates: boolean = true, farPoint?: IPoint) {
+    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, trimDeadends: boolean = true, farPoint?: IPoint) {
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, farPoint);
         var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, farPoint);
@@ -324,11 +322,15 @@ module MakerJs.model {
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments);
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, keepDuplicates);
+            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true);
         }
 
         for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA);
+            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false);
+        }
+
+        if (trimDeadends) {
+            removeDeadEnds(<IModel>{ models: { modelA: modelA, modelB: modelB } });
         }
     }
 
