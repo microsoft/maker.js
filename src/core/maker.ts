@@ -449,6 +449,20 @@ module MakerJs {
         return item && (item.paths || item.models);
     }
 
+    /**
+     * Reference to a path id within a model.
+     */
+    export interface IRefPathIdInModel {
+        modelContext: IModel;
+        pathId: string;
+    }
+
+    /**
+     * Path and its reference id within a model
+     */
+    export interface IRefPathInModel extends IRefPathIdInModel {
+        pathContext: IPath;
+    }
 }
 
 //CommonJs

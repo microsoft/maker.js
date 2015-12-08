@@ -5,9 +5,7 @@ module MakerJs.model {
     /**
      * @private
      */
-    interface IPathDirectionalWithPrimeContext extends IPathDirectional {
-        primePathId: string;
-        primeModel: IModel;
+    interface IPathDirectionalWithPrimeContext extends IPathDirectional, IRefPathIdInModel {
     }
 
     /**
@@ -90,7 +88,7 @@ module MakerJs.model {
                     var currPath = <IPathDirectionalWithPrimeContext>currLink.path;
                     currPath.reversed = currLink.reversed;
 
-                    var id = model.getSimilarPathId(loopModel, currPath.primePathId);
+                    var id = model.getSimilarPathId(loopModel, currPath.pathId);
                     loopModel.paths[id] = currPath;
 
                     if (!connections[currLink.nextConnection]) break;
@@ -165,8 +163,8 @@ module MakerJs.model {
             if (!pathContext) return;
 
             var safePath = <IPathDirectionalWithPrimeContext>cloneObject(pathContext);
-            safePath.primePathId = pathId;
-            safePath.primeModel = modelContext;
+            safePath.pathId = pathId;
+            safePath.modelContext = modelContext;
 
             //circles are loops by nature
             if (safePath.type == pathType.Circle) {
@@ -235,9 +233,9 @@ module MakerJs.model {
     export function detachLoop(loopToDetach: IModel) {
         for (var id in loopToDetach.paths) {
             var pathDirectionalWithOriginalContext = <IPathDirectionalWithPrimeContext>loopToDetach.paths[id];
-            var primeModel = pathDirectionalWithOriginalContext.primeModel;
-            if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.primePathId) {
-                delete primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+            var primeModel = pathDirectionalWithOriginalContext.modelContext;
+            if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.pathId) {
+                delete primeModel.paths[pathDirectionalWithOriginalContext.pathId];
             }
         }
     }
