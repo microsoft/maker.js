@@ -54,6 +54,20 @@ module MakerJs.point {
     }
 
     /**
+     * Get the average of two points.
+     * 
+     * @param a First point.
+     * @param b Second point.
+     * @returns New point object which is the average of a and b.
+     */
+    export function average(a: IPoint, b: IPoint): IPoint{
+        function avg(i): number {
+            return (a[i] + b[i]) / 2;
+        }
+        return [avg(0), avg(1)];
+    }
+
+    /**
      * Clone a point into a new point.
      * 
      * @param pointToClone The point to clone.
@@ -235,7 +249,7 @@ module MakerJs.point {
         var d = measure.pointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = fromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);
 
-        return rounded(add(rotationOrigin, rotatedPoint));
+        return add(rotationOrigin, rotatedPoint);
     }
 
     /**
