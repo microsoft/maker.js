@@ -232,15 +232,15 @@ module MakerJs.path {
      * @private
      */
     function getSlope(line: IPathLine): ISlope {
-        var dx = round(line.end[0] - line.origin[0]);
-        if (dx == 0) {
+        var dx = line.end[0] - line.origin[0];
+        if (round(dx) == 0) {
             return {
                 line: line,
                 hasSlope: false
             };
         }
 
-        var dy = round(line.end[1] - line.origin[1]);
+        var dy = line.end[1] - line.origin[1];
 
         var slope = dy / dx;
         var yIntercept = line.origin[1] - slope * line.origin[0];
@@ -382,27 +382,28 @@ module MakerJs.path {
 
         //line is horizontal, get the y value from any point
         var lineY = round(clonedLine.origin[1]);
+        var lineYabs = Math.abs(lineY);
 
         //if y is greater than radius, there is no intersection
-        if (lineY > radius) {
+        if (lineYabs > radius) {
             return null;
         }
 
         var anglesOfIntersection: number[] = [];
 
         //if horizontal Y is the same as the radius, we know it's 90 degrees
-        if (lineY == radius) {
+        if (lineYabs == radius) {
 
             if (options.excludeTangents) {
                 return null;
             }
 
-            anglesOfIntersection.push(unRotate(90));
+            anglesOfIntersection.push(unRotate(lineY > 0 ? 90 : 270));
 
         } else {
 
             function intersectionBetweenEndpoints(x: number, angleOfX: number) {
-                if (measure.isBetween(x, clonedLine.origin[0], clonedLine.end[0], options.excludeTangents)) {
+                if (measure.isBetween(round(x), round(clonedLine.origin[0]), round(clonedLine.end[0]), options.excludeTangents)) {
                     anglesOfIntersection.push(unRotate(angleOfX));
                 }
             }
@@ -472,7 +473,7 @@ module MakerJs.path {
         }
 
         //see if circles are tangent interior
-        if (c2.radius - x == c1.radius) {
+        if (round(c2.radius - x - c1.radius) == 0) {
 
             if (options.excludeTangents) {
                 return null;
@@ -482,7 +483,7 @@ module MakerJs.path {
         }
 
         //see if circles are tangent exterior
-        if (x - c2.radius == c1.radius) {
+        if (round(x - c2.radius - c1.radius) == 0) {
 
             if (options.excludeTangents) {
                 return null;
