@@ -1,4 +1,4 @@
-﻿/// <reference path="deadends.ts" />
+﻿/// <reference path="model.ts" />
 
 module MakerJs.model {
 
@@ -72,6 +72,7 @@ module MakerJs.model {
 
                     var newSegment: ICrossedPathSegment = {
                         path: subSegments[1],
+                        pathId: segments[0].pathId,
                         overlapped: segments[i].overlapped, 
                         uniqueForeignIntersectionPoints: []
                     };
@@ -98,7 +99,7 @@ module MakerJs.model {
 
         function addUniquePoint(pointToAdd: IPoint) {
             for (var i = 0; i < pointArray.length; i++) {
-                if (point.areEqual(pointArray[i], pointToAdd, .00001)) {
+                if (point.areEqual(pointArray[i], pointToAdd, .0000001)) {
                     return;
                 }
             }
@@ -116,7 +117,7 @@ module MakerJs.model {
     /**
      * @private
      */
-    function checkIntersectsForeignPath(segment: IPathInside, foreignPath: IPath, farPoint: IPoint = [7654321, 1234567]) {
+    function checkIntersectsForeignPath(segment: IPathInside, foreignPath: IPath, foreignPathId: string, farPoint: IPoint = [7654321, 1234567]) {
         var origin = point.middle(segment.path);
         var lineToFarPoint = new paths.Line(origin, farPoint);
         var farInt = path.intersection(lineToFarPoint, foreignPath);
@@ -137,7 +138,7 @@ module MakerJs.model {
     function checkInsideForeignModel(segment: IPathInside, modelToIntersect: IModel, farPoint?: IPoint) {
         walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
             if (path2) {
-                checkIntersectsForeignPath(segment, path2, farPoint);
+                checkIntersectsForeignPath(segment, path2, pathId2, farPoint);
             }
         });
     }
@@ -175,6 +176,7 @@ module MakerJs.model {
      * @private
      */
     interface ICrossedPathSegment extends IPathInside {
+        pathId: string;
         overlapped: boolean;
         duplicate?: boolean;
     }
@@ -219,6 +221,7 @@ module MakerJs.model {
             //clone this path and make it the first segment
             var segment: ICrossedPathSegment = {
                 path: cloneObject<IPath>(path1),
+                pathId: pathId1,
                 overlapped: false,
                 uniqueForeignIntersectionPoints: []
             };
@@ -252,10 +255,10 @@ module MakerJs.model {
     /**
      * @private
      */
-    function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[]) {
+    function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[], pointMatchingDistance: number) {
 
         function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
-            if (path.areEqual(segment1.path, segment2.path, .0001)) {
+            if (path.areEqual(segment1.path, segment2.path, pointMatchingDistance)) {
                 segment1.duplicate = segment2.duplicate = true;
             }
         }
@@ -314,12 +317,18 @@ module MakerJs.model {
      * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
      */
-    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, trimDeadends: boolean = true, farPoint?: IPoint) {
+    export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, options?: ICombineOptions) {
 
-        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, farPoint);
-        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, farPoint);
+        var opts: ICombineOptions = {
+            trimDeadEnds: true,
+            pointMatchingDistance: .005
+        };
+        extendObject(opts, options);
 
-        checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments);
+        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.farPoint);
+        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.farPoint);
+
+        checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
             addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true);
@@ -329,7 +338,7 @@ module MakerJs.model {
             addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false);
         }
 
-        if (trimDeadends) {
+        if (opts.trimDeadEnds) {
             removeDeadEnds(<IModel>{ models: { modelA: modelA, modelB: modelB } });
         }
     }

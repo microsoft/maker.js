@@ -336,9 +336,25 @@ module MakerJs {
     export interface IPointMatchOptions {
 
         /**
-         * Optional exemplar of number of decimal places.
+         * Max distance to consider two points as the same.
          */
-        accuracy?: number;
+        pointMatchingDistance?: number;
+    }
+
+    /**
+     * Options to pass to model.combine.
+     */
+    export interface ICombineOptions extends IPointMatchOptions {
+
+        /**
+         * Flag to remove paths which are not part of a loop.
+         */
+        trimDeadEnds?: boolean;
+
+        /**
+         * Point which is known to be outside of the model.
+         */
+        farPoint?: IPoint;
     }
 
     /**

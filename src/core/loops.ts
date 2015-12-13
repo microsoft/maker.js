@@ -5,6 +5,45 @@ module MakerJs.model {
     /**
      * @private
      */
+    export interface IPointMappedItem<T> {
+        averagePoint: IPoint;
+        item: T;
+    }
+
+    /**
+     * @private
+     */
+    export class PointMap<T> {
+        public list: IPointMappedItem<T>[] = [];
+
+        constructor(public matchingDistance: number = .001) {
+        }
+
+        public add(pointToAdd: IPoint, item: T) {
+            this.list.push({ averagePoint: pointToAdd, item: item });
+        }
+
+        public find(pointToFind: IPoint, saveAverage: boolean): T {
+            for (var i = 0; i < this.list.length; i++) {
+                var item = this.list[i];
+                var distance = measure.pointDistance(pointToFind, item.averagePoint);
+
+                if (distance <= this.matchingDistance) {
+
+                    if (saveAverage) {
+                        item.averagePoint = point.average(item.averagePoint, pointToFind);
+                    }
+
+                    return item.item;
+                }
+            }
+            return null;
+        }
+    }
+    
+    /**
+     * @private
+     */
     interface IPathDirectionalWithPrimeContext extends IPathDirectional, IRefPathIdInModel {
     }
 
@@ -124,12 +163,12 @@ module MakerJs.model {
         var result: IModel = { models: {} };
 
         var opts: IFindLoopsOptions = {
-            accuracy: .0001
+            pointMatchingDistance: .005
         };
         extendObject(opts, options);
 
         function getLinkedPathsOnConnectionPoint(p: IPoint) {
-            var serializedPoint = point.serialize(p, opts.accuracy);
+            var serializedPoint = point.serialize(p, .0001);    //TODO convert to pointmap
 
             if (!(serializedPoint in connections)) {
                 connections[serializedPoint] = [];
@@ -155,6 +194,8 @@ module MakerJs.model {
             return result.models[id];
         }
 
+        //todo: clone the original before originating
+        //todo: remove dead ends first
         model.originate(modelContext);
 
         //find loops by looking at all paths in this model
@@ -162,6 +203,7 @@ module MakerJs.model {
 
             if (!pathContext) return;
 
+            //todo - don't clone
             var safePath = <IPathDirectionalWithPrimeContext>cloneObject(pathContext);
             safePath.pathId = pathId;
             safePath.modelContext = modelContext;
@@ -183,7 +225,7 @@ module MakerJs.model {
                 for (var i = 2; i--;) {
                     var linkedPath: ILinkedPath = {
                         path: safePath,
-                        nextConnection: point.serialize(safePath.endPoints[1 - i], opts.accuracy),
+                        nextConnection: point.serialize(safePath.endPoints[1 - i], .0001),  //TODO convert to pointmap
                         reversed: i != 0
                     };
                     getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
@@ -238,5 +280,131 @@ module MakerJs.model {
                 delete primeModel.paths[pathDirectionalWithOriginalContext.pathId];
             }
         }
+    }
+
+    /**
+     * @private
+     */
+    interface IRefPathEndpoints extends IRefPathIdInModel {
+        endPoints: IPoint[];
+    }
+
+    /**
+     * @private
+     */
+    class DeadEndFinder {
+
+        private pointMap: PointMap<IRefPathEndpoints[]>;
+
+        constructor(public pointMatchingDistance) {
+            this.pointMap = new PointMap<IRefPathEndpoints[]>(pointMatchingDistance);
+        }
+
+        public addPathRef(p: IPoint, pathRef: IRefPathEndpoints) {
+            var found = this.pointMap.find(p, true);
+            if (found) {
+                found.push(pathRef);
+            } else {
+                this.pointMap.add(p, [pathRef]);
+            }
+        }
+
+        private removeMatchingPathRefs(a1: IRefPathEndpoints[], a2: IRefPathEndpoints[]) {
+            //see if any are the same in each array
+            for (var i = 0; i < a1.length; i++) {
+                for (var j = 0; j < a2.length; j++) {
+                    if (a1[i] === a2[j]) {
+
+                        var pathRef = a1[i];
+                        delete pathRef.modelContext.paths[pathRef.pathId];
+
+                        a1.splice(i, 1);
+                        a2.splice(j, 1);
+
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private removePathRef(pathRef: IRefPathEndpoints) {
+
+            var removePath = (p: IPoint) => {
+                var pathRefs = this.pointMap.find(p, false);
+
+                for (var i = 0; i < pathRefs.length; i++) {
+                    if (pathRefs[i] === pathRef) {
+                        pathRefs.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+
+            for (var i = 2; i--;) {
+                removePath(pathRef.endPoints[i]);
+            }
+        }
+
+        public removeDeadEnd(): boolean {
+            var found = false;
+            var threeIndex: IRefPathEndpoints[][] = [];
+
+            for (var i = 0; i < this.pointMap.list.length; i++) {
+
+                var pathRefs = this.pointMap.list[i].item;
+
+                if (pathRefs.length == 1) {
+                    var pathRef = pathRefs[0];
+
+                    delete pathRef.modelContext.paths[pathRef.pathId];
+
+                    this.removePathRef(pathRef);
+
+                    found = true;
+                } else if (pathRefs.length == 3) {
+                    threeIndex.push(pathRefs);
+                }
+            }
+
+            if (threeIndex.length) {
+                //find the matching singles hiding within triples
+                for (var a = 0; a < threeIndex.length; a++) {
+                    var pathRefs_a = threeIndex[a];
+                    if (pathRefs_a.length != 3) continue;
+                    for (var b = 0; b < threeIndex.length; b++) {
+                        if (a == b) continue;
+                        var pathRefs_b = threeIndex[b];
+                        if (pathRefs_b.length != 3) continue;
+                        if (this.removeMatchingPathRefs(pathRefs_a, pathRefs_b)) {
+
+                            //if a matching triple was found then our index is no longer valid, so exit.
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return found;
+        }
+    }
+
+    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance = .005) {
+        var serializedPointAccuracy = .0001;
+        var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
+
+        walkPaths(modelContext, function (modelContext: IModel, pathId: string, pathContext: IPath) {
+            var endPoints = point.fromPathEnds(pathContext);
+
+            if (!endPoints) return;
+
+            var pathRef: IRefPathEndpoints = { modelContext: modelContext, pathId: pathId, endPoints: endPoints };
+
+            for (var i = 2; i--;) {
+                deadEndFinder.addPathRef(endPoints[i], pathRef);
+            }
+        });
+
+        while (deadEndFinder.removeDeadEnd());
     }
 }
