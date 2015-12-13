@@ -93,3 +93,7 @@ svg text {
     font-size: 18px;
     font-weight: 200;
 }
+
+#crosshairs-horizontal_text, #crosshairs-vertical_text {
+    display: none;
+}
