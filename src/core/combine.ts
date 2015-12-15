@@ -6,6 +6,7 @@ module MakerJs.model {
      * @private
      */
     function getNonZeroSegments(pathToSegment: IPath, breakPoint: IPoint): IPath[] {
+        var segmentType = pathToSegment.type;
         var segment1 = cloneObject<IPath>(pathToSegment);
         var segment2 = path.breakAtPoint(segment1, breakPoint);
 
@@ -17,6 +18,8 @@ module MakerJs.model {
                 }
             }
             return segments;
+        } else if (segmentType == pathType.Circle) {
+            return [segment1];
         }
         return null;
     }
@@ -70,18 +73,20 @@ module MakerJs.model {
                 if (subSegments) {
                     segments[i].path = subSegments[0];
 
-                    var newSegment: ICrossedPathSegment = {
-                        path: subSegments[1],
-                        pathId: segments[0].pathId,
-                        overlapped: segments[i].overlapped, 
-                        uniqueForeignIntersectionPoints: []
-                    };
+                    if (subSegments[1]) {
+                        var newSegment: ICrossedPathSegment = {
+                            path: subSegments[1],
+                            pathId: segments[0].pathId,
+                            overlapped: segments[i].overlapped,
+                            uniqueForeignIntersectionPoints: []
+                        };
 
-                    if (segments[i].overlapped) {
-                        overlappedSegments.push(newSegment);
+                        if (segments[i].overlapped) {
+                            overlappedSegments.push(newSegment);
+                        }
+
+                        segments.push(newSegment);
                     }
-
-                    segments.push(newSegment);
 
                     //re-check this segment for another deep intersection
                     i--;
