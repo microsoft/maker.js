@@ -309,23 +309,19 @@ module MakerJs.model {
             }
         }
 
-        private removeMatchingPathRefs(a1: IRefPathEndpoints[], a2: IRefPathEndpoints[]) {
+        private removeMatchingPathRefs(a: IRefPathEndpoints[], b: IRefPathEndpoints[]) {
             //see if any are the same in each array
-            for (var i = 0; i < a1.length; i++) {
-                for (var j = 0; j < a2.length; j++) {
-                    if (a1[i] === a2[j]) {
-
-                        var pathRef = a1[i];
-                        delete pathRef.modelContext.paths[pathRef.pathId];
-
-                        a1.splice(i, 1);
-                        a2.splice(j, 1);
-
-                        return true;
+            for (var ai = 0; ai < a.length; ai++) {
+                for (var bi = 0; bi < b.length; bi++) {
+                    if (a[ai] === b[bi]) {
+                        var pathRef = a[ai];
+                        a.splice(ai, 1);
+                        b.splice(bi, 1);
+                        return pathRef;
                     }
                 }
             }
-            return false;
+            return null;
         }
 
         private removePathRef(pathRef: IRefPathEndpoints) {
@@ -348,43 +344,41 @@ module MakerJs.model {
 
         public removeDeadEnd(): boolean {
             var found = false;
-            var threeIndex: IRefPathEndpoints[][] = [];
+            var oddPathRefs: IRefPathEndpoints[] = null;
 
             for (var i = 0; i < this.pointMap.list.length; i++) {
 
                 var pathRefs = this.pointMap.list[i].item;
 
+                if (pathRefs.length % 2 == 0) continue;
+
                 if (pathRefs.length == 1) {
                     var pathRef = pathRefs[0];
-
-                    delete pathRef.modelContext.paths[pathRef.pathId];
-
                     this.removePathRef(pathRef);
 
+                    delete pathRef.modelContext.paths[pathRef.pathId];
                     found = true;
-                } else if (pathRefs.length == 3) {
-                    threeIndex.push(pathRefs);
-                }
-            }
 
-            if (threeIndex.length) {
-                //find the matching singles hiding within triples
-                for (var a = 0; a < threeIndex.length; a++) {
-                    var pathRefs_a = threeIndex[a];
-                    if (pathRefs_a.length != 3) continue;
-                    for (var b = 0; b < threeIndex.length; b++) {
-                        if (a == b) continue;
-                        var pathRefs_b = threeIndex[b];
-                        if (pathRefs_b.length != 3) continue;
-                        if (this.removeMatchingPathRefs(pathRefs_a, pathRefs_b)) {
+                } else {
 
-                            //if a matching triple was found then our index is no longer valid, so exit.
-                            return true;
+                    if (!oddPathRefs) {
+                        //save this for another iteration
+                        oddPathRefs = pathRefs;
+                    } else {
+
+                        //compare with the saved
+                        var pathRef = this.removeMatchingPathRefs(oddPathRefs, pathRefs);
+                        if (pathRef) {
+
+                            delete pathRef.modelContext.paths[pathRef.pathId];
+                            found = true;
+
+                            //clear the saved
+                            oddPathRefs = null;
                         }
                     }
                 }
             }
-
             return found;
         }
     }
