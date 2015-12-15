@@ -14,7 +14,7 @@ title: Api - IOpenJsCadOptions Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
+			<a href="makerjs.ifindloopsoptions.html" class="tsd-signature-type">IFindLoopsOptions</a>
 			<ul class="tsd-hierarchy">
 				<li>
 					<span class="target">IOpenJsCadOptions</span>
@@ -30,10 +30,10 @@ title: Api - IOpenJsCadOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#extrusion" class="tsd-kind-icon">extrusion</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#facetsize" class="tsd-kind-icon">facet<wbr>Size</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#units" class="tsd-kind-icon">units</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#removefromoriginal" class="tsd-kind-icon">remove<wbr>From<wbr>Original</a></li>
 				</ul>
 			</section>
 		</div>
@@ -41,21 +41,6 @@ title: Api - IOpenJsCadOptions Interface
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="accuracy" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> accuracy</h3>
-		<div class="tsd-signature tsd-kind-icon">accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L218">core/openjscad.ts:218</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Optional accuracy of points.</p>
-			</div>
-		</div>
-	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 		<a name="extrusion" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> extrusion</h3>
@@ -87,18 +72,34 @@ title: Api - IOpenJsCadOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="units" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
-		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<a name="pointmatchingdistance" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
+		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#units">units</a></p>
+			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/exporter.ts#L14">core/exporter.ts:14</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L341">core/maker.ts:341</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Unit system to embed in exported file.</p>
+				<p>Max distance to consider two points as the same.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="removefromoriginal" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> remove<wbr>From<wbr>Original</h3>
+		<div class="tsd-signature tsd-kind-icon">remove<wbr>From<wbr>Original<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ifindloopsoptions.html">IFindLoopsOptions</a>.<a href="makerjs.ifindloopsoptions.html#removefromoriginal">removeFromOriginal</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L368">core/maker.ts:368</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Flag to remove looped paths from the original model.</p>
 			</div>
 		</div>
 	</section>

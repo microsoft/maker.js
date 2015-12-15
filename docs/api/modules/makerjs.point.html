@@ -13,6 +13,7 @@ title: Api - point Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#add" class="tsd-kind-icon">add</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#areequal" class="tsd-kind-icon">are<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#areequalrounded" class="tsd-kind-icon">are<wbr>Equal<wbr>Rounded</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#average" class="tsd-kind-icon">average</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#clone" class="tsd-kind-icon">clone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#closest" class="tsd-kind-icon">closest</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#fromangleoncircle" class="tsd-kind-icon">from<wbr>Angle<wbr>OnCircle</a></li>
@@ -82,7 +83,7 @@ title: Api - point Module
 		<a name="areequal" class="tsd-anchor"></a>
 		<h3>are<wbr>Equal</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">are<wbr>Equal<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">are<wbr>Equal<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, withinDistance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -110,6 +111,9 @@ title: Api - point Module
 							<p>Second point.</p>
 						</div>
 					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> withinDistance: <span class="tsd-signature-type">number</span></h5>
+					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 				<p>true if points are the same, false if they are not</p>
@@ -126,7 +130,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L47">core/point.ts:47</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L52">core/point.ts:52</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -161,6 +165,44 @@ title: Api - point Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="average" class="tsd-anchor"></a>
+		<h3>average</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">average<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L63">core/point.ts:63</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get the average of two points.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>a: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First point.</p>
+						</div>
+					</li>
+					<li>
+						<h5>b: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second point.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h4>
+				<p>New point object which is the average of a and b.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="clone" class="tsd-anchor"></a>
 		<h3>clone</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -170,7 +212,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L57">core/point.ts:57</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L76">core/point.ts:76</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -202,7 +244,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L69">core/point.ts:69</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L88">core/point.ts:88</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -240,7 +282,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L104">core/point.ts:104</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L123">core/point.ts:123</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -278,7 +320,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L114">core/point.ts:114</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L133">core/point.ts:133</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -310,7 +352,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L124">core/point.ts:124</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L143">core/point.ts:143</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -342,7 +384,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L91">core/point.ts:91</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L110">core/point.ts:110</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -380,7 +422,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L153">core/point.ts:153</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L172">core/point.ts:172</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -418,7 +460,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L195">core/point.ts:195</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L214">core/point.ts:214</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -462,7 +504,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L228">core/point.ts:228</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L247">core/point.ts:247</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -506,7 +548,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L216">core/point.ts:216</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L235">core/point.ts:235</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -544,7 +586,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L243">core/point.ts:243</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L262">core/point.ts:262</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -582,7 +624,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L258">core/point.ts:258</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L277">core/point.ts:277</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -620,7 +662,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L270">core/point.ts:270</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L289">core/point.ts:289</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -658,7 +700,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L280">core/point.ts:280</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L299">core/point.ts:299</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
