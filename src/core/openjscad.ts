@@ -152,7 +152,7 @@ module MakerJs.exporter {
 
         var opts: IOpenJsCadOptions = {
             extrusion: 1,
-            accuracy: .0001
+            pointMatchingDistance: .005
         };
 
         extendObject(opts, options);

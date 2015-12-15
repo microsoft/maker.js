@@ -5,9 +5,46 @@ module MakerJs.model {
     /**
      * @private
      */
-    interface IPathDirectionalWithPrimeContext extends IPathDirectional {
-        primePathId: string;
-        primeModel: IModel;
+    export interface IPointMappedItem<T> {
+        averagePoint: IPoint;
+        item: T;
+    }
+
+    /**
+     * @private
+     */
+    export class PointMap<T> {
+        public list: IPointMappedItem<T>[] = [];
+
+        constructor(public matchingDistance: number = .001) {
+        }
+
+        public add(pointToAdd: IPoint, item: T) {
+            this.list.push({ averagePoint: pointToAdd, item: item });
+        }
+
+        public find(pointToFind: IPoint, saveAverage: boolean): T {
+            for (var i = 0; i < this.list.length; i++) {
+                var item = this.list[i];
+                var distance = measure.pointDistance(pointToFind, item.averagePoint);
+
+                if (distance <= this.matchingDistance) {
+
+                    if (saveAverage) {
+                        item.averagePoint = point.average(item.averagePoint, pointToFind);
+                    }
+
+                    return item.item;
+                }
+            }
+            return null;
+        }
+    }
+    
+    /**
+     * @private
+     */
+    interface IPathDirectionalWithPrimeContext extends IPathDirectional, IRefPathIdInModel {
     }
 
     /**
@@ -90,7 +127,7 @@ module MakerJs.model {
                     var currPath = <IPathDirectionalWithPrimeContext>currLink.path;
                     currPath.reversed = currLink.reversed;
 
-                    var id = model.getSimilarPathId(loopModel, currPath.primePathId);
+                    var id = model.getSimilarPathId(loopModel, currPath.pathId);
                     loopModel.paths[id] = currPath;
 
                     if (!connections[currLink.nextConnection]) break;
@@ -126,12 +163,12 @@ module MakerJs.model {
         var result: IModel = { models: {} };
 
         var opts: IFindLoopsOptions = {
-            accuracy: .0001
+            pointMatchingDistance: .005
         };
         extendObject(opts, options);
 
         function getLinkedPathsOnConnectionPoint(p: IPoint) {
-            var serializedPoint = point.serialize(p, opts.accuracy);
+            var serializedPoint = point.serialize(p, .0001);    //TODO convert to pointmap
 
             if (!(serializedPoint in connections)) {
                 connections[serializedPoint] = [];
@@ -157,6 +194,7 @@ module MakerJs.model {
             return result.models[id];
         }
 
+        //todo: remove dead ends first
         model.originate(modelContext);
 
         //find loops by looking at all paths in this model
@@ -165,8 +203,8 @@ module MakerJs.model {
             if (!pathContext) return;
 
             var safePath = <IPathDirectionalWithPrimeContext>cloneObject(pathContext);
-            safePath.primePathId = pathId;
-            safePath.primeModel = modelContext;
+            safePath.pathId = pathId;
+            safePath.modelContext = modelContext;
 
             //circles are loops by nature
             if (safePath.type == pathType.Circle) {
@@ -185,7 +223,7 @@ module MakerJs.model {
                 for (var i = 2; i--;) {
                     var linkedPath: ILinkedPath = {
                         path: safePath,
-                        nextConnection: point.serialize(safePath.endPoints[1 - i], opts.accuracy),
+                        nextConnection: point.serialize(safePath.endPoints[1 - i], .0001),  //TODO convert to pointmap
                         reversed: i != 0
                     };
                     getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
@@ -235,10 +273,130 @@ module MakerJs.model {
     export function detachLoop(loopToDetach: IModel) {
         for (var id in loopToDetach.paths) {
             var pathDirectionalWithOriginalContext = <IPathDirectionalWithPrimeContext>loopToDetach.paths[id];
-            var primeModel = pathDirectionalWithOriginalContext.primeModel;
-            if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.primePathId) {
-                delete primeModel.paths[pathDirectionalWithOriginalContext.primePathId];
+            var primeModel = pathDirectionalWithOriginalContext.modelContext;
+            if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.pathId) {
+                delete primeModel.paths[pathDirectionalWithOriginalContext.pathId];
             }
         }
+    }
+
+    /**
+     * @private
+     */
+    interface IRefPathEndpoints extends IRefPathIdInModel {
+        endPoints: IPoint[];
+    }
+
+    /**
+     * @private
+     */
+    class DeadEndFinder {
+
+        private pointMap: PointMap<IRefPathEndpoints[]>;
+
+        constructor(public pointMatchingDistance) {
+            this.pointMap = new PointMap<IRefPathEndpoints[]>(pointMatchingDistance);
+        }
+
+        public addPathRef(p: IPoint, pathRef: IRefPathEndpoints) {
+            var found = this.pointMap.find(p, true);
+            if (found) {
+                found.push(pathRef);
+            } else {
+                this.pointMap.add(p, [pathRef]);
+            }
+        }
+
+        private removeMatchingPathRefs(a: IRefPathEndpoints[], b: IRefPathEndpoints[]) {
+            //see if any are the same in each array
+            for (var ai = 0; ai < a.length; ai++) {
+                for (var bi = 0; bi < b.length; bi++) {
+                    if (a[ai] === b[bi]) {
+                        var pathRef = a[ai];
+                        a.splice(ai, 1);
+                        b.splice(bi, 1);
+                        return pathRef;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private removePathRef(pathRef: IRefPathEndpoints) {
+
+            var removePath = (p: IPoint) => {
+                var pathRefs = this.pointMap.find(p, false);
+
+                for (var i = 0; i < pathRefs.length; i++) {
+                    if (pathRefs[i] === pathRef) {
+                        pathRefs.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+
+            for (var i = 2; i--;) {
+                removePath(pathRef.endPoints[i]);
+            }
+        }
+
+        public removeDeadEnd(): boolean {
+            var found = false;
+            var oddPathRefs: IRefPathEndpoints[] = null;
+
+            for (var i = 0; i < this.pointMap.list.length; i++) {
+
+                var pathRefs = this.pointMap.list[i].item;
+
+                if (pathRefs.length % 2 == 0) continue;
+
+                if (pathRefs.length == 1) {
+                    var pathRef = pathRefs[0];
+                    this.removePathRef(pathRef);
+
+                    delete pathRef.modelContext.paths[pathRef.pathId];
+                    found = true;
+
+                } else {
+
+                    if (!oddPathRefs) {
+                        //save this for another iteration
+                        oddPathRefs = pathRefs;
+                    } else {
+
+                        //compare with the saved
+                        var pathRef = this.removeMatchingPathRefs(oddPathRefs, pathRefs);
+                        if (pathRef) {
+
+                            delete pathRef.modelContext.paths[pathRef.pathId];
+                            found = true;
+
+                            //clear the saved
+                            oddPathRefs = null;
+                        }
+                    }
+                }
+            }
+            return found;
+        }
+    }
+
+    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance = .005) {
+        var serializedPointAccuracy = .0001;
+        var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
+
+        walkPaths(modelContext, function (modelContext: IModel, pathId: string, pathContext: IPath) {
+            var endPoints = point.fromPathEnds(pathContext);
+
+            if (!endPoints) return;
+
+            var pathRef: IRefPathEndpoints = { modelContext: modelContext, pathId: pathId, endPoints: endPoints };
+
+            for (var i = 2; i--;) {
+                deadEndFinder.addPathRef(endPoints[i], pathRef);
+            }
+        });
+
+        while (deadEndFinder.removeDeadEnd());
     }
 }

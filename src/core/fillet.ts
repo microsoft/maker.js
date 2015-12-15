@@ -63,7 +63,7 @@ module MakerJs.path {
     /**
      * @private
      */
-    function getMatchingPointProperties(path1: IPath, path2: IPath): IMatchPointProperty[] {
+    function getMatchingPointProperties(path1: IPath, path2: IPath, options?: IPointMatchOptions): IMatchPointProperty[] {
         var path1Properties = getPointProperties(path1);
         var path2Properties = getPointProperties(path2);
 
@@ -80,7 +80,7 @@ module MakerJs.path {
         }
 
         function check(i1: number, i2: number) {
-            if (point.areEqualRounded(path1Properties[i1].point, path2Properties[i2].point)) {
+            if (point.areEqual(path1Properties[i1].point, path2Properties[i2].point, .0001)) {
                 result = [
                     makeMatch(path1, path1Properties, i1),
                     makeMatch(path2, path2Properties, i2)
@@ -110,7 +110,7 @@ module MakerJs.path {
 
             properties[i].shardPoint = circleIntersection.intersectionPoints[0];
 
-            if (point.areEqualRounded(properties[i].point, circleIntersection.intersectionPoints[0], options.accuracy)) {
+            if (point.areEqual(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
                 if (circleIntersection.intersectionPoints.length > 1) {
                     properties[i].shardPoint = circleIntersection.intersectionPoints[1];
                 } else {
@@ -296,12 +296,12 @@ module MakerJs.path {
         if (isPathLine(line1) && isPathLine(line2) && filletRadius && filletRadius > 0) {
 
             var opts: IPointMatchOptions = {
-                accuracy: .0001
+                pointMatchingDistance: .005
             };
             extendObject(opts, options);
 
             //first find the common point
-            var commonProperty = getMatchingPointProperties(line1, line2);
+            var commonProperty = getMatchingPointProperties(line1, line2, options);
             if (commonProperty) {
 
                 //get the ratio comparison of the two lines
@@ -360,12 +360,12 @@ module MakerJs.path {
         if (path1 && path2 && filletRadius && filletRadius > 0) {
 
             var opts: IPointMatchOptions = {
-                accuracy: .0001
+                pointMatchingDistance: .005
             };
             extendObject(opts, options);
 
             //first find the common point
-            var commonProperty = getMatchingPointProperties(path1, path2);
+            var commonProperty = getMatchingPointProperties(path1, path2, options);
             if (commonProperty) {
 
                 //since arcs can curl beyond, we need a local reference point. 

@@ -21,12 +21,32 @@ module MakerJs.model {
     }
 
     /**
+     * Get an unused id in the models map with the same prefix.
+     * 
+     * @param modelContext The model containing the models map.
+     * @param modelId The id to use directly (if unused), or as a prefix.
+     */
+    export function getSimilarModelId(modelContext: IModel, modelId: string): string {
+        if (!modelContext.models) return modelId;
+
+        var i = 0;
+        var newModelId = modelId;
+        while (newModelId in modelContext.models) {
+            i++;
+            newModelId = modelId + '_' + i;
+        }
+        return newModelId;
+    }
+
+    /**
      * Get an unused id in the paths map with the same prefix.
      * 
      * @param modelContext The model containing the paths map.
-     * @param pathId The pathId to use directly (if unused), or as a prefix.
+     * @param pathId The id to use directly (if unused), or as a prefix.
      */
     export function getSimilarPathId(modelContext: IModel, pathId: string): string {
+        if (!modelContext.paths) return pathId;
+
         var i = 0;
         var newPathId = pathId;
         while (newPathId in modelContext.paths) {
@@ -43,6 +63,8 @@ module MakerJs.model {
      * @param origin Optional offset reference point.
      */
     export function originate(modelToOriginate: IModel, origin?: IPoint) {
+        if (!modelToOriginate) return;
+
         var newOrigin = point.add(modelToOriginate.origin, origin);
 
         if (modelToOriginate.paths) {
@@ -229,12 +251,14 @@ module MakerJs.model {
 
         if (modelContext.paths) {
             for (var pathId in modelContext.paths) {
+                if (!modelContext.paths[pathId]) continue;
                 callback(modelContext, pathId, modelContext.paths[pathId]);
             }
         }
 
         if (modelContext.models) {
             for (var id in modelContext.models) {
+                if (!modelContext.models[id]) continue;
                 walkPaths(modelContext.models[id], callback);
             }
         }

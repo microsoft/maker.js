@@ -23,12 +23,14 @@ module MakerJs.path {
         }
 
         function getAngleStrictlyBetweenArcAngles() {
-            var endAngle = angle.ofArcEnd(arc);
+            var startAngle = angle.noRevolutions(arc.startAngle);
+            var endAngle = startAngle + angle.ofArcEnd(arc) - arc.startAngle;
+
             var tries = [0, 1, -1];
             for (var i = 0; i < tries.length; i++) {
                 var add = + 360 * tries[i];
-                if (measure.isBetween(angleAtBreakPoint + add, arc.startAngle, endAngle, true)) {
-                    return angleAtBreakPoint + add;
+                if (measure.isBetween(angleAtBreakPoint + add, startAngle, endAngle, true)) {
+                    return arc.startAngle + angleAtBreakPoint + add - startAngle;
                 }
             }
             return null;
