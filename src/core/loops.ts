@@ -194,7 +194,6 @@ module MakerJs.model {
             return result.models[id];
         }
 
-        //todo: clone the original before originating
         //todo: remove dead ends first
         model.originate(modelContext);
 
@@ -203,7 +202,6 @@ module MakerJs.model {
 
             if (!pathContext) return;
 
-            //todo - don't clone
             var safePath = <IPathDirectionalWithPrimeContext>cloneObject(pathContext);
             safePath.pathId = pathId;
             safePath.modelContext = modelContext;

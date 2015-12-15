@@ -311,7 +311,7 @@ module MakerJs.model {
     }
 
     /**
-     * Combine 2 models. The models should be originated, and every paths within each model should be part of a loop.
+     * Combine 2 models. The models should be originated, and every path within each model should be part of a loop.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
