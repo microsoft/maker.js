@@ -104,7 +104,7 @@ module MakerJs.model {
 
         function addUniquePoint(pointToAdd: IPoint) {
             for (var i = 0; i < pointArray.length; i++) {
-                if (point.areEqual(pointArray[i], pointToAdd, .0000001)) {
+                if (point.areEqual(pointArray[i], pointToAdd, .000000001)) {
                     return;
                 }
             }
