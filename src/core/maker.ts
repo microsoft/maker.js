@@ -331,6 +331,44 @@ module MakerJs {
     }
 
     /**
+     * Options when matching points
+     */
+    export interface IPointMatchOptions {
+
+        /**
+         * Max distance to consider two points as the same.
+         */
+        pointMatchingDistance?: number;
+    }
+
+    /**
+     * Options to pass to model.combine.
+     */
+    export interface ICombineOptions extends IPointMatchOptions {
+
+        /**
+         * Flag to remove paths which are not part of a loop.
+         */
+        trimDeadEnds?: boolean;
+
+        /**
+         * Point which is known to be outside of the model.
+         */
+        farPoint?: IPoint;
+    }
+
+    /**
+     * Options to pass to model.findLoops.
+     */
+    export interface IFindLoopsOptions extends IPointMatchOptions {
+
+        /**
+         * Flag to remove looped paths from the original model.
+         */
+        removeFromOriginal?: boolean;
+    }
+
+    /**
      * A path that may be indicated to "flow" in either direction between its endpoints.
      */
     export interface IPathDirectional extends IPath {
@@ -414,12 +452,33 @@ module MakerJs {
     }
 
     /**
+     * Callback signature for model.walkPaths().
+     */
+    export interface IModelPathCallback {
+        (modelContext: IModel, pathId: string, pathContext: IPath): void;
+    }
+
+    /**
      * Test to see if an object implements the required properties of a model.
      */
     export function isModel(item: any): boolean {
         return item && (item.paths || item.models);
     }
 
+    /**
+     * Reference to a path id within a model.
+     */
+    export interface IRefPathIdInModel {
+        modelContext: IModel;
+        pathId: string;
+    }
+
+    /**
+     * Path and its reference id within a model
+     */
+    export interface IRefPathInModel extends IRefPathIdInModel {
+        pathContext: IPath;
+    }
 }
 
 //CommonJs

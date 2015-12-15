@@ -32,8 +32,13 @@ module MakerJs.point {
      * @param b Second point.
      * @returns true if points are the same, false if they are not
      */
-    export function areEqual(a: IPoint, b: IPoint): boolean {
-        return a[0] == b[0] && a[1] == b[1];
+    export function areEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean {
+        if (!withinDistance) {
+            return a[0] == b[0] && a[1] == b[1];
+        } else {
+            var distance = measure.pointDistance(a, b);
+            return distance <= withinDistance;
+        }
     }
 
     /**
@@ -46,6 +51,20 @@ module MakerJs.point {
      */
     export function areEqualRounded(a: IPoint, b: IPoint, accuracy = .0000001): boolean {
         return round(a[0], accuracy) == round(b[0], accuracy) && round(a[1], accuracy) == round(b[1], accuracy);
+    }
+
+    /**
+     * Get the average of two points.
+     * 
+     * @param a First point.
+     * @param b Second point.
+     * @returns New point object which is the average of a and b.
+     */
+    export function average(a: IPoint, b: IPoint): IPoint{
+        function avg(i): number {
+            return (a[i] + b[i]) / 2;
+        }
+        return [avg(0), avg(1)];
     }
 
     /**
@@ -257,7 +276,7 @@ module MakerJs.point {
      */
     export function serialize(pointContext: IPoint, accuracy?: number) {
         var roundedPoint = rounded(pointContext, accuracy);
-        return roundedPoint[0] + ',' + roundedPoint[1];
+        return JSON.stringify(roundedPoint);
     }
 
     /**

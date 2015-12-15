@@ -248,6 +248,37 @@ declare module MakerJs {
         path2Angles?: number[];
     }
     /**
+     * Options when matching points
+     */
+    interface IPointMatchOptions {
+        /**
+         * Max distance to consider two points as the same.
+         */
+        pointMatchingDistance?: number;
+    }
+    /**
+     * Options to pass to model.combine.
+     */
+    interface ICombineOptions extends IPointMatchOptions {
+        /**
+         * Flag to remove paths which are not part of a loop.
+         */
+        trimDeadEnds?: boolean;
+        /**
+         * Point which is known to be outside of the model.
+         */
+        farPoint?: IPoint;
+    }
+    /**
+     * Options to pass to model.findLoops.
+     */
+    interface IFindLoopsOptions extends IPointMatchOptions {
+        /**
+         * Flag to remove looped paths from the original model.
+         */
+        removeFromOriginal?: boolean;
+    }
+    /**
      * A path that may be indicated to "flow" in either direction between its endpoints.
      */
     interface IPathDirectional extends IPath {
@@ -316,9 +347,28 @@ declare module MakerJs {
         layer?: string;
     }
     /**
+     * Callback signature for model.walkPaths().
+     */
+    interface IModelPathCallback {
+        (modelContext: IModel, pathId: string, pathContext: IPath): void;
+    }
+    /**
      * Test to see if an object implements the required properties of a model.
      */
     function isModel(item: any): boolean;
+    /**
+     * Reference to a path id within a model.
+     */
+    interface IRefPathIdInModel {
+        modelContext: IModel;
+        pathId: string;
+    }
+    /**
+     * Path and its reference id within a model
+     */
+    interface IRefPathInModel extends IRefPathIdInModel {
+        pathContext: IPath;
+    }
 }
 declare module MakerJs.angle {
     /**
@@ -328,7 +378,7 @@ declare module MakerJs.angle {
      * @param b Second angle.
      * @returns true if angles are the same, false if they are not
      */
-    function areEqual(angle1: number, angle2: number): boolean;
+    function areEqual(angle1: number, angle2: number, accuracy?: number): boolean;
     /**
      * Ensures an angle is not greater than 360
      *
@@ -415,7 +465,7 @@ declare module MakerJs.point {
      * @param b Second point.
      * @returns true if points are the same, false if they are not
      */
-    function areEqual(a: IPoint, b: IPoint): boolean;
+    function areEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean;
     /**
      * Find out if two points are equal after rounding.
      *
@@ -425,6 +475,14 @@ declare module MakerJs.point {
      * @returns true if points are the same, false if they are not
      */
     function areEqualRounded(a: IPoint, b: IPoint, accuracy?: number): boolean;
+    /**
+     * Get the average of two points.
+     *
+     * @param a First point.
+     * @param b Second point.
+     * @returns New point object which is the average of a and b.
+     */
+    function average(a: IPoint, b: IPoint): IPoint;
     /**
      * Clone a point into a new point.
      *
@@ -543,7 +601,7 @@ declare module MakerJs.path {
      * @param b Second path.
      * @returns true if paths are the same, false if they are not
      */
-    function areEqual(path1: IPath, path2: IPath): boolean;
+    function areEqual(path1: IPath, path2: IPath, withinPointDistance?: number): boolean;
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      *
@@ -675,10 +733,17 @@ declare module MakerJs.model {
      */
     function countChildModels(modelContext: IModel): number;
     /**
+     * Get an unused id in the models map with the same prefix.
+     *
+     * @param modelContext The model containing the models map.
+     * @param modelId The id to use directly (if unused), or as a prefix.
+     */
+    function getSimilarModelId(modelContext: IModel, modelId: string): string;
+    /**
      * Get an unused id in the paths map with the same prefix.
      *
      * @param modelContext The model containing the paths map.
-     * @param pathId The pathId to use directly (if unused), or as a prefix.
+     * @param pathId The id to use directly (if unused), or as a prefix.
      */
     function getSimilarPathId(modelContext: IModel, pathId: string): string;
     /**
@@ -740,12 +805,6 @@ declare module MakerJs.model {
      */
     function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel;
     /**
-     * Callback signature for walkPaths.
-     */
-    interface IModelPathCallback {
-        (modelContext: IModel, pathId: string, pathContext: IPath): void;
-    }
-    /**
      * Recursively walk through all paths for a given model.
      *
      * @param modelContext The model to walk.
@@ -764,7 +823,14 @@ declare module MakerJs.model {
      */
     function isPathInsideModel(pathContext: IPath, modelContext: IModel, farPoint?: IPoint): boolean;
     /**
-     * Combine 2 models. The models should be originated.
+     * Break a model's paths everywhere they intersect with another path.
+     *
+     * @param modelToBreak The model containing paths to be broken.
+     * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
+     */
+    function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel): void;
+    /**
+     * Combine 2 models. The models should be originated, and every path within each model should be part of a loop.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
@@ -775,7 +841,7 @@ declare module MakerJs.model {
      * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
      */
-    function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean, includeAOutsideB: boolean, includeBInsideA: boolean, includeBOutsideA: boolean, keepDuplicates?: boolean, farPoint?: IPoint): void;
+    function combine(modelA: IModel, modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, options?: ICombineOptions): void;
 }
 declare module MakerJs.units {
     /**
@@ -974,7 +1040,7 @@ declare module MakerJs.path {
      * @param line2 Second line to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number): IPathArc;
+    function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number, options?: IPointMatchOptions): IPathArc;
     /**
      * Adds a round corner to the inside angle between 2 paths. The paths must meet at one point.
      *
@@ -982,7 +1048,7 @@ declare module MakerJs.path {
      * @param path2 Second path to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    function fillet(path1: IPath, path2: IPath, filletRadius: number): IPathArc;
+    function fillet(path1: IPath, path2: IPath, filletRadius: number, options?: IPointMatchOptions): IPathArc;
 }
 declare module MakerJs.kit {
     /**
@@ -1047,13 +1113,37 @@ declare module MakerJs.kit {
 }
 declare module MakerJs.model {
     /**
+     * @private
+     */
+    interface IPointMappedItem<T> {
+        averagePoint: IPoint;
+        item: T;
+    }
+    /**
+     * @private
+     */
+    class PointMap<T> {
+        matchingDistance: number;
+        list: IPointMappedItem<T>[];
+        constructor(matchingDistance?: number);
+        add(pointToAdd: IPoint, item: T): void;
+        find(pointToFind: IPoint, saveAverage: boolean): T;
+    }
+    /**
      * Find paths that have common endpoints and form loops.
      *
      * @param modelContext The model to search for loops.
-     * @param accuracy Optional exemplar of number of decimal places.
-     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
+     * @param options Optional options object.
+     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
      */
-    function findLoops(modelContext: IModel, accuracy?: number): IModel;
+    function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel;
+    /**
+     * Remove all paths in a loop model from the model(s) which contained them.
+     *
+     * @param loopToDetach The model to search for loops.
+     */
+    function detachLoop(loopToDetach: IModel): void;
+    function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number): void;
 }
 declare module MakerJs.exporter {
     /**
@@ -1126,7 +1216,7 @@ declare module MakerJs.exporter {
     /**
      * OpenJsCad export options.
      */
-    interface IOpenJsCadOptions extends IExportOptions {
+    interface IOpenJsCadOptions extends IFindLoopsOptions {
         /**
          * Optional depth of 3D extrusion.
          */
@@ -1135,10 +1225,6 @@ declare module MakerJs.exporter {
          * Optional size of curve facets.
          */
         facetSize?: number;
-        /**
-         * Optional accuracy of points.
-         */
-        accuracy?: number;
     }
 }
 declare module MakerJs.exporter {

@@ -1,13 +1,57 @@
 ﻿/// <reference path="combine.ts" />
 
 module MakerJs.model {
+    
+    /**
+     * @private
+     */
+    export interface IPointMappedItem<T> {
+        averagePoint: IPoint;
+        item: T;
+    }
+
+    /**
+     * @private
+     */
+    export class PointMap<T> {
+        public list: IPointMappedItem<T>[] = [];
+
+        constructor(public matchingDistance: number = .001) {
+        }
+
+        public add(pointToAdd: IPoint, item: T) {
+            this.list.push({ averagePoint: pointToAdd, item: item });
+        }
+
+        public find(pointToFind: IPoint, saveAverage: boolean): T {
+            for (var i = 0; i < this.list.length; i++) {
+                var item = this.list[i];
+                var distance = measure.pointDistance(pointToFind, item.averagePoint);
+
+                if (distance <= this.matchingDistance) {
+
+                    if (saveAverage) {
+                        item.averagePoint = point.average(item.averagePoint, pointToFind);
+                    }
+
+                    return item.item;
+                }
+            }
+            return null;
+        }
+    }
+    
+    /**
+     * @private
+     */
+    interface IPathDirectionalWithPrimeContext extends IPathDirectional, IRefPathIdInModel {
+    }
 
     /**
      * @private
      */
     interface ILinkedPath {
-        id: string;
-        path: IPath;
+        path: IPathDirectional;
         nextConnection: string;
         reversed: boolean;
     }
@@ -52,7 +96,18 @@ module MakerJs.model {
     /**
      * @private
      */
-    function follow(connections: IConnectionMap, loops: ILoopModel[]) {
+    function collectLoop(loop: ILoopModel, loops: ILoopModel[], detach: boolean) {
+        loops.push(loop);
+
+        if (detach) {
+            detachLoop(loop);
+        }
+    }
+
+    /**
+     * @private
+     */
+    function follow(connections: IConnectionMap, loops: ILoopModel[], detach: boolean) {
         //for a given point, follow the paths that connect to each other to form loops
         for (var p in connections) {
             var linkedPaths: ILinkedPath[] = connections[p];
@@ -69,10 +124,10 @@ module MakerJs.model {
 
                 while (true) {
 
-                    var currPath = <IPathDirectional>currLink.path;
+                    var currPath = <IPathDirectionalWithPrimeContext>currLink.path;
                     currPath.reversed = currLink.reversed;
 
-                    var id = model.getSimilarPathId(loopModel, currLink.id);
+                    var id = model.getSimilarPathId(loopModel, currPath.pathId);
                     loopModel.paths[id] = currPath;
 
                     if (!connections[currLink.nextConnection]) break;
@@ -87,7 +142,7 @@ module MakerJs.model {
                     if (currLink.path === firstLink.path) {
 
                         //loop is closed
-                        loops.push(loopModel);
+                        collectLoop(loopModel, loops, detach);
                         break;
                     }
                 }
@@ -99,16 +154,21 @@ module MakerJs.model {
      * Find paths that have common endpoints and form loops.
      * 
      * @param modelContext The model to search for loops.
-     * @param accuracy Optional exemplar of number of decimal places.
-     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectional.
+     * @param options Optional options object.
+     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
      */
-    export function findLoops(modelContext: IModel, accuracy?: number): IModel {
+    export function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel {
         var loops: ILoopModel[] = [];
         var connections: IConnectionMap = {};
         var result: IModel = { models: {} };
 
+        var opts: IFindLoopsOptions = {
+            pointMatchingDistance: .005
+        };
+        extendObject(opts, options);
+
         function getLinkedPathsOnConnectionPoint(p: IPoint) {
-            var serializedPoint = point.serialize(p, accuracy);
+            var serializedPoint = point.serialize(p, .0001);    //TODO convert to pointmap
 
             if (!(serializedPoint in connections)) {
                 connections[serializedPoint] = [];
@@ -134,6 +194,7 @@ module MakerJs.model {
             return result.models[id];
         }
 
+        //todo: remove dead ends first
         model.originate(modelContext);
 
         //find loops by looking at all paths in this model
@@ -141,7 +202,9 @@ module MakerJs.model {
 
             if (!pathContext) return;
 
-            var safePath = <IPathDirectional>cloneObject(pathContext);
+            var safePath = <IPathDirectionalWithPrimeContext>cloneObject(pathContext);
+            safePath.pathId = pathId;
+            safePath.modelContext = modelContext;
 
             //circles are loops by nature
             if (safePath.type == pathType.Circle) {
@@ -150,7 +213,8 @@ module MakerJs.model {
                     insideCount: 0
                 };
                 loopModel.paths[pathId] = safePath;
-                loops.push(loopModel);
+
+                collectLoop(loopModel, loops, opts.removeFromOriginal);
 
             } else {
                 //gather both endpoints from all non-circle segments
@@ -158,9 +222,8 @@ module MakerJs.model {
 
                 for (var i = 2; i--;) {
                     var linkedPath: ILinkedPath = {
-                        id: pathId,
                         path: safePath,
-                        nextConnection: point.serialize(safePath.endPoints[1 - i], accuracy),
+                        nextConnection: point.serialize(safePath.endPoints[1 - i], .0001),  //TODO convert to pointmap
                         reversed: i != 0
                     };
                     getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
@@ -169,7 +232,7 @@ module MakerJs.model {
         });
 
         //follow paths to find loops
-        follow(connections, loops);
+        follow(connections, loops, opts.removeFromOriginal);
 
         //now we have all loops, we need to see which are inside of each other
         spin(function (firstLoop: ILoopModel) {
@@ -200,5 +263,140 @@ module MakerJs.model {
         });
 
         return result;
+    }
+
+    /**
+     * Remove all paths in a loop model from the model(s) which contained them.
+     * 
+     * @param loopToDetach The model to search for loops.
+     */
+    export function detachLoop(loopToDetach: IModel) {
+        for (var id in loopToDetach.paths) {
+            var pathDirectionalWithOriginalContext = <IPathDirectionalWithPrimeContext>loopToDetach.paths[id];
+            var primeModel = pathDirectionalWithOriginalContext.modelContext;
+            if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.pathId) {
+                delete primeModel.paths[pathDirectionalWithOriginalContext.pathId];
+            }
+        }
+    }
+
+    /**
+     * @private
+     */
+    interface IRefPathEndpoints extends IRefPathIdInModel {
+        endPoints: IPoint[];
+    }
+
+    /**
+     * @private
+     */
+    class DeadEndFinder {
+
+        private pointMap: PointMap<IRefPathEndpoints[]>;
+
+        constructor(public pointMatchingDistance) {
+            this.pointMap = new PointMap<IRefPathEndpoints[]>(pointMatchingDistance);
+        }
+
+        public addPathRef(p: IPoint, pathRef: IRefPathEndpoints) {
+            var found = this.pointMap.find(p, true);
+            if (found) {
+                found.push(pathRef);
+            } else {
+                this.pointMap.add(p, [pathRef]);
+            }
+        }
+
+        private removeMatchingPathRefs(a: IRefPathEndpoints[], b: IRefPathEndpoints[]) {
+            //see if any are the same in each array
+            for (var ai = 0; ai < a.length; ai++) {
+                for (var bi = 0; bi < b.length; bi++) {
+                    if (a[ai] === b[bi]) {
+                        var pathRef = a[ai];
+                        a.splice(ai, 1);
+                        b.splice(bi, 1);
+                        return pathRef;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private removePathRef(pathRef: IRefPathEndpoints) {
+
+            var removePath = (p: IPoint) => {
+                var pathRefs = this.pointMap.find(p, false);
+
+                for (var i = 0; i < pathRefs.length; i++) {
+                    if (pathRefs[i] === pathRef) {
+                        pathRefs.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+
+            for (var i = 2; i--;) {
+                removePath(pathRef.endPoints[i]);
+            }
+        }
+
+        public removeDeadEnd(): boolean {
+            var found = false;
+            var oddPathRefs: IRefPathEndpoints[] = null;
+
+            for (var i = 0; i < this.pointMap.list.length; i++) {
+
+                var pathRefs = this.pointMap.list[i].item;
+
+                if (pathRefs.length % 2 == 0) continue;
+
+                if (pathRefs.length == 1) {
+                    var pathRef = pathRefs[0];
+                    this.removePathRef(pathRef);
+
+                    delete pathRef.modelContext.paths[pathRef.pathId];
+                    found = true;
+
+                } else {
+
+                    if (!oddPathRefs) {
+                        //save this for another iteration
+                        oddPathRefs = pathRefs;
+                    } else {
+
+                        //compare with the saved
+                        var pathRef = this.removeMatchingPathRefs(oddPathRefs, pathRefs);
+                        if (pathRef) {
+
+                            delete pathRef.modelContext.paths[pathRef.pathId];
+                            found = true;
+
+                            //clear the saved
+                            oddPathRefs = null;
+                        }
+                    }
+                }
+            }
+            return found;
+        }
+    }
+
+    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance = .005) {
+        var serializedPointAccuracy = .0001;
+        var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
+
+        walkPaths(modelContext, function (modelContext: IModel, pathId: string, pathContext: IPath) {
+            var endPoints = point.fromPathEnds(pathContext);
+
+            if (!endPoints) return;
+
+            var pathRef: IRefPathEndpoints = { modelContext: modelContext, pathId: pathId, endPoints: endPoints };
+
+            for (var i = 2; i--;) {
+                deadEndFinder.addPathRef(endPoints[i], pathRef);
+            }
+        });
+
+        while (deadEndFinder.removeDeadEnd());
     }
 }

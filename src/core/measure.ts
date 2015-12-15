@@ -76,6 +76,13 @@ module MakerJs.measure {
         var startAngle = arc.startAngle;
         var endAngle = angle.ofArcEnd(arc);
 
+        var span = endAngle - startAngle;
+
+        startAngle = angle.noRevolutions(startAngle);
+        endAngle = startAngle + span;
+
+        angleInQuestion = angle.noRevolutions(angleInQuestion);
+
         //computed angles will not be negative, but the arc may have specified a negative angle, so check against one revolution forward and backward
         return (isBetween(angleInQuestion, startAngle, endAngle, exclusive) || isBetween(angleInQuestion, startAngle + 360, endAngle + 360, exclusive) || isBetween(angleInQuestion, startAngle - 360, endAngle - 360, exclusive))
     }
@@ -90,11 +97,11 @@ module MakerJs.measure {
      */
     export function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, exclusive: boolean): boolean {
         for (var i = 2; i--;) {
-            var origin_value = round(line.origin[i]);
-            var end_value = round(line.end[i]);
-            if (origin_value == end_value) {
+            if (round(line.origin[i] - line.end[i], .000001) == 0) {
                 continue;
             }
+            var origin_value = round(line.origin[i]);
+            var end_value = round(line.end[i]);
             if (!isBetween(round(pointInQuestion[i]), origin_value, end_value, exclusive)) return false;
         }
         return true;
@@ -228,19 +235,20 @@ module MakerJs.measure {
             getExtreme(totalMeasurement.high, pathMeasurement.high, Math.max);
         }
 
-        function measure(model: IModel, offsetOrigin?: IPoint) {
+        function measure(modelToMeasure: IModel, offsetOrigin?: IPoint) {
+            if (!modelToMeasure) return;
 
-            var newOrigin = point.add(model.origin, offsetOrigin);
+            var newOrigin = point.add(modelToMeasure.origin, offsetOrigin);
 
-            if (model.paths) {
-                for (var id in model.paths) {
-                    lowerOrHigher(newOrigin, pathExtents(model.paths[id]));
+            if (modelToMeasure.paths) {
+                for (var id in modelToMeasure.paths) {
+                    lowerOrHigher(newOrigin, pathExtents(modelToMeasure.paths[id]));
                 }
             }
 
-            if (model.models) {
-                for (var id in model.models) {
-                    measure(model.models[id], newOrigin);
+            if (modelToMeasure.models) {
+                for (var id in modelToMeasure.models) {
+                    measure(modelToMeasure.models[id], newOrigin);
                 }
             }
         }
