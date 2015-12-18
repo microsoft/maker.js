@@ -487,6 +487,10 @@ header .inner img.logo {
   margin-left: -18px;
 }
 
+header .inner img.logo.small {
+    height: 120px;
+}
+
 header h2 a {
     color: #9ddcff;
 }
