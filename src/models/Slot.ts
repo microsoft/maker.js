@@ -21,4 +21,22 @@ module MakerJs.models {
             this.origin = origin;
         }
     }
+
+    (<IKit>Slot).metaParameters = [
+        {
+            title: "origin", type: "select", value: [
+                [0, 0],
+                [10, 0],
+                [10, 10]
+            ]
+        },
+        {
+            title: "end", type: "select", value: [
+                [30, 0],
+                [0, 30],
+                [10, 30]
+            ]
+        },
+        { title: "radius", type: "range", min: 1, max: 50, value: 3 }
+    ];
 }

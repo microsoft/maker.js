@@ -24,7 +24,7 @@ module MakerJs.models {
         { title: "closed", type: "bool", value: true },
         {
             title: "points", type: "select", value: [
-                [ [0,0], [100, 0], [50, 50] ],
+                [[0, 0], [100, 0], [50, 50]],
                 [[0, 0], [100, 0], [150, 150]]
             ]
         }
