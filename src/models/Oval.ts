@@ -10,4 +10,8 @@ module MakerJs.models {
 
     }
 
-} 
+    (<IKit>Oval).metaParameters = [
+        { title: "width", type: "range", min: 1, max: 100, value: 25 },
+        { title: "height", type: "range", min: 1, max: 100, value: 50 }
+    ];
+}

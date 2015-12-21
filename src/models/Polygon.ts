@@ -19,4 +19,10 @@ module MakerJs.models {
             return points;
         }
     }
+
+    (<IKit>Polygon).metaParameters = [
+        { title: "number of sides", type: "range", min: 3, max: 24, value: 6 },
+        { title: "radius", type: "range", min: 1, max: 100, value: 50 },
+        { title: "offset angle", type: "range", min: 0, max: 180, value: 0 }
+    ];
 }

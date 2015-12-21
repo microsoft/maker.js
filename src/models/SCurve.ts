@@ -35,4 +35,9 @@ module MakerJs.models {
             this.paths['curve_end'] = path.moveRelative(path.mirror(curve, true, true), [width, height]);
         }
     }
-} 
+
+    (<IKit>SCurve).metaParameters = [
+        { title: "width", type: "range", min: 1, max: 100, value: 25 },
+        { title: "height", type: "range", min: 1, max: 100, value: 50 }
+    ];
+}

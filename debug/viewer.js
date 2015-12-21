@@ -147,9 +147,7 @@ var Viewer = {
 
         if (Viewer.Constructor.metaParameters) {
             for (var i = 0; i < Viewer.Constructor.metaParameters.length; i++) {
-                var attrs = Viewer.Constructor.metaParameters[i];
-
-                Viewer.Params.push(attrs.value);
+                var attrs = makerjs.cloneObject( Viewer.Constructor.metaParameters[i]);
 
                 var id = 'input_' + i;
                 var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
@@ -164,6 +162,8 @@ var Viewer = {
                         input = new makerjs.exporter.XmlTag('input', attrs);
                         input.attrs['onchange'] = 'this.title=this.value;Viewer.Refresh(' + i + ', makerjs.round(this.valueAsNumber, .001))';
                         input.attrs['id'] = id;
+
+                        Viewer.Params.push(attrs.value);
 
                         break;
 
@@ -181,6 +181,32 @@ var Viewer = {
 
                         input = new makerjs.exporter.XmlTag('input', checkboxAttrs);
 
+                        Viewer.Params.push(attrs.value);
+
+                        break;
+
+                    case 'select':
+
+                        var selectAttrs = {
+                            id: id,
+                            onchange: 'Viewer.Refresh(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
+                        };
+
+                        input = new makerjs.exporter.XmlTag('select', selectAttrs);
+                        var options = '';
+
+                        for (var j = 0; j < attrs.value.length; j++) {
+                            var option = new makerjs.exporter.XmlTag('option');
+                            option.innerText = JSON.stringify(attrs.value[j]);
+
+                            options += option.toString();
+                        }
+
+                        input.innerText = options;
+                        input.innerTextEscaped = true;
+
+                        Viewer.Params.push(attrs.value[0]);
+
                         break;
                 }
 
@@ -197,30 +223,42 @@ var Viewer = {
 
     loadModelCode: function (filename) {
 
-        if (filename) {
-            var script = document.createElement('script');
-            script.setAttribute('src', '../examples/' + filename + '.js');
-            
-            var _makerjs = makerjs;
+        var _makerjs = makerjs;
 
-            function newModelCode() {
+        function newModelCode() {
+            Viewer.ViewScale = null;
+
+            makerjs = _makerjs;
+
+            if (!Viewer.Constructor) {
+                Viewer.Constructor = require(filename);
+            }
+
+            Viewer.populateParams(filename);
+            Viewer.Refresh();
+        }
+
+        if (filename) {
+
+            if (filename in makerjs.models) {
+
                 Viewer.ViewScale = null;
 
-                makerjs = _makerjs;
-
-                if (!Viewer.Constructor) {
-                    Viewer.Constructor = require(filename);
-                }
+                Viewer.Constructor = makerjs.models[filename];
 
                 Viewer.populateParams(filename);
                 Viewer.Refresh();
+
+                return;
             }
 
+            var script = document.createElement('script');
+            script.setAttribute('src', '../examples/' + filename + '.js');
+            
             script.onload = function () {
                 setTimeout(newModelCode, 0);
             };
 
-            
             window.require = function (name) {
                 if (name == 'makerjs' || name == '../target/js/node.maker.js') {
                     return _makerjs;

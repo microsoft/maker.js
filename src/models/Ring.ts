@@ -16,4 +16,9 @@ module MakerJs.models {
             }
         }
     }
-} 
+
+    (<IKit>Ring).metaParameters = [
+        { title: "outer radius", type: "range", min: 0, max: 100, step: 1, value: 50 },
+        { title: "inner radius", type: "range", min: 0, max: 100, step: 1, value: 20 }
+    ];
+}

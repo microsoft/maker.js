@@ -42,4 +42,11 @@ module MakerJs.models {
         }
 
     }
-} 
+    
+    (<IKit>Star).metaParameters = [
+        { title: "number of sides", type: "range", min: 3, max: 24, value: 8 },
+        { title: "outer radius", type: "range", min: 1, max: 100, value: 70 },
+        { title: "inner radius", type: "range", min: 0, max: 100, value: 20 },
+        { title: "skip points (when inner radius is zero)", type: "range", min: 0, max: 12, value: 2 }
+    ];
+}
