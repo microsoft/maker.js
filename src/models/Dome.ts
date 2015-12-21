@@ -4,9 +4,14 @@
 
         public paths: IPathMap = {};
 
-        constructor(width: number, height: number, radius: number = Math.min(width / 2, height)) {
+        constructor(width: number, height: number, radius?: number) {
 
             var w2 = width / 2;
+
+            if (radius < 0) radius = 0;
+            if (radius === void 0) radius = w2;
+            radius = Math.min(radius, w2);
+            radius = Math.min(radius, height);
             var wt = Math.max(w2 - radius, 0);
             var hr = Math.max(height - radius, 0);
 
@@ -28,4 +33,10 @@
 
         }
     }
+
+    (<IKit>Dome).metaParameters = [
+        { title: "width", type: "range", min: 1, max: 100, value: 25 },
+        { title: "height", type: "range", min: 1, max: 100, value: 50 },
+        { title: "radius", type: "range", min: 0, max: 50, value: 12.5 }
+    ];
 }
