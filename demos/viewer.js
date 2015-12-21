@@ -222,6 +222,8 @@ var Viewer = {
 
     loadModelCode: function (filename) {
 
+        if (filename) {
+
             var _makerjs = makerjs;
 
             function newModelCode() {
@@ -237,8 +239,6 @@ var Viewer = {
                 Viewer.Refresh();
             }
 
-        if (filename) {
-
             if (filename in makerjs.models) {
 
                 Viewer.ViewScale = null;
@@ -252,7 +252,7 @@ var Viewer = {
             }
 
             var script = document.createElement('script');
-            script.setAttribute('src', '../examples/' + filename + '.js');
+            script.setAttribute('src', '/maker.js/demos/' + filename + '.js');
             
             script.onload = function () {
                 setTimeout(newModelCode, 0);
