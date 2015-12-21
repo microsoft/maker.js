@@ -14,4 +14,11 @@ module MakerJs.models {
 
         }
     }
+
+    (<IKit>BoltCircle).metaParameters = [
+        { title: "bolt circle radius", type: "range", min: 1, max: 100, value: 50 },
+        { title: "hole radius", type: "range", min: 1, max: 50, value: 10 },
+        { title: "bolt count", type: "range", min: 3, max: 24, value: 6 },
+        { title: "offset angle", type: "range", min: 0, max: 180, value: 0 }
+    ];
 }

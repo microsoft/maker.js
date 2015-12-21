@@ -24,7 +24,8 @@ module MakerJs.angle {
      */
     export function noRevolutions(angleInDegrees: number) {
         var revolutions = Math.floor(angleInDegrees / 360);
-        return angleInDegrees - (360 * revolutions);
+        var a = angleInDegrees - (360 * revolutions);
+        return a < 0 ? a + 360 : a;
     }
 
     /**
