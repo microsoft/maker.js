@@ -369,6 +369,50 @@ declare module MakerJs {
     interface IRefPathInModel extends IRefPathIdInModel {
         pathContext: IPath;
     }
+    /**
+     * Describes a parameter and its limits.
+     */
+    interface IMetaParameter {
+        /**
+         * Display text of the parameter.
+         */
+        title: string;
+        /**
+         * Type of the parameter. Currently supports "range".
+         */
+        type: string;
+        /**
+         * Optional minimum value of the range.
+         */
+        min?: number;
+        /**
+         * Optional maximum value of the range.
+         */
+        max?: number;
+        /**
+         * Optional step value between min and max.
+         */
+        step?: number;
+        /**
+         * Initial sample value for this parameter.
+         */
+        value: any;
+    }
+    /**
+     * An IKit is a model-producing class with some sample parameters. Think of it as a packaged model with instructions on how to best use it.
+     */
+    interface IKit {
+        /**
+         * The constructor. The kit must be "new-able" and it must produce an IModel.
+         * It can have any number of any type of parameters.
+         */
+        new (...args: any[]): IModel;
+        /**
+         * Attached to the constructor is a property named metaParameters which is an array of IMetaParameter objects.
+         * Each element of the array corresponds to a parameter of the constructor, in order.
+         */
+        metaParameters?: IMetaParameter[];
+    }
 }
 declare module MakerJs.angle {
     /**
@@ -1052,50 +1096,6 @@ declare module MakerJs.path {
 }
 declare module MakerJs.kit {
     /**
-     * Describes a parameter and its limits.
-     */
-    interface IMetaParameter {
-        /**
-         * Display text of the parameter.
-         */
-        title: string;
-        /**
-         * Type of the parameter. Currently supports "range".
-         */
-        type: string;
-        /**
-         * Optional minimum value of the range.
-         */
-        min?: number;
-        /**
-         * Optional maximum value of the range.
-         */
-        max?: number;
-        /**
-         * Optional step value between min and max.
-         */
-        step?: number;
-        /**
-         * Initial sample value for this parameter.
-         */
-        value: any;
-    }
-    /**
-     * An IKit is a model-producing class with some sample parameters. Think of it as a packaged model with instructions on how to best use it.
-     */
-    interface IKit {
-        /**
-         * The constructor. The kit must be "new-able" and it must produce an IModel.
-         * It can have any number of any type of parameters.
-         */
-        new (...args: any[]): IModel;
-        /**
-         * Attached to the constructor is a property named metaParameters which is an array of IMetaParameter objects.
-         * Each element of the array corresponds to a parameter of the constructor, in order.
-         */
-        metaParameters?: IMetaParameter[];
-    }
-    /**
      * Helper function to use the JavaScript "apply" function in conjunction with the "new" keyword.
      *
      * @param ctor The constructor for the class which is an IKit.
@@ -1313,7 +1313,7 @@ declare module MakerJs.models {
 declare module MakerJs.models {
     class OvalArc implements IModel {
         paths: IPathMap;
-        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number);
+        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number, selfIntersect?: boolean);
     }
 }
 declare module MakerJs.models {
@@ -1331,6 +1331,13 @@ declare module MakerJs.models {
     class SCurve implements IModel {
         paths: IPathMap;
         constructor(width: number, height: number);
+    }
+}
+declare module MakerJs.models {
+    class Slot implements IModel {
+        paths: IPathMap;
+        origin: IPoint;
+        constructor(origin: IPoint, endPoint: IPoint, radius: number);
     }
 }
 declare module MakerJs.models {

@@ -96,7 +96,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPoint(item) {
-        return (Array.isArray(item) && item.length > 1);
+        return (Array.isArray(item) && item.length == 2 && !isNaN(item[0]) && !isNaN(item[1]));
     }
     MakerJs.isPoint = isPoint;
     /**
@@ -186,7 +186,8 @@ var MakerJs;
          */
         function noRevolutions(angleInDegrees) {
             var revolutions = Math.floor(angleInDegrees / 360);
-            return angleInDegrees - (360 * revolutions);
+            var a = angleInDegrees - (360 * revolutions);
+            return a < 0 ? a + 360 : a;
         }
         angle.noRevolutions = noRevolutions;
         /**
@@ -2731,6 +2732,7 @@ var MakerJs;
 (function (MakerJs) {
     var kit;
     (function (kit) {
+        //construct a model
         /**
          * Helper function to use the JavaScript "apply" function in conjunction with the "new" keyword.
          *
@@ -3575,6 +3577,15 @@ var MakerJs;
             return ConnectTheDots;
         })();
         models.ConnectTheDots = ConnectTheDots;
+        ConnectTheDots.metaParameters = [
+            { title: "closed", type: "bool", value: true },
+            {
+                title: "points", type: "select", value: [
+                    [[0, 0], [100, 0], [50, 50]],
+                    [[0, 0], [100, 0], [150, 150]]
+                ]
+            }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var __extends = (this && this.__extends) || function (d, b) {
@@ -3605,6 +3616,11 @@ var MakerJs;
             return Polygon;
         })(models.ConnectTheDots);
         models.Polygon = Polygon;
+        Polygon.metaParameters = [
+            { title: "number of sides", type: "range", min: 3, max: 24, value: 6 },
+            { title: "radius", type: "range", min: 1, max: 100, value: 50 },
+            { title: "offset angle", type: "range", min: 0, max: 180, value: 0 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3623,6 +3639,12 @@ var MakerJs;
             return BoltCircle;
         })();
         models.BoltCircle = BoltCircle;
+        BoltCircle.metaParameters = [
+            { title: "bolt circle radius", type: "range", min: 1, max: 100, value: 50 },
+            { title: "hole radius", type: "range", min: 1, max: 50, value: 10 },
+            { title: "bolt count", type: "range", min: 3, max: 24, value: 6 },
+            { title: "offset angle", type: "range", min: 0, max: 180, value: 0 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3645,6 +3667,11 @@ var MakerJs;
             return BoltRectangle;
         })();
         models.BoltRectangle = BoltRectangle;
+        BoltRectangle.metaParameters = [
+            { title: "width", type: "range", min: 1, max: 100, value: 50 },
+            { title: "height", type: "range", min: 1, max: 100, value: 25 },
+            { title: "hole radius", type: "range", min: 1, max: 50, value: 3 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3653,9 +3680,14 @@ var MakerJs;
     (function (models) {
         var Dome = (function () {
             function Dome(width, height, radius) {
-                if (radius === void 0) { radius = Math.min(width / 2, height); }
                 this.paths = {};
                 var w2 = width / 2;
+                if (radius < 0)
+                    radius = 0;
+                if (radius === void 0)
+                    radius = w2;
+                radius = Math.min(radius, w2);
+                radius = Math.min(radius, height);
                 var wt = Math.max(w2 - radius, 0);
                 var hr = Math.max(height - radius, 0);
                 this.paths["Bottom"] = new MakerJs.paths.Line([-w2, 0], [w2, 0]);
@@ -3674,6 +3706,11 @@ var MakerJs;
             return Dome;
         })();
         models.Dome = Dome;
+        Dome.metaParameters = [
+            { title: "width", type: "range", min: 1, max: 100, value: 25 },
+            { title: "height", type: "range", min: 1, max: 100, value: 50 },
+            { title: "radius", type: "range", min: 0, max: 50, value: 12.5 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3705,6 +3742,11 @@ var MakerJs;
             return RoundRectangle;
         })();
         models.RoundRectangle = RoundRectangle;
+        RoundRectangle.metaParameters = [
+            { title: "width", type: "range", min: 1, max: 100, value: 25 },
+            { title: "height", type: "range", min: 1, max: 100, value: 50 },
+            { title: "radius", type: "range", min: 0, max: 50, value: 5 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3719,6 +3761,10 @@ var MakerJs;
             return Oval;
         })(models.RoundRectangle);
         models.Oval = Oval;
+        Oval.metaParameters = [
+            { title: "width", type: "range", min: 1, max: 100, value: 25 },
+            { title: "height", type: "range", min: 1, max: 100, value: 50 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3726,24 +3772,59 @@ var MakerJs;
     var models;
     (function (models) {
         var OvalArc = (function () {
-            function OvalArc(startAngle, endAngle, sweepRadius, slotRadius) {
+            function OvalArc(startAngle, endAngle, sweepRadius, slotRadius, selfIntersect) {
                 var _this = this;
+                if (selfIntersect === void 0) { selfIntersect = false; }
                 this.paths = {};
+                if (slotRadius <= 0 || sweepRadius <= 0)
+                    return;
+                startAngle = MakerJs.angle.noRevolutions(startAngle);
+                endAngle = MakerJs.angle.noRevolutions(endAngle);
+                if (MakerJs.round(startAngle - endAngle) == 0)
+                    return;
+                if (endAngle < startAngle)
+                    endAngle += 360;
                 var addCap = function (id, tiltAngle, offsetStartAngle, offsetEndAngle) {
-                    var p = MakerJs.point.fromPolar(MakerJs.angle.toRadians(tiltAngle), sweepRadius);
-                    _this.paths[id] = new MakerJs.paths.Arc(p, slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle);
+                    return _this.paths[id] = new MakerJs.paths.Arc(MakerJs.point.fromPolar(MakerJs.angle.toRadians(tiltAngle), sweepRadius), slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle);
                 };
                 var addSweep = function (id, offsetRadius) {
-                    _this.paths[id] = new MakerJs.paths.Arc(MakerJs.point.zero(), sweepRadius + offsetRadius, startAngle, endAngle);
+                    return _this.paths[id] = new MakerJs.paths.Arc([0, 0], sweepRadius + offsetRadius, startAngle, endAngle);
                 };
-                addSweep("Inner", -slotRadius);
                 addSweep("Outer", slotRadius);
-                addCap("StartCap", startAngle, 180, 0);
-                addCap("EndCap", endAngle, 0, 180);
+                var hasInner = (sweepRadius - slotRadius) > 0;
+                if (hasInner) {
+                    addSweep("Inner", -slotRadius);
+                }
+                var caps = [];
+                caps.push(addCap("StartCap", startAngle, 180, 0));
+                caps.push(addCap("EndCap", endAngle, 0, 180));
+                //the distance between the cap origins
+                var d = MakerJs.measure.pointDistance(caps[0].origin, caps[1].origin);
+                if ((d / 2) < slotRadius) {
+                    //the caps intersect
+                    var int = MakerJs.path.intersection(caps[0], caps[1]);
+                    if (int) {
+                        if (!hasInner || !selfIntersect) {
+                            caps[0].startAngle = int.path1Angles[0];
+                            caps[1].endAngle = int.path2Angles[0];
+                        }
+                        if (!selfIntersect && hasInner && int.intersectionPoints.length == 2) {
+                            addCap("StartCap2", startAngle, 180, 0).endAngle = int.path1Angles[1];
+                            addCap("EndCap2", endAngle, 0, 180).startAngle = int.path2Angles[1] + 360;
+                        }
+                    }
+                }
             }
             return OvalArc;
         })();
         models.OvalArc = OvalArc;
+        OvalArc.metaParameters = [
+            { title: "start angle", type: "range", min: -360, max: 360, step: 1, value: -180 },
+            { title: "end angle", type: "range", min: -360, max: 360, step: 1, value: 170 },
+            { title: "sweep", type: "range", min: 0, max: 100, step: 1, value: 50 },
+            { title: "radius", type: "range", min: 0, max: 100, step: 1, value: 10 },
+            { title: "self intersect", type: "bool", value: false }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3758,6 +3839,10 @@ var MakerJs;
             return Rectangle;
         })(models.ConnectTheDots);
         models.Rectangle = Rectangle;
+        Rectangle.metaParameters = [
+            { title: "width", type: "range", min: 1, max: 100, value: 25 },
+            { title: "height", type: "range", min: 1, max: 100, value: 50 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3778,6 +3863,10 @@ var MakerJs;
             return Ring;
         })();
         models.Ring = Ring;
+        Ring.metaParameters = [
+            { title: "outer radius", type: "range", min: 0, max: 100, step: 1, value: 50 },
+            { title: "inner radius", type: "range", min: 0, max: 100, step: 1, value: 20 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3815,6 +3904,48 @@ var MakerJs;
             return SCurve;
         })();
         models.SCurve = SCurve;
+        SCurve.metaParameters = [
+            { title: "width", type: "range", min: 1, max: 100, value: 25 },
+            { title: "height", type: "range", min: 1, max: 100, value: 50 }
+        ];
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var Slot = (function () {
+            function Slot(origin, endPoint, radius) {
+                this.paths = {};
+                var a = MakerJs.angle.ofPointInDegrees(origin, endPoint);
+                var len = MakerJs.measure.pointDistance(origin, endPoint);
+                this.paths['Top'] = new MakerJs.paths.Line([0, radius], [len, radius]);
+                this.paths['Bottom'] = new MakerJs.paths.Line([0, -radius], [len, -radius]);
+                this.paths['StartCap'] = new MakerJs.paths.Arc([0, 0], radius, 90, 270);
+                this.paths['EndCap'] = new MakerJs.paths.Arc([len, 0], radius, 270, 90);
+                MakerJs.model.rotate(this, a, [0, 0]);
+                this.origin = origin;
+            }
+            return Slot;
+        })();
+        models.Slot = Slot;
+        Slot.metaParameters = [
+            {
+                title: "origin", type: "select", value: [
+                    [0, 0],
+                    [10, 0],
+                    [10, 10]
+                ]
+            },
+            {
+                title: "end", type: "select", value: [
+                    [30, 0],
+                    [0, 30],
+                    [10, 30]
+                ]
+            },
+            { title: "radius", type: "range", min: 1, max: 50, value: 3 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3829,6 +3960,9 @@ var MakerJs;
             return Square;
         })(models.Rectangle);
         models.Square = Square;
+        Square.metaParameters = [
+            { title: "side", type: "range", min: 1, max: 100, value: 25 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3864,6 +3998,12 @@ var MakerJs;
             return Star;
         })();
         models.Star = Star;
+        Star.metaParameters = [
+            { title: "number of sides", type: "range", min: 3, max: 24, value: 8 },
+            { title: "outer radius", type: "range", min: 1, max: 100, value: 70 },
+            { title: "inner radius", type: "range", min: 0, max: 100, value: 20 },
+            { title: "skip points (when inner radius is zero)", type: "range", min: 0, max: 12, value: 2 }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 
