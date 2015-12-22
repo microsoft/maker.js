@@ -1246,27 +1246,27 @@ declare module MakerJs.exporter {
         /**
          * SVG color of the rendered paths.
          */
-        stroke: string;
+        stroke?: string;
         /**
          * Scale of the SVG rendering.
          */
-        scale: number;
+        scale?: number;
         /**
          *  Indicate that the id's of paths should be rendered as SVG text elements.
          */
-        annotate: boolean;
+        annotate?: boolean;
         /**
          * Rendered reference origin.
          */
-        origin: IPoint;
+        origin?: IPoint;
         /**
          * Use SVG < path > elements instead of < line >, < circle > etc.
          */
-        useSvgPathOnly: boolean;
+        useSvgPathOnly?: boolean;
         /**
          * Flag to use SVG viewbox.
          */
-        viewBox: boolean;
+        viewBox?: boolean;
     }
 }
 declare module MakerJs.models {

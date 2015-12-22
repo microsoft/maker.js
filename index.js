@@ -2758,7 +2758,11 @@ var MakerJs;
             var metaParams = ctor.metaParameters;
             if (metaParams) {
                 for (var i = 0; i < metaParams.length; i++) {
-                    parameters.push(metaParams[i].value);
+                    var value = metaParams[i].value;
+                    if (Array.isArray(value)) {
+                        value = value[0];
+                    }
+                    parameters.push(value);
                 }
             }
             return parameters;
@@ -3580,8 +3584,8 @@ var MakerJs;
             { title: "closed", type: "bool", value: true },
             {
                 title: "points", type: "select", value: [
-                    [[0, 0], [100, 0], [50, 50]],
-                    [[0, 0], [100, 0], [150, 150]]
+                    [[0, 0], [40, 40], [60, 20], [100, 100], [60, 60], [40, 80]],
+                    [[0, 0], [100, 0], [50, 87]]
                 ]
             }
         ];
@@ -3640,8 +3644,8 @@ var MakerJs;
         models.BoltCircle = BoltCircle;
         BoltCircle.metaParameters = [
             { title: "bolt circle radius", type: "range", min: 1, max: 100, value: 50 },
-            { title: "hole radius", type: "range", min: 1, max: 50, value: 10 },
-            { title: "bolt count", type: "range", min: 3, max: 24, value: 6 },
+            { title: "hole radius", type: "range", min: 1, max: 50, value: 5 },
+            { title: "bolt count", type: "range", min: 3, max: 24, value: 12 },
             { title: "offset angle", type: "range", min: 0, max: 180, value: 0 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
@@ -3667,9 +3671,9 @@ var MakerJs;
         })();
         models.BoltRectangle = BoltRectangle;
         BoltRectangle.metaParameters = [
-            { title: "width", type: "range", min: 1, max: 100, value: 50 },
-            { title: "height", type: "range", min: 1, max: 100, value: 25 },
-            { title: "hole radius", type: "range", min: 1, max: 50, value: 3 }
+            { title: "width", type: "range", min: 1, max: 100, value: 100 },
+            { title: "height", type: "range", min: 1, max: 100, value: 50 },
+            { title: "hole radius", type: "range", min: 1, max: 50, value: 5 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3706,9 +3710,9 @@ var MakerJs;
         })();
         models.Dome = Dome;
         Dome.metaParameters = [
-            { title: "width", type: "range", min: 1, max: 100, value: 25 },
-            { title: "height", type: "range", min: 1, max: 100, value: 50 },
-            { title: "radius", type: "range", min: 0, max: 50, value: 12.5 }
+            { title: "width", type: "range", min: 1, max: 100, value: 50 },
+            { title: "height", type: "range", min: 1, max: 100, value: 100 },
+            { title: "radius", type: "range", min: 0, max: 50, value: 25 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3742,9 +3746,9 @@ var MakerJs;
         })();
         models.RoundRectangle = RoundRectangle;
         RoundRectangle.metaParameters = [
-            { title: "width", type: "range", min: 1, max: 100, value: 25 },
-            { title: "height", type: "range", min: 1, max: 100, value: 50 },
-            { title: "radius", type: "range", min: 0, max: 50, value: 5 }
+            { title: "width", type: "range", min: 1, max: 100, value: 50 },
+            { title: "height", type: "range", min: 1, max: 100, value: 100 },
+            { title: "radius", type: "range", min: 0, max: 50, value: 11 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3761,8 +3765,8 @@ var MakerJs;
         })(models.RoundRectangle);
         models.Oval = Oval;
         Oval.metaParameters = [
-            { title: "width", type: "range", min: 1, max: 100, value: 25 },
-            { title: "height", type: "range", min: 1, max: 100, value: 50 }
+            { title: "width", type: "range", min: 1, max: 100, value: 50 },
+            { title: "height", type: "range", min: 1, max: 100, value: 100 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3818,10 +3822,10 @@ var MakerJs;
         })();
         models.OvalArc = OvalArc;
         OvalArc.metaParameters = [
-            { title: "start angle", type: "range", min: -360, max: 360, step: 1, value: -180 },
-            { title: "end angle", type: "range", min: -360, max: 360, step: 1, value: 170 },
+            { title: "start angle", type: "range", min: -360, max: 360, step: 1, value: 180 },
+            { title: "end angle", type: "range", min: -360, max: 360, step: 1, value: 0 },
             { title: "sweep", type: "range", min: 0, max: 100, step: 1, value: 50 },
-            { title: "radius", type: "range", min: 0, max: 100, step: 1, value: 10 },
+            { title: "radius", type: "range", min: 0, max: 100, step: 1, value: 15 },
             { title: "self intersect", type: "bool", value: false }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
@@ -3839,8 +3843,8 @@ var MakerJs;
         })(models.ConnectTheDots);
         models.Rectangle = Rectangle;
         Rectangle.metaParameters = [
-            { title: "width", type: "range", min: 1, max: 100, value: 25 },
-            { title: "height", type: "range", min: 1, max: 100, value: 50 }
+            { title: "width", type: "range", min: 1, max: 100, value: 50 },
+            { title: "height", type: "range", min: 1, max: 100, value: 100 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3904,8 +3908,8 @@ var MakerJs;
         })();
         models.SCurve = SCurve;
         SCurve.metaParameters = [
-            { title: "width", type: "range", min: 1, max: 100, value: 25 },
-            { title: "height", type: "range", min: 1, max: 100, value: 50 }
+            { title: "width", type: "range", min: 1, max: 100, value: 50 },
+            { title: "height", type: "range", min: 1, max: 100, value: 100 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3938,12 +3942,12 @@ var MakerJs;
             },
             {
                 title: "end", type: "select", value: [
-                    [30, 0],
+                    [80, 0],
                     [0, 30],
                     [10, 30]
                 ]
             },
-            { title: "radius", type: "range", min: 1, max: 50, value: 3 }
+            { title: "radius", type: "range", min: 1, max: 50, value: 10 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3960,7 +3964,7 @@ var MakerJs;
         })(models.Rectangle);
         models.Square = Square;
         Square.metaParameters = [
-            { title: "side", type: "range", min: 1, max: 100, value: 25 }
+            { title: "side", type: "range", min: 1, max: 100, value: 100 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3999,8 +4003,8 @@ var MakerJs;
         models.Star = Star;
         Star.metaParameters = [
             { title: "number of sides", type: "range", min: 3, max: 24, value: 8 },
-            { title: "outer radius", type: "range", min: 1, max: 100, value: 70 },
-            { title: "inner radius", type: "range", min: 0, max: 100, value: 20 },
+            { title: "outer radius", type: "range", min: 1, max: 100, value: 50 },
+            { title: "inner radius", type: "range", min: 0, max: 100, value: 15 },
             { title: "skip points (when inner radius is zero)", type: "range", min: 0, max: 12, value: 2 }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));

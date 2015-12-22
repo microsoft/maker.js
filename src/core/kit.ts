@@ -29,7 +29,11 @@ module MakerJs.kit {
         var metaParams = ctor.metaParameters;
         if (metaParams) {
             for (var i = 0; i < metaParams.length; i++) {
-                parameters.push(metaParams[i].value);
+                var value = metaParams[i].value;
+                if (Array.isArray(value)) {
+                    value = value[0];
+                }
+                parameters.push(value);
             }
         }
         return parameters;

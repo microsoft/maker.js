@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maker.js debug TypeScript source code</title>
+
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        svg {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+    <script>
+        //pretend we are in node
+        var module = {};
+    </script>
+
+    <script src="../src/core/maker.js"></script>
+    <script src="../src/core/angle.js"></script>
+    <script src="../src/core/point.js"></script>
+    <script src="../src/core/units.js"></script>
+    <script src="../src/core/measure.js"></script>
+    <script src="../src/core/path.js"></script>
+    <script src="../src/core/break.js"></script>
+    <script src="../src/core/paths.js"></script>
+    <script src="../src/core/model.js"></script>
+    <script src="../src/core/kit.js"></script>
+    <script src="../src/core/exporter.js"></script>
+    <script src="../src/core/dxf.js"></script>
+    <script src="../src/core/xml.js"></script>
+    <script src="../src/core/svg.js"></script>
+    <script src="../src/core/solvers.js"></script>
+    <script src="../src/core/intersect.js"></script>
+    <script src="../src/core/fillet.js"></script>
+    <script src="../src/models/BoltCircle.js"></script>
+    <script src="../src/models/BoltRectangle.js"></script>
+    <script src="../src/models/Dome.js"></script>
+    <script src="../src/models/RoundRectangle.js"></script>
+    <script src="../src/models/Oval.js"></script>
+    <script src="../src/models/OvalArc.js"></script>
+    <script src="../src/models/ConnectTheDots.js"></script>
+    <script src="../src/models/Rectangle.js"></script>
+    <script src="../src/models/Ring.js"></script>
+    <script src="../src/models/Polygon.js"></script>
+    <script src="../src/models/Square.js"></script>
+    <script src="../src/models/Slot.js"></script>
+    <script src="../src/models/SCurve.js"></script>
+    <script src="../src/models/Star.js"></script>
+
+    <script>
+        //pretend it's been required
+        var makerjs = MakerJs;
+
+        var require = function (name) {
+            return makerjs;
+        }
+    </script>
+
+    <!--drop in any model kit that you want to debug-->
+    <script src="../examples/smile.js"></script>
+
+</head>
+<body>
+
+    <script>
+        var constructor = module.exports;
+        var parameters = makerjs.kit.getParameterValues(constructor);
+        var model = makerjs.kit.construct(constructor, parameters);
+        var svg = makerjs.exporter.toSVG(model);
+        document.write(svg);
+    </script>
+
+</body>
+
+</html>

@@ -32,11 +32,11 @@ module MakerJs.models {
         },
         {
             title: "end", type: "select", value: [
-                [30, 0],
+                [80, 0],
                 [0, 30],
                 [10, 30]
             ]
         },
-        { title: "radius", type: "range", min: 1, max: 50, value: 3 }
+        { title: "radius", type: "range", min: 1, max: 50, value: 10 }
     ];
 }
