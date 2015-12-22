@@ -20,8 +20,8 @@ module MakerJs.models {
     }
 
     (<IKit>BoltRectangle).metaParameters = [
-        { title: "width", type: "range", min: 1, max: 100, value: 50 },
-        { title: "height", type: "range", min: 1, max: 100, value: 25 },
-        { title: "hole radius", type: "range", min: 1, max: 50, value: 3 }
+        { title: "width", type: "range", min: 1, max: 100, value: 100 },
+        { title: "height", type: "range", min: 1, max: 100, value: 50 },
+        { title: "hole radius", type: "range", min: 1, max: 50, value: 5 }
     ];
 }

@@ -34,8 +34,8 @@ module MakerJs.models {
     }
 
     (<IKit>RoundRectangle).metaParameters = [
-        { title: "width", type: "range", min: 1, max: 100, value: 25 },
-        { title: "height", type: "range", min: 1, max: 100, value: 50 },
-        { title: "radius", type: "range", min: 0, max: 50, value: 5 }
+        { title: "width", type: "range", min: 1, max: 100, value: 50 },
+        { title: "height", type: "range", min: 1, max: 100, value: 100 },
+        { title: "radius", type: "range", min: 0, max: 50, value: 11 }
     ];
 }

@@ -10,11 +10,29 @@
             padding: 0;
             font-family: sans-serif;
         }
+        
         svg {
             position: absolute;
             top: 0;
             height: 100%;
             width: 100%;
+        }
+
+        .thumb {
+            border: 1px solid red;
+            position: relative;
+            width: 160px;
+            height: 120px;
+            margin: 20px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .thumb svg {
+            max-width: 140px;
+            max-height: 100px;
+            margin-left: 10px;
+            margin-top: 10px;
         }
     </style>
 
@@ -64,18 +82,29 @@
         }
     </script>
 
-    <!--drop in any model kit that you want to debug-->
-    <script src="../examples/smile.js"></script>
 
 </head>
 <body>
 
     <script>
-        var constructor = module.exports;
-        var parameters = makerjs.kit.getParameterValues(constructor);
-        var model = makerjs.kit.construct(constructor, parameters);
-        var svg = makerjs.exporter.toSVG(model);
-        document.write(svg);
+        var sorted = [];
+
+        for (var modelType in makerjs.models) {
+            sorted.push(modelType);
+        }
+
+        sorted.sort();
+
+        for (var i = 0; i < sorted.length; i++) {
+            var modelType = sorted[i];
+            var constructor = makerjs.models[modelType];
+            var parameters = makerjs.kit.getParameterValues(constructor);
+            var model = makerjs.kit.construct(constructor, parameters);
+
+            var svg = makerjs.exporter.toSVG(model);
+
+            document.write('<div class="thumb" title="' + modelType + '">' + svg + '</div>');
+        }
     </script>
 
 </body>
