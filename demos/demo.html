@@ -16,7 +16,20 @@ title: Demo
 
 <script src="viewer.js"></script>
     
-<input type="hidden" id="selectModelCode" value="smile" />
+<div class="selectModelCode">
+    <label for="selectModelCode">choose a demo drawing : </label>
+    <select id="selectModelCode" onchange="Viewer.loadModelCode(this.value)">
+        <option>logo</option>
+        <option>smile</option>
+        <option>m</option>
+        <option>skatedeck</option>
+        <option>testPanel</option>
+        <option>tubeclamp</option>
+        <option>ventgrid</option>
+        <option>ventgridcircle</option>
+        <option>card</option>
+    </select>
+</div>
 
 <div id="view">
     <div id="svg-render" class="svg-zone"></div>
