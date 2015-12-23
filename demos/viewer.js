@@ -47,9 +47,9 @@ var Viewer = {
         var svg = makerjs.exporter.toSVG(svgModel, renderOptions);
         document.getElementById("svg-render").innerHTML = svg;
 
-        if (Viewer.panZoom) {
-            Viewer.panZoom.reset();
-        }
+        //if (Viewer.panZoom) {
+        //    Viewer.panZoom.reset();
+        //}
 
         Viewer.panZoom = svgPanZoom('#svg1', {
             zoomEnabled: true,
@@ -236,6 +236,11 @@ var Viewer = {
                 }
 
                 Viewer.populateParams(filename);
+
+                if (Viewer.panZoom) {
+                    Viewer.panZoom.reset();
+                }
+
                 Viewer.Refresh();
             }
 
@@ -246,6 +251,11 @@ var Viewer = {
                 Viewer.Constructor = makerjs.models[filename];
 
                 Viewer.populateParams(filename);
+
+                if (Viewer.panZoom) {
+                    Viewer.panZoom.reset();
+                }
+
                 Viewer.Refresh();
 
                 return;
