@@ -49,8 +49,10 @@ var Viewer = {
 
         var zoom = null;
         var center = true;
+        var pan = null;
         if (Viewer.panZoom) {
             zoom = Viewer.panZoom.getZoom();
+            pan = Viewer.panZoom.getPan();
             center = false;
         }
 
@@ -62,8 +64,9 @@ var Viewer = {
             customEventsHandler: Viewer.touchEventsHandler
         });
 
-        if (zoom) {
+        if (zoom && pan) {
             Viewer.panZoom.zoom(zoom);
+            Viewer.panZoom.pan(pan);
         }
 
     },
