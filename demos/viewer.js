@@ -47,9 +47,10 @@ var Viewer = {
         var svg = makerjs.exporter.toSVG(svgModel, renderOptions);
         document.getElementById("svg-render").innerHTML = svg;
 
-        //if (Viewer.panZoom) {
-        //    Viewer.panZoom.reset();
-        //}
+        var zoom = null;
+        if (Viewer.panZoom) {
+            zoom = Viewer.panZoom.getZoom();
+        }
 
         Viewer.panZoom = svgPanZoom('#svg1', {
             zoomEnabled: true,
@@ -58,6 +59,11 @@ var Viewer = {
             center: true,
             customEventsHandler: Viewer.touchEventsHandler
         });
+
+        if (zoom) {
+            Viewer.panZoom.zoom(zoom);
+        }
+
     },
 
     Fit: function () {
@@ -238,7 +244,7 @@ var Viewer = {
                 Viewer.populateParams(filename);
 
                 if (Viewer.panZoom) {
-                    Viewer.panZoom.reset();
+                    Viewer.panZoom = null;
                 }
 
                 Viewer.Refresh();
@@ -253,7 +259,7 @@ var Viewer = {
                 Viewer.populateParams(filename);
 
                 if (Viewer.panZoom) {
-                    Viewer.panZoom.reset();
+                    Viewer.panZoom = null;
                 }
 
                 Viewer.Refresh();
