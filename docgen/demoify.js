@@ -13,9 +13,6 @@ function demoify(name) {
     b.require(prefix + name, { expose: name });
     b.bundle().pipe(fs.createWriteStream(filename));
 }
-function getRequireConstructor(name) {
-    return require(prefix + name);
-}
 function thumbnail(name, constructor) {
     var parameters = makerjs.kit.getParameterValues(constructor);
     var model = makerjs.kit.construct(constructor, parameters);
@@ -26,6 +23,11 @@ function thumbnail(name, constructor) {
     x.innerTextEscaped = true;
     return x.toString();
 }
+function writeThumbnail(filenumber, name, constructor) {
+    console.log('writing thumbnail ' + name);
+    fs.write(filenumber, thumbnail(name, constructor));
+    fs.write(filenumber, '\n\n');
+}
 function main() {
     var listFile = fs.openSync('./demos/list.html', 'w');
     fs.write(listFile, '---\nlayout: page\ntitle: Demos\n---\n');
@@ -33,10 +35,18 @@ function main() {
         if (key.indexOf(prefix) == 0) {
             var name = key.substring(prefixLen);
             demoify(name);
-            var ctor = getRequireConstructor(name);
-            fs.write(listFile, thumbnail(name, ctor));
-            fs.write(listFile, '\n\n');
+            var ctor = require(prefix + name);
+            writeThumbnail(listFile, name, ctor);
         }
+    }
+    var sorted = [];
+    for (var modelType in makerjs.models) {
+        sorted.push(modelType);
+    }
+    sorted.sort();
+    for (var i = 0; i < sorted.length; i++) {
+        var modelType = sorted[i];
+        writeThumbnail(listFile, modelType, makerjs.models[modelType]);
     }
     fs.closeSync(listFile);
 }

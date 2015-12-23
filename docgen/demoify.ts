@@ -3,7 +3,7 @@
 import fs = require('fs');
 var browserify = require('browserify');
 var pjson = require('../package.json');
-var makerjs = require('../target/js/node.maker.js');
+var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
 
 var prefix = 'makerjs-';
 var prefixLen = prefix.length;
@@ -17,11 +17,7 @@ function demoify(name: string) {
     b.bundle().pipe(fs.createWriteStream(filename));
 }
 
-function getRequireConstructor(name: string) {
-    return require(prefix + name);
-}
-
-function thumbnail(name: string, constructor) {
+function thumbnail(name: string, constructor: MakerJs.IKit) {
     var parameters = makerjs.kit.getParameterValues(constructor);
     var model = makerjs.kit.construct(constructor, parameters);
 
@@ -36,6 +32,12 @@ function thumbnail(name: string, constructor) {
     return x.toString();
 }
 
+function writeThumbnail(filenumber: number, name: string, constructor) {
+    console.log('writing thumbnail ' + name);
+    fs.write(filenumber, thumbnail(name, constructor));
+    fs.write(filenumber, '\n\n');
+}
+
 function main() {
 
     var listFile = fs.openSync('./demos/list.html', 'w');
@@ -46,10 +48,23 @@ function main() {
             var name = <string>key.substring(prefixLen);
             demoify(name);
 
-            var ctor = getRequireConstructor(name);
-            fs.write(listFile, thumbnail(name, ctor));
-            fs.write(listFile, '\n\n');
+            var ctor = <MakerJs.IKit>require(prefix + name);
+
+            writeThumbnail(listFile, name, ctor);
         }
+    }
+
+    var sorted = [];
+
+    for (var modelType in makerjs.models) {
+        sorted.push(modelType);
+    }
+
+    sorted.sort();
+
+    for (var i = 0; i < sorted.length; i++) {
+        var modelType = sorted[i];
+        writeThumbnail(listFile, modelType, makerjs.models[modelType]);
     }
 
     fs.closeSync(listFile);
