@@ -552,3 +552,21 @@ svg path {
   fill: black;
   stroke: none;
 }
+
+.thumb {
+    background-color: #317CCF;
+    position: relative;
+    width: 160px;
+    height: 120px;
+    margin: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.thumb svg path{
+    max-width: 140px;
+    max-height: 100px;
+    margin-left: 10px;
+    margin-top: 10px;
+    stroke: #fff;
+}
