@@ -36,9 +36,17 @@ function writeThumbnail(filenumber, name, constructor) {
     fs.write(filenumber, thumbnail(name, constructor));
     fs.write(filenumber, '\n\n');
 }
+function writeHeading(filenumber, heading) {
+    var h2 = new makerjs.exporter.XmlTag('h2');
+    h2.innerText = heading;
+    fs.write(filenumber, h2.toString());
+    fs.write(filenumber, '\n\n');
+}
 function main() {
     var listFile = fs.openSync('./demos/list.html', 'w');
+    //Jekyll liquid layout
     fs.write(listFile, '---\nlayout: page\ntitle: Demos\n---\n');
+    writeHeading(listFile, 'Models published on NPM');
     for (var key in pjson.dependencies) {
         if (key.indexOf(prefix) == 0) {
             var name = key.substring(prefixLen);
@@ -47,10 +55,10 @@ function main() {
             writeThumbnail(listFile, name, ctor);
         }
     }
+    writeHeading(listFile, 'Models included with Maker.js');
     var sorted = [];
-    for (var modelType in makerjs.models) {
+    for (var modelType in makerjs.models)
         sorted.push(modelType);
-    }
     sorted.sort();
     for (var i = 0; i < sorted.length; i++) {
         var modelType = sorted[i];
