@@ -134,7 +134,7 @@ var Viewer = {
     prepareView: function () {
 
         //attach mousewheel
-        var view = document.getElementById("view");
+        //var view = document.getElementById("view");
 
         /*
         view.onwheel = view.onmousewheel = function (ev) {
@@ -146,8 +146,7 @@ var Viewer = {
         };
         */
 
-        var selectModelCode = document.getElementById('selectModelCode');
-        Viewer.loadModelCode(selectModelCode.value);
+        Viewer.loadModelCode(document.location.substring(6));   // following "?demo="
     },
 
     populateParams: function (filename) {
