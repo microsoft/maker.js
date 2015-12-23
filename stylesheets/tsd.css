@@ -563,10 +563,13 @@ svg path {
     vertical-align: middle;
 }
 
-.thumb svg path{
+.thumb svg {
     max-width: 140px;
     max-height: 100px;
     margin-left: 10px;
     margin-top: 10px;
+}
+
+.thumb svg path {
     stroke: #fff;
 }
