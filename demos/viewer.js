@@ -146,7 +146,7 @@ var Viewer = {
         };
         */
 
-        Viewer.loadModelCode(document.location.substring(6));   // following "?demo="
+        Viewer.loadModelCode(document.location.search.substring(6));   // following "?demo="
     },
 
     populateParams: function (filename) {
