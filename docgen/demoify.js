@@ -21,12 +21,12 @@ function thumbnail(name, constructor) {
     var scaleX = measurement.high[0] - measurement.low[0];
     var scaleY = measurement.high[1] - measurement.low[1];
     var scale = Math.max(scaleX, scaleY);
-    makerjs.model.scale(model, 1 / scale);
+    makerjs.model.scale(model, 100 / scale);
     var svg = makerjs.exporter.toSVG(model);
-    var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb', "title": name });
+    var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb' });
     div.innerText = svg;
     div.innerTextEscaped = true;
-    var a = new makerjs.exporter.XmlTag('a', { "href": '?demo=' + name });
+    var a = new makerjs.exporter.XmlTag('a', { "href": '?demo=' + name, "title": name });
     a.innerText = div.toString();
     a.innerTextEscaped = true;
     return a.toString();
