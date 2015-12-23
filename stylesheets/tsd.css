@@ -566,8 +566,8 @@ svg path {
 .thumb svg {
     max-width: 140px;
     max-height: 100px;
-    margin-left: 10px;
-    margin-top: 10px;
+    margin-left: 8px;
+    margin-top: 8px;
 }
 
 .thumb svg path {
