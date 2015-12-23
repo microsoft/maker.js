@@ -7,6 +7,7 @@ var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
 
 var prefix = 'makerjs-';
 var prefixLen = prefix.length;
+var thumbSize = { width: 140, height: 100 };
 
 function demoify(name: string) {
     var filename = './demos/' + name + '.js';
@@ -21,15 +22,24 @@ function thumbnail(name: string, constructor: MakerJs.IKit) {
     var parameters = makerjs.kit.getParameterValues(constructor);
     var model = makerjs.kit.construct(constructor, parameters);
 
+    var measurement = makerjs.measure.modelExtents(model);
+    var scaleX = measurement.high[0] - measurement.low[0];
+    var scaleY = measurement.high[1] - measurement.low[1];
+
+    var scale = Math.max(scaleX, scaleY);
+    makerjs.model.scale(model, 1 / scale);
+
     var svg = makerjs.exporter.toSVG(model);
 
-    var attrs = { 'class': 'thumb', 'title': name };
+    var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb', "title": name });
+    div.innerText = svg;
+    div.innerTextEscaped = true;
 
-    var x = new makerjs.exporter.XmlTag('div', attrs);
-    x.innerText = svg;
-    x.innerTextEscaped = true;
-
-    return x.toString();
+    var a = new makerjs.exporter.XmlTag('a', { "href": '?demo=' + name });
+    a.innerText = div.toString();
+    a.innerTextEscaped = true;
+    
+    return a.toString();
 }
 
 function writeThumbnail(filenumber: number, name: string, constructor) {
