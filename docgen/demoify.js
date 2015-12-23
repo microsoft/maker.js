@@ -26,7 +26,7 @@ function thumbnail(name, constructor) {
     var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb' });
     div.innerText = svg;
     div.innerTextEscaped = true;
-    var a = new makerjs.exporter.XmlTag('a', { "href": '?demo=' + name, "title": name });
+    var a = new makerjs.exporter.XmlTag('a', { "href": 'demo.html?demo=' + name, "title": name });
     a.innerText = div.toString();
     a.innerTextEscaped = true;
     return a.toString();
