@@ -16,20 +16,7 @@ title: Demo
 
 <script src="viewer.js"></script>
     
-<div class="selectModelCode">
-    <label for="selectModelCode">choose a demo drawing : </label>
-    <select id="selectModelCode" onchange="Viewer.loadModelCode(this.value)">
-        <option>logo</option>
-        <option>smile</option>
-        <option>m</option>
-        <option>skatedeck</option>
-        <option>testPanel</option>
-        <option>tubeclamp</option>
-        <option>ventgrid</option>
-        <option>ventgridcircle</option>
-        <!--<option>card</option>-->
-    </select>
-</div>
+<p>Move the sliders below to change parameters. Then you can download your customized drawing.</p>
 
 <div id="view">
     <div id="svg-render" class="svg-zone"></div>
@@ -43,8 +30,8 @@ title: Demo
 </div>
 
 <div class="optionpanel">
-    <a href="#" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome and Firefox" download="myModel.dxf">download dxf</a>
-    <a href="#" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome and Firefox" download="myModel.svg">download svg</a>
-    <a href="#" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome and Firefox" download="myModel.json">download json</a>
-    <a href="#" onclick="this.href = Viewer.getExport('stl');" title="Download works in Chrome and Firefox" download="myModel.stl">download stl</a>
+    <a href="#" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.dxf">download dxf</a>
+    <a href="#" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.svg">download svg</a>
+    <a href="#" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.json">download json</a>
+    <a href="#" onclick="this.href = Viewer.getExport('stl');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.stl">download stl</a>
 </div>
