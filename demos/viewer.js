@@ -48,15 +48,17 @@ var Viewer = {
         document.getElementById("svg-render").innerHTML = svg;
 
         var zoom = null;
+        var center = true;
         if (Viewer.panZoom) {
             zoom = Viewer.panZoom.getZoom();
+            center = false;
         }
 
         Viewer.panZoom = svgPanZoom('#svg1', {
             zoomEnabled: true,
             controlIconsEnabled: true,
             fit: false,
-            center: true,
+            center: center,
             customEventsHandler: Viewer.touchEventsHandler
         });
 
