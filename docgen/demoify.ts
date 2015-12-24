@@ -102,7 +102,7 @@ function homePage() {
 
     var homeFile = fs.openSync('./home.html', 'w');
 
-    fs.write(homeFile, jekyll('page', 'Home'));
+    fs.write(homeFile, jekyll('page', 'Maker.js'));
 
     var h2 = new makerjs.exporter.XmlTag('h2');
     h2.innerText = 'Latest demos';
