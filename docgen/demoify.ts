@@ -57,7 +57,7 @@ function writeHeading(filenumber: number, heading: string) {
 
 function main() {
 
-    var listFile = fs.openSync('./demos/list.html', 'w');
+    var listFile = fs.openSync('./demos/index.html', 'w');
 
     //Jekyll liquid layout
     fs.write(listFile, '---\nlayout: page\ntitle: Demos\n---\n');

@@ -43,7 +43,7 @@ function writeHeading(filenumber, heading) {
     fs.write(filenumber, '\n\n');
 }
 function main() {
-    var listFile = fs.openSync('./demos/list.html', 'w');
+    var listFile = fs.openSync('./demos/index.html', 'w');
     //Jekyll liquid layout
     fs.write(listFile, '---\nlayout: page\ntitle: Demos\n---\n');
     writeHeading(listFile, 'Models published on NPM');
