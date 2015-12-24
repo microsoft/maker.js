@@ -152,6 +152,6 @@ function homePage() {
     fs.close(homeFile);
 }
 
-//demoIndexPage();
+demoIndexPage();
 
 homePage();

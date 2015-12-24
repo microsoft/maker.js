@@ -108,6 +108,5 @@ function homePage() {
     fs.write(homeFile, html.substring(pos + find.length));
     fs.close(homeFile);
 }
-//demoIndexPage();
+demoIndexPage();
 homePage();
-//# sourceMappingURL=demoify.js.map
