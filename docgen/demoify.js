@@ -92,19 +92,20 @@ function homePage() {
         if (i >= max)
             break;
     }
-    var allDemosLink = new makerjs.exporter.XmlTag('a', { "href": "/demos/#content" });
+    var allDemosLink = new makerjs.exporter.XmlTag('a', { "href": "/maker.js/demos/#content" });
     allDemosLink.innerText = 'see all demos';
     var allDemosP = new makerjs.exporter.XmlTag('p');
     allDemosP.innerText = allDemosLink.toString();
     allDemosP.innerTextEscaped = true;
     demos.push(allDemosP.toString());
     var demosHtml = demos.join('\n');
+    fs.write(homeFile, demosHtml);
     console.log('writing about markdown');
     var readmeFile = fs.readFileSync('README.md', 'UTF8');
     var html = marked(readmeFile);
     var find = '<p><a href="http://microsoft.github.io/maker.js/demos/">Demos</a> - <a href="http://microsoft.github.io/maker.js/docs/">Documentation</a></p>';
-    var newHtml = html.replace(find, demosHtml);
-    fs.write(homeFile, newHtml);
+    var pos = html.indexOf(find);
+    fs.write(homeFile, html.substring(pos + find.length));
     fs.close(homeFile);
 }
 //demoIndexPage();

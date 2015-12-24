@@ -125,7 +125,7 @@ function homePage() {
     }
 
     
-    var allDemosLink = new makerjs.exporter.XmlTag('a', { "href": "/demos/#content" });
+    var allDemosLink = new makerjs.exporter.XmlTag('a', { "href": "/maker.js/demos/#content" });
     allDemosLink.innerText = 'see all demos';
 
     var allDemosP = new makerjs.exporter.XmlTag('p');
@@ -136,6 +136,8 @@ function homePage() {
 
     var demosHtml = demos.join('\n');
     
+    fs.write(homeFile, demosHtml);
+
     console.log('writing about markdown');
 
     var readmeFile = fs.readFileSync('README.md', 'UTF8');
@@ -143,9 +145,9 @@ function homePage() {
 
     var find = '<p><a href="http://microsoft.github.io/maker.js/demos/">Demos</a> - <a href="http://microsoft.github.io/maker.js/docs/">Documentation</a></p>';
 
-    var newHtml = html.replace(find, demosHtml);
+    var pos = html.indexOf(find);
 
-    fs.write(homeFile, newHtml);
+    fs.write(homeFile, html.substring(pos + find.length));
 
     fs.close(homeFile);
 }
