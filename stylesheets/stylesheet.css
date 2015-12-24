@@ -787,6 +787,9 @@ footer a:hover {
   header .inner {
     position: relative;
   }
+  header .inner ul li {
+    display: list-item;
+  }
   header h1, header h2 {
     width: 100%;
   }
@@ -797,21 +800,7 @@ footer a:hover {
     font-size: 24px;
   }
   header a.button {
-    position: relative;
-    display: inline-block;
-    width: auto;
-    height: auto;
-    padding: 5px 10px;
-    margin-top: 15px;
-    font-size: 13px;
-    line-height: 1;
-    color: #2879d0;
-    text-align: center;
-    background-color: #9ddcff;
-    background-image: none;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
+    display: none;
   }
   header a.button small {
     display: inline;
