@@ -21,7 +21,7 @@ function demoify(name: string) {
     b.bundle().pipe(fs.createWriteStream(filename));
 }
 
-function thumbnail(name: string, constructor: MakerJs.IKit) {
+function thumbnail(name: string, constructor: MakerJs.IKit, baseUrl: string) {
     var parameters = makerjs.kit.getParameterValues(constructor);
     var model = makerjs.kit.construct(constructor, parameters);
 
@@ -38,16 +38,16 @@ function thumbnail(name: string, constructor: MakerJs.IKit) {
     div.innerText = svg;
     div.innerTextEscaped = true;
 
-    var a = new makerjs.exporter.XmlTag('a', { "href": 'demo.html?demo=' + name, "title": name });
+    var a = new makerjs.exporter.XmlTag('a', { "href": baseUrl + 'demo.html?demo=' + name, "title": name });
     a.innerText = div.toString();
     a.innerTextEscaped = true;
     
     return a.toString();
 }
 
-function writeThumbnail(filenumber: number, name: string, constructor) {
+function writeThumbnail(filenumber: number, name: string, constructor, baseUrl: string) {
     console.log('writing thumbnail ' + name);
-    fs.write(filenumber, thumbnail(name, constructor));
+    fs.write(filenumber, thumbnail(name, constructor, baseUrl));
     fs.write(filenumber, '\n\n');
 }
 
@@ -79,7 +79,7 @@ function demoIndexPage() {
 
             var ctor = <MakerJs.IKit>require(prefix + name);
 
-            writeThumbnail(listFile, name, ctor);
+            writeThumbnail(listFile, name, ctor, '');
         }
     }
 
@@ -91,10 +91,10 @@ function demoIndexPage() {
 
     for (var i = 0; i < sorted.length; i++) {
         var modelType = sorted[i];
-        writeThumbnail(listFile, modelType, makerjs.models[modelType]);
+        writeThumbnail(listFile, modelType, makerjs.models[modelType], '');
     }
 
-    fs.closeSync(listFile);
+    fs.close(listFile);
 }
 
 function homePage() {
@@ -118,7 +118,7 @@ function homePage() {
 
             var ctor = <MakerJs.IKit>require(prefix + name);
 
-            demos.push(thumbnail(name, ctor));
+            demos.push(thumbnail(name, ctor, 'demos/'));
         }
         i++;
         if (i >= max) break;
@@ -136,19 +136,16 @@ function homePage() {
 
     var demosHtml = demos.join('\n');
     
-    fs.write(homeFile, demosHtml);
+    fs.write(homeFile, demosHtml + '\n');
 
     console.log('writing about markdown');
 
-    var readmeFile = fs.readFileSync('README.md', 'UTF8');
-    var html = marked(readmeFile);
+    var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
+    var find = '## Features';
+    var pos = readmeMarkdown.indexOf(find);
+    var html = marked(readmeMarkdown.substring(pos));
 
-    var find = '<p><a href="http://microsoft.github.io/maker.js/demos/">Demos</a> - <a href="http://microsoft.github.io/maker.js/docs/">Documentation</a></p>';
-
-    var pos = html.indexOf(find);
-
-    fs.write(homeFile, html.substring(pos + find.length));
-
+    fs.write(homeFile, html);
     fs.close(homeFile);
 }
 
