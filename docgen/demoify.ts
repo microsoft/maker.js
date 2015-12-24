@@ -1,9 +1,12 @@
 ﻿/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../target/ts/makerjs.d.ts" />
+/// <reference path="../typings/marked/marked.d.ts" />
 
 import fs = require('fs');
 var browserify = require('browserify');
 var pjson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
+var marked = <MarkedStatic>require('marked');
 
 var prefix = 'makerjs-';
 var prefixLen = prefix.length;
@@ -55,12 +58,17 @@ function writeHeading(filenumber: number, heading: string) {
     fs.write(filenumber, '\n\n');
 }
 
-function main() {
+function jekyll(layout: string, title: string) {
+    //Jekyll liquid layout
+    var dashes = '---';
+    return [dashes, 'layout: ' + layout, 'title: ' + title, dashes, ''].join('\n');    
+}
+
+function demoIndexPage() {
 
     var listFile = fs.openSync('./demos/index.html', 'w');
 
-    //Jekyll liquid layout
-    fs.write(listFile, '---\nlayout: page\ntitle: Demos\n---\n');
+    fs.write(listFile, jekyll('page', 'Demos'));
 
     writeHeading(listFile, 'Models published on NPM');
 
@@ -89,4 +97,42 @@ function main() {
     fs.closeSync(listFile);
 }
 
-main();
+function homePage() {
+    console.log('writing homepage');
+
+    var homeFile = fs.openSync('./home.html', 'w');
+
+    fs.write(homeFile, jekyll('page', 'Home'));
+
+    writeHeading(homeFile, 'Latest demos');
+
+    var max = 6;
+    var i = 0;
+
+    for (var key in pjson.dependencies) {
+        if (key.indexOf(prefix) == 0) {
+            var name = <string>key.substring(prefixLen);
+
+            var ctor = <MakerJs.IKit>require(prefix + name);
+
+            writeThumbnail(homeFile, name, ctor);
+        }
+        i++;
+        if (i >= max) break;
+    }
+
+    //todo - link to "see all demos"
+
+    console.log('writing about markdown');
+
+    var readmeFile = fs.readFileSync('README.md', 'UTF8');
+    var html = marked(readmeFile);
+
+    fs.write(homeFile, html);
+
+    fs.close(homeFile);
+}
+
+//demoIndexPage();
+
+homePage();

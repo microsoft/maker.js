@@ -1,8 +1,11 @@
 /// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../target/ts/makerjs.d.ts" />
+/// <reference path="../typings/marked/marked.d.ts" />
 var fs = require('fs');
 var browserify = require('browserify');
 var pjson = require('../package.json');
 var makerjs = require('../target/js/node.maker.js');
+var marked = require('marked');
 var prefix = 'makerjs-';
 var prefixLen = prefix.length;
 var thumbSize = { width: 140, height: 100 };
@@ -42,10 +45,14 @@ function writeHeading(filenumber, heading) {
     fs.write(filenumber, h2.toString());
     fs.write(filenumber, '\n\n');
 }
-function main() {
-    var listFile = fs.openSync('./demos/index.html', 'w');
+function jekyll(layout, title) {
     //Jekyll liquid layout
-    fs.write(listFile, '---\nlayout: page\ntitle: Demos\n---\n');
+    var dashes = '---';
+    return [dashes, 'layout: ' + layout, 'title: ' + title, dashes, ''].join('\n');
+}
+function demoIndexPage() {
+    var listFile = fs.openSync('./demos/index.html', 'w');
+    fs.write(listFile, jekyll('page', 'Demos'));
     writeHeading(listFile, 'Models published on NPM');
     for (var key in pjson.dependencies) {
         if (key.indexOf(prefix) == 0) {
@@ -66,5 +73,30 @@ function main() {
     }
     fs.closeSync(listFile);
 }
-main();
+function homePage() {
+    console.log('writing homepage');
+    var homeFile = fs.openSync('./home.html', 'w');
+    fs.write(homeFile, jekyll('page', 'Home'));
+    writeHeading(homeFile, 'Latest demos');
+    var max = 6;
+    var i = 0;
+    for (var key in pjson.dependencies) {
+        if (key.indexOf(prefix) == 0) {
+            var name = key.substring(prefixLen);
+            var ctor = require(prefix + name);
+            writeThumbnail(homeFile, name, ctor);
+        }
+        i++;
+        if (i >= max)
+            break;
+    }
+    //todo - link to "see all demos"
+    console.log('writing about markdown');
+    var readmeFile = fs.readFileSync('README.md', 'UTF8');
+    var html = marked(readmeFile);
+    fs.write(homeFile, html);
+    fs.close(homeFile);
+}
+//demoIndexPage();
+homePage();
 //# sourceMappingURL=demoify.js.map
