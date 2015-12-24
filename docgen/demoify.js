@@ -94,7 +94,10 @@ function homePage() {
     }
     var allDemosLink = new makerjs.exporter.XmlTag('a', { "href": "/demos/#content" });
     allDemosLink.innerText = 'see all demos';
-    demos.push(allDemosLink.toString());
+    var allDemosP = new makerjs.exporter.XmlTag('p');
+    allDemosP.innerText = allDemosLink.toString();
+    allDemosP.innerTextEscaped = true;
+    demos.push(allDemosP.toString());
     var demosHtml = demos.join('\n');
     console.log('writing about markdown');
     var readmeFile = fs.readFileSync('README.md', 'UTF8');
