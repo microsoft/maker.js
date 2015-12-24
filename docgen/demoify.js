@@ -77,24 +77,31 @@ function homePage() {
     console.log('writing homepage');
     var homeFile = fs.openSync('./home.html', 'w');
     fs.write(homeFile, jekyll('page', 'Home'));
-    writeHeading(homeFile, 'Latest demos');
+    var h2 = new makerjs.exporter.XmlTag('h2');
+    h2.innerText = 'Latest demos';
+    var demos = [h2.toString()];
     var max = 6;
     var i = 0;
     for (var key in pjson.dependencies) {
         if (key.indexOf(prefix) == 0) {
             var name = key.substring(prefixLen);
             var ctor = require(prefix + name);
-            writeThumbnail(homeFile, name, ctor);
+            demos.push(thumbnail(name, ctor));
         }
         i++;
         if (i >= max)
             break;
     }
-    //todo - link to "see all demos"
+    var allDemosLink = new makerjs.exporter.XmlTag('a', { "href": "/demos/#content" });
+    allDemosLink.innerText = 'see all demos';
+    demos.push(allDemosLink.toString());
+    var demosHtml = demos.join('\n');
     console.log('writing about markdown');
     var readmeFile = fs.readFileSync('README.md', 'UTF8');
     var html = marked(readmeFile);
-    fs.write(homeFile, html);
+    var find = '<p><a href="http://microsoft.github.io/maker.js/demos/">Demos</a> - <a href="http://microsoft.github.io/maker.js/docs/">Documentation</a></p>';
+    var newHtml = html.replace(find, demosHtml);
+    fs.write(homeFile, newHtml);
     fs.close(homeFile);
 }
 //demoIndexPage();
