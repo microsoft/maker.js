@@ -100,7 +100,7 @@ function demoIndexPage() {
 function homePage() {
     console.log('writing homepage');
 
-    var homeFile = fs.openSync('./home.html', 'w');
+    var homeFile = fs.openSync('./index.html', 'w');
 
     fs.write(homeFile, jekyll('page', 'Maker.js'));
 

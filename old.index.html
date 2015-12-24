@@ -1,0 +1,16 @@
+---
+layout: posts
+title: Blog
+---
+
+{% for post in site.posts %}
+
+<section id="post" class="tsd-panel">
+  <span class="postdate">{{ post.date | date_to_string }}</span>
+  <h2><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h2>
+
+  {{ post.excerpt }}
+
+</section>
+
+{% endfor %}
