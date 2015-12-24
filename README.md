@@ -36,19 +36,20 @@ Easily add a curvature at the joint between any 2 paths, using a [traditional fi
 
 ### Built-in models
 
-* Bolt Circle
-* Bolt Rectangle
-* Connect the dots
-* Dome
-* Oval
-* OvalArc
-* Polygon
-* Rectangle
-* Ring
-* RoundRectangle
-* S curve
-* Square
-* Star
+* [Bolt Circle](http://microsoft.github.io/maker.js/demos/demo.html?demo=BoltCircle)
+* [Bolt Rectangle](http://microsoft.github.io/maker.js/demos/demo.html?demo=BoltRectangle)
+* [Connect the dots](http://microsoft.github.io/maker.js/demos/demo.html?demo=ConnectTheDots)
+* [Dome](http://microsoft.github.io/maker.js/demos/demo.html?demo=Dome)
+* [Oval](http://microsoft.github.io/maker.js/demos/demo.html?demo=Oval)
+* [OvalArc](http://microsoft.github.io/maker.js/demos/demo.html?demo=OvalArc)
+* [Polygon](http://microsoft.github.io/maker.js/demos/demo.html?demo=Polygon)
+* [Rectangle](http://microsoft.github.io/maker.js/demos/demo.html?demo=Rectangle)
+* [Ring](http://microsoft.github.io/maker.js/demos/demo.html?demo=Ring)
+* [RoundRectangle](http://microsoft.github.io/maker.js/demos/demo.html?demo=RoundRectangle)
+* [S curve](http://microsoft.github.io/maker.js/demos/demo.html?demo=SCurve)
+* [Slot](http://microsoft.github.io/maker.js/demos/demo.html?demo=Slot)
+* [Square](http://microsoft.github.io/maker.js/demos/demo.html?demo=Square)
+* [Star](http://microsoft.github.io/maker.js/demos/demo.html?demo=Star)
 
 ## Getting Started
 
