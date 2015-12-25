@@ -29,84 +29,92 @@ function thumbnail(name, constructor, baseUrl) {
     var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb' });
     div.innerText = svg;
     div.innerTextEscaped = true;
-    var a = new makerjs.exporter.XmlTag('a', { "href": baseUrl + 'demo.html?demo=' + name, "title": name });
-    a.innerText = div.toString();
-    a.innerTextEscaped = true;
-    return a.toString();
-}
-function writeThumbnail(filenumber, name, constructor, baseUrl) {
-    console.log('writing thumbnail ' + name);
-    fs.write(filenumber, thumbnail(name, constructor, baseUrl));
-    fs.write(filenumber, '\n\n');
-}
-function writeHeading(filenumber, heading) {
-    var h2 = new makerjs.exporter.XmlTag('h2');
-    h2.innerText = heading;
-    fs.write(filenumber, h2.toString());
-    fs.write(filenumber, '\n\n');
+    return anchor(div.toString(), baseUrl + 'demo.html?demo=' + name, name, true);
 }
 function jekyll(layout, title) {
     //Jekyll liquid layout
     var dashes = '---';
     return [dashes, 'layout: ' + layout, 'title: ' + title, dashes, ''].join('\n');
 }
+function anchor(text, href, title, isEscaped) {
+    var a = new makerjs.exporter.XmlTag('a', { "href": href, "title": title });
+    a.innerText = text;
+    if (isEscaped) {
+        a.innerTextEscaped = true;
+    }
+    return a.toString();
+}
 function demoIndexPage() {
-    var listFile = fs.openSync('./demos/index.html', 'w');
-    fs.write(listFile, jekyll('page', 'Demos'));
-    writeHeading(listFile, 'Models published on NPM');
-    for (var key in pjson.dependencies) {
-        if (key.indexOf(prefix) == 0) {
-            var name = key.substring(prefixLen);
-            demoify(name);
-            var ctor = require(prefix + name);
-            writeThumbnail(listFile, name, ctor, '');
+    var stream = fs.createWriteStream('./demos/index.html');
+    stream.once('open', function (fd) {
+        function writeHeading(heading) {
+            var h2 = new makerjs.exporter.XmlTag('h2');
+            h2.innerTextEscaped = true;
+            h2.innerText = heading;
+            stream.write(h2.toString());
+            stream.write('\n\n');
         }
-    }
-    writeHeading(listFile, 'Models included with Maker.js');
-    var sorted = [];
-    for (var modelType in makerjs.models)
-        sorted.push(modelType);
-    sorted.sort();
-    for (var i = 0; i < sorted.length; i++) {
-        var modelType = sorted[i];
-        writeThumbnail(listFile, modelType, makerjs.models[modelType], '');
-    }
-    fs.close(listFile);
+        function writeThumbnail(name, constructor, baseUrl) {
+            console.log('writing thumbnail ' + name);
+            stream.write(thumbnail(name, constructor, baseUrl));
+            stream.write('\n\n');
+        }
+        stream.write(jekyll('page', 'Demos'));
+        writeHeading('Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
+        for (var key in pjson.dependencies) {
+            if (key.indexOf(prefix) == 0) {
+                var name = key.substring(prefixLen);
+                demoify(name);
+                var ctor = require(prefix + name);
+                writeThumbnail(name, ctor, '');
+            }
+        }
+        writeHeading('Models included with Maker.js');
+        var sorted = [];
+        for (var modelType in makerjs.models)
+            sorted.push(modelType);
+        sorted.sort();
+        for (var i = 0; i < sorted.length; i++) {
+            var modelType = sorted[i];
+            writeThumbnail(modelType, makerjs.models[modelType], '');
+        }
+        stream.end();
+    });
 }
 function homePage() {
     console.log('writing homepage');
-    var homeFile = fs.openSync('./index.html', 'w');
-    fs.write(homeFile, jekyll('page', 'Maker.js'));
-    var h2 = new makerjs.exporter.XmlTag('h2');
-    h2.innerText = 'Latest demos';
-    var demos = [h2.toString()];
-    var max = 6;
-    var i = 0;
-    for (var key in pjson.dependencies) {
-        if (key.indexOf(prefix) == 0) {
-            var name = key.substring(prefixLen);
-            var ctor = require(prefix + name);
-            demos.push(thumbnail(name, ctor, 'demos/'));
+    var stream = fs.createWriteStream('./index.html');
+    stream.once('open', function (fd) {
+        stream.write(jekyll('page', 'Maker.js'));
+        var h2 = new makerjs.exporter.XmlTag('h2');
+        h2.innerText = 'Latest demos';
+        var demos = [h2.toString()];
+        var max = 6;
+        var i = 0;
+        for (var key in pjson.dependencies) {
+            if (key.indexOf(prefix) == 0) {
+                var name = key.substring(prefixLen);
+                var ctor = require(prefix + name);
+                demos.push(thumbnail(name, ctor, 'demos/'));
+            }
+            i++;
+            if (i >= max)
+                break;
         }
-        i++;
-        if (i >= max)
-            break;
-    }
-    var allDemosLink = new makerjs.exporter.XmlTag('a', { "href": "/maker.js/demos/#content" });
-    allDemosLink.innerText = 'see all demos';
-    var allDemosP = new makerjs.exporter.XmlTag('p');
-    allDemosP.innerText = allDemosLink.toString();
-    allDemosP.innerTextEscaped = true;
-    demos.push(allDemosP.toString());
-    var demosHtml = demos.join('\n');
-    fs.write(homeFile, demosHtml + '\n');
-    console.log('writing about markdown');
-    var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
-    var find = '## Features';
-    var pos = readmeMarkdown.indexOf(find);
-    var html = marked(readmeMarkdown.substring(pos));
-    fs.write(homeFile, html);
-    fs.close(homeFile);
+        var allDemosP = new makerjs.exporter.XmlTag('p');
+        allDemosP.innerText = anchor('see all demos', "/maker.js/demos/#content");
+        allDemosP.innerTextEscaped = true;
+        demos.push(allDemosP.toString());
+        var demosHtml = demos.join('\n');
+        stream.write(demosHtml + '\n');
+        console.log('writing about markdown');
+        var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
+        var find = '## Features';
+        var pos = readmeMarkdown.indexOf(find);
+        var html = marked(readmeMarkdown.substring(pos));
+        stream.write(html);
+        stream.end();
+    });
 }
 demoIndexPage();
 homePage();
