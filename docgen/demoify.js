@@ -6,6 +6,12 @@ var browserify = require('browserify');
 var pjson = require('../package.json');
 var makerjs = require('../target/js/node.maker.js');
 var marked = require('marked');
+// Synchronous highlighting with highlight.js
+marked.setOptions({
+    highlight: function (code) {
+        return require('highlight.js').highlightAuto(code).value;
+    }
+});
 var prefix = 'makerjs-';
 var prefixLen = prefix.length;
 var thumbSize = { width: 140, height: 100 };
@@ -118,4 +124,3 @@ function homePage() {
 }
 demoIndexPage();
 homePage();
-//# sourceMappingURL=demoify.js.map

@@ -8,6 +8,13 @@ var pjson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
 var marked = <MarkedStatic>require('marked');
 
+// Synchronous highlighting with highlight.js
+marked.setOptions({
+    highlight: function (code) {
+        return require('highlight.js').highlightAuto(code).value;
+    }
+});
+
 var prefix = 'makerjs-';
 var prefixLen = prefix.length;
 var thumbSize = { width: 140, height: 100 };
