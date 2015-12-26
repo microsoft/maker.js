@@ -25,9 +25,9 @@ function Spiral(loops, startRadius, spacing) {
 
 
 Spiral.metaParameters = [
-    { title: "loops", type: "range", min: 1, max: 60, step: 1, value: 1 },
-    { title: "start radius", type: "range", min: 0, max: 10, step: .01, value: 0.33 },
-    { title: "spacing", type: "range", min: 0, max: 1, step: .01, value: 1 }
+    { title: "loops", type: "range", min: 1, max: 60, step: 1, value: 9 },
+    { title: "start radius", type: "range", min: 0, max: 50, step: .01, value: 0.33 },
+    { title: "spacing", type: "range", min: 0, max: 5, step: .01, value: 1 }
 ];
 
 module.exports = Spiral;
