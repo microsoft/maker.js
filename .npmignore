@@ -1,6 +1,8 @@
 .npmignore
 node_modules/
 debug/*
+demos/*
+docs/*
 examples/*
 src/*
 target/*
