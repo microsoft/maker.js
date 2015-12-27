@@ -408,6 +408,9 @@ module MakerJs.path {
                         results.push(result);
                     }
 
+                    //the two paths may actually be on the same line
+                    if (round(results[0].filletAngle - results[1].filletAngle) == 0) return null;
+
                     var filletArc = new paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
                     var filletSpan = measure.arcAngle(filletArc);
 
