@@ -46,7 +46,7 @@
     "typescript": "^1.4.1"
   },
   "dependencies": {
-    "makerjs-spokes-straight": "^1.0.0",
+    "makerjs-spokes-straight": "^1.1.1",
     "makerjs-polygon-rimbox": "^1.0.0",
     "makerjs-rimbox": "^1.1.3",
     "makerjs-ventgrid": "^1.1.1",
