@@ -2704,6 +2704,9 @@ var MakerJs;
                             }
                             results.push(result);
                         }
+                        //the two paths may actually be on the same line
+                        if (MakerJs.round(results[0].filletAngle - results[1].filletAngle) == 0)
+                            return null;
                         var filletArc = new MakerJs.paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
                         var filletSpan = MakerJs.measure.arcAngle(filletArc);
                         //the algorithm is only valid for fillet less than 180 degrees
