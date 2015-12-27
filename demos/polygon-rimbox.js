@@ -33,7 +33,7 @@ var PolygonRimboxOutside = (function () {
     return PolygonRimboxOutside;
 })();
 var PolygonRimbox = (function () {
-    function PolygonRimbox(sides, radius, holeRadius, rimThickness) {
+    function PolygonRimbox(sides, radius, holeRadius, rimThickness, solid) {
         if (arguments.length == 0) {
             var defaultValues = makerjs.kit.getParameterValues(PolygonRimbox);
             sides = defaultValues.shift();
@@ -55,14 +55,18 @@ var PolygonRimbox = (function () {
             this.models['inner'].models['side' + i] = inside;
             this.models['outer'].models['side' + i] = outside;
         }
+        if (solid) {
+            delete this.models['inner'];
+        }
     }
     return PolygonRimbox;
 })();
 PolygonRimbox.metaParameters = [
     { title: "sides", type: "range", min: 3, max: 25, value: 6 },
     { title: "radius", type: "range", min: 10, max: 500, value: 50 },
-    { title: "holeRadius", type: "range", min: 1, max: 20, value: 3 },
-    { title: "rimThickness", type: "range", min: 1, max: 20, value: 2 }
+    { title: "hole radius", type: "range", min: 1, max: 20, value: 3 },
+    { title: "rim thickness", type: "range", min: 1, max: 20, value: 2 },
+    { title: "solid", type: "bool", value: false }
 ];
 module.exports = PolygonRimbox;
 
