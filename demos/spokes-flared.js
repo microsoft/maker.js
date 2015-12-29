@@ -98,9 +98,9 @@ FlaredSpokes.metaParameters = [
     { title: "outer radius", type: "range", min: 2, max: 100, step: 1, value: 100 },
     { title: "inner radius", type: "range", min: 1, max: 90, step: 1, value: 40 },
     { title: "spoke count", type: "range", min: 1, max: 40, step: 1, value: 5 },
-    { title: "spoke width", type: "range", min: 1, max: 50, step: 1, value: 40 },
-    { title: "flare width", type: "range", min: 1, max: 40, step: 1, value: 10 },
-    { title: "inner fillet", type: "range", min: 0, max: 20, step: .1, value: 4 },
+    { title: "spoke width", type: "range", min: 1, max: 50, step: 1, value: 9 },
+    { title: "flare width", type: "range", min: 1, max: 50, step: 1, value: 40 },
+    { title: "inner fillet", type: "range", min: 0, max: 20, step: .1, value: 10 },
     { title: "outer fillet", type: "range", min: 0, max: 20, step: .1, value: 10 },
     { title: "add ring", type: "bool", value: true }
 ];
