@@ -90,7 +90,8 @@ function FlaredSpokes(outerRadius, innerRadius, count, spokeWidth, flareWidth, i
     }
 
     if (addRing) {
-        this.models.ring2 = new makerjs.models.Ring(outerRadius + spokeWidth, innerRadius - spokeWidth);
+        var ringWidth = (spokeWidth + flareWidth) / 2;
+        this.models.ring2 = new makerjs.models.Ring(outerRadius + ringWidth, innerRadius - ringWidth);
     }
 }
 
