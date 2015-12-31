@@ -7,6 +7,7 @@ var browserify = require('browserify');
 var pjson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
 var marked = <MarkedStatic>require('marked');
+var detective = require('detective');
 
 // Synchronous highlighting with highlight.js
 marked.setOptions({
@@ -18,6 +19,7 @@ marked.setOptions({
 var prefix = 'makerjs-';
 var prefixLen = prefix.length;
 var thumbSize = { width: 140, height: 100 };
+var allRequires = { 'makerjs': 1 };
 
 function demoify(name: string) {
     var filename = './demos/' + name + '.js';
@@ -167,6 +169,52 @@ function homePage() {
 
 }
 
+function copyRequire(root, key, copyTo) {
+
+    var dirpath = root + '/' + key + '/';
+
+    console.log(dirpath);
+
+    var dirjson: string = null;
+
+    try {
+        dirjson = fs.readFileSync(dirpath + 'package.json', 'UTF8');
+    }
+    catch (e) {
+    }
+
+    if (!dirjson) return;
+
+    var djson = JSON.parse(dirjson);
+    var main = djson.main;
+    var src = fs.readFileSync(dirpath + main, 'UTF8');
+
+    allRequires[key] = 1;
+    fs.writeFileSync('./playground/' + copyTo + key + '.js', src, 'UTF8');
+
+    var requires = <string[]>detective(src);
+
+    for (var i = 0; i < requires.length; i++) {
+        var irequire = requires[i];
+        if (!(irequire in allRequires)) {
+
+            copyRequire(dirpath + 'node_modules', irequire, 'requirements/');
+        }
+    }
+}
+
+function playground() {
+
+    var root = './';
+
+    for (var key in pjson.dependencies) {
+        copyRequire('./node_modules', key, 'dependencies/');
+    }
+
+}
+
 demoIndexPage();
 
 homePage();
+
+//playground();
