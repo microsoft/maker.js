@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="TKRequire.js"></script>
+    <script src="../target/js/browser.maker.js"></script>
+    <script>
+
+        require.relativePath = '../examples/';
+
+        function doEval() {
+            var text = document.getElementById('t1').value;
+
+            var module = {};
+
+            var originalDocumentWrite = document.write;
+
+            var html = '';
+
+            document.write = function (markup) {
+                html += markup;
+            };
+
+            var Fn = new Function("require", "module", "document", text);
+
+            //call function with the "new" keyword so the "this" keyword is an instance
+            var result = new Fn(require, module, document);
+
+            document.write = originalDocumentWrite;
+
+            if (module.exports) {
+                var params = makerjs.kit.getParameterValues(module.exports);
+                var model = makerjs.kit.construct(module.exports, params);
+                html = makerjs.exporter.toSVG(model);
+            } else if (makerjs.isModel(result)) {
+                html = makerjs.exporter.toSVG(result);
+            }
+
+            document.getElementById('view').innerHTML = html;
+        }
+
+    </script>
+</head>
+<body>
+
+    <div id="view" style="border: 1px solid silver; min-height: 200px"></div>
+
+    <script>
+        var makerjs = require('makerjs');
+        var Spiral = require("spiral");
+        
+        var params = makerjs.kit.getParameterValues(Spiral);
+        var model = makerjs.kit.construct(Spiral, params);
+
+        var svg = makerjs.exporter.toSVG(model);
+
+        document.getElementById('view').innerHTML = svg;
+
+    </script>
+
+    <textarea id="t1" style="width:98%; height: 400px;">
+
+        var makerjs = require('makerjs');
+
+        function Spiral(loops, startRadius, spacing) {
+
+            if (spacing == 0) loops = 1;
+
+            function revolution(r) {
+
+                this.paths = {
+                    arc1: new makerjs.paths.Arc([0, 0], r, 0, 90),
+                    arc2: new makerjs.paths.Arc([0, -spacing], r + spacing, 90, 180),
+                    arc3: new makerjs.paths.Arc([2 * spacing, -spacing], r + 3 * spacing, 180, 270),
+                    arc4: new makerjs.paths.Arc([2 * spacing, 0], r + 4 * spacing, 270, 360)
+                };
+
+            }
+
+            this.models = {};
+
+            for (var i = 0; i < loops; i++) {
+                this.models['loop' + i] = new revolution(startRadius + i * spacing * 6);
+            }
+        }
+
+        Spiral.metaParameters = [
+            { title: "loops", type: "range", min: 1, max: 60, step: 1, value: 9 },
+            { title: "start radius", type: "range", min: 0, max: 50, step: .01, value: 0.33 },
+            { title: "spacing", type: "range", min: 0, max: 5, step: .01, value: 1 }
+        ];
+
+        module.exports = Spiral;
+
+    </textarea>
+
+    <button onclick="doEval()">Eval</button>
+
+
+</body>
+</html>
