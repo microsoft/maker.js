@@ -1,4 +1,4 @@
-﻿var makerjs = require('../target/js/node.maker.js');
+﻿var makerjs = require('./../target/js/node.maker.js');
 
 function fillets(radius) {
     var Line = makerjs.paths.Line;

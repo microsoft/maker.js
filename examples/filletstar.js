@@ -1,4 +1,4 @@
-var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('./../target/js/node.maker.js');
 
 function filletstar(numberOfPoints, filletOutsideRadius, filletInsideRadius, innerRadiusPct, skip) {
     var radius = 100;

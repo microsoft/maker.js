@@ -1,4 +1,4 @@
-var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('./../target/js/node.maker.js');
 
 function tubeClamp(tubediameter, thickness, distance, open, wing, lid, lidclearance) {
 
