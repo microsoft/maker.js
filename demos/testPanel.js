@@ -1,4 +1,4 @@
-var makerjs = require('makerjs');
+var makerjs = require('./../target/js/node.maker.js');
 
 function testPanel(count, height, width, radius, angle) {
 
