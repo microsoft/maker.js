@@ -2,8 +2,13 @@
 <html>
 <head>
     <title></title>
-	<meta charset="utf-8" />
-    <script src="../external/ace/ace.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
+    <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
+    <script src="../external/codemirror/lib/codemirror.js"></script>
+    <script src="../external/codemirror/mode/javascript/javascript.js"></script>
+
     <script src="../external/TKRequire/TKRequire.js"></script>
     <script src="../target/js/browser.maker.js"></script>
     <script src="playground.js"></script>
@@ -13,7 +18,7 @@
         var makerjs = require('makerjs');
 
         function doEval() {
-            var text = editor.getValue();
+            var text = myCodeMirror.doc.getValue();
 
             var html = MakerJsPlayground.runJavaScriptGetHTML(text);
 
@@ -37,7 +42,7 @@
 
     <div id="view" style="border: 1px solid silver; min-height: 200px"></div>
 
-<pre id="editor">
+<textarea id="textarea1">
 var makerjs = require('makerjs');
 function Spiral(loops, startRadius, spacing) {
     if (spacing == 0) loops = 1;
@@ -60,13 +65,11 @@ Spiral.metaParameters = [
     { title: "spacing", type: "range", min: 0, max: 5, step: .01, value: 1 }
 ];
 module.exports = Spiral;
-</pre>
+</textarea>
 
 
     <script>
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/twilight");
-        editor.session.setMode("ace/mode/javascript");
+        var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('textarea1'), { lineNumbers: true, theme: 'twilight' });
     </script>
 
     <button onclick="doEval()">Eval</button>
