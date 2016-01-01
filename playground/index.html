@@ -5,37 +5,13 @@
 	<meta charset="utf-8" />
     <script src="TKRequire.js"></script>
     <script src="../target/js/browser.maker.js"></script>
+    <script src="playground.js"></script>
     <script>
-
-        require.relativePath = '../examples/';
 
         function doEval() {
             var text = document.getElementById('t1').value;
 
-            var module = {};
-
-            var originalDocumentWrite = document.write;
-
-            var html = '';
-
-            document.write = function (markup) {
-                html += markup;
-            };
-
-            var Fn = new Function("require", "module", "document", text);
-
-            //call function with the "new" keyword so the "this" keyword is an instance
-            var result = new Fn(require, module, document);
-
-            document.write = originalDocumentWrite;
-
-            if (module.exports) {
-                var params = makerjs.kit.getParameterValues(module.exports);
-                var model = makerjs.kit.construct(module.exports, params);
-                html = makerjs.exporter.toSVG(model);
-            } else if (makerjs.isModel(result)) {
-                html = makerjs.exporter.toSVG(result);
-            }
+            var html = MakerJsPlayground.runJavaScriptGetHTML(text);
 
             document.getElementById('view').innerHTML = html;
         }
