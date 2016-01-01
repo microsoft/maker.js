@@ -49,6 +49,11 @@ function require(url) {
       } else {
         fullOrRelativePath = "./" + require.relativePath + scriptName;
       };
+
+      if (require.httpAlwaysGet) {
+          fullOrRelativePath += '?' + new Date().getMilliseconds();
+      }
+
       //console.log("TKRequire: including: " + fullOrRelativePath);
       X.open("GET", fullOrRelativePath, false); // Synchrounous load.
       X.send();
@@ -66,6 +71,16 @@ function require(url) {
         }
         source = source.slice(moduleStart + 1, moduleEnd - 1);
       }
+      
+      //flag to return only the source without executing it
+      if (require.returnSource) {
+
+          // Restore the relative path.
+          require.relativePath = originalPath;
+
+          return source;
+      }
+
       // Fix, add comment to show source on Chrome Dev Tools
       source = "//@ sourceURL=" + window.location.origin + url + "\n" + source;
       //------

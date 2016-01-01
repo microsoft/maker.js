@@ -5,16 +5,21 @@
 /// <reference path="../src/core/angle.ts" />
 /// <reference path="../src/core/intersect.ts" />
 
-declare var makerjs: typeof MakerJs;
-
 //for TKRequire
 interface NodeRequire {
     relativePath: string;
+    returnSource: boolean;
+    httpAlwaysGet: boolean;
 }
 
 require.relativePath = '../examples/';
+require.httpAlwaysGet = true;
 
 module MakerJsPlayground {
+
+    var makerjs: typeof MakerJs;
+
+    export var myCodeMirror: CodeMirror.Editor;
 
     interface MockNodeModule {
         exports?: any;
@@ -56,4 +61,58 @@ module MakerJsPlayground {
         return html;
     }
 
+    export function downloadScript(url) {
+        require.returnSource = true;
+        var script = require(url);
+        require.returnSource = false;
+        return script;
+    }
+
+    export function doEval() {
+        var text = myCodeMirror.getDoc().getValue();
+
+        var html = runJavaScriptGetHTML(text);
+
+        document.getElementById('view').innerHTML = html;
+    }
+
+    function isHttp(url: string): boolean {
+        return "http" === url.substr(0, 4);
+    }
+
+    class QueryStringParams {
+
+        constructor(querystring: string = document.location.search.substring(1)) {
+            if (querystring) {
+                var pairs = querystring.split('&');
+                for (var i = 0; i < pairs.length; i++) {
+                    var pair = pairs[i].split('=');
+                    this[pair[0]] = decodeURIComponent(pair[1]);
+                }
+            }
+        }
+    }
+
+    window.onload = function (ev) {
+
+        //need to call this to cache it once
+        makerjs = require('makerjs');
+
+        var textarea1 = document.getElementById('textarea1') as HTMLTextAreaElement;
+
+        var qps = new QueryStringParams();
+        var scriptname = qps['script'];
+
+        if (scriptname && !isHttp(scriptname)) {
+
+            var script = downloadScript(scriptname);
+            textarea1.value = script;
+            var html = runJavaScriptGetHTML(script);
+
+            document.getElementById('view').innerHTML = html;
+        }
+
+        myCodeMirror = CodeMirror.fromTextArea(textarea1, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
+
+    };
 }

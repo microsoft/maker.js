@@ -7,6 +7,9 @@
   "installed": {
     "node/node.d.ts": {
       "commit": "066819c65ff561ca109955e0b725c253e243f0a2"
+    },
+    "codemirror/codemirror.d.ts": {
+      "commit": "fe563dff3428bac1260d1794e2c2ecf8f097535a"
     }
   }
 }
