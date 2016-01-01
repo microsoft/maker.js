@@ -24,13 +24,32 @@
 
     </script>
     <style type="text/css" media="screen">
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
         body {
             overflow: hidden;
         }
-
+        #view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+        }
         #editor {
+            position: absolute;
             margin: 0;
-            height: 300px;
+            top: 50%;
+            left: 0;
+            right: 0;
+            bottom: 30px;
+        }
+        button {
+            position: absolute;
+            bottom: 3px;
         }
     </style>
 </head>
