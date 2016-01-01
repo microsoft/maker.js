@@ -5,8 +5,10 @@
 /// <reference path="../src/core/angle.ts" />
 /// <reference path="../src/core/intersect.ts" />
 require.relativePath = '../examples/';
+require.httpAlwaysGet = true;
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
+    var makerjs;
     function runJavaScriptGetHTML(javaScript) {
         var module = {};
         var html = '';
@@ -36,5 +38,48 @@ var MakerJsPlayground;
         return html;
     }
     MakerJsPlayground.runJavaScriptGetHTML = runJavaScriptGetHTML;
+    function downloadScript(url) {
+        require.returnSource = true;
+        var script = require(url);
+        require.returnSource = false;
+        return script;
+    }
+    MakerJsPlayground.downloadScript = downloadScript;
+    function doEval() {
+        var text = MakerJsPlayground.myCodeMirror.getDoc().getValue();
+        var html = runJavaScriptGetHTML(text);
+        document.getElementById('view').innerHTML = html;
+    }
+    MakerJsPlayground.doEval = doEval;
+    function isHttp(url) {
+        return "http" === url.substr(0, 4);
+    }
+    var QueryStringParams = (function () {
+        function QueryStringParams(querystring) {
+            if (querystring === void 0) { querystring = document.location.search.substring(1); }
+            if (querystring) {
+                var pairs = querystring.split('&');
+                for (var i = 0; i < pairs.length; i++) {
+                    var pair = pairs[i].split('=');
+                    this[pair[0]] = decodeURIComponent(pair[1]);
+                }
+            }
+        }
+        return QueryStringParams;
+    })();
+    window.onload = function (ev) {
+        //need to call this to cache it once
+        makerjs = require('makerjs');
+        var textarea1 = document.getElementById('textarea1');
+        var qps = new QueryStringParams();
+        var scriptname = qps['script'];
+        if (scriptname && !isHttp(scriptname)) {
+            var script = downloadScript(scriptname);
+            textarea1.value = script;
+            var html = runJavaScriptGetHTML(script);
+            document.getElementById('view').innerHTML = html;
+        }
+        MakerJsPlayground.myCodeMirror = CodeMirror.fromTextArea(textarea1, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
+    };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
 //# sourceMappingURL=playground.js.map
