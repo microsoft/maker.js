@@ -1,4 +1,4 @@
-var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('./../target/js/node.maker.js');
 var smile = require('./smile.js');
 var m = require('./m.js');
 

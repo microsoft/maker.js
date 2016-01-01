@@ -110,14 +110,22 @@ module MakerJs.model {
         if (modelToMirror.paths) {
             newModel.paths = {};
             for (var id in modelToMirror.paths) {
-                newModel.paths[id] = path.mirror(modelToMirror.paths[id], mirrorX, mirrorY);
+                var pathToMirror = modelToMirror.paths[id];
+                if (!pathToMirror) continue;
+                var pathMirrored = path.mirror(pathToMirror, mirrorX, mirrorY);
+                if (!pathMirrored) continue;
+                newModel.paths[id] = pathMirrored;
             }
         }
 
         if (modelToMirror.models) {
             newModel.models = {};
             for (var id in modelToMirror.models) {
-                newModel.models[id] = model.mirror(modelToMirror.models[id], mirrorX, mirrorY);
+                var childModelToMirror = modelToMirror.models[id];
+                if (!childModelToMirror) continue;
+                var childModelMirrored = model.mirror(childModelToMirror, mirrorX, mirrorY);
+                if (!childModelMirrored) continue;
+                newModel.models[id] = childModelMirrored;
             }
         }
 

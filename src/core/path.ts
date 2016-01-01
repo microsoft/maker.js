@@ -58,45 +58,47 @@ module MakerJs.path {
      * @returns Mirrored path.
      */
     export function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IPath {
-
         var newPath: IPath = null;
-        var origin = point.mirror(pathToMirror.origin, mirrorX, mirrorY);
 
-        var map: IPathFunctionMap = {};
+        if (pathToMirror) {
+            var origin = point.mirror(pathToMirror.origin, mirrorX, mirrorY);
 
-        map[pathType.Line] = function (line: IPathLine) {
+            var map: IPathFunctionMap = {};
 
-            newPath = new paths.Line(
-                origin,
-                point.mirror(line.end, mirrorX, mirrorY)
+            map[pathType.Line] = function (line: IPathLine) {
+
+                newPath = new paths.Line(
+                    origin,
+                    point.mirror(line.end, mirrorX, mirrorY)
                 );
-        };
+            };
 
-        map[pathType.Circle] = function (circle: IPathCircle) {
+            map[pathType.Circle] = function (circle: IPathCircle) {
 
-            newPath = new paths.Circle(
-                origin,
-                circle.radius
+                newPath = new paths.Circle(
+                    origin,
+                    circle.radius
                 );
-        };
+            };
 
-        map[pathType.Arc] = function (arc: IPathArc) {
+            map[pathType.Arc] = function (arc: IPathArc) {
 
-            var startAngle = angle.mirror(arc.startAngle, mirrorX, mirrorY);
-            var endAngle = angle.mirror(angle.ofArcEnd(arc), mirrorX, mirrorY);
-            var xor = mirrorX != mirrorY;
+                var startAngle = angle.mirror(arc.startAngle, mirrorX, mirrorY);
+                var endAngle = angle.mirror(angle.ofArcEnd(arc), mirrorX, mirrorY);
+                var xor = mirrorX != mirrorY;
 
-            newPath = new paths.Arc(
-                origin,
-                arc.radius,
-                xor ? endAngle : startAngle,
-                xor ? startAngle : endAngle
+                newPath = new paths.Arc(
+                    origin,
+                    arc.radius,
+                    xor ? endAngle : startAngle,
+                    xor ? startAngle : endAngle
                 );
-        };
+            };
 
-        var fn = map[pathToMirror.type];
-        if (fn) {
-            fn(pathToMirror);
+            var fn = map[pathToMirror.type];
+            if (fn) {
+                fn(pathToMirror);
+            }
         }
 
         return newPath;

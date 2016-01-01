@@ -629,23 +629,25 @@ var MakerJs;
          */
         function mirror(pathToMirror, mirrorX, mirrorY, newId) {
             var newPath = null;
-            var origin = MakerJs.point.mirror(pathToMirror.origin, mirrorX, mirrorY);
-            var map = {};
-            map[MakerJs.pathType.Line] = function (line) {
-                newPath = new MakerJs.paths.Line(origin, MakerJs.point.mirror(line.end, mirrorX, mirrorY));
-            };
-            map[MakerJs.pathType.Circle] = function (circle) {
-                newPath = new MakerJs.paths.Circle(origin, circle.radius);
-            };
-            map[MakerJs.pathType.Arc] = function (arc) {
-                var startAngle = MakerJs.angle.mirror(arc.startAngle, mirrorX, mirrorY);
-                var endAngle = MakerJs.angle.mirror(MakerJs.angle.ofArcEnd(arc), mirrorX, mirrorY);
-                var xor = mirrorX != mirrorY;
-                newPath = new MakerJs.paths.Arc(origin, arc.radius, xor ? endAngle : startAngle, xor ? startAngle : endAngle);
-            };
-            var fn = map[pathToMirror.type];
-            if (fn) {
-                fn(pathToMirror);
+            if (pathToMirror) {
+                var origin = MakerJs.point.mirror(pathToMirror.origin, mirrorX, mirrorY);
+                var map = {};
+                map[MakerJs.pathType.Line] = function (line) {
+                    newPath = new MakerJs.paths.Line(origin, MakerJs.point.mirror(line.end, mirrorX, mirrorY));
+                };
+                map[MakerJs.pathType.Circle] = function (circle) {
+                    newPath = new MakerJs.paths.Circle(origin, circle.radius);
+                };
+                map[MakerJs.pathType.Arc] = function (arc) {
+                    var startAngle = MakerJs.angle.mirror(arc.startAngle, mirrorX, mirrorY);
+                    var endAngle = MakerJs.angle.mirror(MakerJs.angle.ofArcEnd(arc), mirrorX, mirrorY);
+                    var xor = mirrorX != mirrorY;
+                    newPath = new MakerJs.paths.Arc(origin, arc.radius, xor ? endAngle : startAngle, xor ? startAngle : endAngle);
+                };
+                var fn = map[pathToMirror.type];
+                if (fn) {
+                    fn(pathToMirror);
+                }
             }
             return newPath;
         }
@@ -1023,13 +1025,25 @@ var MakerJs;
             if (modelToMirror.paths) {
                 newModel.paths = {};
                 for (var id in modelToMirror.paths) {
-                    newModel.paths[id] = MakerJs.path.mirror(modelToMirror.paths[id], mirrorX, mirrorY);
+                    var pathToMirror = modelToMirror.paths[id];
+                    if (!pathToMirror)
+                        continue;
+                    var pathMirrored = MakerJs.path.mirror(pathToMirror, mirrorX, mirrorY);
+                    if (!pathMirrored)
+                        continue;
+                    newModel.paths[id] = pathMirrored;
                 }
             }
             if (modelToMirror.models) {
                 newModel.models = {};
                 for (var id in modelToMirror.models) {
-                    newModel.models[id] = model.mirror(modelToMirror.models[id], mirrorX, mirrorY);
+                    var childModelToMirror = modelToMirror.models[id];
+                    if (!childModelToMirror)
+                        continue;
+                    var childModelMirrored = model.mirror(childModelToMirror, mirrorX, mirrorY);
+                    if (!childModelMirrored)
+                        continue;
+                    newModel.models[id] = childModelMirrored;
                 }
             }
             return newModel;

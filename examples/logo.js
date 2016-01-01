@@ -1,4 +1,4 @@
-var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('./../target/js/node.maker.js');
 
 function logo(or, ir, ear, outline, mHeight, serifHeight, speed, drop, columnWidth, spacing, step) {
 
