@@ -9,6 +9,7 @@ require.httpAlwaysGet = true;
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
     var makerjs;
+    MakerJsPlayground.svgStrokeWidthInPixels = 2;
     function runJavaScriptGetHTML(javaScript) {
         var module = {};
         var html = '';
@@ -33,7 +34,19 @@ var MakerJsPlayground;
             model = result;
         }
         if (model) {
-            html += makerjs.exporter.toSVG(model);
+            var renderOptions = {
+                //                origin: svgOrigin,
+                //viewBox: false,
+                //                stroke: 'red',
+                strokeWidth: MakerJsPlayground.svgStrokeWidthInPixels + 'px',
+            };
+            if (model.units && window.navigator.userAgent.indexOf('Trident') > 0) {
+                var pixelsPerInch = 100;
+                var scale = makerjs.units.conversionScale(makerjs.unitType.Inch, model.units);
+                var pixel = scale / pixelsPerInch;
+                renderOptions.strokeWidth = (MakerJsPlayground.svgStrokeWidthInPixels * pixel * makerjs.exporter.svgUnit[model.units].scaleConversion).toString();
+            }
+            html += makerjs.exporter.toSVG(model, renderOptions);
         }
         return html;
     }

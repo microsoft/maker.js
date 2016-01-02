@@ -1,0 +1,85 @@
+﻿html, body {
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+}
+
+body {
+    padding: 1em;
+}
+
+section {
+    clear: both;
+    margin-bottom: 1em;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: normal;
+    color: #aaa;
+    line-height: 18px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    display: inline;
+}
+
+.logo img {
+    vertical-align: text-bottom;
+    margin-right: 0.5em;
+}
+
+.logo h2 {
+    letter-spacing: 6px;
+}
+
+#view-params {
+    min-height: 50%;
+    position: relative;
+    background-color: #317CCF;
+}
+
+#params {
+    width: 18em;
+    padding: .5em 1em 1em 1em;
+    margin: 1em;
+    background-color: #fff;
+    position: absolute;
+    right: 0;
+    box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
+}
+
+#view {
+    padding: 1em;
+    overflow: auto;
+}
+
+svg line, svg circle, svg path {
+    stroke: #fff;
+    fill: none;
+}
+
+#view svg {
+    padding: 1em;
+}
+
+.code-header {
+    font-family: monospace;
+    background-color: #d0d0d0;
+    margin-top: 2em;
+    padding: .5em 1em;
+    border: 1px solid #aaa;
+}
+
+.code-header button {
+    font-family: monospace;
+    background-color: green;
+    color: white;
+}
+
+.CodeMirror {
+    height: auto;
+}
+
+footer {
+    margin-bottom: 1em;
+}

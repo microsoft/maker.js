@@ -1232,6 +1232,19 @@ declare module MakerJs.exporter {
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
     /**
+     * @private
+     */
+    interface svgUnitConversion {
+        [unitType: string]: {
+            svgUnitType: string;
+            scaleConversion: number;
+        };
+    }
+    /**
+     * @private
+     */
+    var svgUnit: svgUnitConversion;
+    /**
      * SVG rendering options.
      */
     interface ISVGRenderOptions extends IExportOptions {
