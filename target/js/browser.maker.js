@@ -3502,7 +3502,7 @@ var MakerJs;
                 }
             }
             //convert unit system (if it exists) into SVG's units. scale if necessary.
-            var useSvgUnit = svgUnit[opts.units];
+            var useSvgUnit = exporter.svgUnit[opts.units];
             if (useSvgUnit && opts.viewBox) {
                 opts.scale *= useSvgUnit.scaleConversion;
             }
@@ -3565,16 +3565,16 @@ var MakerJs;
         /**
          * @private
          */
-        var svgUnit = {};
+        exporter.svgUnit = {};
         //SVG Coordinate Systems, Transformations and Units documentation:
         //http://www.w3.org/TR/SVG/coords.html
         //The supported length unit identifiers are: em, ex, px, pt, pc, cm, mm, in, and percentages.
-        svgUnit[MakerJs.unitType.Inch] = { svgUnitType: "in", scaleConversion: 1 };
-        svgUnit[MakerJs.unitType.Millimeter] = { svgUnitType: "mm", scaleConversion: 1 };
-        svgUnit[MakerJs.unitType.Centimeter] = { svgUnitType: "cm", scaleConversion: 1 };
+        exporter.svgUnit[MakerJs.unitType.Inch] = { svgUnitType: "in", scaleConversion: 1 };
+        exporter.svgUnit[MakerJs.unitType.Millimeter] = { svgUnitType: "mm", scaleConversion: 1 };
+        exporter.svgUnit[MakerJs.unitType.Centimeter] = { svgUnitType: "cm", scaleConversion: 1 };
         //Add conversions for all unitTypes
-        svgUnit[MakerJs.unitType.Foot] = { svgUnitType: "in", scaleConversion: 12 };
-        svgUnit[MakerJs.unitType.Meter] = { svgUnitType: "cm", scaleConversion: 100 };
+        exporter.svgUnit[MakerJs.unitType.Foot] = { svgUnitType: "in", scaleConversion: 12 };
+        exporter.svgUnit[MakerJs.unitType.Meter] = { svgUnitType: "cm", scaleConversion: 100 };
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
