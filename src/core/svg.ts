@@ -308,9 +308,9 @@ module MakerJs.exporter {
     }
 
     /**
-     * @private
+     * Map of MakerJs unit system to SVG unit system
      */
-    interface svgUnitConversion {
+    export interface svgUnitConversion {
         [unitType: string]: { svgUnitType: string; scaleConversion: number; };
     }
 
@@ -319,9 +319,9 @@ module MakerJs.exporter {
     }
 
     /**
-     * @private
+     * Map of MakerJs unit system to SVG unit system
      */
-    var svgUnit: svgUnitConversion = {};
+    export var svgUnit: svgUnitConversion = {};
 
     //SVG Coordinate Systems, Transformations and Units documentation:
     //http://www.w3.org/TR/SVG/coords.html
