@@ -5,6 +5,7 @@ demos/*
 docgen/*
 docs/*
 examples/*
+playground/*
 src/*
 target/*
 typings/*

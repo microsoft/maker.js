@@ -20,6 +20,7 @@ module MakerJsPlayground {
     var makerjs: typeof MakerJs;
 
     export var myCodeMirror: CodeMirror.Editor;
+    export var svgStrokeWidthInPixels = 2;
 
     interface MockNodeModule {
         exports?: any;
@@ -55,7 +56,28 @@ module MakerJsPlayground {
         }
 
         if (model) {
-            html += makerjs.exporter.toSVG(model);
+
+
+            var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
+//                origin: svgOrigin,
+                //viewBox: false,
+//                stroke: 'red',
+                strokeWidth: svgStrokeWidthInPixels + 'px',
+//                annotate: document.getElementById('checkAnnotate').checked,
+//                scale: Viewer.ViewScale * .8,
+//                useSvgPathOnly: false,
+                //svgAttrs: { id: 'svg1' }
+            };
+
+
+            if (model.units && window.navigator.userAgent.indexOf('Trident') > 0) {
+                var pixelsPerInch = 100;
+                var scale = makerjs.units.conversionScale(makerjs.unitType.Inch, model.units);
+                var pixel = scale / pixelsPerInch;
+                renderOptions.strokeWidth = (svgStrokeWidthInPixels * pixel * makerjs.exporter.svgUnit[model.units].scaleConversion).toString();
+            }
+
+            html += makerjs.exporter.toSVG(model, renderOptions);
         }
 
         return html;

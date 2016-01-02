@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Maker.js Playground</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
@@ -12,20 +12,37 @@
     <script src="../external/TKRequire/TKRequire.js"></script>
     <script src="../target/js/browser.maker.js"></script>
     <script src="playground.js"></script>
-
-    <style type="text/css" media="screen">
-        .CodeMirror {
-          height: auto;
-        }
-    </style>
+    <link href="playground.css" rel="stylesheet" />
 </head>
 <body>
 
-    <div id="view" style="border: 1px solid silver; "></div>
+    <section class="logo"><img src="m.png" /><h2>Maker.js</h2></section>
 
-    <textarea id="textarea1"></textarea>
+    <section id="view-params">
+        <div id="params">
+            params
+        </div>
+        <div id="view"></div>
+    </section>
 
-    <button onclick="MakerJsPlayground.doEval()">Eval</button>
+    <section>
+        <button>download</button>
+    </section>
 
+    <section>
+    </section>
+
+    <section>
+        <div class="code-header">
+            JavaScript code editor
+            <button onclick="MakerJsPlayground.doEval()">&nbsp;&#x25BA; Run&nbsp;</button>
+            <span class="status"></span>
+        </div>
+        <textarea id="textarea1"></textarea>
+    </section>
+
+    <footer>
+        Microsoft
+    </footer>
 </body>
 </html>
