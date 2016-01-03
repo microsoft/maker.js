@@ -55,10 +55,14 @@ h2 {
     color: #555;
 }
 
+#view-container {
+    overflow: auto;
+}
+
 #view {
     padding: 1em;
-    overflow: auto;
     color: #fff;
+    overflow-y: hidden;
 }
 
 svg line, svg circle, svg path {
@@ -69,6 +73,7 @@ svg line, svg circle, svg path {
 
 #view svg {
     padding: 1em;
+    overflow: visible;
 }
 
 #view svg text {

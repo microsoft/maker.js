@@ -42,8 +42,9 @@ module MakerJsPlayground {
             }
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-                //origin: svgOrigin,
+                //origin: [150, 0],
                 //annotate: document.getElementById('checkAnnotate').checked,
+                //viewBox: false,
                 //annotate: true,
                 scale: viewScale
             };

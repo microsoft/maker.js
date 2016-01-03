@@ -28,8 +28,9 @@ var MakerJsPlayground;
                 viewScale *= MakerJsPlayground.makerjs.units.conversionScale(model.units, MakerJsPlayground.makerjs.unitType.Inch) * pixelsPerInch;
             }
             var renderOptions = {
-                //origin: svgOrigin,
+                //origin: [150, 0],
                 //annotate: document.getElementById('checkAnnotate').checked,
+                //viewBox: false,
                 //annotate: true,
                 scale: viewScale
             };
