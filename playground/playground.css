@@ -8,6 +8,11 @@ body {
     padding: 1em;
 }
 
+a[name=top] {
+    position: absolute;
+    top: -1em;
+}
+
 header, section, footer {
     margin-bottom: 1em;
 }
@@ -37,7 +42,7 @@ h2 {
 }
 
 #view-params {
-    min-height: 50%;
+    min-height: 100px;
     position: relative;
     background-color: #3177C6;
     background-image: url('blueprint.png');
@@ -60,7 +65,7 @@ h2 {
 }
 
 #view {
-    padding: 1em;
+    padding: 2em;
     color: #fff;
     overflow-y: hidden;
 }
@@ -72,7 +77,6 @@ svg line, svg circle, svg path {
 }
 
 #view svg {
-    padding: 1em;
     overflow: visible;
 }
 
@@ -102,8 +106,35 @@ svg line, svg circle, svg path {
     font-family: monospace;
     background-color: green;
     color: white;
+    float: right;
+    margin-top: -2px;
 }
 
 .CodeMirror {
     height: auto;
+}
+
+.scroll-nav-links {
+    position: fixed; 
+    bottom: .75em; 
+    right: 0;
+    z-index: 2; 
+    padding: .25em .5em .5em 1em; 
+    background-color: #555;
+    opacity: .85;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+
+.scroll-nav-links span {
+    font-size: smaller;
+    margin-right: .5em;
+    color: #ccc;
+    text-transform: uppercase;
+}
+
+.scroll-nav-links a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
 }

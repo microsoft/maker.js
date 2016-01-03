@@ -11,7 +11,10 @@ module MakerJsPlayground {
     export var makerjs: typeof MakerJs;
     export var relativePath = '../examples/';
 
+    var pixelsPerInch = 100;
     var iframe: HTMLIFrameElement;
+    var hMargin: number;
+    var vMargin: number;
 
     interface IProcessedResult {
         html: string;
@@ -46,23 +49,45 @@ module MakerJsPlayground {
 
     export function render() {
 
+        //remove content so default size can be measured
+        document.getElementById('view').innerHTML = '';
+
         if (processed.model) {
 
-            var pixelsPerInch = 100;
-
             var measure = makerjs.measure.modelExtents(processed.model);
-
+            var height: number;
+            var width: number;
             var viewScale = 1;
 
-            if (processed.model.units) {                
+            //width mode
+            if (true) {
+                width = document.getElementById("params").offsetLeft - 2 * hMargin;
+            } else {
+                width = document.getElementById("view-params").offsetWidth;
+            }
+            height = window.innerHeight - 9.75 * vMargin;
+
+            if (processed.model.units) {
                 //cast into inches, then to pixels
                 viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
 
+            if ((<HTMLInputElement>document.getElementById('check-fit-on-screen')).checked) {
+                var modelHeightNatural = measure.high[1] - measure.low[1];
+                var modelHeightInPixels = modelHeightNatural * viewScale;
+                var modelWidthNatural = measure.high[0] - measure.low[0];
+                var modelWidthInPixels = modelWidthNatural * viewScale;
+
+                var scaleHeight = height / modelHeightInPixels;
+                var scaleWidth = width / modelWidthInPixels;
+
+                viewScale *= Math.min(scaleWidth, scaleHeight);
+            }
+
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-                //origin: [150, 0],
+                origin: [width / 2, measure.high[1] * viewScale],
                 annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
-                //viewBox: false,
+                svgAttrs: { id: 'view-svg' },
                 scale: viewScale
             };
 
@@ -72,13 +97,12 @@ module MakerJsPlayground {
                 },
             };
 
-            if (true) {
+            if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
 
                 renderModel.paths = {
                     'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
                     'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
                 };
-
             }
 
             var html = processed.html;
@@ -131,6 +155,11 @@ module MakerJsPlayground {
     window.onload = function (ev) {
 
         makerjs = require('makerjs');
+
+        var viewMeasure = document.getElementById('view-measure');
+
+        hMargin = viewMeasure.offsetLeft;
+        vMargin = viewMeasure.offsetTop;
 
         var textarea = document.getElementById('javascript-code-textarea') as HTMLTextAreaElement;
         codeMirrorEditor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });

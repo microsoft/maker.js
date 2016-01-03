@@ -13,7 +13,8 @@
     <script src="playground.js"></script>
 </head>
 <body>
-    
+    <a name="top"></a>
+
     <header class="logo"><a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h2>Maker.js</h2></a></header>
 
     <section id="view-params">
@@ -25,7 +26,7 @@
             params (how-to)
         </div>
         <div id="view-container">
-            <div id="view"></div>
+            <div id="view"><div id="view-measure"></div></div>
         </div>
     </section>
 
@@ -34,25 +35,31 @@
     </section>
 
     <section>
-    </section>
-
-    <section>
         <div class="code-header">
             JavaScript code editor
             <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
             <span class="status"></span>
         </div>
-        <textarea id="javascript-code-textarea">
-var makerjs = require('makerjs');
 
-this.paths = {
-    head: new makerjs.paths.Circle([0, 0], 90),
-    eye: new makerjs.paths.Circle([25, 25], 10),
-    mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
-    wink: new makerjs.paths.Line([-35, 20], [-15, 20])
-};
-</textarea>
+        <a name="code"></a>
+
+        <textarea id="javascript-code-textarea">
+            var makerjs = require('makerjs');
+
+            this.paths = {
+            head: new makerjs.paths.Circle([0, 0], 90),
+            eye: new makerjs.paths.Circle([25, 25], 10),
+            mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
+            wink: new makerjs.paths.Line([-35, 20], [-15, 20])
+            };
+        </textarea>
     </section>
+
+    <div class="scroll-nav-links">
+        <span>jump to</span>
+        <span><a href="#code">code</a></span>
+        <span><a href="#top">top</a></span>
+    </div>
 
     <footer>
         Microsoft
