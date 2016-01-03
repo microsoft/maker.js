@@ -5,97 +5,134 @@
 /// <reference path="../src/core/angle.ts" />
 /// <reference path="../src/core/intersect.ts" />
 
-//for TKRequire
-interface NodeRequire {
-    relativePath: string;
-    returnSource: boolean;
-    httpAlwaysGet: boolean;
-}
-
-require.relativePath = '../examples/';
-require.httpAlwaysGet = true;
-
 module MakerJsPlayground {
 
-    var makerjs: typeof MakerJs;
+    export var codeMirrorEditor: CodeMirror.Editor;
+    export var makerjs: typeof MakerJs;
+    export var relativePath = '../examples/';
 
-    export var myCodeMirror: CodeMirror.Editor;
-    export var svgStrokeWidthInPixels = 2;
+    var pixelsPerInch = 100;
+    var iframe: HTMLIFrameElement;
+    var hMargin: number;
+    var vMargin: number;
 
-    interface MockNodeModule {
-        exports?: any;
+    interface IProcessedResult {
+        html: string;
+        model: MakerJs.IModel;
     }
 
-    export function runJavaScriptGetHTML(javaScript: string): string {
-        var module: MockNodeModule = {};
-        var html = '';
-        var model: MakerJs.IModel = null;
+    var processed: IProcessedResult = {
+        html: '',
+        model: null
+    };
 
-        //temporarily override document.write
-        var originalDocumentWrite = document.write;
-        document.write = function (markup) {
-            html += markup;
-        };
+    export function processResult(html: string, result: any) {
 
-        //evaluate the javaScript code
-        var Fn: any = new Function('require', 'module', 'document', javaScript);
-        var result: any = new Fn(require, module, document); //call function with the "new" keyword so the "this" keyword is an instance
-
-        //restore document.write to original
-        document.write = originalDocumentWrite;
+        processed.html = html;
+        processed.model = null;
 
         //see if output is either a Node module, or a MakerJs.IModel
-        if (module.exports) {
+        if (typeof result === 'function') {
 
             //construct an IModel from the Node module
-            var params = makerjs.kit.getParameterValues(module.exports);
-            model = makerjs.kit.construct(module.exports, params);
+            var params = makerjs.kit.getParameterValues(result);
+            processed.model = makerjs.kit.construct(result, params);
 
         } else if (makerjs.isModel(result)) {
-            model = result;
+            processed.model = result;
         }
 
-        if (model) {
+        document.body.removeChild(iframe);
 
+        render();
+    }
 
-            var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-//                origin: svgOrigin,
-                //viewBox: false,
-//                stroke: 'red',
-                strokeWidth: svgStrokeWidthInPixels + 'px',
-//                annotate: document.getElementById('checkAnnotate').checked,
-//                scale: Viewer.ViewScale * .8,
-//                useSvgPathOnly: false,
-                //svgAttrs: { id: 'svg1' }
-            };
+    export function render() {
 
+        //remove content so default size can be measured
+        document.getElementById('view').innerHTML = '';
 
-            if (model.units && window.navigator.userAgent.indexOf('Trident') > 0) {
-                var pixelsPerInch = 100;
-                var scale = makerjs.units.conversionScale(makerjs.unitType.Inch, model.units);
-                var pixel = scale / pixelsPerInch;
-                renderOptions.strokeWidth = (svgStrokeWidthInPixels * pixel * makerjs.exporter.svgUnit[model.units].scaleConversion).toString();
+        if (processed.model) {
+
+            var measure = makerjs.measure.modelExtents(processed.model);
+            var height: number;
+            var width: number;
+            var viewScale = 1;
+
+            //width mode
+            if (true) {
+                width = document.getElementById("params").offsetLeft - 2 * hMargin;
+            } else {
+                width = document.getElementById("view-params").offsetWidth;
+            }
+            height = window.innerHeight - 9.75 * vMargin;
+
+            if (processed.model.units) {
+                //cast into inches, then to pixels
+                viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
 
-            html += makerjs.exporter.toSVG(model, renderOptions);
+            if ((<HTMLInputElement>document.getElementById('check-fit-on-screen')).checked) {
+                var modelHeightNatural = measure.high[1] - measure.low[1];
+                var modelHeightInPixels = modelHeightNatural * viewScale;
+                var modelWidthNatural = measure.high[0] - measure.low[0];
+                var modelWidthInPixels = modelWidthNatural * viewScale;
+
+                var scaleHeight = height / modelHeightInPixels;
+                var scaleWidth = width / modelWidthInPixels;
+
+                viewScale *= Math.min(scaleWidth, scaleHeight);
+            }
+
+            var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
+                origin: [width / 2, measure.high[1] * viewScale],
+                annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
+                svgAttrs: { id: 'view-svg' },
+                scale: viewScale
+            };
+
+            var renderModel: MakerJs.IModel = {
+                models: {
+                    model: processed.model
+                },
+            };
+
+            if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
+
+                renderModel.paths = {
+                    'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                    'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                };
+            }
+
+            var html = processed.html;
+
+            html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
 
-        return html;
-    }
-
-    export function downloadScript(url) {
-        require.returnSource = true;
-        var script = require(url);
-        require.returnSource = false;
-        return script;
-    }
-
-    export function doEval() {
-        var text = myCodeMirror.getDoc().getValue();
-
-        var html = runJavaScriptGetHTML(text);
-
         document.getElementById('view').innerHTML = html;
+    }
+
+    export function filenameFromRequireId(id: string): string {
+        return relativePath + id + '.js';
+    }
+
+    export function downloadScript(url: string, callback: (download: string) => void) {
+        var x = new XMLHttpRequest();
+        x.open('GET', url, true);
+        x.onreadystatechange = function () {
+            if (x.readyState == 4 && x.status == 200) {
+                callback(x.responseText);
+            }
+        };
+        x.send();
+    }
+
+    export function runCodeFromEditor() {
+        iframe = document.createElement('iframe');
+        iframe.src = 'require-iframe.html';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
     }
 
     function isHttp(url: string): boolean {
@@ -117,24 +154,28 @@ module MakerJsPlayground {
 
     window.onload = function (ev) {
 
-        //need to call this to cache it once
         makerjs = require('makerjs');
 
-        var textarea1 = document.getElementById('textarea1') as HTMLTextAreaElement;
+        var viewMeasure = document.getElementById('view-measure');
+
+        hMargin = viewMeasure.offsetLeft;
+        vMargin = viewMeasure.offsetTop;
+
+        var textarea = document.getElementById('javascript-code-textarea') as HTMLTextAreaElement;
+        codeMirrorEditor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
 
         var qps = new QueryStringParams();
         var scriptname = qps['script'];
 
         if (scriptname && !isHttp(scriptname)) {
 
-            var script = downloadScript(scriptname);
-            textarea1.value = script;
-            var html = runJavaScriptGetHTML(script);
-
-            document.getElementById('view').innerHTML = html;
+            downloadScript(filenameFromRequireId(scriptname), function (download: string) {
+                codeMirrorEditor.getDoc().setValue(download);
+                runCodeFromEditor();
+            });
+        } else {
+            runCodeFromEditor();
         }
-
-        myCodeMirror = CodeMirror.fromTextArea(textarea1, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
 
     };
 }
