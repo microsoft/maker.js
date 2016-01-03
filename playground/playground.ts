@@ -13,68 +13,80 @@ module MakerJsPlayground {
 
     var iframe: HTMLIFrameElement;
 
+    interface IProcessedResult {
+        html: string;
+        model: MakerJs.IModel;
+    }
+
+    var processed: IProcessedResult = {
+        html: '',
+        model: null
+    };
+
     export function processResult(html: string, result: any) {
 
-        var model: MakerJs.IModel;
+        processed.html = html;
+        processed.model = null;
 
         //see if output is either a Node module, or a MakerJs.IModel
         if (typeof result === 'function') {
 
             //construct an IModel from the Node module
             var params = makerjs.kit.getParameterValues(result);
-            model = makerjs.kit.construct(result, params);
+            processed.model = makerjs.kit.construct(result, params);
 
         } else if (makerjs.isModel(result)) {
-            model = result;
+            processed.model = result;
         }
 
-        if (model) {
+        document.body.removeChild(iframe);
+
+        render();
+    }
+
+    export function render() {
+
+        if (processed.model) {
 
             var pixelsPerInch = 100;
 
-            var measure = makerjs.measure.modelExtents(model);
+            var measure = makerjs.measure.modelExtents(processed.model);
 
             var viewScale = 1;
 
-            if (model.units) {                
+            if (processed.model.units) {                
                 //cast into inches, then to pixels
-                viewScale *= makerjs.units.conversionScale(model.units, makerjs.unitType.Inch) * pixelsPerInch;
+                viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
                 //origin: [150, 0],
-                //annotate: document.getElementById('checkAnnotate').checked,
+                annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
                 //viewBox: false,
-                //annotate: true,
                 scale: viewScale
             };
 
-            var renderModel: MakerJs.IModel;
+            var renderModel: MakerJs.IModel = {
+                models: {
+                    model: processed.model
+                },
+            };
 
             if (true) {
 
-                renderModel = {
-                    paths: {
-                        'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
-                        'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
-                    },
-                    models: {
-                        model: model
-                    },
+                renderModel.paths = {
+                    'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                    'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
                 };
 
-            } else {
-
-                delete model.units;
-                renderModel = model;
             }
+
+            var html = processed.html;
 
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
 
         document.getElementById('view').innerHTML = html;
-
-        document.body.removeChild(iframe);
     }
 
     export function filenameFromRequireId(id: string): string {

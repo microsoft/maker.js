@@ -8,54 +8,58 @@ var MakerJsPlayground;
 (function (MakerJsPlayground) {
     MakerJsPlayground.relativePath = '../examples/';
     var iframe;
+    var processed = {
+        html: '',
+        model: null
+    };
     function processResult(html, result) {
-        var model;
+        processed.html = html;
+        processed.model = null;
         //see if output is either a Node module, or a MakerJs.IModel
         if (typeof result === 'function') {
             //construct an IModel from the Node module
             var params = MakerJsPlayground.makerjs.kit.getParameterValues(result);
-            model = MakerJsPlayground.makerjs.kit.construct(result, params);
+            processed.model = MakerJsPlayground.makerjs.kit.construct(result, params);
         }
         else if (MakerJsPlayground.makerjs.isModel(result)) {
-            model = result;
+            processed.model = result;
         }
-        if (model) {
+        document.body.removeChild(iframe);
+        render();
+    }
+    MakerJsPlayground.processResult = processResult;
+    function render() {
+        if (processed.model) {
             var pixelsPerInch = 100;
-            var measure = MakerJsPlayground.makerjs.measure.modelExtents(model);
+            var measure = MakerJsPlayground.makerjs.measure.modelExtents(processed.model);
             var viewScale = 1;
-            if (model.units) {
+            if (processed.model.units) {
                 //cast into inches, then to pixels
-                viewScale *= MakerJsPlayground.makerjs.units.conversionScale(model.units, MakerJsPlayground.makerjs.unitType.Inch) * pixelsPerInch;
+                viewScale *= MakerJsPlayground.makerjs.units.conversionScale(processed.model.units, MakerJsPlayground.makerjs.unitType.Inch) * pixelsPerInch;
             }
             var renderOptions = {
                 //origin: [150, 0],
-                //annotate: document.getElementById('checkAnnotate').checked,
+                annotate: document.getElementById('check-annotate').checked,
                 //viewBox: false,
-                //annotate: true,
                 scale: viewScale
             };
-            var renderModel;
+            var renderModel = {
+                models: {
+                    model: processed.model
+                },
+            };
             if (true) {
-                renderModel = {
-                    paths: {
-                        'crosshairs-vertical': new MakerJsPlayground.makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
-                        'crosshairs-horizontal': new MakerJsPlayground.makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
-                    },
-                    models: {
-                        model: model
-                    },
+                renderModel.paths = {
+                    'crosshairs-vertical': new MakerJsPlayground.makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                    'crosshairs-horizontal': new MakerJsPlayground.makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
                 };
             }
-            else {
-                delete model.units;
-                renderModel = model;
-            }
+            var html = processed.html;
             html += MakerJsPlayground.makerjs.exporter.toSVG(renderModel, renderOptions);
         }
         document.getElementById('view').innerHTML = html;
-        document.body.removeChild(iframe);
     }
-    MakerJsPlayground.processResult = processResult;
+    MakerJsPlayground.render = render;
     function filenameFromRequireId(id) {
         return MakerJsPlayground.relativePath + id + '.js';
     }
