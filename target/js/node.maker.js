@@ -3562,7 +3562,7 @@ var MakerJs;
         }
         exporter.toSVG = toSVG;
         /**
-         * @private
+         * Map of MakerJs unit system to SVG unit system
          */
         exporter.svgUnit = {};
         //SVG Coordinate Systems, Transformations and Units documentation:

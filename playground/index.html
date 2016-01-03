@@ -6,23 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
+    <link href="playground.css" rel="stylesheet" />
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
-
-    <script src="../external/TKRequire/TKRequire.js"></script>
     <script src="../target/js/browser.maker.js"></script>
     <script src="playground.js"></script>
-    <link href="playground.css" rel="stylesheet" />
 </head>
 <body>
+    <a name="top"></a>
 
-    <section class="logo"><img src="m.png" /><h2>Maker.js</h2></section>
+    <header class="logo"><a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h2>Maker.js</h2></a></header>
 
     <section id="view-params">
         <div id="params">
-            params
+            <div><label><input id="check-fit-on-screen" type="checkbox" onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
+            <div><label><input id="check-show-origin" type="checkbox" onclick="MakerJsPlayground.render()" /> show origin</label></div>
+            <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path id</label></div>
+            <hr />
+            params (how-to)
         </div>
-        <div id="view"></div>
+        <div id="view-container">
+            <div id="view"><div id="view-measure"></div></div>
+        </div>
     </section>
 
     <section>
@@ -30,19 +35,35 @@
     </section>
 
     <section>
-    </section>
-
-    <section>
         <div class="code-header">
             JavaScript code editor
-            <button onclick="MakerJsPlayground.doEval()">&nbsp;&#x25BA; Run&nbsp;</button>
+            <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
             <span class="status"></span>
         </div>
-    <textarea id="textarea1"></textarea>
+
+        <a name="code"></a>
+
+        <textarea id="javascript-code-textarea">
+            var makerjs = require('makerjs');
+
+            this.paths = {
+            head: new makerjs.paths.Circle([0, 0], 90),
+            eye: new makerjs.paths.Circle([25, 25], 10),
+            mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
+            wink: new makerjs.paths.Line([-35, 20], [-15, 20])
+            };
+        </textarea>
     </section>
+
+    <div class="scroll-nav-links">
+        <span>jump to</span>
+        <span><a href="#code">code</a></span>
+        <span><a href="#top">top</a></span>
+    </div>
 
     <footer>
         Microsoft
     </footer>
+
 </body>
 </html>

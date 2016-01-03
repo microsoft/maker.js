@@ -8,8 +8,12 @@ body {
     padding: 1em;
 }
 
-section {
-    clear: both;
+a[name=top] {
+    position: absolute;
+    top: -1em;
+}
+
+header, section, footer {
     margin-bottom: 1em;
 }
 
@@ -23,6 +27,11 @@ h2 {
     display: inline;
 }
 
+.logo a {
+    border: none;
+    text-decoration: none;
+}
+
 .logo img {
     vertical-align: text-bottom;
     margin-right: 0.5em;
@@ -33,9 +42,10 @@ h2 {
 }
 
 #view-params {
-    min-height: 50%;
+    min-height: 100px;
     position: relative;
-    background-color: #317CCF;
+    background-color: #3177C6;
+    background-image: url('blueprint.png');
 }
 
 #params {
@@ -44,22 +54,44 @@ h2 {
     margin: 1em;
     background-color: #fff;
     position: absolute;
+    top: 0;
     right: 0;
     box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
+    color: #555;
+}
+
+#view-container {
+    overflow: auto;
 }
 
 #view {
-    padding: 1em;
-    overflow: auto;
+    padding: 2em;
+    color: #fff;
+    overflow-y: hidden;
 }
 
 svg line, svg circle, svg path {
     stroke: #fff;
+    stroke-width: 2px;
     fill: none;
 }
 
 #view svg {
-    padding: 1em;
+    overflow: visible;
+}
+
+#view svg text {
+    fill: #0ff;
+    stroke: none;
+}
+
+#crosshairs-vertical, #crosshairs-horizontal {
+    stroke: #4DD2FF;
+    stroke-width: 1;
+}
+
+#crosshairs-horizontal_text, #crosshairs-vertical_text {
+    display: none;
 }
 
 .code-header {
@@ -74,12 +106,35 @@ svg line, svg circle, svg path {
     font-family: monospace;
     background-color: green;
     color: white;
+    float: right;
+    margin-top: -2px;
 }
 
 .CodeMirror {
     height: auto;
 }
 
-footer {
-    margin-bottom: 1em;
+.scroll-nav-links {
+    position: fixed; 
+    bottom: .75em; 
+    right: 0;
+    z-index: 2; 
+    padding: .25em .5em .5em 1em; 
+    background-color: #555;
+    opacity: .85;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+
+.scroll-nav-links span {
+    font-size: smaller;
+    margin-right: .5em;
+    color: #ccc;
+    text-transform: uppercase;
+}
+
+.scroll-nav-links a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
 }
