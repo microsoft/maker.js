@@ -2,7 +2,6 @@
 /// <reference path="playground.ts" />
 var MakerJsRequireIframe;
 (function (MakerJsRequireIframe) {
-    MakerJsRequireIframe.path = '../examples/';
     var Counter = (function () {
         function Counter() {
             this.required = 0;
@@ -29,7 +28,7 @@ var MakerJsRequireIframe;
     function runCode(javaScript) {
         var Fn = new Function('require', 'module', 'document', 'console', javaScript);
         var result = new Fn(window.require, window.module, document, parent.console); //call function with the "new" keyword so the "this" keyword is an instance
-        return result;
+        return window.module.exports || result;
     }
     var counter = new Counter();
     var html = '';
@@ -52,7 +51,7 @@ var MakerJsRequireIframe;
         counter.required++;
         var script = document.createElement('script');
         script.id = id;
-        script.src = MakerJsRequireIframe.path + id + '.js?' + new Date().getMilliseconds();
+        script.src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
         script.onload = function () {
             //save the requred module
             required[id] = window.module.exports;
@@ -68,10 +67,12 @@ var MakerJsRequireIframe;
     window.module = { exports: null };
     window.onload = function () {
         //get the code from the editor
-        var javaScript = parent.MakerJsPlayground.myCodeMirror.getDoc().getValue();
+        var javaScript = parent.MakerJsPlayground.codeMirrorEditor.getDoc().getValue();
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
         counter.complete = function () {
-            //when all requirements are collected, run the code against its requirements
+            //reset any calls to document.write
+            html = '';
+            //when all requirements are collected, run the code again, using its requirements
             var result = runCode(javaScript);
             //send results back to parent window
             parent.MakerJsPlayground.processResult(html, result);

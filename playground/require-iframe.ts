@@ -13,8 +13,6 @@ interface Window {
 
 module MakerJsRequireIframe {
 
-    export var path = '../examples/';
-
     class Counter {
         public required = 0;
         public loaded = 0;
@@ -41,7 +39,7 @@ module MakerJsRequireIframe {
         var Fn: any = new Function('require', 'module', 'document', 'console', javaScript);
         var result: any = new Fn(window.require, window.module, document, parent.console); //call function with the "new" keyword so the "this" keyword is an instance
 
-        return result;
+        return window.module.exports || result;
     }
 
     var counter = new Counter();
@@ -71,7 +69,7 @@ module MakerJsRequireIframe {
 
         var script: HTMLScriptElement = document.createElement('script');
         script.id = id;
-        script.src = path + id + '.js?' + new Date().getMilliseconds();
+        script.src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
 
         script.onload = () => {
             
@@ -96,13 +94,16 @@ module MakerJsRequireIframe {
     window.onload = function () {
 
         //get the code from the editor
-        var javaScript = parent.MakerJsPlayground.myCodeMirror.getDoc().getValue();
+        var javaScript = parent.MakerJsPlayground.codeMirrorEditor.getDoc().getValue();
 
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
 
         counter.complete = function () {
+            
+            //reset any calls to document.write
+            html = '';
 
-            //when all requirements are collected, run the code against its requirements
+            //when all requirements are collected, run the code again, using its requirements
             var result = runCode(javaScript);
 
             //send results back to parent window

@@ -7,6 +7,7 @@
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
     MakerJsPlayground.svgStrokeWidthInPixels = 2;
+    MakerJsPlayground.relativePath = '../examples/';
     var iframe;
     function processResult(html, result) {
         var model;
@@ -39,12 +40,21 @@ var MakerJsPlayground;
         document.body.removeChild(iframe);
     }
     MakerJsPlayground.processResult = processResult;
-    //export function downloadScript(url) {
-    //    //require.returnSource = true;
-    //    var script = require(url);
-    //    //require.returnSource = false;
-    //    return script;
-    //}
+    function filenameFromRequireId(id) {
+        return MakerJsPlayground.relativePath + id + '.js';
+    }
+    MakerJsPlayground.filenameFromRequireId = filenameFromRequireId;
+    function downloadScript(url, callback) {
+        var x = new XMLHttpRequest();
+        x.open('GET', url, true);
+        x.onreadystatechange = function () {
+            if (x.readyState == 4 && x.status == 200) {
+                callback(x.responseText);
+            }
+        };
+        x.send();
+    }
+    MakerJsPlayground.downloadScript = downloadScript;
     function runCodeFromEditor() {
         iframe = document.createElement('iframe');
         iframe.src = 'require-iframe.html';
@@ -71,10 +81,17 @@ var MakerJsPlayground;
     window.onload = function (ev) {
         MakerJsPlayground.makerjs = require('makerjs');
         var textarea = document.getElementById('javascript-code-textarea');
-        MakerJsPlayground.myCodeMirror = CodeMirror.fromTextArea(textarea, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
+        MakerJsPlayground.codeMirrorEditor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
         var qps = new QueryStringParams();
         var scriptname = qps['script'];
         if (scriptname && !isHttp(scriptname)) {
+            downloadScript(filenameFromRequireId(scriptname), function (download) {
+                MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+                runCodeFromEditor();
+            });
+        }
+        else {
+            runCodeFromEditor();
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));

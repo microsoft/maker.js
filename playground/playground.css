@@ -22,6 +22,11 @@ h2 {
     display: inline;
 }
 
+.logo a {
+    border: none;
+    text-decoration: none;
+}
+
 .logo img {
     vertical-align: text-bottom;
     margin-right: 0.5em;
@@ -34,7 +39,8 @@ h2 {
 #view-params {
     min-height: 50%;
     position: relative;
-    background-color: #317CCF;
+    background-color: #3176C4;
+    background-image: url('blueprint.png');
 }
 
 #params {
