@@ -4,23 +4,25 @@
     <title>Maker.js Playground</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="playground.css" rel="stylesheet" />
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
-
-    <script src="../external/TKRequire/TKRequire.js"></script>
     <script src="../target/js/browser.maker.js"></script>
     <script src="playground.js"></script>
-    <link href="playground.css" rel="stylesheet" />
 </head>
 <body>
-
-    <section class="logo"><img src="m.png" /><h2>Maker.js</h2></section>
+    
+    <header class="logo"><img src="m.png" /><h2>Maker.js</h2></header>
 
     <section id="view-params">
         <div id="params">
-            params
+            <div><label><input type="checkbox" /> fit on screen</label></div>
+            <div><label><input type="checkbox" /> show origin</label></div>
+            <div><label><input type="checkbox" /> show path id</label></div>
+            <hr />
+            params (how-to)
         </div>
         <div id="view"></div>
     </section>
@@ -35,14 +37,24 @@
     <section>
         <div class="code-header">
             JavaScript code editor
-            <button onclick="MakerJsPlayground.doEval()">&nbsp;&#x25BA; Run&nbsp;</button>
+            <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
             <span class="status"></span>
         </div>
-        <textarea id="textarea1"></textarea>
+        <textarea id="javascript-code-textarea">
+var makerjs = require('makerjs');
+
+this.paths = {
+    head: new makerjs.paths.Circle([0, 0], 90),
+    eye: new makerjs.paths.Circle([25, 25], 10),
+    mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
+    wink: new makerjs.paths.Line([-35, 20], [-15, 20])
+};
+</textarea>
     </section>
 
     <footer>
         Microsoft
     </footer>
+
 </body>
 </html>

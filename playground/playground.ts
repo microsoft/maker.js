@@ -5,51 +5,24 @@
 /// <reference path="../src/core/angle.ts" />
 /// <reference path="../src/core/intersect.ts" />
 
-//for TKRequire
-interface NodeRequire {
-    relativePath: string;
-    returnSource: boolean;
-    httpAlwaysGet: boolean;
-}
-
-require.relativePath = '../examples/';
-require.httpAlwaysGet = true;
-
 module MakerJsPlayground {
-
-    var makerjs: typeof MakerJs;
 
     export var myCodeMirror: CodeMirror.Editor;
     export var svgStrokeWidthInPixels = 2;
+    export var makerjs: typeof MakerJs;
 
-    interface MockNodeModule {
-        exports?: any;
-    }
+    var iframe: HTMLIFrameElement;
 
-    export function runJavaScriptGetHTML(javaScript: string): string {
-        var module: MockNodeModule = {};
-        var html = '';
-        var model: MakerJs.IModel = null;
+    export function processResult(html: string, result: any) {
 
-        //temporarily override document.write
-        var originalDocumentWrite = document.write;
-        document.write = function (markup) {
-            html += markup;
-        };
-
-        //evaluate the javaScript code
-        var Fn: any = new Function('require', 'module', 'document', javaScript);
-        var result: any = new Fn(require, module, document); //call function with the "new" keyword so the "this" keyword is an instance
-
-        //restore document.write to original
-        document.write = originalDocumentWrite;
+        var model: MakerJs.IModel;
 
         //see if output is either a Node module, or a MakerJs.IModel
-        if (module.exports) {
+        if (typeof result === 'function') {
 
             //construct an IModel from the Node module
-            var params = makerjs.kit.getParameterValues(module.exports);
-            model = makerjs.kit.construct(module.exports, params);
+            var params = makerjs.kit.getParameterValues(result);
+            model = makerjs.kit.construct(result, params);
 
         } else if (makerjs.isModel(result)) {
             model = result;
@@ -57,19 +30,18 @@ module MakerJsPlayground {
 
         if (model) {
 
-
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-//                origin: svgOrigin,
+                //origin: svgOrigin,
                 //viewBox: false,
-//                stroke: 'red',
+                //stroke: 'red',
                 strokeWidth: svgStrokeWidthInPixels + 'px',
-//                annotate: document.getElementById('checkAnnotate').checked,
-//                scale: Viewer.ViewScale * .8,
-//                useSvgPathOnly: false,
+                //annotate: document.getElementById('checkAnnotate').checked,
+                //scale: Viewer.ViewScale * .8,
+                //useSvgPathOnly: false,
                 //svgAttrs: { id: 'svg1' }
             };
 
-
+            //handle old IE
             if (model.units && window.navigator.userAgent.indexOf('Trident') > 0) {
                 var pixelsPerInch = 100;
                 var scale = makerjs.units.conversionScale(makerjs.unitType.Inch, model.units);
@@ -80,22 +52,23 @@ module MakerJsPlayground {
             html += makerjs.exporter.toSVG(model, renderOptions);
         }
 
-        return html;
-    }
-
-    export function downloadScript(url) {
-        require.returnSource = true;
-        var script = require(url);
-        require.returnSource = false;
-        return script;
-    }
-
-    export function doEval() {
-        var text = myCodeMirror.getDoc().getValue();
-
-        var html = runJavaScriptGetHTML(text);
-
         document.getElementById('view').innerHTML = html;
+
+        document.body.removeChild(iframe);
+    }
+
+    //export function downloadScript(url) {
+    //    //require.returnSource = true;
+    //    var script = require(url);
+    //    //require.returnSource = false;
+    //    return script;
+    //}
+
+    export function runCodeFromEditor() {
+        iframe = document.createElement('iframe');
+        iframe.src = 'require-iframe.html';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
     }
 
     function isHttp(url: string): boolean {
@@ -117,24 +90,25 @@ module MakerJsPlayground {
 
     window.onload = function (ev) {
 
-        //need to call this to cache it once
         makerjs = require('makerjs');
 
-        var textarea1 = document.getElementById('textarea1') as HTMLTextAreaElement;
+        var textarea = document.getElementById('javascript-code-textarea') as HTMLTextAreaElement;
+        myCodeMirror = CodeMirror.fromTextArea(textarea, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
 
         var qps = new QueryStringParams();
         var scriptname = qps['script'];
 
         if (scriptname && !isHttp(scriptname)) {
 
-            var script = downloadScript(scriptname);
-            textarea1.value = script;
-            var html = runJavaScriptGetHTML(script);
+            //var script = downloadScript(scriptname);
 
-            document.getElementById('view').innerHTML = html;
+
+            //textarea1.value = script;
+            //var html = runJavaScriptGetHTML(script);
+
+            //document.getElementById('view').innerHTML = html;
         }
 
-        myCodeMirror = CodeMirror.fromTextArea(textarea1, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
 
     };
 }

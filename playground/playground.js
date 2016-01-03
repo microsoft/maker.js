@@ -4,66 +4,54 @@
 /// <reference path="../src/core/svg.ts" />
 /// <reference path="../src/core/angle.ts" />
 /// <reference path="../src/core/intersect.ts" />
-require.relativePath = '../examples/';
-require.httpAlwaysGet = true;
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
-    var makerjs;
     MakerJsPlayground.svgStrokeWidthInPixels = 2;
-    function runJavaScriptGetHTML(javaScript) {
-        var module = {};
-        var html = '';
-        var model = null;
-        //temporarily override document.write
-        var originalDocumentWrite = document.write;
-        document.write = function (markup) {
-            html += markup;
-        };
-        //evaluate the javaScript code
-        var Fn = new Function('require', 'module', 'document', javaScript);
-        var result = new Fn(require, module, document); //call function with the "new" keyword so the "this" keyword is an instance
-        //restore document.write to original
-        document.write = originalDocumentWrite;
+    var iframe;
+    function processResult(html, result) {
+        var model;
         //see if output is either a Node module, or a MakerJs.IModel
-        if (module.exports) {
+        if (typeof result === 'function') {
             //construct an IModel from the Node module
-            var params = makerjs.kit.getParameterValues(module.exports);
-            model = makerjs.kit.construct(module.exports, params);
+            var params = MakerJsPlayground.makerjs.kit.getParameterValues(result);
+            model = MakerJsPlayground.makerjs.kit.construct(result, params);
         }
-        else if (makerjs.isModel(result)) {
+        else if (MakerJsPlayground.makerjs.isModel(result)) {
             model = result;
         }
         if (model) {
             var renderOptions = {
-                //                origin: svgOrigin,
+                //origin: svgOrigin,
                 //viewBox: false,
-                //                stroke: 'red',
+                //stroke: 'red',
                 strokeWidth: MakerJsPlayground.svgStrokeWidthInPixels + 'px',
             };
+            //handle old IE
             if (model.units && window.navigator.userAgent.indexOf('Trident') > 0) {
                 var pixelsPerInch = 100;
-                var scale = makerjs.units.conversionScale(makerjs.unitType.Inch, model.units);
+                var scale = MakerJsPlayground.makerjs.units.conversionScale(MakerJsPlayground.makerjs.unitType.Inch, model.units);
                 var pixel = scale / pixelsPerInch;
-                renderOptions.strokeWidth = (MakerJsPlayground.svgStrokeWidthInPixels * pixel * makerjs.exporter.svgUnit[model.units].scaleConversion).toString();
+                renderOptions.strokeWidth = (MakerJsPlayground.svgStrokeWidthInPixels * pixel * MakerJsPlayground.makerjs.exporter.svgUnit[model.units].scaleConversion).toString();
             }
-            html += makerjs.exporter.toSVG(model, renderOptions);
+            html += MakerJsPlayground.makerjs.exporter.toSVG(model, renderOptions);
         }
-        return html;
-    }
-    MakerJsPlayground.runJavaScriptGetHTML = runJavaScriptGetHTML;
-    function downloadScript(url) {
-        require.returnSource = true;
-        var script = require(url);
-        require.returnSource = false;
-        return script;
-    }
-    MakerJsPlayground.downloadScript = downloadScript;
-    function doEval() {
-        var text = MakerJsPlayground.myCodeMirror.getDoc().getValue();
-        var html = runJavaScriptGetHTML(text);
         document.getElementById('view').innerHTML = html;
+        document.body.removeChild(iframe);
     }
-    MakerJsPlayground.doEval = doEval;
+    MakerJsPlayground.processResult = processResult;
+    //export function downloadScript(url) {
+    //    //require.returnSource = true;
+    //    var script = require(url);
+    //    //require.returnSource = false;
+    //    return script;
+    //}
+    function runCodeFromEditor() {
+        iframe = document.createElement('iframe');
+        iframe.src = 'require-iframe.html';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+    }
+    MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
     function isHttp(url) {
         return "http" === url.substr(0, 4);
     }
@@ -81,18 +69,13 @@ var MakerJsPlayground;
         return QueryStringParams;
     })();
     window.onload = function (ev) {
-        //need to call this to cache it once
-        makerjs = require('makerjs');
-        var textarea1 = document.getElementById('textarea1');
+        MakerJsPlayground.makerjs = require('makerjs');
+        var textarea = document.getElementById('javascript-code-textarea');
+        MakerJsPlayground.myCodeMirror = CodeMirror.fromTextArea(textarea, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
         var qps = new QueryStringParams();
         var scriptname = qps['script'];
         if (scriptname && !isHttp(scriptname)) {
-            var script = downloadScript(scriptname);
-            textarea1.value = script;
-            var html = runJavaScriptGetHTML(script);
-            document.getElementById('view').innerHTML = html;
         }
-        MakerJsPlayground.myCodeMirror = CodeMirror.fromTextArea(textarea1, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
 //# sourceMappingURL=playground.js.map

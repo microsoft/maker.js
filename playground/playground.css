@@ -8,8 +8,7 @@ body {
     padding: 1em;
 }
 
-section {
-    clear: both;
+header, section, footer {
     margin-bottom: 1em;
 }
 
@@ -46,11 +45,13 @@ h2 {
     position: absolute;
     right: 0;
     box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
+    color: #555;
 }
 
 #view {
     padding: 1em;
     overflow: auto;
+    color: #fff;
 }
 
 svg line, svg circle, svg path {
@@ -78,8 +79,4 @@ svg line, svg circle, svg path {
 
 .CodeMirror {
     height: auto;
-}
-
-footer {
-    margin-bottom: 1em;
 }
