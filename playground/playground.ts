@@ -8,7 +8,6 @@
 module MakerJsPlayground {
 
     export var codeMirrorEditor: CodeMirror.Editor;
-    export var svgStrokeWidthInPixels = 2;
     export var makerjs: typeof MakerJs;
     export var relativePath = '../examples/';
 
@@ -31,26 +30,45 @@ module MakerJsPlayground {
 
         if (model) {
 
-            var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-                //origin: svgOrigin,
-                //viewBox: false,
-                //stroke: 'red',
-                strokeWidth: svgStrokeWidthInPixels + 'px',
-                //annotate: document.getElementById('checkAnnotate').checked,
-                //scale: Viewer.ViewScale * .8,
-                //useSvgPathOnly: false,
-                //svgAttrs: { id: 'svg1' }
-            };
+            var pixelsPerInch = 100;
 
-            //handle old IE
-            if (model.units && window.navigator.userAgent.indexOf('Trident') > 0) {
-                var pixelsPerInch = 100;
-                var scale = makerjs.units.conversionScale(makerjs.unitType.Inch, model.units);
-                var pixel = scale / pixelsPerInch;
-                renderOptions.strokeWidth = (svgStrokeWidthInPixels * pixel * makerjs.exporter.svgUnit[model.units].scaleConversion).toString();
+            var measure = makerjs.measure.modelExtents(model);
+
+            var viewScale = 1;
+
+            if (model.units) {                
+                //cast into inches, then to pixels
+                viewScale *= makerjs.units.conversionScale(model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
 
-            html += makerjs.exporter.toSVG(model, renderOptions);
+            var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
+                //origin: svgOrigin,
+                //annotate: document.getElementById('checkAnnotate').checked,
+                //annotate: true,
+                scale: viewScale
+            };
+
+            var renderModel: MakerJs.IModel;
+
+            if (true) {
+
+                renderModel = {
+                    paths: {
+                        'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                        'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                    },
+                    models: {
+                        model: model
+                    },
+                };
+
+            } else {
+
+                delete model.units;
+                renderModel = model;
+            }
+
+            html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
 
         document.getElementById('view').innerHTML = html;

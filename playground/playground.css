@@ -39,7 +39,7 @@ h2 {
 #view-params {
     min-height: 50%;
     position: relative;
-    background-color: #3176C4;
+    background-color: #3177C6;
     background-image: url('blueprint.png');
 }
 
@@ -49,6 +49,7 @@ h2 {
     margin: 1em;
     background-color: #fff;
     position: absolute;
+    top: 0;
     right: 0;
     box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
     color: #555;
@@ -62,11 +63,26 @@ h2 {
 
 svg line, svg circle, svg path {
     stroke: #fff;
+    stroke-width: 2px;
     fill: none;
 }
 
 #view svg {
     padding: 1em;
+}
+
+#view svg text {
+    fill: #0ff;
+    stroke: none;
+}
+
+#crosshairs-vertical, #crosshairs-horizontal {
+    stroke: #4DD2FF;
+    stroke-width: 1;
+}
+
+#crosshairs-horizontal_text, #crosshairs-vertical_text {
+    display: none;
 }
 
 .code-header {

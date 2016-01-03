@@ -6,7 +6,6 @@
 /// <reference path="../src/core/intersect.ts" />
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
-    MakerJsPlayground.svgStrokeWidthInPixels = 2;
     MakerJsPlayground.relativePath = '../examples/';
     var iframe;
     function processResult(html, result) {
@@ -21,20 +20,36 @@ var MakerJsPlayground;
             model = result;
         }
         if (model) {
+            var pixelsPerInch = 100;
+            var measure = MakerJsPlayground.makerjs.measure.modelExtents(model);
+            var viewScale = 1;
+            if (model.units) {
+                //cast into inches, then to pixels
+                viewScale *= MakerJsPlayground.makerjs.units.conversionScale(model.units, MakerJsPlayground.makerjs.unitType.Inch) * pixelsPerInch;
+            }
             var renderOptions = {
                 //origin: svgOrigin,
-                //viewBox: false,
-                //stroke: 'red',
-                strokeWidth: MakerJsPlayground.svgStrokeWidthInPixels + 'px',
+                //annotate: document.getElementById('checkAnnotate').checked,
+                //annotate: true,
+                scale: viewScale
             };
-            //handle old IE
-            if (model.units && window.navigator.userAgent.indexOf('Trident') > 0) {
-                var pixelsPerInch = 100;
-                var scale = MakerJsPlayground.makerjs.units.conversionScale(MakerJsPlayground.makerjs.unitType.Inch, model.units);
-                var pixel = scale / pixelsPerInch;
-                renderOptions.strokeWidth = (MakerJsPlayground.svgStrokeWidthInPixels * pixel * MakerJsPlayground.makerjs.exporter.svgUnit[model.units].scaleConversion).toString();
+            var renderModel;
+            if (true) {
+                renderModel = {
+                    paths: {
+                        'crosshairs-vertical': new MakerJsPlayground.makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                        'crosshairs-horizontal': new MakerJsPlayground.makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                    },
+                    models: {
+                        model: model
+                    },
+                };
             }
-            html += MakerJsPlayground.makerjs.exporter.toSVG(model, renderOptions);
+            else {
+                delete model.units;
+                renderModel = model;
+            }
+            html += MakerJsPlayground.makerjs.exporter.toSVG(renderModel, renderOptions);
         }
         document.getElementById('view').innerHTML = html;
         document.body.removeChild(iframe);
