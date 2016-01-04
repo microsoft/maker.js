@@ -53,7 +53,7 @@ h2 {
 }
 
 #rendering-options-menu, #rendering-options-top {
-    width: 18em;
+    width: 14em;
     padding: .5em 1em 1em 1em;
     margin: 1em;
     background-color: #fff;
@@ -78,6 +78,7 @@ h2 {
     border: none;
     outline: none;
     font-size: medium;
+    padding-right: 0;
 }
 
 #rendering-options-top button .icon.dropdown {
@@ -109,18 +110,32 @@ h2 {
     float: right;
 }
 
+#rendering-options-menu hr {
+    margin: 1em 0;
+    border-color: inherit;
+    border-style: inherit;
+}
+
+#rendering-options-menu hr ~ div > label {
+    letter-spacing: 1px;
+    font-variant: small-caps;
+    color: #777
+}
+
 .collapse-rendering-options #rendering-options-menu {
     visibility: hidden;
 }
 
 #params div {
-    height: 2em;
+    margin-bottom: .5em;
 }
 
 #params input[type=range] {
     width: 8em;
     margin: 0;
     padding: 0;
+    position: relative;
+    top: 6px;
 }
 
 #view {
@@ -157,6 +172,22 @@ svg line, svg circle, svg path {
     display: none;
 }
 
+#download a {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    color: #555;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+    margin-top: .5em;
+    margin-right: 1em;
+    padding-top: .2em;
+    padding-bottom: .3em;
+    width: 9em;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: smaller;
+}
 .code-header {
     font-family: monospace;
     background-color: #d0d0d0;

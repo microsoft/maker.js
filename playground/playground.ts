@@ -9,15 +9,22 @@ declare var makerjs: typeof MakerJs;
 
 module MakerJsPlayground {
 
-    export var codeMirrorEditor: CodeMirror.Editor;
-    export var relativePath = '../examples/';
+    //classes
 
-    var pixelsPerInch = 100;
-    var iframe: HTMLIFrameElement;
-    var renderingOptionsMenu: HTMLDivElement;
-    var view: HTMLDivElement;
-    var hMargin: number;
-    var vMargin: number;
+    class QueryStringParams {
+
+        constructor(querystring: string = document.location.search.substring(1)) {
+            if (querystring) {
+                var pairs = querystring.split('&');
+                for (var i = 0; i < pairs.length; i++) {
+                    var pair = pairs[i].split('=');
+                    this[pair[0]] = decodeURIComponent(pair[1]);
+                }
+            }
+        }
+    }
+
+    //interfaces
 
     interface IProcessedResult {
         html: string;
@@ -27,6 +34,14 @@ module MakerJsPlayground {
         paramHtml: string;
     }
 
+    //private members
+
+    var pixelsPerInch = 100;
+    var iframe: HTMLIFrameElement;
+    var renderingOptionsMenu: HTMLDivElement;
+    var view: HTMLDivElement;
+    var hMargin: number;
+    var vMargin: number;
     var processed: IProcessedResult = {
         html: '',
         kit: null,
@@ -35,35 +50,8 @@ module MakerJsPlayground {
         paramHtml: ''
     };
 
-    export function processResult(html: string, result: any) {
-
-        processed.html = html;
-        processed.model = null;
-        processed.paramValues = null;
-        processed.paramHtml = '';
-
-        //see if output is either a Node module, or a MakerJs.IModel
-        if (typeof result === 'function') {
-
-            populateParams((<MakerJs.IKit>result).metaParameters);
-
-            processed.kit = result;
-
-            //construct an IModel from the Node module
-            processed.model = makerjs.kit.construct(result, processed.paramValues);
-
-        } else if (makerjs.isModel(result)) {
-            processed.model = result;
-        }
-
-        document.getElementById('params').innerHTML = processed.paramHtml;
-
-        render();
-
-        //now safe to render, so register a resize listener
-        if (!window.onresize) {
-            window.onresize = render;
-        }
+    function isHttp(url: string): boolean {
+        return "http" === url.substr(0, 4);
     }
 
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
@@ -148,6 +136,54 @@ module MakerJsPlayground {
 
         processed.paramValues = paramValues;
         processed.paramHtml = paramHtml;
+    }
+
+    //public members
+
+    export var codeMirrorEditor: CodeMirror.Editor;
+    export var codeMirrorOptions: CodeMirror.EditorConfiguration = {
+        lineNumbers: true,
+        theme: 'twilight',
+        viewportMargin: Infinity
+    };
+    export var relativePath = '';
+
+    export function runCodeFromEditor() {
+        iframe = document.createElement('iframe');
+        iframe.src = 'require-iframe.html';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+    }
+
+    export function processResult(html: string, result: any) {
+
+        processed.html = html;
+        processed.model = null;
+        processed.paramValues = null;
+        processed.paramHtml = '';
+
+        //see if output is either a Node module, or a MakerJs.IModel
+        if (typeof result === 'function') {
+
+            populateParams((<MakerJs.IKit>result).metaParameters);
+
+            processed.kit = result;
+
+            //construct an IModel from the Node module
+            processed.model = makerjs.kit.construct(result, processed.paramValues);
+
+        } else if (makerjs.isModel(result)) {
+            processed.model = result;
+        }
+
+        document.getElementById('params').innerHTML = processed.paramHtml;
+
+        render();
+
+        //now safe to render, so register a resize listener
+        if (!window.onresize) {
+            window.onresize = render;
+        }
     }
 
     export function setParam(index: number, value: any) {
@@ -243,33 +279,59 @@ module MakerJsPlayground {
         x.send();
     }
 
-    export function runCodeFromEditor() {
-        iframe = document.createElement('iframe');
-        iframe.src = 'require-iframe.html';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
+    export function toggleClass(name) {
+        var c = document.body.classList;
+        if (c.contains(name)) {
+            c.remove(name);
+        } else {
+            c.add(name);
+        }
+        MakerJsPlayground.render();
     }
 
-    function isHttp(url: string): boolean {
-        return "http" === url.substr(0, 4);
-    }
+    export function getRaw(type) {
+        switch (type) {
+            case "dxf":
+                return makerjs.exporter.toDXF(processed.model);
 
-    class QueryStringParams {
+            case "svg":
+                return makerjs.exporter.toSVG(processed.model);
 
-        constructor(querystring: string = document.location.search.substring(1)) {
-            if (querystring) {
-                var pairs = querystring.split('&');
-                for (var i = 0; i < pairs.length; i++) {
-                    var pair = pairs[i].split('=');
-                    this[pair[0]] = decodeURIComponent(pair[1]);
-                }
-            }
+            case "json":
+                return JSON.stringify(processed.model);
+
+            case "openjscad":
+                return makerjs.exporter.toOpenJsCad(processed.model);
+
+            case "stl":
+                return makerjs.exporter.toSTL(processed.model);
         }
     }
 
-    window.onload = function (ev) {
+    export function getExport(type) {
+        var raw = getRaw(type);
+        var encoded = encodeURIComponent(raw);
+        switch (type) {
+            case "dxf":
+                return "data:application/dxf," + encoded;
 
-        makerjs = require('makerjs');
+            case "svg":
+                return "data:image/svg+xml," + encoded;
+
+            case "json":
+                return "data:application/json," + encoded;
+
+            case "openjscad":
+                return "data:text/javascript," + encoded;
+
+            case "stl":
+                return "data:application/stl," + encoded;
+        }
+    }
+
+    //execution
+
+    window.onload = function (ev) {
 
         renderingOptionsMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
         view = document.getElementById('view') as HTMLDivElement;
@@ -279,8 +341,14 @@ module MakerJsPlayground {
         hMargin = viewMeasure.offsetLeft;
         vMargin = viewMeasure.offsetTop;
 
-        var textarea = document.getElementById('javascript-code-textarea') as HTMLTextAreaElement;
-        codeMirrorEditor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, theme: 'twilight', viewportMargin: Infinity });
+        var pre = document.getElementById('init-javascript-code') as HTMLPreElement;
+        codeMirrorOptions.value = pre.innerText;
+        codeMirrorEditor = CodeMirror(
+            function (elt) {
+                pre.parentNode.replaceChild(elt, pre);
+            },
+            codeMirrorOptions
+        );
 
         var qps = new QueryStringParams();
         var scriptname = qps['script'];
