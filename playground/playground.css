@@ -1,7 +1,9 @@
 ﻿html, body {
-    height: 100%;
-    font-family: 'Segoe UI', sans-serif;
     margin: 0;
+}
+
+html, body, button {
+    font-family: 'Segoe UI', sans-serif;
 }
 
 body {
@@ -15,6 +17,8 @@ a[name=top] {
 
 header, section, footer {
     margin-bottom: 1em;
+    clear: both;
+    position: relative;
 }
 
 h2 {
@@ -42,32 +46,91 @@ h2 {
 }
 
 #view-params {
-    min-height: 100px;
-    position: relative;
+    min-height: 23em;
+    overflow: hidden;
     background-color: #3177C6;
     background-image: url('blueprint.png');
 }
 
-#params {
+#rendering-options-menu, #rendering-options-top {
     width: 18em;
     padding: .5em 1em 1em 1em;
     margin: 1em;
     background-color: #fff;
-    position: absolute;
-    top: 0;
-    right: 0;
-    box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
+    border: 1px solid #ddd;
     color: #555;
+    box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
 }
 
-#view-container {
-    overflow: auto;
+#rendering-options-top {
+    position: absolute;
+    right: 0;
+    bottom: -30px;
+    padding-bottom: 30px;
+    margin-bottom: 0;
+    border-bottom-color: #fff;
+    text-align: right;
+}
+
+#rendering-options-top button {
+    background-color: #fff;
+    color: #555;
+    border: none;
+    outline: none;
+    font-size: medium;
+}
+
+#rendering-options-top button .icon.dropdown {
+    display: none;
+}
+
+.collapse-rendering-options #rendering-options-top button .icon.dropdown {
+    display: inline;
+}
+
+.collapse-rendering-options #rendering-options-top button .icon.dropup {
+    display: none;
+}
+
+.collapse-rendering-options #rendering-options-top {
+    background-color: transparent;
+    border-color: transparent;
+    bottom: 0;
+    padding-bottom: 0;
+    box-shadow: none;
+}
+
+#rendering-options-menu {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+
+    position: relative;
+    float: right;
+}
+
+.collapse-rendering-options #rendering-options-menu {
+    visibility: hidden;
+}
+
+#params div {
+    height: 2em;
+}
+
+#params input[type=range] {
+    width: 8em;
+    margin: 0;
+    padding: 0;
 }
 
 #view {
-    padding: 2em;
     color: #fff;
-    overflow-y: hidden;
+    padding: 2em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 svg line, svg circle, svg path {

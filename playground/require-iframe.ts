@@ -9,6 +9,7 @@ interface Window {
     require: NodeRequireFunction;
     module: MockNodeModule;
     MakerJsPlayground: typeof MakerJsPlayground;
+    makerjs: typeof MakerJs;
 }
 
 module MakerJsRequireIframe {
@@ -45,8 +46,8 @@ module MakerJsRequireIframe {
     var counter = new Counter();
     var html = '';
     var required = {
-        'makerjs': parent.MakerJsPlayground.makerjs,
-        './../target/js/node.maker.js': parent.MakerJsPlayground.makerjs
+        'makerjs': parent.makerjs,
+        './../target/js/node.maker.js': parent.makerjs
     };
 
     //override document.write
@@ -96,12 +97,18 @@ module MakerJsRequireIframe {
         //get the code from the editor
         var javaScript = parent.MakerJsPlayground.codeMirrorEditor.getDoc().getValue();
 
+        var originalAlert = window.alert;
+        window.alert = function () { };
+
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
 
         counter.complete = function () {
             
             //reset any calls to document.write
             html = '';
+
+            //reinstate alert
+            window.alert = originalAlert;
 
             //when all requirements are collected, run the code again, using its requirements
             var result = runCode(javaScript);
