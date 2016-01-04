@@ -127,13 +127,15 @@ h2 {
 }
 
 #params div {
-    height: 2em;
+    margin-bottom: .5em;
 }
 
 #params input[type=range] {
     width: 8em;
     margin: 0;
     padding: 0;
+    position: relative;
+    top: 6px;
 }
 
 #view {
