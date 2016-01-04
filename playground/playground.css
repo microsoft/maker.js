@@ -48,15 +48,16 @@ h2 {
     background-image: url('blueprint.png');
 }
 
-#params {
+#tools {
     width: 18em;
     padding: .5em 1em 1em 1em;
     margin: 1em;
     background-color: #fff;
     position: absolute;
-    top: 0;
+    top: -4em;
     right: 0;
     box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
+    border: 1px solid #ddd;
     color: #555;
 }
 

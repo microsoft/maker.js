@@ -5,10 +5,11 @@
 /// <reference path="../src/core/angle.ts" />
 /// <reference path="../src/core/intersect.ts" />
 
+declare var makerjs: typeof MakerJs;
+
 module MakerJsPlayground {
 
     export var codeMirrorEditor: CodeMirror.Editor;
-    export var makerjs: typeof MakerJs;
     export var relativePath = '../examples/';
 
     var pixelsPerInch = 100;
@@ -18,31 +19,141 @@ module MakerJsPlayground {
 
     interface IProcessedResult {
         html: string;
+        kit: MakerJs.IKit;
         model: MakerJs.IModel;
+        paramValues: any[],
+        paramHtml: string;
     }
 
     var processed: IProcessedResult = {
         html: '',
-        model: null
+        kit: null,
+        model: null,
+        paramValues: [],
+        paramHtml: ''
     };
 
     export function processResult(html: string, result: any) {
 
         processed.html = html;
         processed.model = null;
+        processed.paramValues = null;
+        processed.paramHtml = '';
 
         //see if output is either a Node module, or a MakerJs.IModel
         if (typeof result === 'function') {
 
+            populateParams((<MakerJs.IKit>result).metaParameters);
+
+            processed.kit = result;
+
             //construct an IModel from the Node module
-            var params = makerjs.kit.getParameterValues(result);
-            processed.model = makerjs.kit.construct(result, params);
+            processed.model = makerjs.kit.construct(result, processed.paramValues);
 
         } else if (makerjs.isModel(result)) {
             processed.model = result;
         }
 
-        document.body.removeChild(iframe);
+        //document.body.removeChild(iframe);
+
+        document.getElementById('params').innerHTML = processed.paramHtml;
+
+        render();
+    }
+
+    function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
+
+        if (metaParameters) {
+
+            var paramValues = [];
+            var paramHtml = '';
+
+            for (var i = 0; i < metaParameters.length; i++) {
+                var attrs = makerjs.cloneObject(metaParameters[i]);
+
+                var id = 'input_' + i;
+                var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
+                label.innerText = attrs.title + ': ';
+
+                var input = null;
+
+                switch (attrs.type) {
+
+                    case 'range':
+                        attrs.title = attrs.value;
+                        input = new makerjs.exporter.XmlTag('input', attrs);
+                        input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
+                        input.attrs['id'] = id;
+
+                        paramValues.push(attrs.value);
+
+                        break;
+
+                    case 'bool':
+
+                        var checkboxAttrs = {
+                            id: id,
+                            type: 'checkbox',
+                            onchange: 'MakerJsPlayground.setParam(' + i + ', this.checked)'
+                        };
+
+                        if (attrs.value) {
+                            checkboxAttrs['checked'] = true;
+                        }
+
+                        input = new makerjs.exporter.XmlTag('input', checkboxAttrs);
+
+                        paramValues.push(attrs.value);
+
+                        break;
+
+                    case 'select':
+
+                        var selectAttrs = {
+                            id: id,
+                            onchange: 'MakerJsPlayground.setParam(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
+                        };
+
+                        input = new makerjs.exporter.XmlTag('select', selectAttrs);
+                        var options = '';
+
+                        for (var j = 0; j < attrs.value.length; j++) {
+                            var option = new makerjs.exporter.XmlTag('option');
+                            option.innerText = JSON.stringify(attrs.value[j]);
+
+                            options += option.toString();
+                        }
+
+                        input.innerText = options;
+                        input.innerTextEscaped = true;
+
+                        paramValues.push(attrs.value[0]);
+
+                        break;
+                }
+
+                if (!input) continue;
+
+                var div = new makerjs.exporter.XmlTag('div');
+                div.innerText = label.toString() + input.toString();
+                div.innerTextEscaped = true;
+                paramHtml += div.toString();
+            }
+        }
+
+        processed.paramValues = paramValues;
+        processed.paramHtml = paramHtml;
+    }
+
+    export function setParam(index: number, value: any) {
+        processed.paramValues[index] = value;
+
+        //see if output is either a Node module, or a MakerJs.IModel
+        if (processed.kit) {
+
+            //construct an IModel from the kit
+            processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+        }
 
         render();
     }
@@ -61,9 +172,9 @@ module MakerJsPlayground {
 
             //width mode
             if (true) {
-                width = document.getElementById("params").offsetLeft - 2 * hMargin;
+                width = document.getElementById('tools').offsetLeft - 2 * hMargin;
             } else {
-                width = document.getElementById("view-params").offsetWidth;
+                width = document.getElementById('view-params').offsetWidth;
             }
             height = window.innerHeight - 9.75 * vMargin;
 

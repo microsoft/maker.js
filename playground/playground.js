@@ -13,43 +13,118 @@ var MakerJsPlayground;
     var vMargin;
     var processed = {
         html: '',
-        model: null
+        kit: null,
+        model: null,
+        paramValues: [],
+        paramHtml: ''
     };
     function processResult(html, result) {
         processed.html = html;
         processed.model = null;
+        processed.paramValues = null;
+        processed.paramHtml = '';
         //see if output is either a Node module, or a MakerJs.IModel
         if (typeof result === 'function') {
+            populateParams(result.metaParameters);
+            processed.kit = result;
             //construct an IModel from the Node module
-            var params = MakerJsPlayground.makerjs.kit.getParameterValues(result);
-            processed.model = MakerJsPlayground.makerjs.kit.construct(result, params);
+            processed.model = makerjs.kit.construct(result, processed.paramValues);
         }
-        else if (MakerJsPlayground.makerjs.isModel(result)) {
+        else if (makerjs.isModel(result)) {
             processed.model = result;
         }
-        document.body.removeChild(iframe);
+        //document.body.removeChild(iframe);
+        document.getElementById('params').innerHTML = processed.paramHtml;
         render();
     }
     MakerJsPlayground.processResult = processResult;
+    function populateParams(metaParameters) {
+        if (metaParameters) {
+            var paramValues = [];
+            var paramHtml = '';
+            for (var i = 0; i < metaParameters.length; i++) {
+                var attrs = makerjs.cloneObject(metaParameters[i]);
+                var id = 'input_' + i;
+                var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
+                label.innerText = attrs.title + ': ';
+                var input = null;
+                switch (attrs.type) {
+                    case 'range':
+                        attrs.title = attrs.value;
+                        input = new makerjs.exporter.XmlTag('input', attrs);
+                        input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
+                        input.attrs['id'] = id;
+                        paramValues.push(attrs.value);
+                        break;
+                    case 'bool':
+                        var checkboxAttrs = {
+                            id: id,
+                            type: 'checkbox',
+                            onchange: 'MakerJsPlayground.setParam(' + i + ', this.checked)'
+                        };
+                        if (attrs.value) {
+                            checkboxAttrs['checked'] = true;
+                        }
+                        input = new makerjs.exporter.XmlTag('input', checkboxAttrs);
+                        paramValues.push(attrs.value);
+                        break;
+                    case 'select':
+                        var selectAttrs = {
+                            id: id,
+                            onchange: 'MakerJsPlayground.setParam(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
+                        };
+                        input = new makerjs.exporter.XmlTag('select', selectAttrs);
+                        var options = '';
+                        for (var j = 0; j < attrs.value.length; j++) {
+                            var option = new makerjs.exporter.XmlTag('option');
+                            option.innerText = JSON.stringify(attrs.value[j]);
+                            options += option.toString();
+                        }
+                        input.innerText = options;
+                        input.innerTextEscaped = true;
+                        paramValues.push(attrs.value[0]);
+                        break;
+                }
+                if (!input)
+                    continue;
+                var div = new makerjs.exporter.XmlTag('div');
+                div.innerText = label.toString() + input.toString();
+                div.innerTextEscaped = true;
+                paramHtml += div.toString();
+            }
+        }
+        processed.paramValues = paramValues;
+        processed.paramHtml = paramHtml;
+    }
+    function setParam(index, value) {
+        processed.paramValues[index] = value;
+        //see if output is either a Node module, or a MakerJs.IModel
+        if (processed.kit) {
+            //construct an IModel from the kit
+            processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+        }
+        render();
+    }
+    MakerJsPlayground.setParam = setParam;
     function render() {
         //remove content so default size can be measured
         document.getElementById('view').innerHTML = '';
         if (processed.model) {
-            var measure = MakerJsPlayground.makerjs.measure.modelExtents(processed.model);
+            var measure = makerjs.measure.modelExtents(processed.model);
             var height;
             var width;
             var viewScale = 1;
             //width mode
             if (true) {
-                width = document.getElementById("params").offsetLeft - 2 * hMargin;
+                width = document.getElementById('tools').offsetLeft - 2 * hMargin;
             }
             else {
-                width = document.getElementById("view-params").offsetWidth;
+                width = document.getElementById('view-params').offsetWidth;
             }
             height = window.innerHeight - 9.75 * vMargin;
             if (processed.model.units) {
                 //cast into inches, then to pixels
-                viewScale *= MakerJsPlayground.makerjs.units.conversionScale(processed.model.units, MakerJsPlayground.makerjs.unitType.Inch) * pixelsPerInch;
+                viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
             if (document.getElementById('check-fit-on-screen').checked) {
                 var modelHeightNatural = measure.high[1] - measure.low[1];
@@ -73,12 +148,12 @@ var MakerJsPlayground;
             };
             if (document.getElementById('check-show-origin').checked) {
                 renderModel.paths = {
-                    'crosshairs-vertical': new MakerJsPlayground.makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
-                    'crosshairs-horizontal': new MakerJsPlayground.makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                    'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                    'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
                 };
             }
             var html = processed.html;
-            html += MakerJsPlayground.makerjs.exporter.toSVG(renderModel, renderOptions);
+            html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
         document.getElementById('view').innerHTML = html;
     }
@@ -122,7 +197,7 @@ var MakerJsPlayground;
         return QueryStringParams;
     })();
     window.onload = function (ev) {
-        MakerJsPlayground.makerjs = require('makerjs');
+        makerjs = require('makerjs');
         var viewMeasure = document.getElementById('view-measure');
         hMargin = viewMeasure.offsetLeft;
         vMargin = viewMeasure.offsetTop;
