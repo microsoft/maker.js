@@ -3,55 +3,58 @@
 <head>
     <title>Maker.js Playground</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=100">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10">
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
     <link href="playground.css" rel="stylesheet" />
+
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
+    <script src="../external/OpenJsCad/csg.js"></script>
+    <script src="../external/OpenJsCad/formats.js"></script>
+
     <script src="../target/js/browser.maker.js"></script>
     <script>
         var makerjs = require('makerjs');
-
-        function toggleClass(name) {
-            var c = document.body.classList;
-            if (c.contains(name)) {
-                c.remove(name);
-            } else {
-                c.add(name);
-            }
-            MakerJsPlayground.render();
-        }
-        
     </script>
+
     <script src="playground.js"></script>
+    <script>
+        //config
+        MakerJsPlayground.relativePath = '../examples/';
+    </script>
+
 </head>
 <body>
     <a name="top"></a>
-    <div>
 
         <header class="logo">
             <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h2>Maker.js</h2></a>
             <div id="rendering-options-top">
-                <button onclick="toggleClass('collapse-rendering-options')" >rendering options <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
+            <button onclick="MakerJsPlayground.toggleClass('collapse-rendering-options')">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
             </div>
         </header>
-
 
         <section id="view-params">
             <div id="view"><div id="view-measure"></div></div>
             <div id="rendering-options-menu">
+            <div id="params"></div>
+            <hr />
                 <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
                 <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
                 <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
-                <hr />
-                <div id="params"></div>
-                params (how-to)
             </div>
         </section>
 
-        <section>
-            <button>download</button>
+    <section id="download">
+        <div>
+            Download your customized drawing
+        </div>
+        <a href="#" onclick="this.href = MakerJsPlayground.getExport('dxf');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.dxf">.dxf</a>
+        <a href="#" onclick="this.href = MakerJsPlayground.getExport('svg');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.svg">.svg</a>
+        <a href="#" onclick="this.href = MakerJsPlayground.getExport('json');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.json">json</a>
+        <a href="#" onclick="this.href = MakerJsPlayground.getExport('openjscad');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.txt">openjscad</a>
+        <a href="#" onclick="this.href = MakerJsPlayground.getExport('stl');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.stl">.stl</a>
         </section>
 
         <section>
@@ -63,16 +66,15 @@
 
             <a name="code"></a>
 
-            <textarea id="javascript-code-textarea">
+        <pre id="init-javascript-code">
 var makerjs = require('makerjs');
-
 this.paths = {
     head: new makerjs.paths.Circle([0, 0], 90),
     eye: new makerjs.paths.Circle([25, 25], 10),
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
     wink: new makerjs.paths.Line([-35, 20], [-15, 20])
 };
-            </textarea>
+</pre>
 
         </section>
 
@@ -85,7 +87,6 @@ this.paths = {
         <footer>
             Microsoft
         </footer>
-    </div>
 
 </body>
 </html>
