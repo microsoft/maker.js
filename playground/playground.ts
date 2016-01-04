@@ -56,11 +56,14 @@ module MakerJsPlayground {
             processed.model = result;
         }
 
-        //document.body.removeChild(iframe);
-
         document.getElementById('params').innerHTML = processed.paramHtml;
 
         render();
+
+        //now safe to render, so register a resize listener
+        if (!window.onresize) {
+            window.onresize = render;
+        }
     }
 
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
@@ -168,28 +171,27 @@ module MakerJsPlayground {
         if (processed.model) {
 
             var measure = makerjs.measure.modelExtents(processed.model);
-            var height: number;
-            var width: number;
+            var modelHeightNatural = measure.high[1] - measure.low[1];
+            var modelWidthNatural = measure.high[0] - measure.low[0];
+            var height = view.offsetHeight - 2 * vMargin;
+            var width = document.getElementById('view-params').offsetWidth - 2 * hMargin;
+            var menuLeft = renderingOptionsMenu.offsetLeft - 2 * hMargin;
             var viewScale = 1;
 
-            //width mode
-            if (true) {
-                width = renderingOptionsMenu.offsetLeft - 2 * hMargin;
-            } else {
-                width = document.getElementById('view-params').offsetWidth;
+            //view mode - left of menu
+            if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
+                width = menuLeft;
             }
-            height = view.offsetHeight - 2 * vMargin;
 
             if (processed.model.units) {
                 //cast into inches, then to pixels
                 viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
 
+            var modelWidthInPixels = modelWidthNatural * viewScale;
+            var modelHeightInPixels = modelHeightNatural * viewScale;
+
             if ((<HTMLInputElement>document.getElementById('check-fit-on-screen')).checked) {
-                var modelHeightNatural = measure.high[1] - measure.low[1];
-                var modelHeightInPixels = modelHeightNatural * viewScale;
-                var modelWidthNatural = measure.high[0] - measure.low[0];
-                var modelWidthInPixels = modelWidthNatural * viewScale;
 
                 var scaleHeight = height / modelHeightInPixels;
                 var scaleWidth = width / modelWidthInPixels;
@@ -198,7 +200,7 @@ module MakerJsPlayground {
             }
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-                origin: [width / 2, measure.high[1] * viewScale],
+                origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
                 annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
                 svgAttrs: { id: 'view-svg' },
                 scale: viewScale
