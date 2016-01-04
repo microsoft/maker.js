@@ -53,7 +53,7 @@ h2 {
 }
 
 #rendering-options-menu, #rendering-options-top {
-    width: 18em;
+    width: 15em;
     padding: .5em 1em 1em 1em;
     margin: 1em;
     background-color: #fff;
@@ -78,6 +78,7 @@ h2 {
     border: none;
     outline: none;
     font-size: medium;
+    padding-right: 0;
 }
 
 #rendering-options-top button .icon.dropdown {
