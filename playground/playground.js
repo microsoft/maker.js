@@ -9,6 +9,8 @@ var MakerJsPlayground;
     MakerJsPlayground.relativePath = '../examples/';
     var pixelsPerInch = 100;
     var iframe;
+    var renderingOptionsMenu;
+    var view;
     var hMargin;
     var vMargin;
     var processed = {
@@ -108,7 +110,7 @@ var MakerJsPlayground;
     MakerJsPlayground.setParam = setParam;
     function render() {
         //remove content so default size can be measured
-        document.getElementById('view').innerHTML = '';
+        view.innerHTML = '';
         if (processed.model) {
             var measure = makerjs.measure.modelExtents(processed.model);
             var height;
@@ -116,12 +118,12 @@ var MakerJsPlayground;
             var viewScale = 1;
             //width mode
             if (true) {
-                width = document.getElementById('tools').offsetLeft - 2 * hMargin;
+                width = renderingOptionsMenu.offsetLeft - 2 * hMargin;
             }
             else {
                 width = document.getElementById('view-params').offsetWidth;
             }
-            height = window.innerHeight - 9.75 * vMargin;
+            height = view.offsetHeight - 2 * vMargin;
             if (processed.model.units) {
                 //cast into inches, then to pixels
                 viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
@@ -155,7 +157,7 @@ var MakerJsPlayground;
             var html = processed.html;
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
-        document.getElementById('view').innerHTML = html;
+        view.innerHTML = html;
     }
     MakerJsPlayground.render = render;
     function filenameFromRequireId(id) {
@@ -198,6 +200,8 @@ var MakerJsPlayground;
     })();
     window.onload = function (ev) {
         makerjs = require('makerjs');
+        renderingOptionsMenu = document.getElementById('rendering-options-menu');
+        view = document.getElementById('view');
         var viewMeasure = document.getElementById('view-measure');
         hMargin = viewMeasure.offsetLeft;
         vMargin = viewMeasure.offsetTop;

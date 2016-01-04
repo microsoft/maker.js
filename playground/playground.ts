@@ -14,6 +14,8 @@ module MakerJsPlayground {
 
     var pixelsPerInch = 100;
     var iframe: HTMLIFrameElement;
+    var renderingOptionsMenu: HTMLDivElement;
+    var view: HTMLDivElement;
     var hMargin: number;
     var vMargin: number;
 
@@ -161,7 +163,7 @@ module MakerJsPlayground {
     export function render() {
 
         //remove content so default size can be measured
-        document.getElementById('view').innerHTML = '';
+        view.innerHTML = '';
 
         if (processed.model) {
 
@@ -172,11 +174,11 @@ module MakerJsPlayground {
 
             //width mode
             if (true) {
-                width = document.getElementById('tools').offsetLeft - 2 * hMargin;
+                width = renderingOptionsMenu.offsetLeft - 2 * hMargin;
             } else {
                 width = document.getElementById('view-params').offsetWidth;
             }
-            height = window.innerHeight - 9.75 * vMargin;
+            height = view.offsetHeight - 2 * vMargin;
 
             if (processed.model.units) {
                 //cast into inches, then to pixels
@@ -221,7 +223,7 @@ module MakerJsPlayground {
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
 
-        document.getElementById('view').innerHTML = html;
+        view.innerHTML = html;
     }
 
     export function filenameFromRequireId(id: string): string {
@@ -267,6 +269,9 @@ module MakerJsPlayground {
 
         makerjs = require('makerjs');
 
+        renderingOptionsMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
+        view = document.getElementById('view') as HTMLDivElement;
+
         var viewMeasure = document.getElementById('view-measure');
 
         hMargin = viewMeasure.offsetLeft;
@@ -289,4 +294,5 @@ module MakerJsPlayground {
         }
 
     };
+
 }
