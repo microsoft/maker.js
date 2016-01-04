@@ -289,6 +289,46 @@ module MakerJsPlayground {
         MakerJsPlayground.render();
     }
 
+    export function getRaw(type) {
+        switch (type) {
+            case "dxf":
+                return makerjs.exporter.toDXF(processed.model);
+
+            case "svg":
+                return makerjs.exporter.toSVG(processed.model);
+
+            case "json":
+                return JSON.stringify(processed.model);
+
+            case "openjscad":
+                return makerjs.exporter.toOpenJsCad(processed.model);
+
+            case "stl":
+                return makerjs.exporter.toSTL(processed.model);
+        }
+    }
+
+    export function getExport(type) {
+        var raw = getRaw(type);
+        var encoded = encodeURIComponent(raw);
+        switch (type) {
+            case "dxf":
+                return "data:application/dxf," + encoded;
+
+            case "svg":
+                return "data:image/svg+xml," + encoded;
+
+            case "json":
+                return "data:application/json," + encoded;
+
+            case "openjscad":
+                return "data:text/javascript," + encoded;
+
+            case "stl":
+                return "data:application/stl," + encoded;
+        }
+    }
+
     //execution
 
     window.onload = function (ev) {
