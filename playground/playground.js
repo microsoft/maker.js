@@ -131,7 +131,7 @@ var MakerJsPlayground;
         //now safe to render, so register a resize listener
         if (!window.onresize) {
             window.onresize = render;
-            document.body.gestureEnd = function () {
+            document.body.ongestureend = function () {
                 MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
                 render();
             };
