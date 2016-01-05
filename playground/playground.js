@@ -135,9 +135,11 @@ var MakerJsPlayground;
             }
             window.ontouchend = function () {
                 setTimeout(function(){
-                    processed.html += 'tt ' + document.body.scrollLeft + ' ' + window.innerWidth + ' ' + screen.width + '<br/>';
+                    processed.html += 't2 ' + ' ' + window.innerWidth + ' ' + screen.width + ' ' + screen.height + '<br/>';
                 
-                    MakerJsPlayground.windowZoom = (document.body.scrollLeft + window.innerWidth) / screen.width;
+                    var screenWidth = Math.abs(window.orientation) == 90 ? screen.width : screen.height;
+                
+                    MakerJsPlayground.windowZoom = window.innerWidth / screenWidth;
                     render();
                 }, 0);
             };
