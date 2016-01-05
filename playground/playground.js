@@ -134,7 +134,7 @@ var MakerJsPlayground;
                 render();
             }
             window.ontouchend = function () {
-                processed.html += 'touchend ' + window.innerWidth + ' ' + screen.width;
+                processed.html += 't ' + window.innerWidth + ' ' + window.clientWidth + ' ' + screen.width;
                 
                 MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
                 render();
