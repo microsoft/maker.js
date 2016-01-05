@@ -130,17 +130,11 @@ var MakerJsPlayground;
         render();
         //now safe to render, so register a resize listener
         if (!window.onresize) {
-            window.onresize = function() {
-                render();
-            }
-            window.ontouchend = function () {
-                html = 'o:' + window.orientation + ' ww:' + window.innerWidth + ' sw:' + screen.width + ' wh:' + window.innerHeight + ' sh:' + screen.height;
-            
-                if(Math.abs(window.orientation) == 90) {
+            window.onresize = window.ontouchend = function () {
+
+                setTimeout(function() {
                     MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
-                } else {
-                    MakerJsPlayground.windowZoom = window.innerWidth / screen.height;
-                }
+                }, 200);
             
                 render();
             };
