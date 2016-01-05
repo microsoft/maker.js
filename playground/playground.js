@@ -34,6 +34,7 @@ var MakerJsPlayground;
         paramValues: [],
         paramHtml: ''
     };
+    var init = true;
     function getZoom() {
         var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
         var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
@@ -134,8 +135,11 @@ var MakerJsPlayground;
         document.getElementById('params').innerHTML = processed.paramHtml;
         render();
         //now safe to render, so register a resize listener
-        if (!window.onresize) {
-            window.onresize = view.ontouchend = window.orientationchange = render;
+        if (init) {
+            init = false;
+            window.addEventListener('resize', render);
+            window.addEventListener('orientationchange', render);
+            view.addEventListener('touchend', render);
         }
     }
     MakerJsPlayground.processResult = processResult;
