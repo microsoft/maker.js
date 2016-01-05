@@ -101,6 +101,9 @@ var MakerJsPlayground;
         viewportMargin: Infinity
     };
     MakerJsPlayground.relativePath = '';
+    MakerJsPlayground.svgFontSize = 14;
+    MakerJsPlayground.svgStrokeWidth = 2;
+    MakerJsPlayground.windowZoom = 1;
     function runCodeFromEditor() {
         iframe = document.createElement('iframe');
         iframe.src = 'require-iframe.html';
@@ -128,6 +131,10 @@ var MakerJsPlayground;
         //now safe to render, so register a resize listener
         if (!window.onresize) {
             window.onresize = render;
+            window.ontouchend = function () {
+                MakerJsPlayground.windowZoom = window.innerWidth / window.outerWidth;
+                render();
+            };
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -170,7 +177,8 @@ var MakerJsPlayground;
             var renderOptions = {
                 origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
                 annotate: document.getElementById('check-annotate').checked,
-                svgAttrs: { id: 'view-svg' },
+                svgAttrs: { id: 'view-svg', "font-size": (MakerJsPlayground.windowZoom * MakerJsPlayground.svgFontSize) + 'px' },
+                strokeWidth: (MakerJsPlayground.windowZoom * MakerJsPlayground.svgStrokeWidth) + 'px',
                 scale: viewScale
             };
             var renderModel = {

@@ -147,6 +147,9 @@ module MakerJsPlayground {
         viewportMargin: Infinity
     };
     export var relativePath = '';
+    export var svgFontSize = 14;
+    export var svgStrokeWidth = 2;
+    export var windowZoom = 1;
 
     export function runCodeFromEditor() {
         iframe = document.createElement('iframe');
@@ -183,6 +186,12 @@ module MakerJsPlayground {
         //now safe to render, so register a resize listener
         if (!window.onresize) {
             window.onresize = render;
+
+            window.ontouchend = function () {
+                windowZoom = window.innerWidth / window.outerWidth;
+                render();
+            };
+
         }
     }
 
@@ -238,7 +247,8 @@ module MakerJsPlayground {
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
                 origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
                 annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
-                svgAttrs: { id: 'view-svg' },
+                svgAttrs: { id: 'view-svg', "font-size": (windowZoom * svgFontSize) + 'px' },
+                strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
                 scale: viewScale
             };
 
