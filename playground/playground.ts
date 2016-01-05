@@ -49,6 +49,15 @@ module MakerJsPlayground {
         paramValues: [],
         paramHtml: ''
     };
+    var init = true;
+
+    function getZoom() {
+        var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
+
+        var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
+
+        MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
+    }
 
     function isHttp(url: string): boolean {
         return "http" === url.substr(0, 4);
@@ -184,14 +193,16 @@ module MakerJsPlayground {
         render();
 
         //now safe to render, so register a resize listener
-        if (!window.onresize) {
-            window.onresize = render;
+        if (init) {
+            init = false;
 
-            window.ontouchend = function () {
-                windowZoom = window.innerWidth / window.outerWidth;
+            //todo - still need double tap
+            window.addEventListener('resize', render);
+            window.addEventListener('orientationchange', render);
+            view.addEventListener('touchend', function () {
+                document.body.classList.add('collapse-rendering-options');
                 render();
-            };
-
+            });
         }
     }
 
@@ -209,6 +220,7 @@ module MakerJsPlayground {
     }
 
     export function render() {
+        getZoom();
 
         //remove content so default size can be measured
         view.innerHTML = '';
@@ -342,6 +354,10 @@ module MakerJsPlayground {
     //execution
 
     window.onload = function (ev) {
+
+        if (window.orientation === void 0) {
+            window.orientation = 'landscape';
+        }
 
         renderingOptionsMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
         view = document.getElementById('view') as HTMLDivElement;
