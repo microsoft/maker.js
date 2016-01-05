@@ -140,7 +140,7 @@ var MakerJsPlayground;
             window.addEventListener('resize', render);
             window.addEventListener('orientationchange', render);
             view.addEventListener('touchend', function () {
-                document.body.classList.remove('collapse-rendering-options');
+                document.body.classList.add('collapse-rendering-options');
                 render();
             });
         }
