@@ -37,7 +37,7 @@ var MakerJsPlayground;
     function getZoom() {
         var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
         var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
-        MakerJsPlayground.windowZoom = Math.max(0.15, zoom);
+        MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
     }
     function isHttp(url) {
         return "http" === url.substr(0, 4);
