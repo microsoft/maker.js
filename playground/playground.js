@@ -131,10 +131,9 @@ var MakerJsPlayground;
         //now safe to render, so register a resize listener
         if (!window.onresize) {
             window.onresize = function() {
-                processed.html += 'resize ';
                 render();
             }
-            document.body.touchend = function () {
+            window.ontouchend = function () {
                 processed.html += 'touchend ' + window.innerWidth + ' ' + screen.width;
                 
                 MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
