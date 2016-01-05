@@ -132,7 +132,7 @@ var MakerJsPlayground;
         if (!window.onresize) {
             window.onresize = render;
             window.ontouchend = function () {
-                MakerJsPlayground.windowZoom = window.innerWidth / window.outerWidth;
+                MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
                 render();
             };
         }
