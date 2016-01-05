@@ -134,10 +134,12 @@ var MakerJsPlayground;
                 render();
             }
             window.ontouchend = function () {
-                processed.html += 'te ' + document.body.clientWidth + ' ' + window.innerWidth + ' ' + screen.width + '<br/>';
+                setTimeout(function(){
+                    processed.html += 'tv ' + window.innerWidth + ' ' + screen.width + '<br/>';
                 
-                MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
-                render();
+                    MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
+                    render();
+                }, 0);
             };
         }
     }
