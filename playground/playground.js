@@ -134,7 +134,7 @@ var MakerJsPlayground;
                 var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
 
                 MakerJsPlayground.windowZoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
-processed.html += MakerJsPlayground.windowZoom + '';
+processed.html += makerjs.round(MakerJsPlayground.windowZoom, .01) + '<br/>';
 
                 render();
             };
