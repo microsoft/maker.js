@@ -150,7 +150,6 @@ h2 {
 
 svg line, svg circle, svg path {
     stroke: #fff;
-    stroke-width: 2px;
     fill: none;
 }
 
@@ -159,12 +158,12 @@ svg line, svg circle, svg path {
 }
 
 #view svg text {
-    fill: #0ff;
+    fill: turquoise;
     stroke: none;
 }
 
 #crosshairs-vertical, #crosshairs-horizontal {
-    stroke: #4DD2FF;
+    stroke: midnightblue;
     stroke-width: 1;
 }
 
