@@ -135,9 +135,9 @@ var MakerJsPlayground;
             }
             window.ontouchend = function () {
                 setTimeout(function(){
-                    processed.html += 'tv ' + window.innerWidth + ' ' + screen.width + '<br/>';
+                    processed.html += 'tt ' + document.body.scrollWidth + ' ' + screen.width + '<br/>';
                 
-                    MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
+                    MakerJsPlayground.windowZoom = document.body.scrollWidth / screen.width;
                     render();
                 }, 0);
             };
