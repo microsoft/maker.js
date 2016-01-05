@@ -134,14 +134,15 @@ var MakerJsPlayground;
                 render();
             }
             window.ontouchend = function () {
-                setTimeout(function(){
-                    processed.html += 't2 ' + ' ' + window.innerWidth + ' ' + screen.width + ' ' + screen.height + '<br/>';
-                
-                    var screenWidth = Math.abs(window.orientation) == 90 ? screen.width : screen.height;
-                
-                    MakerJsPlayground.windowZoom = window.innerWidth / screenWidth;
-                    render();
-                }, 0);
+                html = 'o:' + window.orientation + ' ww:' + window.innerWidth + ' sw:' + screen.width + ' wh:' + window.innerHeight + ' sh:' + screen.height;
+            
+                if(Math.abs(window.orientation) == 90) {
+                    MakerJsPlayground.windowZoom = window.innerWidth / screen.width;
+                } else {
+                    MakerJsPlayground.windowZoom = window.innerWidth / screen.height;
+                }
+            
+                render();
             };
         }
     }
