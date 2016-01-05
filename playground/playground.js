@@ -34,6 +34,11 @@ var MakerJsPlayground;
         paramValues: [],
         paramHtml: ''
     };
+    function getZoom() {
+        var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
+        var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
+        MakerJsPlayground.windowZoom = Math.max(0.15, zoom);
+    }
     function isHttp(url) {
         return "http" === url.substr(0, 4);
     }
@@ -130,14 +135,7 @@ var MakerJsPlayground;
         render();
         //now safe to render, so register a resize listener
         if (!window.onresize) {
-            window.onresize = view.ontouchend = window.orientationchange = function () {
-                var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
-
-                MakerJsPlayground.windowZoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
-processed.html += makerjs.round(MakerJsPlayground.windowZoom, .01) + '<br/>';
-
-                render();
-            };
+            window.onresize = view.ontouchend = window.orientationchange = render;
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -152,6 +150,7 @@ processed.html += makerjs.round(MakerJsPlayground.windowZoom, .01) + '<br/>';
     }
     MakerJsPlayground.setParam = setParam;
     function render() {
+        getZoom();
         //remove content so default size can be measured
         view.innerHTML = '';
         if (processed.model) {
@@ -261,6 +260,9 @@ processed.html += makerjs.round(MakerJsPlayground.windowZoom, .01) + '<br/>';
     MakerJsPlayground.getExport = getExport;
     //execution
     window.onload = function (ev) {
+        if (window.orientation === void 0) {
+            window.orientation = 'landscape';
+        }
         renderingOptionsMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
         var viewMeasure = document.getElementById('view-measure');
