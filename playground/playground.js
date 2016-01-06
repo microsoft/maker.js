@@ -101,6 +101,13 @@ var MakerJsPlayground;
         processed.paramValues = paramValues;
         processed.paramHtml = paramHtml;
     }
+    function generateCodeFromKit(id, kit) {
+        var code = ["var makerjs = require('makerjs');"];
+        code.push(kit.toString().replace(/MakerJs/g, 'makerjs').replace(/   /g, ''));
+        code.push(id + '.metaParameters = ' + JSON.stringify(kit.metaParameters).replace('[{', '[\n {').replace(/\},/g, '},\n ').replace('}]', '}\n]') + ';');
+        code.push('module.exports = ' + id + ';\n');
+        return code.join('\n\n');
+    }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
         theme: 'twilight',
@@ -284,10 +291,17 @@ var MakerJsPlayground;
         var qps = new QueryStringParams();
         var scriptname = qps['script'];
         if (scriptname && !isHttp(scriptname)) {
-            downloadScript(filenameFromRequireId(scriptname), function (download) {
-                MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+            if (scriptname in makerjs.models) {
+                var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
                 runCodeFromEditor();
-            });
+            }
+            else {
+                downloadScript(filenameFromRequireId(scriptname), function (download) {
+                    MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+                    runCodeFromEditor();
+                });
+            }
         }
         else {
             runCodeFromEditor();

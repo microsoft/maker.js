@@ -147,6 +147,18 @@ module MakerJsPlayground {
         processed.paramHtml = paramHtml;
     }
 
+    function generateCodeFromKit(id: string, kit: MakerJs.IKit): string {
+        var code = ["var makerjs = require('makerjs');"];
+
+        code.push((<Function>kit).toString().replace(/MakerJs/g, 'makerjs').replace(/   /g, ''));
+
+        code.push(id + '.metaParameters = ' + JSON.stringify(kit.metaParameters).replace('[{', '[\n {').replace(/\},/g, '},\n ').replace('}]', '}\n]') + ';');
+
+        code.push('module.exports = ' + id + ';\n');
+
+        return code.join('\n\n');
+    }
+
     //public members
 
     export var codeMirrorEditor: CodeMirror.Editor;
@@ -381,10 +393,18 @@ module MakerJsPlayground {
 
         if (scriptname && !isHttp(scriptname)) {
 
-            downloadScript(filenameFromRequireId(scriptname), function (download: string) {
-                codeMirrorEditor.getDoc().setValue(download);
+            if (scriptname in makerjs.models) {
+
+                var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                codeMirrorEditor.getDoc().setValue(code);
                 runCodeFromEditor();
-            });
+
+            } else {
+                downloadScript(filenameFromRequireId(scriptname), function (download: string) {
+                    codeMirrorEditor.getDoc().setValue(download);
+                    runCodeFromEditor();
+                });
+            }
         } else {
             runCodeFromEditor();
         }
