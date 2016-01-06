@@ -1,5 +1,6 @@
-///<reference path="../target/ts/makerjs.d.ts"/>
-var makerjs = require('./../target/js/node.maker.js');
+///<reference path="typings/tsd.d.ts"/>
+//https://github.com/danmarshall/makerjs-ventgrid
+var makerjs = require('makerjs');
 var Ventgrid = (function () {
     function Ventgrid(filterRadius, spacing, width, height) {
         var _this = this;
@@ -54,6 +55,3 @@ Ventgrid.metaParameters = [
     { title: "height", type: "range", min: 20, max: 200, value: 50 },
 ];
 module.exports = Ventgrid;
-//To compile this: go to the root and:
-// cd examples
-// tsc ventgrid.ts --declaration
