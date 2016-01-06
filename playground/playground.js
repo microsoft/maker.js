@@ -102,11 +102,24 @@ var MakerJsPlayground;
         processed.paramHtml = paramHtml;
     }
     function generateCodeFromKit(id, kit) {
-        var code = ["var makerjs = require('makerjs');"];
-        code.push(kit.toString().replace(/MakerJs/g, 'makerjs').replace(/   /g, ''));
-        code.push(id + '.metaParameters = ' + JSON.stringify(kit.metaParameters).replace('[{', '[\n {').replace(/\},/g, '},\n ').replace('}]', '}\n]') + ';');
-        code.push('module.exports = ' + id + ';\n');
-        return code.join('\n\n');
+        var values = [];
+        var comment = [];
+        var firstComment = "//" + id + " parameters: ";
+        for (var i in kit.metaParameters) {
+            comment.push(firstComment + kit.metaParameters[i].title);
+            firstComment = "";
+            values.push(kit.metaParameters[i].value);
+        }
+        var code = [];
+        code.push("var makerjs = require('makerjs');");
+        code.push("");
+        code.push(comment.join(", "));
+        code.push("");
+        code.push("this.models = {");
+        code.push("  my" + id + ": new makerjs.models." + id + "(" + values.join(', ') + ")");
+        code.push("};");
+        code.push("");
+        return code.join('\n');
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
