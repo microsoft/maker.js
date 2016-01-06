@@ -13,19 +13,9 @@ marked.setOptions({
         return require('highlight.js').highlightAuto(code).value;
     }
 });
-var prefix = 'makerjs-';
-var prefixLen = prefix.length;
 var thumbSize = { width: 140, height: 100 };
 var allRequires = { 'makerjs': 1 };
-function demoify(name) {
-    var filename = './demos/' + name + '.js';
-    console.log('writing ' + filename);
-    var b = browserify();
-    b.exclude('makerjs');
-    b.require(prefix + name, { expose: name });
-    b.bundle().pipe(fs.createWriteStream(filename));
-}
-function thumbnail(name, constructor, baseUrl) {
+function thumbnail(key, constructor, baseUrl) {
     var parameters = makerjs.kit.getParameterValues(constructor);
     var model = makerjs.kit.construct(constructor, parameters);
     var measurement = makerjs.measure.modelExtents(model);
@@ -37,7 +27,7 @@ function thumbnail(name, constructor, baseUrl) {
     var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb' });
     div.innerText = svg;
     div.innerTextEscaped = true;
-    return anchor(div.toString(), baseUrl + 'demo.html?demo=' + name, name, true);
+    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true);
 }
 function jekyll(layout, title) {
     //Jekyll liquid layout
@@ -62,20 +52,16 @@ function demoIndexPage() {
             stream.write(h2.toString());
             stream.write('\n\n');
         }
-        function writeThumbnail(name, constructor, baseUrl) {
-            console.log('writing thumbnail ' + name);
-            stream.write(thumbnail(name, constructor, baseUrl));
+        function writeThumbnail(key, constructor, baseUrl) {
+            console.log('writing thumbnail ' + key);
+            stream.write(thumbnail(key, constructor, baseUrl));
             stream.write('\n\n');
         }
         stream.write(jekyll('page', 'Demos'));
         writeHeading('Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
         for (var key in pjson.dependencies) {
-            if (key.indexOf(prefix) == 0) {
-                var name = key.substring(prefixLen);
-                demoify(name);
-                var ctor = require(prefix + name);
-                writeThumbnail(name, ctor, '');
-            }
+            var ctor = require(key);
+            writeThumbnail(key, ctor, '../');
         }
         writeHeading('Models included with Maker.js');
         var sorted = [];
@@ -84,7 +70,7 @@ function demoIndexPage() {
         sorted.sort();
         for (var i = 0; i < sorted.length; i++) {
             var modelType = sorted[i];
-            writeThumbnail(modelType, makerjs.models[modelType], '');
+            writeThumbnail(modelType, makerjs.models[modelType], '../');
         }
         stream.end();
     });
@@ -100,11 +86,8 @@ function homePage() {
         var max = 6;
         var i = 0;
         for (var key in pjson.dependencies) {
-            if (key.indexOf(prefix) == 0) {
-                var name = key.substring(prefixLen);
-                var ctor = require(prefix + name);
-                demos.push(thumbnail(name, ctor, 'demos/'));
-            }
+            var ctor = require(key);
+            demos.push(thumbnail(key, ctor, ''));
             i++;
             if (i >= max)
                 break;
@@ -139,22 +122,21 @@ function copyRequire(root, key, copyTo) {
     var main = djson.main;
     var src = fs.readFileSync(dirpath + main, 'UTF8');
     allRequires[key] = 1;
-    fs.writeFileSync('./playground/' + copyTo + key + '.js', src, 'UTF8');
+    fs.writeFileSync('./demos/js/' + copyTo + key + '.js', src, 'UTF8');
     var requires = detective(src);
     for (var i = 0; i < requires.length; i++) {
         var irequire = requires[i];
         if (!(irequire in allRequires)) {
-            copyRequire(dirpath + 'node_modules', irequire, 'requirements/');
+            copyRequire(dirpath + 'node_modules', irequire, '');
         }
     }
 }
 function playground() {
     var root = './';
     for (var key in pjson.dependencies) {
-        copyRequire('./node_modules', key, 'dependencies/');
+        copyRequire('./node_modules', key, '');
     }
 }
 demoIndexPage();
 homePage();
-//playground();
-//# sourceMappingURL=demoify.js.map
+playground();
