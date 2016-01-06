@@ -104,13 +104,22 @@ var MakerJsPlayground;
     function generateCodeFromKit(id, kit) {
         var values = [];
         var comment = [];
+        var code = [];
         var firstComment = "//" + id + " parameters: ";
         for (var i in kit.metaParameters) {
             comment.push(firstComment + kit.metaParameters[i].title);
             firstComment = "";
-            values.push(kit.metaParameters[i].value);
+            var value = kit.metaParameters[i].value;
+            if (kit.metaParameters[i].type === 'select') {
+                value = value[0];
+            }
+            if (typeof value === 'object') {
+                values.push(JSON.stringify(value));
+            }
+            else {
+                values.push(value);
+            }
         }
-        var code = [];
         code.push("var makerjs = require('makerjs');");
         code.push("");
         code.push(comment.join(", "));
