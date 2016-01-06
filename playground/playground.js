@@ -34,6 +34,12 @@ var MakerJsPlayground;
         paramValues: [],
         paramHtml: ''
     };
+    var init = true;
+    function getZoom() {
+        var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
+        var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
+        MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
+    }
     function isHttp(url) {
         return "http" === url.substr(0, 4);
     }
@@ -95,6 +101,13 @@ var MakerJsPlayground;
         processed.paramValues = paramValues;
         processed.paramHtml = paramHtml;
     }
+    function generateCodeFromKit(id, kit) {
+        var code = ["var makerjs = require('makerjs');"];
+        code.push(kit.toString().replace(/MakerJs/g, 'makerjs').replace(/   /g, ''));
+        code.push(id + '.metaParameters = ' + JSON.stringify(kit.metaParameters).replace('[{', '[\n {').replace(/\},/g, '},\n ').replace('}]', '}\n]') + ';');
+        code.push('module.exports = ' + id + ';\n');
+        return code.join('\n\n');
+    }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
         theme: 'twilight',
@@ -129,12 +142,15 @@ var MakerJsPlayground;
         document.getElementById('params').innerHTML = processed.paramHtml;
         render();
         //now safe to render, so register a resize listener
-        if (!window.onresize) {
-            window.onresize = render;
-            window.ontouchend = function () {
-                MakerJsPlayground.windowZoom = window.innerWidth / window.outerWidth;
+        if (init) {
+            init = false;
+            //todo - still need double tap
+            window.addEventListener('resize', render);
+            window.addEventListener('orientationchange', render);
+            view.addEventListener('touchend', function () {
+                document.body.classList.add('collapse-rendering-options');
                 render();
-            };
+            });
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -149,6 +165,7 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.setParam = setParam;
     function render() {
+        getZoom();
         //remove content so default size can be measured
         view.innerHTML = '';
         if (processed.model) {
@@ -258,6 +275,9 @@ var MakerJsPlayground;
     MakerJsPlayground.getExport = getExport;
     //execution
     window.onload = function (ev) {
+        if (window.orientation === void 0) {
+            window.orientation = 'landscape';
+        }
         renderingOptionsMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
         var viewMeasure = document.getElementById('view-measure');
@@ -271,10 +291,17 @@ var MakerJsPlayground;
         var qps = new QueryStringParams();
         var scriptname = qps['script'];
         if (scriptname && !isHttp(scriptname)) {
-            downloadScript(filenameFromRequireId(scriptname), function (download) {
-                MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+            if (scriptname in makerjs.models) {
+                var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
                 runCodeFromEditor();
-            });
+            }
+            else {
+                downloadScript(filenameFromRequireId(scriptname), function (download) {
+                    MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+                    runCodeFromEditor();
+                });
+            }
         }
         else {
             runCodeFromEditor();

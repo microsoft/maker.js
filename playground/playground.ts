@@ -49,6 +49,15 @@ module MakerJsPlayground {
         paramValues: [],
         paramHtml: ''
     };
+    var init = true;
+
+    function getZoom() {
+        var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
+
+        var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
+
+        MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
+    }
 
     function isHttp(url: string): boolean {
         return "http" === url.substr(0, 4);
@@ -138,6 +147,18 @@ module MakerJsPlayground {
         processed.paramHtml = paramHtml;
     }
 
+    function generateCodeFromKit(id: string, kit: MakerJs.IKit): string {
+        var code = ["var makerjs = require('makerjs');"];
+
+        code.push((<Function>kit).toString().replace(/MakerJs/g, 'makerjs').replace(/   /g, ''));
+
+        code.push(id + '.metaParameters = ' + JSON.stringify(kit.metaParameters).replace('[{', '[\n {').replace(/\},/g, '},\n ').replace('}]', '}\n]') + ';');
+
+        code.push('module.exports = ' + id + ';\n');
+
+        return code.join('\n\n');
+    }
+
     //public members
 
     export var codeMirrorEditor: CodeMirror.Editor;
@@ -184,14 +205,16 @@ module MakerJsPlayground {
         render();
 
         //now safe to render, so register a resize listener
-        if (!window.onresize) {
-            window.onresize = render;
+        if (init) {
+            init = false;
 
-            window.ontouchend = function () {
-                windowZoom = window.innerWidth / window.outerWidth;
+            //todo - still need double tap
+            window.addEventListener('resize', render);
+            window.addEventListener('orientationchange', render);
+            view.addEventListener('touchend', function () {
+                document.body.classList.add('collapse-rendering-options');
                 render();
-            };
-
+            });
         }
     }
 
@@ -209,6 +232,7 @@ module MakerJsPlayground {
     }
 
     export function render() {
+        getZoom();
 
         //remove content so default size can be measured
         view.innerHTML = '';
@@ -343,6 +367,10 @@ module MakerJsPlayground {
 
     window.onload = function (ev) {
 
+        if (window.orientation === void 0) {
+            window.orientation = 'landscape';
+        }
+
         renderingOptionsMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
         view = document.getElementById('view') as HTMLDivElement;
 
@@ -365,10 +393,18 @@ module MakerJsPlayground {
 
         if (scriptname && !isHttp(scriptname)) {
 
-            downloadScript(filenameFromRequireId(scriptname), function (download: string) {
-                codeMirrorEditor.getDoc().setValue(download);
+            if (scriptname in makerjs.models) {
+
+                var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                codeMirrorEditor.getDoc().setValue(code);
                 runCodeFromEditor();
-            });
+
+            } else {
+                downloadScript(filenameFromRequireId(scriptname), function (download: string) {
+                    codeMirrorEditor.getDoc().setValue(download);
+                    runCodeFromEditor();
+                });
+            }
         } else {
             runCodeFromEditor();
         }
