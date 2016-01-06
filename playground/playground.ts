@@ -148,15 +148,28 @@ module MakerJsPlayground {
     }
 
     function generateCodeFromKit(id: string, kit: MakerJs.IKit): string {
-        var code = ["var makerjs = require('makerjs');"];
+        var values = [];
+        var comment = [];
 
-        code.push((<Function>kit).toString().replace(/MakerJs/g, 'makerjs').replace(/   /g, ''));
+        var firstComment = "//" + id + " parameters: ";
 
-        code.push(id + '.metaParameters = ' + JSON.stringify(kit.metaParameters).replace('[{', '[\n {').replace(/\},/g, '},\n ').replace('}]', '}\n]') + ';');
+        for (var i in kit.metaParameters) {
+            comment.push(firstComment + kit.metaParameters[i].title);
+            firstComment = "";
+            values.push(kit.metaParameters[i].value);
+        }
 
-        code.push('module.exports = ' + id + ';\n');
+        var code = [];
+        code.push("var makerjs = require('makerjs');");
+        code.push("");
+        code.push(comment.join(", "));
+        code.push("");
+        code.push("this.models = {");
+        code.push("  my" + id + ": new makerjs.models." + id + "(" + values.join(', ') + ")");
+        code.push("};");
+        code.push("");
 
-        return code.join('\n\n');
+        return code.join('\n');
     }
 
     //public members
