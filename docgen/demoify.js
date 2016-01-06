@@ -124,10 +124,15 @@ function copyRequire(root, key, copyTo) {
     allRequires[key] = 1;
     fs.writeFileSync('./demos/js/' + copyTo + key + '.js', src, 'UTF8');
     var requires = detective(src);
+    console.log('...requires ' + requires.length + ' libraries');
     for (var i = 0; i < requires.length; i++) {
         var irequire = requires[i];
         if (!(irequire in allRequires)) {
+            console.log('requiring ' + irequire);
             copyRequire(dirpath + 'node_modules', irequire, '');
+        }
+        else {
+            console.log('ignoring ' + irequire);
         }
     }
 }

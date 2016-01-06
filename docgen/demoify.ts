@@ -176,11 +176,17 @@ function copyRequire(root, key, copyTo) {
 
     var requires = <string[]>detective(src);
 
+    console.log('...requires ' + requires.length + ' libraries');
+
     for (var i = 0; i < requires.length; i++) {
         var irequire = requires[i];
+
         if (!(irequire in allRequires)) {
+            console.log('requiring ' + irequire);
 
             copyRequire(dirpath + 'node_modules', irequire, '');
+        } else {
+            console.log('ignoring ' + irequire);
         }
     }
 }
