@@ -137,6 +137,7 @@ var MakerJsPlayground;
         //now safe to render, so register a resize listener
         if (init) {
             init = false;
+            //todo - still need double tap
             window.addEventListener('resize', render);
             window.addEventListener('orientationchange', render);
             view.addEventListener('touchend', function () {
