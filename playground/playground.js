@@ -34,6 +34,12 @@ var MakerJsPlayground;
         paramValues: [],
         paramHtml: ''
     };
+    var init = true;
+    function getZoom() {
+        var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
+        var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
+        MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
+    }
     function isHttp(url) {
         return "http" === url.substr(0, 4);
     }
@@ -129,12 +135,15 @@ var MakerJsPlayground;
         document.getElementById('params').innerHTML = processed.paramHtml;
         render();
         //now safe to render, so register a resize listener
-        if (!window.onresize) {
-            window.onresize = render;
-            window.ontouchend = function () {
-                MakerJsPlayground.windowZoom = window.innerWidth / window.outerWidth;
+        if (init) {
+            init = false;
+            //todo - still need double tap
+            window.addEventListener('resize', render);
+            window.addEventListener('orientationchange', render);
+            view.addEventListener('touchend', function () {
+                document.body.classList.add('collapse-rendering-options');
                 render();
-            };
+            });
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -149,6 +158,7 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.setParam = setParam;
     function render() {
+        getZoom();
         //remove content so default size can be measured
         view.innerHTML = '';
         if (processed.model) {
@@ -258,6 +268,9 @@ var MakerJsPlayground;
     MakerJsPlayground.getExport = getExport;
     //execution
     window.onload = function (ev) {
+        if (window.orientation === void 0) {
+            window.orientation = 'landscape';
+        }
         renderingOptionsMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
         var viewMeasure = document.getElementById('view-measure');
