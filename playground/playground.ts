@@ -148,18 +148,29 @@ module MakerJsPlayground {
     }
 
     function generateCodeFromKit(id: string, kit: MakerJs.IKit): string {
-        var values = [];
-        var comment = [];
+        var values: string[] = [];
+        var comment: string[] = [];
+        var code: string[] = [];
 
         var firstComment = "//" + id + " parameters: ";
 
         for (var i in kit.metaParameters) {
             comment.push(firstComment + kit.metaParameters[i].title);
             firstComment = "";
-            values.push(kit.metaParameters[i].value);
+
+            var value = kit.metaParameters[i].value;
+
+            if (kit.metaParameters[i].type === 'select') {
+                value = value[0];
+            }
+
+            if (typeof value === 'object') {
+                values.push(JSON.stringify(value));
+            } else {
+                values.push(value);
+            }
         }
 
-        var code = [];
         code.push("var makerjs = require('makerjs');");
         code.push("");
         code.push(comment.join(", "));
