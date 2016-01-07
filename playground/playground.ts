@@ -54,7 +54,7 @@ module MakerJsPlayground {
     function getZoom() {
         var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
 
-        var zoom = (landscape ? window.innerWidth : window.innerHeight) / screen.width;
+        var zoom = (landscape ? window.innerWidth : window.innerHeight) / document.body.clientWidth;
 
         MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
     }
