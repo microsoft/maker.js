@@ -36,6 +36,7 @@ var MakerJsPlayground;
         paramHtml: ''
     };
     var init = true;
+    var marker;
     function getZoom() {
         var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
         var zoom = (landscape ? window.innerWidth : window.innerHeight) / document.body.clientWidth;
@@ -43,6 +44,20 @@ var MakerJsPlayground;
     }
     function isHttp(url) {
         return "http" === url.substr(0, 4);
+    }
+    function isIJavaScriptErrorDetails(result) {
+        var sample = {
+            colno: 0,
+            lineno: 0,
+            message: '',
+            name: ''
+        };
+        for (var key in sample) {
+            if (!(key in result)) {
+                return false;
+            }
+        }
+        return true;
     }
     function populateParams(metaParameters) {
         if (metaParameters) {
@@ -135,6 +150,17 @@ var MakerJsPlayground;
         document.body.classList.remove('download-available');
         selectFormat.selectedIndex = 0;
     }
+    function highlightCodeError(error) {
+        processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
+        var editorLine = error.lineno - 1;
+        var from = {
+            line: editorLine, ch: error.colno - 1
+        };
+        var to = {
+            line: editorLine, ch: MakerJsPlayground.codeMirrorEditor.getDoc().getLine(editorLine).length
+        };
+        marker = MakerJsPlayground.codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+    }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
         theme: 'twilight',
@@ -152,6 +178,10 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
     function processResult(html, result) {
+        if (marker) {
+            marker.clear();
+            marker = null;
+        }
         resetDownload();
         processed.html = html;
         processed.model = null;
@@ -166,6 +196,10 @@ var MakerJsPlayground;
         }
         else if (makerjs.isModel(result)) {
             processed.model = result;
+        }
+        else if (isIJavaScriptErrorDetails(result)) {
+            //render script error
+            highlightCodeError(result);
         }
         document.getElementById('params').innerHTML = processed.paramHtml;
         render();

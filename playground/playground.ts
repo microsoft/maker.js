@@ -38,6 +38,13 @@ module MakerJsPlayground {
         paramHtml: string;
     }
 
+    export interface IJavaScriptErrorDetails {
+        colno: number;
+        lineno: number;
+        message: string;
+        name: string;
+    }
+
     //private members
 
     var pixelsPerInch = 100;
@@ -55,6 +62,7 @@ module MakerJsPlayground {
         paramHtml: ''
     };
     var init = true;
+    var marker: CodeMirror.TextMarker;
 
     function getZoom() {
         var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -66,6 +74,23 @@ module MakerJsPlayground {
 
     function isHttp(url: string): boolean {
         return "http" === url.substr(0, 4);
+    }
+
+    function isIJavaScriptErrorDetails(result: any) {
+        var sample: IJavaScriptErrorDetails = {
+            colno: 0,
+            lineno: 0,
+            message: '',
+            name: ''
+        };
+        
+        for (var key in sample) {
+            if (!(key in result)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
@@ -193,6 +218,23 @@ module MakerJsPlayground {
         selectFormat.selectedIndex = 0;
     }
 
+    function highlightCodeError(error: IJavaScriptErrorDetails) {
+
+        processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
+
+        var editorLine = error.lineno - 1;
+
+        var from: CodeMirror.Position = {
+            line: editorLine, ch: error.colno - 1
+        };
+
+        var to: CodeMirror.Position = {
+            line: editorLine, ch: codeMirrorEditor.getDoc().getLine(editorLine).length
+        };
+
+        marker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+    }
+
     //public members
 
     export var codeMirrorEditor: CodeMirror.Editor;
@@ -215,6 +257,11 @@ module MakerJsPlayground {
 
     export function processResult(html: string, result: any) {
 
+        if (marker) {
+            marker.clear();
+            marker = null;
+        }
+
         resetDownload();
 
         processed.html = html;
@@ -234,6 +281,10 @@ module MakerJsPlayground {
 
         } else if (makerjs.isModel(result)) {
             processed.model = result;
+        } else if (isIJavaScriptErrorDetails(result)) {
+            
+            //render script error
+            highlightCodeError(result as IJavaScriptErrorDetails);
         }
 
         document.getElementById('params').innerHTML = processed.paramHtml;

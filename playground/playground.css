@@ -234,3 +234,7 @@ svg line, svg circle, svg path {
     font-weight: bold;
     text-decoration: none;
 }
+
+.code-error {
+    background-color: orange;
+}
