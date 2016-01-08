@@ -2,7 +2,7 @@
     margin: 0;
 }
 
-html, body, button {
+html, body, button, select {
     font-family: 'Segoe UI', sans-serif;
 }
 
@@ -172,21 +172,24 @@ svg line, svg circle, svg path {
 }
 
 #download a {
+    display: none;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     color: #555;
     text-decoration: none;
     white-space: nowrap;
-    display: inline-block;
     margin-top: .5em;
-    margin-right: 1em;
-    padding-top: .2em;
-    padding-bottom: .3em;
-    width: 9em;
+    margin-left: 1em;
+    padding: .2em 2em .3em 2em;
     text-align: center;
     text-transform: uppercase;
     font-size: smaller;
 }
+
+.download-available #download a{
+    display: inline;
+}
+
 .code-header {
     font-family: monospace;
     background-color: #d0d0d0;

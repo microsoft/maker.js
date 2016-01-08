@@ -23,8 +23,9 @@ var MakerJsPlayground;
     //private members
     var pixelsPerInch = 100;
     var iframe;
-    var renderingOptionsMenu;
+    var customizeMenu;
     var view;
+    var selectFormat;
     var hMargin;
     var vMargin;
     var processed = {
@@ -130,6 +131,10 @@ var MakerJsPlayground;
         code.push("");
         return code.join('\n');
     }
+    function resetDownload() {
+        document.body.classList.remove('download-available');
+        selectFormat.selectedIndex = 0;
+    }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
         theme: 'twilight',
@@ -147,6 +152,7 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
     function processResult(html, result) {
+        resetDownload();
         processed.html = html;
         processed.model = null;
         processed.paramValues = null;
@@ -177,6 +183,7 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.processResult = processResult;
     function setParam(index, value) {
+        resetDownload();
         processed.paramValues[index] = value;
         //see if output is either a Node module, or a MakerJs.IModel
         if (processed.kit) {
@@ -190,13 +197,14 @@ var MakerJsPlayground;
         getZoom();
         //remove content so default size can be measured
         view.innerHTML = '';
+        var html = processed.html;
         if (processed.model) {
             var measure = makerjs.measure.modelExtents(processed.model);
             var modelHeightNatural = measure.high[1] - measure.low[1];
             var modelWidthNatural = measure.high[0] - measure.low[0];
             var height = view.offsetHeight - 2 * vMargin;
             var width = document.getElementById('view-params').offsetWidth - 2 * hMargin;
-            var menuLeft = renderingOptionsMenu.offsetLeft - 2 * hMargin;
+            var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
             var viewScale = 1;
             //view mode - left of menu
             if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
@@ -231,7 +239,6 @@ var MakerJsPlayground;
                     'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
                 };
             }
-            var html = processed.html;
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
         view.innerHTML = html;
@@ -263,45 +270,58 @@ var MakerJsPlayground;
         MakerJsPlayground.render();
     }
     MakerJsPlayground.toggleClass = toggleClass;
-    function getRaw(type) {
-        switch (type) {
+    function getRaw(format) {
+        switch (format) {
             case "dxf":
                 return makerjs.exporter.toDXF(processed.model);
             case "svg":
                 return makerjs.exporter.toSVG(processed.model);
             case "json":
                 return JSON.stringify(processed.model);
-            case "openjscad":
+            case "txt":
                 return makerjs.exporter.toOpenJsCad(processed.model);
             case "stl":
                 return makerjs.exporter.toSTL(processed.model);
         }
     }
     MakerJsPlayground.getRaw = getRaw;
-    function getExport(type) {
-        var raw = getRaw(type);
+    function getExport(format) {
+        var raw = getRaw(format);
         var encoded = encodeURIComponent(raw);
-        switch (type) {
+        switch (format) {
             case "dxf":
                 return "data:application/dxf," + encoded;
             case "svg":
                 return "data:image/svg+xml," + encoded;
             case "json":
                 return "data:application/json," + encoded;
-            case "openjscad":
-                return "data:text/javascript," + encoded;
+            case "txt":
+                return "data:text/plain," + encoded;
             case "stl":
                 return "data:application/stl," + encoded;
         }
     }
     MakerJsPlayground.getExport = getExport;
+    function selectDownloadFormat(format) {
+        document.body.classList.add('download-wait');
+        setTimeout(function () {
+            var x = 'data:text/plain;charset=utf-8,foobar'; //getExport(format);
+            var a = document.getElementById('download-link');
+            a.href = x;
+            a.download = 'myModel.' + format;
+            document.body.classList.remove('download-wait');
+            document.body.classList.add('download-available');
+        }, 1);
+    }
+    MakerJsPlayground.selectDownloadFormat = selectDownloadFormat;
     //execution
     window.onload = function (ev) {
         if (window.orientation === void 0) {
             window.orientation = 'landscape';
         }
-        renderingOptionsMenu = document.getElementById('rendering-options-menu');
+        customizeMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
+        selectFormat = document.getElementById('select-format');
         var viewMeasure = document.getElementById('view-measure');
         hMargin = viewMeasure.offsetLeft;
         vMargin = viewMeasure.offsetTop;

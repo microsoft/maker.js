@@ -13,15 +13,55 @@
     <script src="../external/OpenJsCad/csg.js"></script>
     <script src="../external/OpenJsCad/formats.js"></script>
 
-    <script src="../target/js/browser.maker.js"></script>
     <script>
-        var makerjs = require('makerjs');
+        //pretend we are in node
+        var module = {};
+    </script>
+
+    <script src="../src/core/maker.js"></script>
+    <script src="../src/core/angle.js"></script>
+    <script src="../src/core/point.js"></script>
+    <script src="../src/core/units.js"></script>
+    <script src="../src/core/measure.js"></script>
+    <script src="../src/core/path.js"></script>
+    <script src="../src/core/break.js"></script>
+    <script src="../src/core/paths.js"></script>
+    <script src="../src/core/model.js"></script>
+    <script src="../src/core/combine.js"></script>
+    <script src="../src/core/loops.js"></script>
+    <script src="../src/core/kit.js"></script>
+    <script src="../src/core/exporter.js"></script>
+    <script src="../src/core/dxf.js"></script>
+    <script src="../src/core/xml.js"></script>
+    <script src="../src/core/svg.js"></script>
+    <script src="../src/core/openjscad.js"></script>
+    <script src="../src/core/solvers.js"></script>
+    <script src="../src/core/fillet.js"></script>
+    <script src="../src/core/intersect.js"></script>
+    <script src="../src/models/BoltCircle.js"></script>
+    <script src="../src/models/BoltRectangle.js"></script>
+    <script src="../src/models/Dome.js"></script>
+    <script src="../src/models/RoundRectangle.js"></script>
+    <script src="../src/models/Oval.js"></script>
+    <script src="../src/models/OvalArc.js"></script>
+    <script src="../src/models/ConnectTheDots.js"></script>
+    <script src="../src/models/Rectangle.js"></script>
+    <script src="../src/models/Ring.js"></script>
+    <script src="../src/models/Polygon.js"></script>
+    <script src="../src/models/Square.js"></script>
+    <script src="../src/models/Slot.js"></script>
+    <script src="../src/models/SCurve.js"></script>
+    <script src="../src/models/Star.js"></script>
+
+    <script>
+        //pretend it's been required
+        var makerjs = MakerJs;
     </script>
 
     <script src="playground.js"></script>
     <script>
         //config
-        MakerJsPlayground.relativePath = '../demos/js/';
+        MakerJsPlayground.relativePath = '../examples/';
     </script>
 
 </head>
@@ -50,21 +90,27 @@
         <div>
             Download your customized drawing
         </div>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('dxf');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.dxf">.dxf</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('svg');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.svg">.svg</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('json');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.json">json</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('openjscad');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.txt">openjscad</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('stl');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.stl">.stl</a>
-        </section>
+        <select id="select-format" onchange="MakerJsPlayground.selectDownloadFormat(this.options[this.selectedIndex].value);">
+            <option disabled selected value="" >Choose format</option>
+            <option value="json">JSON</option>
+            <option value="svg">SVG</option>
+            <option value="dxf">DXF</option>
+            <option value="stl">STL</option>
+            <option value="txt">OpenJsCad code</option>
+        </select>
+        
+        <a id="download-link" href="" download="">download</a>
 
-        <section>
-            <div class="code-header">
-                JavaScript code editor
-                <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
-                <span class="status"></span>
-            </div>
+    </section>
 
-            <a name="code"></a>
+    <section>
+        <div class="code-header">
+            JavaScript code editor
+            <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
+            <span class="status"></span>
+        </div>
+
+        <a name="code"></a>
 
         <pre id="init-javascript-code">
 var makerjs = require('makerjs');
