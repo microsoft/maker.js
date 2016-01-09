@@ -7,6 +7,10 @@
 
 declare var makerjs: typeof MakerJs;
 
+interface HTMLAnchorElement {
+    download: string;
+}
+
 module MakerJsPlayground {
 
     //classes
@@ -34,12 +38,20 @@ module MakerJsPlayground {
         paramHtml: string;
     }
 
+    export interface IJavaScriptErrorDetails {
+        colno: number;
+        lineno: number;
+        message: string;
+        name: string;
+    }
+
     //private members
 
     var pixelsPerInch = 100;
     var iframe: HTMLIFrameElement;
-    var renderingOptionsMenu: HTMLDivElement;
+    var customizeMenu: HTMLDivElement;
     var view: HTMLDivElement;
+    var selectFormat: HTMLSelectElement;
     var hMargin: number;
     var vMargin: number;
     var processed: IProcessedResult = {
@@ -50,6 +62,7 @@ module MakerJsPlayground {
         paramHtml: ''
     };
     var init = true;
+    var marker: CodeMirror.TextMarker;
 
     function getZoom() {
         var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -61,6 +74,23 @@ module MakerJsPlayground {
 
     function isHttp(url: string): boolean {
         return "http" === url.substr(0, 4);
+    }
+
+    function isIJavaScriptErrorDetails(result: any) {
+        var sample: IJavaScriptErrorDetails = {
+            colno: 0,
+            lineno: 0,
+            message: '',
+            name: ''
+        };
+        
+        for (var key in sample) {
+            if (!(key in result)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
@@ -183,6 +213,28 @@ module MakerJsPlayground {
         return code.join('\n');
     }
 
+    function resetDownload() {
+        document.body.classList.remove('download-available');
+        selectFormat.selectedIndex = 0;
+    }
+
+    function highlightCodeError(error: IJavaScriptErrorDetails) {
+
+        processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
+
+        var editorLine = error.lineno - 1;
+
+        var from: CodeMirror.Position = {
+            line: editorLine, ch: error.colno - 1
+        };
+
+        var to: CodeMirror.Position = {
+            line: editorLine, ch: codeMirrorEditor.getDoc().getLine(editorLine).length
+        };
+
+        marker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+    }
+
     //public members
 
     export var codeMirrorEditor: CodeMirror.Editor;
@@ -205,6 +257,13 @@ module MakerJsPlayground {
 
     export function processResult(html: string, result: any) {
 
+        if (marker) {
+            marker.clear();
+            marker = null;
+        }
+
+        resetDownload();
+
         processed.html = html;
         processed.model = null;
         processed.paramValues = null;
@@ -222,6 +281,10 @@ module MakerJsPlayground {
 
         } else if (makerjs.isModel(result)) {
             processed.model = result;
+        } else if (isIJavaScriptErrorDetails(result)) {
+            
+            //render script error
+            highlightCodeError(result as IJavaScriptErrorDetails);
         }
 
         document.getElementById('params').innerHTML = processed.paramHtml;
@@ -243,6 +306,9 @@ module MakerJsPlayground {
     }
 
     export function setParam(index: number, value: any) {
+
+        resetDownload();
+
         processed.paramValues[index] = value;
 
         //see if output is either a Node module, or a MakerJs.IModel
@@ -261,6 +327,8 @@ module MakerJsPlayground {
         //remove content so default size can be measured
         view.innerHTML = '';
 
+        var html = processed.html;
+
         if (processed.model) {
 
             var measure = makerjs.measure.modelExtents(processed.model);
@@ -268,7 +336,7 @@ module MakerJsPlayground {
             var modelWidthNatural = measure.high[0] - measure.low[0];
             var height = view.offsetHeight - 2 * vMargin;
             var width = document.getElementById('view-params').offsetWidth - 2 * hMargin;
-            var menuLeft = renderingOptionsMenu.offsetLeft - 2 * hMargin;
+            var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
             var viewScale = 1;
 
             //view mode - left of menu
@@ -314,8 +382,6 @@ module MakerJsPlayground {
                 };
             }
 
-            var html = processed.html;
-
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
 
@@ -347,8 +413,8 @@ module MakerJsPlayground {
         MakerJsPlayground.render();
     }
 
-    export function getRaw(type) {
-        switch (type) {
+    export function getRaw(format: string) {
+        switch (format) {
             case "dxf":
                 return makerjs.exporter.toDXF(processed.model);
 
@@ -358,7 +424,7 @@ module MakerJsPlayground {
             case "json":
                 return JSON.stringify(processed.model);
 
-            case "openjscad":
+            case "txt":
                 return makerjs.exporter.toOpenJsCad(processed.model);
 
             case "stl":
@@ -366,10 +432,10 @@ module MakerJsPlayground {
         }
     }
 
-    export function getExport(type) {
-        var raw = getRaw(type);
+    export function getExport(format: string) {
+        var raw = getRaw(format);
         var encoded = encodeURIComponent(raw);
-        switch (type) {
+        switch (format) {
             case "dxf":
                 return "data:application/dxf," + encoded;
 
@@ -379,12 +445,28 @@ module MakerJsPlayground {
             case "json":
                 return "data:application/json," + encoded;
 
-            case "openjscad":
-                return "data:text/javascript," + encoded;
+            case "txt":
+                return "data:text/plain," + encoded;
 
             case "stl":
                 return "data:application/stl," + encoded;
         }
+    }
+
+    export function selectDownloadFormat(format: string) {
+        document.body.classList.add('download-wait');
+
+        setTimeout(function () {
+            var x = 'data:text/plain;charset=utf-8,foobar';//getExport(format);
+
+            var a = document.getElementById('download-link') as HTMLAnchorElement;
+            a.href = x;
+            a.download = 'myModel.' + format;
+
+            document.body.classList.remove('download-wait');
+            document.body.classList.add('download-available');
+
+        }, 1);
     }
 
     //execution
@@ -395,8 +477,9 @@ module MakerJsPlayground {
             window.orientation = 'landscape';
         }
 
-        renderingOptionsMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
+        customizeMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
         view = document.getElementById('view') as HTMLDivElement;
+        selectFormat = document.getElementById('select-format') as HTMLSelectElement;
 
         var viewMeasure = document.getElementById('view-measure');
 

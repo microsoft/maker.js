@@ -3,7 +3,7 @@
 <head>
     <title>Maker.js Playground</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10">
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
     <link href="playground.css" rel="stylesheet" />
@@ -28,43 +28,49 @@
 <body>
     <a name="top"></a>
 
-        <header class="logo">
-            <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h2>Maker.js</h2></a>
-            <div id="rendering-options-top">
+    <header class="logo">
+        <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h2>Maker.js</h2></a>
+        <div id="rendering-options-top">
             <button onclick="MakerJsPlayground.toggleClass('collapse-rendering-options')">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
-            </div>
-        </header>
+        </div>
+    </header>
 
-        <section id="view-params">
-            <div id="view"><div id="view-measure"></div></div>
-            <div id="rendering-options-menu">
-                <div id="params"></div>
-                <hr />
-                <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
-                <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
-                <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
-            </div>
-        </section>
+    <section id="view-params">
+        <div id="view"><div id="view-measure"></div></div>
+        <div id="rendering-options-menu">
+            <div id="params"></div>
+            <hr />
+            <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
+            <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
+            <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
+        </div>
+    </section>
 
     <section id="download">
         <div>
             Download your customized drawing
         </div>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('dxf');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.dxf">.dxf</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('svg');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.svg">.svg</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('json');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.json">json</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('openjscad');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.txt">openjscad</a>
-        <a href="#" onclick="this.href = MakerJsPlayground.getExport('stl');" title="Download works in Chrome, Firefox and Microsoft Edge" download="myModel.stl">.stl</a>
-        </section>
+        <select id="select-format" onchange="MakerJsPlayground.selectDownloadFormat(this.options[this.selectedIndex].value);">
+            <option disabled selected value="" >Choose format</option>
+            <option value="json">JSON</option>
+            <option value="svg">SVG</option>
+            <option value="dxf">DXF</option>
+            <option value="stl">STL</option>
+            <option value="txt">OpenJsCad code</option>
+        </select>
+        
+        <a id="download-link" href="" download="">download</a>
 
-        <section>
-            <div class="code-header">
-                JavaScript code editor
-                <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
-                <span class="status"></span>
-            </div>
+    </section>
 
-            <a name="code"></a>
+    <section>
+        <div class="code-header">
+            JavaScript code editor
+            <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
+            <span class="status"></span>
+        </div>
+
+        <a name="code"></a>
 
         <pre id="init-javascript-code">
 var makerjs = require('makerjs');
@@ -76,16 +82,16 @@ this.paths = {
 };
 </pre>
 
-        </section>
+    </section>
 
-        <div class="scroll-nav-links">
-            <span>jump to</span>
-            <span><a href="#code">code</a></span>
-            <span><a href="#top">top</a></span>
-        </div>
+    <div class="scroll-nav-links">
+        <span>jump to</span>
+        <span><a href="#code">code</a></span>
+        <span><a href="#top">top</a></span>
+    </div>
 
-        <footer>
-        </footer>
+    <footer>
+    </footer>
 
 </body>
 </html>
