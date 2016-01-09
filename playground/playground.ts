@@ -214,8 +214,6 @@ module MakerJsPlayground {
     }
 
     function resetDownload() {
-        document.body.classList.remove('download-available');
-        selectFormat.selectedIndex = 0;
     }
 
     function highlightCodeError(error: IJavaScriptErrorDetails) {
@@ -424,7 +422,7 @@ module MakerJsPlayground {
             case "json":
                 return JSON.stringify(processed.model);
 
-            case "txt":
+            case "openjscad":
                 return makerjs.exporter.toOpenJsCad(processed.model);
 
             case "stl":
@@ -445,7 +443,7 @@ module MakerJsPlayground {
             case "json":
                 return "data:application/json," + encoded;
 
-            case "txt":
+            case "openjscad":
                 return "data:text/plain," + encoded;
 
             case "stl":
@@ -453,20 +451,9 @@ module MakerJsPlayground {
         }
     }
 
-    export function selectDownloadFormat(format: string) {
-        document.body.classList.add('download-wait');
-
-        setTimeout(function () {
-            var x = 'data:text/plain;charset=utf-8,foobar';//getExport(format);
-
-            var a = document.getElementById('download-link') as HTMLAnchorElement;
-            a.href = x;
-            a.download = 'myModel.' + format;
-
-            document.body.classList.remove('download-wait');
-            document.body.classList.add('download-available');
-
-        }, 1);
+    export function downloadClick(a: HTMLAnchorElement, format: string) {
+        //todo - generate out of the click handler in case generation takes a while
+        a.href = getExport(format);
     }
 
     //execution

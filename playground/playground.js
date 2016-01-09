@@ -147,8 +147,6 @@ var MakerJsPlayground;
         return code.join('\n');
     }
     function resetDownload() {
-        document.body.classList.remove('download-available');
-        selectFormat.selectedIndex = 0;
     }
     function highlightCodeError(error) {
         processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
@@ -312,7 +310,7 @@ var MakerJsPlayground;
                 return makerjs.exporter.toSVG(processed.model);
             case "json":
                 return JSON.stringify(processed.model);
-            case "txt":
+            case "openjscad":
                 return makerjs.exporter.toOpenJsCad(processed.model);
             case "stl":
                 return makerjs.exporter.toSTL(processed.model);
@@ -329,25 +327,18 @@ var MakerJsPlayground;
                 return "data:image/svg+xml," + encoded;
             case "json":
                 return "data:application/json," + encoded;
-            case "txt":
+            case "openjscad":
                 return "data:text/plain," + encoded;
             case "stl":
                 return "data:application/stl," + encoded;
         }
     }
     MakerJsPlayground.getExport = getExport;
-    function selectDownloadFormat(format) {
-        document.body.classList.add('download-wait');
-        setTimeout(function () {
-            var x = 'data:text/plain;charset=utf-8,foobar'; //getExport(format);
-            var a = document.getElementById('download-link');
-            a.href = x;
-            a.download = 'myModel.' + format;
-            document.body.classList.remove('download-wait');
-            document.body.classList.add('download-available');
-        }, 1);
+    function downloadClick(a, format) {
+        //todo - generate out of the click handler in case generation takes a while
+        a.href = getExport(format);
     }
-    MakerJsPlayground.selectDownloadFormat = selectDownloadFormat;
+    MakerJsPlayground.downloadClick = downloadClick;
     //execution
     window.onload = function (ev) {
         if (window.orientation === void 0) {
