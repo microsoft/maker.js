@@ -57,5 +57,16 @@
     "makerjs-spiral": "^1.0.1",
     "makerjs-heart": "^1.0.0",
     "makerjs-smile": "^1.2.1"
-  }
+  },
+  "ordered_demo_list":  [
+      "makerjs-spokes-flared",
+      "makerjs-spokes-straight",
+      "makerjs-polygon-rimbox",
+      "makerjs-rimbox",
+      "makerjs-ventgrid",
+      "makerjs-ventgridcircle",
+      "makerjs-spiral",
+      "makerjs-heart",
+      "makerjs-smile"
+    ]  
 }
