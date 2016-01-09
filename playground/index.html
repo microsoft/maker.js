@@ -90,16 +90,12 @@
         <div>
             Download your customized drawing
         </div>
-        <select id="select-format" onchange="MakerJsPlayground.selectDownloadFormat(this.options[this.selectedIndex].value);">
-            <option disabled selected value="" >Choose format</option>
-            <option value="json">JSON</option>
-            <option value="svg">SVG</option>
-            <option value="dxf">DXF</option>
-            <option value="stl">STL</option>
-            <option value="txt">OpenJsCad code</option>
-        </select>
-        
-        <a id="download-link" href="" download="">download</a>
+
+        <a href="#" onclick="MakerJsPlayground.downloadClick(this, 'dxf');" title="Download works in Chrome, Firefox, or Safari" download="myModel.dxf">.dxf</a>
+        <a href="#" onclick="MakerJsPlayground.downloadClick(this, 'svg');" title="Download works in Chrome, Firefox, or Safari" download="myModel.svg">.svg</a>
+        <a href="#" onclick="MakerJsPlayground.downloadClick(this, 'json');" title="Download works in Chrome, Firefox, or Safari" download="myModel.json">json</a>
+        <a href="#" onclick="MakerJsPlayground.downloadClick(this, 'openjscad');" title="Download works in Chrome, Firefox, or Safari" download="myModel.txt">openjscad</a>
+        <a href="#" onclick="MakerJsPlayground.downloadClick(this, 'stl');" title="Download works in Chrome, Firefox, or Safari" download="myModel.stl">.stl</a>
 
     </section>
 
