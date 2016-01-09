@@ -1,9 +1,15 @@
 /// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../src/core/exporter.ts" />
-/// <reference path="../src/core/kit.ts" />
-/// <reference path="../src/core/svg.ts" />
+/// <reference path="../src/core/maker.ts" />
 /// <reference path="../src/core/angle.ts" />
+/// <reference path="../src/core/path.ts" />
+/// <reference path="../src/core/break.ts" />
 /// <reference path="../src/core/intersect.ts" />
+/// <reference path="../src/core/kit.ts" />
+/// <reference path="../src/core/loops.ts" />
+/// <reference path="../src/core/dxf.ts" />
+/// <reference path="../src/core/svg.ts" />
+/// <reference path="../src/core/openjscad.ts" />
+/// <reference path="../src/models/connectthedots.ts" />
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
     //classes
@@ -263,7 +269,7 @@ var MakerJsPlayground;
             var renderModel = {
                 models: {
                     model: processed.model
-                },
+                }
             };
             if (document.getElementById('check-show-origin').checked) {
                 renderModel.paths = {
@@ -315,6 +321,7 @@ var MakerJsPlayground;
             case "stl":
                 return makerjs.exporter.toSTL(processed.model);
         }
+        return '';
     }
     MakerJsPlayground.getRaw = getRaw;
     function getExport(format) {
@@ -375,4 +382,3 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
-//# sourceMappingURL=playground.js.map
