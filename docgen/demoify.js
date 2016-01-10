@@ -42,6 +42,12 @@ function anchor(text, href, title, isEscaped) {
     }
     return a.toString();
 }
+function section(innerHtml) {
+    var s = new makerjs.exporter.XmlTag('section', { "class": 'tsd-panel' });
+    s.innerText = innerHtml;
+    s.innerTextEscaped = true;
+    return s.toString();
+}
 function getRequireKit(key) {
     if (key in packageJson.dependencies) {
         return require(key);
@@ -88,7 +94,7 @@ function homePage() {
     console.log('writing homepage');
     var stream = fs.createWriteStream('./index.html');
     stream.once('open', function (fd) {
-        stream.write(jekyll('page', 'Maker.js'));
+        stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
         var h2 = new makerjs.exporter.XmlTag('h2');
         h2.innerText = 'Latest demos';
         var demos = [h2.toString()];
@@ -102,14 +108,13 @@ function homePage() {
         allDemosP.innerText = anchor('see all demos', "/maker.js/demos/#content");
         allDemosP.innerTextEscaped = true;
         demos.push(allDemosP.toString());
-        var demosHtml = demos.join('\n');
-        stream.write(demosHtml + '\n');
+        stream.write(section(demos.join('\n')) + '\n');
         console.log('writing about markdown');
         var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
         var find = '## Features';
         var pos = readmeMarkdown.indexOf(find);
-        var html = marked(readmeMarkdown.substring(pos));
-        stream.write(html);
+        var aboutHtml = marked(readmeMarkdown.substring(pos));
+        stream.write(section(aboutHtml));
         stream.end();
     });
 }
