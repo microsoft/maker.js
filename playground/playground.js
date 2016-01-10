@@ -262,7 +262,8 @@ var MakerJsPlayground;
             var renderOptions = {
                 origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
                 annotate: document.getElementById('check-annotate').checked,
-                svgAttrs: { id: 'view-svg', "font-size": (MakerJsPlayground.windowZoom * MakerJsPlayground.svgFontSize) + 'px' },
+                svgAttrs: { id: 'view-svg' },
+                fontSize: (MakerJsPlayground.windowZoom * MakerJsPlayground.svgFontSize) + 'px',
                 strokeWidth: (MakerJsPlayground.windowZoom * MakerJsPlayground.svgStrokeWidth) + 'px',
                 scale: viewScale
             };

@@ -367,7 +367,8 @@ module MakerJsPlayground {
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
                 origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
                 annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
-                svgAttrs: { id: 'view-svg', "font-size": (windowZoom * svgFontSize) + 'px' },
+                svgAttrs: { id: 'view-svg' },
+                fontSize: (windowZoom * svgFontSize) + 'px',
                 strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
                 scale: viewScale
             };
@@ -381,8 +382,8 @@ module MakerJsPlayground {
             if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
 
                 renderModel.paths = {
-                    'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
-                    'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                        'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                        'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
                 };
             }
 

@@ -29,6 +29,7 @@ module MakerJs.exporter {
             scale: 1,
             stroke: "#000",
             strokeWidth: '0.25mm',   //a somewhat average kerf of a laser cutter
+            fontSize: '9pt',
             useSvgPathOnly: true,
             viewBox: true
         };
@@ -289,7 +290,8 @@ module MakerJs.exporter {
             stroke: opts.stroke,
             "stroke-width": opts.strokeWidth,
             "stroke-linecap": "round",
-            "fill": "none"
+            "fill": "none",
+            "font-size": opts.fontSize
         });
         append(svgGroup.getOpeningTag(false));
 
@@ -352,6 +354,11 @@ module MakerJs.exporter {
          * Optional attributes to add to the root svg tag.
          */
         svgAttrs?: IXmlTagAttrs;
+
+        /**
+         * SVG font size and font size units.
+         */
+        fontSize?: string;
 
         /**
          * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
