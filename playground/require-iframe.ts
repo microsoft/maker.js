@@ -54,6 +54,30 @@ module MakerJsRequireIframe {
         document.getElementsByTagName('head')[0].appendChild(script);
     }
 
+    function load(id: string) {
+
+        var script: HTMLScriptElement = document.createElement('script');
+        script.id = id;
+        script.src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+
+        script.onload = () => {
+            
+            //save the requred module
+            required[id] = window.module.exports;
+
+            //reset so it does not get picked up again
+            window.module.exports = null;
+
+            //increment the counter
+            counter.addLoaded();
+        };
+
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+    }
+
+    var reloads = [];
+    var previousId = null;
     var counter = new Counter();
     var html = '';
     var error: Error = null;
@@ -91,23 +115,13 @@ module MakerJsRequireIframe {
 
         counter.required++;
 
-        var script: HTMLScriptElement = document.createElement('script');
-        script.id = id;
-        script.src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+        load(id);
 
-        script.onload = () => {
-            
-            //save the requred module
-            required[id] = window.module.exports;
+        if (previousId) {
+            reloads.push(previousId);
+        }
 
-            //reset so it does not get picked up again
-            window.module.exports = null;
-
-            //increment the counter
-            counter.addLoaded();
-        };
-
-        document.getElementsByTagName('head')[0].appendChild(script);
+        previousId = id;
 
         //return an object that may be treated like a class
         return Dummy;
@@ -125,7 +139,7 @@ module MakerJsRequireIframe {
 
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
 
-        counter.complete = function () {
+        function complete2 () {
 
             if (error) {
 
@@ -160,6 +174,24 @@ module MakerJsRequireIframe {
 
             }
         };
+
+        function complete1 () {
+
+            if (reloads.length) {
+                counter.complete = complete2;
+
+                counter.required += reloads.length;
+
+                for (var i = reloads.length; i--;) {
+                    load(reloads[i]);
+                }
+
+            } else {
+                complete2();
+            }
+        }
+
+        counter.complete = complete1;
 
         try {
             
