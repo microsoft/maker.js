@@ -1858,8 +1858,15 @@ var MakerJs;
         function toDXF(itemToExport, options) {
             //DXF format documentation:
             //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
+            if (options === void 0) { options = {}; }
             var opts = {};
             MakerJs.extendObject(opts, options);
+            if (MakerJs.isModel(itemToExport)) {
+                var modelToExport = itemToExport;
+                if (modelToExport.exporterOptions) {
+                    MakerJs.extendObject(opts, modelToExport.exporterOptions['toDXF']);
+                }
+            }
             var dxf = [];
             function append(value) {
                 dxf.push(value);
@@ -3293,14 +3300,20 @@ var MakerJs;
          * @returns String of JavaScript containing a main() function for OpenJsCad.
          */
         function toOpenJsCad(modelToExport, options) {
+            if (!modelToExport)
+                return '';
             var all = '';
             var depth = 0;
             var depthModel;
             var opts = {
                 extrusion: 1,
-                pointMatchingDistance: .005
+                pointMatchingDistance: .005,
+                functionName: 'main'
             };
             MakerJs.extendObject(opts, options);
+            if (modelToExport.exporterOptions) {
+                MakerJs.extendObject(options, modelToExport.exporterOptions['toOpenJsCad']);
+            }
             var loops = MakerJs.model.findLoops(modelToExport, opts);
             while (depthModel = loops.models[depth]) {
                 var union = '';
@@ -3314,7 +3327,7 @@ var MakerJs;
             }
             var extrudeOptions = { offset: [0, 0, opts.extrusion] };
             var extrude = wrap('.extrude', JSON.stringify(extrudeOptions), true);
-            return 'function main(){return ' + all + extrude + ';}';
+            return 'function ' + opts.functionName + '(){return ' + all + extrude + '; } ';
         }
         exporter.toOpenJsCad = toOpenJsCad;
         /**
@@ -3327,8 +3340,42 @@ var MakerJs;
          * @returns String of STL format of 3D object.
          */
         function toSTL(modelToExport, options) {
-            var script = toOpenJsCad(modelToExport, options);
-            script += 'return main();';
+            if (!modelToExport)
+                return '';
+            function tryExportUnionFromOptions() {
+                if (!modelToExport.models)
+                    return;
+                if (!modelToExport.exporterOptions)
+                    return;
+                var stlOptions = modelToExport.exporterOptions['toSTL'];
+                if (!stlOptions)
+                    return;
+                var union = '';
+                var i = 0;
+                for (var key in stlOptions) {
+                    var fName = 'f' + i;
+                    var openJsCadOptions = stlOptions[key];
+                    openJsCadOptions.functionName = fName;
+                    var childModel = modelToExport.models[key];
+                    if (childModel) {
+                        script += toOpenJsCad(childModel, openJsCadOptions);
+                        if (union) {
+                            union += '.union(' + fName + '())';
+                        }
+                        else {
+                            union = fName + '()';
+                        }
+                    }
+                    i++;
+                }
+                script += ' return ' + union + ';';
+            }
+            var script = '';
+            tryExportUnionFromOptions();
+            if (!script) {
+                script += toOpenJsCad(modelToExport, options);
+                script += 'return main();';
+            }
             var f = new Function(script);
             var csg = f();
             return csg.toStlString();
@@ -3361,10 +3408,19 @@ var MakerJs;
                 scale: 1,
                 stroke: "#000",
                 strokeWidth: '0.25mm',
+                fontSize: '9pt',
                 useSvgPathOnly: true,
                 viewBox: true
             };
             MakerJs.extendObject(opts, options);
+            var modelToExport;
+            var itemToExportIsModel = MakerJs.isModel(itemToExport);
+            if (itemToExportIsModel) {
+                modelToExport = itemToExport;
+                if (modelToExport.exporterOptions) {
+                    MakerJs.extendObject(opts, modelToExport.exporterOptions['toSVG']);
+                }
+            }
             var elements = [];
             var layers = {};
             function append(value, layer) {
@@ -3481,18 +3537,17 @@ var MakerJs;
             };
             //fixup options
             //measure the item to move it into svg area
-            var modelToMeasure;
-            if (MakerJs.isModel(itemToExport)) {
-                modelToMeasure = itemToExport;
+            if (itemToExportIsModel) {
+                modelToExport = itemToExport;
             }
             else if (Array.isArray(itemToExport)) {
                 //issue: this won't handle an array of models
-                modelToMeasure = { paths: itemToExport };
+                modelToExport = { paths: itemToExport };
             }
             else if (MakerJs.isPath(itemToExport)) {
-                modelToMeasure = { paths: { modelToMeasure: itemToExport } };
+                modelToExport = { paths: { modelToMeasure: itemToExport } };
             }
-            var size = MakerJs.measure.modelExtents(modelToMeasure);
+            var size = MakerJs.measure.modelExtents(modelToExport);
             //try to get the unit system from the itemToExport
             if (!opts.units) {
                 var unitSystem = exporter.tryGetModelUnits(itemToExport);
@@ -3542,7 +3597,8 @@ var MakerJs;
                 stroke: opts.stroke,
                 "stroke-width": opts.strokeWidth,
                 "stroke-linecap": "round",
-                "fill": "none"
+                "fill": "none",
+                "font-size": opts.fontSize
             });
             append(svgGroup.getOpeningTag(false));
             var exp = new exporter.Exporter(map, fixPoint, fixPath, beginModel, endModel);

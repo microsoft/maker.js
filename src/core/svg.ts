@@ -29,11 +29,22 @@ module MakerJs.exporter {
             scale: 1,
             stroke: "#000",
             strokeWidth: '0.25mm',   //a somewhat average kerf of a laser cutter
+            fontSize: '9pt',
             useSvgPathOnly: true,
             viewBox: true
         };
 
         extendObject(opts, options);
+
+        var modelToExport: IModel;
+        var itemToExportIsModel = isModel(itemToExport);
+        if (itemToExportIsModel) {
+            modelToExport = itemToExport as IModel;
+
+            if (modelToExport.exporterOptions) {
+                extendObject(opts, modelToExport.exporterOptions['toSVG']);
+            }
+        }
 
         var elements: string[] = [];
         var layers: ILayerElements = {};
@@ -203,20 +214,18 @@ module MakerJs.exporter {
 
         //measure the item to move it into svg area
 
-        var modelToMeasure: IModel;
-
-        if (isModel(itemToExport)) {
-            modelToMeasure = <IModel>itemToExport;
+        if (itemToExportIsModel) {
+            modelToExport = <IModel>itemToExport;
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToMeasure = { paths: <IPathMap>itemToExport };
+            modelToExport = { paths: <IPathMap>itemToExport };
 
         } else if (isPath(itemToExport)) {
-            modelToMeasure = { paths: {modelToMeasure: <IPath>itemToExport } };
+            modelToExport = { paths: {modelToMeasure: <IPath>itemToExport } };
         }
 
-        var size = measure.modelExtents(modelToMeasure);
+        var size = measure.modelExtents(modelToExport);
 
         //try to get the unit system from the itemToExport
         if (!opts.units) {
@@ -281,7 +290,8 @@ module MakerJs.exporter {
             stroke: opts.stroke,
             "stroke-width": opts.strokeWidth,
             "stroke-linecap": "round",
-            "fill": "none"
+            "fill": "none",
+            "font-size": opts.fontSize
         });
         append(svgGroup.getOpeningTag(false));
 
@@ -344,6 +354,11 @@ module MakerJs.exporter {
          * Optional attributes to add to the root svg tag.
          */
         svgAttrs?: IXmlTagAttrs;
+
+        /**
+         * SVG font size and font size units.
+         */
+        fontSize?: string;
 
         /**
          * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.

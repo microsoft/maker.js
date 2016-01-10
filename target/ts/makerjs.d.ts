@@ -345,6 +345,12 @@ declare module MakerJs {
          * Optional layer of this model.
          */
         layer?: string;
+        /**
+         * Optional exporter options for this model.
+         */
+        exporterOptions?: {
+            [exporterName: string]: any;
+        };
     }
     /**
      * Callback signature for model.walkPaths().
@@ -1212,7 +1218,7 @@ declare module MakerJs.exporter {
      * @param options.resolution Size of facets.
      * @returns String of STL format of 3D object.
      */
-    function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions): string;
+    function toSTL(modelToExport: IModel, options: ISTLRenderOptions | IOpenJsCadOptions): string;
     /**
      * OpenJsCad export options.
      */
@@ -1225,6 +1231,13 @@ declare module MakerJs.exporter {
          * Optional size of curve facets.
          */
         facetSize?: number;
+        /**
+         * Optional override of function name, default is "main"
+         */
+        functionName?: string;
+    }
+    interface ISTLRenderOptions {
+        [modelId: string]: IOpenJsCadOptions;
     }
 }
 declare module MakerJs.exporter {
@@ -1252,6 +1265,10 @@ declare module MakerJs.exporter {
          * Optional attributes to add to the root svg tag.
          */
         svgAttrs?: IXmlTagAttrs;
+        /**
+         * SVG font size and font size units.
+         */
+        fontSize?: string;
         /**
          * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
          */

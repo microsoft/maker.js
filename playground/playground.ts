@@ -1,9 +1,15 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../src/core/exporter.ts" />
-/// <reference path="../src/core/kit.ts" />
-/// <reference path="../src/core/svg.ts" />
+/// <reference path="../src/core/maker.ts" />
 /// <reference path="../src/core/angle.ts" />
+/// <reference path="../src/core/path.ts" />
+/// <reference path="../src/core/break.ts" />
 /// <reference path="../src/core/intersect.ts" />
+/// <reference path="../src/core/kit.ts" />
+/// <reference path="../src/core/loops.ts" />
+/// <reference path="../src/core/dxf.ts" />
+/// <reference path="../src/core/svg.ts" />
+/// <reference path="../src/core/openjscad.ts" />
+/// <reference path="../src/models/connectthedots.ts" />
 
 declare var makerjs: typeof MakerJs;
 
@@ -361,7 +367,8 @@ module MakerJsPlayground {
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
                 origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
                 annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
-                svgAttrs: { id: 'view-svg', "font-size": (windowZoom * svgFontSize) + 'px' },
+                svgAttrs: { id: 'view-svg' },
+                fontSize: (windowZoom * svgFontSize) + 'px',
                 strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
                 scale: viewScale
             };
@@ -369,7 +376,7 @@ module MakerJsPlayground {
             var renderModel: MakerJs.IModel = {
                 models: {
                     model: processed.model
-                },
+                }
             };
 
             if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
@@ -411,49 +418,64 @@ module MakerJsPlayground {
         MakerJsPlayground.render();
     }
 
-    export function getRaw(format: string) {
-        switch (format) {
-            case "dxf":
-                return makerjs.exporter.toDXF(processed.model);
-
-            case "svg":
-                return makerjs.exporter.toSVG(processed.model);
-
-            case "json":
-                return JSON.stringify(processed.model);
-
-            case "openjscad":
-                return makerjs.exporter.toOpenJsCad(processed.model);
-
-            case "stl":
-                return makerjs.exporter.toSTL(processed.model);
-        }
+    interface IExport {
+        xf: Function;   //exporter function
+        mt: string;     //media type
     }
 
-    export function getExport(format: string) {
-        var raw = getRaw(format);
-        var encoded = encodeURIComponent(raw);
-        switch (format) {
-            case "dxf":
-                return "data:application/dxf," + encoded;
+    interface IExportResult {
+        text: string;
+        dataUri: string;
+    }
 
-            case "svg":
-                return "data:image/svg+xml," + encoded;
+    interface IFormatToExporterMap {
+        [format: string]: IExport;
+    }
 
-            case "json":
-                return "data:application/json," + encoded;
-
-            case "openjscad":
-                return "data:text/plain," + encoded;
-
-            case "stl":
-                return "data:application/stl," + encoded;
+    var formatMap: IFormatToExporterMap = {
+        "json": {
+            xf: JSON.stringify,
+            mt: 'application/json'
+        },
+        "dxf": {
+            xf: makerjs.exporter.toDXF,
+            mt: 'application/dxf'
+        },
+        "svg": {
+            xf: makerjs.exporter.toSVG,
+            mt: 'image/svg+xml'
+        },
+        "openjscad": {
+            xf: makerjs.exporter.toOpenJsCad,
+            mt: 'text/plain'
+        },
+        "stl": {
+            xf: makerjs.exporter.toSTL,
+            mt: 'application/stl'
         }
+    };
+
+    export function getExport(format: string): IExportResult {
+        var iexport = formatMap[format];
+        if (iexport) {
+
+            //call the exporter function. for STL, this may take a while on the UI thread.
+            var text = iexport.xf(processed.model);
+
+            var encoded = encodeURIComponent(text);
+            var uriPrefix = 'data:' + iexport.mt + ',';
+
+            return {
+                text: text,
+                dataUri: uriPrefix + encoded
+            };
+        }
+        return null;
     }
 
     export function downloadClick(a: HTMLAnchorElement, format: string) {
         //todo - generate out of the click handler in case generation takes a while
-        a.href = getExport(format);
+        a.href = getExport(format).dataUri;
     }
 
     //execution
