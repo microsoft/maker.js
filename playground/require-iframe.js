@@ -37,6 +37,22 @@ var MakerJsRequireIframe;
         script.appendChild(fragment);
         document.getElementsByTagName('head')[0].appendChild(script);
     }
+    function load(id) {
+        var script = document.createElement('script');
+        script.id = id;
+        script.src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+        script.onload = function () {
+            //save the requred module
+            required[id] = window.module.exports;
+            //reset so it does not get picked up again
+            window.module.exports = null;
+            //increment the counter
+            counter.addLoaded();
+        };
+        document.getElementsByTagName('head')[0].appendChild(script);
+    }
+    var reloads = [];
+    var previousId = null;
     var counter = new Counter();
     var html = '';
     var error = null;
@@ -65,18 +81,11 @@ var MakerJsRequireIframe;
             return required[id];
         }
         counter.required++;
-        var script = document.createElement('script');
-        script.id = id;
-        script.src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
-        script.onload = function () {
-            //save the requred module
-            required[id] = window.module.exports;
-            //reset so it does not get picked up again
-            window.module.exports = null;
-            //increment the counter
-            counter.addLoaded();
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        load(id);
+        if (previousId) {
+            reloads.push(previousId);
+        }
+        previousId = id;
         //return an object that may be treated like a class
         return Dummy;
     };
@@ -87,7 +96,7 @@ var MakerJsRequireIframe;
         var originalAlert = window.alert;
         window.alert = function () { };
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
-        counter.complete = function () {
+        function complete2() {
             if (error) {
                 runCodeGlobal(javaScript);
             }
@@ -112,7 +121,21 @@ var MakerJsRequireIframe;
                     parent.MakerJsPlayground.processResult(html, window.module.exports || model);
                 }, 0);
             }
-        };
+        }
+        ;
+        function complete1() {
+            if (reloads.length) {
+                counter.complete = complete2;
+                counter.required += reloads.length;
+                for (var i = reloads.length; i--;) {
+                    load(reloads[i]);
+                }
+            }
+            else {
+                complete2();
+            }
+        }
+        counter.complete = complete1;
         try {
             //run for the collection pass
             runCodeIsolated(javaScript);
