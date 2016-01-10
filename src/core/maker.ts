@@ -449,6 +449,11 @@ module MakerJs {
          * Optional layer of this model.
          */
         layer?: string;
+
+        /**
+         * Optional exporter options for this model.
+         */
+        exporterOptions?: { [exporterName: string]: any };
     }
 
     /**

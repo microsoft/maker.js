@@ -14,7 +14,7 @@ module MakerJs.exporter {
      * @param options.units String of the unit system. May be omitted. See makerjs.unitType for possible values.
      * @returns String of DXF content.
      */
-    export function toDXF(itemToExport: any, options?: IDXFRenderOptions): string {
+    export function toDXF(itemToExport: any, options: IDXFRenderOptions = {}): string {
 
         //DXF format documentation:
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
@@ -22,6 +22,13 @@ module MakerJs.exporter {
         var opts: IDXFRenderOptions = {};
 
         extendObject(opts, options);
+
+        if (isModel(itemToExport)) {
+            var modelToExport = itemToExport as IModel;
+            if (modelToExport.exporterOptions) {
+                extendObject(opts, modelToExport.exporterOptions['toDXF']);
+            }
+        }
 
         var dxf: string[] = [];
 
