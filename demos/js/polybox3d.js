@@ -14,10 +14,6 @@ function polybox3d(sides, radius, holeRadius, rim) {
 
     delete this.models.bottom.models.bolts;
 
-    this.zBottom = 1;
-    this.zLid = rim;
-    this.zSides = 2 * radius;
-
     this.exporterOptions = {
         toOpenJsCad: {
             modelMap: {
