@@ -3312,24 +3312,55 @@ var MakerJs;
             };
             MakerJs.extendObject(opts, options);
             if (modelToExport.exporterOptions) {
-                MakerJs.extendObject(options, modelToExport.exporterOptions['toOpenJsCad']);
+                MakerJs.extendObject(opts, modelToExport.exporterOptions['toOpenJsCad']);
             }
-            var loops = MakerJs.model.findLoops(modelToExport, opts);
-            while (depthModel = loops.models[depth]) {
-                var union = '';
-                for (var modelId in depthModel.models) {
-                    var subModel = depthModel.models[modelId];
-                    union += wrap('.union', pathsToOpenJsCad(subModel, opts.facetSize), union);
+            //pass options back into calling object
+            MakerJs.extendObject(options, opts);
+            if (opts && opts.modelMap) {
+                all = exportFromOptionsMap(modelToExport, opts.modelMap);
+            }
+            if (!all) {
+                var result = [];
+                var loops = MakerJs.model.findLoops(modelToExport, opts);
+                while (depthModel = loops.models[depth]) {
+                    var union = '';
+                    for (var modelId in depthModel.models) {
+                        var subModel = depthModel.models[modelId];
+                        union += wrap('.union', pathsToOpenJsCad(subModel, opts.facetSize), union);
+                    }
+                    var operator = (depth % 2 == 0) ? '.union' : '.subtract';
+                    result.push(wrap(operator, union, result.length));
+                    depth++;
                 }
-                var operator = (depth % 2 == 0) ? '.union' : '.subtract';
-                all += wrap(operator, union, all);
-                depth++;
+                var extrudeOptions = { offset: [0, 0, opts.extrusion] };
+                result.push(wrap('.extrude', JSON.stringify(extrudeOptions), true));
+                all = 'return ' + result.join('');
             }
-            var extrudeOptions = { offset: [0, 0, opts.extrusion] };
-            var extrude = wrap('.extrude', JSON.stringify(extrudeOptions), true);
-            return 'function ' + opts.functionName + '(){return ' + all + extrude + '; } ';
+            return 'function ' + opts.functionName + '(){' + all + ';}';
         }
         exporter.toOpenJsCad = toOpenJsCad;
+        function exportFromOptionsMap(modelToExport, optionsMap) {
+            if (!modelToExport.models)
+                return;
+            var result = [];
+            var union = [];
+            var i = 0;
+            for (var key in optionsMap) {
+                var fName = 'f' + i;
+                var options = optionsMap[key];
+                options.functionName = fName;
+                var childModel = modelToExport.models[key];
+                if (childModel) {
+                    result.push(toOpenJsCad(childModel, options));
+                    union.push('(' + fName + '())');
+                }
+                i++;
+            }
+            if (!result.length)
+                return;
+            result.push('return ' + union.join('.union'));
+            return result.join(' ');
+        }
         /**
          * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
          *
@@ -3340,42 +3371,11 @@ var MakerJs;
          * @returns String of STL format of 3D object.
          */
         function toSTL(modelToExport, options) {
+            if (options === void 0) { options = {}; }
             if (!modelToExport)
                 return '';
-            function tryExportUnionFromOptions() {
-                if (!modelToExport.models)
-                    return;
-                if (!modelToExport.exporterOptions)
-                    return;
-                var stlOptions = modelToExport.exporterOptions['toSTL'];
-                if (!stlOptions)
-                    return;
-                var union = '';
-                var i = 0;
-                for (var key in stlOptions) {
-                    var fName = 'f' + i;
-                    var openJsCadOptions = stlOptions[key];
-                    openJsCadOptions.functionName = fName;
-                    var childModel = modelToExport.models[key];
-                    if (childModel) {
-                        script += toOpenJsCad(childModel, openJsCadOptions);
-                        if (union) {
-                            union += '.union(' + fName + '())';
-                        }
-                        else {
-                            union = fName + '()';
-                        }
-                    }
-                    i++;
-                }
-                script += ' return ' + union + ';';
-            }
-            var script = '';
-            tryExportUnionFromOptions();
-            if (!script) {
-                script += toOpenJsCad(modelToExport, options);
-                script += 'return main();';
-            }
+            var script = toOpenJsCad(modelToExport, options);
+            script += 'return ' + options.functionName + '();';
             var f = new Function(script);
             var csg = f();
             return csg.toStlString();
