@@ -270,7 +270,7 @@ var MakerJsPlayground;
             var renderModel = {
                 models: {
                     model: processed.model
-                },
+                }
             };
             if (document.getElementById('check-show-origin').checked) {
                 renderModel.paths = {
@@ -387,4 +387,3 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
-//# sourceMappingURL=playground.js.map

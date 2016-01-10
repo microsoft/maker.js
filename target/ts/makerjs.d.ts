@@ -1266,6 +1266,10 @@ declare module MakerJs.exporter {
          */
         svgAttrs?: IXmlTagAttrs;
         /**
+         * SVG font size and font size units.
+         */
+        fontSize?: string;
+        /**
          * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
          */
         strokeWidth?: string;

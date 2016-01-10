@@ -376,7 +376,7 @@ module MakerJsPlayground {
             var renderModel: MakerJs.IModel = {
                 models: {
                     model: processed.model
-                },
+                }
             };
 
             if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {

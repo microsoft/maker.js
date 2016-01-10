@@ -3342,7 +3342,7 @@ var MakerJs;
         function toSTL(modelToExport, options) {
             if (!modelToExport)
                 return '';
-            function hasMatchingOptions() {
+            function tryExportUnionFromOptions() {
                 if (!modelToExport.models)
                     return;
                 if (!modelToExport.exporterOptions)
@@ -3350,7 +3350,7 @@ var MakerJs;
                 var stlOptions = modelToExport.exporterOptions['toSTL'];
                 if (!stlOptions)
                     return;
-                var main = '';
+                var union = '';
                 var i = 0;
                 for (var key in stlOptions) {
                     var fName = 'f' + i;
@@ -3359,19 +3359,19 @@ var MakerJs;
                     var childModel = modelToExport.models[key];
                     if (childModel) {
                         script += toOpenJsCad(childModel, openJsCadOptions);
-                        if (main) {
-                            main += '.union(' + fName + '())';
+                        if (union) {
+                            union += '.union(' + fName + '())';
                         }
                         else {
-                            main = fName + '()';
+                            union = fName + '()';
                         }
                     }
                     i++;
                 }
-                script += ' return ' + main + ';';
+                script += ' return ' + union + ';';
             }
             var script = '';
-            hasMatchingOptions();
+            tryExportUnionFromOptions();
             if (!script) {
                 script += toOpenJsCad(modelToExport, options);
                 script += 'return main();';
@@ -3408,6 +3408,7 @@ var MakerJs;
                 scale: 1,
                 stroke: "#000",
                 strokeWidth: '0.25mm',
+                fontSize: '9pt',
                 useSvgPathOnly: true,
                 viewBox: true
             };
@@ -3596,7 +3597,8 @@ var MakerJs;
                 stroke: opts.stroke,
                 "stroke-width": opts.strokeWidth,
                 "stroke-linecap": "round",
-                "fill": "none"
+                "fill": "none",
+                "font-size": opts.fontSize
             });
             append(svgGroup.getOpeningTag(false));
             var exp = new exporter.Exporter(map, fixPoint, fixPath, beginModel, endModel);
