@@ -151,11 +151,16 @@ function homePage() {
         console.log('writing about markdown');
 
         var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
-        var find = '## Features';
-        var pos = readmeMarkdown.indexOf(find);
-        var aboutHtml = marked(readmeMarkdown.substring(pos));
 
-        stream.write(section(aboutHtml));
+        var sections = readmeMarkdown.split('\n## ');
+
+        //skip the first section, begin with 1
+        for (var i = 1; i < sections.length; i++) {
+
+            var sectionHtml = marked('## ' + sections[i]);
+
+            stream.write(section(sectionHtml));
+        }
 
         stream.end();
     });
