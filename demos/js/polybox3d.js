@@ -19,10 +19,12 @@ function polybox3d(sides, radius, holeRadius, rim) {
     this.zSides = 2 * radius;
 
     this.exporterOptions = {
-        toSTL: {
-            bottom: { extrusion: 1 },
-            side: { extrusion: 2 * radius },
-            lid: { extrusion: rim }
+        toOpenJsCad: {
+            modelMap: {
+                bottom: { extrusion: 1 },
+                side: { extrusion: 2 * radius },
+                lid: { extrusion: rim }
+            }
         }
     };
 
