@@ -382,8 +382,8 @@ module MakerJsPlayground {
             if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
 
                 renderModel.paths = {
-                        'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
-                        'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                    'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
+                    'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
                 };
             }
 
