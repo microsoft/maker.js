@@ -195,7 +195,7 @@ module MakerJs.exporter {
     export function toSTL(modelToExport: IModel, options: ISTLRenderOptions | IOpenJsCadOptions): string {
         if (!modelToExport) return '';
 
-        function hasMatchingOptions() {
+        function tryExportUnionFromOptions() {
 
             if (!modelToExport.models) return;
             if (!modelToExport.exporterOptions) return;
@@ -204,9 +204,9 @@ module MakerJs.exporter {
 
             if (!stlOptions) return;
 
-            var main = '';
-
+            var union = '';
             var i = 0;
+
             for (var key in stlOptions) {
                 var fName = 'f' + i;
 
@@ -218,21 +218,21 @@ module MakerJs.exporter {
                 if (childModel) {
                     script += toOpenJsCad(childModel, openJsCadOptions);
 
-                    if (main) {
-                        main += '.union(' + fName + '())'
+                    if (union) {
+                        union += '.union(' + fName + '())'
                     } else {
-                        main = fName + '()';
+                        union = fName + '()';
                     }
                 }
                 i++;
             }
 
-            script += ' return ' + main + ';';
+            script += ' return ' + union + ';';
         }
 
         var script = '';
 
-        hasMatchingOptions();
+        tryExportUnionFromOptions();
 
         if (!script) {
             script += toOpenJsCad(modelToExport, options);
