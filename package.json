@@ -55,12 +55,13 @@
   },
   "ordered_demo_list": [
     "polybox3d",
+    "rimbox3d",
     "makerjs-spokes-flared",
     "makerjs-spokes-straight",
     "makerjs-polygon-rimbox",
     "makerjs-rimbox",
-    "makerjs-ventgrid",
     "makerjs-ventgridcircle",
+    "makerjs-ventgrid",
     "makerjs-spiral",
     "makerjs-heart",
     "makerjs-smile"
