@@ -35,6 +35,16 @@ module MakerJs.exporter {
 
         extendObject(opts, options);
 
+        var modelToExport: IModel;
+        var itemToExportIsModel = isModel(itemToExport);
+        if (itemToExportIsModel) {
+            modelToExport = itemToExport as IModel;
+
+            if (modelToExport.exporterOptions) {
+                extendObject(opts, modelToExport.exporterOptions['toSVG']);
+            }
+        }
+
         var elements: string[] = [];
         var layers: ILayerElements = {};
 
@@ -203,20 +213,18 @@ module MakerJs.exporter {
 
         //measure the item to move it into svg area
 
-        var modelToMeasure: IModel;
-
-        if (isModel(itemToExport)) {
-            modelToMeasure = <IModel>itemToExport;
+        if (itemToExportIsModel) {
+            modelToExport = <IModel>itemToExport;
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToMeasure = { paths: <IPathMap>itemToExport };
+            modelToExport = { paths: <IPathMap>itemToExport };
 
         } else if (isPath(itemToExport)) {
-            modelToMeasure = { paths: {modelToMeasure: <IPath>itemToExport } };
+            modelToExport = { paths: {modelToMeasure: <IPath>itemToExport } };
         }
 
-        var size = measure.modelExtents(modelToMeasure);
+        var size = measure.modelExtents(modelToExport);
 
         //try to get the unit system from the itemToExport
         if (!opts.units) {

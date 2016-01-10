@@ -146,16 +146,23 @@ module MakerJs.exporter {
      * @returns String of JavaScript containing a main() function for OpenJsCad.
      */
     export function toOpenJsCad(modelToExport: IModel, options?: IOpenJsCadOptions): string {
+        if (!modelToExport) return '';
+
         var all = '';
         var depth = 0;
         var depthModel: IModel;
 
         var opts: IOpenJsCadOptions = {
             extrusion: 1,
-            pointMatchingDistance: .005
+            pointMatchingDistance: .005,
+            functionName: 'main'
         };
 
         extendObject(opts, options);
+
+        if (modelToExport.exporterOptions) {
+            extendObject(options, modelToExport.exporterOptions['toOpenJsCad']);
+        }
 
         var loops = model.findLoops(modelToExport, opts);
 
@@ -173,7 +180,7 @@ module MakerJs.exporter {
         var extrudeOptions: CAG.CAG_extrude_options = { offset: [0, 0, opts.extrusion] };
         var extrude = wrap('.extrude', JSON.stringify(extrudeOptions), true);
 
-        return 'function main(){return ' + all + extrude + ';}';
+        return 'function ' + opts.functionName + '(){return ' + all + extrude + '; } ';
     }
 
     /**
@@ -185,11 +192,52 @@ module MakerJs.exporter {
      * @param options.resolution Size of facets.
      * @returns String of STL format of 3D object.
      */
-    export function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions) {
+    export function toSTL(modelToExport: IModel, options: ISTLRenderOptions | IOpenJsCadOptions): string {
+        if (!modelToExport) return '';
 
-        var script = toOpenJsCad(modelToExport, options);
+        function hasMatchingOptions() {
 
-        script += 'return main();';
+            if (!modelToExport.models) return;
+            if (!modelToExport.exporterOptions) return;
+
+            var stlOptions = modelToExport.exporterOptions['toSTL'];
+
+            if (!stlOptions) return;
+
+            var main = '';
+
+            var i = 0;
+            for (var key in stlOptions) {
+                var fName = 'f' + i;
+
+                var openJsCadOptions = stlOptions[key];
+                openJsCadOptions.functionName = fName;
+
+                var childModel = modelToExport.models[key];
+
+                if (childModel) {
+                    script += toOpenJsCad(childModel, openJsCadOptions);
+
+                    if (main) {
+                        main += '.union(' + fName + '())'
+                    } else {
+                        main = fName + '()';
+                    }
+                }
+                i++;
+            }
+
+            script += ' return ' + main + ';';
+        }
+
+        var script = '';
+
+        hasMatchingOptions();
+
+        if (!script) {
+            script += toOpenJsCad(modelToExport, options);
+            script += 'return main();';
+        }
 
         var f = new Function(script);
         var csg = <CSG>f();
@@ -211,6 +259,15 @@ module MakerJs.exporter {
          * Optional size of curve facets.
          */
         facetSize?: number;
+
+        /**
+         * Optional override of function name, default is "main"
+         */
+        functionName?: string;
+    }
+
+    export interface ISTLRenderOptions {
+        [modelId: string]: IOpenJsCadOptions;
     }
 }
  

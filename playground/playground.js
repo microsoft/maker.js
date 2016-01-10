@@ -269,7 +269,7 @@ var MakerJsPlayground;
             var renderModel = {
                 models: {
                     model: processed.model
-                }
+                },
             };
             if (document.getElementById('check-show-origin').checked) {
                 renderModel.paths = {
@@ -308,42 +308,46 @@ var MakerJsPlayground;
         MakerJsPlayground.render();
     }
     MakerJsPlayground.toggleClass = toggleClass;
-    function getRaw(format) {
-        switch (format) {
-            case "dxf":
-                return makerjs.exporter.toDXF(processed.model);
-            case "svg":
-                return makerjs.exporter.toSVG(processed.model);
-            case "json":
-                return JSON.stringify(processed.model);
-            case "openjscad":
-                return makerjs.exporter.toOpenJsCad(processed.model);
-            case "stl":
-                return makerjs.exporter.toSTL(processed.model);
+    var formatMap = {
+        "json": {
+            xf: JSON.stringify,
+            mt: 'application/json'
+        },
+        "dxf": {
+            xf: makerjs.exporter.toDXF,
+            mt: 'application/dxf'
+        },
+        "svg": {
+            xf: makerjs.exporter.toSVG,
+            mt: 'image/svg+xml'
+        },
+        "openjscad": {
+            xf: makerjs.exporter.toOpenJsCad,
+            mt: 'text/plain'
+        },
+        "stl": {
+            xf: makerjs.exporter.toSTL,
+            mt: 'application/stl'
         }
-        return '';
-    }
-    MakerJsPlayground.getRaw = getRaw;
+    };
     function getExport(format) {
-        var raw = getRaw(format);
-        var encoded = encodeURIComponent(raw);
-        switch (format) {
-            case "dxf":
-                return "data:application/dxf," + encoded;
-            case "svg":
-                return "data:image/svg+xml," + encoded;
-            case "json":
-                return "data:application/json," + encoded;
-            case "openjscad":
-                return "data:text/plain," + encoded;
-            case "stl":
-                return "data:application/stl," + encoded;
+        var iexport = formatMap[format];
+        if (iexport) {
+            //call the exporter function. for STL, this may take a while on the UI thread.
+            var text = iexport.xf(processed.model);
+            var encoded = encodeURIComponent(text);
+            var uriPrefix = 'data:' + iexport.mt + ',';
+            return {
+                text: text,
+                dataUri: uriPrefix + encoded
+            };
         }
+        return null;
     }
     MakerJsPlayground.getExport = getExport;
     function downloadClick(a, format) {
         //todo - generate out of the click handler in case generation takes a while
-        a.href = getExport(format);
+        a.href = getExport(format).dataUri;
     }
     MakerJsPlayground.downloadClick = downloadClick;
     //execution
@@ -382,3 +386,4 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
+//# sourceMappingURL=playground.js.map

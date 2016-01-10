@@ -417,50 +417,64 @@ module MakerJsPlayground {
         MakerJsPlayground.render();
     }
 
-    export function getRaw(format: string): string {
-        switch (format) {
-            case "dxf":
-                return makerjs.exporter.toDXF(processed.model);
-
-            case "svg":
-                return makerjs.exporter.toSVG(processed.model);
-
-            case "json":
-                return JSON.stringify(processed.model);
-
-            case "openjscad":
-                return makerjs.exporter.toOpenJsCad(processed.model);
-
-            case "stl":
-                return makerjs.exporter.toSTL(processed.model);
-        }
-        return '';
+    interface IExport {
+        xf: Function;   //exporter function
+        mt: string;     //media type
     }
 
-    export function getExport(format: string) {
-        var raw = getRaw(format);
-        var encoded = encodeURIComponent(raw);
-        switch (format) {
-            case "dxf":
-                return "data:application/dxf," + encoded;
+    interface IExportResult {
+        text: string;
+        dataUri: string;
+    }
 
-            case "svg":
-                return "data:image/svg+xml," + encoded;
+    interface IFormatToExporterMap {
+        [format: string]: IExport;
+    }
 
-            case "json":
-                return "data:application/json," + encoded;
-
-            case "openjscad":
-                return "data:text/plain," + encoded;
-
-            case "stl":
-                return "data:application/stl," + encoded;
+    var formatMap: IFormatToExporterMap = {
+        "json": {
+            xf: JSON.stringify,
+            mt: 'application/json'
+        },
+        "dxf": {
+            xf: makerjs.exporter.toDXF,
+            mt: 'application/dxf'
+        },
+        "svg": {
+            xf: makerjs.exporter.toSVG,
+            mt: 'image/svg+xml'
+        },
+        "openjscad": {
+            xf: makerjs.exporter.toOpenJsCad,
+            mt: 'text/plain'
+        },
+        "stl": {
+            xf: makerjs.exporter.toSTL,
+            mt: 'application/stl'
         }
+    };
+
+    export function getExport(format: string): IExportResult {
+        var iexport = formatMap[format];
+        if (iexport) {
+
+            //call the exporter function. for STL, this may take a while on the UI thread.
+            var text = iexport.xf(processed.model);
+
+            var encoded = encodeURIComponent(text);
+            var uriPrefix = 'data:' + iexport.mt + ',';
+
+            return {
+                text: text,
+                dataUri: uriPrefix + encoded
+            };
+        }
+        return null;
     }
 
     export function downloadClick(a: HTMLAnchorElement, format: string) {
         //todo - generate out of the click handler in case generation takes a while
-        a.href = getExport(format);
+        a.href = getExport(format).dataUri;
     }
 
     //execution
