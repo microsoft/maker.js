@@ -1218,7 +1218,7 @@ declare module MakerJs.exporter {
      * @param options.resolution Size of facets.
      * @returns String of STL format of 3D object.
      */
-    function toSTL(modelToExport: IModel, options: ISTLRenderOptions | IOpenJsCadOptions): string;
+    function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions): string;
     /**
      * OpenJsCad export options.
      */
@@ -1232,11 +1232,15 @@ declare module MakerJs.exporter {
          */
         facetSize?: number;
         /**
-         * Optional override of function name, default is "main"
+         * Optional override of function name, default is "main".
          */
         functionName?: string;
+        /**
+         * Optional options applied to specific first-child models by model id.
+         */
+        modelMap?: IOpenJsCadOptionsMap;
     }
-    interface ISTLRenderOptions {
+    interface IOpenJsCadOptionsMap {
         [modelId: string]: IOpenJsCadOptions;
     }
 }
