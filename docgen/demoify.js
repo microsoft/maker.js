@@ -93,7 +93,7 @@ function homePage() {
         h2.innerText = 'Latest demos';
         var demos = [h2.toString()];
         var max = 6;
-        for (var i = 0; i < packageJson.ordered_demo_list.length && i <= max; i++) {
+        for (var i = 0; i < packageJson.ordered_demo_list.length && i < max; i++) {
             var key = packageJson.ordered_demo_list[i];
             var ctor = getRequireKit(key);
             demos.push(thumbnail(key, ctor, ''));

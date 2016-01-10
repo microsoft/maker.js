@@ -124,7 +124,7 @@ function homePage() {
 
         var max = 6;
 
-        for (var i = 0; i < packageJson.ordered_demo_list.length && i <= max; i++) {
+        for (var i = 0; i < packageJson.ordered_demo_list.length && i < max; i++) {
             var key = packageJson.ordered_demo_list[i];
             var ctor = getRequireKit(key);
 
