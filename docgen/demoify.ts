@@ -4,7 +4,7 @@
 
 import fs = require('fs');
 var browserify = require('browserify');
-var pjson = require('../package.json');
+var packageJson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
 var marked = <MarkedStatic>require('marked');
 var detective = require('detective');
@@ -56,6 +56,14 @@ function anchor(text: string, href: string, title?: string, isEscaped?: boolean)
     return a.toString();
 }
 
+function getRequireKit(key: string): MakerJs.IKit {
+    if (key in packageJson.dependencies) {
+        return require(key);
+    } else {
+        return require('../demos/js/' + key);
+    }
+}
+
 function demoIndexPage() {
 
     var stream = fs.createWriteStream('./demos/index.html');
@@ -79,8 +87,9 @@ function demoIndexPage() {
 
         writeHeading('Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
 
-        for (var key in pjson.dependencies) {
-            var ctor = <MakerJs.IKit>require(key);
+        for (var i = 0; i < packageJson.ordered_demo_list.length; i++) {
+            var key = packageJson.ordered_demo_list[i];
+            var ctor = getRequireKit(key);
 
             writeThumbnail(key, ctor, '../');
         }
@@ -114,17 +123,13 @@ function homePage() {
         var demos = [h2.toString()];
 
         var max = 6;
-        var i = 0;
 
-        for (var key in pjson.dependencies) {
-            var ctor = <MakerJs.IKit>require(key);
+        for (var i = 0; i < packageJson.ordered_demo_list.length && i <= max; i++) {
+            var key = packageJson.ordered_demo_list[i];
+            var ctor = getRequireKit(key);
 
             demos.push(thumbnail(key, ctor, ''));
-            
-            i++;
-            if (i >= max) break;
         }
-
 
         var allDemosP = new makerjs.exporter.XmlTag('p');
         allDemosP.innerText = anchor('see all demos', "/maker.js/demos/#content");
@@ -191,11 +196,11 @@ function copyRequire(root, key, copyTo) {
     }
 }
 
-function playground() {
+function copyDependencies() {
 
     var root = './';
 
-    for (var key in pjson.dependencies) {
+    for (var key in packageJson.dependencies) {
         copyRequire('./node_modules', key, '');
     }
 
@@ -205,4 +210,4 @@ demoIndexPage();
 
 homePage();
 
-playground();
+copyDependencies();
