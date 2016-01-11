@@ -8,6 +8,7 @@ html, body, button, select {
 
 body {
     padding: 1em;
+    overflow-y: scroll;
 }
 
 a[name=top] {
@@ -21,7 +22,7 @@ header, section, footer {
     position: relative;
 }
 
-h2 {
+header h1 {
     font-size: 24px;
     font-weight: normal;
     color: #aaa;
@@ -45,11 +46,16 @@ h2 {
     letter-spacing: 6px;
 }
 
+#blueprint-canvas {
+    background-color: #3177C6;
+    background-image: url('blueprint.png');
+    overflow: hidden;
+}
+
 #view-params {
     min-height: 23em;
     overflow: hidden;
-    background-color: #3177C6;
-    background-image: url('blueprint.png');
+    position: relative;
 }
 
 #rendering-options-menu, #rendering-options-top {
@@ -123,7 +129,7 @@ h2 {
 }
 
 .collapse-rendering-options #rendering-options-menu {
-    visibility: hidden;
+    display: none;
 }
 
 #params div {
@@ -171,6 +177,17 @@ svg line, svg circle, svg path {
     display: none;
 }
 
+#notes {
+    border: 1px solid rgba(0,0,111,0.3);
+    color: #fdfdff;
+    padding: 0 1em;
+    margin: 0 1em .5em 1em;
+}
+
+.collapse-notes #notes, .no-notes #notes, .no-notes #notes-toggle {
+    display: none;
+}
+
 #download a {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
@@ -208,6 +225,10 @@ svg line, svg circle, svg path {
     height: auto;
 }
 
+.code-error {
+    background-color: orange;
+}
+
 .scroll-nav-links {
     position: fixed; 
     bottom: .75em; 
@@ -233,6 +254,9 @@ svg line, svg circle, svg path {
     text-decoration: none;
 }
 
-.code-error {
-    background-color: orange;
+/* this is to clear the logo */
+@media only screen and (max-width: 540px) {
+    header {
+        height: 90px;
+    }
 }
