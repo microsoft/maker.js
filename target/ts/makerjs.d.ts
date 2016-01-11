@@ -418,6 +418,10 @@ declare module MakerJs {
          * Each element of the array corresponds to a parameter of the constructor, in order.
          */
         metaParameters?: IMetaParameter[];
+        /**
+         * Information about this kit, in plain text or markdown format.
+         */
+        notes?: string;
     }
 }
 declare module MakerJs.angle {

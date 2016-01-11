@@ -35,13 +35,39 @@ var MakerJsRequireIframe;
         var fragment = document.createDocumentFragment();
         fragment.textContent = javaScript;
         script.appendChild(fragment);
-        document.getElementsByTagName('head')[0].appendChild(script);
+        head.appendChild(script);
     }
-    function load(id) {
-        var script = document.createElement('script');
+    function load(id, requiredById) {
+        //bookkeeping
+        if (!(id in loads)) {
+            loads[id] = requiredById;
+        }
+        //first look for an existing node to reuse its src, so it loads from cache
+        var script = document.getElementById(id);
+        var src;
+        if (script) {
+            src = script.src;
+            head.removeChild(script);
+        }
+        else {
+            src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+        }
+        //always create a new element so it fires the onload event
+        script = document.createElement('script');
         script.id = id;
-        script.src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+        script.src = src;
+        var timeout = setTimeout(function () {
+            var errorDetails = {
+                colno: 0,
+                lineno: 0,
+                message: 'Could not load module "' + id + '"' + (loads[id] ? ' required by "' + loads[id] + '"' : '') + '. Possibly a network error, or the file does not exist.',
+                name: 'Load module failure'
+            };
+            //send error results back to parent window
+            parent.MakerJsPlayground.processResult('', errorDetails);
+        }, 5000);
         script.onload = function () {
+            clearTimeout(timeout);
             //save the requred module
             required[id] = window.module.exports;
             //reset so it does not get picked up again
@@ -49,8 +75,10 @@ var MakerJsRequireIframe;
             //increment the counter
             counter.addLoaded();
         };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        head.appendChild(script);
     }
+    var head;
+    var loads = {};
     var reloads = [];
     var previousId = null;
     var counter = new Counter();
@@ -81,16 +109,17 @@ var MakerJsRequireIframe;
             return required[id];
         }
         counter.required++;
-        load(id);
         if (previousId) {
             reloads.push(previousId);
         }
+        load(id, previousId);
         previousId = id;
         //return an object that may be treated like a class
         return Dummy;
     };
     window.module = { exports: null };
     window.onload = function () {
+        head = document.getElementsByTagName('head')[0];
         //get the code from the editor
         var javaScript = parent.MakerJsPlayground.codeMirrorEditor.getDoc().getValue();
         var originalAlert = window.alert;
@@ -109,6 +138,7 @@ var MakerJsRequireIframe;
                 runCodeGlobal(javaScript);
                 //yield thread for the script tag to execute
                 setTimeout(function () {
+                    //restore properties from the "this" keyword
                     var model = {};
                     var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
                     for (var i = 0; i < props.length; i++) {
@@ -128,7 +158,7 @@ var MakerJsRequireIframe;
                 counter.complete = complete2;
                 counter.required += reloads.length;
                 for (var i = reloads.length; i--;) {
-                    load(reloads[i]);
+                    load(reloads[i], null);
                 }
             }
             else {

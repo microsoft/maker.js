@@ -224,19 +224,23 @@ module MakerJsPlayground {
 
     function highlightCodeError(error: IJavaScriptErrorDetails) {
 
-        processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
+        if (error.lineno || error.colno) {
+            processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
 
-        var editorLine = error.lineno - 1;
+            var editorLine = error.lineno - 1;
 
-        var from: CodeMirror.Position = {
-            line: editorLine, ch: error.colno - 1
-        };
+            var from: CodeMirror.Position = {
+                line: editorLine, ch: error.colno - 1
+            };
 
-        var to: CodeMirror.Position = {
-            line: editorLine, ch: codeMirrorEditor.getDoc().getLine(editorLine).length
-        };
+            var to: CodeMirror.Position = {
+                line: editorLine, ch: codeMirrorEditor.getDoc().getLine(editorLine).length
+            };
 
-        marker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+            marker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+        } else {
+            processed.html = error.name + ' : ' + error.message;
+        }
     }
 
     //public members
@@ -259,6 +263,18 @@ module MakerJsPlayground {
         document.body.appendChild(iframe);
     }
 
+    export function setNotes(markdown: string) {
+        var className = 'no-notes';
+        var html = '';
+        if (markdown) {
+            html = marked(markdown);
+            document.body.classList.remove(className);
+        } else {
+            document.body.classList.add(className);
+        }
+        document.getElementById('notes').innerHTML = html;
+    }
+
     export function processResult(html: string, result: any) {
 
         if (marker) {
@@ -267,6 +283,7 @@ module MakerJsPlayground {
         }
 
         resetDownload();
+        setNotes('');
 
         processed.html = html;
         processed.model = null;
@@ -283,8 +300,13 @@ module MakerJsPlayground {
             //construct an IModel from the Node module
             processed.model = makerjs.kit.construct(result, processed.paramValues);
 
+            setNotes(processed.model.notes || processed.kit.notes);
+
         } else if (makerjs.isModel(result)) {
             processed.model = result;
+
+            setNotes(processed.model.notes);
+
         } else if (isIJavaScriptErrorDetails(result)) {
             
             //render script error
@@ -370,7 +392,8 @@ module MakerJsPlayground {
                 svgAttrs: { id: 'view-svg' },
                 fontSize: (windowZoom * svgFontSize) + 'px',
                 strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
-                scale: viewScale
+                scale: viewScale,
+                useSvgPathOnly: false
             };
 
             var renderModel: MakerJs.IModel = {
@@ -398,10 +421,26 @@ module MakerJsPlayground {
     }
 
     export function downloadScript(url: string, callback: (download: string) => void) {
+
+        var timeout = setTimeout(function () {
+            x.onreadystatechange = null;
+
+            var errorDetails: MakerJsPlayground.IJavaScriptErrorDetails = {
+                colno: 0,
+                lineno: 0,
+                message: 'Could not load script "' + url + '". Possibly a network error, or the file does not exist.',
+                name: 'Load module failure'
+            };
+
+            processResult('', errorDetails);
+
+        }, 5000);
+
         var x = new XMLHttpRequest();
         x.open('GET', url, true);
         x.onreadystatechange = function () {
             if (x.readyState == 4 && x.status == 200) {
+                clearTimeout(timeout);
                 callback(x.responseText);
             }
         };
@@ -485,6 +524,11 @@ module MakerJsPlayground {
         if (window.orientation === void 0) {
             window.orientation = 'landscape';
         }
+
+        //hide the customize menu when booting on small screens
+        //if (document.body.clientWidth < 540) {
+        //    document.body.classList.add('collapse-rendering-options');
+        //}
 
         customizeMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
         view = document.getElementById('view') as HTMLDivElement;
