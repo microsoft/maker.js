@@ -200,6 +200,10 @@ svg line, svg circle, svg path {
     font-size: 1em;
 }
 
+#notes a {
+    color: #0ff;
+}
+
 .collapse-notes #notes, .no-notes #notes, .no-notes #notes-toggle {
     display: none;
 }
