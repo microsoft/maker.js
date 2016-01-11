@@ -53,6 +53,12 @@ Easily add a curvature at the joint between any 2 paths, using a [traditional fi
 
 ## Getting Started
 
+### Try it now
+
+Visit the [Maker.js Playground](http://microsoft.github.io/maker.js/playground/) to edit and run JavaScript from your browser.
+
+Each of the [demos](http://microsoft.github.io/maker.js/demos/#content) will also open in the playground so that you can explore and modify their code.
+
 ### To use in a web browser
 
 Download the browser-based version of Maker.js, then upload it to your website:
