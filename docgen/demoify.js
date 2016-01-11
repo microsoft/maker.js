@@ -42,8 +42,11 @@ function anchor(text, href, title, isEscaped, cssClass) {
     }
     return a.toString();
 }
+function sectionTag() {
+    return new makerjs.exporter.XmlTag('section', { "class": 'tsd-panel' });
+}
 function section(innerHtml) {
-    var s = new makerjs.exporter.XmlTag('section', { "class": 'tsd-panel' });
+    var s = sectionTag();
     s.innerText = innerHtml;
     s.innerTextEscaped = true;
     return s.toString();
@@ -59,11 +62,11 @@ function getRequireKit(key) {
 function demoIndexPage() {
     var stream = fs.createWriteStream('./demos/index.html');
     stream.once('open', function (fd) {
-        function writeHeading(heading) {
-            var h2 = new makerjs.exporter.XmlTag('h2');
-            h2.innerTextEscaped = true;
-            h2.innerText = heading;
-            stream.write(h2.toString());
+        function writeHeading(level, heading) {
+            var h = new makerjs.exporter.XmlTag('h' + level);
+            h.innerTextEscaped = true;
+            h.innerText = heading;
+            stream.write(h.toString());
             stream.write('\n\n');
         }
         function writeThumbnail(key, constructor, baseUrl) {
@@ -71,14 +74,19 @@ function demoIndexPage() {
             stream.write(thumbnail(key, constructor, baseUrl));
             stream.write('\n\n');
         }
-        stream.write(jekyll('page', 'Demos'));
-        writeHeading('Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
+        var st = sectionTag();
+        stream.write(jekyll('default', 'Demos'));
+        writeHeading(1, 'Demos');
+        stream.write(st.getOpeningTag(false));
+        writeHeading(2, 'Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
         for (var i = 0; i < packageJson.ordered_demo_list.length; i++) {
             var key = packageJson.ordered_demo_list[i];
             var ctor = getRequireKit(key);
             writeThumbnail(key, ctor, '../');
         }
-        writeHeading('Models included with Maker.js');
+        stream.write(st.getClosingTag());
+        stream.write(st.getOpeningTag(false));
+        writeHeading(2, 'Models included with Maker.js');
         var sorted = [];
         for (var modelType in makerjs.models)
             sorted.push(modelType);
@@ -87,6 +95,7 @@ function demoIndexPage() {
             var modelType = sorted[i];
             writeThumbnail(modelType, makerjs.models[modelType], '../');
         }
+        stream.write(st.getClosingTag());
         stream.end();
     });
 }
