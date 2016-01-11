@@ -181,7 +181,13 @@ svg line, svg circle, svg path {
     border: 1px solid rgba(0,0,111,0.3);
     color: #fdfdff;
     padding: 0 1em;
-    margin: 0 1em .5em 1em;
+    margin: 0 1em .7em 1em;
+    background-color: rgba(0, 0, 0, .1);
+}
+
+#notes h1, #notes h2, #notes h3, #notes h4, #notes h5, #notes h6 {
+    font-weight: 600;
+    color: #cef;
 }
 
 #notes h1 {
