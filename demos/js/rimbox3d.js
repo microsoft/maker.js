@@ -34,4 +34,6 @@ rimbox3d.metaParameters = [
     { title: "z depth", type: "range", min: 2, max: 200, value: 50 }
 ];
 
+rimbox3d.notes = '# This model is 3D enabled!\nDownload the **STL** file to see the generated 3D model. You will need an STL viewer app on your machine. Or, you can generate the **OpenJsCad** code, and paste it into the page at [OpenJsCad.org](http://openjscad.org)';
+
 module.exports = rimbox3d;
