@@ -10,6 +10,9 @@
     },
     "codemirror/codemirror.d.ts": {
       "commit": "fe563dff3428bac1260d1794e2c2ecf8f097535a"
+    },
+    "marked/marked.d.ts": {
+      "commit": "6eebd5e90a1cbd6b47b0705ba72dbcd5baf846f3"
     }
   }
 }

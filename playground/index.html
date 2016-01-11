@@ -7,7 +7,7 @@
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
     <link href="playground.css" rel="stylesheet" />
-
+    <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
     <script src="../external/OpenJsCad/csg.js"></script>
@@ -25,26 +25,30 @@
     </script>
 
 </head>
-<body>
+<body class="no-notes">
     <a name="top"></a>
 
-    <header class="logo">
-        <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h2>Maker.js</h2></a>
-        <div id="rendering-options-top">
+        <header class="logo">
+        <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h1>Maker.js</h1></a>
+            <div id="rendering-options-top">
             <button onclick="MakerJsPlayground.toggleClass('collapse-rendering-options')">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
-        </div>
-    </header>
+            </div>
+        </header>
 
-    <section id="view-params">
-        <div id="view"><div id="view-measure"></div></div>
-        <div id="rendering-options-menu">
-            <div id="params"></div>
-            <hr />
-            <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
-            <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
-            <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
-        </div>
-    </section>
+    <section id="blueprint-canvas">
+        <div id="view-params">
+            <div id="view"><div id="view-measure"></div></div>
+            <div id="rendering-options-menu">
+                <div id="params"></div>
+                <hr />
+                <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
+                <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
+                <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
+                <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
+            </div>
+            </div>
+        <div id="notes"></div>
+        </section>
 
     <section id="download">
         <div>
@@ -76,18 +80,20 @@ this.paths = {
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
     wink: new makerjs.paths.Line([-35, 20], [-15, 20])
 };
+
+this.notes = '# Welcome to the Maker.js playground \n You can edit the code below, then click **Run** to see your drawing.';
 </pre>
 
-    </section>
+        </section>
 
-    <div class="scroll-nav-links">
-        <span>jump to</span>
-        <span><a href="#code">code</a></span>
-        <span><a href="#top">top</a></span>
-    </div>
+        <div class="scroll-nav-links">
+            <span>jump to</span>
+            <span><a href="#code">code</a></span>
+            <span><a href="#top">top</a></span>
+        </div>
 
-    <footer>
-    </footer>
+        <footer>
+        </footer>
 
 </body>
 </html>

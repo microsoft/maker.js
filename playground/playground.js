@@ -155,15 +155,20 @@ var MakerJsPlayground;
     function resetDownload() {
     }
     function highlightCodeError(error) {
-        processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
-        var editorLine = error.lineno - 1;
-        var from = {
-            line: editorLine, ch: error.colno - 1
-        };
-        var to = {
-            line: editorLine, ch: MakerJsPlayground.codeMirrorEditor.getDoc().getLine(editorLine).length
-        };
-        marker = MakerJsPlayground.codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+        if (error.lineno || error.colno) {
+            processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
+            var editorLine = error.lineno - 1;
+            var from = {
+                line: editorLine, ch: error.colno - 1
+            };
+            var to = {
+                line: editorLine, ch: MakerJsPlayground.codeMirrorEditor.getDoc().getLine(editorLine).length
+            };
+            marker = MakerJsPlayground.codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+        }
+        else {
+            processed.html = error.name + ' : ' + error.message;
+        }
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
@@ -181,12 +186,26 @@ var MakerJsPlayground;
         document.body.appendChild(iframe);
     }
     MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
+    function setNotes(markdown) {
+        var className = 'no-notes';
+        var html = '';
+        if (markdown) {
+            html = marked(markdown);
+            document.body.classList.remove(className);
+        }
+        else {
+            document.body.classList.add(className);
+        }
+        document.getElementById('notes').innerHTML = html;
+    }
+    MakerJsPlayground.setNotes = setNotes;
     function processResult(html, result) {
         if (marker) {
             marker.clear();
             marker = null;
         }
         resetDownload();
+        setNotes('');
         processed.html = html;
         processed.model = null;
         processed.paramValues = null;
@@ -197,9 +216,11 @@ var MakerJsPlayground;
             processed.kit = result;
             //construct an IModel from the Node module
             processed.model = makerjs.kit.construct(result, processed.paramValues);
+            setNotes(processed.model.notes || processed.kit.notes);
         }
         else if (makerjs.isModel(result)) {
             processed.model = result;
+            setNotes(processed.model.notes);
         }
         else if (isIJavaScriptErrorDetails(result)) {
             //render script error
@@ -265,7 +286,8 @@ var MakerJsPlayground;
                 svgAttrs: { id: 'view-svg' },
                 fontSize: (MakerJsPlayground.windowZoom * MakerJsPlayground.svgFontSize) + 'px',
                 strokeWidth: (MakerJsPlayground.windowZoom * MakerJsPlayground.svgStrokeWidth) + 'px',
-                scale: viewScale
+                scale: viewScale,
+                useSvgPathOnly: false
             };
             var renderModel = {
                 models: {
@@ -288,10 +310,21 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.filenameFromRequireId = filenameFromRequireId;
     function downloadScript(url, callback) {
+        var timeout = setTimeout(function () {
+            x.onreadystatechange = null;
+            var errorDetails = {
+                colno: 0,
+                lineno: 0,
+                message: 'Could not load script "' + url + '". Possibly a network error, or the file does not exist.',
+                name: 'Load module failure'
+            };
+            processResult('', errorDetails);
+        }, 5000);
         var x = new XMLHttpRequest();
         x.open('GET', url, true);
         x.onreadystatechange = function () {
             if (x.readyState == 4 && x.status == 200) {
+                clearTimeout(timeout);
                 callback(x.responseText);
             }
         };
@@ -356,6 +389,10 @@ var MakerJsPlayground;
         if (window.orientation === void 0) {
             window.orientation = 'landscape';
         }
+        //hide the customize menu when booting on small screens
+        //if (document.body.clientWidth < 540) {
+        //    document.body.classList.add('collapse-rendering-options');
+        //}
         customizeMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
         selectFormat = document.getElementById('select-format');
