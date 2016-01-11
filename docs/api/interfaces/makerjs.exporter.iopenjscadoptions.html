@@ -32,6 +32,8 @@ title: Api - IOpenJsCadOptions Interface
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#extrusion" class="tsd-kind-icon">extrusion</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#facetsize" class="tsd-kind-icon">facet<wbr>Size</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#functionname" class="tsd-kind-icon">function<wbr>Name</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#modelmap" class="tsd-kind-icon">model<wbr>Map</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#removefromoriginal" class="tsd-kind-icon">remove<wbr>From<wbr>Original</a></li>
 				</ul>
@@ -47,7 +49,7 @@ title: Api - IOpenJsCadOptions Interface
 		<div class="tsd-signature tsd-kind-icon">extrusion<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L208">core/openjscad.ts:208</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L257">core/openjscad.ts:257</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -62,12 +64,42 @@ title: Api - IOpenJsCadOptions Interface
 		<div class="tsd-signature tsd-kind-icon">facet<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L213">core/openjscad.ts:213</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L262">core/openjscad.ts:262</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
 				<p>Optional size of curve facets.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="functionname" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> function<wbr>Name</h3>
+		<div class="tsd-signature tsd-kind-icon">function<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L267">core/openjscad.ts:267</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional override of function name, default is &quot;main&quot;.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="modelmap" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> model<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">model<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="makerjs.exporter.iopenjscadoptionsmap.html" class="tsd-signature-type">IOpenJsCadOptionsMap</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/openjscad.ts#L272">core/openjscad.ts:272</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional options applied to specific first-child models by model id.</p>
 			</div>
 		</div>
 	</section>
