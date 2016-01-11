@@ -184,6 +184,22 @@ svg line, svg circle, svg path {
     margin: 0 1em .5em 1em;
 }
 
+#notes h1 {
+    font-size: 1.3em;
+}
+
+#notes h2 {
+    font-size: 1.2em;
+}
+
+#notes h3 {
+    font-size: 1.1em;
+}
+
+#notes h4, #notes h5, #notes h6 {
+    font-size: 1em;
+}
+
 .collapse-notes #notes, .no-notes #notes, .no-notes #notes-toggle {
     display: none;
 }
