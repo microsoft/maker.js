@@ -324,6 +324,7 @@ var MakerJsPlayground;
         x.open('GET', url, true);
         x.onreadystatechange = function () {
             if (x.readyState == 4 && x.status == 200) {
+                clearTimeout(timeout);
                 callback(x.responseText);
             }
         };
