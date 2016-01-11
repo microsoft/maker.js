@@ -788,6 +788,7 @@ footer a:hover {
     position: relative;
   }
   header .inner ul li {
+    list-style-type: none;
     display: list-item;
   }
   header h1, header h2 {
