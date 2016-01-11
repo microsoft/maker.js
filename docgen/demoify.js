@@ -27,15 +27,15 @@ function thumbnail(key, constructor, baseUrl) {
     var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb' });
     div.innerText = svg;
     div.innerTextEscaped = true;
-    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true);
+    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true, 'thumb-link');
 }
 function jekyll(layout, title) {
     //Jekyll liquid layout
     var dashes = '---';
     return [dashes, 'layout: ' + layout, 'title: ' + title, dashes, ''].join('\n');
 }
-function anchor(text, href, title, isEscaped) {
-    var a = new makerjs.exporter.XmlTag('a', { "href": href, "title": title });
+function anchor(text, href, title, isEscaped, cssClass) {
+    var a = new makerjs.exporter.XmlTag('a', { "href": href, "title": title, "class": cssClass });
     a.innerText = text;
     if (isEscaped) {
         a.innerTextEscaped = true;

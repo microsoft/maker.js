@@ -576,3 +576,20 @@ svg path {
 .thumb svg path {
     stroke: #fff;
 }
+
+@media only screen and (max-width: 767px) {
+    .thumb {
+        width: 140px;
+        height: 105px;
+        margin: 5px 3px;
+    }
+
+    .thumb svg {
+        max-width: 120px;
+        max-height: 85px;
+    }
+
+    .thumb svg path {
+        stroke-width: 1px;
+    }
+}

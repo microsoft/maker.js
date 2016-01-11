@@ -36,7 +36,7 @@ function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
     div.innerText = svg;
     div.innerTextEscaped = true;
 
-    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true);
+    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true, 'thumb-link');
 }
 
 function jekyll(layout: string, title: string) {
@@ -45,8 +45,8 @@ function jekyll(layout: string, title: string) {
     return [dashes, 'layout: ' + layout, 'title: ' + title, dashes, ''].join('\n');    
 }
 
-function anchor(text: string, href: string, title?: string, isEscaped?: boolean) {
-    var a = new makerjs.exporter.XmlTag('a', { "href": href, "title": title });
+function anchor(text: string, href: string, title?: string, isEscaped?: boolean, cssClass?: string) {
+    var a = new makerjs.exporter.XmlTag('a', { "href": href, "title": title, "class": cssClass });
     a.innerText = text;
 
     if (isEscaped) {
