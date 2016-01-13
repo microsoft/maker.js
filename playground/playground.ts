@@ -258,9 +258,13 @@ module MakerJsPlayground {
 
     export function runCodeFromEditor() {
         iframe = document.createElement('iframe');
-        iframe.src = 'require-iframe.html';
         iframe.style.display = 'none';
+
         document.body.appendChild(iframe);
+
+        iframe.contentWindow.document.open();
+        iframe.contentWindow.document.write('<html><head><script src="require-iframe.js"></script></head><body></body></html>');
+        iframe.contentWindow.document.close();
     }
 
     export function setNotes(markdown: string) {
