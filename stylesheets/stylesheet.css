@@ -713,19 +713,25 @@ dl dd {
 }
 
 footer {
-  padding-top: 20px;
-  padding-bottom: 30px;
-  margin-top: 40px;
-  font-size: 13px;
-  color: #aaa;
-  background: transparent url('../images/hr.png') 0 0 no-repeat;
+    clear: both;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    font-size: 13px;
 }
 
 footer a {
   color: #666;
+    display: inline-block;
+    margin-right: 1em;
 }
 footer a:hover {
   color: #444;
+}
+footer img {
+    margin-bottom: -4px;
+    margin-right: 1em;
+    height: 20px;
 }
 
 /* MISC */
