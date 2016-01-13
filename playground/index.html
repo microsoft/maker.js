@@ -4,6 +4,28 @@
     <title>Maker.js Playground</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10">
+
+    <!--
+        
+    *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    *****************************************************************************
+
+    https://github.com/Microsoft/maker.js
+
+    -->
+
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
     <link href="playground.css" rel="stylesheet" />
@@ -71,7 +93,7 @@
     <header class="logo">
         <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h1>Maker.js</h1></a>
         <div id="rendering-options-top">
-        <button onclick="MakerJsPlayground.toggleClass('collapse-rendering-options')">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
+            <button onclick="MakerJsPlayground.toggleClass('collapse-rendering-options')">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
         </div>
     </header>
 
@@ -120,20 +142,20 @@ this.paths = {
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
     wink: new makerjs.paths.Line([-35, 20], [-15, 20])
 };
-
 this.notes = '# Welcome to the Maker.js playground \n You can edit the code below, then click **Run** to see your drawing.';
 </pre>
 
-        </section>
+    </section>
 
-        <div class="scroll-nav-links">
-            <span>jump to</span>
-            <span><a href="#code">code</a></span>
-            <span><a href="#top">top</a></span>
-        </div>
+    <div class="scroll-nav-links">
+        <span>jump to</span>
+        <span><a href="#code">code</a></span>
+        <span><a href="#top">top</a></span>
+    </div>
 
-        <footer>
-        </footer>
+    <footer>
+        <a href="https://github.com/Microsoft"><img src="microsoft.png" height="16" /> Open source, from Microsoft with love.</a> <a href="http://aka.ms/privacy">Privacy Statement</a> &copy;2016&nbsp;Microsoft
+    </footer>
 
 </body>
 </html>
