@@ -107,7 +107,7 @@ function homePage() {
         var h2 = new makerjs.exporter.XmlTag('h2');
         h2.innerText = 'Latest demos';
         var demos = [h2.toString()];
-        var max = 6;
+        var max = 9;
         for (var i = 0; i < packageJson.ordered_demo_list.length && i < max; i++) {
             var key = packageJson.ordered_demo_list[i];
             var ctor = getRequireKit(key);
