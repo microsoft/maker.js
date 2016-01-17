@@ -214,7 +214,15 @@ svg line, svg circle, svg path {
     display: none;
 }
 
-#download a {
+#download h2 {
+    font-weight: normal;
+    font-size: smaller;
+    color: #777;
+    margin: 0;
+    padding: 0;
+}
+
+#download a, #download button {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     color: #555;
@@ -229,6 +237,86 @@ svg line, svg circle, svg path {
     text-align: center;
     text-transform: uppercase;
     font-size: smaller;
+}
+
+#download button.text-tool {
+    float: right;
+    margin-bottom: 2em;
+    width: auto;
+    margin-right: 0;
+    margin-top: 0;
+    padding-left: 2em;
+    padding-right: 2em;
+    font-size: .65em;
+    background: transparent;
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    color: #aaa;
+}
+
+#download-progress {
+    height: .25em;
+    width: 0;
+    background-color: green;
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+#download-ready a {
+    width: auto;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#download-generating, #download-ready
+{
+    display: none;
+}
+
+#download-preview-container {
+    padding-right: 1em;
+    margin-top: .5em;
+    margin-bottom: 0;
+}
+
+#download-preview {
+    width: 100%;
+    padding: .5em;
+    border: 1px solid #eedd88;
+    background-color: #ffee99;
+    color: #333300;
+    font-size: small;
+}
+
+.download-generating #download-generating {
+    display: block;
+}
+
+.download-generating #download-select, .download-generating #download-ready {
+    display: none;
+}
+
+.download-ready #download-ready {
+    display: block;
+}
+
+.download-ready #download-select, .download-ready #download-generating {
+    display: none;
+}
+
+.onscreen-help {
+    font-size: small;
+    color: #777;
+    padding-top: .2em;
+}
+
+#download .onscreen-help button {
+    width: auto;
+    margin-right: 0;
+    margin-top: 0;
+    text-transform: none;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .code-header {

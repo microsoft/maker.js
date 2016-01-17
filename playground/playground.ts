@@ -1,21 +1,11 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../src/core/maker.ts" />
-/// <reference path="../src/core/angle.ts" />
-/// <reference path="../src/core/path.ts" />
-/// <reference path="../src/core/break.ts" />
-/// <reference path="../src/core/intersect.ts" />
+/// <reference path="export-format.ts" />
 /// <reference path="../src/core/kit.ts" />
-/// <reference path="../src/core/loops.ts" />
-/// <reference path="../src/core/dxf.ts" />
-/// <reference path="../src/core/svg.ts" />
-/// <reference path="../src/core/openjscad.ts" />
 /// <reference path="../src/models/connectthedots.ts" />
+/// <reference path="../typings/codemirror/codemirror.d.ts" />
+/// <reference path="../typings/marked/marked.d.ts" />
 
 declare var makerjs: typeof MakerJs;
-
-interface HTMLAnchorElement {
-    download: string;
-}
 
 module MakerJsPlayground {
 
@@ -57,7 +47,8 @@ module MakerJsPlayground {
     var iframe: HTMLIFrameElement;
     var customizeMenu: HTMLDivElement;
     var view: HTMLDivElement;
-    var selectFormat: HTMLSelectElement;
+    var progress: HTMLDivElement;
+    var preview: HTMLTextAreaElement;
     var hMargin: number;
     var vMargin: number;
     var processed: IProcessedResult = {
@@ -68,7 +59,8 @@ module MakerJsPlayground {
         paramHtml: ''
     };
     var init = true;
-    var marker: CodeMirror.TextMarker;
+    var errorMarker: CodeMirror.TextMarker;
+    var exportWorker: Worker = null;
 
     function getZoom() {
         var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -220,6 +212,8 @@ module MakerJsPlayground {
     }
 
     function resetDownload() {
+        cancelExport();
+        document.body.classList.remove('download-ready');
     }
 
     function highlightCodeError(error: IJavaScriptErrorDetails) {
@@ -237,7 +231,7 @@ module MakerJsPlayground {
                 line: editorLine, ch: codeMirrorEditor.getDoc().getLine(editorLine).length
             };
 
-            marker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+            errorMarker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
         } else {
             processed.html = error.name + ' : ' + error.message;
         }
@@ -255,6 +249,7 @@ module MakerJsPlayground {
     export var svgFontSize = 14;
     export var svgStrokeWidth = 2;
     export var windowZoom = 1;
+    export var querystringParams: QueryStringParams;
 
     export function runCodeFromEditor() {
         iframe = document.createElement('iframe');
@@ -281,9 +276,9 @@ module MakerJsPlayground {
 
     export function processResult(html: string, result: any) {
 
-        if (marker) {
-            marker.clear();
-            marker = null;
+        if (errorMarker) {
+            errorMarker.clear();
+            errorMarker = null;
         }
 
         resetDownload();
@@ -461,64 +456,74 @@ module MakerJsPlayground {
         MakerJsPlayground.render();
     }
 
-    interface IExport {
-        xf: Function;   //exporter function
-        mt: string;     //media type
-    }
+    function getExport(ev: MessageEvent) {
+        var response = ev.data as MakerJsPlaygroundExport.IExportResponse;
 
-    interface IExportResult {
-        text: string;
-        dataUri: string;
-    }
+        console.log(response.percentComplete);
 
-    interface IFormatToExporterMap {
-        [format: string]: IExport;
-    }
+        progress.style.width = response.percentComplete + '%';
 
-    var formatMap: IFormatToExporterMap = {
-        "json": {
-            xf: JSON.stringify,
-            mt: 'application/json'
-        },
-        "dxf": {
-            xf: makerjs.exporter.toDXF,
-            mt: 'application/dxf'
-        },
-        "svg": {
-            xf: makerjs.exporter.toSVG,
-            mt: 'image/svg+xml'
-        },
-        "openjscad": {
-            xf: makerjs.exporter.toOpenJsCad,
-            mt: 'text/plain'
-        },
-        "stl": {
-            xf: makerjs.exporter.toSTL,
-            mt: 'application/stl'
+        if (response.percentComplete == 100 && response.text) {
+
+            //allow progress bar to render
+            setTimeout(function () {
+                var fe = MakerJsPlaygroundExport.formatMap[response.request.format];
+
+                var encoded = encodeURIComponent(response.text);
+                var uriPrefix = 'data:' + fe.mediaType + ',';
+                var filename = (querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
+                var dataUri = uriPrefix + encoded;
+            
+                //create a download link
+                var a = new MakerJs.exporter.XmlTag('a', { href: dataUri, download: filename });
+                a.innerText = 'download ' + response.request.formatTitle;
+                document.getElementById('download-link-container').innerHTML = a.toString();
+
+                preview.value = response.text;
+
+                (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
+
+                //put the download ui into ready mode
+                toggleClass('download-generating');
+                toggleClass('download-ready');
+            }, 300);
+
         }
-    };
-
-    export function getExport(format: string): IExportResult {
-        var iexport = formatMap[format];
-        if (iexport) {
-
-            //call the exporter function. for STL, this may take a while on the UI thread.
-            var text = iexport.xf(processed.model);
-
-            var encoded = encodeURIComponent(text);
-            var uriPrefix = 'data:' + iexport.mt + ',';
-
-            return {
-                text: text,
-                dataUri: uriPrefix + encoded
-            };
-        }
-        return null;
     }
 
-    export function downloadClick(a: HTMLAnchorElement, format: string) {
-        //todo - generate out of the click handler in case generation takes a while
-        a.href = getExport(format).dataUri;
+    export function downloadClick(a: HTMLAnchorElement, format: MakerJsPlaygroundExport.ExportFormat) {
+
+        var request: MakerJsPlaygroundExport.IExportRequest = {
+            format: format,
+            formatTitle: a.innerText,
+            model: processed.model
+        };
+
+        //initialize a worker - this will download scripts into the worker
+        if (!exportWorker) {
+            exportWorker = new Worker('export-worker.js');
+            exportWorker.onmessage = getExport;
+        }
+
+        //put the download ui into generation mode
+        progress.style.width = '0';
+        toggleClass('download-generating');
+
+        //tell the worker to process the job
+        exportWorker.postMessage(request);
+    }
+
+    export function copyToClipboard() {
+        preview.select();
+        document.execCommand('copy');
+    }
+
+    export function cancelExport() {
+        if (exportWorker) {
+            exportWorker.terminate();
+            exportWorker = null;
+        }
+        document.body.classList.remove('download-generating');
     }
 
     //execution
@@ -536,7 +541,8 @@ module MakerJsPlayground {
 
         customizeMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
         view = document.getElementById('view') as HTMLDivElement;
-        selectFormat = document.getElementById('select-format') as HTMLSelectElement;
+        progress = document.getElementById('download-progress') as HTMLDivElement;
+        preview = document.getElementById('download-preview') as HTMLTextAreaElement;
 
         var viewMeasure = document.getElementById('view-measure');
 
@@ -552,8 +558,8 @@ module MakerJsPlayground {
             codeMirrorOptions
         );
 
-        var qps = new QueryStringParams();
-        var scriptname = qps['script'];
+        querystringParams = new QueryStringParams();
+        var scriptname = querystringParams['script'];
 
         if (scriptname && !isHttp(scriptname)) {
 
