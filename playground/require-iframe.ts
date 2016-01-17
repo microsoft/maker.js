@@ -1,13 +1,9 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
 /// <reference path="playground.ts" />
 
-interface MockNodeModule {
-    exports?: any;
-}
-
 interface Window {
     require: NodeRequireFunction;
-    module: MockNodeModule;
+    module: NodeModule;
     MakerJsPlayground: typeof MakerJsPlayground;
     makerjs: typeof MakerJs;
 }
@@ -169,7 +165,7 @@ module MakerJsRequireIframe {
         return Dummy;
     };
 
-    window.module = { exports: null };
+    window.module = { exports: null } as NodeModule;
 
     window.onload = function () {
         head = document.getElementsByTagName('head')[0];

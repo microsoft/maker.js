@@ -214,7 +214,15 @@ svg line, svg circle, svg path {
     display: none;
 }
 
-#download a {
+#download h2 {
+    font-weight: normal;
+    font-size: smaller;
+    color: #777;
+    margin: 0;
+    padding: 0;
+}
+
+#download a, #download button {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     color: #555;
@@ -229,6 +237,53 @@ svg line, svg circle, svg path {
     text-align: center;
     text-transform: uppercase;
     font-size: smaller;
+}
+
+#download-progress {
+    height: .25em;
+    width: 0;
+    background-color: green;
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+#download-ready a {
+    width: auto;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#download-generating, #download-ready
+{
+    display: none;
+}
+
+#download-preview {
+    border: 2px inset;
+    padding: .5em;
+    word-break: break-word;
+    overflow-y: scroll;
+    max-height: 5em;
+}
+
+.download-show-all #download-preview {
+    max-height: none;
+}
+
+.download-generating #download-generating {
+    display: block;
+}
+
+.download-generating #download-select, .download-generating #download-ready {
+    display: none;
+}
+
+.download-ready #download-ready {
+    display: block;
+}
+
+.download-ready #download-select, .download-ready #download-generating {
+    display: none;
 }
 
 .code-header {
