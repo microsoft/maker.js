@@ -459,8 +459,6 @@ module MakerJsPlayground {
     function getExport(ev: MessageEvent) {
         var response = ev.data as MakerJsPlaygroundExport.IExportResponse;
 
-        console.log(response.percentComplete);
-
         progress.style.width = response.percentComplete + '%';
 
         if (response.percentComplete == 100 && response.text) {

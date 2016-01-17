@@ -10,7 +10,7 @@ module.require = (id: string): any => {
     if (id in module) {
         return module[id];
     }
-        
+    
     return this;
 };
 
@@ -131,7 +131,5 @@ onmessage = (ev: MessageEvent) => {
         postMessage(result);
                 
     }
-    
-    console.log("worker:" + request.format + request.model);
     
 }
