@@ -475,7 +475,7 @@ module MakerJsPlayground {
                 var dataUri = uriPrefix + encoded;
             
                 //create a download link
-                var a = new MakerJs.exporter.XmlTag('a', { href: dataUri, download: filename });
+                var a = new makerjs.exporter.XmlTag('a', { href: dataUri, download: filename });
                 a.innerText = 'download ' + response.request.formatTitle;
                 document.getElementById('download-link-container').innerHTML = a.toString();
 
