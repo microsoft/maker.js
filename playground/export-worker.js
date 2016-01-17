@@ -11,6 +11,54 @@ module.require = function (id) {
 };
 importScripts("../external/OpenJsCad/csg.js", "../external/OpenJsCad/formats.js", "../target/js/node.maker.js", "export-format.js");
 var makerjs = module['MakerJs'];
+var unionCount = 0;
+var unionIndex = 0;
+var polygonCount = 0;
+var polygonIndex = 0;
+var incrementUnion;
+var incrementPolygon;
+CSG.Path2D.prototype['appendArc2'] = CSG.Path2D.prototype.appendArc;
+CSG.Path2D.prototype.appendArc = function (endpoint, options) {
+    unionIndex++;
+    incrementUnion();
+    return this['appendArc2'](endpoint, options);
+};
+CSG.Path2D.prototype['appendPoint2'] = CSG.Path2D.prototype.appendPoint;
+CSG.Path2D.prototype.appendPoint = function (point) {
+    unionIndex++;
+    incrementUnion();
+    return this['appendPoint2'](point);
+};
+CAG.prototype['union2'] = CAG.prototype.union;
+CAG.prototype.union = function (cag) {
+    unionIndex++;
+    incrementUnion();
+    return this['union2'](cag);
+};
+CSG.Polygon.prototype['toStlString2'] = CSG.Polygon.prototype.toStlString;
+CSG.Polygon.prototype.toStlString = function () {
+    polygonIndex++;
+    incrementPolygon();
+    return this['toStlString2']();
+};
+CSG.prototype['toStlString2'] = CSG.prototype.toStlString;
+CSG.prototype.toStlString = function () {
+    polygonCount = this.polygons.length;
+    polygonIndex = 0;
+    return this['toStlString2']();
+};
+function toStl(model) {
+    var options = {};
+    var script = makerjs.exporter.toOpenJsCad(model, options);
+    script += 'return ' + options.functionName + '();';
+    unionCount = (script.match(/union/g) || []).length
+        + (script.match(/appendArc/g) || []).length
+        + (script.match(/appendPoint/g) || []).length;
+    unionIndex = 0;
+    var f = new Function(script);
+    var csg = f();
+    return csg.toStlString();
+}
 function getExporter(format) {
     var f = MakerJsPlaygroundExport.ExportFormat;
     switch (format) {
@@ -23,7 +71,7 @@ function getExporter(format) {
         case f.OpenJsCad:
             return makerjs.exporter.toOpenJsCad;
         case f.Stl:
-            return makerjs.exporter.toSTL;
+            return toStl;
     }
 }
 /* events */
@@ -31,13 +79,22 @@ onmessage = function (ev) {
     var request = ev.data;
     var exporter = getExporter(request.format);
     if (exporter) {
-        //call the exporter function.
-        var text = exporter(request.model);
         var result = {
             request: request,
-            text: text,
-            percentComplete: 100
+            text: null,
+            percentComplete: 0
         };
+        incrementUnion = function () {
+            result.percentComplete = 50 * unionIndex / unionCount;
+            postMessage(result);
+        };
+        incrementPolygon = function () {
+            result.percentComplete = 50 + 50 * polygonIndex / polygonCount;
+            postMessage(result);
+        };
+        //call the exporter function.
+        result.text = exporter(request.model);
+        result.percentComplete = 100;
         postMessage(result);
     }
     console.log("worker:" + request.format + request.model);

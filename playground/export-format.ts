@@ -1,4 +1,12 @@
 ﻿/// <reference path="../src/core/maker.ts" />
+/// <reference path="../src/core/angle.ts" />
+/// <reference path="../src/core/path.ts" />
+/// <reference path="../src/core/intersect.ts" />
+/// <reference path="../src/core/loops.ts" />
+/// <reference path="../src/core/break.ts" />
+/// <reference path="../src/core/dxf.ts" />
+/// <reference path="../src/core/svg.ts" />
+/// <reference path="../src/core/openjscad.ts" />
 
 module MakerJsPlaygroundExport {
 

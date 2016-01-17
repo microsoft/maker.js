@@ -1,14 +1,6 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
 /// <reference path="export-format.ts" />
-/// <reference path="../src/core/angle.ts" />
-/// <reference path="../src/core/path.ts" />
-/// <reference path="../src/core/break.ts" />
-/// <reference path="../src/core/intersect.ts" />
 /// <reference path="../src/core/kit.ts" />
-/// <reference path="../src/core/loops.ts" />
-/// <reference path="../src/core/dxf.ts" />
-/// <reference path="../src/core/svg.ts" />
-/// <reference path="../src/core/openjscad.ts" />
 /// <reference path="../src/models/connectthedots.ts" />
 /// <reference path="../typings/codemirror/codemirror.d.ts" />
 /// <reference path="../typings/marked/marked.d.ts" />
@@ -56,6 +48,7 @@ module MakerJsPlayground {
     var customizeMenu: HTMLDivElement;
     var view: HTMLDivElement;
     var progress: HTMLDivElement;
+    var preview: HTMLTextAreaElement;
     var hMargin: number;
     var vMargin: number;
     var processed: IProcessedResult = {
@@ -466,9 +459,11 @@ module MakerJsPlayground {
     function getExport(ev: MessageEvent) {
         var response = ev.data as MakerJsPlaygroundExport.IExportResponse;
 
+        console.log(response.percentComplete);
+
         progress.style.width = response.percentComplete + '%';
 
-        if (response.percentComplete == 100) {
+        if (response.percentComplete == 100 && response.text) {
 
             //allow progress bar to render
             setTimeout(function () {
@@ -476,7 +471,7 @@ module MakerJsPlayground {
 
                 var encoded = encodeURIComponent(response.text);
                 var uriPrefix = 'data:' + fe.mediaType + ',';
-                var filename = (querystringParams['script'] || 'myModel') + '.' + fe.fileExtension;
+                var filename = (querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
                 var dataUri = uriPrefix + encoded;
             
                 //create a download link
@@ -484,7 +479,9 @@ module MakerJsPlayground {
                 a.innerText = 'download ' + response.request.formatTitle;
                 document.getElementById('download-link-container').innerHTML = a.toString();
 
-                (<HTMLTextAreaElement>document.getElementById('download-preview')).value = response.text;
+                preview.value = response.text;
+
+                (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
 
                 //put the download ui into ready mode
                 toggleClass('download-generating');
@@ -509,11 +506,16 @@ module MakerJsPlayground {
         }
 
         //put the download ui into generation mode
-        progress.style.width = '1%';
+        progress.style.width = '0';
         toggleClass('download-generating');
 
         //tell the worker to process the job
         exportWorker.postMessage(request);
+    }
+
+    export function copyToClipboard() {
+        preview.select();
+        document.execCommand('copy');
     }
 
     export function cancelExport() {
@@ -540,6 +542,7 @@ module MakerJsPlayground {
         customizeMenu = document.getElementById('rendering-options-menu') as HTMLDivElement;
         view = document.getElementById('view') as HTMLDivElement;
         progress = document.getElementById('download-progress') as HTMLDivElement;
+        preview = document.getElementById('download-preview') as HTMLTextAreaElement;
 
         var viewMeasure = document.getElementById('view-measure');
 

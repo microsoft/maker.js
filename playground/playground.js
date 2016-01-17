@@ -1,14 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 /// <reference path="export-format.ts" />
-/// <reference path="../src/core/angle.ts" />
-/// <reference path="../src/core/path.ts" />
-/// <reference path="../src/core/break.ts" />
-/// <reference path="../src/core/intersect.ts" />
 /// <reference path="../src/core/kit.ts" />
-/// <reference path="../src/core/loops.ts" />
-/// <reference path="../src/core/dxf.ts" />
-/// <reference path="../src/core/svg.ts" />
-/// <reference path="../src/core/openjscad.ts" />
 /// <reference path="../src/models/connectthedots.ts" />
 /// <reference path="../typings/codemirror/codemirror.d.ts" />
 /// <reference path="../typings/marked/marked.d.ts" />
@@ -34,6 +26,7 @@ var MakerJsPlayground;
     var customizeMenu;
     var view;
     var progress;
+    var preview;
     var hMargin;
     var vMargin;
     var processed = {
@@ -351,20 +344,22 @@ var MakerJsPlayground;
     MakerJsPlayground.toggleClass = toggleClass;
     function getExport(ev) {
         var response = ev.data;
+        console.log(response.percentComplete);
         progress.style.width = response.percentComplete + '%';
-        if (response.percentComplete == 100) {
+        if (response.percentComplete == 100 && response.text) {
             //allow progress bar to render
             setTimeout(function () {
                 var fe = MakerJsPlaygroundExport.formatMap[response.request.format];
                 var encoded = encodeURIComponent(response.text);
                 var uriPrefix = 'data:' + fe.mediaType + ',';
-                var filename = (MakerJsPlayground.querystringParams['script'] || 'myModel') + '.' + fe.fileExtension;
+                var filename = (MakerJsPlayground.querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
                 var dataUri = uriPrefix + encoded;
                 //create a download link
                 var a = new MakerJs.exporter.XmlTag('a', { href: dataUri, download: filename });
                 a.innerText = 'download ' + response.request.formatTitle;
                 document.getElementById('download-link-container').innerHTML = a.toString();
-                document.getElementById('download-preview').value = response.text;
+                preview.value = response.text;
+                document.getElementById('download-filename').innerText = filename;
                 //put the download ui into ready mode
                 toggleClass('download-generating');
                 toggleClass('download-ready');
@@ -383,12 +378,17 @@ var MakerJsPlayground;
             exportWorker.onmessage = getExport;
         }
         //put the download ui into generation mode
-        progress.style.width = '1%';
+        progress.style.width = '0';
         toggleClass('download-generating');
         //tell the worker to process the job
         exportWorker.postMessage(request);
     }
     MakerJsPlayground.downloadClick = downloadClick;
+    function copyToClipboard() {
+        preview.select();
+        document.execCommand('copy');
+    }
+    MakerJsPlayground.copyToClipboard = copyToClipboard;
     function cancelExport() {
         if (exportWorker) {
             exportWorker.terminate();
@@ -409,6 +409,7 @@ var MakerJsPlayground;
         customizeMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
         progress = document.getElementById('download-progress');
+        preview = document.getElementById('download-preview');
         var viewMeasure = document.getElementById('view-measure');
         hMargin = viewMeasure.offsetLeft;
         vMargin = viewMeasure.offsetTop;
@@ -437,4 +438,3 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
-//# sourceMappingURL=playground.js.map
