@@ -130,10 +130,11 @@
         <div id="download-ready">
             <span id="download-link-container"></span>
             <span>
-                <button onclick="MakerJsPlayground.toggleClass('download-show-all')">show all</button>
                 <button class="close" onclick="MakerJsPlayground.toggleClass('download-ready')">close</button>
             </span>
-            <pre id="download-preview"></pre>
+            <div id="download-preview-container">
+                <textarea id="download-preview" rows="8" readonly></textarea>
+            </div>
         </div>
 
     </section>

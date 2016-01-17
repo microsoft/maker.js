@@ -239,6 +239,21 @@ svg line, svg circle, svg path {
     font-size: smaller;
 }
 
+#download button.text-tool {
+    float: right;
+    margin-bottom: 2em;
+    width: auto;
+    margin-right: 0;
+    margin-top: 0;
+    padding-left: 2em;
+    padding-right: 2em;
+    font-size: .65em;
+    background: transparent;
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    color: #aaa;
+}
+
 #download-progress {
     height: .25em;
     width: 0;
@@ -258,16 +273,19 @@ svg line, svg circle, svg path {
     display: none;
 }
 
-#download-preview {
-    border: 2px inset;
-    padding: .5em;
-    word-break: break-word;
-    overflow-y: scroll;
-    max-height: 5em;
+#download-preview-container {
+    padding-right: 1em;
+    margin-top: .5em;
+    margin-bottom: 0;
 }
 
-.download-show-all #download-preview {
-    max-height: none;
+#download-preview {
+    width: 100%;
+    padding: .5em;
+    border: 1px solid #eedd88;
+    background-color: #ffee99;
+    color: #333300;
+    font-size: small;
 }
 
 .download-generating #download-generating {

@@ -156,6 +156,8 @@ var MakerJsPlayground;
         return code.join('\n');
     }
     function resetDownload() {
+        cancelExport();
+        document.body.classList.remove('download-ready');
     }
     function highlightCodeError(error) {
         if (error.lineno || error.colno) {
@@ -362,7 +364,7 @@ var MakerJsPlayground;
                 var a = new MakerJs.exporter.XmlTag('a', { href: dataUri, download: filename });
                 a.innerText = 'download ' + response.request.formatTitle;
                 document.getElementById('download-link-container').innerHTML = a.toString();
-                document.getElementById('download-preview').innerText = response.text;
+                document.getElementById('download-preview').value = response.text;
                 //put the download ui into ready mode
                 toggleClass('download-generating');
                 toggleClass('download-ready');
@@ -388,9 +390,11 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.downloadClick = downloadClick;
     function cancelExport() {
-        exportWorker.terminate();
-        exportWorker = null;
-        toggleClass('download-generating');
+        if (exportWorker) {
+            exportWorker.terminate();
+            exportWorker = null;
+        }
+        document.body.classList.remove('download-generating');
     }
     MakerJsPlayground.cancelExport = cancelExport;
     //execution
@@ -433,3 +437,4 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
+//# sourceMappingURL=playground.js.map

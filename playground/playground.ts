@@ -219,6 +219,8 @@ module MakerJsPlayground {
     }
 
     function resetDownload() {
+        cancelExport();
+        document.body.classList.remove('download-ready');
     }
 
     function highlightCodeError(error: IJavaScriptErrorDetails) {
@@ -482,7 +484,7 @@ module MakerJsPlayground {
                 a.innerText = 'download ' + response.request.formatTitle;
                 document.getElementById('download-link-container').innerHTML = a.toString();
 
-                document.getElementById('download-preview').innerText = response.text;
+                (<HTMLTextAreaElement>document.getElementById('download-preview')).value = response.text;
 
                 //put the download ui into ready mode
                 toggleClass('download-generating');
@@ -515,9 +517,11 @@ module MakerJsPlayground {
     }
 
     export function cancelExport() {
-        exportWorker.terminate();
-        exportWorker = null;
-        toggleClass('download-generating');
+        if (exportWorker) {
+            exportWorker.terminate();
+            exportWorker = null;
+        }
+        document.body.classList.remove('download-generating');
     }
 
     //execution
