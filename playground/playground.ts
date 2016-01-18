@@ -107,7 +107,7 @@ module MakerJsPlayground {
                 label.innerText = attrs.title + ': ';
 
                 var input: MakerJs.exporter.XmlTag = null;
-                var textbox: MakerJs.exporter.XmlTag = null;
+                var numberBox: MakerJs.exporter.XmlTag = null;
 
                 switch (attrs.type) {
 
@@ -119,9 +119,11 @@ module MakerJsPlayground {
                         input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
                         input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
 
-                        var textboxAttrs = {
-                            "id": 'textbox_' + i,
-                            "type": 'text',
+                        //note: we could also apply the min and max of the range to the number field. however, the useage of the textbox is to deliberately "go out of bounds" when the example range is insufficient.
+                        var numberBoxAttrs = {
+                            "id": 'numberbox_' + i,
+                            "type": 'number',
+                            "step": 'any',
                             "value": attrs.value,
                             "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.value, .001))'
                         };
@@ -131,14 +133,14 @@ module MakerJsPlayground {
                             "onsubmit": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.elements[0].value, .001))'
                         };
 
-                        textbox = new makerjs.exporter.XmlTag('form', formAttrs);
-                        textbox.innerText = new makerjs.exporter.XmlTag('input', textboxAttrs).toString();
-                        textbox.innerTextEscaped = true;
+                        numberBox = new makerjs.exporter.XmlTag('form', formAttrs);
+                        numberBox.innerText = new makerjs.exporter.XmlTag('input', numberBoxAttrs).toString();
+                        numberBox.innerTextEscaped = true;
 
                         paramValues.push(attrs.value);
 
                         label.attrs['title'] = 'click to toggle slider / textbox for ' + label.attrs['title'];
-                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderTextbox(this, ' + i + ')';
+                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderNumberBox(this, ' + i + ')';
 
                         break;
 
@@ -188,8 +190,8 @@ module MakerJsPlayground {
                 var div = new makerjs.exporter.XmlTag('div');
                 div.innerText = label.toString() + input.toString();
 
-                if (textbox) {
-                    div.innerText += textbox.toString();
+                if (numberBox) {
+                    div.innerText += numberBox.toString();
                 }
 
                 div.innerTextEscaped = true;
@@ -358,18 +360,18 @@ module MakerJsPlayground {
 
     export function setParam(index: number, value: any) {
 
-        //sync slider / textbox
+        //sync slider / numberbox
         var div = document.querySelectorAll('#params > div')[index];
         var slider = div.querySelector('input[type=range]') as HTMLInputElement;
-        var textbox = div.querySelector('input[type=text]') as HTMLInputElement;
+        var numberBox = div.querySelector('input[type=number]') as HTMLInputElement;
 
-        if (slider && textbox) {
-            if (div.classList.contains('toggle-text')) {
-                //textbox is master
-                slider.value = textbox.value;
+        if (slider && numberBox) {
+            if (div.classList.contains('toggle-number')) {
+                //numberbox is master
+                slider.value = numberBox.value;
             } else {
                 //slider is master
-                textbox.value = slider.value;
+                numberBox.value = slider.value;
             }
         }
 
@@ -387,17 +389,17 @@ module MakerJsPlayground {
         render();
     }
 
-    export function toggleSliderTextbox(label: HTMLLabelElement, index: number) {
+    export function toggleSliderNumberBox(label: HTMLLabelElement, index: number) {
         var id: string;
-        if (toggleClass('toggle-text', false, label.parentElement)) {
+        if (toggleClass('toggle-number', false, label.parentElement)) {
             id = 'slider_' + index;
 
-            //re-render according to slider value since textbox may be out of limits
+            //re-render according to slider value since numberbox may be out of limits
             var slider = document.getElementById(id) as HTMLInputElement;
             slider.onchange(null);
 
         } else {
-            id = 'textbox_' + index;
+            id = 'numberbox_' + index;
         }
         label.htmlFor = id;
     }
