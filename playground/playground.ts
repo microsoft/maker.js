@@ -120,6 +120,9 @@ module MakerJsPlayground {
 
                         paramValues.push(attrs.value);
 
+                        label.attrs['title'] = 'click to enter a value for ' + label.attrs['title'];
+                        label.attrs['onclick'] = 'MakerJsPlayground.prompt(this)';
+
                         break;
 
                     case 'bool':
@@ -347,6 +350,17 @@ module MakerJsPlayground {
         }
 
         render();
+    }
+
+    export function prompt(label: HTMLLabelElement) {
+        var input = label.nextElementSibling as HTMLInputElement;
+
+        var newValue = window.prompt('Enter a value for ' + label.innerText, input.value);
+
+        if (newValue !== null) {
+            input.value = newValue;
+            input.onchange(null);
+        }
     }
 
     export function activateParam(input: HTMLInputElement) {

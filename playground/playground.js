@@ -81,6 +81,8 @@ var MakerJsPlayground;
                         input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this)';
                         input.attrs['id'] = id;
                         paramValues.push(attrs.value);
+                        label.attrs['title'] = 'click to enter a value for ' + label.attrs['title'];
+                        label.attrs['onclick'] = 'MakerJsPlayground.prompt(this)';
                         break;
                     case 'bool':
                         var checkboxAttrs = {
@@ -255,6 +257,15 @@ var MakerJsPlayground;
         render();
     }
     MakerJsPlayground.setParam = setParam;
+    function prompt(label) {
+        var input = label.nextElementSibling;
+        var newValue = window.prompt('Enter a value for ' + label.innerText, input.value);
+        if (newValue !== null) {
+            input.value = newValue;
+            input.onchange(null);
+        }
+    }
+    MakerJsPlayground.prompt = prompt;
     function activateParam(input) {
         document.body.classList.add('param-active');
         input.parentElement.classList.add('active');
