@@ -115,11 +115,11 @@ module MakerJsPlayground {
                     case 'range':
                         attrs.title = attrs.value;
                         attrs['id'] = id;
-                        attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1500); }';
-                        attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this, true)';
-                        attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
+                        attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
+                        attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
+                        attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1000)';
                         attrs['onmousedown'] = 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); }';
-                        attrs['onmouseup'] = 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.deActivateParam(this, 1500); }';
+                        attrs['onmouseup'] = 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.deActivateParam(this, 1000); }';
 
                         input = new makerjs.exporter.XmlTag('input', attrs);
 
@@ -419,7 +419,7 @@ module MakerJsPlayground {
         }
 
         if (onLongHold) {
-            longHoldTimeout = setTimeout(activate, 1000);
+            longHoldTimeout = setTimeout(activate, 200);
         } else {
             activate();
         }
