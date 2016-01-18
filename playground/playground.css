@@ -111,15 +111,20 @@ header h1 {
     border-top: none;
     padding-top: 0;
     margin-top: 0;
-
     position: relative;
     float: right;
 }
 
 #rendering-options-menu hr {
     margin: 1em 0;
-    border-color: inherit;
-    border-style: inherit;
+    border: 1px solid #ddd;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+#rendering-options-menu > div {
+    position: relative;
 }
 
 #rendering-options-menu hr ~ div > label {
@@ -130,6 +135,19 @@ header h1 {
 
 .collapse-rendering-options #rendering-options-menu {
     display: none;
+}
+
+.param-active #rendering-options-menu {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.param-active #rendering-options-menu > div > div {
+    visibility: hidden;
+}
+
+.param-active #rendering-options-menu > div > div.active {
+    visibility: visible;
+    color: #0ff;
 }
 
 #params div {
