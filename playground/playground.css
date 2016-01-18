@@ -148,6 +148,7 @@ header h1 {
 .param-active #rendering-options-menu > div > div.active {
     visibility: visible;
     color: #0ff;
+    text-shadow: 0 0 1em rgba(0,0,0,.5);
 }
 
 #params div {
