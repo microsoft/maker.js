@@ -116,9 +116,10 @@
     </section>
 
     <section id="download">
-        <h2>Download your customized drawing</h2>
 
         <div id="download-select">
+            <h2>Choose a file format to download your customized drawing</h2>
+
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Json);">json</button>
@@ -127,11 +128,15 @@
         </div>
 
         <div id="download-generating">
+            <h2>Generating your customized drawing...</h2>
+
             <button onclick="MakerJsPlayground.cancelExport()">cancel</button>
             <div id="download-progress"></div>
         </div>
 
         <div id="download-ready">
+            <h2>Your customized drawing file is ready for download</h2>
+
             <span id="download-link-container"></span>
             <span>
                 <button class="close" onclick="MakerJsPlayground.toggleClass('download-ready')">close</button>
