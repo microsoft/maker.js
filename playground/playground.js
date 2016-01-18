@@ -72,21 +72,33 @@ var MakerJsPlayground;
                 var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
                 label.innerText = attrs.title + ': ';
                 var input = null;
+                var textbox = null;
                 switch (attrs.type) {
                     case 'range':
                         attrs.title = attrs.value;
                         input = new makerjs.exporter.XmlTag('input', attrs);
                         input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
                         input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
-                        input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this)';
-                        input.attrs['id'] = id;
+                        input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
+                        var textboxAttrs = {
+                            "id": id,
+                            "type": 'text',
+                            "value": attrs.value,
+                            "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.value, .001))'
+                        };
+                        var formAttrs = {
+                            "action": 'javascript:void(0);',
+                            "onsubmit": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.elements[0].value, .001))'
+                        };
+                        textbox = new makerjs.exporter.XmlTag('form', formAttrs);
+                        textbox.innerText = new makerjs.exporter.XmlTag('input', textboxAttrs).toString();
+                        textbox.innerTextEscaped = true;
                         paramValues.push(attrs.value);
-                        label.attrs['title'] = 'click to enter a value for ' + label.attrs['title'];
-                        label.attrs['onclick'] = 'MakerJsPlayground.prompt(this)';
+                        label.attrs['title'] = 'click to toggle slider / textbox for ' + label.attrs['title'];
+                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderTextbox(this)';
                         break;
                     case 'bool':
                         var checkboxAttrs = {
-                            id: id,
                             type: 'checkbox',
                             onchange: 'MakerJsPlayground.setParam(' + i + ', this.checked)'
                         };
@@ -98,7 +110,6 @@ var MakerJsPlayground;
                         break;
                     case 'select':
                         var selectAttrs = {
-                            id: id,
                             onchange: 'MakerJsPlayground.setParam(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
                         };
                         input = new makerjs.exporter.XmlTag('select', selectAttrs);
@@ -117,6 +128,9 @@ var MakerJsPlayground;
                     continue;
                 var div = new makerjs.exporter.XmlTag('div');
                 div.innerText = label.toString() + input.toString();
+                if (textbox) {
+                    div.innerText += textbox.toString();
+                }
                 div.innerTextEscaped = true;
                 paramHtml += div.toString();
             }
@@ -257,26 +271,21 @@ var MakerJsPlayground;
         render();
     }
     MakerJsPlayground.setParam = setParam;
-    function prompt(label) {
-        var input = label.nextElementSibling;
-        var newValue = window.prompt('Enter a value for ' + label.innerText, input.value);
-        if (newValue !== null) {
-            input.value = newValue;
-            input.onchange(null);
-        }
+    function toggleSliderTextbox(label) {
+        toggleClass('toggle-text', false, label.parentElement);
     }
-    MakerJsPlayground.prompt = prompt;
+    MakerJsPlayground.toggleSliderTextbox = toggleSliderTextbox;
     function activateParam(input) {
         document.body.classList.add('param-active');
         input.parentElement.classList.add('active');
         clearTimeout(paramActiveTimeout);
     }
     MakerJsPlayground.activateParam = activateParam;
-    function deActivateParam(input) {
+    function deActivateParam(input, delay) {
         paramActiveTimeout = setTimeout(function () {
             document.body.classList.remove('param-active');
             input.parentElement.classList.remove('active');
-        }, 1500);
+        }, delay);
     }
     MakerJsPlayground.deActivateParam = deActivateParam;
     function render() {
@@ -358,15 +367,23 @@ var MakerJsPlayground;
         x.send();
     }
     MakerJsPlayground.downloadScript = downloadScript;
-    function toggleClass(name) {
-        var c = document.body.classList;
+    function toggleClass(name, render, element) {
+        if (render === void 0) { render = true; }
+        if (element === void 0) { element = document.body; }
+        var c = element.classList;
+        var result;
         if (c.contains(name)) {
             c.remove(name);
+            result = true;
         }
         else {
             c.add(name);
+            result = false;
         }
-        MakerJsPlayground.render();
+        if (render) {
+            MakerJsPlayground.render();
+        }
+        return result;
     }
     MakerJsPlayground.toggleClass = toggleClass;
     function getExport(ev) {
@@ -387,8 +404,8 @@ var MakerJsPlayground;
                 preview.value = response.text;
                 document.getElementById('download-filename').innerText = filename;
                 //put the download ui into ready mode
-                toggleClass('download-generating');
-                toggleClass('download-ready');
+                toggleClass('download-generating', false);
+                toggleClass('download-ready', false);
             }, 300);
         }
     }
@@ -405,7 +422,7 @@ var MakerJsPlayground;
         }
         //put the download ui into generation mode
         progress.style.width = '0';
-        toggleClass('download-generating');
+        toggleClass('download-generating', false);
         //tell the worker to process the job
         exportWorker.postMessage(request);
     }
