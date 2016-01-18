@@ -72,7 +72,7 @@ var MakerJsPlayground;
                 var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
                 label.innerText = attrs.title + ': ';
                 var input = null;
-                var textbox = null;
+                var numberBox = null;
                 switch (attrs.type) {
                     case 'range':
                         attrs.title = attrs.value;
@@ -81,9 +81,11 @@ var MakerJsPlayground;
                         input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
                         input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
                         input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
-                        var textboxAttrs = {
-                            "id": 'textbox_' + i,
-                            "type": 'text',
+                        //note: we could also apply the min and max of the range to the number field. however, the useage of the textbox is to deliberately "go out of bounds" when the example range is insufficient.
+                        var numberBoxAttrs = {
+                            "id": 'numberbox_' + i,
+                            "type": 'number',
+                            "step": 'any',
                             "value": attrs.value,
                             "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.value, .001))'
                         };
@@ -91,12 +93,12 @@ var MakerJsPlayground;
                             "action": 'javascript:void(0);',
                             "onsubmit": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.elements[0].value, .001))'
                         };
-                        textbox = new makerjs.exporter.XmlTag('form', formAttrs);
-                        textbox.innerText = new makerjs.exporter.XmlTag('input', textboxAttrs).toString();
-                        textbox.innerTextEscaped = true;
+                        numberBox = new makerjs.exporter.XmlTag('form', formAttrs);
+                        numberBox.innerText = new makerjs.exporter.XmlTag('input', numberBoxAttrs).toString();
+                        numberBox.innerTextEscaped = true;
                         paramValues.push(attrs.value);
                         label.attrs['title'] = 'click to toggle slider / textbox for ' + label.attrs['title'];
-                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderTextbox(this, ' + i + ')';
+                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderNumberBox(this, ' + i + ')';
                         break;
                     case 'bool':
                         var checkboxAttrs = {
@@ -129,8 +131,8 @@ var MakerJsPlayground;
                     continue;
                 var div = new makerjs.exporter.XmlTag('div');
                 div.innerText = label.toString() + input.toString();
-                if (textbox) {
-                    div.innerText += textbox.toString();
+                if (numberBox) {
+                    div.innerText += numberBox.toString();
                 }
                 div.innerTextEscaped = true;
                 paramHtml += div.toString();
@@ -262,18 +264,18 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.processResult = processResult;
     function setParam(index, value) {
-        //sync slider / textbox
+        //sync slider / numberbox
         var div = document.querySelectorAll('#params > div')[index];
         var slider = div.querySelector('input[type=range]');
-        var textbox = div.querySelector('input[type=text]');
-        if (slider && textbox) {
-            if (div.classList.contains('toggle-text')) {
-                //textbox is master
-                slider.value = textbox.value;
+        var numberBox = div.querySelector('input[type=number]');
+        if (slider && numberBox) {
+            if (div.classList.contains('toggle-number')) {
+                //numberbox is master
+                slider.value = numberBox.value;
             }
             else {
                 //slider is master
-                textbox.value = slider.value;
+                numberBox.value = slider.value;
             }
         }
         resetDownload();
@@ -286,20 +288,20 @@ var MakerJsPlayground;
         render();
     }
     MakerJsPlayground.setParam = setParam;
-    function toggleSliderTextbox(label, index) {
+    function toggleSliderNumberBox(label, index) {
         var id;
-        if (toggleClass('toggle-text', false, label.parentElement)) {
+        if (toggleClass('toggle-number', false, label.parentElement)) {
             id = 'slider_' + index;
-            //re-render according to slider value since textbox may be out of limits
+            //re-render according to slider value since numberbox may be out of limits
             var slider = document.getElementById(id);
             slider.onchange(null);
         }
         else {
-            id = 'textbox_' + index;
+            id = 'numberbox_' + index;
         }
         label.htmlFor = id;
     }
-    MakerJsPlayground.toggleSliderTextbox = toggleSliderTextbox;
+    MakerJsPlayground.toggleSliderNumberBox = toggleSliderNumberBox;
     function activateParam(input) {
         document.body.classList.add('param-active');
         input.parentElement.classList.add('active');

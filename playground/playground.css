@@ -162,7 +162,7 @@ header h1 {
     top: 6px;
 }
 
-#params input[type=text] {
+#params input[type=number] {
     width: 8em;
     top: 0;
     display: inline-block;
@@ -174,11 +174,11 @@ header h1 {
     display: none;
 }
 
-#params .toggle-text form {
+#params .toggle-number form {
     display: inline;
 }
 
-#params .toggle-text input[type=range] {
+#params .toggle-number input[type=range] {
     display: none;
 }
 
