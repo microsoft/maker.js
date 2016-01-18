@@ -40,6 +40,7 @@ var MakerJsPlayground;
     var errorMarker;
     var exportWorker = null;
     var paramActiveTimeout;
+    var longHoldTimeout;
     function getZoom() {
         var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
         var zoom = (landscape ? window.innerWidth : window.innerHeight) / document.body.clientWidth;
@@ -76,17 +77,21 @@ var MakerJsPlayground;
                 switch (attrs.type) {
                     case 'range':
                         attrs.title = attrs.value;
+                        attrs['id'] = id;
+                        attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1500); }';
+                        attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this, true)';
+                        attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
+                        attrs['onmousedown'] = 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); }';
+                        attrs['onmouseup'] = 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.deActivateParam(this, 1500); }';
                         input = new makerjs.exporter.XmlTag('input', attrs);
-                        input.attrs['id'] = id;
-                        input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
-                        input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
-                        input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
                         //note: we could also apply the min and max of the range to the number field. however, the useage of the textbox is to deliberately "go out of bounds" when the example range is insufficient.
                         var numberBoxAttrs = {
                             "id": 'numberbox_' + i,
                             "type": 'number',
                             "step": 'any',
                             "value": attrs.value,
+                            "onfocus": 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this.parentElement); }',
+                            "onblur": 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.deActivateParam(this.parentElement, 0); }',
                             "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.value, .001))'
                         };
                         var formAttrs = {
@@ -302,13 +307,24 @@ var MakerJsPlayground;
         label.htmlFor = id;
     }
     MakerJsPlayground.toggleSliderNumberBox = toggleSliderNumberBox;
-    function activateParam(input) {
-        document.body.classList.add('param-active');
-        input.parentElement.classList.add('active');
-        clearTimeout(paramActiveTimeout);
+    function activateParam(input, onLongHold) {
+        if (onLongHold === void 0) { onLongHold = false; }
+        function activate() {
+            document.body.classList.add('param-active');
+            input.parentElement.classList.add('active');
+            clearTimeout(paramActiveTimeout);
+        }
+        if (onLongHold) {
+            longHoldTimeout = setTimeout(activate, 1000);
+        }
+        else {
+            activate();
+        }
     }
     MakerJsPlayground.activateParam = activateParam;
     function deActivateParam(input, delay) {
+        clearTimeout(longHoldTimeout);
+        clearTimeout(paramActiveTimeout);
         paramActiveTimeout = setTimeout(function () {
             document.body.classList.remove('param-active');
             input.parentElement.classList.remove('active');
@@ -467,6 +483,10 @@ var MakerJsPlayground;
         document.body.classList.remove('download-generating');
     }
     MakerJsPlayground.cancelExport = cancelExport;
+    function isSmallDevice() {
+        return document.body.clientWidth < 540;
+    }
+    MakerJsPlayground.isSmallDevice = isSmallDevice;
     //execution
     window.onload = function (ev) {
         if (window.orientation === void 0) {
