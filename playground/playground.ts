@@ -102,7 +102,7 @@ module MakerJsPlayground {
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
 
-                var id = 'input_' + i;
+                var id = 'slider_' + i;
                 var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
                 label.innerText = attrs.title + ': ';
 
@@ -114,12 +114,13 @@ module MakerJsPlayground {
                     case 'range':
                         attrs.title = attrs.value;
                         input = new makerjs.exporter.XmlTag('input', attrs);
+                        input.attrs['id'] = id;
                         input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
                         input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
                         input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
 
                         var textboxAttrs = {
-                            "id": id,
+                            "id": 'textbox_' + i,
                             "type": 'text',
                             "value": attrs.value,
                             "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.value, .001))'
@@ -137,7 +138,7 @@ module MakerJsPlayground {
                         paramValues.push(attrs.value);
 
                         label.attrs['title'] = 'click to toggle slider / textbox for ' + label.attrs['title'];
-                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderTextbox(this)';
+                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderTextbox(this, ' + i + ')';
 
                         break;
 
@@ -357,6 +358,21 @@ module MakerJsPlayground {
 
     export function setParam(index: number, value: any) {
 
+        //sync slider / textbox
+        var div = document.querySelectorAll('#params > div')[index];
+        var slider = div.querySelector('input[type=range]') as HTMLInputElement;
+        var textbox = div.querySelector('input[type=text]') as HTMLInputElement;
+
+        if (slider && textbox) {
+            if (div.classList.contains('toggle-text')) {
+                //textbox is master
+                slider.value = textbox.value;
+            } else {
+                //slider is master
+                textbox.value = slider.value;
+            }
+        }
+
         resetDownload();
 
         processed.paramValues[index] = value;
@@ -371,8 +387,19 @@ module MakerJsPlayground {
         render();
     }
 
-    export function toggleSliderTextbox(label: HTMLLabelElement) {
-        toggleClass('toggle-text', false, label.parentElement);
+    export function toggleSliderTextbox(label: HTMLLabelElement, index: number) {
+        var id: string;
+        if (toggleClass('toggle-text', false, label.parentElement)) {
+            id = 'slider_' + index;
+
+            //re-render according to slider value since textbox may be out of limits
+            var slider = document.getElementById(id) as HTMLInputElement;
+            slider.onchange(null);
+
+        } else {
+            id = 'textbox_' + index;
+        }
+        label.htmlFor = id;
     }
 
     export function activateParam(input: HTMLInputElement) {
