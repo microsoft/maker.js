@@ -344,7 +344,6 @@ var MakerJsPlayground;
     MakerJsPlayground.toggleClass = toggleClass;
     function getExport(ev) {
         var response = ev.data;
-        console.log(response.percentComplete);
         progress.style.width = response.percentComplete + '%';
         if (response.percentComplete == 100 && response.text) {
             //allow progress bar to render
