@@ -102,33 +102,49 @@ module MakerJsPlayground {
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
 
-                var id = 'input_' + i;
+                var id = 'slider_' + i;
                 var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
                 label.innerText = attrs.title + ': ';
 
-                var input = null;
+                var input: MakerJs.exporter.XmlTag = null;
+                var textbox: MakerJs.exporter.XmlTag = null;
 
                 switch (attrs.type) {
 
                     case 'range':
                         attrs.title = attrs.value;
                         input = new makerjs.exporter.XmlTag('input', attrs);
+                        input.attrs['id'] = id;
                         input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
                         input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
-                        input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this)';
-                        input.attrs['id'] = id;
+                        input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1500)';
+
+                        var textboxAttrs = {
+                            "id": 'textbox_' + i,
+                            "type": 'text',
+                            "value": attrs.value,
+                            "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.value, .001))'
+                        };
+
+                        var formAttrs = {
+                            "action": 'javascript:void(0);',
+                            "onsubmit": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.elements[0].value, .001))'
+                        };
+
+                        textbox = new makerjs.exporter.XmlTag('form', formAttrs);
+                        textbox.innerText = new makerjs.exporter.XmlTag('input', textboxAttrs).toString();
+                        textbox.innerTextEscaped = true;
 
                         paramValues.push(attrs.value);
 
-                        label.attrs['title'] = 'click to enter a value for ' + label.attrs['title'];
-                        label.attrs['onclick'] = 'MakerJsPlayground.prompt(this)';
+                        label.attrs['title'] = 'click to toggle slider / textbox for ' + label.attrs['title'];
+                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderTextbox(this, ' + i + ')';
 
                         break;
 
                     case 'bool':
 
                         var checkboxAttrs = {
-                            id: id,
                             type: 'checkbox',
                             onchange: 'MakerJsPlayground.setParam(' + i + ', this.checked)'
                         };
@@ -146,7 +162,6 @@ module MakerJsPlayground {
                     case 'select':
 
                         var selectAttrs = {
-                            id: id,
                             onchange: 'MakerJsPlayground.setParam(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
                         };
 
@@ -172,6 +187,11 @@ module MakerJsPlayground {
 
                 var div = new makerjs.exporter.XmlTag('div');
                 div.innerText = label.toString() + input.toString();
+
+                if (textbox) {
+                    div.innerText += textbox.toString();
+                }
+
                 div.innerTextEscaped = true;
                 paramHtml += div.toString();
             }
@@ -338,6 +358,21 @@ module MakerJsPlayground {
 
     export function setParam(index: number, value: any) {
 
+        //sync slider / textbox
+        var div = document.querySelectorAll('#params > div')[index];
+        var slider = div.querySelector('input[type=range]') as HTMLInputElement;
+        var textbox = div.querySelector('input[type=text]') as HTMLInputElement;
+
+        if (slider && textbox) {
+            if (div.classList.contains('toggle-text')) {
+                //textbox is master
+                slider.value = textbox.value;
+            } else {
+                //slider is master
+                textbox.value = slider.value;
+            }
+        }
+
         resetDownload();
 
         processed.paramValues[index] = value;
@@ -352,15 +387,19 @@ module MakerJsPlayground {
         render();
     }
 
-    export function prompt(label: HTMLLabelElement) {
-        var input = label.nextElementSibling as HTMLInputElement;
+    export function toggleSliderTextbox(label: HTMLLabelElement, index: number) {
+        var id: string;
+        if (toggleClass('toggle-text', false, label.parentElement)) {
+            id = 'slider_' + index;
 
-        var newValue = window.prompt('Enter a value for ' + label.innerText, input.value);
+            //re-render according to slider value since textbox may be out of limits
+            var slider = document.getElementById(id) as HTMLInputElement;
+            slider.onchange(null);
 
-        if (newValue !== null) {
-            input.value = newValue;
-            input.onchange(null);
+        } else {
+            id = 'textbox_' + index;
         }
+        label.htmlFor = id;
     }
 
     export function activateParam(input: HTMLInputElement) {
@@ -369,11 +408,11 @@ module MakerJsPlayground {
         clearTimeout(paramActiveTimeout);
     }
 
-    export function deActivateParam(input: HTMLInputElement) {
+    export function deActivateParam(input: HTMLInputElement, delay: number) {
         paramActiveTimeout = setTimeout(function () {
             document.body.classList.remove('param-active');
             input.parentElement.classList.remove('active');
-        }, 1500);
+        }, delay);
     }
 
     export function render() {
@@ -476,14 +515,23 @@ module MakerJsPlayground {
         x.send();
     }
 
-    export function toggleClass(name) {
-        var c = document.body.classList;
+    export function toggleClass(name: string, render = true, element: HTMLElement = document.body): boolean {
+        var c = element.classList;
+        var result: boolean;
+
         if (c.contains(name)) {
             c.remove(name);
+            result = true;
         } else {
             c.add(name);
+            result = false;
         }
-        MakerJsPlayground.render();
+
+        if (render) {
+            MakerJsPlayground.render();
+        }
+
+        return result;
     }
 
     function getExport(ev: MessageEvent) {
@@ -512,8 +560,8 @@ module MakerJsPlayground {
                 (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
 
                 //put the download ui into ready mode
-                toggleClass('download-generating');
-                toggleClass('download-ready');
+                toggleClass('download-generating', false);
+                toggleClass('download-ready', false);
             }, 300);
 
         }
@@ -535,7 +583,7 @@ module MakerJsPlayground {
 
         //put the download ui into generation mode
         progress.style.width = '0';
-        toggleClass('download-generating');
+        toggleClass('download-generating', false);
 
         //tell the worker to process the job
         exportWorker.postMessage(request);

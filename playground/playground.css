@@ -162,6 +162,26 @@ header h1 {
     top: 6px;
 }
 
+#params input[type=text] {
+    width: 8em;
+    top: 0;
+    display: inline-block;
+    margin-top: 6px;
+    margin-bottom: -2px;
+}
+
+#params form {
+    display: none;
+}
+
+#params .toggle-text form {
+    display: inline;
+}
+
+#params .toggle-text input[type=range] {
+    display: none;
+}
+
 #view {
     color: #fff;
     padding: 2em;
