@@ -39,6 +39,7 @@ var MakerJsPlayground;
     var init = true;
     var errorMarker;
     var exportWorker = null;
+    var paramActiveTimeout;
     function getZoom() {
         var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
         var zoom = (landscape ? window.innerWidth : window.innerHeight) / document.body.clientWidth;
@@ -76,6 +77,8 @@ var MakerJsPlayground;
                         attrs.title = attrs.value;
                         input = new makerjs.exporter.XmlTag('input', attrs);
                         input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
+                        input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
+                        input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this)';
                         input.attrs['id'] = id;
                         paramValues.push(attrs.value);
                         break;
@@ -252,6 +255,19 @@ var MakerJsPlayground;
         render();
     }
     MakerJsPlayground.setParam = setParam;
+    function activateParam(input) {
+        document.body.classList.add('param-active');
+        input.parentElement.classList.add('active');
+        clearTimeout(paramActiveTimeout);
+    }
+    MakerJsPlayground.activateParam = activateParam;
+    function deActivateParam(input) {
+        paramActiveTimeout = setTimeout(function () {
+            document.body.classList.remove('param-active');
+            input.parentElement.classList.remove('active');
+        }, 1500);
+    }
+    MakerJsPlayground.deActivateParam = deActivateParam;
     function render() {
         getZoom();
         //remove content so default size can be measured
@@ -344,7 +360,6 @@ var MakerJsPlayground;
     MakerJsPlayground.toggleClass = toggleClass;
     function getExport(ev) {
         var response = ev.data;
-        console.log(response.percentComplete);
         progress.style.width = response.percentComplete + '%';
         if (response.percentComplete == 100 && response.text) {
             //allow progress bar to render
@@ -438,3 +453,4 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
+//# sourceMappingURL=playground.js.map

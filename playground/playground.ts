@@ -61,6 +61,7 @@ module MakerJsPlayground {
     var init = true;
     var errorMarker: CodeMirror.TextMarker;
     var exportWorker: Worker = null;
+    var paramActiveTimeout: NodeJS.Timer;
 
     function getZoom() {
         var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -113,6 +114,8 @@ module MakerJsPlayground {
                         attrs.title = attrs.value;
                         input = new makerjs.exporter.XmlTag('input', attrs);
                         input.attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))';
+                        input.attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
+                        input.attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this)';
                         input.attrs['id'] = id;
 
                         paramValues.push(attrs.value);
@@ -346,6 +349,19 @@ module MakerJsPlayground {
         render();
     }
 
+    export function activateParam(input: HTMLInputElement) {
+        document.body.classList.add('param-active');
+        input.parentElement.classList.add('active');
+        clearTimeout(paramActiveTimeout);
+    }
+
+    export function deActivateParam(input: HTMLInputElement) {
+        paramActiveTimeout = setTimeout(function () {
+            document.body.classList.remove('param-active');
+            input.parentElement.classList.remove('active');
+        }, 1500);
+    }
+
     export function render() {
         getZoom();
 
@@ -458,8 +474,6 @@ module MakerJsPlayground {
 
     function getExport(ev: MessageEvent) {
         var response = ev.data as MakerJsPlaygroundExport.IExportResponse;
-
-        console.log(response.percentComplete);
 
         progress.style.width = response.percentComplete + '%';
 

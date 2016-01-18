@@ -97,5 +97,4 @@ onmessage = function (ev) {
         result.percentComplete = 100;
         postMessage(result);
     }
-    console.log("worker:" + request.format + request.model);
 };
