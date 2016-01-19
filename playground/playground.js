@@ -507,8 +507,8 @@ var MakerJsPlayground;
             };
             if (document.getElementById('check-show-origin').checked) {
                 renderModel.paths = {
-                    'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
-                    'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                    'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(measure.low[1], 0)], [0, Math.max(measure.high[1], 0)]),
+                    'crosshairs-horizontal': new makerjs.paths.Line([Math.min(measure.low[0], 0), 0], [Math.max(measure.high[0], 0), 0])
                 };
             }
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
@@ -667,4 +667,3 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
-//# sourceMappingURL=playground.js.map
