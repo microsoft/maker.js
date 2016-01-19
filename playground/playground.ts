@@ -26,12 +26,18 @@ module MakerJsPlayground {
 
     //interfaces
 
+    interface ILockedPath {
+        route: string[];
+        notes: string;
+    }
+
     interface IProcessedResult {
         html: string;
         kit: MakerJs.IKit;
         model: MakerJs.IModel;
         paramValues: any[],
         paramHtml: string;
+        lockedPath?: ILockedPath;
     }
 
     export interface IJavaScriptErrorDetails {
@@ -63,6 +69,8 @@ module MakerJsPlayground {
     var exportWorker: Worker = null;
     var paramActiveTimeout: NodeJS.Timer;
     var longHoldTimeout: NodeJS.Timer;
+    var viewModelRootSelector = 'svg > g > g > g';
+    var zoomOutLockedPath = 0.44;
 
     function getZoom() {
         var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -271,6 +279,137 @@ module MakerJsPlayground {
         }
     }
 
+    function arraysEqual(a, b) {
+        if (!a || !b) return false;
+        if (a.length != b.length) return false;
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
+
+    function viewClick(ev: MouseEvent) {
+        if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
+
+            var text = ev.srcElement as SVGTextElement;
+            var path = text.previousSibling;
+
+            lockToPath(path);
+        }
+    }
+
+    function lockToPath(path: Node) {
+        
+        //trace back to root
+        var root = view.querySelector(viewModelRootSelector) as SVGGElement;
+        var route: string[] = [];
+        var element = path;
+
+        while (element !== root) {
+            var id = element.attributes.getNamedItem('id').value
+
+            route.unshift(id);
+
+            if (element.nodeName == 'g') {
+                route.unshift('models');
+            } else {
+                route.unshift('paths');
+            }
+            element = element.parentNode;
+        }
+
+        if (processed.lockedPath && arraysEqual(processed.lockedPath.route, route)) {
+
+            processed.lockedPath = null;
+            setNotes(processed.model.notes || processed.kit.notes);
+
+        } else {
+
+            var crumb = 'this';
+            for (var i = 0; i < route.length; i++) {
+                if (i % 2 == 0) {
+                    crumb += "." + route[i];
+                } else {
+                    crumb += '["' + route[i] + '"]';
+                }
+            }
+            
+            processed.lockedPath = {
+                route: route,
+                notes: "Path Info|\n---|---\nRoute|``` " + crumb + " ```\nJSON|"
+            };
+
+            updateLockedPathNotes();
+        }
+
+        render();
+    }
+
+    function getLockedPathSvgElement() {
+        var root = view.querySelector(viewModelRootSelector) as SVGGElement;
+        var selector = '';
+
+        for (var i = 0; i < processed.lockedPath.route.length - 2; i += 2) {
+            selector += " g[id='" + processed.lockedPath.route[i + 1] + "']";
+        }
+
+        selector += " [id='" + processed.lockedPath.route[processed.lockedPath.route.length - 1] + "']";
+
+        return root.querySelector(selector) as HTMLElement;
+    }
+
+    function getLockedPathAndOffset() {
+        if (!processed.lockedPath) return null;
+
+        var ref = processed.model;
+        var origin = processed.model.origin || [0, 0];
+
+        var route = processed.lockedPath.route.slice();
+
+        while (route.length) {
+            var prop = route.shift();
+            ref = ref[prop];
+
+            if (!ref) return null;
+
+            if (ref.origin && route.length) {
+                origin = makerjs.point.add(origin, ref.origin);
+            }
+        }
+
+        return {
+            path: <MakerJs.IPath>ref,
+            offset: origin
+        };
+    }
+
+    function updateLockedPathNotes() {
+        if (processed.model && processed.lockedPath) {
+            var pathAndOffset = getLockedPathAndOffset();
+            if (pathAndOffset) {
+                setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.path) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
+            } else {
+                setNotes(processed.model.notes || processed.kit.notes);
+            }
+        }
+    }
+
+    function measureLockedPath(): MakerJs.IMeasure {
+        var pathAndOffset = getLockedPathAndOffset();
+        if (!pathAndOffset) return null;
+
+        var measure = makerjs.measure.pathExtents(pathAndOffset.path);
+        measure.high = makerjs.point.add(measure.high, pathAndOffset.offset);
+        measure.low = makerjs.point.add(measure.low, pathAndOffset.offset);
+
+        return measure;
+    }
+
+    function areSameHeightMeasurement(a: MakerJs.IMeasure, b: MakerJs.IMeasure) {
+        return a.high[1] == b.high[1] && a.low[1] == b.low[1];
+    }
+
     //public members
 
     export var codeMirrorEditor: CodeMirror.Editor;
@@ -348,6 +487,8 @@ module MakerJsPlayground {
 
         document.getElementById('params').innerHTML = processed.paramHtml;
 
+        updateLockedPathNotes();
+
         render();
 
         //now safe to render, so register a resize listener
@@ -361,6 +502,8 @@ module MakerJsPlayground {
                 document.body.classList.add('collapse-rendering-options');
                 render();
             });
+
+            view.addEventListener('click', viewClick);
         }
     }
 
@@ -390,6 +533,8 @@ module MakerJsPlayground {
 
             //construct an IModel from the kit
             processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+
+            updateLockedPathNotes();
         }
 
         render();
@@ -445,18 +590,25 @@ module MakerJsPlayground {
         var html = processed.html;
 
         if (processed.model) {
+            var annotate = (<HTMLInputElement>document.getElementById('check-annotate')).checked;
+            var fitOnScreen = (<HTMLInputElement>document.getElementById('check-fit-on-screen')).checked;
+            var measureModel = makerjs.measure.modelExtents(processed.model);
+            var measure = measureLockedPath();
 
-            var measure = makerjs.measure.modelExtents(processed.model);
+            if (!measure || !fitOnScreen || !annotate) {
+                measure = measureModel;
+            }
+
             var modelHeightNatural = measure.high[1] - measure.low[1];
             var modelWidthNatural = measure.high[0] - measure.low[0];
-            var height = view.offsetHeight - 2 * vMargin;
-            var width = document.getElementById('view-params').offsetWidth - 2 * hMargin;
+            var viewHeight = view.offsetHeight - 2 * vMargin;
+            var viewWidth = document.getElementById('view-params').offsetWidth - 2 * hMargin;
             var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
             var viewScale = 1;
 
             //view mode - left of menu
             if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
-                width = menuLeft;
+                viewWidth = menuLeft;
             }
 
             if (processed.model.units) {
@@ -464,20 +616,36 @@ module MakerJsPlayground {
                 viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
 
-            var modelWidthInPixels = modelWidthNatural * viewScale;
-            var modelHeightInPixels = modelHeightNatural * viewScale;
+            var modelWidthInPixels = makerjs.round(modelWidthNatural * viewScale, .1);
+            var modelHeightInPixels = makerjs.round(modelHeightNatural * viewScale, .1);
+            var zoomOut = false;
 
-            if ((<HTMLInputElement>document.getElementById('check-fit-on-screen')).checked) {
+            if (fitOnScreen) {
 
-                var scaleHeight = height / modelHeightInPixels;
-                var scaleWidth = width / modelWidthInPixels;
+                var scaleHeight = viewHeight / modelHeightInPixels;
+                var scaleWidth = viewWidth / modelWidthInPixels;
 
                 viewScale *= Math.min(scaleWidth, scaleHeight);
+
+                zoomOut = processed.lockedPath && !areSameHeightMeasurement(measureModel, measure);
+
+                if (zoomOut) {
+                    viewScale *= zoomOutLockedPath;
+                }
+            }
+
+            var centerY = measure.high[1] * viewScale;
+            var v2 = viewHeight / 2;
+
+            if (!modelHeightInPixels) {
+                centerY += v2;
+            } else if (zoomOut) {
+                centerY += v2 * (1 - zoomOutLockedPath);
             }
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-                origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
-                annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
+                origin: [viewWidth / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, centerY],
+                annotate: annotate,
                 svgAttrs: { id: 'view-svg' },
                 fontSize: (windowZoom * svgFontSize) + 'px',
                 strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
@@ -487,7 +655,7 @@ module MakerJsPlayground {
 
             var renderModel: MakerJs.IModel = {
                 models: {
-                    model: processed.model
+                    ROOT: processed.model
                 }
             };
 
@@ -503,6 +671,15 @@ module MakerJsPlayground {
         }
 
         view.innerHTML = html;
+
+        if (processed.lockedPath) {
+            var path = getLockedPathSvgElement();
+            if (path) {
+                path.setAttribute('class', 'locked');
+                path.style.strokeWidth = (windowZoom * 2 * svgStrokeWidth) + 'px';
+            }
+        }
+
     }
 
     export function filenameFromRequireId(id: string): string {
@@ -536,7 +713,7 @@ module MakerJsPlayground {
         x.send();
     }
 
-    export function toggleClass(name: string, render = true, element: HTMLElement = document.body): boolean {
+    export function toggleClass(name: string, doRender = true, element: HTMLElement = document.body): boolean {
         var c = element.classList;
         var result: boolean;
 
@@ -548,8 +725,8 @@ module MakerJsPlayground {
             result = false;
         }
 
-        if (render) {
-            MakerJsPlayground.render();
+        if (doRender) {
+            render();
         }
 
         return result;
