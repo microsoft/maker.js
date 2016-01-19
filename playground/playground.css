@@ -123,11 +123,7 @@ header h1 {
     border-right-width: 0;
 }
 
-#rendering-options-menu > div {
-    position: relative;
-}
-
-#rendering-options-menu hr ~ div > label {
+#rendering-options-menu .view-controls label {
     letter-spacing: 1px;
     font-variant: small-caps;
     color: #777
@@ -198,6 +194,10 @@ svg line, svg circle, svg path {
     fill: none;
 }
 
+svg .locked {
+    stroke: #0000FF;
+}
+
 #view svg {
     overflow: visible;
 }
@@ -205,6 +205,10 @@ svg line, svg circle, svg path {
 #view svg text {
     fill: turquoise;
     stroke: none;
+}
+
+#view svg .locked + text {
+    fill: yellow;
 }
 
 #crosshairs-vertical, #crosshairs-horizontal {
@@ -224,9 +228,13 @@ svg line, svg circle, svg path {
     background-color: rgba(0, 0, 0, .1);
 }
 
-#notes h1, #notes h2, #notes h3, #notes h4, #notes h5, #notes h6 {
+#notes h1, #notes h2, #notes h3, #notes h4, #notes h5, #notes h6, #notes th {
     font-weight: 600;
     color: #cef;
+}
+
+#notes td:first-child {
+    color: midnightblue;
 }
 
 #notes h1 {
@@ -243,6 +251,10 @@ svg line, svg circle, svg path {
 
 #notes h4, #notes h5, #notes h6 {
     font-size: 1em;
+}
+
+#notes table {
+    margin: 1em 0;
 }
 
 #notes a {

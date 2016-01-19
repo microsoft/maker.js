@@ -41,6 +41,8 @@ var MakerJsPlayground;
     var exportWorker = null;
     var paramActiveTimeout;
     var longHoldTimeout;
+    var viewModelRootSelector = 'svg > g > g > g';
+    var zoomOutLockedPath = 0.44;
     function getZoom() {
         var landscape = (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
         var zoom = (landscape ? window.innerWidth : window.innerHeight) / document.body.clientWidth;
@@ -195,6 +197,114 @@ var MakerJsPlayground;
             processed.html = error.name + ' : ' + error.message;
         }
     }
+    function arraysEqual(a, b) {
+        if (!a || !b)
+            return false;
+        if (a.length != b.length)
+            return false;
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i])
+                return false;
+        }
+        return true;
+    }
+    function viewClick(ev) {
+        if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
+            var text = ev.srcElement;
+            var path = text.previousSibling;
+            lockToPath(path);
+        }
+    }
+    function lockToPath(path) {
+        //trace back to root
+        var root = view.querySelector(viewModelRootSelector);
+        var route = [];
+        var element = path;
+        while (element !== root) {
+            var id = element.attributes.getNamedItem('id').value;
+            route.unshift(id);
+            if (element.nodeName == 'g') {
+                route.unshift('models');
+            }
+            else {
+                route.unshift('paths');
+            }
+            element = element.parentNode;
+        }
+        if (processed.lockedPath && arraysEqual(processed.lockedPath.route, route)) {
+            processed.lockedPath = null;
+            setNotes(processed.model.notes || processed.kit.notes);
+        }
+        else {
+            var crumb = 'this';
+            for (var i = 0; i < route.length; i++) {
+                if (i % 2 == 0) {
+                    crumb += "." + route[i];
+                }
+                else {
+                    crumb += '["' + route[i] + '"]';
+                }
+            }
+            processed.lockedPath = {
+                route: route,
+                notes: "Path Info|\n---|---\nRoute|``` " + crumb + " ```\nJSON|"
+            };
+            updateLockedPathNotes();
+        }
+        render();
+    }
+    function getLockedPathSvgElement() {
+        var root = view.querySelector(viewModelRootSelector);
+        var selector = '';
+        for (var i = 0; i < processed.lockedPath.route.length - 2; i += 2) {
+            selector += " g[id='" + processed.lockedPath.route[i + 1] + "']";
+        }
+        selector += " [id='" + processed.lockedPath.route[processed.lockedPath.route.length - 1] + "']";
+        return root.querySelector(selector);
+    }
+    function getLockedPathAndOffset() {
+        if (!processed.lockedPath)
+            return null;
+        var ref = processed.model;
+        var origin = processed.model.origin || [0, 0];
+        var route = processed.lockedPath.route.slice();
+        while (route.length) {
+            var prop = route.shift();
+            ref = ref[prop];
+            if (!ref)
+                return null;
+            if (ref.origin && route.length) {
+                origin = makerjs.point.add(origin, ref.origin);
+            }
+        }
+        return {
+            path: ref,
+            offset: origin
+        };
+    }
+    function updateLockedPathNotes() {
+        if (processed.model && processed.lockedPath) {
+            var pathAndOffset = getLockedPathAndOffset();
+            if (pathAndOffset) {
+                setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.path) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
+            }
+            else {
+                setNotes(processed.model.notes || processed.kit.notes);
+            }
+        }
+    }
+    function measureLockedPath() {
+        var pathAndOffset = getLockedPathAndOffset();
+        if (!pathAndOffset)
+            return null;
+        var measure = makerjs.measure.pathExtents(pathAndOffset.path);
+        measure.high = makerjs.point.add(measure.high, pathAndOffset.offset);
+        measure.low = makerjs.point.add(measure.low, pathAndOffset.offset);
+        return measure;
+    }
+    function areSameHeightMeasurement(a, b) {
+        return a.high[1] == b.high[1] && a.low[1] == b.low[1];
+    }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
         theme: 'twilight',
@@ -254,6 +364,7 @@ var MakerJsPlayground;
             highlightCodeError(result);
         }
         document.getElementById('params').innerHTML = processed.paramHtml;
+        updateLockedPathNotes();
         render();
         //now safe to render, so register a resize listener
         if (init) {
@@ -265,6 +376,7 @@ var MakerJsPlayground;
                 document.body.classList.add('collapse-rendering-options');
                 render();
             });
+            view.addEventListener('click', viewClick);
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -289,6 +401,7 @@ var MakerJsPlayground;
         if (processed.kit) {
             //construct an IModel from the kit
             processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+            updateLockedPathNotes();
         }
         render();
     }
@@ -337,31 +450,50 @@ var MakerJsPlayground;
         view.innerHTML = '';
         var html = processed.html;
         if (processed.model) {
-            var measure = makerjs.measure.modelExtents(processed.model);
+            var annotate = document.getElementById('check-annotate').checked;
+            var fitOnScreen = document.getElementById('check-fit-on-screen').checked;
+            var measureModel = makerjs.measure.modelExtents(processed.model);
+            var measure = measureLockedPath();
+            if (!measure || !fitOnScreen || !annotate) {
+                measure = measureModel;
+            }
             var modelHeightNatural = measure.high[1] - measure.low[1];
             var modelWidthNatural = measure.high[0] - measure.low[0];
-            var height = view.offsetHeight - 2 * vMargin;
-            var width = document.getElementById('view-params').offsetWidth - 2 * hMargin;
+            var viewHeight = view.offsetHeight - 2 * vMargin;
+            var viewWidth = document.getElementById('view-params').offsetWidth - 2 * hMargin;
             var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
             var viewScale = 1;
             //view mode - left of menu
             if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
-                width = menuLeft;
+                viewWidth = menuLeft;
             }
             if (processed.model.units) {
                 //cast into inches, then to pixels
                 viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
             }
-            var modelWidthInPixels = modelWidthNatural * viewScale;
-            var modelHeightInPixels = modelHeightNatural * viewScale;
-            if (document.getElementById('check-fit-on-screen').checked) {
-                var scaleHeight = height / modelHeightInPixels;
-                var scaleWidth = width / modelWidthInPixels;
+            var modelWidthInPixels = makerjs.round(modelWidthNatural * viewScale, .1);
+            var modelHeightInPixels = makerjs.round(modelHeightNatural * viewScale, .1);
+            var zoomOut = false;
+            if (fitOnScreen) {
+                var scaleHeight = viewHeight / modelHeightInPixels;
+                var scaleWidth = viewWidth / modelWidthInPixels;
                 viewScale *= Math.min(scaleWidth, scaleHeight);
+                zoomOut = processed.lockedPath && !areSameHeightMeasurement(measureModel, measure);
+                if (zoomOut) {
+                    viewScale *= zoomOutLockedPath;
+                }
+            }
+            var centerY = measure.high[1] * viewScale;
+            var v2 = viewHeight / 2;
+            if (!modelHeightInPixels) {
+                centerY += v2;
+            }
+            else if (zoomOut) {
+                centerY += v2 * (1 - zoomOutLockedPath);
             }
             var renderOptions = {
-                origin: [width / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale],
-                annotate: document.getElementById('check-annotate').checked,
+                origin: [viewWidth / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, centerY],
+                annotate: annotate,
                 svgAttrs: { id: 'view-svg' },
                 fontSize: (MakerJsPlayground.windowZoom * MakerJsPlayground.svgFontSize) + 'px',
                 strokeWidth: (MakerJsPlayground.windowZoom * MakerJsPlayground.svgStrokeWidth) + 'px',
@@ -370,18 +502,25 @@ var MakerJsPlayground;
             };
             var renderModel = {
                 models: {
-                    model: processed.model
+                    ROOT: processed.model
                 }
             };
             if (document.getElementById('check-show-origin').checked) {
                 renderModel.paths = {
-                    'crosshairs-vertical': new makerjs.paths.Line([0, measure.low[1]], [0, measure.high[1]]),
-                    'crosshairs-horizontal': new makerjs.paths.Line([measure.low[0], 0], [measure.high[0], 0])
+                    'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(measure.low[1], 0)], [0, Math.max(measure.high[1], 0)]),
+                    'crosshairs-horizontal': new makerjs.paths.Line([Math.min(measure.low[0], 0), 0], [Math.max(measure.high[0], 0), 0])
                 };
             }
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
         view.innerHTML = html;
+        if (processed.lockedPath) {
+            var path = getLockedPathSvgElement();
+            if (path) {
+                path.setAttribute('class', 'locked');
+                path.style.strokeWidth = (MakerJsPlayground.windowZoom * 2 * MakerJsPlayground.svgStrokeWidth) + 'px';
+            }
+        }
     }
     MakerJsPlayground.render = render;
     function filenameFromRequireId(id) {
@@ -410,8 +549,8 @@ var MakerJsPlayground;
         x.send();
     }
     MakerJsPlayground.downloadScript = downloadScript;
-    function toggleClass(name, render, element) {
-        if (render === void 0) { render = true; }
+    function toggleClass(name, doRender, element) {
+        if (doRender === void 0) { doRender = true; }
         if (element === void 0) { element = document.body; }
         var c = element.classList;
         var result;
@@ -423,8 +562,8 @@ var MakerJsPlayground;
             c.add(name);
             result = false;
         }
-        if (render) {
-            MakerJsPlayground.render();
+        if (doRender) {
+            render();
         }
         return result;
     }
@@ -528,4 +667,3 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
-//# sourceMappingURL=playground.js.map
