@@ -79,12 +79,8 @@ module MakerJsPlayground {
     var viewPanOffset: MakerJs.IPoint = [0, 0];
     var viewMousePos: MakerJs.IPoint;
 
-    function getZoom() {
-        var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
-
-        var zoom = (landscape ? window.innerWidth : window.innerHeight) / document.body.clientWidth;
-
-        MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
+    function isLandscapeOrientation() {
+        return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
     }
 
     function isHttp(url: string): boolean {
@@ -323,7 +319,7 @@ module MakerJsPlayground {
 
         checkFitToScreen.checked = false;
 
-        var scaleDelta = 1;
+        var scaleDelta = 1;     //TODO: base the delta, min / max value on model natural size vs window size
         var startScale = viewScale;
 
         viewScale = Math.max(viewScale + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * scaleDelta, 1);
@@ -502,7 +498,6 @@ module MakerJsPlayground {
     export var relativePath = '';
     export var svgFontSize = 14;
     export var svgStrokeWidth = 2;
-    export var windowZoom = 1;
     export var viewScale: number;
     export var querystringParams: QueryStringParams;
 
@@ -581,10 +576,6 @@ module MakerJsPlayground {
             //todo - still need double tap
             window.addEventListener('resize', render);
             window.addEventListener('orientationchange', render);
-            view.addEventListener('touchend', function () {
-                document.body.classList.add('collapse-rendering-options');
-                render();
-            });
 
             view.addEventListener('click', viewClick);
 
@@ -707,7 +698,6 @@ module MakerJsPlayground {
     }
 
     export function render() {
-        getZoom();
 
         //remove content so default size can be measured
         view.innerHTML = '';
@@ -731,8 +721,8 @@ module MakerJsPlayground {
                     id: 'view-svg',
                     style: 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
                  },
-                fontSize: (windowZoom * svgFontSize) + 'px',
-                strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
+                fontSize: svgFontSize + 'px',
+                strokeWidth: svgStrokeWidth + 'px',
                 scale: viewScale,
                 useSvgPathOnly: false
             };
@@ -760,7 +750,7 @@ module MakerJsPlayground {
             var path = getLockedPathSvgElement();
             if (path) {
                 path.setAttribute('class', 'locked');
-                path.style.strokeWidth = (windowZoom * 2 * svgStrokeWidth) + 'px';
+                path.style.strokeWidth = (2 * svgStrokeWidth) + 'px';
             }
         }
 
