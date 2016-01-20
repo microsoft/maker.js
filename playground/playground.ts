@@ -35,6 +35,7 @@ module MakerJsPlayground {
         html: string;
         kit: MakerJs.IKit;
         model: MakerJs.IModel;
+        measurement: MakerJs.IMeasure;
         paramValues: any[],
         paramHtml: string;
         lockedPath?: ILockedPath;
@@ -55,12 +56,14 @@ module MakerJsPlayground {
     var view: HTMLDivElement;
     var progress: HTMLDivElement;
     var preview: HTMLTextAreaElement;
+    var checkFitToScreen: HTMLInputElement;
     var hMargin: number;
     var vMargin: number;
     var processed: IProcessedResult = {
         html: '',
         kit: null,
         model: null,
+        measurement: null,
         paramValues: [],
         paramHtml: ''
     };
@@ -70,7 +73,11 @@ module MakerJsPlayground {
     var paramActiveTimeout: NodeJS.Timer;
     var longHoldTimeout: NodeJS.Timer;
     var viewModelRootSelector = 'svg > g > g > g';
-    var zoomOutLockedPath = 0.44;
+    var viewOrigin: MakerJs.IPoint;
+    var viewPanning = false;
+    var viewPanStart: MakerJs.IPoint;
+    var viewPanOffset: MakerJs.IPoint = [0, 0];
+    var viewMousePos: MakerJs.IPoint;
 
     function getZoom() {
         var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -289,6 +296,19 @@ module MakerJsPlayground {
         return true;
     }
 
+    // Find out where an element is on the page
+    // From http://www.quirksmode.org/js/findpos.html
+    function pageOffset(el: HTMLElement): MakerJs.IPoint {
+        var curleft = 0, curtop = 0;
+        if (el.offsetParent) {
+            do {
+                curleft += el.offsetLeft;
+                curtop += el.offsetTop;
+            } while (el = el.offsetParent as HTMLElement);
+        }
+        return [curleft, curtop];
+    }
+
     function viewClick(ev: MouseEvent) {
         if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
 
@@ -296,6 +316,67 @@ module MakerJsPlayground {
             var path = text.previousSibling;
 
             lockToPath(path);
+        }
+    }
+
+    function viewWheel(ev: MouseWheelEvent) {
+
+        checkFitToScreen.checked = false;
+
+        var scaleDelta = 1;
+        var startScale = viewScale;
+
+        viewScale = Math.max(viewScale + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * scaleDelta, 1);
+
+        var p = makerjs.point;
+        var scaleDiff = viewScale / startScale;
+        var pannedOrigin = p.add(viewOrigin, viewPanOffset);
+        var mouseFromPadding = p.subtract([ev.pageX, ev.pageY], [hMargin, vMargin]);
+        var mouseFromViewOffset = p.subtract(mouseFromPadding, pageOffset(view));
+        var mouseFromOrigin = p.subtract(mouseFromViewOffset, pannedOrigin);
+        var scaledMouseFromOrigin = p.scale(mouseFromOrigin, scaleDiff);
+        var mouseDiff = p.subtract(mouseFromOrigin, scaledMouseFromOrigin);
+
+        viewPanOffset = p.add(viewPanOffset, mouseDiff);
+
+        render();
+
+        ev.preventDefault();
+    }
+
+    function viewMouseDown(ev: MouseEvent) {
+        viewPanning = true;
+        viewPanStart = [ev.clientX, ev.clientY];
+    }
+
+    function mouseDelta(ev: MouseEvent): MakerJs.IPoint {
+        return [ev.clientX - viewPanStart[0], ev.clientY - viewPanStart[1]];
+    }
+
+    function viewMouseUp(ev: MouseEvent) {
+        viewPanning = false;
+
+        viewPanOffset = makerjs.point.add(viewPanOffset, mouseDelta(ev));
+    }
+
+    function viewMouseMove(ev: MouseEvent) {
+        viewMousePos = [ev.offsetX, ev.offsetY];
+        //setNotes(JSON.stringify(viewMousePos) + ' ' + ev.pageX);
+
+        if (viewPanning) {
+
+            checkFitToScreen.checked = false;
+
+            var svgElement = view.children[0] as HTMLElement;
+
+            viewPanOffset = makerjs.point.add(viewPanOffset, mouseDelta(ev));
+
+            viewPanStart = [ev.clientX, ev.clientY];
+
+            svgElement.style.marginLeft = viewPanOffset[0] + 'px';
+            svgElement.style.marginTop = viewPanOffset[1] + 'px';
+
+            ev.preventDefault();
         }
     }
 
@@ -422,6 +503,7 @@ module MakerJsPlayground {
     export var svgFontSize = 14;
     export var svgStrokeWidth = 2;
     export var windowZoom = 1;
+    export var viewScale: number;
     export var querystringParams: QueryStringParams;
 
     export function runCodeFromEditor() {
@@ -459,6 +541,7 @@ module MakerJsPlayground {
 
         processed.html = html;
         processed.model = null;
+        processed.measurement = null;
         processed.paramValues = null;
         processed.paramHtml = '';
 
@@ -504,6 +587,11 @@ module MakerJsPlayground {
             });
 
             view.addEventListener('click', viewClick);
+
+            view.addEventListener('wheel', viewWheel);
+            view.addEventListener('mousedown', viewMouseDown);
+            view.addEventListener('mouseup', viewMouseUp);
+            view.addEventListener('mousemove', viewMouseMove);
         }
     }
 
@@ -533,6 +621,7 @@ module MakerJsPlayground {
 
             //construct an IModel from the kit
             processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+            processed.measurement = null;
 
             updateLockedPathNotes();
         }
@@ -581,6 +670,42 @@ module MakerJsPlayground {
         }, delay);
     }
 
+    export function fitOnScreen() {
+
+        checkFitToScreen.checked = true;
+
+        var measure = processed.measurement;
+        var modelHeightNatural = measure.high[1] - measure.low[1];
+        var modelWidthNatural = measure.high[0] - measure.low[0];
+        var viewHeight = view.offsetHeight - 2 * vMargin;
+        var v2 = viewHeight / 2;
+        var viewWidth = document.getElementById('view-params').offsetWidth - 2 * hMargin;
+        var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
+
+        viewPanOffset = [0, 0];
+        viewScale = 1;
+
+        //view mode - left of menu
+        if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
+            viewWidth = menuLeft;
+        }
+
+        if (processed.model.units) {
+            //cast into inches, then to pixels
+            viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
+        }
+
+        var modelWidthInPixels = makerjs.round(modelWidthNatural * viewScale, .1);
+        var modelHeightInPixels = makerjs.round(modelHeightNatural * viewScale, .1);
+
+        var scaleHeight = viewHeight / modelHeightInPixels;
+        var scaleWidth = viewWidth / modelWidthInPixels;
+
+        viewScale *= Math.min(scaleWidth, scaleHeight);
+
+        viewOrigin = [viewWidth / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale];
+    }
+
     export function render() {
         getZoom();
 
@@ -590,63 +715,22 @@ module MakerJsPlayground {
         var html = processed.html;
 
         if (processed.model) {
-            var annotate = (<HTMLInputElement>document.getElementById('check-annotate')).checked;
-            var fitOnScreen = (<HTMLInputElement>document.getElementById('check-fit-on-screen')).checked;
-            var measureModel = makerjs.measure.modelExtents(processed.model);
-            var measure = measureLockedPath();
 
-            if (!measure || !fitOnScreen || !annotate) {
-                measure = measureModel;
+            if (!processed.measurement) {
+                processed.measurement = makerjs.measure.modelExtents(processed.model);
             }
 
-            var modelHeightNatural = measure.high[1] - measure.low[1];
-            var modelWidthNatural = measure.high[0] - measure.low[0];
-            var viewHeight = view.offsetHeight - 2 * vMargin;
-            var viewWidth = document.getElementById('view-params').offsetWidth - 2 * hMargin;
-            var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
-            var viewScale = 1;
-
-            //view mode - left of menu
-            if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
-                viewWidth = menuLeft;
-            }
-
-            if (processed.model.units) {
-                //cast into inches, then to pixels
-                viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
-            }
-
-            var modelWidthInPixels = makerjs.round(modelWidthNatural * viewScale, .1);
-            var modelHeightInPixels = makerjs.round(modelHeightNatural * viewScale, .1);
-            var zoomOut = false;
-
-            if (fitOnScreen) {
-
-                var scaleHeight = viewHeight / modelHeightInPixels;
-                var scaleWidth = viewWidth / modelWidthInPixels;
-
-                viewScale *= Math.min(scaleWidth, scaleHeight);
-
-                zoomOut = processed.lockedPath && !areSameHeightMeasurement(measureModel, measure);
-
-                if (zoomOut) {
-                    viewScale *= zoomOutLockedPath;
-                }
-            }
-
-            var centerY = measure.high[1] * viewScale;
-            var v2 = viewHeight / 2;
-
-            if (!modelHeightInPixels) {
-                centerY += v2;
-            } else if (zoomOut) {
-                centerY += v2 * (1 - zoomOutLockedPath);
+            if (!viewScale) {
+                fitOnScreen();
             }
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-                origin: [viewWidth / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, centerY],
-                annotate: annotate,
-                svgAttrs: { id: 'view-svg' },
+                origin: viewOrigin,
+                annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
+                svgAttrs: {
+                    id: 'view-svg',
+                    style: 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
+                 },
                 fontSize: (windowZoom * svgFontSize) + 'px',
                 strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
                 scale: viewScale,
@@ -662,8 +746,8 @@ module MakerJsPlayground {
             if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
 
                 renderModel.paths = {
-                    'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(measure.low[1], 0)], [0, Math.max(measure.high[1], 0)]),
-                    'crosshairs-horizontal': new makerjs.paths.Line([Math.min(measure.low[0], 0), 0], [Math.max(measure.high[0], 0), 0])
+                    'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(processed.measurement.low[1], 0)], [0, Math.max(processed.measurement.high[1], 0)]),
+                    'crosshairs-horizontal': new makerjs.paths.Line([Math.min(processed.measurement.low[0], 0), 0], [Math.max(processed.measurement.high[0], 0), 0])
                 };
             }
 
@@ -821,6 +905,7 @@ module MakerJsPlayground {
         view = document.getElementById('view') as HTMLDivElement;
         progress = document.getElementById('download-progress') as HTMLDivElement;
         preview = document.getElementById('download-preview') as HTMLTextAreaElement;
+        checkFitToScreen = document.getElementById('check-fit-on-screen') as HTMLInputElement;
 
         var viewMeasure = document.getElementById('view-measure');
 

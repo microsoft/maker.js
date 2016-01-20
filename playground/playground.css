@@ -233,8 +233,18 @@ svg .locked {
     color: #cef;
 }
 
+#notes th {
+    white-space: nowrap
+}
+
+#notes td {
+    word-break: break-all;
+}
+
 #notes td:first-child {
     color: midnightblue;
+    vertical-align: top;
+    white-space: nowrap;
 }
 
 #notes h1 {

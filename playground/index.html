@@ -105,7 +105,7 @@
                     <div>
                         <hr />
                     </div>
-                    <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
+                    <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } MakerJsPlayground.render();" /> fit on screen</label></div>
                     <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
                     <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
                     <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
