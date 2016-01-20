@@ -1,0 +1,472 @@
+html, body {
+    margin: 0;
+}
+
+html, body, button, select {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    padding: 1em;
+    overflow-y: scroll;
+}
+
+a[name=top] {
+    position: absolute;
+    top: -1em;
+}
+
+header, section, footer {
+    margin-bottom: 1em;
+    clear: both;
+    position: relative;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: normal;
+    color: #aaa;
+    line-height: 18px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    display: inline;
+}
+
+.logo a {
+    border: none;
+    text-decoration: none;
+}
+
+.logo img {
+    vertical-align: text-bottom;
+    margin-right: 0.5em;
+}
+
+.logo h2 {
+    letter-spacing: 6px;
+}
+
+#blueprint-canvas {
+    background-color: #3177C6;
+    background-image: url('blueprint.png');
+    overflow: hidden;
+}
+
+#view-params {
+    min-height: 23em;
+    overflow: hidden;
+    position: relative;
+}
+
+#rendering-options-menu, #rendering-options-top {
+    width: 14em;
+    padding: .5em 1em 1em 1em;
+    margin: 1em;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #555;
+    box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
+}
+
+#rendering-options-top {
+    position: absolute;
+    right: 0;
+    bottom: -30px;
+    padding-bottom: 30px;
+    margin-bottom: 0;
+    border-bottom-color: #fff;
+    text-align: right;
+}
+
+#rendering-options-top button {
+    background-color: #fff;
+    color: #555;
+    border: none;
+    outline: none;
+    font-size: medium;
+    padding-right: 0;
+}
+
+#rendering-options-top button .icon.dropdown {
+    display: none;
+}
+
+.collapse-rendering-options #rendering-options-top button .icon.dropdown {
+    display: inline;
+}
+
+.collapse-rendering-options #rendering-options-top button .icon.dropup {
+    display: none;
+}
+
+.collapse-rendering-options #rendering-options-top {
+    background-color: transparent;
+    border-color: transparent;
+    bottom: 0;
+    padding-bottom: 0;
+    box-shadow: none;
+}
+
+#rendering-options-menu {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+    position: relative;
+    float: right;
+}
+
+#rendering-options-menu hr {
+    margin: 1em 0;
+    border: 1px solid #ddd;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+#rendering-options-menu .view-controls label {
+    letter-spacing: 1px;
+    font-variant: small-caps;
+    color: #777
+}
+
+.collapse-rendering-options #rendering-options-menu {
+    display: none;
+}
+
+.param-active #rendering-options-menu {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.param-active #rendering-options-menu > div > div {
+    visibility: hidden;
+}
+
+.param-active #rendering-options-menu > div > div.active {
+    visibility: visible;
+    color: #0ff;
+    text-shadow: 0 0 1em rgba(0,0,0,.5);
+}
+
+#params div {
+    margin-bottom: .5em;
+}
+
+#params input[type=range] {
+    width: 8em;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 6px;
+}
+
+#params input[type=number] {
+    width: 8em;
+    top: 0;
+    display: inline-block;
+    margin-top: 6px;
+    margin-bottom: -2px;
+}
+
+#params form {
+    display: none;
+}
+
+#params .toggle-number form {
+    display: inline;
+}
+
+#params .toggle-number input[type=range] {
+    display: none;
+}
+
+#view {
+    color: #fff;
+    padding: 2em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+svg line, svg circle, svg path {
+    stroke: #fff;
+    fill: none;
+}
+
+svg .locked {
+    stroke: #0000FF;
+}
+
+#view svg {
+    overflow: visible;
+}
+
+#view svg text {
+    fill: turquoise;
+    stroke: none;
+}
+
+#view svg .locked + text {
+    fill: yellow;
+}
+
+#crosshairs-vertical, #crosshairs-horizontal {
+    stroke: midnightblue;
+    stroke-width: 1;
+}
+
+#crosshairs-horizontal_text, #crosshairs-vertical_text {
+    display: none;
+}
+
+#notes {
+    border: 1px solid rgba(0,0,111,0.3);
+    color: #fdfdff;
+    padding: 0 1em;
+    margin: 0 1em .7em 1em;
+    background-color: rgba(0, 0, 0, .1);
+}
+
+#notes h1, #notes h2, #notes h3, #notes h4, #notes h5, #notes h6, #notes th {
+    font-weight: 600;
+    color: #cef;
+}
+
+#notes th {
+    white-space: nowrap
+}
+
+#notes td {
+    word-break: break-all;
+}
+
+#notes td:first-child {
+    color: midnightblue;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+#notes h1 {
+    font-size: 1.3em;
+}
+
+#notes h2 {
+    font-size: 1.2em;
+}
+
+#notes h3 {
+    font-size: 1.1em;
+}
+
+#notes h4, #notes h5, #notes h6 {
+    font-size: 1em;
+}
+
+#notes table {
+    margin: 1em 0;
+}
+
+#notes a {
+    color: #0ff;
+}
+
+.collapse-notes #notes, .no-notes #notes, .no-notes #notes-toggle {
+    display: none;
+}
+
+#download h2 {
+    font-weight: normal;
+    font-size: smaller;
+    color: #777;
+    margin: 0;
+    padding: 0;
+}
+
+#download a, #download button {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    color: #555;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+    margin-top: .5em;
+    margin-right: 1em;
+    padding-top: .2em;
+    padding-bottom: .3em;
+    width: 9em;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: smaller;
+}
+
+#download button.text-tool {
+    float: right;
+    margin-bottom: 2em;
+    width: auto;
+    margin-right: 0;
+    margin-top: 0;
+    padding-left: 2em;
+    padding-right: 2em;
+    font-size: .65em;
+    background: transparent;
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    color: #aaa;
+}
+
+#download-progress {
+    height: .25em;
+    width: 0;
+    background-color: green;
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+#download-ready a {
+    width: auto;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#download-generating, #download-ready
+{
+    display: none;
+}
+
+#download-preview-container {
+    padding-right: 1em;
+    margin-top: .5em;
+    margin-bottom: 0;
+}
+
+#download-preview {
+    width: 100%;
+    padding: .5em;
+    border: 1px solid #eedd88;
+    background-color: #ffee99;
+    color: #333300;
+    font-size: small;
+}
+
+.download-generating #download-generating {
+    display: block;
+}
+
+.download-generating #download-select, .download-generating #download-ready {
+    display: none;
+}
+
+.download-ready #download-ready {
+    display: block;
+}
+
+.download-ready #download-select, .download-ready #download-generating {
+    display: none;
+}
+
+.onscreen-help {
+    font-size: small;
+    color: #777;
+    padding-top: .2em;
+}
+
+#download .onscreen-help button {
+    width: auto;
+    margin-right: 0;
+    margin-top: 0;
+    text-transform: none;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.code-header {
+    font-family: monospace;
+    background-color: #d0d0d0;
+    margin-top: 2em;
+    padding: .5em 1em;
+    border: 1px solid #aaa;
+}
+
+.code-header button {
+    font-family: monospace;
+    background-color: green;
+    color: white;
+    float: right;
+    margin-top: -2px;
+}
+
+.CodeMirror {
+    height: auto;
+}
+
+.code-error {
+    background-color: orange;
+}
+
+.scroll-nav-links {
+    position: fixed; 
+    bottom: .75em; 
+    right: 0;
+    z-index: 2; 
+    padding: .25em .5em .5em 1em; 
+    background-color: #555;
+    opacity: .85;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+
+.scroll-nav-links span {
+    font-size: smaller;
+    margin-right: .5em;
+    color: #ccc;
+    text-transform: uppercase;
+}
+
+.scroll-nav-links a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+footer {
+    font-size: smaller;
+    line-height: 2em;
+    margin-top: 3em;
+    margin-bottom: -.5em;
+    color: #aaa;
+}
+
+footer a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 1em;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer img {
+    height: 20px;
+    vertical-align: text-bottom;
+    margin-bottom: -1px;
+    margin-right: 7px;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* this is to clear the logo */
+@media only screen and (max-width: 540px) {
+    header {
+        height: 90px;
+    }
+}
