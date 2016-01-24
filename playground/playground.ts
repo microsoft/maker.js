@@ -66,9 +66,107 @@ module MakerJsPlayground {
         [id: number]: IPointer;
     }
 
-    interface IPointers {
-        down: IPointerMap;
-        count: number;
+    class IPointers {
+        public down: IPointerMap = {};
+        public count: number;
+
+        constructor(public selector) {
+        }
+
+        public reset() {
+            this.down = {};
+            this.count = 0;
+        }
+
+        public asArray(): IPointer[] {
+
+            var result: IPointer[] = [];
+
+            for (var id in this.down) {
+                result.push(this.down[id]);
+            }
+
+            return result;
+        }
+
+        public average(fromCanvas: boolean): MakerJs.IPoint {
+
+            var all = this.asArray();
+
+            if (all.length == 0) return null;
+
+            var x = 0;
+            var y = 0;
+
+            for (var i = 0; i < all.length; i++) {
+                var p = all[i].currentPoint;
+                var point = fromCanvas ? p.fromCanvas : p.fromDrawingOrigin;
+                x += point[0];
+                y += point[1];
+            }
+
+            return [x / all.length, y / all.length];
+        }
+
+        private drawPointer(ns: string, point: MakerJs.IPoint, id: string): SVGGElement {
+
+            function createElement(tagName: string, attrs: any) {
+                var el = document.createElementNS(ns, tagName);
+
+                for (var attrName in attrs) {
+                    var value = attrs[attrName];
+                    el.setAttributeNS(null, attrName, value);
+                }
+
+                return el;
+            }
+
+            function createLine(lineId: string, x1: number | string, y1: number | string, x2: number | string, y2: number | string) {
+                return createElement('line', {
+                    "id": lineId,
+                    "x1": x1,
+                    "y1": y1,
+                    "x2": x2,
+                    "y2": y2
+                });
+            }
+
+            var x = createLine('x', point[0], 0, point[0], '100%');
+
+            var y = createLine('y', 0, point[1], '100%', point[1]);
+
+            var g = createElement('g', { "id": id }) as SVGGElement;
+
+            g.appendChild(x);
+            g.appendChild(y);
+
+            return g;
+        }
+
+        public erase(): SVGElement {
+            var oldNode = document.querySelector(this.selector) as SVGElement;
+            var domPointers = oldNode.cloneNode(false) as SVGElement;
+            oldNode.parentNode.replaceChild(domPointers, oldNode);
+            return domPointers;
+        }
+
+        public draw() {
+
+            //erase all pointers
+            var domPointers = this.erase();
+
+            var count = 0;
+            var ns = domPointers.getAttribute('xmlns');
+            var maxPointers = 2;
+
+            for (var id in pointers.down) {
+                var pointer = pointers.down[id]
+                domPointers.appendChild(this.drawPointer(ns, pointer.currentPoint.fromCanvas, 'pointer' + count));
+                count++;
+                if (count >= maxPointers) break;
+            }
+        }
+
     }
 
     //private members
@@ -98,7 +196,7 @@ module MakerJsPlayground {
     var viewModelRootSelector = 'svg#drawing > g > g > g';
     var viewOrigin: MakerJs.IPoint;
     var viewPanOffset: MakerJs.IPoint = [0, 0];
-    var pointers: IPointers;
+    var pointers = new IPointers('#pointers');
 
     function isLandscapeOrientation() {
         return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -331,12 +429,12 @@ module MakerJsPlayground {
         var fromCanvas = p.subtract([ev.pageX, ev.pageY], pageOffset(view));
         var fromView = p.subtract(fromCanvas, [hMargin, vMargin]);
         var pannedOrigin = p.add(viewOrigin, viewPanOffset);
-        var fromDrawingOrigin = p.subtract(fromView, pannedOrigin);
+        var fromDrawingOrigin = p.scale(p.subtract(fromView, pannedOrigin), 1 / viewScale);
 
         return {
             fromCanvas: fromCanvas,
             fromDrawingOrigin: fromDrawingOrigin,
-            distanceToOrigin: makerjs.measure.pointDistance([0, 0], fromDrawingOrigin) / viewScale
+            distanceToOrigin: makerjs.measure.pointDistance([0, 0], fromDrawingOrigin)
         };
     }
 
@@ -349,6 +447,10 @@ module MakerJsPlayground {
             lockToPath(path);
         }
     }
+
+    var viewScaleStart: number = null;
+    var viewPanStart: MakerJs.IPoint = null;
+    var previousMidPoint: MakerJs.IPoint = null;
 
     function viewPointerDown(ev: PointerEvent) {
 
@@ -365,15 +467,31 @@ module MakerJsPlayground {
         pointers.down[p.id] = p;
         pointers.count++;
 
-        drawPointers();
+        if (pointers.count == 2) {
+            viewScaleStart = viewScale;
+            viewPanStart = viewPanOffset;
+
+            previousMidPoint = pointers.average(false);
+        }
+
+        pointers.draw();
     }
 
     function viewPointerUp(ev: PointerEvent) {
+
+        pointers.reset();
+        pointers.draw();
+
+        return;
+
         if (pointers.down[ev.pointerId]) {
             delete pointers.down[ev.pointerId];
             pointers.count--;
 
-            drawPointers();
+            pointers.draw();
+            console.log(ev.pointerId + ' up');
+        } else {
+            console.log(ev.pointerId + ' up not found');
         }
     }
 
@@ -383,34 +501,85 @@ module MakerJsPlayground {
         var currPointer = pointers.down[ev.pointerId];
         if (!currPointer) return;
 
-        var point = getPoint(ev);
+        var p = makerjs.point;
+        var panDelta: MakerJs.IPoint;
         currPointer.previousPoint = currPointer.currentPoint;
-        currPointer.currentPoint = point;
+        currPointer.currentPoint = getPoint(ev);
 
-        drawPointers();
+        pointers.draw();
+
+        checkFitToScreen.checked = false;
+        ev.preventDefault();
 
         if (pointers.count == 1) {
             //simple pan
 
-            var delta = makerjs.point.subtract(currPointer.currentPoint.fromCanvas, currPointer.previousPoint.fromCanvas);
+            panDelta = p.subtract(currPointer.currentPoint.fromCanvas, currPointer.previousPoint.fromCanvas);
 
-            checkFitToScreen.checked = false;
+            viewPanOffset = p.add(viewPanOffset, panDelta);
 
             var svgElement = view.children[0] as HTMLElement;
 
-            viewPanOffset = makerjs.point.add(viewPanOffset, delta);
-
+            //no need to re-render, just move the margin
             svgElement.style.marginLeft = viewPanOffset[0] + 'px';
             svgElement.style.marginTop = viewPanOffset[1] + 'px';
 
-            ev.preventDefault();
 
         } else if (pointers.count == 2) {
+            //zoom
 
-            ev.preventDefault();
+            var pointerArray = pointers.asArray();
 
+            function distance(a: IPointToCanvas, b: IPointToCanvas) {
+                return makerjs.measure.pointDistance(a.fromCanvas, b.fromCanvas);
+            }
+
+            function midPoint(a: IPointToCanvas, b: IPointToCanvas) {
+                return p.middle(new makerjs.paths.Line(a.fromDrawingOrigin, b.fromDrawingOrigin));
+            }
+
+            //scale
+            var initialDistance = distance(pointerArray[0].initialPoint, pointerArray[1].initialPoint);
+            var currentDistance = distance(pointerArray[0].currentPoint, pointerArray[1].currentPoint);
+            var scaleDiff = currentDistance / initialDistance;
+
+            var currentMidPoint = midPoint(pointerArray[0].currentPoint, pointerArray[1].currentPoint);
+
+            var currentMidPoint2 = pointers.average(true);
+
+            panDelta = p.subtract(currentMidPoint2, previousMidPoint);
+
+            viewPanOffset = p.subtract(p.subtract(p.subtract(currentMidPoint2, viewOrigin), [hMargin, vMargin]), p.scale(previousMidPoint, viewScale));//p.add(viewPanStart, panDelta);
+
+            viewScale = viewScaleStart * scaleDiff;
+            updateZoomScale();
+
+            setNotes({ x: currentMidPoint });
+
+            //scaleCenterPoint(viewScaleStart * scaleDiff, currentMidPoint);
+
+            render();
         }
+    }
 
+    function scaleCenterPoint(newScale: number, centerPoint: MakerJs.IPoint) {
+
+        var p = makerjs.point;
+        var scaledCenterPoint = p.scale(centerPoint, viewScale);
+        var startScale = viewScale;
+
+        viewScale = newScale;
+
+        updateZoomScale();
+        setNotes({ centerPoint: centerPoint, scaled: scaledCenterPoint, viewPanOffset: viewPanOffset });
+
+        var scaleDiff = viewScale / startScale;
+        var scaledMouseFromOrigin = p.scale(scaledCenterPoint, scaleDiff);
+        var mouseDiff = p.subtract(scaledCenterPoint, scaledMouseFromOrigin);
+
+        viewPanOffset = p.add(viewPanOffset, mouseDiff);
+
+        return mouseDiff;
     }
 
     function viewWheel(ev: MouseWheelEvent) {
@@ -418,80 +587,14 @@ module MakerJsPlayground {
         checkFitToScreen.checked = false;
 
         var scaleDelta = 1;     //TODO: base the delta, min / max value on model natural size vs window size
-        var startScale = viewScale;
 
-        viewScale = Math.max(viewScale + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * scaleDelta, 1);
+        var newScale = Math.max(viewScale + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * scaleDelta, 1);
 
-        var p = makerjs.point;
-        var scaleDiff = viewScale / startScale;
-        var mouseFromOrigin = getPoint(ev).fromDrawingOrigin;
-        var scaledMouseFromOrigin = p.scale(mouseFromOrigin, scaleDiff);
-        var mouseDiff = p.subtract(mouseFromOrigin, scaledMouseFromOrigin);
-
-        viewPanOffset = p.add(viewPanOffset, mouseDiff);
+        scaleCenterPoint(newScale, getPoint(ev).fromDrawingOrigin);
 
         render();
 
         ev.preventDefault();
-    }
-
-    function drawPointer(ns: string, point: MakerJs.IPoint, id: string): SVGGElement {
-
-        function createElement(tagName: string, attrs: any) {
-            var el = document.createElementNS(ns, tagName);
-
-            for (var attrName in attrs) {
-                var value = attrs[attrName];
-                el.setAttributeNS(null, attrName, value);
-            }
-
-            return el;
-        }
-
-        function createLine(lineId: string, x1: number | string, y1: number | string, x2: number | string, y2: number | string) {
-            return createElement('line', {
-                "id": lineId,
-                "x1": x1,
-                "y1": y1,
-                "x2": x2,
-                "y2": y2
-            });
-        }
-
-        var x = createLine('x', point[0], 0, point[0], '100%');
-
-        var y = createLine('y', 0, point[1], '100%', point[1]);
-
-        var g = createElement('g', { "id": id }) as SVGGElement;
-
-        g.appendChild(x);
-        g.appendChild(y);
-
-        return g;
-    }
-
-    function erasePointers(): SVGElement {
-        var oldNode = document.querySelector('#pointers') as SVGElement;
-        var domPointers = oldNode.cloneNode(false) as SVGElement;
-        oldNode.parentNode.replaceChild(domPointers, oldNode);
-        return domPointers;
-    }
-
-    function drawPointers() {
-
-        //erase all pointers
-        var domPointers = erasePointers();
-
-        var count = 0;
-        var ns = domPointers.getAttribute('xmlns');
-        var maxPointers = 2;
-
-        for (var id in pointers.down) {
-            var pointer = pointers.down[id]
-            domPointers.appendChild(drawPointer(ns, pointer.currentPoint.fromCanvas, 'pointer' + count));
-            count++;
-            if (count >= maxPointers) break;
-        }
     }
 
     function lockToPath(path: Node) {
@@ -666,6 +769,11 @@ module MakerJsPlayground {
         document.getElementById('notes').innerHTML = html;
     }
 
+    export function updateZoomScale() {
+        var z = document.getElementById('zoom-display');
+        z.innerText = '(' + (viewScale * 100).toFixed(0) + '%)';
+    }
+
     export function processResult(html: string, result: any) {
 
         if (errorMarker) {
@@ -796,12 +904,9 @@ module MakerJsPlayground {
 
     export function fitOnScreen() {
 
-        //initialize pointers
-        pointers = {
-            down: {},
-            count: 0
-        };
-        erasePointers();
+        //reset pointers
+        pointers.reset();
+        pointers.erase();
 
         checkFitToScreen.checked = true;
 
@@ -833,6 +938,8 @@ module MakerJsPlayground {
         var scaleWidth = viewWidth / modelWidthInPixels;
 
         viewScale *= Math.min(scaleWidth, scaleHeight);
+
+        updateZoomScale();
 
         viewOrigin = [viewWidth / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, measure.high[1] * viewScale];
     }
@@ -879,6 +986,7 @@ module MakerJsPlayground {
                     'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(processed.measurement.low[1], 0)], [0, Math.max(processed.measurement.high[1], 0)]),
                     'crosshairs-horizontal': new makerjs.paths.Line([Math.min(processed.measurement.low[0], 0), 0], [Math.max(processed.measurement.high[0], 0), 0])
                 };
+
             }
 
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
@@ -1021,6 +1129,18 @@ module MakerJsPlayground {
     //execution
 
     window.onload = function (ev) {
+
+        //document.addEventListener('touchstart', function (event) {
+        //    event.preventDefault();
+        //});
+
+        //document.addEventListener('touchmove', function (event) {
+        //    event.preventDefault();
+        //});
+
+        //document.addEventListener('touchend', function (event) {
+        //    event.preventDefault();
+        //});
 
         if (window.orientation === void 0) {
             window.orientation = 'landscape';
