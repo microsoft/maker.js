@@ -43,12 +43,13 @@ var MakerJsPlayground;
     var exportWorker = null;
     var paramActiveTimeout;
     var longHoldTimeout;
-    var viewModelRootSelector = 'svg > g > g > g';
+    var viewModelRootSelector = 'svg#drawing > g > g > g';
     var viewOrigin;
-    var viewPanning = false;
-    var viewPanStart;
     var viewPanOffset = [0, 0];
-    var viewMousePos;
+    var pointers = {
+        down: {},
+        count: 0
+    };
     function isLandscapeOrientation() {
         return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
     }
@@ -224,11 +225,64 @@ var MakerJsPlayground;
         }
         return [curleft, curtop];
     }
+    function getPoint(ev) {
+        var p = makerjs.point;
+        var fromCanvas = p.subtract([ev.pageX, ev.pageY], pageOffset(view));
+        var fromView = p.subtract(fromCanvas, [hMargin, vMargin]);
+        var pannedOrigin = p.add(viewOrigin, viewPanOffset);
+        var fromDrawingOrigin = p.subtract(fromView, pannedOrigin);
+        return {
+            fromCanvas: fromCanvas,
+            fromDrawingOrigin: fromDrawingOrigin,
+            distanceToOrigin: makerjs.measure.pointDistance([0, 0], fromDrawingOrigin) / MakerJsPlayground.viewScale
+        };
+    }
     function viewClick(ev) {
         if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
             var text = ev.srcElement;
             var path = text.previousSibling;
             lockToPath(path);
+        }
+    }
+    function viewPointerDown(ev) {
+        var point = getPoint(ev);
+        var p = {
+            id: ev.pointerId,
+            type: ev.pointerType,
+            initialPoint: point,
+            previousPoint: point,
+            currentPoint: point
+        };
+        pointers.down[p.id] = p;
+        pointers.count++;
+        drawPointers();
+    }
+    function viewPointerUp(ev) {
+        delete pointers.down[ev.pointerId];
+        pointers.count--;
+        drawPointers();
+    }
+    function viewPointerMove(ev) {
+        //first we need to deal with the current pointer
+        var currPointer = pointers.down[ev.pointerId];
+        if (currPointer) {
+            var point = getPoint(ev);
+            currPointer.previousPoint = currPointer.currentPoint;
+            currPointer.currentPoint = point;
+        }
+        drawPointers();
+        if (pointers.count == 1) {
+            //simple pan
+            var delta = makerjs.point.subtract(currPointer.currentPoint.fromCanvas, currPointer.previousPoint.fromCanvas);
+            checkFitToScreen.checked = false;
+            var svgElement = view.children[0];
+            viewPanOffset = makerjs.point.add(viewPanOffset, delta);
+            svgElement.style.marginLeft = viewPanOffset[0] + 'px';
+            svgElement.style.marginTop = viewPanOffset[1] + 'px';
+            ev.preventDefault();
+        }
+        else if (pointers.count == 2) {
+            ev.preventDefault();
         }
     }
     function viewWheel(ev) {
@@ -238,38 +292,52 @@ var MakerJsPlayground;
         MakerJsPlayground.viewScale = Math.max(MakerJsPlayground.viewScale + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * scaleDelta, 1);
         var p = makerjs.point;
         var scaleDiff = MakerJsPlayground.viewScale / startScale;
-        var pannedOrigin = p.add(viewOrigin, viewPanOffset);
-        var mouseFromPadding = p.subtract([ev.pageX, ev.pageY], [hMargin, vMargin]);
-        var mouseFromViewOffset = p.subtract(mouseFromPadding, pageOffset(view));
-        var mouseFromOrigin = p.subtract(mouseFromViewOffset, pannedOrigin);
+        var mouseFromOrigin = getPoint(ev).fromDrawingOrigin;
         var scaledMouseFromOrigin = p.scale(mouseFromOrigin, scaleDiff);
         var mouseDiff = p.subtract(mouseFromOrigin, scaledMouseFromOrigin);
         viewPanOffset = p.add(viewPanOffset, mouseDiff);
         render();
         ev.preventDefault();
     }
-    function viewMouseDown(ev) {
-        viewPanning = true;
-        viewPanStart = [ev.clientX, ev.clientY];
+    function drawPointer(ns, point, id) {
+        function createElement(tagName, attrs) {
+            var el = document.createElementNS(ns, tagName);
+            for (var attrName in attrs) {
+                var value = attrs[attrName];
+                el.setAttributeNS(null, attrName, value);
+            }
+            return el;
+        }
+        function createLine(lineId, x1, y1, x2, y2) {
+            return createElement('line', {
+                "id": lineId,
+                "x1": x1,
+                "y1": y1,
+                "x2": x2,
+                "y2": y2
+            });
+        }
+        var x = createLine('x', point[0], 0, point[0], '100%');
+        var y = createLine('y', 0, point[1], '100%', point[1]);
+        var g = createElement('g', { "id": id });
+        g.appendChild(x);
+        g.appendChild(y);
+        return g;
     }
-    function mouseDelta(ev) {
-        return [ev.clientX - viewPanStart[0], ev.clientY - viewPanStart[1]];
-    }
-    function viewMouseUp(ev) {
-        viewPanning = false;
-        viewPanOffset = makerjs.point.add(viewPanOffset, mouseDelta(ev));
-    }
-    function viewMouseMove(ev) {
-        viewMousePos = [ev.offsetX, ev.offsetY];
-        //setNotes(JSON.stringify(viewMousePos) + ' ' + ev.pageX);
-        if (viewPanning) {
-            checkFitToScreen.checked = false;
-            var svgElement = view.children[0];
-            viewPanOffset = makerjs.point.add(viewPanOffset, mouseDelta(ev));
-            viewPanStart = [ev.clientX, ev.clientY];
-            svgElement.style.marginLeft = viewPanOffset[0] + 'px';
-            svgElement.style.marginTop = viewPanOffset[1] + 'px';
-            ev.preventDefault();
+    function drawPointers() {
+        //erase all pointers
+        var oldNode = document.querySelector('#pointers');
+        var domPointers = oldNode.cloneNode(false);
+        oldNode.parentNode.replaceChild(domPointers, oldNode);
+        var count = 0;
+        var ns = domPointers.getAttribute('xmlns');
+        var maxPointers = 2;
+        for (var id in pointers.down) {
+            var pointer = pointers.down[id];
+            domPointers.appendChild(drawPointer(ns, pointer.currentPoint.fromCanvas, 'pointer' + count));
+            count++;
+            if (count >= maxPointers)
+                break;
         }
     }
     function lockToPath(path) {
@@ -362,6 +430,15 @@ var MakerJsPlayground;
     function areSameHeightMeasurement(a, b) {
         return a.high[1] == b.high[1] && a.low[1] == b.low[1];
     }
+    function initialize() {
+        window.addEventListener('resize', render);
+        window.addEventListener('orientationchange', render);
+        view.addEventListener('click', viewClick);
+        view.addEventListener('wheel', viewWheel);
+        view.addEventListener('pointerdown', viewPointerDown);
+        view.addEventListener('pointerup', viewPointerUp);
+        view.addEventListener('pointermove', viewPointerMove);
+    }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
         theme: 'twilight',
@@ -379,7 +456,14 @@ var MakerJsPlayground;
         iframe.contentWindow.document.close();
     }
     MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
-    function setNotes(markdown) {
+    function setNotes(value) {
+        var markdown = '';
+        if (typeof value === 'string') {
+            markdown = value;
+        }
+        else {
+            markdown = JSON.stringify(value);
+        }
         var className = 'no-notes';
         var html = '';
         if (markdown) {
@@ -426,14 +510,7 @@ var MakerJsPlayground;
         //now safe to render, so register a resize listener
         if (init) {
             init = false;
-            //todo - still need double tap
-            window.addEventListener('resize', render);
-            window.addEventListener('orientationchange', render);
-            view.addEventListener('click', viewClick);
-            view.addEventListener('wheel', viewWheel);
-            view.addEventListener('mousedown', viewMouseDown);
-            view.addEventListener('mouseup', viewMouseUp);
-            view.addEventListener('mousemove', viewMouseMove);
+            initialize();
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -544,7 +621,7 @@ var MakerJsPlayground;
                 origin: viewOrigin,
                 annotate: document.getElementById('check-annotate').checked,
                 svgAttrs: {
-                    id: 'view-svg',
+                    id: 'drawing',
                     style: 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
                 },
                 fontSize: MakerJsPlayground.svgFontSize + 'px',
@@ -720,3 +797,4 @@ var MakerJsPlayground;
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
+//# sourceMappingURL=playground.js.map

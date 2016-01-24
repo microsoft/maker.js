@@ -7,6 +7,11 @@
 
 declare var makerjs: typeof MakerJs;
 
+interface MouseEvent {
+    pointerId: number;
+    pointerType: string;
+}
+
 module MakerJsPlayground {
 
     //classes
@@ -48,6 +53,24 @@ module MakerJsPlayground {
         name: string;
     }
 
+    interface IPointToCanvas {
+        fromCanvas: MakerJs.IPoint;
+        fromDrawingOrigin: MakerJs.IPoint;
+        distanceToOrigin: number;
+    }
+
+    interface IPointer {
+        id: number;
+        type: string;
+        initialPoint: IPointToCanvas;
+        previousPoint: IPointToCanvas;
+        currentPoint: IPointToCanvas;
+    }
+
+    interface IPointerMap {
+        [id: number]: IPointer;
+    }
+
     //private members
 
     var pixelsPerInch = 100;
@@ -72,12 +95,13 @@ module MakerJsPlayground {
     var exportWorker: Worker = null;
     var paramActiveTimeout: NodeJS.Timer;
     var longHoldTimeout: NodeJS.Timer;
-    var viewModelRootSelector = 'svg > g > g > g';
+    var viewModelRootSelector = 'svg#drawing > g > g > g';
     var viewOrigin: MakerJs.IPoint;
-    var viewPanning = false;
-    var viewPanStart: MakerJs.IPoint;
     var viewPanOffset: MakerJs.IPoint = [0, 0];
-    var viewMousePos: MakerJs.IPoint;
+    var pointers = {
+        down: <IPointerMap>{},
+        count: 0
+    };
 
     function isLandscapeOrientation() {
         return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -305,6 +329,20 @@ module MakerJsPlayground {
         return [curleft, curtop];
     }
 
+    function getPoint(ev: MouseEvent): IPointToCanvas {
+        var p = makerjs.point;
+        var fromCanvas = p.subtract([ev.pageX, ev.pageY], pageOffset(view));
+        var fromView = p.subtract(fromCanvas, [hMargin, vMargin]);
+        var pannedOrigin = p.add(viewOrigin, viewPanOffset);
+        var fromDrawingOrigin = p.subtract(fromView, pannedOrigin);
+
+        return {
+            fromCanvas: fromCanvas,
+            fromDrawingOrigin: fromDrawingOrigin,
+            distanceToOrigin: makerjs.measure.pointDistance([0, 0], fromDrawingOrigin) / viewScale
+        };
+    }
+
     function viewClick(ev: MouseEvent) {
         if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
 
@@ -313,6 +351,69 @@ module MakerJsPlayground {
 
             lockToPath(path);
         }
+    }
+
+    function viewPointerDown(ev: MouseEvent) {
+
+        var point = getPoint(ev);
+
+        var p: IPointer = {
+            id: ev.pointerId,
+            type: ev.pointerType,
+            initialPoint: point,
+            previousPoint: point,
+            currentPoint: point
+        };
+
+        pointers.down[p.id] = p;
+        pointers.count++;
+
+        drawPointers();
+    }
+
+    function viewPointerUp(ev: MouseEvent) {
+        delete pointers.down[ev.pointerId];
+        pointers.count--;
+
+        drawPointers();
+
+
+    }
+
+    function viewPointerMove(ev: MouseEvent) {
+
+        //first we need to deal with the current pointer
+        var currPointer = pointers.down[ev.pointerId];
+        if (currPointer) {
+            var point = getPoint(ev);
+            currPointer.previousPoint = currPointer.currentPoint;
+            currPointer.currentPoint = point;
+        }
+
+        drawPointers();
+
+        if (pointers.count == 1) {
+            //simple pan
+
+            var delta = makerjs.point.subtract(currPointer.currentPoint.fromCanvas, currPointer.previousPoint.fromCanvas);
+
+            checkFitToScreen.checked = false;
+
+            var svgElement = view.children[0] as HTMLElement;
+
+            viewPanOffset = makerjs.point.add(viewPanOffset, delta);
+
+            svgElement.style.marginLeft = viewPanOffset[0] + 'px';
+            svgElement.style.marginTop = viewPanOffset[1] + 'px';
+
+            ev.preventDefault();
+
+        } else if (pointers.count == 2) {
+
+            ev.preventDefault();
+
+        }
+
     }
 
     function viewWheel(ev: MouseWheelEvent) {
@@ -326,10 +427,7 @@ module MakerJsPlayground {
 
         var p = makerjs.point;
         var scaleDiff = viewScale / startScale;
-        var pannedOrigin = p.add(viewOrigin, viewPanOffset);
-        var mouseFromPadding = p.subtract([ev.pageX, ev.pageY], [hMargin, vMargin]);
-        var mouseFromViewOffset = p.subtract(mouseFromPadding, pageOffset(view));
-        var mouseFromOrigin = p.subtract(mouseFromViewOffset, pannedOrigin);
+        var mouseFromOrigin = getPoint(ev).fromDrawingOrigin;
         var scaledMouseFromOrigin = p.scale(mouseFromOrigin, scaleDiff);
         var mouseDiff = p.subtract(mouseFromOrigin, scaledMouseFromOrigin);
 
@@ -340,40 +438,59 @@ module MakerJsPlayground {
         ev.preventDefault();
     }
 
-    function viewMouseDown(ev: MouseEvent) {
-        viewPanning = true;
-        viewPanStart = [ev.clientX, ev.clientY];
-    }
+    function drawPointer(ns: string, point: MakerJs.IPoint, id: string): SVGGElement {
 
-    function mouseDelta(ev: MouseEvent): MakerJs.IPoint {
-        return [ev.clientX - viewPanStart[0], ev.clientY - viewPanStart[1]];
-    }
+        function createElement(tagName: string, attrs: any) {
+            var el = document.createElementNS(ns, tagName);
 
-    function viewMouseUp(ev: MouseEvent) {
-        viewPanning = false;
+            for (var attrName in attrs) {
+                var value = attrs[attrName];
+                el.setAttributeNS(null, attrName, value);
+            }
 
-        viewPanOffset = makerjs.point.add(viewPanOffset, mouseDelta(ev));
-    }
-
-    function viewMouseMove(ev: MouseEvent) {
-        viewMousePos = [ev.offsetX, ev.offsetY];
-        //setNotes(JSON.stringify(viewMousePos) + ' ' + ev.pageX);
-
-        if (viewPanning) {
-
-            checkFitToScreen.checked = false;
-
-            var svgElement = view.children[0] as HTMLElement;
-
-            viewPanOffset = makerjs.point.add(viewPanOffset, mouseDelta(ev));
-
-            viewPanStart = [ev.clientX, ev.clientY];
-
-            svgElement.style.marginLeft = viewPanOffset[0] + 'px';
-            svgElement.style.marginTop = viewPanOffset[1] + 'px';
-
-            ev.preventDefault();
+            return el;
         }
+
+        function createLine(lineId: string, x1: number | string, y1: number | string, x2: number | string, y2: number | string) {
+            return createElement('line', {
+                "id": lineId,
+                "x1": x1,
+                "y1": y1,
+                "x2": x2,
+                "y2": y2
+            });
+        }
+
+        var x = createLine('x', point[0], 0, point[0], '100%');
+
+        var y = createLine('y', 0, point[1], '100%', point[1]);
+
+        var g = createElement('g', { "id": id }) as SVGGElement;
+
+        g.appendChild(x);
+        g.appendChild(y);
+
+        return g;
+    }
+
+    function drawPointers() {
+
+        //erase all pointers
+        var oldNode = document.querySelector('#pointers') as SVGElement;
+        var domPointers = oldNode.cloneNode(false) as SVGElement;
+        oldNode.parentNode.replaceChild(domPointers, oldNode);
+
+        var count = 0;
+        var ns = domPointers.getAttribute('xmlns');
+        var maxPointers = 2;
+
+        for (var id in pointers.down) {
+            var pointer = pointers.down[id]
+            domPointers.appendChild(drawPointer(ns, pointer.currentPoint.fromCanvas, 'pointer' + count));
+            count++;
+            if (count >= maxPointers) break;
+        }
+
     }
 
     function lockToPath(path: Node) {
@@ -487,6 +604,20 @@ module MakerJsPlayground {
         return a.high[1] == b.high[1] && a.low[1] == b.low[1];
     }
 
+    function initialize() {
+
+        window.addEventListener('resize', render);
+        window.addEventListener('orientationchange', render);
+
+        view.addEventListener('click', viewClick);
+
+        view.addEventListener('wheel', viewWheel);
+        view.addEventListener('pointerdown', viewPointerDown);
+        view.addEventListener('pointerup', viewPointerUp);
+        view.addEventListener('pointermove', viewPointerMove);
+
+    }
+
     //public members
 
     export var codeMirrorEditor: CodeMirror.Editor;
@@ -512,7 +643,17 @@ module MakerJsPlayground {
         iframe.contentWindow.document.close();
     }
 
-    export function setNotes(markdown: string) {
+    export function setNotes(obj: Object);
+    export function setNotes(markdown: string);
+    export function setNotes(value: any) {
+        var markdown = '';
+
+        if (typeof value === 'string') {
+            markdown = value;
+        } else {
+            markdown = JSON.stringify(value);
+        }
+
         var className = 'no-notes';
         var html = '';
         if (markdown) {
@@ -573,16 +714,7 @@ module MakerJsPlayground {
         if (init) {
             init = false;
 
-            //todo - still need double tap
-            window.addEventListener('resize', render);
-            window.addEventListener('orientationchange', render);
-
-            view.addEventListener('click', viewClick);
-
-            view.addEventListener('wheel', viewWheel);
-            view.addEventListener('mousedown', viewMouseDown);
-            view.addEventListener('mouseup', viewMouseUp);
-            view.addEventListener('mousemove', viewMouseMove);
+            initialize();
         }
     }
 
@@ -718,7 +850,7 @@ module MakerJsPlayground {
                 origin: viewOrigin,
                 annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
                 svgAttrs: {
-                    id: 'view-svg',
+                    id: 'drawing',
                     style: 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
                  },
                 fontSize: svgFontSize + 'px',

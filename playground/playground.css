@@ -189,12 +189,12 @@ header h1 {
     left: 0;
 }
 
-svg line, svg circle, svg path {
+svg#drawing line, svg#drawing circle, svg#drawing path {
     stroke: #fff;
     fill: none;
 }
 
-svg .locked {
+svg#drawing .locked {
     stroke: #0000FF;
 }
 
@@ -202,22 +202,35 @@ svg .locked {
     overflow: visible;
 }
 
-#view svg text {
+#view svg#drawing text {
     fill: turquoise;
     stroke: none;
 }
 
-#view svg .locked + text {
+#view svg#drawing .locked + text {
     fill: yellow;
 }
 
-#crosshairs-vertical, #crosshairs-horizontal {
+#view #crosshairs-vertical, #view #crosshairs-horizontal {
     stroke: midnightblue;
     stroke-width: 1;
 }
 
 #crosshairs-horizontal_text, #crosshairs-vertical_text {
     display: none;
+}
+
+svg#pointers {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+svg#pointers line {
+    stroke: #00f;
+    stroke-width: 1px;
 }
 
 #notes {

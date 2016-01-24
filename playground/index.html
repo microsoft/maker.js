@@ -29,6 +29,7 @@
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
     <link href="playground.css" rel="stylesheet" />
+    <script src="../external/pep/pep.js"></script>
     <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
@@ -97,8 +98,9 @@
     </header>
 
     <section id="blueprint-canvas">
+        <svg id="pointers" xmlns="http://www.w3.org/2000/svg"></svg>
         <div id="view-params">
-            <div id="view"><div id="view-measure"></div></div>
+            <div id="view" touch-action="none" class="noselect"><div id="view-measure"></div></div>
             <div id="rendering-options-menu" class="noselect">
                 <div id="params"></div>
                 <div class="view-controls">
