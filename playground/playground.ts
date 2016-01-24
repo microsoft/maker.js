@@ -7,11 +7,6 @@
 
 declare var makerjs: typeof MakerJs;
 
-interface MouseEvent {
-    pointerId: number;
-    pointerType: string;
-}
-
 module MakerJsPlayground {
 
     //classes
@@ -71,6 +66,11 @@ module MakerJsPlayground {
         [id: number]: IPointer;
     }
 
+    interface IPointers {
+        down: IPointerMap;
+        count: number;
+    }
+
     //private members
 
     var pixelsPerInch = 100;
@@ -98,10 +98,7 @@ module MakerJsPlayground {
     var viewModelRootSelector = 'svg#drawing > g > g > g';
     var viewOrigin: MakerJs.IPoint;
     var viewPanOffset: MakerJs.IPoint = [0, 0];
-    var pointers = {
-        down: <IPointerMap>{},
-        count: 0
-    };
+    var pointers: IPointers;
 
     function isLandscapeOrientation() {
         return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -343,7 +340,7 @@ module MakerJsPlayground {
         };
     }
 
-    function viewClick(ev: MouseEvent) {
+    function viewClick(ev: PointerEvent) {
         if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
 
             var text = ev.srcElement as SVGTextElement;
@@ -353,7 +350,7 @@ module MakerJsPlayground {
         }
     }
 
-    function viewPointerDown(ev: MouseEvent) {
+    function viewPointerDown(ev: PointerEvent) {
 
         var point = getPoint(ev);
 
@@ -371,24 +368,24 @@ module MakerJsPlayground {
         drawPointers();
     }
 
-    function viewPointerUp(ev: MouseEvent) {
-        delete pointers.down[ev.pointerId];
-        pointers.count--;
+    function viewPointerUp(ev: PointerEvent) {
+        if (pointers.down[ev.pointerId]) {
+            delete pointers.down[ev.pointerId];
+            pointers.count--;
 
-        drawPointers();
-
-
+            drawPointers();
+        }
     }
 
-    function viewPointerMove(ev: MouseEvent) {
+    function viewPointerMove(ev: PointerEvent) {
 
         //first we need to deal with the current pointer
         var currPointer = pointers.down[ev.pointerId];
-        if (currPointer) {
-            var point = getPoint(ev);
-            currPointer.previousPoint = currPointer.currentPoint;
-            currPointer.currentPoint = point;
-        }
+        if (!currPointer) return;
+
+        var point = getPoint(ev);
+        currPointer.previousPoint = currPointer.currentPoint;
+        currPointer.currentPoint = point;
 
         drawPointers();
 
@@ -473,12 +470,17 @@ module MakerJsPlayground {
         return g;
     }
 
-    function drawPointers() {
-
-        //erase all pointers
+    function erasePointers(): SVGElement {
         var oldNode = document.querySelector('#pointers') as SVGElement;
         var domPointers = oldNode.cloneNode(false) as SVGElement;
         oldNode.parentNode.replaceChild(domPointers, oldNode);
+        return domPointers;
+    }
+
+    function drawPointers() {
+
+        //erase all pointers
+        var domPointers = erasePointers();
 
         var count = 0;
         var ns = domPointers.getAttribute('xmlns');
@@ -490,7 +492,6 @@ module MakerJsPlayground {
             count++;
             if (count >= maxPointers) break;
         }
-
     }
 
     function lockToPath(path: Node) {
@@ -613,9 +614,9 @@ module MakerJsPlayground {
 
         view.addEventListener('wheel', viewWheel);
         view.addEventListener('pointerdown', viewPointerDown);
-        view.addEventListener('pointerup', viewPointerUp);
         view.addEventListener('pointermove', viewPointerMove);
 
+        document.addEventListener('pointerup', viewPointerUp);  //release pointer from anywhere
     }
 
     //public members
@@ -794,6 +795,13 @@ module MakerJsPlayground {
     }
 
     export function fitOnScreen() {
+
+        //initialize pointers
+        pointers = {
+            down: {},
+            count: 0
+        };
+        erasePointers();
 
         checkFitToScreen.checked = true;
 

@@ -46,10 +46,7 @@ var MakerJsPlayground;
     var viewModelRootSelector = 'svg#drawing > g > g > g';
     var viewOrigin;
     var viewPanOffset = [0, 0];
-    var pointers = {
-        down: {},
-        count: 0
-    };
+    var pointers;
     function isLandscapeOrientation() {
         return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
     }
@@ -258,18 +255,20 @@ var MakerJsPlayground;
         drawPointers();
     }
     function viewPointerUp(ev) {
-        delete pointers.down[ev.pointerId];
-        pointers.count--;
-        drawPointers();
+        if (pointers.down[ev.pointerId]) {
+            delete pointers.down[ev.pointerId];
+            pointers.count--;
+            drawPointers();
+        }
     }
     function viewPointerMove(ev) {
         //first we need to deal with the current pointer
         var currPointer = pointers.down[ev.pointerId];
-        if (currPointer) {
-            var point = getPoint(ev);
-            currPointer.previousPoint = currPointer.currentPoint;
-            currPointer.currentPoint = point;
-        }
+        if (!currPointer)
+            return;
+        var point = getPoint(ev);
+        currPointer.previousPoint = currPointer.currentPoint;
+        currPointer.currentPoint = point;
         drawPointers();
         if (pointers.count == 1) {
             //simple pan
@@ -324,11 +323,15 @@ var MakerJsPlayground;
         g.appendChild(y);
         return g;
     }
-    function drawPointers() {
-        //erase all pointers
+    function erasePointers() {
         var oldNode = document.querySelector('#pointers');
         var domPointers = oldNode.cloneNode(false);
         oldNode.parentNode.replaceChild(domPointers, oldNode);
+        return domPointers;
+    }
+    function drawPointers() {
+        //erase all pointers
+        var domPointers = erasePointers();
         var count = 0;
         var ns = domPointers.getAttribute('xmlns');
         var maxPointers = 2;
@@ -436,8 +439,8 @@ var MakerJsPlayground;
         view.addEventListener('click', viewClick);
         view.addEventListener('wheel', viewWheel);
         view.addEventListener('pointerdown', viewPointerDown);
-        view.addEventListener('pointerup', viewPointerUp);
         view.addEventListener('pointermove', viewPointerMove);
+        document.addEventListener('pointerup', viewPointerUp); //release pointer from anywhere
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
@@ -580,6 +583,12 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.deActivateParam = deActivateParam;
     function fitOnScreen() {
+        //initialize pointers
+        pointers = {
+            down: {},
+            count: 0
+        };
+        erasePointers();
         checkFitToScreen.checked = true;
         var measure = processed.measurement;
         var modelHeightNatural = measure.high[1] - measure.low[1];
