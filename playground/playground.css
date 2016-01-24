@@ -216,14 +216,6 @@ svg#drawing .locked {
     stroke-width: 1;
 }
 
-#view svg#drawing g#pointer circle {
-    stroke: pink;
-}
-
-#view svg#drawing g#pointer2 circle {
-    stroke: lime;
-}
-
 #crosshairs-horizontal_text, #crosshairs-vertical_text {
     display: none;
 }
