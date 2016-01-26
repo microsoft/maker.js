@@ -28,58 +28,19 @@
 
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
-    <link href="playground.css" rel="stylesheet" />
+    <link href="testplayground.css" rel="stylesheet" />
+    <script src="testpep.js"></script>
     <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
 
+    <script src="../target/js/browser.maker.js"></script>
     <script>
-        //pretend we are in node
-        var module = {};
-    </script>
-
-    <script src="../src/core/maker.js"></script>
-    <script src="../src/core/angle.js"></script>
-    <script src="../src/core/point.js"></script>
-    <script src="../src/core/units.js"></script>
-    <script src="../src/core/measure.js"></script>
-    <script src="../src/core/path.js"></script>
-    <script src="../src/core/break.js"></script>
-    <script src="../src/core/paths.js"></script>
-    <script src="../src/core/model.js"></script>
-    <script src="../src/core/combine.js"></script>
-    <script src="../src/core/loops.js"></script>
-    <script src="../src/core/kit.js"></script>
-    <script src="../src/core/exporter.js"></script>
-    <script src="../src/core/dxf.js"></script>
-    <script src="../src/core/xml.js"></script>
-    <script src="../src/core/svg.js"></script>
-    <script src="../src/core/openjscad.js"></script>
-    <script src="../src/core/solvers.js"></script>
-    <script src="../src/core/fillet.js"></script>
-    <script src="../src/core/intersect.js"></script>
-    <script src="../src/models/BoltCircle.js"></script>
-    <script src="../src/models/BoltRectangle.js"></script>
-    <script src="../src/models/Dome.js"></script>
-    <script src="../src/models/RoundRectangle.js"></script>
-    <script src="../src/models/Oval.js"></script>
-    <script src="../src/models/OvalArc.js"></script>
-    <script src="../src/models/ConnectTheDots.js"></script>
-    <script src="../src/models/Rectangle.js"></script>
-    <script src="../src/models/Ring.js"></script>
-    <script src="../src/models/Polygon.js"></script>
-    <script src="../src/models/Square.js"></script>
-    <script src="../src/models/Slot.js"></script>
-    <script src="../src/models/SCurve.js"></script>
-    <script src="../src/models/Star.js"></script>
-
-    <script>
-        //pretend it's been required
-        var makerjs = MakerJs;
+        var makerjs = require('makerjs');
     </script>
 
     <script src="export-format.js"></script>
-    <script src="playground.js"></script>
+    <script src="testplayground.js"></script>
     <script>
         //config
         MakerJsPlayground.relativePath = '../examples/';
@@ -97,15 +58,16 @@
     </header>
 
     <section id="blueprint-canvas">
+        <svg id="pointers" xmlns="http://www.w3.org/2000/svg"></svg>
         <div id="view-params">
-            <div id="view"><div id="view-measure"></div></div>
+            <div id="view" touch-action="none" class="noselect"><div id="view-measure"></div></div>
             <div id="rendering-options-menu" class="noselect">
                 <div id="params"></div>
                 <div class="view-controls">
                     <div>
                         <hr />
                     </div>
-                    <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } MakerJsPlayground.render();" /> fit on screen</label></div>
+                    <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.viewScale = 1; MakerJsPlayground.updateZoomScale(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label></div>
                     <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
                     <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
                     <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
@@ -125,6 +87,8 @@
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Json);">json</button>
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.OpenJsCad);">openjscad</button>
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Stl);">.stl</button>
+
+            <button onclick="MakerJsPlayground.Pointers.test()">test</button>
         </div>
 
         <div id="download-generating">
