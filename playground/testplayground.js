@@ -167,7 +167,7 @@ var MakerJsPlayground;
                 };
                 fn(ev);
             }
-            setNotes({ touchids: ids });
+            setNotes({ TTTtouchids: ids });
         };
         Pointers.viewClick = function (e) {
             var ev = e;
@@ -624,6 +624,7 @@ var MakerJsPlayground;
         view.addEventListener('touchstart', Pointers.touchStart);
         view.addEventListener('touchmove', Pointers.touchMove);
         view.addEventListener('touchend', Pointers.touchEnd);
+        view.addEventListener('touchcancel', Pointers.touchEnd);
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
@@ -822,7 +823,8 @@ var MakerJsPlayground;
                     //these are here for a bug in either Jquery Pep or Chrome 47 - where the pointer events are not handled by the view
                     "ontouchstart": 'MakerJsPlayground.Pointers.touchStart(arguments[0]);',
                     "ontouchmove": 'MakerJsPlayground.Pointers.touchMove(arguments[0]);',
-                    "ontouchend": 'MakerJsPlayground.Pointers.touchEnd(arguments[0]);'
+                    "ontouchend": 'MakerJsPlayground.Pointers.touchEnd(arguments[0]);',
+                    "ontouchcancel": 'MakerJsPlayground.Pointers.touchEnd(arguments[0]);'
                 },
                 fontSize: MakerJsPlayground.svgFontSize + 'px',
                 strokeWidth: MakerJsPlayground.svgStrokeWidth + 'px',
