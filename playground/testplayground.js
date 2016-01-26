@@ -27,10 +27,13 @@ var MakerJsPlayground;
             this.viewPanStart = null;
             this.previousMidPoint = null;
             this.down = {};
+            this.log = '';
         }
         Pointers.prototype.reset = function () {
             this.down = {};
             this.count = 0;
+            this.log = '';
+            MakerJsPlayground.codeMirrorEditor.getDoc().setValue(this.log);
         };
         Pointers.prototype.asArray = function () {
             var result = [];
@@ -166,6 +169,8 @@ var MakerJsPlayground;
                 previousPoint: point,
                 currentPoint: point
             };
+            MakerJsPlayground.pointers.log = ev.pointerId + ' down\n' + MakerJsPlayground.pointers.log;
+            MakerJsPlayground.codeMirrorEditor.getDoc().setValue(MakerJsPlayground.pointers.log);
             MakerJsPlayground.pointers.down[p.id] = p;
             MakerJsPlayground.pointers.count++;
             if (MakerJsPlayground.pointers.count == 2) {
@@ -178,6 +183,8 @@ var MakerJsPlayground;
         };
         Pointers.viewPointerUp = function (e) {
             var ev = Pointers.getPointerEvent(e);
+            MakerJsPlayground.pointers.log = ev.pointerId + ' up\n' + MakerJsPlayground.pointers.log;
+            MakerJsPlayground.codeMirrorEditor.getDoc().setValue(MakerJsPlayground.pointers.log);
             if (MakerJsPlayground.pointers.down[ev.pointerId]) {
                 delete MakerJsPlayground.pointers.down[ev.pointerId];
                 MakerJsPlayground.pointers.count--;
