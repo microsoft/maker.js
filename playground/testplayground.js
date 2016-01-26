@@ -819,6 +819,10 @@ var MakerJsPlayground;
                 svgAttrs: {
                     "id": 'drawing',
                     "style": 'margin-left:' + viewPanOffset[0].toFixed(0) + 'px; margin-top:' + viewPanOffset[1].toFixed(0) + 'px',
+                    //these are here for a bug in either Jquery Pep or Chrome 47 - where the pointer events are not handled by the view
+                    "ontouchstart": 'MakerJsPlayground.Pointers.touchStart(arguments[0]);',
+                    "ontouchmove": 'MakerJsPlayground.Pointers.touchMove(arguments[0]);',
+                    "ontouchend": 'MakerJsPlayground.Pointers.touchEnd(arguments[0]);'
                 },
                 fontSize: MakerJsPlayground.svgFontSize + 'px',
                 strokeWidth: MakerJsPlayground.svgStrokeWidth + 'px',
