@@ -204,6 +204,11 @@ var MakerJsPlayground;
             }
             MakerJsPlayground.pointers.draw();
         };
+        Pointers.touchCancel = function (e) {
+            Pointers.touchEvery(e, function (ev) {
+                MakerJsPlayground.pointers.log = ev.pointerId + ' was cancelled\n' + MakerJsPlayground.pointers.log;
+            });
+        };
         Pointers.touchEnd = function (e) {
             Pointers.touchEvery(e, Pointers.viewPointerUp);
         };
@@ -624,7 +629,7 @@ var MakerJsPlayground;
         view.addEventListener('touchstart', Pointers.touchStart);
         view.addEventListener('touchmove', Pointers.touchMove);
         view.addEventListener('touchend', Pointers.touchEnd);
-        view.addEventListener('touchcancel', Pointers.touchEnd);
+        view.addEventListener('touchcancel', Pointers.touchCancel);
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
@@ -824,7 +829,7 @@ var MakerJsPlayground;
                     "ontouchstart": 'MakerJsPlayground.Pointers.touchStart(arguments[0]);',
                     "ontouchmove": 'MakerJsPlayground.Pointers.touchMove(arguments[0]);',
                     "ontouchend": 'MakerJsPlayground.Pointers.touchEnd(arguments[0]);',
-                    "ontouchcancel": 'MakerJsPlayground.Pointers.touchEnd(arguments[0]);'
+                    "ontouchcancel": 'MakerJsPlayground.Pointers.touchCancel(arguments[0]);'
                 },
                 fontSize: MakerJsPlayground.svgFontSize + 'px',
                 strokeWidth: MakerJsPlayground.svgStrokeWidth + 'px',
