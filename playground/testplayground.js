@@ -174,6 +174,7 @@ var MakerJsPlayground;
                 MakerJsPlayground.pointers.previousMidPoint = MakerJsPlayground.pointers.average(false);
             }
             MakerJsPlayground.pointers.draw();
+            setNotes(MakerJsPlayground.pointers.down);
         };
         Pointers.viewPointerUp = function (e) {
             var ev = Pointers.getPointerEvent(e);
@@ -182,9 +183,7 @@ var MakerJsPlayground;
                 MakerJsPlayground.pointers.count--;
                 MakerJsPlayground.pointers.draw();
             }
-            else {
-                setNotes('wow pointer not found ' + ev.pointerId);
-            }
+            setNotes(MakerJsPlayground.pointers.down);
         };
         Pointers.viewPointerMove = function (e) {
             var ev = Pointers.getPointerEvent(e);
