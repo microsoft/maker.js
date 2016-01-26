@@ -580,9 +580,9 @@ var MakerJsPlayground;
         //todo - make this work for touch / pointer instead of just click
         view.addEventListener('click', Pointers.viewClick);
         view.addEventListener('wheel', Pointers.viewWheel);
-        view.addEventListener('pointerdown', Pointers.viewPointerDown);
-        view.addEventListener('pointermove', Pointers.viewPointerMove);
-        document.addEventListener('pointerup', Pointers.viewPointerUp); //release pointer from anywhere
+        view.addEventListener('touchstart', Pointers.viewPointerDown);
+        view.addEventListener('touchmove', Pointers.viewPointerMove);
+        document.addEventListener('touchend', Pointers.viewPointerUp); //release pointer from anywhere
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
