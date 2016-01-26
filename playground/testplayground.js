@@ -167,7 +167,7 @@ var MakerJsPlayground;
                 };
                 fn(ev);
             }
-            setNotes({ aTtouchids: ids });
+            setNotes({ BERGaTtouchids: ids });
         };
         Pointers.viewClick = function (e) {
             var ev = e;
@@ -214,8 +214,8 @@ var MakerJsPlayground;
         };
         Pointers.viewPointerUp = function (e) {
             var ev = e;
-            MakerJsPlayground.pointers.log = ev.pointerId + ' up\n' + MakerJsPlayground.pointers.log;
             if (MakerJsPlayground.pointers.down[ev.pointerId]) {
+                MakerJsPlayground.pointers.log = ev.pointerId + ' up deleted \n' + MakerJsPlayground.pointers.log;
                 delete MakerJsPlayground.pointers.down[ev.pointerId];
                 MakerJsPlayground.pointers.count--;
                 MakerJsPlayground.pointers.draw();
