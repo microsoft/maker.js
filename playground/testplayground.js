@@ -176,8 +176,12 @@ var MakerJsPlayground;
             MakerJsPlayground.pointers.draw();
         };
         Pointers.viewPointerUp = function (e) {
-            MakerJsPlayground.pointers.reset();
-            MakerJsPlayground.pointers.erase();
+            var ev = Pointers.getPointerEvent(e);
+            if (MakerJsPlayground.pointers.down[ev.pointerId]) {
+                delete MakerJsPlayground.pointers.down[ev.pointerId];
+                MakerJsPlayground.pointers.count--;
+                MakerJsPlayground.pointers.draw();
+            }
         };
         Pointers.viewPointerMove = function (e) {
             var ev = Pointers.getPointerEvent(e);
