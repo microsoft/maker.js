@@ -147,7 +147,7 @@ var MakerJsPlayground;
         //        }
         //    };
         //}
-        Pointers.touchEvery = function (e, fn) {
+        Pointers.touchEvery = function (e, fn, allowPropagation) {
             var ids = '';
             for (var i = 0; i < e.changedTouches.length; i++) {
                 var touch = e.changedTouches[i];
@@ -163,7 +163,8 @@ var MakerJsPlayground;
                     srcElement: e.srcElement,
                     stopPropagation: function () {
                         e.stopPropagation();
-                    }
+                    },
+                    allowPropagation: allowPropagation
                 };
                 fn(ev);
             }
@@ -178,13 +179,15 @@ var MakerJsPlayground;
             }
         };
         Pointers.touchStart = function (e) {
-            Pointers.touchEvery(e, Pointers.viewPointerDown);
+            Pointers.touchEvery(e, Pointers.viewPointerDown, arguments[1]);
         };
         Pointers.viewPointerDown = function (e) {
             var ev = e;
             console.log(ev.pageX, ev.pageY);
-            ev.preventDefault();
-            ev.stopPropagation();
+            if (!ev.allowPropagation) {
+                ev.preventDefault();
+                ev.stopPropagation();
+            }
             var point = Pointers.getPoint(ev);
             var p = {
                 id: ev.pointerId,
@@ -205,7 +208,7 @@ var MakerJsPlayground;
             MakerJsPlayground.pointers.draw();
         };
         Pointers.touchEnd = function (e) {
-            Pointers.touchEvery(e, Pointers.viewPointerUp);
+            Pointers.touchEvery(e, Pointers.viewPointerUp, arguments[1]);
         };
         Pointers.viewPointerUp = function (e) {
             var ev = e;
@@ -214,17 +217,19 @@ var MakerJsPlayground;
             if (MakerJsPlayground.pointers.down[ev.pointerId]) {
                 delete MakerJsPlayground.pointers.down[ev.pointerId];
                 MakerJsPlayground.pointers.count--;
-                MakerJsPlayground.pointers.draw();
             }
+            MakerJsPlayground.pointers.draw();
         };
         Pointers.touchMove = function (e) {
-            Pointers.touchEvery(e, Pointers.viewPointerMove);
+            Pointers.touchEvery(e, Pointers.viewPointerMove, arguments[1]);
         };
         Pointers.viewPointerMove = function (e) {
             var ev = e;
             var pointerId = ev.pointerId;
-            ev.stopPropagation();
-            ev.preventDefault();
+            if (!ev.allowPropagation) {
+                ev.stopPropagation();
+                ev.preventDefault();
+            }
             //first we need to deal with the current pointer
             var currPointer = MakerJsPlayground.pointers.down[pointerId];
             if (!currPointer)
@@ -295,7 +300,8 @@ var MakerJsPlayground;
                 srcElement: null,
                 pointerType: 'test',
                 preventDefault: function () { },
-                stopPropagation: function () { }
+                stopPropagation: function () { },
+                allowPropagation: false
             };
             console.log('step ' + i + ' ' + ev.pageX + ' ' + max[0]);
             if (down) {
@@ -323,7 +329,8 @@ var MakerJsPlayground;
                 srcElement: null,
                 pointerType: 'test',
                 preventDefault: function () { },
-                stopPropagation: function () { }
+                stopPropagation: function () { },
+                allowPropagation: false
             };
             var p2_start = [574, 160];
             var p2_end = [320, 390];
@@ -820,9 +827,9 @@ var MakerJsPlayground;
                     "id": 'drawing',
                     "style": 'margin-left:' + viewPanOffset[0].toFixed(0) + 'px; margin-top:' + viewPanOffset[1].toFixed(0) + 'px',
                     //these are here for a bug in either Jquery Pep or Chrome 47 - where the pointer events are not handled by the view
-                    "ontouchstart": 'MakerJsPlayground.Pointers.touchStart(arguments[0]);',
-                    "ontouchmove": 'MakerJsPlayground.Pointers.touchMove(arguments[0]);',
-                    "ontouchend": 'MakerJsPlayground.Pointers.touchEnd(arguments[0]);'
+                    "ontouchstart": 'MakerJsPlayground.Pointers.touchStart(arguments[0], true);',
+                    "ontouchmove": 'MakerJsPlayground.Pointers.touchMove(arguments[0], true);',
+                    "ontouchend": 'MakerJsPlayground.Pointers.touchEnd(arguments[0], true);'
                 },
                 fontSize: MakerJsPlayground.svgFontSize + 'px',
                 strokeWidth: MakerJsPlayground.svgStrokeWidth + 'px',
