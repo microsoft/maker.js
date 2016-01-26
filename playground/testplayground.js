@@ -167,7 +167,7 @@ var MakerJsPlayground;
                 };
                 fn(ev);
             }
-            setNotes({ TTTtouchids: ids });
+            setNotes({ zTTTtouchids: ids });
         };
         Pointers.viewClick = function (e) {
             var ev = e;
