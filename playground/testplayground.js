@@ -148,11 +148,14 @@ var MakerJsPlayground;
         //    };
         //}
         Pointers.touchEvery = function (e, fn) {
+            var ids = '';
             for (var i = 0; i < e.changedTouches.length; i++) {
+                var touch = e.changedTouches[i];
+                ids += touch.identifier + ' ';
                 var ev = {
-                    pageX: e.changedTouches[i].pageX,
-                    pageY: e.changedTouches[i].pageY,
-                    pointerId: e.changedTouches[i].identifier,
+                    pageX: touch.pageX,
+                    pageY: touch.pageY,
+                    pointerId: touch.identifier,
                     pointerType: 'touch',
                     preventDefault: function () {
                         e.preventDefault();
@@ -164,6 +167,7 @@ var MakerJsPlayground;
                 };
                 fn(ev);
             }
+            setNotes({ touchids: ids });
         };
         Pointers.viewClick = function (e) {
             var ev = e;
