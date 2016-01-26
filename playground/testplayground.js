@@ -161,13 +161,10 @@ var MakerJsPlayground;
                         e.preventDefault();
                     },
                     srcElement: e.srcElement,
-                    stopPropagation: function () {
-                        e.stopPropagation();
-                    }
                 };
                 fn(ev);
             }
-            setNotes({ BERGaTtouchids: ids });
+            setNotes({ zoidBERGaTtouchids: ids });
         };
         Pointers.viewClick = function (e) {
             var ev = e;
@@ -184,7 +181,7 @@ var MakerJsPlayground;
             var ev = e;
             console.log(ev.pageX, ev.pageY);
             ev.preventDefault();
-            ev.stopPropagation();
+            //ev.stopPropagation();
             var point = Pointers.getPoint(ev);
             var p = {
                 id: ev.pointerId,
@@ -231,7 +228,7 @@ var MakerJsPlayground;
         Pointers.viewPointerMove = function (e) {
             var ev = e;
             var pointerId = ev.pointerId;
-            ev.stopPropagation();
+            //ev.stopPropagation();
             ev.preventDefault();
             //first we need to deal with the current pointer
             var currPointer = MakerJsPlayground.pointers.down[pointerId];
@@ -303,7 +300,6 @@ var MakerJsPlayground;
                 srcElement: null,
                 pointerType: 'test',
                 preventDefault: function () { },
-                stopPropagation: function () { }
             };
             console.log('step ' + i + ' ' + ev.pageX + ' ' + max[0]);
             if (down) {
@@ -331,7 +327,6 @@ var MakerJsPlayground;
                 srcElement: null,
                 pointerType: 'test',
                 preventDefault: function () { },
-                stopPropagation: function () { }
             };
             var p2_start = [574, 160];
             var p2_end = [320, 390];
