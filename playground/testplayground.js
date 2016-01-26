@@ -183,7 +183,7 @@ var MakerJsPlayground;
                 MakerJsPlayground.pointers.draw();
             }
             else {
-                setNotes('pointer not found ' + ev.pointerId);
+                setNotes('wow pointer not found ' + ev.pointerId);
             }
         };
         Pointers.viewPointerMove = function (e) {
@@ -589,7 +589,7 @@ var MakerJsPlayground;
         view.addEventListener('wheel', Pointers.viewWheel);
         view.addEventListener('touchstart', Pointers.viewPointerDown);
         view.addEventListener('touchmove', Pointers.viewPointerMove);
-        document.addEventListener('touchend', Pointers.viewPointerUp); //release pointer from anywhere
+        view.addEventListener('touchend', Pointers.viewPointerUp);
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
