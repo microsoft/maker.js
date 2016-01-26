@@ -182,6 +182,9 @@ var MakerJsPlayground;
                 MakerJsPlayground.pointers.count--;
                 MakerJsPlayground.pointers.draw();
             }
+            else {
+                setNotes('pointer not found ' + ev.pointerId);
+            }
         };
         Pointers.viewPointerMove = function (e) {
             var ev = Pointers.getPointerEvent(e);
