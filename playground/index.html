@@ -100,7 +100,11 @@
     <section id="blueprint-canvas">
         <svg id="pointers" xmlns="http://www.w3.org/2000/svg"></svg>
         <div id="view-params">
-            <div id="view" touch-action="none" class="noselect"><div id="view-measure"></div></div>
+            <div id="view" touch-action="none" class="noselect">
+                <div id="view-svg-container"></div>
+                <svg id="pointers" xmlns="http://www.w3.org/2000/svg"></svg>
+                <div id="touch-shield"></div>
+            </div>
             <div id="rendering-options-menu" class="noselect">
                 <div id="params"></div>
                 <div class="view-controls">

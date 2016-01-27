@@ -84,7 +84,7 @@ module MakerJsPlayground {
         private viewScaleStart: number = null;
         private viewPanStart: MakerJs.IPoint = null;
         private previousMidPoint: MakerJs.IPoint = null;
-
+        private keepEventElement: HTMLElement;
         public down: IPointerMap = {};
         public count: number;
 
@@ -92,6 +92,10 @@ module MakerJsPlayground {
         }
 
         public reset() {
+            if (this.keepEventElement) {
+                view.removeChild(this.keepEventElement);
+            }
+            this.keepEventElement = null;
             this.down = {};
             this.count = 0;
         }
@@ -169,8 +173,6 @@ module MakerJsPlayground {
         }
 
         public draw() {
-
-            return;
 
             //erase all pointers
             var domPointers = this.erase();
@@ -264,10 +266,13 @@ module MakerJsPlayground {
             pointers.down[p.id] = p;
             pointers.count++;
 
+            document.body.classList.add('pointing');
+
             if (pointers.count == 2) {
                 pointers.viewScaleStart = viewScale;
                 pointers.viewPanStart = viewPanOffset;
 
+                //TODO - rename this, and fix bug when swithing between 1 and 2 points
                 pointers.previousMidPoint = pointers.average(false);
             }
 
@@ -275,12 +280,22 @@ module MakerJsPlayground {
         }
 
         public static viewPointerUp(e: PointerEvent) {
-
             var ev = e as IPointerEvent;
-            ev.preventDefault();
 
-            pointers.reset();
-            pointers.draw();
+            if (pointers.down[ev.pointerId]) {
+
+                delete pointers.down[ev.pointerId];
+                pointers.count--;
+
+                //todo: find a way to reset when a pointer exists but is "lost"
+                if (pointers.count == 0) {
+                    document.body.classList.remove('pointing');
+                    pointers.reset();
+                    pointers.erase();
+                } else {
+                    pointers.draw();
+                }
+            }
         }
 
         public static viewPointerMove(e: PointerEvent) {
@@ -312,7 +327,7 @@ module MakerJsPlayground {
 
                 viewPanOffset = p.add(viewPanOffset, panDelta);
 
-                var svgElement = view.children[0] as HTMLElement;
+                var svgElement = viewSvgContainer.children[0] as HTMLElement;
 
                 //no need to re-render, just move the margin
                 svgElement.style.marginLeft = viewPanOffset[0] + 'px';
@@ -349,6 +364,13 @@ module MakerJsPlayground {
                 updateZoomScale();
 
                 setNotes({ x: currentMidPoint });
+
+                if (!pointers.keepEventElement) {
+                    pointers.keepEventElement = viewSvgContainer.children[0] as HTMLElement;
+                    viewSvgContainer.removeChild(pointers.keepEventElement);
+                    pointers.keepEventElement.style.visibility = 'hidden';
+                    view.appendChild(pointers.keepEventElement);
+                }
 
                 render();
             }
@@ -397,6 +419,7 @@ module MakerJsPlayground {
     var iframe: HTMLIFrameElement;
     var customizeMenu: HTMLDivElement;
     var view: HTMLDivElement;
+    var viewSvgContainer: HTMLDivElement;
     var progress: HTMLDivElement;
     var preview: HTMLTextAreaElement;
     var checkFitToScreen: HTMLInputElement;
@@ -635,7 +658,7 @@ module MakerJsPlayground {
     function lockToPath(path: Node) {
         
         //trace back to root
-        var root = view.querySelector(viewModelRootSelector) as SVGGElement;
+        var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGGElement;
         var route: string[] = [];
         var element = path;
 
@@ -680,7 +703,7 @@ module MakerJsPlayground {
     }
 
     function getLockedPathSvgElement() {
-        var root = view.querySelector(viewModelRootSelector) as SVGGElement;
+        var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGGElement;
         var selector = '';
 
         for (var i = 0; i < processed.lockedPath.route.length - 2; i += 2) {
@@ -755,7 +778,15 @@ module MakerJsPlayground {
         view.addEventListener('pointerdown', Pointers.viewPointerDown);
         view.addEventListener('pointermove', Pointers.viewPointerMove);
 
-        document.addEventListener('pointerup', Pointers.viewPointerUp);  //release pointer from anywhere
+        view.addEventListener('pointerup', Pointers.viewPointerUp);
+
+        document.addEventListener('touchend', function (e: TouchEvent) {
+            console.log('touches:' + e.touches.length + ' pointers:' + pointers.count);
+            if (!e.touches.length) {
+                pointers.reset();
+                pointers.erase();
+            }
+        });
     }
 
     //public members
@@ -984,7 +1015,7 @@ module MakerJsPlayground {
     export function render() {
 
         //remove content so default size can be measured
-        view.innerHTML = '';
+        viewSvgContainer.innerHTML = '';
 
         var html = processed.html;
 
@@ -1006,9 +1037,9 @@ module MakerJsPlayground {
                     "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px',
 
                     //these are here for a bug in either Jquery Pep or Chrome 47 - where the pointer events are not handled by the view
-                    "ontouchstart": 'MakerJsPlayground.Pointers.viewPointerDown(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));',
-                    "ontouchmove": 'MakerJsPlayground.Pointers.viewPointerMove(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));',
-                    "ontouchend": 'MakerJsPlayground.Pointers.viewPointerUp(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));'
+                    //"ontouchstart": 'MakerJsPlayground.Pointers.viewPointerDown(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));',
+                    //"ontouchmove": 'MakerJsPlayground.Pointers.viewPointerMove(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));',
+                    //"ontouchend": 'MakerJsPlayground.Pointers.viewPointerUp(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));'
 
                 },
                 fontSize: svgFontSize + 'px',
@@ -1035,7 +1066,7 @@ module MakerJsPlayground {
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
 
-        view.innerHTML = html;
+        viewSvgContainer.innerHTML = html;
 
         if (processed.lockedPath) {
             var path = getLockedPathSvgElement();
@@ -1188,10 +1219,10 @@ module MakerJsPlayground {
         preview = document.getElementById('download-preview') as HTMLTextAreaElement;
         checkFitToScreen = document.getElementById('check-fit-on-screen') as HTMLInputElement;
 
-        var viewMeasure = document.getElementById('view-measure');
+        viewSvgContainer = document.getElementById('view-svg-container') as HTMLDivElement;
 
-        hMargin = viewMeasure.offsetLeft;
-        vMargin = viewMeasure.offsetTop;
+        hMargin = viewSvgContainer.offsetLeft;
+        vMargin = viewSvgContainer.offsetTop;
 
         var pre = document.getElementById('init-javascript-code') as HTMLPreElement;
         codeMirrorOptions.value = pre.innerText;
