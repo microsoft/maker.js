@@ -30,7 +30,7 @@ var MakerJsPlayground;
         }
         Pointers.prototype.reset = function () {
             if (this.keepEventElement) {
-                document.body.removeChild(this.keepEventElement);
+                view.removeChild(this.keepEventElement);
             }
             this.keepEventElement = null;
             this.down = {};
@@ -235,8 +235,8 @@ var MakerJsPlayground;
                 if (!MakerJsPlayground.pointers.keepEventElement) {
                     MakerJsPlayground.pointers.keepEventElement = viewSvgContainer.children[0];
                     viewSvgContainer.removeChild(MakerJsPlayground.pointers.keepEventElement);
-                    MakerJsPlayground.pointers.keepEventElement.style.display = 'none';
-                    document.body.appendChild(MakerJsPlayground.pointers.keepEventElement);
+                    MakerJsPlayground.pointers.keepEventElement.style.visibility = 'hidden';
+                    view.appendChild(MakerJsPlayground.pointers.keepEventElement);
                 }
                 render();
             }
@@ -555,11 +555,12 @@ var MakerJsPlayground;
         view.addEventListener('pointermove', Pointers.viewPointerMove);
         view.addEventListener('pointerup', Pointers.viewPointerUp);
         document.addEventListener('touchend', function (e) {
-            if (!e.touches.length) {
-                MakerJsPlayground.pointers.reset();
-                MakerJsPlayground.pointers.erase();
-                document.body.classList.remove('pointing');
-            }
+            console.log('touches:' + e.touches.length + ' pointers:' + MakerJsPlayground.pointers.count);
+            //if (!e.touches.length) {
+            //    pointers.reset();
+            //    pointers.erase();
+            //    document.body.classList.remove('pointing');
+            //}
         });
     }
     MakerJsPlayground.codeMirrorOptions = {
