@@ -556,11 +556,11 @@ var MakerJsPlayground;
         view.addEventListener('pointerup', Pointers.viewPointerUp);
         document.addEventListener('touchend', function (e) {
             console.log('touches:' + e.touches.length + ' pointers:' + MakerJsPlayground.pointers.count);
-            //if (!e.touches.length) {
-            //    pointers.reset();
-            //    pointers.erase();
-            //    document.body.classList.remove('pointing');
-            //}
+            if (!e.touches.length) {
+                MakerJsPlayground.pointers.reset();
+                MakerJsPlayground.pointers.erase();
+                document.body.classList.remove('pointing');
+            }
         });
     }
     MakerJsPlayground.codeMirrorOptions = {
