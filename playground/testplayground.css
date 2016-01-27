@@ -181,12 +181,15 @@ header h1 {
 
 #view {
     color: #fff;
-    padding: 2em;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
+}
+
+#view-svg-container {
+    margin: 2em;
 }
 
 svg#drawing line, svg#drawing circle, svg#drawing path {
@@ -220,7 +223,8 @@ svg#drawing .locked {
     display: none;
 }
 
-svg#pointers {
+svg#pointers, #touch-shield {
+    display: none;
     height: 100%;
     left: 0;
     position: absolute;
@@ -231,6 +235,14 @@ svg#pointers {
 svg#pointers line {
     stroke: #00f;
     stroke-width: 1px;
+}
+
+#touch-shield {
+    background-color: transparent;
+}
+
+.pointing svg#pointers, .pointing #touch-shield{
+    display: block;
 }
 
 #notes {
