@@ -29,6 +29,10 @@ var MakerJsPlayground;
             this.down = {};
         }
         Pointers.prototype.reset = function () {
+            if (this.keepEventElement) {
+                document.body.removeChild(this.keepEventElement);
+            }
+            this.keepEventElement = null;
             this.down = {};
             this.count = 0;
         };
@@ -217,6 +221,12 @@ var MakerJsPlayground;
                 MakerJsPlayground.viewScale = MakerJsPlayground.pointers.viewScaleStart * scaleDiff;
                 updateZoomScale();
                 setNotes({ x: currentMidPoint });
+                if (!MakerJsPlayground.pointers.keepEventElement) {
+                    MakerJsPlayground.pointers.keepEventElement = view.children[0];
+                    view.removeChild(MakerJsPlayground.pointers.keepEventElement);
+                    MakerJsPlayground.pointers.keepEventElement.style.display = 'none';
+                    document.body.appendChild(MakerJsPlayground.pointers.keepEventElement);
+                }
                 render();
             }
         };
