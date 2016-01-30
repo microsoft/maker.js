@@ -798,7 +798,6 @@ module MakerJsPlayground {
         viewportMargin: Infinity
     };
     export var relativePath = '';
-    export var svgFontSize = 14;
     export var svgStrokeWidth = 2;
     export var viewScale: number;
     export var querystringParams: QueryStringParams;
@@ -1034,15 +1033,8 @@ module MakerJsPlayground {
                 annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
                 svgAttrs: {
                     "id": 'drawing',
-                    "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px',
-
-                    //these are here for a bug in either Jquery Pep or Chrome 47 - where the pointer events are not handled by the view
-                    //"ontouchstart": 'MakerJsPlayground.Pointers.viewPointerDown(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));',
-                    //"ontouchmove": 'MakerJsPlayground.Pointers.viewPointerMove(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));',
-                    //"ontouchend": 'MakerJsPlayground.Pointers.viewPointerUp(MakerJsPlayground.Pointers.touchToPointer(arguments[0]));'
-
+                    "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
                 },
-                fontSize: svgFontSize + 'px',
                 strokeWidth: svgStrokeWidth + 'px',
                 scale: viewScale,
                 useSvgPathOnly: false

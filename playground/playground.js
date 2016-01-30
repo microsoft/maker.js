@@ -568,7 +568,6 @@ var MakerJsPlayground;
         viewportMargin: Infinity
     };
     MakerJsPlayground.relativePath = '';
-    MakerJsPlayground.svgFontSize = 14;
     MakerJsPlayground.svgStrokeWidth = 2;
     MakerJsPlayground.pointers = new Pointers('#pointers');
     function runCodeFromEditor() {
@@ -755,9 +754,8 @@ var MakerJsPlayground;
                 annotate: document.getElementById('check-annotate').checked,
                 svgAttrs: {
                     "id": 'drawing',
-                    "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px',
+                    "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
                 },
-                fontSize: MakerJsPlayground.svgFontSize + 'px',
                 strokeWidth: MakerJsPlayground.svgStrokeWidth + 'px',
                 scale: MakerJsPlayground.viewScale,
                 useSvgPathOnly: false
