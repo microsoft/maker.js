@@ -1,5 +1,6 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
 /// <reference path="export-format.ts" />
+/// <reference path="pointer.ts" />
 /// <reference path="../src/core/kit.ts" />
 /// <reference path="../src/models/connectthedots.ts" />
 /// <reference path="../typings/codemirror/codemirror.d.ts" />
@@ -46,371 +47,6 @@ module MakerJsPlayground {
         lineno: number;
         message: string;
         name: string;
-    }
-
-    interface IPointToCanvas {
-        fromCanvas: MakerJs.IPoint;
-        fromDrawingOrigin: MakerJs.IPoint;
-        distanceToOrigin: number;
-    }
-
-    interface IPointer {
-        id: number;
-        type: string;
-        initialPoint: IPointToCanvas;
-        previousPoint: IPointToCanvas;
-        currentPoint: IPointToCanvas;
-    }
-
-    interface IPointerMap {
-        [id: number]: IPointer;
-    }
-
-    //these are the limited subset of props we use
-    interface IMouseEvent {
-        pageX: number;
-        pageY: number;
-        preventDefault: Function;
-        srcElement: Element,
-        stopPropagation: Function;
-    }
-
-    interface IPointerEvent extends IMouseEvent {
-        pointerId: number;
-        pointerType: string;
-    }
-
-    export class Pointers {
-        private viewScaleStart: number = null;
-        private viewPanStart: MakerJs.IPoint = null;
-        private previousMidPoint: MakerJs.IPoint = null;
-        private keepEventElement: HTMLElement;
-        public down: IPointerMap = {};
-        public count: number;
-
-        constructor(public selector) {
-        }
-
-        public reset() {
-            if (this.keepEventElement) {
-                view.removeChild(this.keepEventElement);
-            }
-            this.keepEventElement = null;
-            this.down = {};
-            this.count = 0;
-        }
-
-        public asArray(): IPointer[] {
-
-            var result: IPointer[] = [];
-
-            for (var id in this.down) {
-                result.push(this.down[id]);
-            }
-
-            return result;
-        }
-
-        public average(fromCanvas: boolean): MakerJs.IPoint {
-
-            var all = this.asArray();
-
-            if (all.length == 0) return null;
-
-            var x = 0;
-            var y = 0;
-
-            for (var i = 0; i < all.length; i++) {
-                var p = all[i].currentPoint;
-                var point = fromCanvas ? p.fromCanvas : p.fromDrawingOrigin;
-                x += point[0];
-                y += point[1];
-            }
-
-            return [x / all.length, y / all.length];
-        }
-
-        public erase(): SVGElement {
-            var oldNode = document.querySelector(this.selector) as SVGElement;
-            var domPointers = oldNode.cloneNode(false) as SVGElement;
-            oldNode.parentNode.replaceChild(domPointers, oldNode);
-            return domPointers;
-        }
-
-        private drawPointer(ns: string, point: MakerJs.IPoint, id: string): SVGGElement {
-
-            function createElement(tagName: string, attrs: any) {
-                var el = document.createElementNS(ns, tagName);
-
-                for (var attrName in attrs) {
-                    var value = attrs[attrName];
-                    el.setAttributeNS(null, attrName, value);
-                }
-
-                return el;
-            }
-
-            function createLine(lineId: string, x1: number | string, y1: number | string, x2: number | string, y2: number | string) {
-                return createElement('line', {
-                    "id": lineId,
-                    "x1": x1,
-                    "y1": y1,
-                    "x2": x2,
-                    "y2": y2
-                });
-            }
-
-            var x = createLine('x', point[0], 0, point[0], '100%');
-
-            var y = createLine('y', 0, point[1], '100%', point[1]);
-
-            var g = createElement('g', { "id": id }) as SVGGElement;
-
-            g.appendChild(x);
-            g.appendChild(y);
-
-            return g;
-        }
-
-        public draw() {
-
-            //erase all pointers
-            var domPointers = this.erase();
-
-            var count = 0;
-            var ns = domPointers.getAttribute('xmlns');
-            var maxPointers = 2;
-
-            for (var id in pointers.down) {
-                var pointer = pointers.down[id]
-                domPointers.appendChild(this.drawPointer(ns, pointer.currentPoint.fromCanvas, 'pointer' + count));
-                count++;
-                if (count >= maxPointers) break;
-            }
-        }
-
-        // Find out where an element is on the page
-        // From http://www.quirksmode.org/js/findpos.html
-        public static pageOffset(el: HTMLElement): MakerJs.IPoint {
-            var curleft = 0, curtop = 0;
-            if (el.offsetParent) {
-                do {
-                    curleft += el.offsetLeft;
-                    curtop += el.offsetTop;
-                } while (el = el.offsetParent as HTMLElement);
-            }
-            return [curleft, curtop];
-        }
-
-        public static getPoint(ev: IMouseEvent): IPointToCanvas {
-            var p = makerjs.point;
-            var fromCanvas = p.subtract([ev.pageX, ev.pageY], Pointers.pageOffset(view));
-            var fromView = p.subtract(fromCanvas, [hMargin, vMargin]);
-            var pannedOrigin = p.add(viewOrigin, viewPanOffset);
-            var fromDrawingOrigin = p.scale(p.subtract(fromView, pannedOrigin), 1 / viewScale);
-
-            return {
-                fromCanvas: fromCanvas,
-                fromDrawingOrigin: fromDrawingOrigin,
-                distanceToOrigin: makerjs.measure.pointDistance([0, 0], fromDrawingOrigin)
-            };
-        }
-
-        public static viewClick(e: PointerEvent) {
-
-            var ev = e as IPointerEvent;
-
-            if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
-
-                var text = ev.srcElement as SVGTextElement;
-                var path = text.previousSibling;
-
-                lockToPath(path);
-            }
-        }
-
-        public static touchToPointer(ev: TouchEvent): IPointerEvent {
-
-            return <IPointerEvent>{
-                pageX: ev.changedTouches[0].pageX,
-                pageY: ev.changedTouches[0].pageY,
-                pointerId: ev.changedTouches[0].identifier + 2,
-                pointerType: 'touch',
-                preventDefault: function () {
-                    ev.preventDefault();
-                },
-                srcElement: ev.srcElement,
-                stopPropagation: function () {
-                    ev.stopPropagation();
-                }
-            };
-        }
-
-        public static viewPointerDown(e: PointerEvent) {
-
-            var ev = e as IPointerEvent;
-
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            var point = Pointers.getPoint(ev);
-
-            var p: IPointer = {
-                id: ev.pointerId,
-                type: ev.pointerType,
-                initialPoint: point,
-                previousPoint: point,
-                currentPoint: point
-            };
-
-            pointers.down[p.id] = p;
-            pointers.count++;
-
-            document.body.classList.add('pointing');
-
-            if (pointers.count == 2) {
-                pointers.viewScaleStart = viewScale;
-                pointers.viewPanStart = viewPanOffset;
-
-                //TODO - rename this, and fix bug when swithing between 1 and 2 points
-                pointers.previousMidPoint = pointers.average(false);
-            }
-
-            pointers.draw();
-        }
-
-        public static viewPointerUp(e: PointerEvent) {
-            var ev = e as IPointerEvent;
-
-            if (pointers.down[ev.pointerId]) {
-
-                delete pointers.down[ev.pointerId];
-                pointers.count--;
-
-                //todo: find a way to reset when a pointer exists but is "lost"
-                if (pointers.count == 0) {
-                    document.body.classList.remove('pointing');
-                    pointers.reset();
-                    pointers.erase();
-                } else {
-                    pointers.draw();
-                }
-            }
-        }
-
-        public static viewPointerMove(e: PointerEvent) {
-
-            var ev = e as IPointerEvent;
-
-            var pointerId = ev.pointerId;
-
-            ev.stopPropagation();
-            ev.preventDefault();
-
-            //first we need to deal with the current pointer
-            var currPointer = pointers.down[pointerId];
-            if (!currPointer) return;
-
-            var p = makerjs.point;
-            var panDelta: MakerJs.IPoint;
-            currPointer.previousPoint = currPointer.currentPoint;
-            currPointer.currentPoint = Pointers.getPoint(ev);
-
-            pointers.draw();
-
-            checkFitToScreen.checked = false;
-
-            if (pointers.count == 1) {
-                //simple pan
-
-                panDelta = p.subtract(currPointer.currentPoint.fromCanvas, currPointer.previousPoint.fromCanvas);
-
-                viewPanOffset = p.add(viewPanOffset, panDelta);
-
-                var svgElement = viewSvgContainer.children[0] as HTMLElement;
-
-                //no need to re-render, just move the margin
-                svgElement.style.marginLeft = viewPanOffset[0] + 'px';
-                svgElement.style.marginTop = viewPanOffset[1] + 'px';
-
-
-            } else if (pointers.count == 2) {
-                //zoom
-
-                var pointerArray = pointers.asArray();
-
-                function distance(a: IPointToCanvas, b: IPointToCanvas) {
-                    return makerjs.measure.pointDistance(a.fromCanvas, b.fromCanvas);
-                }
-
-                function midPoint(a: IPointToCanvas, b: IPointToCanvas) {
-                    return p.middle(new makerjs.paths.Line(a.fromDrawingOrigin, b.fromDrawingOrigin));
-                }
-
-                //scale
-                var initialDistance = distance(pointerArray[0].initialPoint, pointerArray[1].initialPoint);
-                var currentDistance = distance(pointerArray[0].currentPoint, pointerArray[1].currentPoint);
-                var scaleDiff = currentDistance / initialDistance;
-
-                var currentMidPoint = midPoint(pointerArray[0].currentPoint, pointerArray[1].currentPoint);
-
-                var currentMidPoint2 = pointers.average(true);
-
-                panDelta = p.subtract(currentMidPoint2, pointers.previousMidPoint);
-
-                viewPanOffset = p.subtract(p.subtract(p.subtract(currentMidPoint2, viewOrigin), [hMargin, vMargin]), p.scale(pointers.previousMidPoint, viewScale));//p.add(viewPanStart, panDelta);
-
-                viewScale = pointers.viewScaleStart * scaleDiff;
-                updateZoomScale();
-
-                setNotes({ x: currentMidPoint });
-
-                if (!pointers.keepEventElement) {
-                    pointers.keepEventElement = viewSvgContainer.children[0] as HTMLElement;
-                    viewSvgContainer.removeChild(pointers.keepEventElement);
-                    pointers.keepEventElement.style.visibility = 'hidden';
-                    view.appendChild(pointers.keepEventElement);
-                }
-
-                render();
-            }
-        }
-
-        public static scaleCenterPoint(newScale: number, centerPoint: MakerJs.IPoint) {
-
-            var p = makerjs.point;
-            var scaledCenterPoint = p.scale(centerPoint, viewScale);
-            var startScale = viewScale;
-
-            viewScale = newScale;
-
-            updateZoomScale();
-            setNotes({ centerPoint: centerPoint, scaled: scaledCenterPoint, viewPanOffset: viewPanOffset });
-
-            var scaleDiff = viewScale / startScale;
-            var scaledMouseFromOrigin = p.scale(scaledCenterPoint, scaleDiff);
-            var mouseDiff = p.subtract(scaledCenterPoint, scaledMouseFromOrigin);
-
-            viewPanOffset = p.add(viewPanOffset, mouseDiff);
-
-            return mouseDiff;
-        }
-
-        public static viewWheel(ev: MouseWheelEvent) {
-
-            ev.preventDefault();
-
-            checkFitToScreen.checked = false;
-
-            var scaleDelta = 1;     //TODO: base the delta, min / max value on model natural size vs window size
-
-            var newScale = Math.max(viewScale + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * scaleDelta, 1);
-
-            Pointers.scaleCenterPoint(newScale, Pointers.getPoint(ev).fromDrawingOrigin);
-
-            render();
-        }
-
     }
 
     //private members
@@ -771,22 +407,59 @@ module MakerJsPlayground {
         window.addEventListener('resize', render);
         window.addEventListener('orientationchange', render);
 
-        //todo - make this work for touch / pointer instead of just click
-        view.addEventListener('click', Pointers.viewClick);
+        pointers = new Pointer.Manager('#pointers', view, [hMargin, vMargin], getZoom, setZoom, onPointerReset);
+    }
 
-        view.addEventListener('wheel', Pointers.viewWheel);
-        view.addEventListener('pointerdown', Pointers.viewPointerDown);
-        view.addEventListener('pointermove', Pointers.viewPointerMove);
+    var keepEventElement: HTMLElement = null;
 
-        view.addEventListener('pointerup', Pointers.viewPointerUp);
+    function onPointerReset() {
 
-        document.addEventListener('touchend', function (e: TouchEvent) {
-            console.log('touches:' + e.touches.length + ' pointers:' + pointers.count);
-            if (!e.touches.length) {
-                pointers.reset();
-                pointers.erase();
+        if (keepEventElement) {
+            view.removeChild(keepEventElement);
+        }
+
+        keepEventElement = null;
+    }
+
+    function getZoom(): Pointer.IPanZoom {
+        return {
+            origin: viewOrigin,
+            pan: viewPanOffset,
+            zoom: viewScale
+        };
+    }
+
+    function setZoom(panZoom: Pointer.IPanZoom) {
+
+        checkFitToScreen.checked = false;
+
+        var svgElement = viewSvgContainer.children[0] as HTMLElement;
+
+        viewPanOffset = panZoom.pan;
+
+        if (panZoom.zoom == viewScale) {
+            //just pan
+
+            //no need to re-render, just move the margin
+            svgElement.style.marginLeft = viewPanOffset[0] + 'px';
+            svgElement.style.marginTop = viewPanOffset[1] + 'px';
+
+        } else {
+            //zoom and pan
+
+            if (!keepEventElement) {
+                keepEventElement = svgElement;
+                viewSvgContainer.removeChild(keepEventElement);
+                keepEventElement.style.visibility = 'hidden';
+                this.view.appendChild(keepEventElement);
             }
-        });
+
+            viewScale = panZoom.zoom;
+
+            updateZoomScale();
+
+            render();
+        }
     }
 
     //public members
@@ -801,7 +474,7 @@ module MakerJsPlayground {
     export var svgStrokeWidth = 2;
     export var viewScale: number;
     export var querystringParams: QueryStringParams;
-    export var pointers = new Pointers('#pointers');
+    export var pointers: Pointer.Manager;
 
     export function runCodeFromEditor() {
         iframe = document.createElement('iframe');
@@ -884,14 +557,14 @@ module MakerJsPlayground {
 
         updateLockedPathNotes();
 
-        render();
-
         //now safe to render, so register a resize listener
         if (init) {
             init = false;
 
             initialize();
         }
+
+        render();
     }
 
     export function setParam(index: number, value: any) {
@@ -971,9 +644,7 @@ module MakerJsPlayground {
 
     export function fitOnScreen() {
 
-        //reset pointers
         pointers.reset();
-        pointers.erase();
 
         checkFitToScreen.checked = true;
 
