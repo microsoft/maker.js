@@ -467,8 +467,16 @@ module MakerJsPlayground {
     }
 
     function getZoom(): Pointer.IPanZoom {
+
+        //expects pixels
+        var scale = 1;
+
+        if (renderUnits) {
+            scale = makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch;
+        }
+
         return {
-            origin: viewOrigin,
+            origin: makerjs.point.scale(viewOrigin, scale),
             pan: viewPanOffset,
             zoom: viewScale
         };
@@ -575,7 +583,7 @@ module MakerJsPlayground {
 
     export function updateZoomScale() {
         var z = document.getElementById('zoom-display');
-        z.innerText = '(' + (viewScale * 100).toFixed(0) + '%)';
+        z.innerText = '(' + (viewScale * (renderUnits ? 100 : 1)).toFixed(0) + '%)';
     }
 
     export function processResult(html: string, result: any) {
@@ -779,11 +787,11 @@ module MakerJsPlayground {
 
         var html = processed.html;
 
+        var unitScale = renderUnits ? makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
+
+        var strokeWidth = svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
+
         if (processed.model) {
-
-            var unitScale = renderUnits ? makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
-
-            var strokeWidth = svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
 
             var fontSize = svgFontSize / unitScale;
 
@@ -828,7 +836,7 @@ module MakerJsPlayground {
             var path = getLockedPathSvgElement();
             if (path) {
                 path.setAttribute('class', 'locked');
-                path.style.strokeWidth = (2 * svgStrokeWidth) + 'px';
+                path.style.strokeWidth = (2 * strokeWidth) + 'px';
             }
         }
 

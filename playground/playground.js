@@ -350,8 +350,13 @@ var MakerJsPlayground;
         keepEventElement = null;
     }
     function getZoom() {
+        //expects pixels
+        var scale = 1;
+        if (MakerJsPlayground.renderUnits) {
+            scale = makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch;
+        }
         return {
-            origin: viewOrigin,
+            origin: makerjs.point.scale(viewOrigin, scale),
             pan: viewPanOffset,
             zoom: MakerJsPlayground.viewScale
         };
@@ -430,7 +435,7 @@ var MakerJsPlayground;
     MakerJsPlayground.setNotes = setNotes;
     function updateZoomScale() {
         var z = document.getElementById('zoom-display');
-        z.innerText = '(' + (MakerJsPlayground.viewScale * 100).toFixed(0) + '%)';
+        z.innerText = '(' + (MakerJsPlayground.viewScale * (MakerJsPlayground.renderUnits ? 100 : 1)).toFixed(0) + '%)';
     }
     MakerJsPlayground.updateZoomScale = updateZoomScale;
     function processResult(html, result) {
@@ -586,9 +591,9 @@ var MakerJsPlayground;
     function render() {
         viewSvgContainer.innerHTML = '';
         var html = processed.html;
+        var unitScale = MakerJsPlayground.renderUnits ? makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
+        var strokeWidth = MakerJsPlayground.svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
         if (processed.model) {
-            var unitScale = MakerJsPlayground.renderUnits ? makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
-            var strokeWidth = MakerJsPlayground.svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
             var fontSize = MakerJsPlayground.svgFontSize / unitScale;
             var renderOptions = {
                 origin: viewOrigin,
@@ -623,7 +628,7 @@ var MakerJsPlayground;
             var path = getLockedPathSvgElement();
             if (path) {
                 path.setAttribute('class', 'locked');
-                path.style.strokeWidth = (2 * MakerJsPlayground.svgStrokeWidth) + 'px';
+                path.style.strokeWidth = (2 * strokeWidth) + 'px';
             }
         }
     }
