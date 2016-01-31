@@ -75,6 +75,8 @@ module Pointer {
         private initialAveragePointFromDrawingOrigin: MakerJs.IPoint = null;
         private previousAveragePointFromCanvas: MakerJs.IPoint = null;
         private isClick: boolean;
+        private wheelTimer: NodeJS.Timer;
+        private wheelTimeout = 250;
 
         public down: IPointerMap = {};
         public count: number;
@@ -146,7 +148,7 @@ module Pointer {
             return domPointers;
         }
 
-        private drawPointer(ns: string, point: MakerJs.IPoint, id: string): SVGGElement {
+        private drawPointer(ns: string, point: MakerJs.IPoint, id: string, isCrossHair: boolean): SVGGElement {
 
             function createElement(tagName: string, attrs: any) {
                 var el = document.createElementNS(ns, tagName);
@@ -159,6 +161,15 @@ module Pointer {
                 return el;
             }
 
+            function createCircle(circleId: string, cx: number | string, cy: number | string, r: number | string) {
+                return createElement('circle', {
+                    "id": circleId,
+                    "cx": cx,
+                    "cy": cy,
+                    "r": r
+                }) as SVGCircleElement;
+            }
+
             function createLine(lineId: string, x1: number | string, y1: number | string, x2: number | string, y2: number | string) {
                 return createElement('line', {
                     "id": lineId,
@@ -166,36 +177,46 @@ module Pointer {
                     "y1": y1,
                     "x2": x2,
                     "y2": y2
-                });
+                }) as SVGLineElement;
             }
-
-            var x = createLine('x', point[0], 0, point[0], '100%');
-
-            var y = createLine('y', 0, point[1], '100%', point[1]);
 
             var g = createElement('g', { "id": id }) as SVGGElement;
 
-            g.appendChild(x);
-            g.appendChild(y);
+            if (isCrossHair) {
+
+                var x = createLine('x', point[0], 0, point[0], '100%');
+                var y = createLine('y', 0, point[1], '100%', point[1]);
+
+                g.appendChild(x);
+                g.appendChild(y);
+
+            } else {
+
+                var c = createCircle('c', point[0], point[1], 35);
+                g.appendChild(c);
+
+            }
 
             return g;
         }
 
-        public draw() {
+        public draw(pointers: IPointer[]) {
 
             //erase all pointers
             var domPointers = this.erase();
 
-            var count = 0;
             var ns = domPointers.getAttribute('xmlns');
-            var maxPointers = 2;
 
-            for (var id in this.down) {
-                var pointer = this.down[id]
-                domPointers.appendChild(this.drawPointer(ns, pointer.current.fromCanvas, 'pointer' + count));
-                count++;
-                if (count >= maxPointers) break;
+            for (var i = 0; i < pointers.length; i++) {
+                var pointer = pointers[i];
+                domPointers.appendChild(this.drawPointer(ns, pointer.current.fromCanvas, 'pointer' + i, pointers.length == 1));
             }
+
+            if (pointers.length == 2) {
+                domPointers.appendChild(this.drawPointer(ns, this.previousAveragePointFromCanvas, 'pointer' + i, true));
+            }
+
+            document.body.classList.add('pointing');
         }
 
         public isWithinMargin(p: IPointRelative): boolean {
@@ -207,6 +228,9 @@ module Pointer {
         }
 
         public viewPointerDown(e: IPointerEvent) {
+
+            clearTimeout(this.wheelTimer);
+
             var pointRelative = this.getPointRelative(e);
 
             if (!this.isWithinMargin(pointRelative)) return;
@@ -214,7 +238,7 @@ module Pointer {
             e.preventDefault();
             e.stopPropagation();
 
-            var p: IPointer = {
+            var pointer: IPointer = {
                 id: e.pointerId,
                 type: e.pointerType,
                 initial: pointRelative,
@@ -223,29 +247,39 @@ module Pointer {
                 srcElement: e.srcElement
             };
 
-            this.down[p.id] = p;
+            this.down[pointer.id] = pointer;
             this.count++;
-
-            document.body.classList.add('pointing');
-
             this.isClick = this.count == 1;
 
-            if (this.count == 2) {
+            switch (this.count) {
+            
+                case 1:
+                    this.draw([pointer]);
+                    break;
 
-                var all = this.asArray();
+                case 2:
+                    var all = this.asArray();
 
-                this.initialZoom = pointRelative.panZoom.zoom;
-                this.initialDistance = distanceBetweenCurrent2Points(all);
-                this.initialAveragePointFromDrawingOrigin = average(all, false);
-                this.previousAveragePointFromCanvas = average(all, true);
+                    this.initialZoom = pointRelative.panZoom.zoom;
+                    this.initialDistance = distanceBetweenCurrent2Points(all);
+                    this.initialAveragePointFromDrawingOrigin = average(all, false);
+                    this.previousAveragePointFromCanvas = average(all, true);
+
+                    this.draw(all);
+                    break;
+
+                default:
+                    this.erase();
+                    break;
             }
-
-            this.draw();
+            
         }
 
         public viewPointerMove(e: IPointerEvent) {
             var pointer = this.down[e.pointerId];
             if (!pointer) return;
+
+            clearTimeout(this.wheelTimer);
 
             var pointRelative = this.getPointRelative(e);
             if (!this.isWithinMargin(pointRelative)) return;
@@ -264,6 +298,8 @@ module Pointer {
                 //simple pan
 
                 panDelta = p.subtract(pointer.current.fromCanvas, pointer.previous.fromCanvas);
+
+                this.draw([pointer]);
 
             } else if (this.count == 2) {
                 //pan with zoom
@@ -285,15 +321,18 @@ module Pointer {
                 var zoomDiff = currentDistance / this.initialDistance;
 
                 this.scaleCenterPoint(panZoom, this.initialZoom * zoomDiff, this.initialAveragePointFromDrawingOrigin);
+
+                this.draw(all);
             }
 
             panZoom.pan = p.add(panZoom.pan, panDelta);
 
-            this.draw();
             this.setZoom(panZoom);
         }
 
         public viewPointerUp(e: IPointerEvent) {
+
+            clearTimeout(this.wheelTimer);
 
             var pointer = this.down[e.pointerId];
             if (pointer) {
@@ -318,7 +357,7 @@ module Pointer {
                     this.reset();
 
                 } else {
-                    this.draw();
+                    this.draw(this.asArray());
                 }
             }
         }
@@ -335,18 +374,33 @@ module Pointer {
             panZoom.pan = p.add(panZoom.pan, centerPointDiff);
         }
 
-        public viewWheel(ev: MouseWheelEvent) {
-            ev.preventDefault();
+        public viewWheel(e: MouseWheelEvent) {
+            e.preventDefault();
 
             this.isClick = false;
 
-            var point = this.getPointRelative(ev);
-            var sign = (ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1;
-            var newZoom = point.panZoom.zoom * (1 + sign * wheelZoomDelta);
+            var pointRelative = this.getPointRelative(e);
+            var pointer: IPointer = {
+                id: 0,
+                type: 'wheel',
+                initial: pointRelative,
+                previous: pointRelative,
+                current: pointRelative,
+                srcElement: e.srcElement
+            };
+            var sign = (e.wheelDelta || e['deltaY']) > 0 ? 1 : -1;
+            var newZoom = pointRelative.panZoom.zoom * (1 + sign * wheelZoomDelta);
 
-            this.scaleCenterPoint(point.panZoom, newZoom, point.fromDrawingOrigin);
+            this.scaleCenterPoint(pointRelative.panZoom, newZoom, pointRelative.fromDrawingOrigin);
 
-            this.setZoom(point.panZoom);
+            this.setZoom(pointRelative.panZoom);
+
+            this.draw([pointer]);
+
+            clearTimeout(this.wheelTimer);
+            this.wheelTimer = setTimeout(() => {
+                this.erase();
+            }, this.wheelTimeout);
         }
 
     }

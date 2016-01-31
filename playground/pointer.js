@@ -24,8 +24,6 @@ var Pointer;
     }
     var Manager = (function () {
         function Manager(view, pointersSelector, margin, getZoom, setZoom, onClick, onReset) {
-            //todo - make this work for touch / pointer instead of just click
-            //view.addEventListener('click', viewClick);
             var _this = this;
             this.view = view;
             this.pointersSelector = pointersSelector;
@@ -36,6 +34,7 @@ var Pointer;
             this.onReset = onReset;
             this.initialAveragePointFromDrawingOrigin = null;
             this.previousAveragePointFromCanvas = null;
+            this.wheelTimeout = 250;
             this.down = {};
             view.addEventListener('wheel', function (e) { _this.viewWheel(e); });
             view.addEventListener('pointerdown', function (e) { _this.viewPointerDown(e); });
@@ -83,7 +82,7 @@ var Pointer;
             oldNode.parentNode.replaceChild(domPointers, oldNode);
             return domPointers;
         };
-        Manager.prototype.drawPointer = function (ns, point, id) {
+        Manager.prototype.drawPointer = function (ns, point, id, isCrossHair) {
             function createElement(tagName, attrs) {
                 var el = document.createElementNS(ns, tagName);
                 for (var attrName in attrs) {
@@ -91,6 +90,14 @@ var Pointer;
                     el.setAttributeNS(null, attrName, value);
                 }
                 return el;
+            }
+            function createCircle(circleId, cx, cy, r) {
+                return createElement('circle', {
+                    "id": circleId,
+                    "cx": cx,
+                    "cy": cy,
+                    "r": r
+                });
             }
             function createLine(lineId, x1, y1, x2, y2) {
                 return createElement('line', {
@@ -101,26 +108,31 @@ var Pointer;
                     "y2": y2
                 });
             }
-            var x = createLine('x', point[0], 0, point[0], '100%');
-            var y = createLine('y', 0, point[1], '100%', point[1]);
             var g = createElement('g', { "id": id });
-            g.appendChild(x);
-            g.appendChild(y);
+            if (isCrossHair) {
+                var x = createLine('x', point[0], 0, point[0], '100%');
+                var y = createLine('y', 0, point[1], '100%', point[1]);
+                g.appendChild(x);
+                g.appendChild(y);
+            }
+            else {
+                var c = createCircle('c', point[0], point[1], 35);
+                g.appendChild(c);
+            }
             return g;
         };
-        Manager.prototype.draw = function () {
+        Manager.prototype.draw = function (pointers) {
             //erase all pointers
             var domPointers = this.erase();
-            var count = 0;
             var ns = domPointers.getAttribute('xmlns');
-            var maxPointers = 2;
-            for (var id in this.down) {
-                var pointer = this.down[id];
-                domPointers.appendChild(this.drawPointer(ns, pointer.current.fromCanvas, 'pointer' + count));
-                count++;
-                if (count >= maxPointers)
-                    break;
+            for (var i = 0; i < pointers.length; i++) {
+                var pointer = pointers[i];
+                domPointers.appendChild(this.drawPointer(ns, pointer.current.fromCanvas, 'pointer' + i, pointers.length == 1));
             }
+            if (pointers.length == 2) {
+                domPointers.appendChild(this.drawPointer(ns, this.previousAveragePointFromCanvas, 'pointer' + i, true));
+            }
+            document.body.classList.add('pointing');
         };
         Manager.prototype.isWithinMargin = function (p) {
             if (!makerjs.measure.isBetween(p.fromCanvas[0], this.margin[0], this.view.offsetWidth - this.margin[0], false))
@@ -130,12 +142,13 @@ var Pointer;
             return true;
         };
         Manager.prototype.viewPointerDown = function (e) {
+            clearTimeout(this.wheelTimer);
             var pointRelative = this.getPointRelative(e);
             if (!this.isWithinMargin(pointRelative))
                 return;
             e.preventDefault();
             e.stopPropagation();
-            var p = {
+            var pointer = {
                 id: e.pointerId,
                 type: e.pointerType,
                 initial: pointRelative,
@@ -143,24 +156,31 @@ var Pointer;
                 current: pointRelative,
                 srcElement: e.srcElement
             };
-            this.down[p.id] = p;
+            this.down[pointer.id] = pointer;
             this.count++;
-            document.body.classList.add('pointing');
             this.isClick = this.count == 1;
-            if (this.count == 2) {
-                //TODO - fix bug when swithing between 1 and 2 points in IE
-                var all = this.asArray();
-                this.initialZoom = pointRelative.panZoom.zoom;
-                this.initialDistance = distanceBetweenCurrent2Points(all);
-                this.initialAveragePointFromDrawingOrigin = average(all, false);
-                this.previousAveragePointFromCanvas = average(all, true);
+            switch (this.count) {
+                case 1:
+                    this.draw([pointer]);
+                    break;
+                case 2:
+                    var all = this.asArray();
+                    this.initialZoom = pointRelative.panZoom.zoom;
+                    this.initialDistance = distanceBetweenCurrent2Points(all);
+                    this.initialAveragePointFromDrawingOrigin = average(all, false);
+                    this.previousAveragePointFromCanvas = average(all, true);
+                    this.draw(all);
+                    break;
+                default:
+                    this.erase();
+                    break;
             }
-            this.draw();
         };
         Manager.prototype.viewPointerMove = function (e) {
             var pointer = this.down[e.pointerId];
             if (!pointer)
                 return;
+            clearTimeout(this.wheelTimer);
             var pointRelative = this.getPointRelative(e);
             if (!this.isWithinMargin(pointRelative))
                 return;
@@ -174,6 +194,7 @@ var Pointer;
             if (this.count == 1) {
                 //simple pan
                 panDelta = p.subtract(pointer.current.fromCanvas, pointer.previous.fromCanvas);
+                this.draw([pointer]);
             }
             else if (this.count == 2) {
                 //pan with zoom
@@ -186,12 +207,13 @@ var Pointer;
                 var currentDistance = distanceBetweenCurrent2Points(all);
                 var zoomDiff = currentDistance / this.initialDistance;
                 this.scaleCenterPoint(panZoom, this.initialZoom * zoomDiff, this.initialAveragePointFromDrawingOrigin);
+                this.draw(all);
             }
             panZoom.pan = p.add(panZoom.pan, panDelta);
-            this.draw();
             this.setZoom(panZoom);
         };
         Manager.prototype.viewPointerUp = function (e) {
+            clearTimeout(this.wheelTimer);
             var pointer = this.down[e.pointerId];
             if (pointer) {
                 e.stopPropagation();
@@ -208,7 +230,7 @@ var Pointer;
                     this.reset();
                 }
                 else {
-                    this.draw();
+                    this.draw(this.asArray());
                 }
             }
         };
@@ -222,14 +244,28 @@ var Pointer;
             panZoom.zoom = newZoom;
             panZoom.pan = p.add(panZoom.pan, centerPointDiff);
         };
-        Manager.prototype.viewWheel = function (ev) {
-            ev.preventDefault();
+        Manager.prototype.viewWheel = function (e) {
+            var _this = this;
+            e.preventDefault();
             this.isClick = false;
-            var point = this.getPointRelative(ev);
-            var sign = (ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1;
-            var newZoom = point.panZoom.zoom * (1 + sign * Pointer.wheelZoomDelta);
-            this.scaleCenterPoint(point.panZoom, newZoom, point.fromDrawingOrigin);
-            this.setZoom(point.panZoom);
+            var pointRelative = this.getPointRelative(e);
+            var pointer = {
+                id: 0,
+                type: 'wheel',
+                initial: pointRelative,
+                previous: pointRelative,
+                current: pointRelative,
+                srcElement: e.srcElement
+            };
+            var sign = (e.wheelDelta || e['deltaY']) > 0 ? 1 : -1;
+            var newZoom = pointRelative.panZoom.zoom * (1 + sign * Pointer.wheelZoomDelta);
+            this.scaleCenterPoint(pointRelative.panZoom, newZoom, pointRelative.fromDrawingOrigin);
+            this.setZoom(pointRelative.panZoom);
+            this.draw([pointer]);
+            clearTimeout(this.wheelTimer);
+            this.wheelTimer = setTimeout(function () {
+                _this.erase();
+            }, this.wheelTimeout);
         };
         return Manager;
     })();

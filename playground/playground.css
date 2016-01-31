@@ -235,8 +235,15 @@ svg#pointers, #touch-shield {
     width: 100%;
 }
 
+svg#pointers circle {
+    stroke: #00B2B2;
+    stroke-width: 1px;
+    fill: #0059B2;
+    opacity: 0.5;
+}
+
 svg#pointers line {
-    stroke: #00f;
+    stroke: #00468C;
     stroke-width: 1px;
 }
 
