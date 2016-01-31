@@ -6,8 +6,6 @@
 /// <reference path="../typings/codemirror/codemirror.d.ts" />
 /// <reference path="../typings/marked/marked.d.ts" />
 
-declare var makerjs: typeof MakerJs;
-
 module MakerJsPlayground {
 
     //classes

@@ -1,3 +1,7 @@
+/// <reference path="../src/core/angle.ts" />
+/// <reference path="../src/core/intersect.ts" />
+/// <reference path="../src/core/measure.ts" />
+/// <reference path="../src/core/units.ts" />
 var Pointer;
 (function (Pointer) {
     function distanceBetweenCurrent2Points(all) {
@@ -115,10 +119,19 @@ var Pointer;
                     break;
             }
         };
+        Manager.prototype.isWithinMargin = function (p) {
+            if (!makerjs.measure.isBetween(p.fromCanvas[0], this.margin[0], this.view.offsetWidth - this.margin[0], false))
+                return false;
+            if (!makerjs.measure.isBetween(p.fromCanvas[1], this.margin[1], this.view.offsetHeight - this.margin[1], false))
+                return false;
+            return true;
+        };
         Manager.prototype.viewPointerDown = function (e) {
+            var pointRelative = this.getPointRelative(e);
+            if (!this.isWithinMargin(pointRelative))
+                return;
             e.preventDefault();
             e.stopPropagation();
-            var pointRelative = this.getPointRelative(e);
             var p = {
                 id: e.pointerId,
                 type: e.pointerType,
@@ -142,10 +155,13 @@ var Pointer;
             var pointer = this.down[e.pointerId];
             if (!pointer)
                 return;
+            var pointRelative = this.getPointRelative(e);
+            if (!this.isWithinMargin(pointRelative))
+                return;
             e.stopPropagation();
             e.preventDefault();
             pointer.previous = pointer.current;
-            pointer.current = this.getPointRelative(e);
+            pointer.current = pointRelative;
             var panZoom = pointer.current.panZoom;
             var p = makerjs.point;
             var panDelta;
@@ -218,4 +234,3 @@ var Pointer;
     }
     Pointer.pageOffset = pageOffset;
 })(Pointer || (Pointer = {}));
-//# sourceMappingURL=pointer.js.map
