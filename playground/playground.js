@@ -311,6 +311,23 @@ var MakerJsPlayground;
         measure.low = makerjs.point.add(measure.low, pathAndOffset.offset);
         return measure;
     }
+    function getModelNaturalSize() {
+        var measure = processed.measurement;
+        var modelWidthNatural = measure.high[0] - measure.low[0];
+        var modelHeightNatural = measure.high[1] - measure.low[1];
+        return [modelWidthNatural, modelHeightNatural];
+    }
+    function getViewSize() {
+        var viewHeight = view.offsetHeight - 2 * margin[1];
+        var viewWidth = view.offsetWidth - 2 * margin[0];
+        var menuLeft = customizeMenu.offsetLeft - 2 * margin[0];
+        var width = viewWidth;
+        //view mode - left of menu
+        if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
+            width = menuLeft;
+        }
+        return [width, viewHeight];
+    }
     function areSameHeightMeasurement(a, b) {
         return a.high[1] == b.high[1] && a.low[1] == b.low[1];
     }
@@ -368,6 +385,10 @@ var MakerJsPlayground;
         if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
             fitOnScreen();
         }
+        else if (MakerJsPlayground.renderUnits != processed.model.units) {
+            fitNatural();
+        }
+        render();
         updateLockedPathNotes();
     }
     MakerJsPlayground.codeMirrorOptions = {
@@ -377,6 +398,7 @@ var MakerJsPlayground;
     };
     MakerJsPlayground.relativePath = '';
     MakerJsPlayground.svgStrokeWidth = 2;
+    MakerJsPlayground.svgFontSize = 14;
     function runCodeFromEditor() {
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
@@ -446,7 +468,6 @@ var MakerJsPlayground;
             initialize();
         }
         onProcessed();
-        render();
     }
     MakerJsPlayground.processResult = processResult;
     function setParam(index, value) {
@@ -466,14 +487,10 @@ var MakerJsPlayground;
         }
         resetDownload();
         processed.paramValues[index] = value;
-        //see if output is either a Node module, or a MakerJs.IModel
-        if (processed.kit) {
-            //construct an IModel from the kit
-            processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
-            processed.measurement = null;
-            onProcessed();
-        }
-        render();
+        //construct an IModel from the kit
+        processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+        processed.measurement = null;
+        onProcessed();
     }
     MakerJsPlayground.setParam = setParam;
     function toggleSliderNumberBox(label, index) {
@@ -515,45 +532,64 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.deActivateParam = deActivateParam;
     function fitNatural() {
+        MakerJsPlayground.pointers.reset();
+        var size = getViewSize();
+        var halfWidth = size[0] / 2;
+        var modelNaturalSize = getModelNaturalSize();
         MakerJsPlayground.viewScale = 1;
-        //todo: use units to determine origin and stroke
-        //viewOrigin = [4, 2];
+        viewPanOffset = [0, 0];
+        checkFitToScreen.checked = false;
+        MakerJsPlayground.renderUnits = processed.model.units || null;
+        if (processed.model.units) {
+            //from pixels, to inch, then to units
+            var widthToInch = size[0] / pixelsPerInch;
+            var toUnits = makerjs.units.conversionScale(makerjs.unitType.Inch, processed.model.units) * widthToInch;
+            halfWidth = toUnits / 2;
+        }
+        halfWidth -= modelNaturalSize[0] / 2 + processed.measurement.low[0];
+        viewOrigin = [halfWidth, processed.measurement.high[1]];
+        updateZoomScale();
     }
     MakerJsPlayground.fitNatural = fitNatural;
     function fitOnScreen() {
         MakerJsPlayground.pointers.reset();
-        checkFitToScreen.checked = true;
-        var measure = processed.measurement;
-        var modelHeightNatural = measure.high[1] - measure.low[1];
-        var modelWidthNatural = measure.high[0] - measure.low[0];
-        var viewHeight = view.offsetHeight - 2 * margin[1];
-        var v2 = viewHeight / 2;
-        var viewWidth = document.getElementById('view-params').offsetWidth - 2 * margin[0];
-        var menuLeft = customizeMenu.offsetLeft - 2 * margin[0];
-        viewPanOffset = [0, 0];
+        var size = getViewSize();
+        var halfWidth = size[0] / 2;
+        var modelNaturalSize = getModelNaturalSize();
         MakerJsPlayground.viewScale = 1;
-        //view mode - left of menu
-        if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
-            viewWidth = menuLeft;
-        }
+        viewPanOffset = [0, 0];
+        checkFitToScreen.checked = true;
+        MakerJsPlayground.renderUnits = null;
         if (processed.model.units) {
             //cast into inches, then to pixels
             MakerJsPlayground.viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
         }
-        var modelWidthInPixels = makerjs.round(modelWidthNatural * MakerJsPlayground.viewScale, .1);
-        var modelHeightInPixels = makerjs.round(modelHeightNatural * MakerJsPlayground.viewScale, .1);
-        var scaleHeight = viewHeight / modelHeightInPixels;
-        var scaleWidth = viewWidth / modelWidthInPixels;
+        var modelPixelSize = makerjs.point.rounded(makerjs.point.scale(modelNaturalSize, MakerJsPlayground.viewScale), .1);
+        var scaleHeight = size[1] / modelPixelSize[1];
+        var scaleWidth = size[0] / modelPixelSize[0];
         MakerJsPlayground.viewScale *= Math.min(scaleWidth, scaleHeight);
+        halfWidth -= (modelNaturalSize[0] / 2 + processed.measurement.low[0]) * MakerJsPlayground.viewScale;
+        viewOrigin = [halfWidth, processed.measurement.high[1] * MakerJsPlayground.viewScale];
         updateZoomScale();
-        viewOrigin = [viewWidth / 2 - (modelWidthNatural / 2 + measure.low[0]) * MakerJsPlayground.viewScale, measure.high[1] * MakerJsPlayground.viewScale];
     }
     MakerJsPlayground.fitOnScreen = fitOnScreen;
+    function browserIsMicrosoft() {
+        var clues = ['Edge/', 'Trident/'];
+        for (var i = 0; i < clues.length; i++) {
+            if (navigator.userAgent.indexOf(clues[i]) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    MakerJsPlayground.browserIsMicrosoft = browserIsMicrosoft;
     function render() {
-        //remove content so default size can be measured
         viewSvgContainer.innerHTML = '';
         var html = processed.html;
         if (processed.model) {
+            var unitScale = MakerJsPlayground.renderUnits ? makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
+            var strokeWidth = MakerJsPlayground.svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
+            var fontSize = MakerJsPlayground.svgFontSize / unitScale;
             var renderOptions = {
                 origin: viewOrigin,
                 annotate: document.getElementById('check-annotate').checked,
@@ -561,7 +597,8 @@ var MakerJsPlayground;
                     "id": 'drawing',
                     "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
                 },
-                strokeWidth: MakerJsPlayground.svgStrokeWidth + 'px',
+                strokeWidth: strokeWidth + 'px',
+                fontSize: fontSize + 'px',
                 scale: MakerJsPlayground.viewScale,
                 useSvgPathOnly: false
             };
@@ -570,6 +607,9 @@ var MakerJsPlayground;
                     ROOT: processed.model
                 }
             };
+            if (MakerJsPlayground.renderUnits) {
+                renderModel.units = MakerJsPlayground.renderUnits;
+            }
             if (document.getElementById('check-show-origin').checked) {
                 renderModel.paths = {
                     'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(processed.measurement.low[1], 0)], [0, Math.max(processed.measurement.high[1], 0)]),

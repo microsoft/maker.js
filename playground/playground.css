@@ -210,7 +210,6 @@ svg#drawing .locked {
 }
 
 #view svg#drawing text {
-    font-size: 16px;
     fill: turquoise;
     stroke: none;
 }
@@ -221,7 +220,6 @@ svg#drawing .locked {
 
 #view #crosshairs-vertical, #view #crosshairs-horizontal {
     stroke: midnightblue;
-    stroke-width: 1;
 }
 
 #crosshairs-horizontal_text, #crosshairs-vertical_text {
