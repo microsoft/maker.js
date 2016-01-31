@@ -89,9 +89,6 @@ module Pointer {
             private onReset: () => any
         ) {
 
-            //todo - make this work for touch / pointer instead of just click
-            //view.addEventListener('click', viewClick);
-
             view.addEventListener('wheel', (e: MouseWheelEvent) => { this.viewWheel(e); });
             view.addEventListener('pointerdown', (e: PointerEvent) => { this.viewPointerDown(e as IPointerEvent); });
             view.addEventListener('pointermove', (e: PointerEvent) => { this.viewPointerMove(e as IPointerEvent); });
@@ -234,8 +231,6 @@ module Pointer {
             this.isClick = this.count == 1;
 
             if (this.count == 2) {
-
-                //TODO - fix bug when swithing between 1 and 2 points in IE
 
                 var all = this.asArray();
 
