@@ -78,7 +78,7 @@ module MakerJs.exporter {
                 for (var id in modelToExport.paths) {
                     var currPath = modelToExport.paths[id];
                     if (!currPath) continue;
-                    this.exportPath(id, currPath, newOffset, modelToExport.layer);
+                    this.exportPath(id, currPath, newOffset, currPath.layer || modelToExport.layer);
                 }
             }
 
