@@ -3,7 +3,7 @@
 <head>
     <title>Maker.js Playground</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
     <!--
         
@@ -29,6 +29,7 @@
     <link href="../external/codemirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../external/codemirror/theme/twilight.css" rel="stylesheet" />
     <link href="playground.css" rel="stylesheet" />
+    <script src="../external/pep/pep.js"></script>
     <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
@@ -39,6 +40,7 @@
     </script>
 
     <script src="export-format.js"></script>
+    <script src="pointer.js"></script>
     <script src="playground.js"></script>
     <script>
         //config
@@ -58,16 +60,20 @@
 
     <section id="blueprint-canvas">
         <div id="view-params">
-            <div id="view"><div id="view-measure"></div></div>
+            <div id="view" touch-action="none" class="noselect">
+                <div id="view-svg-container"></div>
+                <svg id="pointers" xmlns="http://www.w3.org/2000/svg"></svg>
+                <div id="touch-shield"></div>
+            </div>
             <div id="rendering-options-menu" class="noselect">
                 <div id="params"></div>
                 <div class="view-controls">
                     <div>
                         <hr />
                     </div>
-                    <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="MakerJsPlayground.render()" /> fit on screen</label></div>
-                    <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.render()" /> show origin</label></div>
-                    <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.render()" /> show path names</label></div>
+                    <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label></div>
+                    <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show origin</label></div>
+                    <div><label><input id="check-annotate" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label></div>
                     <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
                 </div>
             </div>

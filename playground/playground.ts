@@ -1,11 +1,10 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
 /// <reference path="export-format.ts" />
+/// <reference path="pointer.ts" />
 /// <reference path="../src/core/kit.ts" />
 /// <reference path="../src/models/connectthedots.ts" />
 /// <reference path="../typings/codemirror/codemirror.d.ts" />
 /// <reference path="../typings/marked/marked.d.ts" />
-
-declare var makerjs: typeof MakerJs;
 
 module MakerJsPlayground {
 
@@ -35,6 +34,7 @@ module MakerJsPlayground {
         html: string;
         kit: MakerJs.IKit;
         model: MakerJs.IModel;
+        measurement: MakerJs.IMeasure;
         paramValues: any[],
         paramHtml: string;
         lockedPath?: ILockedPath;
@@ -53,14 +53,16 @@ module MakerJsPlayground {
     var iframe: HTMLIFrameElement;
     var customizeMenu: HTMLDivElement;
     var view: HTMLDivElement;
+    var viewSvgContainer: HTMLDivElement;
     var progress: HTMLDivElement;
     var preview: HTMLTextAreaElement;
-    var hMargin: number;
-    var vMargin: number;
+    var checkFitToScreen: HTMLInputElement;
+    var margin: MakerJs.IPoint;
     var processed: IProcessedResult = {
         html: '',
         kit: null,
         model: null,
+        measurement: null,
         paramValues: [],
         paramHtml: ''
     };
@@ -69,15 +71,13 @@ module MakerJsPlayground {
     var exportWorker: Worker = null;
     var paramActiveTimeout: NodeJS.Timer;
     var longHoldTimeout: NodeJS.Timer;
-    var viewModelRootSelector = 'svg > g > g > g';
-    var zoomOutLockedPath = 0.44;
+    var viewModelRootSelector = 'svg#drawing > g > g > g';
+    var viewOrigin: MakerJs.IPoint;
+    var viewPanOffset: MakerJs.IPoint = [0, 0];
+    var keepEventElement: HTMLElement = null;
 
-    function getZoom() {
-        var landscape = (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
-
-        var zoom = (landscape ? window.innerWidth : window.innerHeight) / document.body.clientWidth;
-
-        MakerJsPlayground.windowZoom = Math.max(0.15, Math.min(zoom, 1));
+    function isLandscapeOrientation() {
+        return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
     }
 
     function isHttp(url: string): boolean {
@@ -258,10 +258,21 @@ module MakerJsPlayground {
         document.body.classList.remove('download-ready');
     }
 
+    function Frown() {
+        this.paths = {
+            head: new makerjs.paths.Circle([0, 0], 85),
+            eye1: new makerjs.paths.Circle([-25, 25], 10),
+            eye2: new makerjs.paths.Circle([25, 25], 10),
+            frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
+        };
+    }
+
     function highlightCodeError(error: IJavaScriptErrorDetails) {
 
+        var notes = '';
+
         if (error.lineno || error.colno) {
-            processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
+            notes = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
 
             var editorLine = error.lineno - 1;
 
@@ -274,9 +285,15 @@ module MakerJsPlayground {
             };
 
             errorMarker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
+
         } else {
-            processed.html = error.name + ' : ' + error.message;
+            notes = error.name + ' : ' + error.message;
         }
+
+        viewScale = null;
+        processed.model = new Frown();
+        setNotes(notes);
+        document.body.classList.remove('collapse-notes');
     }
 
     function arraysEqual(a, b) {
@@ -289,20 +306,10 @@ module MakerJsPlayground {
         return true;
     }
 
-    function viewClick(ev: MouseEvent) {
-        if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
-
-            var text = ev.srcElement as SVGTextElement;
-            var path = text.previousSibling;
-
-            lockToPath(path);
-        }
-    }
-
     function lockToPath(path: Node) {
         
         //trace back to root
-        var root = view.querySelector(viewModelRootSelector) as SVGGElement;
+        var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGGElement;
         var route: string[] = [];
         var element = path;
 
@@ -347,7 +354,7 @@ module MakerJsPlayground {
     }
 
     function getLockedPathSvgElement() {
-        var root = view.querySelector(viewModelRootSelector) as SVGGElement;
+        var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGGElement;
         var selector = '';
 
         for (var i = 0; i < processed.lockedPath.route.length - 2; i += 2) {
@@ -406,8 +413,130 @@ module MakerJsPlayground {
         return measure;
     }
 
+    function getModelNaturalSize(): MakerJs.IPoint {
+        var measure = processed.measurement;
+        var modelWidthNatural = measure.high[0] - measure.low[0];
+        var modelHeightNatural = measure.high[1] - measure.low[1];
+        return [modelWidthNatural, modelHeightNatural];
+    }
+
+    function getViewSize(): MakerJs.IPoint {
+        var viewHeight = view.offsetHeight - 2 * margin[1];
+        var viewWidth = view.offsetWidth - 2 * margin[0];
+        var menuLeft = customizeMenu.offsetLeft - 2 * margin[0];
+
+        var width = viewWidth;
+
+        //view mode - left of menu
+        if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
+            width = menuLeft;
+        }
+
+        return [width, viewHeight];
+    }
+
     function areSameHeightMeasurement(a: MakerJs.IMeasure, b: MakerJs.IMeasure) {
         return a.high[1] == b.high[1] && a.low[1] == b.low[1];
+    }
+
+    function initialize() {
+
+        window.addEventListener('resize', onWindowResize);
+        window.addEventListener('orientationchange', onWindowResize);
+
+        pointers = new Pointer.Manager(view, '#pointers', margin, getZoom, setZoom, onPointerClick, onPointerReset);
+    }
+
+    function onPointerClick(srcElement: Element) {
+        if (!keepEventElement && srcElement && srcElement.tagName && srcElement.tagName == 'text') {
+
+            var text = srcElement as SVGTextElement;
+            var path = text.previousSibling;
+
+            lockToPath(path);
+        }
+    }
+
+    function onPointerReset() {
+
+        if (keepEventElement) {
+            view.removeChild(keepEventElement);
+        }
+
+        keepEventElement = null;
+    }
+
+    function getZoom(): Pointer.IPanZoom {
+
+        //expects pixels
+        var scale = 1;
+
+        if (renderUnits) {
+            scale = makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch;
+        }
+
+        return {
+            origin: makerjs.point.scale(viewOrigin, scale),
+            pan: viewPanOffset,
+            zoom: viewScale
+        };
+    }
+
+    function setZoom(panZoom: Pointer.IPanZoom) {
+
+        checkFitToScreen.checked = false;
+
+        var svgElement = viewSvgContainer.children[0] as HTMLElement;
+
+        viewPanOffset = panZoom.pan;
+
+        if (panZoom.zoom == viewScale) {
+            //just pan
+
+            //no need to re-render, just move the margin
+            svgElement.style.marginLeft = viewPanOffset[0] + 'px';
+            svgElement.style.marginTop = viewPanOffset[1] + 'px';
+
+        } else {
+            //zoom and pan
+
+            if (!keepEventElement) {
+                keepEventElement = svgElement;
+                viewSvgContainer.removeChild(keepEventElement);
+                keepEventElement.style.visibility = 'hidden';
+                this.view.appendChild(keepEventElement);
+            }
+
+            viewScale = panZoom.zoom;
+
+            updateZoomScale();
+
+            render();
+        }
+    }
+
+    function onProcessed() {
+
+        //todo: find minimum viewScale
+
+        processed.measurement = makerjs.measure.modelExtents(processed.model);
+
+        if (!viewScale || checkFitToScreen.checked) {
+            fitOnScreen();
+        } else if (renderUnits != processed.model.units) {
+            fitNatural();
+        }
+
+        render();
+
+        updateLockedPathNotes();
+    }
+
+    function onWindowResize() {
+        if (checkFitToScreen.checked) {
+            fitOnScreen();
+            render();
+        }
     }
 
     //public members
@@ -419,10 +548,12 @@ module MakerJsPlayground {
         viewportMargin: Infinity
     };
     export var relativePath = '';
-    export var svgFontSize = 14;
     export var svgStrokeWidth = 2;
-    export var windowZoom = 1;
+    export var svgFontSize = 14;
+    export var viewScale: number;
+    export var renderUnits: string;
     export var querystringParams: QueryStringParams;
+    export var pointers: Pointer.Manager;
 
     export function runCodeFromEditor() {
         iframe = document.createElement('iframe');
@@ -435,7 +566,17 @@ module MakerJsPlayground {
         iframe.contentWindow.document.close();
     }
 
-    export function setNotes(markdown: string) {
+    export function setNotes(obj: Object);
+    export function setNotes(markdown: string);
+    export function setNotes(value: any) {
+        var markdown = '';
+
+        if (typeof value === 'string') {
+            markdown = value;
+        } else {
+            markdown = JSON.stringify(value);
+        }
+
         var className = 'no-notes';
         var html = '';
         if (markdown) {
@@ -445,6 +586,11 @@ module MakerJsPlayground {
             document.body.classList.add(className);
         }
         document.getElementById('notes').innerHTML = html;
+    }
+
+    export function updateZoomScale() {
+        var z = document.getElementById('zoom-display');
+        z.innerText = '(' + (viewScale * (renderUnits ? 100 : 1)).toFixed(0) + '%)';
     }
 
     export function processResult(html: string, result: any) {
@@ -459,6 +605,7 @@ module MakerJsPlayground {
 
         processed.html = html;
         processed.model = null;
+        processed.measurement = null;
         processed.paramValues = null;
         processed.paramHtml = '';
 
@@ -487,24 +634,14 @@ module MakerJsPlayground {
 
         document.getElementById('params').innerHTML = processed.paramHtml;
 
-        updateLockedPathNotes();
-
-        render();
-
         //now safe to render, so register a resize listener
         if (init) {
             init = false;
 
-            //todo - still need double tap
-            window.addEventListener('resize', render);
-            window.addEventListener('orientationchange', render);
-            view.addEventListener('touchend', function () {
-                document.body.classList.add('collapse-rendering-options');
-                render();
-            });
-
-            view.addEventListener('click', viewClick);
+            initialize();
         }
+
+        onProcessed();
     }
 
     export function setParam(index: number, value: any) {
@@ -528,16 +665,11 @@ module MakerJsPlayground {
 
         processed.paramValues[index] = value;
 
-        //see if output is either a Node module, or a MakerJs.IModel
-        if (processed.kit) {
+        //construct an IModel from the kit
+        processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+        processed.measurement = null;
 
-            //construct an IModel from the kit
-            processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
-
-            updateLockedPathNotes();
-        }
-
-        render();
+        onProcessed();
     }
 
     export function toggleSliderNumberBox(label: HTMLLabelElement, index: number) {
@@ -581,74 +713,104 @@ module MakerJsPlayground {
         }, delay);
     }
 
-    export function render() {
-        getZoom();
+    export function fitNatural() {
 
-        //remove content so default size can be measured
-        view.innerHTML = '';
+        pointers.reset();
+
+        var size = getViewSize();
+        var halfWidth = size[0] / 2;
+        var modelNaturalSize = getModelNaturalSize();
+
+        viewScale = 1;
+        viewPanOffset = [0, 0];
+
+        checkFitToScreen.checked = false;
+
+        renderUnits = processed.model.units || null;
+
+        if (processed.model.units) {
+            //from pixels, to inch, then to units
+            var widthToInch = size[0] / pixelsPerInch;
+            var toUnits = makerjs.units.conversionScale(makerjs.unitType.Inch, processed.model.units) * widthToInch;
+
+            halfWidth = toUnits / 2;
+        }
+
+        halfWidth -= modelNaturalSize[0] / 2 + processed.measurement.low[0];
+
+        viewOrigin = [halfWidth, processed.measurement.high[1]];
+
+        updateZoomScale();
+    }
+
+    export function fitOnScreen() {
+
+        pointers.reset();
+
+        var size = getViewSize();
+        var halfWidth = size[0] / 2;
+        var modelNaturalSize = getModelNaturalSize();
+
+        viewScale = 1;
+        viewPanOffset = [0, 0];
+
+        checkFitToScreen.checked = true;
+
+        renderUnits = null;
+
+        if (processed.model.units) {
+            //cast into inches, then to pixels
+            viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
+        }
+
+        var modelPixelSize = makerjs.point.rounded(makerjs.point.scale(modelNaturalSize, viewScale), .1);
+
+        var scaleHeight = size[1] / modelPixelSize[1];
+        var scaleWidth = size[0] / modelPixelSize[0];
+
+        viewScale *= Math.min(scaleWidth, scaleHeight);
+
+        halfWidth -= (modelNaturalSize[0] / 2 + processed.measurement.low[0]) * viewScale;
+
+        viewOrigin = [halfWidth, processed.measurement.high[1] * viewScale];
+
+        updateZoomScale();
+    }
+
+    export function browserIsMicrosoft() {
+        var clues = ['Edge/', 'Trident/'];
+
+        for (var i = 0; i < clues.length; i++) {
+            if (navigator.userAgent.indexOf(clues[i]) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    export function render() {
+
+        viewSvgContainer.innerHTML = '';
 
         var html = processed.html;
 
+        var unitScale = renderUnits ? makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
+
+        var strokeWidth = svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
+
         if (processed.model) {
-            var annotate = (<HTMLInputElement>document.getElementById('check-annotate')).checked;
-            var fitOnScreen = (<HTMLInputElement>document.getElementById('check-fit-on-screen')).checked;
-            var measureModel = makerjs.measure.modelExtents(processed.model);
-            var measure = measureLockedPath();
 
-            if (!measure || !fitOnScreen || !annotate) {
-                measure = measureModel;
-            }
-
-            var modelHeightNatural = measure.high[1] - measure.low[1];
-            var modelWidthNatural = measure.high[0] - measure.low[0];
-            var viewHeight = view.offsetHeight - 2 * vMargin;
-            var viewWidth = document.getElementById('view-params').offsetWidth - 2 * hMargin;
-            var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
-            var viewScale = 1;
-
-            //view mode - left of menu
-            if (!document.body.classList.contains('collapse-rendering-options') && menuLeft > 100) {
-                viewWidth = menuLeft;
-            }
-
-            if (processed.model.units) {
-                //cast into inches, then to pixels
-                viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
-            }
-
-            var modelWidthInPixels = makerjs.round(modelWidthNatural * viewScale, .1);
-            var modelHeightInPixels = makerjs.round(modelHeightNatural * viewScale, .1);
-            var zoomOut = false;
-
-            if (fitOnScreen) {
-
-                var scaleHeight = viewHeight / modelHeightInPixels;
-                var scaleWidth = viewWidth / modelWidthInPixels;
-
-                viewScale *= Math.min(scaleWidth, scaleHeight);
-
-                zoomOut = processed.lockedPath && !areSameHeightMeasurement(measureModel, measure);
-
-                if (zoomOut) {
-                    viewScale *= zoomOutLockedPath;
-                }
-            }
-
-            var centerY = measure.high[1] * viewScale;
-            var v2 = viewHeight / 2;
-
-            if (!modelHeightInPixels) {
-                centerY += v2;
-            } else if (zoomOut) {
-                centerY += v2 * (1 - zoomOutLockedPath);
-            }
+            var fontSize = svgFontSize / unitScale;
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
-                origin: [viewWidth / 2 - (modelWidthNatural / 2 + measure.low[0]) * viewScale, centerY],
-                annotate: annotate,
-                svgAttrs: { id: 'view-svg' },
-                fontSize: (windowZoom * svgFontSize) + 'px',
-                strokeWidth: (windowZoom * svgStrokeWidth) + 'px',
+                origin: viewOrigin,
+                annotate: true,
+                svgAttrs: {
+                    "id": 'drawing',
+                    "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
+                },
+                strokeWidth: strokeWidth + 'px',
+                fontSize: fontSize + 'px',
                 scale: viewScale,
                 useSvgPathOnly: false
             };
@@ -659,24 +821,28 @@ module MakerJsPlayground {
                 }
             };
 
-            if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
-
-                renderModel.paths = {
-                    'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(measure.low[1], 0)], [0, Math.max(measure.high[1], 0)]),
-                    'crosshairs-horizontal': new makerjs.paths.Line([Math.min(measure.low[0], 0), 0], [Math.max(measure.high[0], 0), 0])
-                };
+            if (renderUnits) {
+                renderModel.units = renderUnits;
             }
+
+            var size = getModelNaturalSize();
+            var multiplier = 10;
+
+            renderModel.paths = {
+                'crosshairs-vertical': new makerjs.paths.Line([0, size[1] * multiplier], [0, -size[1] * multiplier]),
+                'crosshairs-horizontal': new makerjs.paths.Line([size[0] * multiplier, 0], [- size[0] * multiplier, 0])
+            };
 
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }
 
-        view.innerHTML = html;
+        viewSvgContainer.innerHTML = html;
 
         if (processed.lockedPath) {
             var path = getLockedPathSvgElement();
             if (path) {
                 path.setAttribute('class', 'locked');
-                path.style.strokeWidth = (windowZoom * 2 * svgStrokeWidth) + 'px';
+                path.style.strokeWidth = (2 * strokeWidth) + 'px';
             }
         }
 
@@ -821,11 +987,11 @@ module MakerJsPlayground {
         view = document.getElementById('view') as HTMLDivElement;
         progress = document.getElementById('download-progress') as HTMLDivElement;
         preview = document.getElementById('download-preview') as HTMLTextAreaElement;
+        checkFitToScreen = document.getElementById('check-fit-on-screen') as HTMLInputElement;
 
-        var viewMeasure = document.getElementById('view-measure');
+        viewSvgContainer = document.getElementById('view-svg-container') as HTMLDivElement;
 
-        hMargin = viewMeasure.offsetLeft;
-        vMargin = viewMeasure.offsetTop;
+        margin = [viewSvgContainer.offsetLeft, viewSvgContainer.offsetTop];
 
         var pre = document.getElementById('init-javascript-code') as HTMLPreElement;
         codeMirrorOptions.value = pre.innerText;

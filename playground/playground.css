@@ -181,7 +181,6 @@ header h1 {
 
 #view {
     color: #fff;
-    padding: 2em;
     position: absolute;
     top: 0;
     right: 0;
@@ -189,12 +188,20 @@ header h1 {
     left: 0;
 }
 
-svg line, svg circle, svg path {
+#view-svg-container {
+    margin: 2em;
+}
+
+/*svg#drawing {
+    transition: margin-left 0.35s cubic-bezier(0.2, 0, 0, 1), margin-top 0.35s cubic-bezier(0.2, 0, 0, 1);
+}*/
+
+svg#drawing line, svg#drawing circle, svg#drawing path {
     stroke: #fff;
     fill: none;
 }
 
-svg .locked {
+svg#drawing .locked {
     stroke: #0000FF;
 }
 
@@ -202,22 +209,58 @@ svg .locked {
     overflow: visible;
 }
 
-#view svg text {
+#view svg#drawing text {
     fill: turquoise;
     stroke: none;
 }
 
-#view svg .locked + text {
+.collapse-annotation #view svg#drawing text {
+    display: none;
+}
+
+#view svg#drawing .locked + text {
     fill: yellow;
 }
 
-#crosshairs-vertical, #crosshairs-horizontal {
-    stroke: midnightblue;
-    stroke-width: 1;
+#view #crosshairs-vertical, #view #crosshairs-horizontal {
+    stroke: #5B9DE3;
+}
+
+.collapse-origin #view #crosshairs-vertical, .collapse-origin #view #crosshairs-horizontal {
+    display: none;
 }
 
 #crosshairs-horizontal_text, #crosshairs-vertical_text {
     display: none;
+}
+
+svg#pointers, #touch-shield {
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+svg#pointers circle {
+    stroke: #00B2B2;
+    stroke-width: 1px;
+    fill: #0059B2;
+    opacity: 0.5;
+}
+
+svg#pointers line {
+    stroke: #00468C;
+    stroke-width: 1px;
+}
+
+#touch-shield {
+    background-color: transparent;
+}
+
+.pointing svg#pointers, .pointing #touch-shield{
+    display: block;
 }
 
 #notes {
@@ -233,8 +276,18 @@ svg .locked {
     color: #cef;
 }
 
+#notes th {
+    white-space: nowrap
+}
+
+#notes td {
+    word-break: break-all;
+}
+
 #notes td:first-child {
     color: midnightblue;
+    vertical-align: top;
+    white-space: nowrap;
 }
 
 #notes h1 {
