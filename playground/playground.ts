@@ -441,8 +441,8 @@ module MakerJsPlayground {
 
     function initialize() {
 
-        window.addEventListener('resize', render);
-        window.addEventListener('orientationchange', render);
+        window.addEventListener('resize', onWindowResize);
+        window.addEventListener('orientationchange', onWindowResize);
 
         pointers = new Pointer.Manager(view, '#pointers', margin, getZoom, setZoom, onPointerClick, onPointerReset);
     }
@@ -530,6 +530,13 @@ module MakerJsPlayground {
         render();
 
         updateLockedPathNotes();
+    }
+
+    function onWindowResize() {
+        if (checkFitToScreen.checked) {
+            fitOnScreen();
+            render();
+        }
     }
 
     //public members
@@ -797,7 +804,7 @@ module MakerJsPlayground {
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
                 origin: viewOrigin,
-                annotate: (<HTMLInputElement>document.getElementById('check-annotate')).checked,
+                annotate: true,
                 svgAttrs: {
                     "id": 'drawing',
                     "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
@@ -818,14 +825,13 @@ module MakerJsPlayground {
                 renderModel.units = renderUnits;
             }
 
-            if ((<HTMLInputElement>document.getElementById('check-show-origin')).checked) {
+            var size = getModelNaturalSize();
+            var multiplier = 10;
 
-                renderModel.paths = {
-                    'crosshairs-vertical': new makerjs.paths.Line([0, Math.min(processed.measurement.low[1], 0)], [0, Math.max(processed.measurement.high[1], 0)]),
-                    'crosshairs-horizontal': new makerjs.paths.Line([Math.min(processed.measurement.low[0], 0), 0], [Math.max(processed.measurement.high[0], 0), 0])
-                };
-
-            }
+            renderModel.paths = {
+                'crosshairs-vertical': new makerjs.paths.Line([0, size[1] * multiplier], [0, -size[1] * multiplier]),
+                'crosshairs-horizontal': new makerjs.paths.Line([size[0] * multiplier, 0], [- size[0] * multiplier, 0])
+            };
 
             html += makerjs.exporter.toSVG(renderModel, renderOptions);
         }

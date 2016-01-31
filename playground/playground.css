@@ -214,12 +214,20 @@ svg#drawing .locked {
     stroke: none;
 }
 
+.collapse-annotation #view svg#drawing text {
+    display: none;
+}
+
 #view svg#drawing .locked + text {
     fill: yellow;
 }
 
 #view #crosshairs-vertical, #view #crosshairs-horizontal {
-    stroke: midnightblue;
+    stroke: #5B9DE3;
+}
+
+.collapse-origin #view #crosshairs-vertical, .collapse-origin #view #crosshairs-horizontal {
+    display: none;
 }
 
 #crosshairs-horizontal_text, #crosshairs-vertical_text {
