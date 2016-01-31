@@ -30,8 +30,7 @@ var MakerJsPlayground;
     var progress;
     var preview;
     var checkFitToScreen;
-    var hMargin;
-    var vMargin;
+    var margin;
     var processed = {
         html: '',
         kit: null,
@@ -48,6 +47,7 @@ var MakerJsPlayground;
     var viewModelRootSelector = 'svg#drawing > g > g > g';
     var viewOrigin;
     var viewPanOffset = [0, 0];
+    var keepEventElement = null;
     function isLandscapeOrientation() {
         return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
     }
@@ -184,9 +184,18 @@ var MakerJsPlayground;
         cancelExport();
         document.body.classList.remove('download-ready');
     }
+    function Frown() {
+        this.paths = {
+            head: new makerjs.paths.Circle([0, 0], 85),
+            eye1: new makerjs.paths.Circle([-25, 25], 10),
+            eye2: new makerjs.paths.Circle([25, 25], 10),
+            frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
+        };
+    }
     function highlightCodeError(error) {
+        var notes = '';
         if (error.lineno || error.colno) {
-            processed.html = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
+            notes = error.name + ' at line ' + error.lineno + ' column ' + error.colno + ' : ' + error.message;
             var editorLine = error.lineno - 1;
             var from = {
                 line: editorLine, ch: error.colno - 1
@@ -197,8 +206,12 @@ var MakerJsPlayground;
             errorMarker = MakerJsPlayground.codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
         }
         else {
-            processed.html = error.name + ' : ' + error.message;
+            notes = error.name + ' : ' + error.message;
         }
+        MakerJsPlayground.viewScale = null;
+        processed.model = new Frown();
+        setNotes(notes);
+        document.body.classList.remove('collapse-notes');
     }
     function arraysEqual(a, b) {
         if (!a || !b)
@@ -304,9 +317,15 @@ var MakerJsPlayground;
     function initialize() {
         window.addEventListener('resize', render);
         window.addEventListener('orientationchange', render);
-        MakerJsPlayground.pointers = new Pointer.Manager('#pointers', view, [hMargin, vMargin], getZoom, setZoom, onPointerReset);
+        MakerJsPlayground.pointers = new Pointer.Manager(view, '#pointers', margin, getZoom, setZoom, onPointerClick, onPointerReset);
     }
-    var keepEventElement = null;
+    function onPointerClick(srcElement) {
+        if (!keepEventElement && srcElement && srcElement.tagName && srcElement.tagName == 'text') {
+            var text = srcElement;
+            var path = text.previousSibling;
+            lockToPath(path);
+        }
+    }
     function onPointerReset() {
         if (keepEventElement) {
             view.removeChild(keepEventElement);
@@ -342,6 +361,14 @@ var MakerJsPlayground;
             updateZoomScale();
             render();
         }
+    }
+    function onProcessed() {
+        //todo: find minimum viewScale
+        processed.measurement = makerjs.measure.modelExtents(processed.model);
+        if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
+            fitOnScreen();
+        }
+        updateLockedPathNotes();
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
@@ -413,12 +440,12 @@ var MakerJsPlayground;
             highlightCodeError(result);
         }
         document.getElementById('params').innerHTML = processed.paramHtml;
-        updateLockedPathNotes();
         //now safe to render, so register a resize listener
         if (init) {
             init = false;
             initialize();
         }
+        onProcessed();
         render();
     }
     MakerJsPlayground.processResult = processResult;
@@ -444,7 +471,7 @@ var MakerJsPlayground;
             //construct an IModel from the kit
             processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
             processed.measurement = null;
-            updateLockedPathNotes();
+            onProcessed();
         }
         render();
     }
@@ -487,16 +514,22 @@ var MakerJsPlayground;
         }, delay);
     }
     MakerJsPlayground.deActivateParam = deActivateParam;
+    function fitNatural() {
+        MakerJsPlayground.viewScale = 1;
+        //todo: use units to determine origin and stroke
+        //viewOrigin = [4, 2];
+    }
+    MakerJsPlayground.fitNatural = fitNatural;
     function fitOnScreen() {
         MakerJsPlayground.pointers.reset();
         checkFitToScreen.checked = true;
         var measure = processed.measurement;
         var modelHeightNatural = measure.high[1] - measure.low[1];
         var modelWidthNatural = measure.high[0] - measure.low[0];
-        var viewHeight = view.offsetHeight - 2 * vMargin;
+        var viewHeight = view.offsetHeight - 2 * margin[1];
         var v2 = viewHeight / 2;
-        var viewWidth = document.getElementById('view-params').offsetWidth - 2 * hMargin;
-        var menuLeft = customizeMenu.offsetLeft - 2 * hMargin;
+        var viewWidth = document.getElementById('view-params').offsetWidth - 2 * margin[0];
+        var menuLeft = customizeMenu.offsetLeft - 2 * margin[0];
         viewPanOffset = [0, 0];
         MakerJsPlayground.viewScale = 1;
         //view mode - left of menu
@@ -521,12 +554,6 @@ var MakerJsPlayground;
         viewSvgContainer.innerHTML = '';
         var html = processed.html;
         if (processed.model) {
-            if (!processed.measurement) {
-                processed.measurement = makerjs.measure.modelExtents(processed.model);
-            }
-            if (!MakerJsPlayground.viewScale) {
-                fitOnScreen();
-            }
             var renderOptions = {
                 origin: viewOrigin,
                 annotate: document.getElementById('check-annotate').checked,
@@ -679,8 +706,7 @@ var MakerJsPlayground;
         preview = document.getElementById('download-preview');
         checkFitToScreen = document.getElementById('check-fit-on-screen');
         viewSvgContainer = document.getElementById('view-svg-container');
-        hMargin = viewSvgContainer.offsetLeft;
-        vMargin = viewSvgContainer.offsetTop;
+        margin = [viewSvgContainer.offsetLeft, viewSvgContainer.offsetTop];
         var pre = document.getElementById('init-javascript-code');
         MakerJsPlayground.codeMirrorOptions.value = pre.innerText;
         MakerJsPlayground.codeMirrorEditor = CodeMirror(function (elt) {

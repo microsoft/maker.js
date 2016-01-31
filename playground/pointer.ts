@@ -6,6 +6,8 @@
 declare var makerjs: typeof MakerJs;
 
 module Pointer {
+    export var wheelZoomDelta = 0.1;
+    export var clickDistance = 2;
 
     export interface IPanZoom {
         origin: MakerJs.IPoint;
@@ -22,8 +24,10 @@ module Pointer {
     interface IPointer {
         id: number;
         type: string;
+        initial: IPointRelative;
         previous: IPointRelative;
         current: IPointRelative;
+        srcElement: Element;
     }
 
     interface IPointerMap {
@@ -70,16 +74,18 @@ module Pointer {
         private initialZoom: number;
         private initialAveragePointFromDrawingOrigin: MakerJs.IPoint = null;
         private previousAveragePointFromCanvas: MakerJs.IPoint = null;
+        private isClick: boolean;
 
         public down: IPointerMap = {};
         public count: number;
 
         constructor(
-            private selector,
             private view: HTMLDivElement,
+            private pointersSelector: string,
             private margin: MakerJs.IPoint,
             private getZoom: () => IPanZoom,
             private setZoom: (panZoom: IPanZoom) => void,
+            private onClick: (srcElement: Element) => any,
             private onReset: () => any
         ) {
 
@@ -137,7 +143,7 @@ module Pointer {
         }
 
         public erase(): SVGElement {
-            var oldNode = document.querySelector(this.selector) as SVGElement;
+            var oldNode = document.querySelector(this.pointersSelector) as SVGElement;
             var domPointers = oldNode.cloneNode(false) as SVGElement;
             oldNode.parentNode.replaceChild(domPointers, oldNode);
             return domPointers;
@@ -214,14 +220,18 @@ module Pointer {
             var p: IPointer = {
                 id: e.pointerId,
                 type: e.pointerType,
+                initial: pointRelative,
                 previous: pointRelative,
-                current: pointRelative
+                current: pointRelative,
+                srcElement: e.srcElement
             };
 
             this.down[p.id] = p;
             this.count++;
 
             document.body.classList.add('pointing');
+
+            this.isClick = this.count == 1;
 
             if (this.count == 2) {
 
@@ -290,7 +300,8 @@ module Pointer {
 
         public viewPointerUp(e: IPointerEvent) {
 
-            if (this.down[e.pointerId]) {
+            var pointer = this.down[e.pointerId];
+            if (pointer) {
 
                 e.stopPropagation();
                 e.preventDefault();
@@ -299,6 +310,15 @@ module Pointer {
                 this.count--;
 
                 if (this.count == 0) {
+
+                    if (this.isClick) {
+
+                        var clickTravel = makerjs.measure.pointDistance(pointer.initial.fromCanvas, pointer.current.fromCanvas);
+
+                        if (clickTravel <= clickDistance) {
+                            this.onClick(pointer.srcElement);
+                        }
+                    }
 
                     this.reset();
 
@@ -323,29 +343,17 @@ module Pointer {
         public viewWheel(ev: MouseWheelEvent) {
             ev.preventDefault();
 
-            var zoomDelta = 1;     //TODO: base the delta, min / max value on model natural size vs window size
+            this.isClick = false;
 
             var point = this.getPointRelative(ev);
-
-            var newZoom = Math.max(point.panZoom.zoom + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * zoomDelta, 1);
+            var sign = (ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1;
+            var newZoom = point.panZoom.zoom * (1 + sign * wheelZoomDelta);
 
             this.scaleCenterPoint(point.panZoom, newZoom, point.fromDrawingOrigin);
 
             this.setZoom(point.panZoom);
         }
 
-        //function viewClick(e: PointerEvent) {
-
-        //    var ev = e as IPointerEvent;
-
-        //    if (ev.srcElement && ev.srcElement.tagName && ev.srcElement.tagName == 'text') {
-
-        //        var text = ev.srcElement as SVGTextElement;
-        //        var path = text.previousSibling;
-
-        //        lockToPath(path);
-        //    }
-        //}
     }
 
     // Find out where an element is on the page

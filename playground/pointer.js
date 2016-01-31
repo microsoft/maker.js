@@ -4,6 +4,8 @@
 /// <reference path="../src/core/units.ts" />
 var Pointer;
 (function (Pointer) {
+    Pointer.wheelZoomDelta = 0.1;
+    Pointer.clickDistance = 2;
     function distanceBetweenCurrent2Points(all) {
         return makerjs.measure.pointDistance(all[0].current.fromCanvas, all[1].current.fromCanvas);
     }
@@ -21,15 +23,16 @@ var Pointer;
         return [x / all.length, y / all.length];
     }
     var Manager = (function () {
-        function Manager(selector, view, margin, getZoom, setZoom, onReset) {
+        function Manager(view, pointersSelector, margin, getZoom, setZoom, onClick, onReset) {
             //todo - make this work for touch / pointer instead of just click
             //view.addEventListener('click', viewClick);
             var _this = this;
-            this.selector = selector;
             this.view = view;
+            this.pointersSelector = pointersSelector;
             this.margin = margin;
             this.getZoom = getZoom;
             this.setZoom = setZoom;
+            this.onClick = onClick;
             this.onReset = onReset;
             this.initialAveragePointFromDrawingOrigin = null;
             this.previousAveragePointFromCanvas = null;
@@ -75,7 +78,7 @@ var Pointer;
             return result;
         };
         Manager.prototype.erase = function () {
-            var oldNode = document.querySelector(this.selector);
+            var oldNode = document.querySelector(this.pointersSelector);
             var domPointers = oldNode.cloneNode(false);
             oldNode.parentNode.replaceChild(domPointers, oldNode);
             return domPointers;
@@ -135,12 +138,15 @@ var Pointer;
             var p = {
                 id: e.pointerId,
                 type: e.pointerType,
+                initial: pointRelative,
                 previous: pointRelative,
-                current: pointRelative
+                current: pointRelative,
+                srcElement: e.srcElement
             };
             this.down[p.id] = p;
             this.count++;
             document.body.classList.add('pointing');
+            this.isClick = this.count == 1;
             if (this.count == 2) {
                 //TODO - fix bug when swithing between 1 and 2 points in IE
                 var all = this.asArray();
@@ -186,12 +192,19 @@ var Pointer;
             this.setZoom(panZoom);
         };
         Manager.prototype.viewPointerUp = function (e) {
-            if (this.down[e.pointerId]) {
+            var pointer = this.down[e.pointerId];
+            if (pointer) {
                 e.stopPropagation();
                 e.preventDefault();
                 delete this.down[e.pointerId];
                 this.count--;
                 if (this.count == 0) {
+                    if (this.isClick) {
+                        var clickTravel = makerjs.measure.pointDistance(pointer.initial.fromCanvas, pointer.current.fromCanvas);
+                        if (clickTravel <= Pointer.clickDistance) {
+                            this.onClick(pointer.srcElement);
+                        }
+                    }
                     this.reset();
                 }
                 else {
@@ -211,9 +224,10 @@ var Pointer;
         };
         Manager.prototype.viewWheel = function (ev) {
             ev.preventDefault();
-            var zoomDelta = 1; //TODO: base the delta, min / max value on model natural size vs window size
+            this.isClick = false;
             var point = this.getPointRelative(ev);
-            var newZoom = Math.max(point.panZoom.zoom + ((ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1) * zoomDelta, 1);
+            var sign = (ev.wheelDelta || ev['deltaY']) > 0 ? 1 : -1;
+            var newZoom = point.panZoom.zoom * (1 + sign * Pointer.wheelZoomDelta);
             this.scaleCenterPoint(point.panZoom, newZoom, point.fromDrawingOrigin);
             this.setZoom(point.panZoom);
         };
