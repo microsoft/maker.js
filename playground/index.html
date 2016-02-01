@@ -88,85 +88,91 @@
     </script>
 
 </head>
-<body class="no-notes">
+<body class="no-notes collapse-annotation">
     <a name="top"></a>
 
-    <header class="logo">
-        <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h1>Maker.js</h1></a>
-        <div id="rendering-options-top">
-            <button onclick="MakerJsPlayground.toggleClass('collapse-rendering-options')">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
-        </div>
-    </header>
+    <main>
+        <header class="logo">
+            <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h1>Maker.js</h1></a>
 
-    <section id="blueprint-canvas">
-        <div id="view-params">
-            <div id="view" touch-action="none" class="noselect">
-                <div id="view-svg-container"></div>
-                <svg id="pointers" xmlns="http://www.w3.org/2000/svg"></svg>
-                <div id="touch-shield"></div>
+            <div id="rendering-options-top">
+                <button onclick="MakerJsPlayground.toggleClassAndResize('collapse-rendering-options');">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
             </div>
-            <div id="rendering-options-menu" class="noselect">
-                <div id="params"></div>
-                <div class="view-controls">
-                    <div>
-                        <hr />
+        </header>
+
+        <section id="blueprint-canvas">
+            <div id="view-params">
+                <div id="view" touch-action="none" class="noselect">
+                    <div id="view-svg-container"></div>
+                    <svg id="pointers" xmlns="http://www.w3.org/2000/svg"></svg>
+                    <div id="touch-shield"></div>
+                </div>
+                <div id="rendering-options-menu" class="noselect">
+                    <div id="params"></div>
+                    <div class="view-controls">
+                        <div>
+                            <hr />
+                        </div>
+                        <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label></div>
+                        <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show origin</label></div>
+                        <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label></div>
+                        <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
                     </div>
-                    <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label></div>
-                    <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show origin</label></div>
-                    <div><label><input id="check-annotate" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label></div>
-                    <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
                 </div>
             </div>
-        </div>
-        <div id="notes"></div>
-    </section>
+            <div id="notes"></div>
+        </section>
 
-    <section id="download">
+        <section id="download">
 
-        <div id="download-select">
-            <h2>Choose a file format to download your customized drawing</h2>
+            <div id="download-select">
+                <h2>Choose a file format to download your customized drawing</h2>
 
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Json);">json</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.OpenJsCad);">openjscad</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Stl);">.stl</button>
-        </div>
-
-        <div id="download-generating">
-            <h2>Generating your customized drawing...</h2>
-
-            <button onclick="MakerJsPlayground.cancelExport()">cancel</button>
-            <div id="download-progress"></div>
-        </div>
-
-        <div id="download-ready">
-            <h2>Your customized drawing file is ready for download</h2>
-
-            <span id="download-link-container"></span>
-            <span>
-                <button class="close" onclick="MakerJsPlayground.toggleClass('download-ready')">close</button>
-            </span>
-            <div id="download-preview-container">
-                <textarea id="download-preview" rows="8" readonly></textarea>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Json);">json</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.OpenJsCad);">openjscad</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Stl);">.stl</button>
             </div>
-            <div class="onscreen-help">
-                If your browser does not support the download button above, <button onclick="MakerJsPlayground.copyToClipboard()">copy the text above</button> and paste into a new text file named <b id="download-filename">myfile.txt</b> on your computer.
+
+            <div id="download-generating">
+                <h2>Generating your customized drawing...</h2>
+
+                <button onclick="MakerJsPlayground.cancelExport()">cancel</button>
+                <div id="download-progress"></div>
             </div>
-        </div>
 
-    </section>
+            <div id="download-ready">
+                <h2>Your customized drawing file is ready for download</h2>
 
-    <section>
-        <div class="code-header">
-            JavaScript code editor
-            <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
-            <span class="status"></span>
-        </div>
+                <span id="download-link-container"></span>
+                <span>
+                    <button class="close" onclick="MakerJsPlayground.toggleClass('download-ready')">close</button>
+                </span>
+                <div id="download-preview-container">
+                    <textarea id="download-preview" rows="8" readonly></textarea>
+                </div>
+                <div class="onscreen-help">
+                    If your browser does not support the download button above, <button onclick="MakerJsPlayground.copyToClipboard()">copy the text above</button> and paste into a new text file named <b id="download-filename">myfile.txt</b> on your computer.
+                </div>
+            </div>
 
-        <a name="code"></a>
+        </section>
 
-        <pre id="init-javascript-code">
+        <section class="editor">
+            <div>
+                <div class="code-header">
+                    <span>
+                        JavaScript code editor
+                        <button class="side-by-side" onclick="MakerJsPlayground.toggleClassAndResize('side-by-side');"><span class="dock">dock</span><span class="undock">undock</span></button>
+                    </span>
+                    <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
+                    <span class="status"></span>
+                </div>
+
+                <a name="code"></a>
+
+                <pre id="init-javascript-code">
 var makerjs = require('makerjs');
 this.paths = {
     head: new makerjs.paths.Circle([0, 0], 90),
@@ -174,20 +180,25 @@ this.paths = {
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
     wink: new makerjs.paths.Line([-35, 20], [-15, 20])
 };
-this.notes = '# Welcome to the Maker.js playground \n You can edit the code below, then click **Run** to see your drawing.';
+this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScript code, then click **Run** to see your drawing.';
+
+//press enter here to add more blank lines
+
 </pre>
+            </div>
+        </section>
 
-    </section>
+        <div class="scroll-nav-links">
+            <span>jump to</span>
+            <span><a href="#code" onclick="document.querySelector('a[name=code]').scrollIntoView();return false;">code</a></span>
+            <span><a href="#top" onclick="document.querySelector('a[name=top]').scrollIntoView();return false;">top</a></span>
+        </div>
 
-    <div class="scroll-nav-links">
-        <span>jump to</span>
-        <span><a href="#code" onclick="document.querySelector('a[name=code]').scrollIntoView();return false;">code</a></span>
-        <span><a href="#top" onclick="document.querySelector('a[name=top]').scrollIntoView();return false;">top</a></span>
-    </div>
+        <footer>
+            <a href="https://github.com/Microsoft"><img src="microsoft.png" height="16" /> Open source, from Microsoft with love.</a> <a href="http://aka.ms/privacy">Privacy Statement</a> &copy;2016&nbsp;Microsoft
+        </footer>
 
-    <footer>
-        <a href="https://github.com/Microsoft"><img src="microsoft.png" height="16" /> Open source, from Microsoft with love.</a> <a href="http://aka.ms/privacy">Privacy Statement</a> &copy;2016&nbsp;Microsoft
-    </footer>
+    </main>
 
 </body>
 </html>

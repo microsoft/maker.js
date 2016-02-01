@@ -1,4 +1,5 @@
 ﻿html, body {
+    height: 100%;
     margin: 0;
 }
 
@@ -7,7 +8,7 @@ html, body, button, select {
 }
 
 body {
-    padding: 1em;
+    padding: 0 1em;
     overflow-y: scroll;
 }
 
@@ -17,9 +18,13 @@ a[name=top] {
 }
 
 header, section, footer {
-    margin-bottom: 1em;
     clear: both;
     position: relative;
+}
+
+header {
+    margin-bottom: 1em;
+    padding-top: 1em;
 }
 
 header h1 {
@@ -49,6 +54,7 @@ header h1 {
 #blueprint-canvas {
     background-color: #3177C6;
     background-image: url('blueprint.png');
+    margin-bottom: 1em;
     overflow: hidden;
 }
 
@@ -429,14 +435,23 @@ svg#pointers line {
     margin-top: 2em;
     padding: .5em 1em;
     border: 1px solid #aaa;
+    text-align: right;
+    position: relative;
+}
+
+.code-header > span:first-child {
+    position: absolute;
+    left: 1em;
 }
 
 .code-header button {
-    font-family: monospace;
+    font-family: inherit;
+    margin-left: 1em;
+}
+
+.code-header button.run {
     background-color: green;
     color: white;
-    float: right;
-    margin-top: -2px;
 }
 
 .CodeMirror {
@@ -451,7 +466,7 @@ svg#pointers line {
     position: fixed; 
     bottom: .75em; 
     right: 0;
-    z-index: 2; 
+    z-index: 7;
     padding: .25em .5em .5em 1em; 
     background-color: #555;
     opacity: .85;
@@ -475,8 +490,8 @@ svg#pointers line {
 footer {
     font-size: smaller;
     line-height: 2em;
-    margin-top: 3em;
-    margin-bottom: -.5em;
+    margin-bottom: 1em;
+    margin-top: 2em;
     color: #aaa;
 }
 
@@ -505,6 +520,53 @@ footer img {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+body.side-by-side {
+    padding: 0;
+    overflow: hidden;
+}
+
+.side-by-side main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 50%;
+    padding: 0 1em;
+    overflow-y: scroll;
+}
+
+.side-by-side #view-params {
+    min-height: 28em;
+}
+
+.side-by-side section.editor {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+}
+
+.side-by-side .code-header {
+    margin-top: 0;
+}
+
+.code-header button.side-by-side .undock {
+    display: none;
+}
+
+.side-by-side .code-header button.side-by-side .dock {
+    display: none;
+}
+
+.side-by-side .code-header button.side-by-side .undock {
+    display: inline;
+}
+
+.side-by-side .scroll-nav-links {
+    display: none;
 }
 
 /* this is to clear the logo */

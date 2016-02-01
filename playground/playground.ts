@@ -296,6 +296,13 @@ module MakerJsPlayground {
         document.body.classList.remove('collapse-notes');
     }
 
+    function dockEditor() {
+        var sectionEditor = document.querySelector('section.editor') as HTMLElement;
+        var codeHeader = document.querySelector('.code-header') as HTMLElement;
+
+        codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
+    }
+
     function arraysEqual(a, b) {
         if (!a || !b) return false;
         if (a.length != b.length) return false;
@@ -532,13 +539,6 @@ module MakerJsPlayground {
         updateLockedPathNotes();
     }
 
-    function onWindowResize() {
-        if (checkFitToScreen.checked) {
-            fitOnScreen();
-            render();
-        }
-    }
-
     //public members
 
     export var codeMirrorEditor: CodeMirror.Editor;
@@ -674,7 +674,7 @@ module MakerJsPlayground {
 
     export function toggleSliderNumberBox(label: HTMLLabelElement, index: number) {
         var id: string;
-        if (toggleClass('toggle-number', false, label.parentElement)) {
+        if (toggleClass('toggle-number', label.parentElement)) {
             id = 'slider_' + index;
 
             //re-render according to slider value since numberbox may be out of limits
@@ -879,7 +879,12 @@ module MakerJsPlayground {
         x.send();
     }
 
-    export function toggleClass(name: string, doRender = true, element: HTMLElement = document.body): boolean {
+    export function toggleClassAndResize(name: string) {
+        toggleClass(name);
+        onWindowResize();
+    }
+
+    export function toggleClass(name: string, element: HTMLElement = document.body): boolean {
         var c = element.classList;
         var result: boolean;
 
@@ -889,10 +894,6 @@ module MakerJsPlayground {
         } else {
             c.add(name);
             result = false;
-        }
-
-        if (doRender) {
-            render();
         }
 
         return result;
@@ -924,8 +925,8 @@ module MakerJsPlayground {
                 (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
 
                 //put the download ui into ready mode
-                toggleClass('download-generating', false);
-                toggleClass('download-ready', false);
+                toggleClass('download-generating');
+                toggleClass('download-ready');
             }, 300);
 
         }
@@ -947,7 +948,7 @@ module MakerJsPlayground {
 
         //put the download ui into generation mode
         progress.style.width = '0';
-        toggleClass('download-generating', false);
+        toggleClass('download-generating');
 
         //tell the worker to process the job
         exportWorker.postMessage(request);
@@ -968,6 +969,21 @@ module MakerJsPlayground {
 
     export function isSmallDevice(): boolean {
         return document.body.clientWidth < 540;
+    }
+
+    export function onWindowResize() {
+        if (checkFitToScreen.checked) {
+            fitOnScreen();
+            render();
+        }
+
+        if (document.body.classList.contains('side-by-side')) {
+            dockEditor();
+        } else {
+            codeMirrorEditor.setSize(null, 'auto');
+            codeMirrorEditor.refresh();
+        }
+
     }
 
     //execution
@@ -1001,6 +1017,11 @@ module MakerJsPlayground {
             },
             codeMirrorOptions
         );
+
+        if (document.body.offsetWidth >= 1280) {
+            toggleClass('side-by-side');
+            dockEditor();
+        }
 
         querystringParams = new QueryStringParams();
         var scriptname = querystringParams['script'];
