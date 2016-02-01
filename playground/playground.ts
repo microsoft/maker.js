@@ -296,11 +296,20 @@ module MakerJsPlayground {
         document.body.classList.remove('collapse-notes');
     }
 
-    function dockEditor() {
-        var sectionEditor = document.querySelector('section.editor') as HTMLElement;
-        var codeHeader = document.querySelector('.code-header') as HTMLElement;
+    function dockEditor(dock: boolean) {
 
-        codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
+        if (dock) {
+            var sectionEditor = document.querySelector('section.editor') as HTMLElement;
+            var codeHeader = document.querySelector('.code-header') as HTMLElement;
+
+            codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
+        } else {
+
+            document.body.classList.remove('side-by-side');
+
+            codeMirrorEditor.setSize(null, 'auto');
+            codeMirrorEditor.refresh();
+        }
     }
 
     function arraysEqual(a, b) {
@@ -978,10 +987,9 @@ module MakerJsPlayground {
         }
 
         if (document.body.classList.contains('side-by-side')) {
-            dockEditor();
+            dockEditor(document.body.offsetWidth >= 960);
         } else {
-            codeMirrorEditor.setSize(null, 'auto');
-            codeMirrorEditor.refresh();
+            dockEditor(false);
         }
 
     }
@@ -1020,7 +1028,7 @@ module MakerJsPlayground {
 
         if (document.body.offsetWidth >= 1280) {
             toggleClass('side-by-side');
-            dockEditor();
+            dockEditor(true);
         }
 
         querystringParams = new QueryStringParams();
