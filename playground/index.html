@@ -48,13 +48,15 @@
     </script>
 
 </head>
-<body class="no-notes">
+<body class="no-notes collapse-annotation">
     <a name="top"></a>
 
+    <main>
     <header class="logo">
         <a href="http://microsoft.github.io/maker.js/"><img src="m.png" /><h1>Maker.js</h1></a>
+
         <div id="rendering-options-top">
-            <button onclick="MakerJsPlayground.toggleClass('collapse-rendering-options')">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
+                <button onclick="MakerJsPlayground.toggleClassAndResize('collapse-rendering-options');">customize <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
         </div>
     </header>
 
@@ -73,7 +75,7 @@
                     </div>
                     <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label></div>
                     <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show origin</label></div>
-                    <div><label><input id="check-annotate" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label></div>
+                        <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label></div>
                     <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
                 </div>
             </div>
@@ -117,10 +119,14 @@
 
     </section>
 
-    <section>
+        <section class="editor">
+            <div>
         <div class="code-header">
+                    <span>
             JavaScript code editor
-            <button onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
+                        <button class="side-by-side" onclick="MakerJsPlayground.toggleClassAndResize('side-by-side');"><span class="dock">dock</span><span class="undock">undock</span></button>
+                    </span>
+                    <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
             <span class="status"></span>
         </div>
 
@@ -134,10 +140,12 @@ this.paths = {
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
     wink: new makerjs.paths.Line([-35, 20], [-15, 20])
 };
+this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScript code, then click **Run** to see your drawing.';
 
-this.notes = '# Welcome to the Maker.js playground \n * You can edit the code below, then click **Run** to see your drawing.\n * You may use your browser\'s zoom to get a closer view. \n * These instructions are in the code too! Using [Markdown syntax](https://www.bing.com/search?q=Markdown+Syntax).';
+//press enter here to add more blank lines
+
 </pre>
-
+            </div>
     </section>
 
     <div class="scroll-nav-links">
@@ -149,6 +157,8 @@ this.notes = '# Welcome to the Maker.js playground \n * You can edit the code be
     <footer>
         <a href="https://github.com/Microsoft"><img src="microsoft.png" height="16" /> Open source, from Microsoft with love.</a> <a href="http://aka.ms/privacy">Privacy Statement</a> &copy;2016&nbsp;Microsoft
     </footer>
+
+    </main>
 
 </body>
 </html>

@@ -213,6 +213,11 @@ var MakerJsPlayground;
         setNotes(notes);
         document.body.classList.remove('collapse-notes');
     }
+    function dockEditor() {
+        var sectionEditor = document.querySelector('section.editor');
+        var codeHeader = document.querySelector('.code-header');
+        MakerJsPlayground.codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
+    }
     function arraysEqual(a, b) {
         if (!a || !b)
             return false;
@@ -396,12 +401,6 @@ var MakerJsPlayground;
         render();
         updateLockedPathNotes();
     }
-    function onWindowResize() {
-        if (checkFitToScreen.checked) {
-            fitOnScreen();
-            render();
-        }
-    }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
         theme: 'twilight',
@@ -506,7 +505,7 @@ var MakerJsPlayground;
     MakerJsPlayground.setParam = setParam;
     function toggleSliderNumberBox(label, index) {
         var id;
-        if (toggleClass('toggle-number', false, label.parentElement)) {
+        if (toggleClass('toggle-number', label.parentElement)) {
             id = 'slider_' + index;
             //re-render according to slider value since numberbox may be out of limits
             var slider = document.getElementById(id);
@@ -665,8 +664,12 @@ var MakerJsPlayground;
         x.send();
     }
     MakerJsPlayground.downloadScript = downloadScript;
-    function toggleClass(name, doRender, element) {
-        if (doRender === void 0) { doRender = true; }
+    function toggleClassAndResize(name) {
+        toggleClass(name);
+        onWindowResize();
+    }
+    MakerJsPlayground.toggleClassAndResize = toggleClassAndResize;
+    function toggleClass(name, element) {
         if (element === void 0) { element = document.body; }
         var c = element.classList;
         var result;
@@ -677,9 +680,6 @@ var MakerJsPlayground;
         else {
             c.add(name);
             result = false;
-        }
-        if (doRender) {
-            render();
         }
         return result;
     }
@@ -702,8 +702,8 @@ var MakerJsPlayground;
                 preview.value = response.text;
                 document.getElementById('download-filename').innerText = filename;
                 //put the download ui into ready mode
-                toggleClass('download-generating', false);
-                toggleClass('download-ready', false);
+                toggleClass('download-generating');
+                toggleClass('download-ready');
             }, 300);
         }
     }
@@ -720,7 +720,7 @@ var MakerJsPlayground;
         }
         //put the download ui into generation mode
         progress.style.width = '0';
-        toggleClass('download-generating', false);
+        toggleClass('download-generating');
         //tell the worker to process the job
         exportWorker.postMessage(request);
     }
@@ -742,6 +742,20 @@ var MakerJsPlayground;
         return document.body.clientWidth < 540;
     }
     MakerJsPlayground.isSmallDevice = isSmallDevice;
+    function onWindowResize() {
+        if (checkFitToScreen.checked) {
+            fitOnScreen();
+            render();
+        }
+        if (document.body.classList.contains('side-by-side')) {
+            dockEditor();
+        }
+        else {
+            MakerJsPlayground.codeMirrorEditor.setSize(null, 'auto');
+            MakerJsPlayground.codeMirrorEditor.refresh();
+        }
+    }
+    MakerJsPlayground.onWindowResize = onWindowResize;
     //execution
     window.onload = function (ev) {
         if (window.orientation === void 0) {
@@ -763,6 +777,10 @@ var MakerJsPlayground;
         MakerJsPlayground.codeMirrorEditor = CodeMirror(function (elt) {
             pre.parentNode.replaceChild(elt, pre);
         }, MakerJsPlayground.codeMirrorOptions);
+        if (document.body.offsetWidth >= 1280) {
+            toggleClass('side-by-side');
+            dockEditor();
+        }
         MakerJsPlayground.querystringParams = new QueryStringParams();
         var scriptname = MakerJsPlayground.querystringParams['script'];
         if (scriptname && !isHttp(scriptname)) {
