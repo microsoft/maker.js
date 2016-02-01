@@ -437,6 +437,7 @@ svg#pointers line {
     border: 1px solid #aaa;
     text-align: right;
     position: relative;
+    line-height: 22px;
 }
 
 .code-header > span:first-child {
@@ -573,5 +574,12 @@ body.side-by-side {
 @media only screen and (max-width: 540px) {
     header {
         height: 90px;
+    }
+}
+
+/* hide the dock button for smaller screens */
+@media only screen and (max-width: 1024px) {
+    .code-header button.side-by-side {
+        display: none;
     }
 }
