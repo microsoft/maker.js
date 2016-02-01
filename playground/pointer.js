@@ -246,9 +246,11 @@ var Pointer;
         };
         Manager.prototype.viewWheel = function (e) {
             var _this = this;
-            e.preventDefault();
             this.isClick = false;
             var pointRelative = this.getPointRelative(e);
+            if (!this.isWithinMargin(pointRelative))
+                return;
+            e.preventDefault();
             var pointer = {
                 id: 0,
                 type: 'wheel',

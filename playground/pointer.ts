@@ -375,11 +375,15 @@ module Pointer {
         }
 
         public viewWheel(e: MouseWheelEvent) {
-            e.preventDefault();
 
             this.isClick = false;
 
             var pointRelative = this.getPointRelative(e);
+
+            if (!this.isWithinMargin(pointRelative)) return;
+
+            e.preventDefault();
+
             var pointer: IPointer = {
                 id: 0,
                 type: 'wheel',
