@@ -213,10 +213,17 @@ var MakerJsPlayground;
         setNotes(notes);
         document.body.classList.remove('collapse-notes');
     }
-    function dockEditor() {
-        var sectionEditor = document.querySelector('section.editor');
-        var codeHeader = document.querySelector('.code-header');
-        MakerJsPlayground.codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
+    function dockEditor(dock) {
+        if (dock) {
+            var sectionEditor = document.querySelector('section.editor');
+            var codeHeader = document.querySelector('.code-header');
+            MakerJsPlayground.codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
+        }
+        else {
+            document.body.classList.remove('side-by-side');
+            MakerJsPlayground.codeMirrorEditor.setSize(null, 'auto');
+            MakerJsPlayground.codeMirrorEditor.refresh();
+        }
     }
     function arraysEqual(a, b) {
         if (!a || !b)
@@ -748,11 +755,10 @@ var MakerJsPlayground;
             render();
         }
         if (document.body.classList.contains('side-by-side')) {
-            dockEditor();
+            dockEditor(document.body.offsetWidth >= 960);
         }
         else {
-            MakerJsPlayground.codeMirrorEditor.setSize(null, 'auto');
-            MakerJsPlayground.codeMirrorEditor.refresh();
+            dockEditor(false);
         }
     }
     MakerJsPlayground.onWindowResize = onWindowResize;
@@ -779,7 +785,7 @@ var MakerJsPlayground;
         }, MakerJsPlayground.codeMirrorOptions);
         if (document.body.offsetWidth >= 1280) {
             toggleClass('side-by-side');
-            dockEditor();
+            dockEditor(true);
         }
         MakerJsPlayground.querystringParams = new QueryStringParams();
         var scriptname = MakerJsPlayground.querystringParams['script'];
