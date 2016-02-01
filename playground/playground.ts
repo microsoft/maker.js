@@ -1027,8 +1027,8 @@ module MakerJsPlayground {
         );
 
         if (document.body.offsetWidth >= 1280) {
-            toggleClass('side-by-side');
-            dockEditor(true);
+            //toggleClass('side-by-side');
+            //dockEditor(true);
         }
 
         querystringParams = new QueryStringParams();

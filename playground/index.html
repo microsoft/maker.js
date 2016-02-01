@@ -119,20 +119,20 @@
 
     </section>
 
-        <section class="editor">
-            <div>
-        <div class="code-header">
-                    <span>
-            JavaScript code editor
-                        <button class="side-by-side" onclick="MakerJsPlayground.toggleClassAndResize('side-by-side');"><span class="dock">dock</span><span class="undock">undock</span></button>
-                    </span>
-                    <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
-            <span class="status"></span>
-        </div>
+    <section class="editor">
+        <div>
+            <div class="code-header">
+                <span>
+                    JavaScript code editor
+                    <!--button class="side-by-side" onclick="MakerJsPlayground.toggleClassAndResize('side-by-side');"><span class="dock">dock</span><span class="undock">undock</span></button-->
+                </span>
+                <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
+                <span class="status"></span>
+            </div>
 
-        <a name="code"></a>
+            <a name="code"></a>
 
-        <pre id="init-javascript-code">
+            <pre id="init-javascript-code">
 var makerjs = require('makerjs');
 this.paths = {
     head: new makerjs.paths.Circle([0, 0], 90),
@@ -145,7 +145,7 @@ this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScrip
 //press enter here to add more blank lines
 
 </pre>
-            </div>
+        </div>
     </section>
 
     <div class="scroll-nav-links">
