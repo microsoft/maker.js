@@ -784,6 +784,8 @@ var MakerJsPlayground;
             pre.parentNode.replaceChild(elt, pre);
         }, MakerJsPlayground.codeMirrorOptions);
         if (document.body.offsetWidth >= 1280) {
+            toggleClass('side-by-side');
+            dockEditor(true);
         }
         MakerJsPlayground.querystringParams = new QueryStringParams();
         var scriptname = MakerJsPlayground.querystringParams['script'];
