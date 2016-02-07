@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "module": "commonjs"
+    },
+    "files": [
+        "../typings/node/node.d.ts",
+        "../target/ts/makerjs.d.ts",
+        "../typings/marked/marked.d.ts",
+        "demoify.ts"
+    ]
+}

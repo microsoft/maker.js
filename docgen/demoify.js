@@ -1,6 +1,3 @@
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../target/ts/makerjs.d.ts" />
-/// <reference path="../typings/marked/marked.d.ts" />
 var fs = require('fs');
 var browserify = require('browserify');
 var packageJson = require('../package.json');

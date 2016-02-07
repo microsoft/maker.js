@@ -1,8 +1,4 @@
-﻿/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../target/ts/makerjs.d.ts" />
-/// <reference path="../typings/marked/marked.d.ts" />
-
-import fs = require('fs');
+﻿import fs = require('fs');
 var browserify = require('browserify');
 var packageJson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
