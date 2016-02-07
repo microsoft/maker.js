@@ -1,5 +1,3 @@
-/// <reference path="paths.ts" />
-
 module MakerJs.model {
 
     /**

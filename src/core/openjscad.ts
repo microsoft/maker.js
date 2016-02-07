@@ -1,7 +1,4 @@
-﻿/// <reference path="exporter.ts" />
-/// <reference path="xml.ts" />
-
-module MakerJs.exporter {
+﻿module MakerJs.exporter {
 
     /**
      * @private

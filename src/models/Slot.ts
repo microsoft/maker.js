@@ -1,6 +1,4 @@
-﻿/// <reference path="roundrectangle.ts" />
-
-module MakerJs.models {
+﻿module MakerJs.models {
 
     export class Slot implements IModel {
 

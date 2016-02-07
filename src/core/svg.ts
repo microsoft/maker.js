@@ -1,6 +1,3 @@
-/// <reference path="exporter.ts" />
-/// <reference path="xml.ts" />
-
 module MakerJs.exporter {
 
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;

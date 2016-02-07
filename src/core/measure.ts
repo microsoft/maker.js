@@ -1,5 +1,3 @@
-/// <reference path="model.ts" />
-
 module MakerJs.measure {
 
     /**
