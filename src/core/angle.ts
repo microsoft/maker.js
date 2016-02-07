@@ -1,5 +1,3 @@
-/// <reference path="maker.ts" />
-
 module MakerJs.angle {
 
     /**

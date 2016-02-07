@@ -1,5 +1,3 @@
-/// <reference path="exporter.ts" />
-
 module MakerJs.exporter {
 
     export function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;

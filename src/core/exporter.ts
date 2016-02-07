@@ -1,7 +1,3 @@
-/// <reference path="model.ts" />
-/// <reference path="units.ts" />
-/// <reference path="measure.ts" />
-
 module MakerJs.exporter {
 
     /**

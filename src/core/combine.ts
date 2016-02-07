@@ -1,6 +1,4 @@
-﻿/// <reference path="model.ts" />
-
-module MakerJs.model {
+﻿module MakerJs.model {
 
     /**
      * @private

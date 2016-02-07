@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "compile-playground": "tsc -p playground && tsc -p playground/worker",
-    "cat-tsd": "sed '/\\/\\/\\/.*reference path=.*/ d' target/ts/makerjs.d.ts > target/ts/temp && cat target/ts/tsd-header.txt target/ts/temp > target/ts/makerjs.d.ts && rm target/ts/temp",
-    "target-node-platform": "cd target && sed '/\\/\\/\\/.*reference path=.*/ d' ts/makerjs.js > js/node.maker.js && cd ..",
+    "cat-tsd": "cat target/ts/tsd-header.txt target/maker.d.ts > target/ts/makerjs.d.ts && rm target/maker.d.ts",
+    "target-node-platform": "cd target && mv maker.js js/node.maker.js && cd ..",
     "target-browser-platform": "cd target/js && browserify -o browser.maker.js -r ./node.maker.js:makerjs && cd ../..",
     "build-debug": "tsc -p src",
     "build": "tsc -p target && npm run cat-tsd && npm run target-node-platform && npm run target-browser-platform && cp target/js/node.maker.js ./index.js && npm run compile-playground",

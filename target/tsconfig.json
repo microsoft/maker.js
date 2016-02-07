@@ -1,10 +1,11 @@
 ﻿{
   "compilerOptions": {
     "declaration": true,
-    "outFile": "ts/makerjs.js",
+    "outFile": "maker.js",
     "sourceMap": false
   },
   "files": [
+    "../typings/tsd.d.ts",
     "../src/core/maker.ts",
     "../src/core/angle.ts",
     "../src/core/point.ts",

@@ -1,6 +1,4 @@
-﻿/// <reference path="combine.ts" />
-
-module MakerJs.model {
+﻿module MakerJs.model {
     
     /**
      * @private

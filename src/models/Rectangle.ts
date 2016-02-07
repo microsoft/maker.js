@@ -1,5 +1,3 @@
-/// <reference path="connectthedots.ts" />
-
 module MakerJs.models {
     export class Rectangle extends ConnectTheDots {
         constructor(width: number, height: number) {
