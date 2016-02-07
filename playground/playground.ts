@@ -1,12 +1,4 @@
-﻿/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="export-format.ts" />
-/// <reference path="pointer.ts" />
-/// <reference path="../src/core/kit.ts" />
-/// <reference path="../src/models/connectthedots.ts" />
-/// <reference path="../typings/codemirror/codemirror.d.ts" />
-/// <reference path="../typings/marked/marked.d.ts" />
-
-module MakerJsPlayground {
+﻿module MakerJsPlayground {
 
     //classes
 

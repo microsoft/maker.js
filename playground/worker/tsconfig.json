@@ -1,0 +1,15 @@
+﻿{
+  "compilerOptions": {
+    "sourceMap": true,
+    "noLib": true
+  },
+  "files": [
+    "../../typings/node/node.d.ts",
+    "../../typings/OpenJsCad/csg.d.ts",
+    "../../target/ts/makerjs.d.ts",
+    "../../typings/lib.core.d.ts",
+    "../../typings/lib.webworker.d.ts",
+    "../export-format.ts",
+    "export-worker.ts"
+  ]
+}
