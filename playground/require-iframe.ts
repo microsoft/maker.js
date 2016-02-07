@@ -1,7 +1,4 @@
-﻿/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="playground.ts" />
-
-interface Window {
+﻿interface Window {
     require: NodeRequireFunction;
     module: NodeModule;
     MakerJsPlayground: typeof MakerJsPlayground;

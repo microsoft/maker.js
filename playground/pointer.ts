@@ -1,9 +1,4 @@
-﻿/// <reference path="../src/core/angle.ts" />
-/// <reference path="../src/core/intersect.ts" />
-/// <reference path="../src/core/measure.ts" />
-/// <reference path="../src/core/units.ts" />
-
-declare var makerjs: typeof MakerJs;
+﻿declare var makerjs: typeof MakerJs;
 
 module Pointer {
     export var wheelZoomDelta = 0.1;

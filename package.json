@@ -6,7 +6,7 @@
   "scripts": {
     "precompile-typescript": "ls src/core/*.ts > build.txt && ls src/models/*.ts >> build.txt",
     "compile-typescript": "tsc --declaration --out target/ts/makerjs.js @build.txt && rm build.txt",
-    "compile-playground": "tsc ./playground/export-format.ts && tsc ./playground/export-worker.ts && tsc ./playground/pointer.ts && tsc ./playground/playground.ts && tsc ./playground/require-iframe.ts",
+    "compile-playground": "tsc -p playground && tsc -p playground/worker",
     "cat-tsd": "sed '/\\/\\/\\/.*reference path=.*/ d' target/ts/makerjs.d.ts > target/ts/temp && cat target/ts/tsd-header.txt target/ts/temp > target/ts/makerjs.d.ts && rm target/ts/temp",
     "target-node-platform": "cd target && sed '/\\/\\/\\/.*reference path=.*/ d' ts/makerjs.js > js/node.maker.js && cd ..",
     "target-browser-platform": "cd target/js && browserify -o browser.maker.js -r ./node.maker.js:makerjs && cd ../..",
