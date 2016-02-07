@@ -1,5 +1,3 @@
-/// <reference path="connectthedots.ts" />
-
 module MakerJs.models {
     export class Polygon extends ConnectTheDots {
         constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees: number = 0) {

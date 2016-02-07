@@ -1,5 +1,3 @@
-/// <reference path="intersect.ts" />
-
 module MakerJs.path {
 
     /**

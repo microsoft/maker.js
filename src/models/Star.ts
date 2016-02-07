@@ -1,7 +1,4 @@
-﻿/// <reference path="polygon.ts" />
-/// <reference path="connectthedots.ts" />
-
-module MakerJs.models {
+﻿module MakerJs.models {
 
     export class Star implements IModel {
 

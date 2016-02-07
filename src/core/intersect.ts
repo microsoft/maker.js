@@ -1,5 +1,3 @@
-/// <reference path="solvers.ts" />
-
 module MakerJs.path {
 
     /**

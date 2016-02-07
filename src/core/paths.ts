@@ -1,5 +1,3 @@
-/// <reference path="path.ts" />
-
 module MakerJs.paths {
     
     //shortcuts

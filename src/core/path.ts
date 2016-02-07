@@ -1,5 +1,3 @@
-/// <reference path="point.ts" />
-
 module MakerJs.path {
 
     /**
