@@ -1,5 +1,5 @@
-﻿/// <reference path="../typings/lib.webworker.d.ts" />
-/// <reference path="export-format.ts" />
+﻿/// <reference path="../../typings/lib.webworker.d.ts" />
+/// <reference path="../export-format.ts" />
 
 /* module system */
 
@@ -15,10 +15,10 @@ module.require = (id: string): any => {
 };
 
 importScripts(
-    "../external/OpenJsCad/csg.js", 
-    "../external/OpenJsCad/formats.js", 
-    "../target/js/node.maker.js", 
-    "export-format.js");
+    "../../external/OpenJsCad/csg.js", 
+    "../../external/OpenJsCad/formats.js", 
+    "../../target/js/node.maker.js", 
+    "../export-format.js");
 
 var makerjs: typeof MakerJs = module['MakerJs'];
 

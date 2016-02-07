@@ -951,7 +951,7 @@ module MakerJsPlayground {
 
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
-            exportWorker = new Worker('export-worker.js');
+            exportWorker = new Worker('worker/export-worker.js');
             exportWorker.onmessage = getExport;
         }
 

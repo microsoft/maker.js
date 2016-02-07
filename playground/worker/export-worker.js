@@ -1,5 +1,5 @@
-/// <reference path="../typings/lib.webworker.d.ts" />
-/// <reference path="export-format.ts" />
+/// <reference path="../../typings/lib.webworker.d.ts" />
+/// <reference path="../export-format.ts" />
 var _this = this;
 /* module system */
 var module = this;
@@ -9,7 +9,7 @@ module.require = function (id) {
     }
     return _this;
 };
-importScripts("../external/OpenJsCad/csg.js", "../external/OpenJsCad/formats.js", "../target/js/node.maker.js", "export-format.js");
+importScripts("../../external/OpenJsCad/csg.js", "../../external/OpenJsCad/formats.js", "../../target/js/node.maker.js", "../export-format.js");
 var makerjs = module['MakerJs'];
 var unionCount = 0;
 var unionIndex = 0;
