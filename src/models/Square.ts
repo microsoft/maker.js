@@ -1,7 +1,10 @@
 module MakerJs.models {
-    export class Square extends Rectangle {
+    export class Square implements IModel {
+
+        public paths: IPathMap = {};
+
         constructor(side: number) {
-            super(side, side);
+            this.paths =  new Rectangle(side, side).paths;
         }
     }
 

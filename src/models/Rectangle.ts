@@ -1,7 +1,10 @@
 module MakerJs.models {
-    export class Rectangle extends ConnectTheDots {
+    export class Rectangle implements IModel {
+
+        public paths: IPathMap = {};
+        
         constructor(width: number, height: number) {
-            super(true, [[0, 0], [width, 0], [width, height], [0, height]]);
+            this.paths = new ConnectTheDots(true, [[0, 0], [width, 0], [width, height], [0, height]]).paths;
         }
     }
 
