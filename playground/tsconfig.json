@@ -1,0 +1,15 @@
+﻿{
+  "compilerOptions": {
+    "sourceMap": true
+  },
+  "files": [
+    "../typings/node/node.d.ts",
+    "../typings/marked/marked.d.ts",
+    "../typings/codemirror/codemirror.d.ts",
+    "../target/ts/makerjs.d.ts",
+    "export-format.ts",
+    "pointer.ts",
+    "playground.ts",
+    "require-iframe.ts"
+  ]
+}

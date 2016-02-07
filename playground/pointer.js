@@ -1,7 +1,3 @@
-/// <reference path="../src/core/angle.ts" />
-/// <reference path="../src/core/intersect.ts" />
-/// <reference path="../src/core/measure.ts" />
-/// <reference path="../src/core/units.ts" />
 var Pointer;
 (function (Pointer) {
     Pointer.wheelZoomDelta = 0.1;
@@ -286,3 +282,4 @@ var Pointer;
     }
     Pointer.pageOffset = pageOffset;
 })(Pointer || (Pointer = {}));
+//# sourceMappingURL=pointer.js.map

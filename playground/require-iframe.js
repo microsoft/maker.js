@@ -1,5 +1,3 @@
-/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="playground.ts" />
 var MakerJsRequireIframe;
 (function (MakerJsRequireIframe) {
     var Counter = (function () {
@@ -180,3 +178,4 @@ var MakerJsRequireIframe;
         }
     };
 })(MakerJsRequireIframe || (MakerJsRequireIframe = {}));
+//# sourceMappingURL=require-iframe.js.map

@@ -1,12 +1,4 @@
-﻿/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="export-format.ts" />
-/// <reference path="pointer.ts" />
-/// <reference path="../src/core/kit.ts" />
-/// <reference path="../src/models/connectthedots.ts" />
-/// <reference path="../typings/codemirror/codemirror.d.ts" />
-/// <reference path="../typings/marked/marked.d.ts" />
-
-module MakerJsPlayground {
+﻿module MakerJsPlayground {
 
     //classes
 
@@ -951,7 +943,7 @@ module MakerJsPlayground {
 
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
-            exportWorker = new Worker('export-worker.js');
+            exportWorker = new Worker('worker/export-worker.js');
             exportWorker.onmessage = getExport;
         }
 
