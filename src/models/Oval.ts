@@ -1,9 +1,11 @@
 module MakerJs.models {
 
-    export class Oval extends RoundRectangle {
+    export class Oval implements IModel {
+
+        public paths: IPathMap = {};
 
         constructor(width: number, height: number) {
-            super(width, height, Math.min(height / 2, width / 2));
+            this.paths = new RoundRectangle(width, height, Math.min(height / 2, width / 2)).paths;
         }
 
     }

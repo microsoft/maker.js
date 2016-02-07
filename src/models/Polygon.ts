@@ -1,7 +1,10 @@
 module MakerJs.models {
-    export class Polygon extends ConnectTheDots {
+    export class Polygon implements IModel {
+        
+        public paths: IPathMap = {};
+
         constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees: number = 0) {
-            super(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees));
+            this.paths = new ConnectTheDots(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees)).paths;
         }
 
         public static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees: number = 0): IPoint[] {
