@@ -56,14 +56,17 @@ var MakerJs;
     }
     MakerJs.round = round;
     /**
+     * @private
+     */
+    var clone = require('clone');
+    /**
      * Clone an object.
      *
      * @param objectToClone The object to clone.
      * @returns A new clone of the original object.
      */
     function cloneObject(objectToClone) {
-        var serialized = JSON.stringify(objectToClone);
-        return JSON.parse(serialized);
+        return clone(objectToClone);
     }
     MakerJs.cloneObject = cloneObject;
     /**
@@ -847,7 +850,7 @@ var MakerJs;
                 this.type = MakerJs.pathType.Arc;
             }
             return Arc;
-        })();
+        }());
         paths.Arc = Arc;
         /**
          * Class for circle path.
@@ -862,7 +865,7 @@ var MakerJs;
                 this.type = MakerJs.pathType.Circle;
             }
             return Circle;
-        })();
+        }());
         paths.Circle = Circle;
         /**
          * Class for line path.
@@ -877,7 +880,7 @@ var MakerJs;
                 this.type = MakerJs.pathType.Line;
             }
             return Line;
-        })();
+        }());
         paths.Line = Line;
         /**
          * Class for chord, which is simply a line path that connects the endpoints of an arc.
@@ -892,7 +895,7 @@ var MakerJs;
                 this.end = arcPoints[1];
             }
             return Chord;
-        })();
+        }());
         paths.Chord = Chord;
         /**
          * Class for a parallel line path.
@@ -919,7 +922,7 @@ var MakerJs;
                 MakerJs.path.move(this, newOrigin);
             }
             return Parallel;
-        })();
+        }());
         paths.Parallel = Parallel;
     })(paths = MakerJs.paths || (MakerJs.paths = {}));
 })(MakerJs || (MakerJs = {}));
@@ -1839,7 +1842,7 @@ var MakerJs;
                 }
             };
             return Exporter;
-        })();
+        }());
         exporter.Exporter = Exporter;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
@@ -2824,7 +2827,7 @@ var MakerJs;
                 return null;
             };
             return PointMap;
-        })();
+        }());
         model.PointMap = PointMap;
         /**
          * @private
@@ -3075,7 +3078,7 @@ var MakerJs;
                 return found;
             };
             return DeadEndFinder;
-        })();
+        }());
         function removeDeadEnds(modelContext, pointMatchingDistance) {
             if (pointMatchingDistance === void 0) { pointMatchingDistance = .005; }
             var serializedPointAccuracy = .0001;
@@ -3184,7 +3187,7 @@ var MakerJs;
                 }
             };
             return XmlTag;
-        })();
+        }());
         exporter.XmlTag = XmlTag;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3651,7 +3654,7 @@ var MakerJs;
                 }
             }
             return ConnectTheDots;
-        })();
+        }());
         models.ConnectTheDots = ConnectTheDots;
         ConnectTheDots.metaParameters = [
             { title: "closed", type: "bool", value: true },
@@ -3664,20 +3667,15 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Polygon = (function (_super) {
-            __extends(Polygon, _super);
+        var Polygon = (function () {
             function Polygon(numberOfSides, radius, firstCornerAngleInDegrees) {
                 if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
-                _super.call(this, true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees));
+                this.paths = {};
+                this.paths = new models.ConnectTheDots(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees)).paths;
             }
             Polygon.getPoints = function (numberOfSides, radius, firstCornerAngleInDegrees) {
                 if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
@@ -3690,7 +3688,7 @@ var MakerJs;
                 return points;
             };
             return Polygon;
-        })(models.ConnectTheDots);
+        }());
         models.Polygon = Polygon;
         Polygon.metaParameters = [
             { title: "number of sides", type: "range", min: 3, max: 24, value: 6 },
@@ -3713,7 +3711,7 @@ var MakerJs;
                 }
             }
             return BoltCircle;
-        })();
+        }());
         models.BoltCircle = BoltCircle;
         BoltCircle.metaParameters = [
             { title: "bolt circle radius", type: "range", min: 1, max: 100, value: 50 },
@@ -3741,7 +3739,7 @@ var MakerJs;
                 }
             }
             return BoltRectangle;
-        })();
+        }());
         models.BoltRectangle = BoltRectangle;
         BoltRectangle.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 100 },
@@ -3780,7 +3778,7 @@ var MakerJs;
                 }
             }
             return Dome;
-        })();
+        }());
         models.Dome = Dome;
         Dome.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3816,7 +3814,7 @@ var MakerJs;
                 }
             }
             return RoundRectangle;
-        })();
+        }());
         models.RoundRectangle = RoundRectangle;
         RoundRectangle.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3829,13 +3827,13 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Oval = (function (_super) {
-            __extends(Oval, _super);
+        var Oval = (function () {
             function Oval(width, height) {
-                _super.call(this, width, height, Math.min(height / 2, width / 2));
+                this.paths = {};
+                this.paths = new models.RoundRectangle(width, height, Math.min(height / 2, width / 2)).paths;
             }
             return Oval;
-        })(models.RoundRectangle);
+        }());
         models.Oval = Oval;
         Oval.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3892,7 +3890,7 @@ var MakerJs;
                 }
             }
             return OvalArc;
-        })();
+        }());
         models.OvalArc = OvalArc;
         OvalArc.metaParameters = [
             { title: "start angle", type: "range", min: -360, max: 360, step: 1, value: 180 },
@@ -3907,13 +3905,13 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Rectangle = (function (_super) {
-            __extends(Rectangle, _super);
+        var Rectangle = (function () {
             function Rectangle(width, height) {
-                _super.call(this, true, [[0, 0], [width, 0], [width, height], [0, height]]);
+                this.paths = {};
+                this.paths = new models.ConnectTheDots(true, [[0, 0], [width, 0], [width, height], [0, height]]).paths;
             }
             return Rectangle;
-        })(models.ConnectTheDots);
+        }());
         models.Rectangle = Rectangle;
         Rectangle.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3937,7 +3935,7 @@ var MakerJs;
                 }
             }
             return Ring;
-        })();
+        }());
         models.Ring = Ring;
         Ring.metaParameters = [
             { title: "outer radius", type: "range", min: 0, max: 100, step: 1, value: 50 },
@@ -3978,7 +3976,7 @@ var MakerJs;
                 this.paths['curve_end'] = MakerJs.path.moveRelative(MakerJs.path.mirror(curve, true, true), [width, height]);
             }
             return SCurve;
-        })();
+        }());
         models.SCurve = SCurve;
         SCurve.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -4003,7 +4001,7 @@ var MakerJs;
                 this.origin = origin;
             }
             return Slot;
-        })();
+        }());
         models.Slot = Slot;
         Slot.metaParameters = [
             {
@@ -4028,13 +4026,13 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Square = (function (_super) {
-            __extends(Square, _super);
+        var Square = (function () {
             function Square(side) {
-                _super.call(this, side, side);
+                this.paths = {};
+                this.paths = new models.Rectangle(side, side).paths;
             }
             return Square;
-        })(models.Rectangle);
+        }());
         models.Square = Square;
         Square.metaParameters = [
             { title: "side", type: "range", min: 1, max: 100, value: 100 }
@@ -4072,7 +4070,7 @@ var MakerJs;
                 return 0;
             };
             return Star;
-        })();
+        }());
         models.Star = Star;
         Star.metaParameters = [
             { title: "number of sides", type: "range", min: 3, max: 24, value: 8 },
