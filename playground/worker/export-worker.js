@@ -9,8 +9,8 @@ module.require = function (id) {
     }
     return _this;
 };
-importScripts("../../external/OpenJsCad/csg.js", "../../external/OpenJsCad/formats.js", "../../target/js/node.maker.js", "../export-format.js");
-var makerjs = module['MakerJs'];
+importScripts("../../external/OpenJsCad/csg.js", "../../external/OpenJsCad/formats.js", "../../target/js/browser.maker.js", "../export-format.js");
+var makerjs = require('makerjs');
 var unionCount = 0;
 var unionIndex = 0;
 var polygonCount = 0;

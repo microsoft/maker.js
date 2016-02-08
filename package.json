@@ -1,6 +1,6 @@
 {
   "name": "makerjs",
-  "version": "0.6.10",
+  "version": "0.6.11",
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
   "main": "index.js",
   "scripts": {
@@ -34,15 +34,16 @@
   },
   "homepage": "https://github.com/Microsoft/maker.js",
   "devDependencies": {
-    "browserify": "^10.2.4",
+    "browserify": "^13.0.0",
     "detective": "^4.3.1",
     "highlight.js": "^9.0.0",
     "marked": "^0.3.5",
     "tsd": "^0.6.1",
     "typedoc": "^0.3.4",
-    "typescript": "^1.4.1"
+    "typescript": "^1.6.2"
   },
   "dependencies": {
+    "clone": "^1.0.2",
     "makerjs-band-clamp": "^1.0.0",
     "makerjs-heart": "^1.0.0",
     "makerjs-polygon-rimbox": "^1.0.2",

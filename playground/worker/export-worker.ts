@@ -17,10 +17,10 @@ module.require = (id: string): any => {
 importScripts(
     "../../external/OpenJsCad/csg.js", 
     "../../external/OpenJsCad/formats.js", 
-    "../../target/js/node.maker.js", 
+    "../../target/js/browser.maker.js", 
     "../export-format.js");
 
-var makerjs: typeof MakerJs = module['MakerJs'];
+var makerjs: typeof MakerJs = require('makerjs');
 
 var unionCount = 0;
 var unionIndex = 0;

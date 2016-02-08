@@ -1,4 +1,168 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"makerjs":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (Buffer){
+var clone = (function() {
+'use strict';
+
+/**
+ * Clones (copies) an Object using deep copying.
+ *
+ * This function supports circular references by default, but if you are certain
+ * there are no circular references in your object, you can save some CPU time
+ * by calling clone(obj, false).
+ *
+ * Caution: if `circular` is false and `parent` contains circular references,
+ * your program may enter an infinite loop and crash.
+ *
+ * @param `parent` - the object to be cloned
+ * @param `circular` - set to true if the object to be cloned may contain
+ *    circular references. (optional - true by default)
+ * @param `depth` - set to a number if the object is only to be cloned to
+ *    a particular depth. (optional - defaults to Infinity)
+ * @param `prototype` - sets the prototype to be used when cloning an object.
+ *    (optional - defaults to parent prototype).
+*/
+function clone(parent, circular, depth, prototype) {
+  var filter;
+  if (typeof circular === 'object') {
+    depth = circular.depth;
+    prototype = circular.prototype;
+    filter = circular.filter;
+    circular = circular.circular
+  }
+  // maintain two arrays for circular references, where corresponding parents
+  // and children have the same index
+  var allParents = [];
+  var allChildren = [];
+
+  var useBuffer = typeof Buffer != 'undefined';
+
+  if (typeof circular == 'undefined')
+    circular = true;
+
+  if (typeof depth == 'undefined')
+    depth = Infinity;
+
+  // recurse this function so we don't reset allParents and allChildren
+  function _clone(parent, depth) {
+    // cloning null always returns null
+    if (parent === null)
+      return null;
+
+    if (depth == 0)
+      return parent;
+
+    var child;
+    var proto;
+    if (typeof parent != 'object') {
+      return parent;
+    }
+
+    if (clone.__isArray(parent)) {
+      child = [];
+    } else if (clone.__isRegExp(parent)) {
+      child = new RegExp(parent.source, __getRegExpFlags(parent));
+      if (parent.lastIndex) child.lastIndex = parent.lastIndex;
+    } else if (clone.__isDate(parent)) {
+      child = new Date(parent.getTime());
+    } else if (useBuffer && Buffer.isBuffer(parent)) {
+      child = new Buffer(parent.length);
+      parent.copy(child);
+      return child;
+    } else {
+      if (typeof prototype == 'undefined') {
+        proto = Object.getPrototypeOf(parent);
+        child = Object.create(proto);
+      }
+      else {
+        child = Object.create(prototype);
+        proto = prototype;
+      }
+    }
+
+    if (circular) {
+      var index = allParents.indexOf(parent);
+
+      if (index != -1) {
+        return allChildren[index];
+      }
+      allParents.push(parent);
+      allChildren.push(child);
+    }
+
+    for (var i in parent) {
+      var attrs;
+      if (proto) {
+        attrs = Object.getOwnPropertyDescriptor(proto, i);
+      }
+
+      if (attrs && attrs.set == null) {
+        continue;
+      }
+      child[i] = _clone(parent[i], depth - 1);
+    }
+
+    return child;
+  }
+
+  return _clone(parent, depth);
+}
+
+/**
+ * Simple flat clone using prototype, accepts only objects, usefull for property
+ * override on FLAT configuration object (no nested props).
+ *
+ * USE WITH CAUTION! This may not behave as you wish if you do not know how this
+ * works.
+ */
+clone.clonePrototype = function clonePrototype(parent) {
+  if (parent === null)
+    return null;
+
+  var c = function () {};
+  c.prototype = parent;
+  return new c();
+};
+
+// private utility functions
+
+function __objToStr(o) {
+  return Object.prototype.toString.call(o);
+};
+clone.__objToStr = __objToStr;
+
+function __isDate(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Date]';
+};
+clone.__isDate = __isDate;
+
+function __isArray(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Array]';
+};
+clone.__isArray = __isArray;
+
+function __isRegExp(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object RegExp]';
+};
+clone.__isRegExp = __isRegExp;
+
+function __getRegExpFlags(re) {
+  var flags = '';
+  if (re.global) flags += 'g';
+  if (re.ignoreCase) flags += 'i';
+  if (re.multiline) flags += 'm';
+  return flags;
+};
+clone.__getRegExpFlags = __getRegExpFlags;
+
+return clone;
+})();
+
+if (typeof module === 'object' && module.exports) {
+  module.exports = clone;
+}
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":undefined}],"makerjs":[function(require,module,exports){
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -57,14 +221,17 @@ var MakerJs;
     }
     MakerJs.round = round;
     /**
+     * @private
+     */
+    var clone = require('clone');
+    /**
      * Clone an object.
      *
      * @param objectToClone The object to clone.
      * @returns A new clone of the original object.
      */
     function cloneObject(objectToClone) {
-        var serialized = JSON.stringify(objectToClone);
-        return JSON.parse(serialized);
+        return clone(objectToClone);
     }
     MakerJs.cloneObject = cloneObject;
     /**
@@ -846,7 +1013,7 @@ var MakerJs;
                 this.type = MakerJs.pathType.Arc;
             }
             return Arc;
-        })();
+        }());
         paths.Arc = Arc;
         /**
          * Class for circle path.
@@ -861,7 +1028,7 @@ var MakerJs;
                 this.type = MakerJs.pathType.Circle;
             }
             return Circle;
-        })();
+        }());
         paths.Circle = Circle;
         /**
          * Class for line path.
@@ -876,7 +1043,7 @@ var MakerJs;
                 this.type = MakerJs.pathType.Line;
             }
             return Line;
-        })();
+        }());
         paths.Line = Line;
         /**
          * Class for chord, which is simply a line path that connects the endpoints of an arc.
@@ -891,7 +1058,7 @@ var MakerJs;
                 this.end = arcPoints[1];
             }
             return Chord;
-        })();
+        }());
         paths.Chord = Chord;
         /**
          * Class for a parallel line path.
@@ -918,7 +1085,7 @@ var MakerJs;
                 MakerJs.path.move(this, newOrigin);
             }
             return Parallel;
-        })();
+        }());
         paths.Parallel = Parallel;
     })(paths = MakerJs.paths || (MakerJs.paths = {}));
 })(MakerJs || (MakerJs = {}));
@@ -1826,7 +1993,7 @@ var MakerJs;
                 }
             };
             return Exporter;
-        })();
+        }());
         exporter.Exporter = Exporter;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
@@ -2811,7 +2978,7 @@ var MakerJs;
                 return null;
             };
             return PointMap;
-        })();
+        }());
         model.PointMap = PointMap;
         /**
          * @private
@@ -3062,7 +3229,7 @@ var MakerJs;
                 return found;
             };
             return DeadEndFinder;
-        })();
+        }());
         function removeDeadEnds(modelContext, pointMatchingDistance) {
             if (pointMatchingDistance === void 0) { pointMatchingDistance = .005; }
             var serializedPointAccuracy = .0001;
@@ -3171,7 +3338,7 @@ var MakerJs;
                 }
             };
             return XmlTag;
-        })();
+        }());
         exporter.XmlTag = XmlTag;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
@@ -3638,7 +3805,7 @@ var MakerJs;
                 }
             }
             return ConnectTheDots;
-        })();
+        }());
         models.ConnectTheDots = ConnectTheDots;
         ConnectTheDots.metaParameters = [
             { title: "closed", type: "bool", value: true },
@@ -3651,20 +3818,15 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Polygon = (function (_super) {
-            __extends(Polygon, _super);
+        var Polygon = (function () {
             function Polygon(numberOfSides, radius, firstCornerAngleInDegrees) {
                 if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
-                _super.call(this, true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees));
+                this.paths = {};
+                this.paths = new models.ConnectTheDots(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees)).paths;
             }
             Polygon.getPoints = function (numberOfSides, radius, firstCornerAngleInDegrees) {
                 if (firstCornerAngleInDegrees === void 0) { firstCornerAngleInDegrees = 0; }
@@ -3677,7 +3839,7 @@ var MakerJs;
                 return points;
             };
             return Polygon;
-        })(models.ConnectTheDots);
+        }());
         models.Polygon = Polygon;
         Polygon.metaParameters = [
             { title: "number of sides", type: "range", min: 3, max: 24, value: 6 },
@@ -3700,7 +3862,7 @@ var MakerJs;
                 }
             }
             return BoltCircle;
-        })();
+        }());
         models.BoltCircle = BoltCircle;
         BoltCircle.metaParameters = [
             { title: "bolt circle radius", type: "range", min: 1, max: 100, value: 50 },
@@ -3728,7 +3890,7 @@ var MakerJs;
                 }
             }
             return BoltRectangle;
-        })();
+        }());
         models.BoltRectangle = BoltRectangle;
         BoltRectangle.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 100 },
@@ -3767,7 +3929,7 @@ var MakerJs;
                 }
             }
             return Dome;
-        })();
+        }());
         models.Dome = Dome;
         Dome.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3803,7 +3965,7 @@ var MakerJs;
                 }
             }
             return RoundRectangle;
-        })();
+        }());
         models.RoundRectangle = RoundRectangle;
         RoundRectangle.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3816,13 +3978,13 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Oval = (function (_super) {
-            __extends(Oval, _super);
+        var Oval = (function () {
             function Oval(width, height) {
-                _super.call(this, width, height, Math.min(height / 2, width / 2));
+                this.paths = {};
+                this.paths = new models.RoundRectangle(width, height, Math.min(height / 2, width / 2)).paths;
             }
             return Oval;
-        })(models.RoundRectangle);
+        }());
         models.Oval = Oval;
         Oval.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3879,7 +4041,7 @@ var MakerJs;
                 }
             }
             return OvalArc;
-        })();
+        }());
         models.OvalArc = OvalArc;
         OvalArc.metaParameters = [
             { title: "start angle", type: "range", min: -360, max: 360, step: 1, value: 180 },
@@ -3894,13 +4056,13 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Rectangle = (function (_super) {
-            __extends(Rectangle, _super);
+        var Rectangle = (function () {
             function Rectangle(width, height) {
-                _super.call(this, true, [[0, 0], [width, 0], [width, height], [0, height]]);
+                this.paths = {};
+                this.paths = new models.ConnectTheDots(true, [[0, 0], [width, 0], [width, height], [0, height]]).paths;
             }
             return Rectangle;
-        })(models.ConnectTheDots);
+        }());
         models.Rectangle = Rectangle;
         Rectangle.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3924,7 +4086,7 @@ var MakerJs;
                 }
             }
             return Ring;
-        })();
+        }());
         models.Ring = Ring;
         Ring.metaParameters = [
             { title: "outer radius", type: "range", min: 0, max: 100, step: 1, value: 50 },
@@ -3965,7 +4127,7 @@ var MakerJs;
                 this.paths['curve_end'] = MakerJs.path.moveRelative(MakerJs.path.mirror(curve, true, true), [width, height]);
             }
             return SCurve;
-        })();
+        }());
         models.SCurve = SCurve;
         SCurve.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
@@ -3990,7 +4152,7 @@ var MakerJs;
                 this.origin = origin;
             }
             return Slot;
-        })();
+        }());
         models.Slot = Slot;
         Slot.metaParameters = [
             {
@@ -4015,13 +4177,13 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Square = (function (_super) {
-            __extends(Square, _super);
+        var Square = (function () {
             function Square(side) {
-                _super.call(this, side, side);
+                this.paths = {};
+                this.paths = new models.Rectangle(side, side).paths;
             }
             return Square;
-        })(models.Rectangle);
+        }());
         models.Square = Square;
         Square.metaParameters = [
             { title: "side", type: "range", min: 1, max: 100, value: 100 }
@@ -4059,7 +4221,7 @@ var MakerJs;
                 return 0;
             };
             return Star;
-        })();
+        }());
         models.Star = Star;
         Star.metaParameters = [
             { title: "number of sides", type: "range", min: 3, max: 24, value: 8 },
@@ -4070,4 +4232,4 @@ var MakerJs;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 
-},{}]},{},[]);
+},{"clone":1}]},{},[]);
