@@ -6,7 +6,7 @@
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
     <!--
-        
+
     *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
     Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -37,8 +37,13 @@
     <script>
         //pretend we are in node
         var module = {};
+
+        function require(id) {
+            return window[id];
+        }
     </script>
 
+    <script src="../node_modules/clone/clone.js"></script>
     <script src="../src/core/maker.js"></script>
     <script src="../src/core/angle.js"></script>
     <script src="../src/core/point.js"></script>
@@ -181,9 +186,7 @@ this.paths = {
     wink: new makerjs.paths.Line([-35, 20], [-15, 20])
 };
 this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScript code, then click **Run** to see your drawing.';
-
 //press enter here to add more blank lines
-
 </pre>
             </div>
         </section>

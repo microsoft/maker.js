@@ -2,6 +2,20 @@
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+ 
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+ 
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
 /**
  * Root module for Maker.js.
  *
@@ -1314,7 +1328,8 @@ declare module MakerJs.models {
     }
 }
 declare module MakerJs.models {
-    class Polygon extends ConnectTheDots {
+    class Polygon implements IModel {
+        paths: IPathMap;
         constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number);
         static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number): IPoint[];
     }
@@ -1344,7 +1359,8 @@ declare module MakerJs.models {
     }
 }
 declare module MakerJs.models {
-    class Oval extends RoundRectangle {
+    class Oval implements IModel {
+        paths: IPathMap;
         constructor(width: number, height: number);
     }
 }
@@ -1355,7 +1371,8 @@ declare module MakerJs.models {
     }
 }
 declare module MakerJs.models {
-    class Rectangle extends ConnectTheDots {
+    class Rectangle implements IModel {
+        paths: IPathMap;
         constructor(width: number, height: number);
     }
 }
@@ -1379,7 +1396,8 @@ declare module MakerJs.models {
     }
 }
 declare module MakerJs.models {
-    class Square extends Rectangle {
+    class Square implements IModel {
+        paths: IPathMap;
         constructor(side: number);
     }
 }
