@@ -4,17 +4,106 @@ module MakerJs.paths {
 
     /**
      * Class for arc path.
-     * 
-     * @param origin The center point of the arc.
-     * @param radius The radius of the arc.
-     * @param startAngle The start angle of the arc.
-     * @param endAngle The end angle of the arc.
      */
     export class Arc implements IPathArc {
+        public origin: IPoint;
+        public radius: number;
+        public startAngle: number;
+        public endAngle: number;
         public type: string;
 
-        constructor(public origin: IPoint, public radius: number, public startAngle: number, public endAngle: number) {
+        /**
+         * Class for arc path, created from origin point, radius, start angle, and end angle.
+         * 
+         * @param origin The center point of the arc.
+         * @param radius The radius of the arc.
+         * @param startAngle The start angle of the arc.
+         * @param endAngle The end angle of the arc.
+         */
+        constructor(origin: IPoint, radius: number, startAngle: number, endAngle: number);
+
+        /**
+         * Class for arc path, created from 2 points, radius, and sweep flag indicating large or small arc.
+         * 
+         * @param p1 First end point of the arc.
+         * @param p2 Second end point of the arc.
+         * @param radius The radius of the arc.
+         * @param sweep Boolean flag to indicate clockwise direction.
+         */
+        constructor(p1: IPoint, p2: IPoint, radius: number, sweep: boolean);
+
+        /**
+         * Class for arc path, created from 2 points and optional boolean flag indicating clockwise.
+         * 
+         * @param p1 First end point of the arc.
+         * @param p2 Second end point of the arc.
+         * @param clockwise Boolean flag to indicate clockwise direction.
+         */
+        constructor(p1: IPoint, p2: IPoint, clockwise: boolean);
+
+        /**
+         * Class for arc path, created from 3 points.
+         * 
+         * @param p1 First end point of the arc.
+         * @param p2 Middle point on the arc.
+         * @param p3 Second end point of the arc.
+         */
+        constructor(p1: IPoint, p2: IPoint, clockwise: boolean);
+
+        constructor(...args: any[]) {
             this.type = pathType.Arc;
+
+            if (args.length == 4) {
+
+                if (typeof args[1] === 'number') {
+                    this.origin = args[0];
+                    this.radius = args[1];
+                    this.startAngle = args[2];
+                    this.endAngle = args[3];
+
+                } else {
+                    //SVG style arc
+
+                    //TODO
+
+                }
+
+            } else {
+
+                var circle: Circle;
+                if (isPoint(args[2])) {
+                    circle = new Circle(args[0], args[1], args[2]);
+                } else {
+                    circle = new Circle(args[0], args[1]);
+                }
+                this.origin = circle.origin;
+                this.radius = circle.radius;
+
+                if (isPoint(args[2])) {
+                    //from 3 points
+
+                    var angles: number[] = [];
+                    for (var i = 0; i < 3; i++) {
+                        angles.push(angle.ofPointInDegrees(this.origin, args[i]));
+                    }
+
+                    this.startAngle = angles[0];
+                    this.endAngle = angles[2];
+
+                    if (!measure.isBetweenArcAngles(angles[1], this, false)) {
+                        this.startAngle = angles[2];
+                        this.endAngle = angles[0];
+                    }
+
+                } else {
+                    //from 2 points and clockwise flag
+                    var clockwise = args[2] as boolean;
+
+                    this.startAngle = angle.ofPointInDegrees(this.origin, args[clockwise ? 1 : 0]);
+                    this.endAngle = angle.ofPointInDegrees( this.origin, args[clockwise ? 0 : 1]);
+                }
+
+            }
         }
     }
 
@@ -52,7 +141,6 @@ module MakerJs.paths {
         constructor(p1: IPoint, p2: IPoint, p3: IPoint);
 
         constructor(...args: any[]) {
-
             this.type = pathType.Circle;
 
             if (args.length == 2) {
