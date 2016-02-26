@@ -20,15 +20,76 @@ module MakerJs.paths {
 
     /**
      * Class for circle path.
-     * 
-     * @param origin The center point of the circle.
-     * @param radius The radius of the circle.
      */
     export class Circle implements IPathCircle {
         public type: string;
+        public origin: IPoint;
+        public radius: number;
 
-        constructor(public origin: IPoint, public radius: number) {
+        /**
+         * Class for circle path, created from origin point and radius.
+         * 
+         * @param origin The center point of the circle.
+         * @param radius The radius of the circle.
+         */
+        constructor(origin: IPoint, radius: number);
+
+        /**
+         * Class for circle path, created from 2 points.
+         * 
+         * @param p1 First point on the circle.
+         * @param p2 Second point on the circle.
+         */
+        constructor(p1: IPoint, p2: IPoint);
+
+        /**
+         * Class for circle path, created from 3 points.
+         * 
+         * @param p1 First point on the circle.
+         * @param p2 Second point on the circle.
+         * @param p3 Third point on the circle.
+         */
+        constructor(p1: IPoint, p2: IPoint, p3: IPoint);
+
+        constructor(...args: any[]) {
+
             this.type = pathType.Circle;
+
+            if (args.length == 2) {
+
+                if (typeof args[1] === 'number') {
+                    this.origin = args[0];
+                    this.radius = args[1];
+
+                } else {
+                    //Circle from 2 points
+                    this.origin = point.average(args[0], args[1]);
+                    this.radius = measure.pointDistance(this.origin, args[0]);
+                }
+
+            } else {
+                //Circle from 3 points
+
+                //create 2 lines with 2nd point in common
+                var lines: IPathLine[] = [
+                    new Line(args[0], args[1]),
+                    new Line(args[1], args[2])
+                ];
+
+                //create perpendicular lines
+                var perpendiculars: IPathLine[] = [];
+                for (var i = 2; i--;) {
+                    var midpoint = point.middle(lines[i]);
+                    perpendiculars.push(<IPathLine>path.rotate(lines[i], 90, midpoint));
+                }
+
+                //find intersection of slopes of perpendiculars
+                this.origin = path.slopeIntersectionPoint(perpendiculars[0], perpendiculars[1]);
+
+                //radius is distance to any of the 3 points
+                this.radius = measure.pointDistance(this.origin, args[0]);
+            }
+
         }
     }
 
