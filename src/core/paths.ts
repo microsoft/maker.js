@@ -1,6 +1,14 @@
 module MakerJs.paths {
     
-    //shortcuts
+    /**
+     * @private
+     */
+    interface IArcSpan {
+        origin: IPoint;
+        startAngle: number;
+        endAngle: number;
+        size: number;
+    }
 
     /**
      * Class for arc path.
@@ -23,14 +31,15 @@ module MakerJs.paths {
         constructor(origin: IPoint, radius: number, startAngle: number, endAngle: number);
 
         /**
-         * Class for arc path, created from 2 points, radius, and sweep flag indicating large or small arc.
+         * Class for arc path, created from 2 points, radius, large Arc flag, and clockwise flag.
          * 
          * @param p1 First end point of the arc.
          * @param p2 Second end point of the arc.
          * @param radius The radius of the arc.
-         * @param sweep Boolean flag to indicate clockwise direction.
+         * @param largeArc Boolean flag to indicate clockwise direction.
+         * @param clockwise Boolean flag to indicate clockwise direction.
          */
-        constructor(p1: IPoint, p2: IPoint, radius: number, sweep: boolean);
+        constructor(p1: IPoint, p2: IPoint, radius: number, largeArc: boolean, clockwise: boolean);
 
         /**
          * Class for arc path, created from 2 points and optional boolean flag indicating clockwise.
@@ -39,7 +48,7 @@ module MakerJs.paths {
          * @param p2 Second end point of the arc.
          * @param clockwise Boolean flag to indicate clockwise direction.
          */
-        constructor(p1: IPoint, p2: IPoint, clockwise: boolean);
+        constructor(p1: IPoint, p2: IPoint, clockwise?: boolean);
 
         /**
          * Class for arc path, created from 3 points.
@@ -48,62 +57,113 @@ module MakerJs.paths {
          * @param p2 Middle point on the arc.
          * @param p3 Second end point of the arc.
          */
-        constructor(p1: IPoint, p2: IPoint, clockwise: boolean);
+        constructor(p1: IPoint, p2: IPoint, p3: IPoint);
 
         constructor(...args: any[]) {
-            this.type = pathType.Arc;
 
-            if (args.length == 4) {
+            switch (args.length) {
 
-                if (typeof args[1] === 'number') {
+                case 5:
+                    //SVG style arc designation
+
+                    this.radius = args[2];
+
+                    //find the 2 potential origins
+                    var origins = path.intersection(
+                        new Circle(args[0], this.radius),
+                        new Circle(args[1], this.radius)
+                    );
+
+                    //there may be a condition where the radius is insufficient! Why does the SVG spec allow this?
+                    if (origins) {
+
+                        var largeArc = args[3] as boolean;
+                        var clockwise = args[4] as boolean;
+                        var span: IArcSpan;
+                        var spans: IArcSpan[] = [];
+
+                        for (var i = 2; i--;) {
+                            var origin = origins.intersectionPoints[i];
+                            var startAngle = angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
+                            var endAngle = angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
+
+                            if (endAngle < startAngle) {
+                                endAngle += 360;
+                            }
+
+                            span = {
+                                origin: origin,
+                                startAngle: startAngle,
+                                endAngle: endAngle,
+                                size: endAngle - startAngle
+                            };
+
+                            //insert sorted by size ascending
+                            if (spans.length == 0 || span.size > spans[0].size) {
+                                spans.push(span);
+                            } else {
+                                spans.unshift(span);
+                            }
+                        }
+
+                        var index = largeArc ? 1 : 0;
+                        span = spans[index];
+
+                        this.origin = span.origin;
+                        this.startAngle = span.startAngle;
+                        this.endAngle = span.endAngle;
+                    }
+
+                    break;
+
+                case 4:
                     this.origin = args[0];
                     this.radius = args[1];
                     this.startAngle = args[2];
                     this.endAngle = args[3];
+                    break;
 
-                } else {
-                    //SVG style arc
+                case 3:
 
-                    //TODO
+                    if (isPoint(args[2])) {
+                        //from 3 points
 
-                }
+                        Circle.apply(this, args);
 
-            } else {
+                        var angles: number[] = [];
+                        for (var i = 0; i < 3; i++) {
+                            angles.push(angle.ofPointInDegrees(this.origin, args[i]));
+                        }
 
-                var circle: Circle;
-                if (isPoint(args[2])) {
-                    circle = new Circle(args[0], args[1], args[2]);
-                } else {
-                    circle = new Circle(args[0], args[1]);
-                }
-                this.origin = circle.origin;
-                this.radius = circle.radius;
+                        this.startAngle = angles[0];
+                        this.endAngle = angles[2];
 
-                if (isPoint(args[2])) {
-                    //from 3 points
+                        //swap start and end angles if this arc does not contain the midpoint
+                        if (!measure.isBetweenArcAngles(angles[1], this, false)) {
+                            this.startAngle = angles[2];
+                            this.endAngle = angles[0];
+                        }
 
-                    var angles: number[] = [];
-                    for (var i = 0; i < 3; i++) {
-                        angles.push(angle.ofPointInDegrees(this.origin, args[i]));
+                        //do not fall through if this was 3 points
+                        break;
                     }
 
-                    this.startAngle = angles[0];
-                    this.endAngle = angles[2];
+                //fall through to below if 2 points
 
-                    if (!measure.isBetweenArcAngles(angles[1], this, false)) {
-                        this.startAngle = angles[2];
-                        this.endAngle = angles[0];
-                    }
-
-                } else {
-                    //from 2 points and clockwise flag
+                case 2:
+                    //from 2 points (and optional clockwise flag)
                     var clockwise = args[2] as boolean;
 
-                    this.startAngle = angle.ofPointInDegrees(this.origin, args[clockwise ? 1 : 0]);
-                    this.endAngle = angle.ofPointInDegrees( this.origin, args[clockwise ? 0 : 1]);
-                }
+                    Circle.call(this, args[0], args[1]);
 
+                    this.startAngle = angle.ofPointInDegrees(this.origin, args[clockwise ? 1 : 0]);
+                    this.endAngle = angle.ofPointInDegrees(this.origin, args[clockwise ? 0 : 1]);
+
+                    break;
             }
+
+            //do this after Circle.apply / Circle.call to make sure this is an arc
+            this.type = pathType.Arc;
         }
     }
 
