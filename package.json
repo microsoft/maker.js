@@ -8,7 +8,7 @@
     "cat-tsd": "cat target/ts/tsd-header.txt target/maker.d.ts > target/ts/makerjs.d.ts && rm target/maker.d.ts",
     "target-node-platform": "cd target && mv maker.js js/node.maker.js && cd ..",
     "target-browser-platform": "cd target/js && browserify --ignore buffer -o browser.maker.js -r ./node.maker.js:makerjs && cd ../..",
-    "build-debug": "tsc -p src",
+    "build-debug": "tsc",
     "build": "tsc -p target && npm run cat-tsd && npm run target-node-platform && npm run target-browser-platform && cp target/js/node.maker.js ./index.js && npm run compile-playground && npm run versionize",
     "versionize": "node ./target/versionize.js",
     "predocs": "rm -r -f ./docs/api",
