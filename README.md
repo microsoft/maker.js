@@ -88,6 +88,12 @@ In your JavaScript, use the require function to get a reference:
 var makerjs = require('makerjs');
 ```
 
+### Draw!
+Learn how to draw in Maker.js by folowing [the tutorial](http://microsoft.github.io/maker.js/docs/basic-drawing/)
+
+### API
+Browse all the library features in the [API Documentation](http://microsoft.github.io/maker.js/docs/api/)
+
 ---
 
 **[Contribute to this project!](CONTRIBUTING.md)**
