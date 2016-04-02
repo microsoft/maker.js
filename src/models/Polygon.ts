@@ -1,4 +1,4 @@
-module MakerJs.models {
+namespace MakerJs.models {
     export class Polygon implements IModel {
         
         public paths: IPathMap = {};

@@ -1,4 +1,4 @@
-module MakerJs.angle {
+namespace MakerJs.angle {
 
     /**
      * Find out if two angles are equal.

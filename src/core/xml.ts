@@ -1,4 +1,4 @@
-﻿module MakerJs.exporter {
+﻿namespace MakerJs.exporter {
 
     /**
      * Attributes for an XML tag.

@@ -1,4 +1,4 @@
-module MakerJs.models {
+namespace MakerJs.models {
     export class Rectangle implements IModel {
 
         public paths: IPathMap = {};

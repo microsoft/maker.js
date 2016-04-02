@@ -24,7 +24,7 @@ and limitations under the License.
  * ```
  * 
  */
-module MakerJs {
+namespace MakerJs {
 
     //units
 

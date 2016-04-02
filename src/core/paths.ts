@@ -1,4 +1,4 @@
-module MakerJs.paths {
+namespace MakerJs.paths {
     
     /**
      * @private

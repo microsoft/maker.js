@@ -1,4 +1,4 @@
-module MakerJs.solvers {
+namespace MakerJs.solvers {
 
     /**
      * Solves for the angle of a triangle when you know lengths of 3 sides.

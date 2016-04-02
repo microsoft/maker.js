@@ -1,4 +1,4 @@
-module MakerJs.measure {
+namespace MakerJs.measure {
 
     /**
      * Interface to Math.min and Math.max functions.
@@ -71,13 +71,9 @@ module MakerJs.measure {
      */
     export function isBetweenArcAngles(angleInQuestion: number, arc: IPathArc, exclusive: boolean): boolean {
 
-        var startAngle = arc.startAngle;
-        var endAngle = angle.ofArcEnd(arc);
-
-        var span = endAngle - startAngle;
-
-        startAngle = angle.noRevolutions(startAngle);
-        endAngle = startAngle + span;
+        var startAngle = angle.noRevolutions(arc.startAngle);
+        var span = arcAngle(arc);
+        var endAngle = startAngle + span;
 
         angleInQuestion = angle.noRevolutions(angleInQuestion);
 

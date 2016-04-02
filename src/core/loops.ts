@@ -1,4 +1,4 @@
-﻿module MakerJs.model {
+﻿namespace MakerJs.model {
     
     /**
      * @private

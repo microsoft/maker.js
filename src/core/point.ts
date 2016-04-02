@@ -1,4 +1,4 @@
-module MakerJs.point {
+namespace MakerJs.point {
 
     /**
      * Add two points together and return the result as a new point object.
