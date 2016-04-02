@@ -219,16 +219,6 @@ namespace MakerJs.path {
     /**
      * @private
      */
-    interface ISlope {
-        hasSlope: boolean;
-        slope?: number;
-        line: IPathLine;
-        yIntercept?: number;
-    }
-
-    /**
-     * @private
-     */
     function getSlope(line: IPathLine): ISlope {
         var dx = line.end[0] - line.origin[0];
         if (round(dx) == 0) {

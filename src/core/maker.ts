@@ -292,6 +292,16 @@ namespace MakerJs {
     };
 
     /**
+     * Slope and y-intercept of a line.
+     */
+    export interface ISlope {
+        hasSlope: boolean;
+        slope?: number;
+        line: IPathLine;
+        yIntercept?: number;
+    }
+
+    /**
      * Options to pass to path.intersection()
      */
     export interface IPathIntersectionOptions {
