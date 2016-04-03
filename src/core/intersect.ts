@@ -217,9 +217,9 @@ namespace MakerJs.path {
     }
 
     /**
-     * @private
+     * Gets the slope of a line.
      */
-    function getSlope(line: IPathLine): ISlope {
+    export function getSlope(line: IPathLine): ISlope {
         var dx = line.end[0] - line.origin[0];
         if (round(dx) == 0) {
             return {
