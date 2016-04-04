@@ -295,9 +295,25 @@ namespace MakerJs {
      * Slope and y-intercept of a line.
      */
     export interface ISlope {
+
+        /**
+         * Boolean to see if line has slope or is vertical.
+         */
         hasSlope: boolean;
+
+        /**
+         * Optional value of non-vertical slope.
+         */
         slope?: number;
+
+        /**
+         * Line used to calculate this slope.
+         */
         line: IPathLine;
+
+        /**
+         * Optional value of y when x = 0.
+         */
         yIntercept?: number;
     }
 
@@ -378,6 +394,28 @@ namespace MakerJs {
          * Flag to remove looped paths from the original model.
          */
         removeFromOriginal?: boolean;
+    }
+
+    /**
+     * Options to pass to model.simplify()
+     */
+    export interface ISimplifyOptions {
+
+        /**
+         * Optional 
+         */
+        pointMatchingDistance?: number;
+
+        /**
+         * Optional 
+         */
+        slopeMatchingDistance?: number;
+
+        /**
+         * Optional 
+         */
+        scalarMatchingDistance?: number;
+
     }
 
     /**
@@ -495,6 +533,50 @@ namespace MakerJs {
      */
     export interface IRefPathInModel extends IRefPathIdInModel {
         pathContext: IPath;
+    }
+
+    /**
+     * A map of functions which accept a path reference as a parameter.
+     * @private
+     */
+    export interface IRefPathInModelFunctionMap {
+
+        /**
+         * Key is the type of a path, value is a function which accepts a path object as its parameter.
+         */
+        [type: string]: (refPathInModel: IRefPathInModel) => void;
+    }
+
+    /**
+     * A collection wrapper for items that share a common point.
+     */
+    export interface IPointMappedItem<T> {
+        averagePoint: IPoint;
+        item: T[];
+    }
+
+    /**
+     * A collection wrapper for items that share a common slope.
+     */
+    export interface ISlopeMappedItem {
+        averageSlope: ISlope;
+        lineRefs: IRefPathInModel[];
+    }
+
+    /**
+     * Options for expanding paths.
+     */
+    export interface IExpandOptions {
+
+        /**
+         * Flag to use straight joints, default is curved joints.
+         */
+        straight?: boolean;
+
+        /**
+         * Flag to optionally bevel joints, only used when joints are straight.
+         */
+        bevel?: boolean;
     }
 
     /**
