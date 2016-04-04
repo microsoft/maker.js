@@ -49,7 +49,7 @@
             return null;
         }
 
-        private removeCollection(key: K): boolean {
+        public removeCollection(key: K): boolean {
 
             if (this.findCollection(key, (index: number) => { this.collections.splice(index, 1); })) {
                 return true;
@@ -58,7 +58,7 @@
             return false;
         }
 
-        private removeItemFromCollection(key: K, item: T): boolean {
+        public removeItemFromCollection(key: K, item: T): boolean {
 
             var collection = this.findCollection(key);
 
@@ -73,6 +73,14 @@
             return false;
         }
 
+        public getCollectionsOfMultiple(cb: (items: T[]) => void) {
+            for (var i = 0; i < this.collections.length; i++) {
+                var collection = this.collections[i];
+                if (collection.items.length > 1) {
+                    cb(collection.items);
+                }
+            }
+        }
     }
 
 }
