@@ -1,6 +1,52 @@
 ﻿namespace MakerJs.model {
 
     /**
+     * @private
+     */
+    function checkForOverlaps(
+        refPaths: IRefPathInModel[],
+        isOverlapping: (path1: IPath, path2: IPath, excludeTangents: boolean) => boolean,
+        overlapUnion: (path1: IPath, path2: IPath) => void) {
+
+        var currIndex = 0;
+
+        do {
+            var root = refPaths[currIndex];
+
+            do {
+                var overlaps = false;
+
+                for (var i = currIndex + 1; i < refPaths.length; i++) {
+                    var arcRef = refPaths[i];
+
+                    overlaps = isOverlapping(root.pathContext, arcRef.pathContext, false);
+                    if (overlaps) {
+
+                        overlapUnion(root.pathContext, arcRef.pathContext);
+                        delete arcRef.modelContext.paths[arcRef.pathId];
+                        refPaths.splice(i, 1);
+                        break;
+                    }
+                }
+
+            } while (overlaps)
+
+            currIndex++;
+        } while (currIndex < refPaths.length)
+    }
+
+    /**
+     * @private
+     */
+    export function normalizedArcLimits(arc: IPathArc) {
+        var startAngle = angle.noRevolutions(arc.startAngle);
+        return {
+            startAngle: startAngle,
+            endAngle: measure.arcAngle(arc) + startAngle
+        };
+    }
+
+    /**
      * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path.
      * 
      * @param modelContext The model to search for similar paths.
@@ -17,29 +63,9 @@
             return false;
         }
 
-        function compareSlopes(slope1: ISlope, slope2: ISlope): boolean {
-
-            //see if slopes are vertical
-            if (!slope1.hasSlope && !slope2.hasSlope) {
-
-                //true if they both have the same x
-                return slope1.line.origin[0] == slope2.line.origin[0];
-            }
-
-            //see if both have slope
-            if (slope1.hasSlope && slope2.hasSlope) {
-
-                //true if they have the same y-intercept and slope
-                return (Math.abs(slope1.yIntercept - slope2.yIntercept) <= opts.scalarMatchingDistance)
-                    && (Math.abs(slope1.slope - slope2.slope) <= opts.slopeMatchingDistance);
-            }
-
-            return false;
-        }
-
         var similarArcs = new Collector<IPathCircle, IRefPathInModel>(compareCircles);
         var similarCircles = new Collector<IPathCircle, IRefPathInModel>(compareCircles);
-        var similarLines = new Collector<ISlope, IRefPathInModel>(compareSlopes);
+        var similarLines = new Collector<ISlope, IRefPathInModel>(measure.isSlopeEqual);
 
         var map: IRefPathInModelFunctionMap = {};
 
@@ -58,7 +84,6 @@
 
         var opts: ISimplifyOptions = {
             scalarMatchingDistance: .001,
-            slopeMatchingDistance: .001,
             pointMatchingDistance: .005
         };
         extendObject(opts, options);
@@ -79,16 +104,62 @@
 
         });
 
-        //for all circles that are similar, delete all but the first.
-        //TODO
-
         //for all arcs that are similar, see if they overlap.
         //combine overlapping arcs into the first one and delete the second.
-        //TODO
+        similarArcs.getCollectionsOfMultiple(function (key: IPathCircle, arcRefs: IRefPathInModel[]) {
+            checkForOverlaps(arcRefs, measure.isArcOverlapping, function (arc1: IPathArc, arc2: IPathArc) {
+
+                var limit1 = normalizedArcLimits(arc1);
+                var limit2 = normalizedArcLimits(arc2);
+
+                arc1.startAngle = Math.min(limit1.startAngle, limit2.startAngle);
+                arc1.endAngle = Math.max(limit1.endAngle, limit2.endAngle);
+            });
+        });
+
+        //for all circles that are similar, delete all but the first.
+        similarCircles.getCollectionsOfMultiple(function (key: IPathCircle, circleRefs: IRefPathInModel[]) {
+            for (var i = 1; i < circleRefs.length; i++) {
+                var circleRef = circleRefs[i];
+                delete circleRef.modelContext.paths[circleRef.pathId];
+            }
+        });
 
         //for all lines that are similar, see if they overlap.
         //combine overlapping lines into the first one and delete the second.
-        //TODO
+        similarLines.getCollectionsOfMultiple(function (slope: ISlope, arcRefs: IRefPathInModel[]) {
+            checkForOverlaps(arcRefs, measure.isLineOverlapping, function (line1: IPathLine, line2: IPathLine) {
+
+                var box: IModel = { paths: { line1: line1, line2: line2 } };
+                var m = measure.modelExtents(box);
+
+                if (!slope.hasSlope) {
+                    //vertical
+                    line1.origin[1] = m.low[1];
+                    line1.end[1] = m.high[1];
+
+                } else {
+                    //non-vertical
+
+                    if (slope.slope < 0) {
+                        //downward
+                        line1.origin = [m.low[0], m.high[1]];
+                        line1.end = [m.high[0], m.low[1]];
+
+                    } else if (slope.slope > 0) {
+                        //upward
+                        line1.origin = m.low;
+                        line1.end = m.high;
+
+                    } else {
+                        //horizontal
+                        line1.origin[0] = m.low[0];
+                        line1.end[0] = m.high[0];
+                    }
+                }
+
+            });
+        });
 
         return modelToSimplify;
     }

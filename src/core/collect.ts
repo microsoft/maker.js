@@ -73,11 +73,11 @@
             return false;
         }
 
-        public getCollectionsOfMultiple(cb: (items: T[]) => void) {
+        public getCollectionsOfMultiple(cb: (key: K, items: T[]) => void) {
             for (var i = 0; i < this.collections.length; i++) {
                 var collection = this.collections[i];
                 if (collection.items.length > 1) {
-                    cb(collection.items);
+                    cb(collection.key, collection.items);
                 }
             }
         }

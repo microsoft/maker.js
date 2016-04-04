@@ -409,11 +409,6 @@ namespace MakerJs {
         /**
          * Optional 
          */
-        slopeMatchingDistance?: number;
-
-        /**
-         * Optional 
-         */
         scalarMatchingDistance?: number;
 
     }
