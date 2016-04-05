@@ -101,11 +101,14 @@ namespace MakerJs.model {
 
         var first = true;
 
-        walkPaths(modelToExpand, function (modelContext: IModel, pathId: string, pathContext: IPath) {
+        //TODO: work without origination
+        var originated = originate(modelToExpand);
+
+        walkPaths(originated, function (modelContext: IModel, pathId: string, pathContext: IPath) {
             var expandedPathModel = path.expand(pathContext, expansion, true);
 
             if (expandedPathModel) {
-                var newId = getSimilarModelId(result, pathId);
+                var newId = getSimilarModelId(result.models['expansions'], pathId);
 
                 model.originate(expandedPathModel);
 
