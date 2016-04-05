@@ -29,6 +29,38 @@
         return result;
     }
 
+    export function straighten(arc: IPathArc, bevel?: boolean): IModel {
+
+        var span = measure.arcAngle(arc);
+        var tips = 1;
+
+        if (span >= 270) {
+            tips = 4;
+        } else if (span > 180) {
+            tips = 3;
+        } else if (span > 150 || bevel) {   //30 degrees is the sharpest
+            tips = 2;
+        }
+
+        var peakRadians = angle.toRadians(span / tips);
+        var circumscribedRadius = models.Polygon.circumscribedRadius(arc.radius, peakRadians);
+        var radians = angle.toRadians(arc.startAngle) + peakRadians / 2;
+        var ends = point.fromArc(arc);
+        var points: IPoint[] = [point.subtract(ends[0], arc.origin)];
+
+        for (var i = 0; i < tips; i++) {
+            points.push(point.fromPolar(radians, circumscribedRadius));
+            radians += peakRadians;
+        }
+
+        points.push(point.subtract(ends[1], arc.origin));
+
+        var result = new models.ConnectTheDots(false, points);
+        (<IModel>result).origin = arc.origin;
+
+        return result;
+    }
+
 }
 
 namespace MakerJs.model {
@@ -37,9 +69,11 @@ namespace MakerJs.model {
 
         if (expansion <= 0) return null;
 
-        //TODO: separate the result into 2 models, between paths and caps
         var result: IModel = {
-            models: {}
+            models: {
+                expansions: { models: {} },
+                caps: { models: {} }
+            }
         };
 
         var first = true;
@@ -56,17 +90,44 @@ namespace MakerJs.model {
                     model.combine(result, expandedPathModel);
                 }
 
-                result.models[newId] = expandedPathModel;
+                result.models['expansions'].models[newId] = expandedPathModel;
+
+                if (expandedPathModel.models) {
+                    var caps = expandedPathModel.models['Caps'];
+
+                    if (caps) {
+                        delete expandedPathModel.models['Caps'];
+
+                        result.models['caps'].models[newId] = caps;
+                    }
+                }
+
                 first = false;
             }
         });
 
         if (options.straight) {
 
-            //TODO simplify only the caps
-            //simplify(result);
+            var roundCaps = result.models['caps'];
 
-            //TODO: straighten each cap, optionally beveling
+            simplify(roundCaps);
+
+            var straightCaps: IModel = { models: {} };
+
+            //straighten each cap, optionally beveling
+            for (var id in roundCaps.models) {
+
+                var straightened: IModel = { models: {} };
+
+                walkPaths(roundCaps.models[id], function (modelContext: IModel, pathId: string, pathContext: IPath) {
+                    straightened.models[pathId] = path.straighten(<IPathArc>pathContext, options.bevel);
+                });
+
+                straightCaps.models[id] = straightened;
+            }
+
+            //replace the rounded with the straightened
+            result.models['caps'] = straightCaps;
         }
 
         return result;
