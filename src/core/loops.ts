@@ -338,7 +338,7 @@
     }
 
     /**
-     * Remove paths from a model which have endpoints that do not connect ot other paths.
+     * Remove paths from a model which have endpoints that do not connect to other paths.
      * 
      * @param modelContext The model to search for dead ends.
      * @param options Optional options object.

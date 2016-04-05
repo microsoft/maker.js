@@ -1,5 +1,13 @@
 ﻿namespace MakerJs.path {
 
+    /**
+     * Expand path by creating a model which surrounds it.
+     *
+     * @param pathToExpand Path to expand.
+     * @param expansion Distance to expand.
+     * @param isolateCaps Optional flag to put the end caps into a separate model named "caps".
+     * @returns Model which surrounds the path.
+     */
     export function expand(pathToExpand: IPath, expansion: number, isolateCaps?: boolean): IModel {
 
         if (!pathToExpand) return null;
@@ -29,28 +37,35 @@
         return result;
     }
 
+    /**
+     * Represent an arc using straight lines.
+     *
+     * @param arc Arc to straighten.
+     * @param bevel Optional flag to bevel the angle to prevent it from being too sharp.
+     * @returns Model of straight lines with same endpoints as the arc.
+     */
     export function straighten(arc: IPathArc, bevel?: boolean): IModel {
 
-        var span = measure.arcAngle(arc);
-        var tips = 1;
+        var arcSpan = measure.arcAngle(arc);
+        var joints = 1;
 
-        if (span >= 270) {
-            tips = 4;
-        } else if (span > 180) {
-            tips = 3;
-        } else if (span > 150 || bevel) {   //30 degrees is the sharpest
-            tips = 2;
+        if (arcSpan >= 270) {
+            joints = 4;
+        } else if (arcSpan > 180) {
+            joints = 3;
+        } else if (arcSpan > 150 || bevel) {   //30 degrees is the sharpest
+            joints = 2;
         }
 
-        var peakRadians = angle.toRadians(span / tips);
-        var circumscribedRadius = models.Polygon.circumscribedRadius(arc.radius, peakRadians);
-        var radians = angle.toRadians(arc.startAngle) + peakRadians / 2;
+        var jointAngleInRadians = angle.toRadians(arcSpan / joints);
+        var circumscribedRadius = models.Polygon.circumscribedRadius(arc.radius, jointAngleInRadians);
         var ends = point.fromArc(arc);
         var points: IPoint[] = [point.subtract(ends[0], arc.origin)];
+        var a = angle.toRadians(arc.startAngle) + jointAngleInRadians / 2;
 
-        for (var i = 0; i < tips; i++) {
-            points.push(point.fromPolar(radians, circumscribedRadius));
-            radians += peakRadians;
+        for (var i = 0; i < joints; i++) {
+            points.push(point.fromPolar(a, circumscribedRadius));
+            a += jointAngleInRadians;
         }
 
         points.push(point.subtract(ends[1], arc.origin));
@@ -65,7 +80,15 @@
 
 namespace MakerJs.model {
 
-    export function expandPaths(modelToExpand: IModel, expansion: number, options: IExpandOptions = {}): IModel {
+    /**
+     * Expand all paths in a model, then combine the resulting expansions.
+     *
+     * @param modelToExpand Model to expand.
+     * @param expansion Distance to expand.
+     * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
+     * @returns Model which surrounds the paths of the original model.
+     */
+    export function expandPaths(modelToExpand: IModel, expansion: number, joints = 0): IModel {
 
         if (expansion <= 0) return null;
 
@@ -106,7 +129,7 @@ namespace MakerJs.model {
             }
         });
 
-        if (options.straight) {
+        if (joints) {
 
             var roundCaps = result.models['caps'];
 
@@ -120,7 +143,7 @@ namespace MakerJs.model {
                 var straightened: IModel = { models: {} };
 
                 walkPaths(roundCaps.models[id], function (modelContext: IModel, pathId: string, pathContext: IPath) {
-                    straightened.models[pathId] = path.straighten(<IPathArc>pathContext, options.bevel);
+                    straightened.models[pathId] = path.straighten(<IPathArc>pathContext, joints == 2);
                 });
 
                 straightCaps.models[id] = straightened;

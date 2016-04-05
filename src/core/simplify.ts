@@ -38,7 +38,7 @@
     /**
      * @private
      */
-    export function normalizedArcLimits(arc: IPathArc) {
+    function normalizedArcLimits(arc: IPathArc) {
         var startAngle = angle.noRevolutions(arc.startAngle);
         return {
             startAngle: startAngle,

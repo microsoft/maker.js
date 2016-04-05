@@ -543,38 +543,6 @@ namespace MakerJs {
     }
 
     /**
-     * A collection wrapper for items that share a common point.
-     */
-    export interface IPointMappedItem<T> {
-        averagePoint: IPoint;
-        item: T[];
-    }
-
-    /**
-     * A collection wrapper for items that share a common slope.
-     */
-    export interface ISlopeMappedItem {
-        averageSlope: ISlope;
-        lineRefs: IRefPathInModel[];
-    }
-
-    /**
-     * Options for expanding paths.
-     */
-    export interface IExpandOptions {
-
-        /**
-         * Flag to use straight joints, default is curved joints.
-         */
-        straight?: boolean;
-
-        /**
-         * Flag to optionally bevel joints, only used when joints are straight.
-         */
-        bevel?: boolean;
-    }
-
-    /**
      * Describes a parameter and its limits.
      */
     export interface IMetaParameter {
