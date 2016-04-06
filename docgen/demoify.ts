@@ -1,4 +1,7 @@
-﻿import fs = require('fs');
+﻿/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="../target/ts/makerjs.d.ts" />
+
+import fs = require('fs');
 var browserify = require('browserify');
 var packageJson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
@@ -117,8 +120,8 @@ function demoIndexPage() {
         sorted.sort();
 
         for (var i = 0; i < sorted.length; i++) {
-            var modelType = sorted[i];
-            writeThumbnail(modelType, makerjs.models[modelType], '../');
+            var modelType2 = sorted[i];
+            writeThumbnail(modelType2, makerjs.models[modelType2], '../');
         }
 
         stream.write(st.getClosingTag());
