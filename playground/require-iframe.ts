@@ -5,7 +5,7 @@
     makerjs: typeof MakerJs;
 }
 
-module MakerJsRequireIframe {
+namespace MakerJsRequireIframe {
 
     interface IRequireMap {
         [id: string]: any;

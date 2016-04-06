@@ -1,4 +1,4 @@
-module MakerJs.measure {
+namespace MakerJs.measure {
 
     /**
      * Interface to Math.min and Math.max functions.
@@ -45,6 +45,30 @@ module MakerJs.measure {
     }
 
     /**
+     * Check for arc overlapping another arc.
+     * 
+     * @param arc1 The arc to test.
+     * @param arc2 The arc to check for overlap.
+     * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
+     * @returns Boolean true if arc1 is overlapped with arc2.
+     */
+    export function isArcOverlapping(arc1: IPathArc, arc2: IPathArc, excludeTangents: boolean): boolean {
+        var pointsOfIntersection: IPoint[] = [];
+
+        function checkAngles(a: IPathArc, b: IPathArc) {
+
+            function checkAngle(n: number) {
+                return measure.isBetweenArcAngles(n, a, excludeTangents);
+            }
+
+            return checkAngle(b.startAngle) || checkAngle(b.endAngle);
+        }
+
+        return checkAngles(arc1, arc2) || checkAngles(arc2, arc1) || (arc1.startAngle == arc2.startAngle && arc1.endAngle == arc2.endAngle);
+    }
+
+
+    /**
      * Check if a given number is between two given limits.
      * 
      * @param valueInQuestion The number to test.
@@ -71,13 +95,9 @@ module MakerJs.measure {
      */
     export function isBetweenArcAngles(angleInQuestion: number, arc: IPathArc, exclusive: boolean): boolean {
 
-        var startAngle = arc.startAngle;
-        var endAngle = angle.ofArcEnd(arc);
-
-        var span = endAngle - startAngle;
-
-        startAngle = angle.noRevolutions(startAngle);
-        endAngle = startAngle + span;
+        var startAngle = angle.noRevolutions(arc.startAngle);
+        var span = arcAngle(arc);
+        var endAngle = startAngle + span;
 
         angleInQuestion = angle.noRevolutions(angleInQuestion);
 
@@ -103,6 +123,53 @@ module MakerJs.measure {
             if (!isBetween(round(pointInQuestion[i]), origin_value, end_value, exclusive)) return false;
         }
         return true;
+    }
+
+    /**
+     * Check for line overlapping another line.
+     * 
+     * @param line1 The line to test.
+     * @param line2 The line to check for overlap.
+     * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
+     * @returns Boolean true if line1 is overlapped with line2.
+     */
+    export function isLineOverlapping(line1: IPathLine, line2: IPathLine, excludeTangents: boolean): boolean {
+        var pointsOfIntersection: IPoint[] = [];
+
+        function checkPoints(index: number, a: IPathLine, b: IPathLine) {
+
+            function checkPoint(p: IPoint) {
+                return measure.isBetweenPoints(p, a, excludeTangents);
+            }
+
+            return checkPoint(b.origin) || checkPoint(b.end);
+        }
+
+        return checkPoints(0, line1, line2) || checkPoints(1, line2, line1);
+    }
+
+    /**
+     * Check for slope equality.
+     * 
+     * @param slope1 The ISlope to test.
+     * @param slope2 The ISlope to check for equality.
+     * @returns Boolean true if slopes are equal.
+     */
+    export function isSlopeEqual(slope1: ISlope, slope2: ISlope): boolean {
+
+        if (!slope1.hasSlope && !slope2.hasSlope) {
+
+            //lines are both vertical, see if x are the same
+            return round(slope1.line.origin[0] - slope2.line.origin[0]) == 0;
+        }
+
+        if (slope1.hasSlope && slope2.hasSlope && (round(slope1.slope - slope2.slope, .00001) == 0)) {
+
+            //lines are parallel, but not vertical, see if y-intercept is the same
+            return round(slope1.yIntercept - slope2.yIntercept, .00001) == 0;
+        }
+
+        return false;
     }
 
     /**

@@ -1,4 +1,4 @@
-module MakerJs.exporter {
+namespace MakerJs.exporter {
 
     export function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;
     export function toDXF(pathsToExport: IPath[], options?: IDXFRenderOptions): string;

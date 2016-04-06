@@ -24,7 +24,7 @@ and limitations under the License.
  * ```
  * 
  */
-module MakerJs {
+namespace MakerJs {
 
     //units
 
@@ -292,6 +292,32 @@ module MakerJs {
     };
 
     /**
+     * Slope and y-intercept of a line.
+     */
+    export interface ISlope {
+
+        /**
+         * Boolean to see if line has slope or is vertical.
+         */
+        hasSlope: boolean;
+
+        /**
+         * Optional value of non-vertical slope.
+         */
+        slope?: number;
+
+        /**
+         * Line used to calculate this slope.
+         */
+        line: IPathLine;
+
+        /**
+         * Optional value of y when x = 0.
+         */
+        yIntercept?: number;
+    }
+
+    /**
      * Options to pass to path.intersection()
      */
     export interface IPathIntersectionOptions {
@@ -368,6 +394,23 @@ module MakerJs {
          * Flag to remove looped paths from the original model.
          */
         removeFromOriginal?: boolean;
+    }
+
+    /**
+     * Options to pass to model.simplify()
+     */
+    export interface ISimplifyOptions {
+
+        /**
+         * Optional 
+         */
+        pointMatchingDistance?: number;
+
+        /**
+         * Optional 
+         */
+        scalarMatchingDistance?: number;
+
     }
 
     /**
@@ -485,6 +528,18 @@ module MakerJs {
      */
     export interface IRefPathInModel extends IRefPathIdInModel {
         pathContext: IPath;
+    }
+
+    /**
+     * A map of functions which accept a path reference as a parameter.
+     * @private
+     */
+    export interface IRefPathInModelFunctionMap {
+
+        /**
+         * Key is the type of a path, value is a function which accepts a path object as its parameter.
+         */
+        [type: string]: (refPathInModel: IRefPathInModel) => void;
     }
 
     /**
