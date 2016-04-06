@@ -1,4 +1,4 @@
-﻿module MakerJs.models {
+﻿namespace MakerJs.models {
 
     export class Star implements IModel {
 

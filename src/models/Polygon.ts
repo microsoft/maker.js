@@ -1,17 +1,25 @@
-module MakerJs.models {
+namespace MakerJs.models {
     export class Polygon implements IModel {
         
         public paths: IPathMap = {};
 
-        constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees: number = 0) {
-            this.paths = new ConnectTheDots(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees)).paths;
+        constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number, circumscribed?: boolean) {
+            this.paths = new ConnectTheDots(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees, circumscribed)).paths;
         }
 
-        public static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees: number = 0): IPoint[] {
+        public static circumscribedRadius(radius: number, angleInRadians: number) {
+            return radius / Math.cos(angleInRadians / 2);
+        }
+
+        public static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees = 0, circumscribed = false): IPoint[] {
             var points = [];
 
             var a1 = angle.toRadians(firstCornerAngleInDegrees);
             var a = 2 * Math.PI / numberOfSides;
+
+            if (circumscribed) {
+                radius = Polygon.circumscribedRadius(radius, a);
+            }
 
             for (var i = 0; i < numberOfSides; i++) {
                 points.push(point.fromPolar(a * i + a1, radius));

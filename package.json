@@ -1,6 +1,6 @@
 {
   "name": "makerjs",
-  "version": "0.6.11",
+  "version": "0.7.0",
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "cat-tsd": "cat target/ts/tsd-header.txt target/maker.d.ts > target/ts/makerjs.d.ts && rm target/maker.d.ts",
     "target-node-platform": "cd target && mv maker.js js/node.maker.js && cd ..",
     "target-browser-platform": "cd target/js && browserify --ignore buffer -o browser.maker.js -r ./node.maker.js:makerjs && cd ../..",
-    "build-debug": "tsc -p src",
+    "build-debug": "tsc",
     "build": "tsc -p target && npm run cat-tsd && npm run target-node-platform && npm run target-browser-platform && cp target/js/node.maker.js ./index.js && npm run compile-playground && npm run versionize",
     "versionize": "node ./target/versionize.js",
     "predocs": "rm -r -f ./docs/api",
@@ -40,8 +40,7 @@
   "devDependencies": {
     "browserify": "^13.0.0",
     "tsd": "^0.6.1",
-    "typedoc": "^0.3.4",
-    "typescript": "^1.6.2"
+    "typescript": "^1.8.2"
   },
   "dependencies": {
     "clone": "^1.0.2"

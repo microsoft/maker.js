@@ -1,44 +1,5 @@
-﻿module MakerJs.model {
-    
-    /**
-     * @private
-     */
-    export interface IPointMappedItem<T> {
-        averagePoint: IPoint;
-        item: T;
-    }
-
-    /**
-     * @private
-     */
-    export class PointMap<T> {
-        public list: IPointMappedItem<T>[] = [];
-
-        constructor(public matchingDistance: number = .001) {
-        }
-
-        public add(pointToAdd: IPoint, item: T) {
-            this.list.push({ averagePoint: pointToAdd, item: item });
-        }
-
-        public find(pointToFind: IPoint, saveAverage: boolean): T {
-            for (var i = 0; i < this.list.length; i++) {
-                var item = this.list[i];
-                var distance = measure.pointDistance(pointToFind, item.averagePoint);
-
-                if (distance <= this.matchingDistance) {
-
-                    if (saveAverage) {
-                        item.averagePoint = point.average(item.averagePoint, pointToFind);
-                    }
-
-                    return item.item;
-                }
-            }
-            return null;
-        }
-    }
-    
+﻿namespace MakerJs.model {
+        
     /**
      * @private
      */
@@ -290,19 +251,16 @@
      */
     class DeadEndFinder {
 
-        private pointMap: PointMap<IRefPathEndpoints[]>;
+        public pointMap: Collector<IPoint, IRefPathEndpoints>;
 
         constructor(public pointMatchingDistance) {
-            this.pointMap = new PointMap<IRefPathEndpoints[]>(pointMatchingDistance);
-        }
 
-        public addPathRef(p: IPoint, pathRef: IRefPathEndpoints) {
-            var found = this.pointMap.find(p, true);
-            if (found) {
-                found.push(pathRef);
-            } else {
-                this.pointMap.add(p, [pathRef]);
+            function comparePoint(point1: IPoint, point2: IPoint): boolean {
+                var distance = measure.pointDistance(point1, point2);
+                return distance <= pointMatchingDistance;
             }
+
+            this.pointMap = new Collector<IPoint, IRefPathEndpoints>(comparePoint);
         }
 
         private removeMatchingPathRefs(a: IRefPathEndpoints[], b: IRefPathEndpoints[]) {
@@ -323,7 +281,7 @@
         private removePathRef(pathRef: IRefPathEndpoints) {
 
             var removePath = (p: IPoint) => {
-                var pathRefs = this.pointMap.find(p, false);
+                var pathRefs = this.pointMap.findCollection(p);
 
                 for (var i = 0; i < pathRefs.length; i++) {
                     if (pathRefs[i] === pathRef) {
@@ -342,9 +300,9 @@
             var found = false;
             var oddPathRefs: IRefPathEndpoints[] = null;
 
-            for (var i = 0; i < this.pointMap.list.length; i++) {
+            for (var i = 0; i < this.pointMap.collections.length; i++) {
 
-                var pathRefs = this.pointMap.list[i].item;
+                var pathRefs = this.pointMap.collections[i].items;
 
                 if (pathRefs.length % 2 == 0) continue;
 
@@ -379,6 +337,13 @@
         }
     }
 
+    /**
+     * Remove paths from a model which have endpoints that do not connect to other paths.
+     * 
+     * @param modelContext The model to search for dead ends.
+     * @param options Optional options object.
+     * @returns The input model (for chaining).
+     */
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance = .005) {
         var serializedPointAccuracy = .0001;
         var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
@@ -391,10 +356,12 @@
             var pathRef: IRefPathEndpoints = { modelContext: modelContext, pathId: pathId, endPoints: endPoints };
 
             for (var i = 2; i--;) {
-                deadEndFinder.addPathRef(endPoints[i], pathRef);
+                deadEndFinder.pointMap.addItemToCollection(endPoints[i], pathRef);
             }
         });
 
         while (deadEndFinder.removeDeadEnd());
+
+        return modelContext;
     }
 }

@@ -1,4 +1,4 @@
-module MakerJs.model {
+namespace MakerJs.model {
 
     /**
      * Count the number of child models within a given model.

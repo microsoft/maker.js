@@ -1,18 +1,27 @@
-﻿module MakerJs.models {
+﻿namespace MakerJs.models {
 
     export class Slot implements IModel {
 
         public paths: IPathMap = {};
         public origin: IPoint;
+        public models: IModelMap;
 
-        constructor(origin: IPoint, endPoint: IPoint, radius: number) {
+        constructor(origin: IPoint, endPoint: IPoint, radius: number, isolateCaps = false) {
+
+            var capModel: IModel = this;
+            if (isolateCaps) {
+                this.models = { "Caps": { paths: {} } };
+                capModel = this.models["Caps"];
+            }
+
             var a = angle.ofPointInDegrees(origin, endPoint);
             var len = measure.pointDistance(origin, endPoint);
 
             this.paths['Top'] = new paths.Line([0, radius], [len, radius]);
             this.paths['Bottom'] = new paths.Line([0, -radius], [len, -radius]);
-            this.paths['StartCap'] = new paths.Arc([0, 0], radius, 90, 270);
-            this.paths['EndCap'] = new paths.Arc([len, 0], radius, 270, 90);
+
+            capModel.paths['StartCap'] = new paths.Arc([0, 0], radius, 90, 270);
+            capModel.paths['EndCap'] = new paths.Arc([len, 0], radius, 270, 90);
 
             model.rotate(this, a, [0, 0]);
 

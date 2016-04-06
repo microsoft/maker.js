@@ -1,4 +1,4 @@
-﻿module MakerJsPlayground {
+﻿namespace MakerJsPlayground {
 
     //classes
 

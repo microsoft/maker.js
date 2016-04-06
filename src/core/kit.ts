@@ -1,4 +1,4 @@
-module MakerJs.kit {
+namespace MakerJs.kit {
     //construct a model
 
     /**

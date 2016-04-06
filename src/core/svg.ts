@@ -1,4 +1,4 @@
-module MakerJs.exporter {
+namespace MakerJs.exporter {
 
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     export function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;

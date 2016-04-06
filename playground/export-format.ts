@@ -1,4 +1,4 @@
-﻿module MakerJsPlaygroundExport {
+﻿namespace MakerJsPlaygroundExport {
 
     export enum ExportFormat {
         Json,

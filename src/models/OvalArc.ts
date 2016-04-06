@@ -1,10 +1,11 @@
-module MakerJs.models {
+namespace MakerJs.models {
 
     export class OvalArc implements IModel {
 
         public paths: IPathMap = {};
+        public models: IModelMap;
 
-        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number, selfIntersect = false) {
+        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number, selfIntersect = false, isolateCaps = false) {
 
             if (slotRadius <= 0 || sweepRadius <= 0) return;
 
@@ -15,8 +16,14 @@ module MakerJs.models {
 
             if (endAngle < startAngle) endAngle += 360;
 
+            var capModel: IModel = this;
+            if (isolateCaps) {
+                this.models = { "Caps": { paths: {} } };
+                capModel = this.models["Caps"];
+            }
+
             var addCap = (id: string, tiltAngle: number, offsetStartAngle: number, offsetEndAngle: number): IPathArc => {
-                return this.paths[id] = new paths.Arc(
+                return capModel.paths[id] = new paths.Arc(
                     point.fromPolar(angle.toRadians(tiltAngle), sweepRadius),
                     slotRadius,
                     tiltAngle + offsetStartAngle,
