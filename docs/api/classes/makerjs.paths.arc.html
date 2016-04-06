@@ -8,20 +8,6 @@ title: Api - Arc Class
 		<div class="lead">
 			<p>Class for arc path.</p>
 		</div>
-		<dl class="tsd-comment-tags">
-			<dt>param</dt>
-			<dd><p>The center point of the arc.</p>
-			</dd>
-			<dt>param</dt>
-			<dd><p>The radius of the arc.</p>
-			</dd>
-			<dt>param</dt>
-			<dd><p>The start angle of the arc.</p>
-			</dd>
-			<dt>param</dt>
-			<dd><p>The end angle of the arc.</p>
-			</dd>
-		</dl>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
@@ -68,27 +54,191 @@ title: Api - Arc Class
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, startAngle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, endAngle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>p1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, largeArc<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, clockwise<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>p1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, clockwise<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>p1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p3<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L16">core/paths.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L21">core/paths.ts:21</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Class for arc path, created from origin point, radius, start angle, and end angle.</p>
+					</div>
+				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
 						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The center point of the arc.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5>radius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The radius of the arc.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5>startAngle: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The start angle of the arc.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5>endAngle: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The end angle of the arc.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L31">core/paths.ts:31</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Class for arc path, created from 2 points, radius, large Arc flag, and clockwise flag.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>p1: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>First end point of the arc.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>p2: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Second end point of the arc.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>radius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The radius of the arc.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>largeArc: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Boolean flag to indicate clockwise direction.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>clockwise: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Boolean flag to indicate clockwise direction.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L42">core/paths.ts:42</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Class for arc path, created from 2 points and optional boolean flag indicating clockwise.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>p1: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>First end point of the arc.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>p2: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Second end point of the arc.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> clockwise: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Boolean flag to indicate clockwise direction.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L51">core/paths.ts:51</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Class for arc path, created from 3 points.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>p1: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>First end point of the arc.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>p2: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Second end point of the arc.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>p3: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Second end point of the arc.</p>
+							</div>
+						</div>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></h4>
@@ -104,7 +254,7 @@ title: Api - Arc Class
 		<div class="tsd-signature tsd-kind-icon">end<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L18">core/paths.ts:18</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L20">core/paths.ts:20</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -114,7 +264,7 @@ title: Api - Arc Class
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L18">core/paths.ts:18</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L17">core/paths.ts:17</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -134,7 +284,7 @@ title: Api - Arc Class
 		<div class="tsd-signature tsd-kind-icon">start<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L18">core/paths.ts:18</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L19">core/paths.ts:19</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -144,7 +294,7 @@ title: Api - Arc Class
 		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L16">core/paths.ts:16</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L21">core/paths.ts:21</a></li>
 			</ul>
 		</aside>
 	</section>

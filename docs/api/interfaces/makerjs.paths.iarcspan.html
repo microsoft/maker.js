@@ -1,6 +1,6 @@
 ---
 layout: posts
-title: Api - ISlope Interface
+title: Api - IArcSpan Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
@@ -11,7 +11,7 @@ title: Api - ISlope Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">ISlope</span>
+			<span class="target">IArcSpan</span>
 		</li>
 	</ul>
 </section>
@@ -22,10 +22,10 @@ title: Api - ISlope Interface
 			<section class="tsd-index-section tsd-is-not-exported">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.path.islope.html#hasslope" class="tsd-kind-icon">has<wbr>Slope</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.path.islope.html#line" class="tsd-kind-icon">line</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.path.islope.html#slope" class="tsd-kind-icon">slope</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.path.islope.html#yintercept" class="tsd-kind-icon">y<wbr>Intercept</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.paths.iarcspan.html#endangle" class="tsd-kind-icon">end<wbr>Angle</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.paths.iarcspan.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.paths.iarcspan.html#size" class="tsd-kind-icon">size</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.paths.iarcspan.html#startangle" class="tsd-kind-icon">start<wbr>Angle</a></li>
 				</ul>
 			</section>
 		</div>
@@ -34,42 +34,42 @@ title: Api - ISlope Interface
 <section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 	<h2>Properties</h2>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="hasslope" class="tsd-anchor"></a>
-		<h3>has<wbr>Slope</h3>
-		<div class="tsd-signature tsd-kind-icon">has<wbr>Slope<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<a name="endangle" class="tsd-anchor"></a>
+		<h3>end<wbr>Angle</h3>
+		<div class="tsd-signature tsd-kind-icon">end<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L225">core/intersect.ts:225</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L9">core/paths.ts:9</a></li>
 			</ul>
 		</aside>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="line" class="tsd-anchor"></a>
-		<h3>line</h3>
-		<div class="tsd-signature tsd-kind-icon">line<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></div>
+		<a name="origin" class="tsd-anchor"></a>
+		<h3>origin</h3>
+		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L227">core/intersect.ts:227</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L7">core/paths.ts:7</a></li>
 			</ul>
 		</aside>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="slope" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> slope</h3>
-		<div class="tsd-signature tsd-kind-icon">slope<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<a name="size" class="tsd-anchor"></a>
+		<h3>size</h3>
+		<div class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L226">core/intersect.ts:226</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L10">core/paths.ts:10</a></li>
 			</ul>
 		</aside>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="yintercept" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> y<wbr>Intercept</h3>
-		<div class="tsd-signature tsd-kind-icon">y<wbr>Intercept<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<a name="startangle" class="tsd-anchor"></a>
+		<h3>start<wbr>Angle</h3>
+		<div class="tsd-signature tsd-kind-icon">start<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L228">core/intersect.ts:228</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L8">core/paths.ts:8</a></li>
 			</ul>
 		</aside>
 	</section>

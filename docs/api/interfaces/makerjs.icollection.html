@@ -1,15 +1,21 @@
 ---
 layout: posts
-title: Api - IPointMappedItem Interface
+title: Api - ICollection Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>A collection for items that share a common key.</p>
+		</div>
 	</div>
 </section>
 <section class="tsd-panel tsd-type-parameters">
 	<h3>Type parameters</h3>
 	<ul class="tsd-type-parameters">
+		<li>
+			<h4>K</h4>
+		</li>
 		<li>
 			<h4>T</h4>
 		</li>
@@ -19,7 +25,7 @@ title: Api - IPointMappedItem Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IPointMappedItem</span>
+			<span class="target">ICollection</span>
 		</li>
 	</ul>
 </section>
@@ -30,8 +36,8 @@ title: Api - IPointMappedItem Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.model.ipointmappeditem.html#averagepoint" class="tsd-kind-icon">average<wbr>Point</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.model.ipointmappeditem.html#item" class="tsd-kind-icon">item</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icollection.html#items" class="tsd-kind-icon">items</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icollection.html#key" class="tsd-kind-icon">key</a></li>
 				</ul>
 			</section>
 		</div>
@@ -40,22 +46,22 @@ title: Api - IPointMappedItem Interface
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="averagepoint" class="tsd-anchor"></a>
-		<h3>average<wbr>Point</h3>
-		<div class="tsd-signature tsd-kind-icon">average<wbr>Point<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<a name="items" class="tsd-anchor"></a>
+		<h3>items</h3>
+		<div class="tsd-signature tsd-kind-icon">items<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L9">core/loops.ts:9</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/collect.ts#L15">core/collect.ts:15</a></li>
 			</ul>
 		</aside>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="item" class="tsd-anchor"></a>
-		<h3>item</h3>
-		<div class="tsd-signature tsd-kind-icon">item<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span></div>
+		<a name="key" class="tsd-anchor"></a>
+		<h3>key</h3>
+		<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">K</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L10">core/loops.ts:10</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/collect.ts#L14">core/collect.ts:14</a></li>
 			</ul>
 		</aside>
 	</section>

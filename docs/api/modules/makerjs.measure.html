@@ -19,9 +19,12 @@ title: Api - measure Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#arcangle" class="tsd-kind-icon">arc<wbr>Angle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#getextremepoint" class="tsd-kind-icon">get<wbr>Extreme<wbr>Point</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcconcavetowardspoint" class="tsd-kind-icon">is<wbr>Arc<wbr>Concave<wbr>Towards<wbr>Point</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcoverlapping" class="tsd-kind-icon">is<wbr>Arc<wbr>Overlapping</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetween" class="tsd-kind-icon">is<wbr>Between</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenarcangles" class="tsd-kind-icon">is<wbr>Between<wbr>Arc<wbr>Angles</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenpoints" class="tsd-kind-icon">is<wbr>Between<wbr>Points</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#islineoverlapping" class="tsd-kind-icon">is<wbr>Line<wbr>Overlapping</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isslopeequal" class="tsd-kind-icon">is<wbr>Slope<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#modelextents" class="tsd-kind-icon">model<wbr>Extents</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#pathextents" class="tsd-kind-icon">path<wbr>Extents</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#pathlength" class="tsd-kind-icon">path<wbr>Length</a></li>
@@ -43,7 +46,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L20">core/measure.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L18">core/measure.ts:18</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -75,7 +78,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L126">core/measure.ts:126</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L191">core/measure.ts:191</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -106,7 +109,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L32">core/measure.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L30">core/measure.ts:30</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -135,6 +138,50 @@ title: Api - measure Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isarcoverlapping" class="tsd-anchor"></a>
+		<h3>is<wbr>Arc<wbr>Overlapping</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Arc<wbr>Overlapping<span class="tsd-signature-symbol">(</span>arc1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, arc2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, excludeTangents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L55">core/measure.ts:55</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check for arc overlapping another arc.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>arc1: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The arc to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>arc2: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The arc to check for overlap.</p>
+						</div>
+					</li>
+					<li>
+						<h5>excludeTangents: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Boolean to exclude exact endpoints and only look for deep overlaps.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if arc1 is overlapped with arc2.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="isbetween" class="tsd-anchor"></a>
 		<h3>is<wbr>Between</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -144,7 +191,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L58">core/measure.ts:58</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L80">core/measure.ts:80</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -194,7 +241,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L74">core/measure.ts:74</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L96">core/measure.ts:96</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -238,7 +285,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L98">core/measure.ts:98</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L116">core/measure.ts:116</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -273,6 +320,88 @@ title: Api - measure Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="islineoverlapping" class="tsd-anchor"></a>
+		<h3>is<wbr>Line<wbr>Overlapping</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Line<wbr>Overlapping<span class="tsd-signature-symbol">(</span>line1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, line2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, excludeTangents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L136">core/measure.ts:136</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check for line overlapping another line.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>line1: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The line to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>line2: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The line to check for overlap.</p>
+						</div>
+					</li>
+					<li>
+						<h5>excludeTangents: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Boolean to exclude exact endpoints and only look for deep overlaps.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if line1 is overlapped with line2.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isslopeequal" class="tsd-anchor"></a>
+		<h3>is<wbr>Slope<wbr>Equal</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Slope<wbr>Equal<span class="tsd-signature-symbol">(</span>slope1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a>, slope2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L158">core/measure.ts:158</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check for slope equality.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>slope1: <a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The ISlope to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>slope2: <a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The ISlope to check for equality.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if slopes are equal.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="modelextents" class="tsd-anchor"></a>
 		<h3>model<wbr>Extents</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -282,7 +411,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L222">core/measure.ts:222</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L287">core/measure.ts:287</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -314,7 +443,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L139">core/measure.ts:139</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L204">core/measure.ts:204</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -346,7 +475,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L190">core/measure.ts:190</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L255">core/measure.ts:255</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -378,7 +507,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L117">core/measure.ts:117</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L182">core/measure.ts:182</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

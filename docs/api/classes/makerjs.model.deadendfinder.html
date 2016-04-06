@@ -28,14 +28,13 @@ title: Api - DeadEndFinder Class
 			<section class="tsd-index-section tsd-is-not-exported">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#pointmap" class="tsd-kind-icon">point<wbr>Map</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#pointmap" class="tsd-kind-icon">point<wbr>Map</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section tsd-is-not-exported">
 				<h3>Methods</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#addpathref" class="tsd-kind-icon">add<wbr>Path<wbr>Ref</a></li>
 					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#removedeadend" class="tsd-kind-icon">remove<wbr>Dead<wbr>End</a></li>
 					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#removematchingpathrefs" class="tsd-kind-icon">remove<wbr>Matching<wbr>Path<wbr>Refs</a></li>
 					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#removepathref" class="tsd-kind-icon">remove<wbr>Path<wbr>Ref</a></li>
@@ -56,7 +55,7 @@ title: Api - DeadEndFinder Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L295">core/loops.ts:295</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L254">core/loops.ts:254</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -72,13 +71,13 @@ title: Api - DeadEndFinder Class
 </section>
 <section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
 		<a name="pointmap" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagPrivate">Private</span> point<wbr>Map</h3>
-		<div class="tsd-signature tsd-kind-icon">point<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="makerjs.model.pointmap.html" class="tsd-signature-type">PointMap</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/makerjs.model.irefpathendpoints.html" class="tsd-signature-type">IRefPathEndpoints</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
+		<h3>point<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">point<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="makerjs.collector.html" class="tsd-signature-type">Collector</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/makerjs.model.irefpathendpoints.html" class="tsd-signature-type">IRefPathEndpoints</a><span class="tsd-signature-symbol">&gt;</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L295">core/loops.ts:295</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L254">core/loops.ts:254</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -88,39 +87,13 @@ title: Api - DeadEndFinder Class
 		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L297">core/loops.ts:297</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L256">core/loops.ts:256</a></li>
 			</ul>
 		</aside>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 	<h2>Methods</h2>
-	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
-		<a name="addpathref" class="tsd-anchor"></a>
-		<h3>add<wbr>Path<wbr>Ref</h3>
-		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
-			<li class="tsd-signature tsd-kind-icon">add<wbr>Path<wbr>Ref<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pathRef<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.model.irefpathendpoints.html" class="tsd-signature-type">IRefPathEndpoints</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L301">core/loops.ts:301</a></li>
-					</ul>
-				</aside>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>p: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-					</li>
-					<li>
-						<h5>pathRef: <a href="../interfaces/makerjs.model.irefpathendpoints.html" class="tsd-signature-type">IRefPathEndpoints</a></h5>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-			</li>
-		</ul>
-	</section>
 	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 		<a name="removedeadend" class="tsd-anchor"></a>
 		<h3>remove<wbr>Dead<wbr>End</h3>
@@ -131,7 +104,7 @@ title: Api - DeadEndFinder Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L343">core/loops.ts:343</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L299">core/loops.ts:299</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -148,7 +121,7 @@ title: Api - DeadEndFinder Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L310">core/loops.ts:310</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L266">core/loops.ts:266</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -174,7 +147,7 @@ title: Api - DeadEndFinder Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L325">core/loops.ts:325</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L281">core/loops.ts:281</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-parameters-title">Parameters</h4>
