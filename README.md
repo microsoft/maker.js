@@ -28,6 +28,8 @@ Easily add a curvature at the joint between any 2 paths, using a [traditional fi
 
 [Detect loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
 
+NEW: [Expand paths](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#expandpaths) to create a surrounding outline, with the option to bevel joints.
+
 ### Output formats
 
 2D: [DXF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf), [SVG](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg)
