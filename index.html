@@ -22,6 +22,8 @@ title: Create parametric CNC drawings using JavaScript
 <p>Easily add a curvature at the joint between any 2 paths, using a <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#fillet">traditional fillet</a> or a <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#dogbone">dogbone fillet</a>.</p>
 <p><a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#combine">Combine models</a> with boolean operations to get unions, intersections, or punches.</p>
 <p><a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops">Detect loops</a> formed by paths connecting end to end.</p>
+<p>NEW: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#expandpaths">Expand paths</a> to simulate a stroke thickness, with the option to bevel joints.</p>
+<p>NEW: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#outline">Outline model</a> to create a surrounding outline, with the option to bevel joints.</p>
 <h3 id="output-formats">Output formats</h3>
 <p>2D: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf">DXF</a>, <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg">SVG</a></p>
 <p>3D: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#toopenjscad">OpenJsCad script</a>, <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tostl">STL</a> (Must include <a href="http://joostn.github.io/OpenJsCad/">OpenJsCad</a> or <a href="https://www.npmjs.com/package/openjscad-csg">openjscad-csg</a>)</p>
