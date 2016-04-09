@@ -17,12 +17,12 @@ var MakerJsRequireIframe;
             this.loaded = 0;
         };
         return Counter;
-    })();
+    }());
     var Dummy = (function () {
         function Dummy() {
         }
         return Dummy;
-    })();
+    }());
     function runCodeIsolated(javaScript) {
         var Fn = new Function('require', 'module', 'document', 'console', javaScript);
         var result = new Fn(window.require, window.module, document, parent.console); //call function with the "new" keyword so the "this" keyword is an instance

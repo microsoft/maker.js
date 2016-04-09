@@ -1,20 +1,6 @@
 namespace MakerJs.angle {
 
     /**
-     * Find out if two angles are equal.
-     * 
-     * @param a First angle.
-     * @param b Second angle.
-     * @returns true if angles are the same, false if they are not
-     */
-    export function areEqual(angle1: number, angle2: number, accuracy: number = .0001) {
-        var a1 = noRevolutions(angle1);
-        var a2 = noRevolutions(angle2);
-        var d = noRevolutions(round(a2 - a1, accuracy));
-        return d == 0;
-    }
-
-    /**
      * Ensures an angle is not greater than 360
      * 
      * @param angleInDegrees Angle in degrees.
@@ -69,7 +55,18 @@ namespace MakerJs.angle {
      * @returns Middle angle of arc.
      */
     export function ofArcMiddle(arc: IPathArc, ratio = .5): number {
-        return arc.startAngle + measure.arcAngle(arc) * ratio;
+        return arc.startAngle + ofArcSpan(arc) * ratio;
+    }
+
+    /**
+     * Total angle of an arc between its start and end angles.
+     * 
+     * @param arc The arc to measure.
+     * @returns Angle of arc.
+     */
+    export function ofArcSpan(arc: IPathArc): number {
+        var endAngle = angle.ofArcEnd(arc);
+        return endAngle - arc.startAngle;
     }
 
     /**

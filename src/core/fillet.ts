@@ -78,7 +78,7 @@ namespace MakerJs.path {
         }
 
         function check(i1: number, i2: number) {
-            if (point.areEqual(path1Properties[i1].point, path2Properties[i2].point, .0001)) {
+            if (measure.isPointEqual(path1Properties[i1].point, path2Properties[i2].point, .0001)) {
                 result = [
                     makeMatch(path1, path1Properties, i1),
                     makeMatch(path2, path2Properties, i2)
@@ -108,7 +108,7 @@ namespace MakerJs.path {
 
             properties[i].shardPoint = circleIntersection.intersectionPoints[0];
 
-            if (point.areEqual(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
+            if (measure.isPointEqual(properties[i].point, circleIntersection.intersectionPoints[0], .0001)) {
                 if (circleIntersection.intersectionPoints.length > 1) {
                     properties[i].shardPoint = circleIntersection.intersectionPoints[1];
                 } else {
@@ -201,7 +201,7 @@ namespace MakerJs.path {
             path.moveRelative(guideLine, filletCenter);
 
             //get the intersection point of the slopes of the context line and the perpendicular line. This is where the fillet meets the line.
-            var intersectionPoint = slopeIntersectionPoint(line, guideLine);
+            var intersectionPoint = point.fromSlopeIntersection(line, guideLine);
             if (intersectionPoint) {
                 result = {
                     filletAngle: angle.ofPointInDegrees(filletCenter, intersectionPoint),
@@ -410,7 +410,7 @@ namespace MakerJs.path {
                     if (round(results[0].filletAngle - results[1].filletAngle) == 0) return null;
 
                     var filletArc = new paths.Arc(center, filletRadius, results[0].filletAngle, results[1].filletAngle);
-                    var filletSpan = measure.arcAngle(filletArc);
+                    var filletSpan = angle.ofArcSpan(filletArc);
 
                     //the algorithm is only valid for fillet less than 180 degrees
                     if (filletSpan == 180) {

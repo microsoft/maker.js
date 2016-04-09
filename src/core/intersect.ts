@@ -126,7 +126,7 @@ namespace MakerJs.path {
     };
 
     map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions) {
-        var intersectionPoint = slopeIntersectionPoint(line1, line2, options);
+        var intersectionPoint = point.fromSlopeIntersection(line1, line2, options);
         if (intersectionPoint) {
 
             //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
@@ -215,77 +215,6 @@ namespace MakerJs.path {
     }
 
     /**
-     * Gets the slope of a line.
-     */
-    export function getSlope(line: IPathLine): ISlope {
-        var dx = line.end[0] - line.origin[0];
-        if (round(dx) == 0) {
-            return {
-                line: line,
-                hasSlope: false
-            };
-        }
-
-        var dy = line.end[1] - line.origin[1];
-
-        var slope = dy / dx;
-        var yIntercept = line.origin[1] - slope * line.origin[0];
-
-        return {
-            line: line,
-            hasSlope: true,
-            slope: slope,
-            yIntercept: yIntercept
-        };
-    }
-
-    /**
-     * @private
-     */
-    function verticalIntersectionPoint(verticalLine: IPathLine, nonVerticalSlope: ISlope): IPoint {
-        var x = verticalLine.origin[0];
-        var y = nonVerticalSlope.slope * x + nonVerticalSlope.yIntercept;
-        return [x, y];
-    }
-
-    /**
-     * Calculates the intersection of slopes of two lines.
-     * 
-     * @param line1 First line to use for slope.
-     * @param line2 Second line to use for slope.
-     * @param options Optional IPathIntersectionOptions.
-     * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
-     */
-    export function slopeIntersectionPoint(line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions = {}): IPoint {
-
-        var slope1 = getSlope(line1);
-        var slope2 = getSlope(line2);
-
-        if (measure.isSlopeEqual(slope1, slope2)) {
-
-            //check for overlap
-            options.out_AreOverlapped = measure.isLineOverlapping(line1, line2, options.excludeTangents);
-
-            return null;
-        }
-
-        var pointOfIntersection: IPoint;
-
-        if (!slope1.hasSlope) {
-            pointOfIntersection = verticalIntersectionPoint(line1, slope2);
-        } else if (!slope2.hasSlope) {
-            pointOfIntersection = verticalIntersectionPoint(line2, slope1);
-        } else {
-            // find intersection by line equation
-            var x = (slope2.yIntercept - slope1.yIntercept) / (slope1.slope - slope2.slope);
-            var y = slope1.slope * x + slope1.yIntercept;
-            pointOfIntersection = [x, y];
-        }
-
-        return pointOfIntersection;
-    }
-
-    /**
      * @private
      */
     function lineToCircle(line: IPathLine, circle: IPathCircle, options: IPathIntersectionOptions): number[] {
@@ -361,7 +290,7 @@ namespace MakerJs.path {
     function circleToCircle(circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions): number[][] {
 
         //see if circles are the same
-        if (circle1.radius == circle2.radius && point.areEqual(circle1.origin, circle2.origin, .0001)) {
+        if (circle1.radius == circle2.radius && measure.isPointEqual(circle1.origin, circle2.origin, .0001)) {
             options.out_AreOverlapped = true;
             return null;
         }
