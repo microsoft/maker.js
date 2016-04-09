@@ -13,7 +13,7 @@ var MakerJsPlayground;
             }
         }
         return QueryStringParams;
-    })();
+    }());
     //private members
     var pixelsPerInch = 100;
     var iframe;

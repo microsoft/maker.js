@@ -266,7 +266,7 @@ var Pointer;
             }, this.wheelTimeout);
         };
         return Manager;
-    })();
+    }());
     Pointer.Manager = Manager;
     // Find out where an element is on the page
     // From http://www.quirksmode.org/js/findpos.html
