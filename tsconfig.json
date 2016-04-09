@@ -16,6 +16,7 @@
     "src/core/simplify.ts",
     "src/core/expand.ts",
     "src/core/units.ts",
+    "src/core/equal.ts",
     "src/core/measure.ts",
     "src/core/exporter.ts",
     "src/core/dxf.ts",

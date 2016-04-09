@@ -42,7 +42,7 @@
         var startAngle = angle.noRevolutions(arc.startAngle);
         return {
             startAngle: startAngle,
-            endAngle: measure.arcAngle(arc) + startAngle
+            endAngle: angle.ofArcSpan(arc) + startAngle
         };
     }
 
@@ -78,7 +78,7 @@
         };
 
         map[pathType.Line] = function (lineRef: IRefPathInModel) {
-            var slope = path.getSlope(<IPathLine>lineRef.pathContext);
+            var slope = measure.lineSlope(<IPathLine>lineRef.pathContext);
             similarLines.addItemToCollection(slope, lineRef);
         };
 

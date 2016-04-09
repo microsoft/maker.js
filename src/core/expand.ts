@@ -46,7 +46,7 @@
      */
     export function straighten(arc: IPathArc, bevel?: boolean): IModel {
 
-        var arcSpan = measure.arcAngle(arc);
+        var arcSpan = angle.ofArcSpan(arc);
         var joints = 1;
 
         if (arcSpan >= 270) {

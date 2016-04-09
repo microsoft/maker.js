@@ -190,7 +190,7 @@ namespace MakerJs.exporter {
 
             var arcPoints = point.fromArc(arc);
 
-            if (point.areEqual(arcPoints[0], arcPoints[1])) {
+            if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
                 circleInPaths(id, arc.origin, arc.radius, layer);
             } else {
 

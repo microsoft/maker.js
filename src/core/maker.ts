@@ -516,6 +516,15 @@ namespace MakerJs {
     }
 
     /**
+     * @private
+     */
+    export interface IPathInside {
+        path: IPath;
+        isInside?: boolean;
+        uniqueForeignIntersectionPoints: IPoint[];
+    }
+
+    /**
      * Reference to a path id within a model.
      */
     export interface IRefPathIdInModel {

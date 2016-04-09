@@ -24,34 +24,6 @@ namespace MakerJs.point {
     }
 
     /**
-     * Find out if two points are equal.
-     * 
-     * @param a First point.
-     * @param b Second point.
-     * @returns true if points are the same, false if they are not
-     */
-    export function areEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean {
-        if (!withinDistance) {
-            return a[0] == b[0] && a[1] == b[1];
-        } else {
-            var distance = measure.pointDistance(a, b);
-            return distance <= withinDistance;
-        }
-    }
-
-    /**
-     * Find out if two points are equal after rounding.
-     * 
-     * @param a First point.
-     * @param b Second point.
-     * @param accuracy Optional exemplar of number of decimal places.
-     * @returns true if points are the same, false if they are not
-     */
-    export function areEqualRounded(a: IPoint, b: IPoint, accuracy = .0000001): boolean {
-        return round(a[0], accuracy) == round(b[0], accuracy) && round(a[1], accuracy) == round(b[1], accuracy);
-    }
-
-    /**
      * Get the average of two points.
      * 
      * @param a First point.
@@ -158,6 +130,52 @@ namespace MakerJs.point {
         }
 
         return result;
+    }
+
+    /**
+     * @private
+     */
+    function verticalIntersectionPoint(verticalLine: IPathLine, nonVerticalSlope: ISlope): IPoint {
+        var x = verticalLine.origin[0];
+        var y = nonVerticalSlope.slope * x + nonVerticalSlope.yIntercept;
+        return [x, y];
+    }
+
+    /**
+     * Calculates the intersection of slopes of two lines.
+     * 
+     * @param line1 First line to use for slope.
+     * @param line2 Second line to use for slope.
+     * @param options Optional IPathIntersectionOptions.
+     * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
+     */
+    export function fromSlopeIntersection(line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions = {}): IPoint {
+
+        var slope1 = measure.lineSlope(line1);
+        var slope2 = measure.lineSlope(line2);
+
+        if (measure.isSlopeEqual(slope1, slope2)) {
+
+            //check for overlap
+            options.out_AreOverlapped = measure.isLineOverlapping(line1, line2, options.excludeTangents);
+
+            return null;
+        }
+
+        var pointOfIntersection: IPoint;
+
+        if (!slope1.hasSlope) {
+            pointOfIntersection = verticalIntersectionPoint(line1, slope2);
+        } else if (!slope2.hasSlope) {
+            pointOfIntersection = verticalIntersectionPoint(line2, slope1);
+        } else {
+            // find intersection by line equation
+            var x = (slope2.yIntercept - slope1.yIntercept) / (slope1.slope - slope2.slope);
+            var y = slope1.slope * x + slope1.yIntercept;
+            pointOfIntersection = [x, y];
+        }
+
+        return pointOfIntersection;
     }
 
     /**
