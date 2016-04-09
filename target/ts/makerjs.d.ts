@@ -411,14 +411,6 @@ declare namespace MakerJs {
      */
     function isModel(item: any): boolean;
     /**
-     * @private
-     */
-    interface IPathInside {
-        path: IPath;
-        isInside?: boolean;
-        uniqueForeignIntersectionPoints: IPoint[];
-    }
-    /**
      * Reference to a path id within a model.
      */
     interface IRefPathIdInModel {
