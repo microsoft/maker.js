@@ -160,7 +160,7 @@ namespace MakerJs.model {
     }
 
     /**
-     * Outline a model by a specified distance.
+     * Outline a model by a specified distance. Useful for accommadating for kerf.
      *
      * @param modelToOutline Model to outline.
      * @param distance Distance to outline.
