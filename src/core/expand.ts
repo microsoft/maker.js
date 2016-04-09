@@ -84,13 +84,13 @@ namespace MakerJs.model {
      * Expand all paths in a model, then combine the resulting expansions.
      *
      * @param modelToExpand Model to expand.
-     * @param expansion Distance to expand.
+     * @param distance Distance to expand.
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
      * @returns Model which surrounds the paths of the original model.
      */
-    export function expandPaths(modelToExpand: IModel, expansion: number, joints = 0): IModel {
+    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0): IModel {
 
-        if (expansion <= 0) return null;
+        if (distance <= 0) return null;
 
         var result: IModel = {
             models: {
@@ -105,7 +105,7 @@ namespace MakerJs.model {
         var originated = originate(modelToExpand);
 
         walkPaths(originated, function (modelContext: IModel, pathId: string, pathContext: IPath) {
-            var expandedPathModel = path.expand(pathContext, expansion, true);
+            var expandedPathModel = path.expand(pathContext, distance, true);
 
             if (expandedPathModel) {
                 var newId = getSimilarModelId(result.models['expansions'], pathId);
@@ -157,6 +157,36 @@ namespace MakerJs.model {
         }
 
         return result;
+    }
+
+    /**
+     * Outline a model by a specified distance.
+     *
+     * @param modelToOutline Model to outline.
+     * @param distance Distance to outline.
+     * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
+     * @returns Model which surrounds the paths outside of the original model.
+     */
+    export function outline(modelToOutline:IModel, distance: number, joints?: number): IModel {
+        var expanded = expandPaths(modelToOutline, distance, joints);
+
+        if (!expanded) return null;
+
+        var loops = findLoops(expanded);
+        if (loops && loops.models) {
+
+            var i = 0;
+
+            while (loops.models[i]) {
+                delete loops.models[i + 1];
+                delete loops.models[i + 2];
+                i += 4;
+            }
+
+            return loops;
+        }
+
+        return null;
     }
 
 }
