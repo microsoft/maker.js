@@ -232,7 +232,7 @@ namespace MakerJs.paths {
                 }
 
                 //find intersection of slopes of perpendiculars
-                this.origin = path.slopeIntersectionPoint(perpendiculars[0], perpendiculars[1]);
+                this.origin = point.fromSlopeIntersection(perpendiculars[0], perpendiculars[1]);
 
                 //radius is distance to any of the 3 points
                 this.radius = measure.pointDistance(this.origin, args[0]);

@@ -2,6 +2,20 @@
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+ 
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+ 
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
 /**
  * Root module for Maker.js.
  *
@@ -397,6 +411,14 @@ declare namespace MakerJs {
      */
     function isModel(item: any): boolean;
     /**
+     * @private
+     */
+    interface IPathInside {
+        path: IPath;
+        isInside?: boolean;
+        uniqueForeignIntersectionPoints: IPoint[];
+    }
+    /**
      * Reference to a path id within a model.
      */
     interface IRefPathIdInModel {
@@ -470,14 +492,6 @@ declare namespace MakerJs {
 }
 declare namespace MakerJs.angle {
     /**
-     * Find out if two angles are equal.
-     *
-     * @param a First angle.
-     * @param b Second angle.
-     * @returns true if angles are the same, false if they are not
-     */
-    function areEqual(angle1: number, angle2: number, accuracy?: number): boolean;
-    /**
      * Ensures an angle is not greater than 360
      *
      * @param angleInDegrees Angle in degrees.
@@ -513,6 +527,13 @@ declare namespace MakerJs.angle {
      * @returns Middle angle of arc.
      */
     function ofArcMiddle(arc: IPathArc, ratio?: number): number;
+    /**
+     * Total angle of an arc between its start and end angles.
+     *
+     * @param arc The arc to measure.
+     * @returns Angle of arc.
+     */
+    function ofArcSpan(arc: IPathArc): number;
     /**
      * Angle of a line path.
      *
@@ -556,23 +577,6 @@ declare namespace MakerJs.point {
      * @returns A new point object.
      */
     function add(a: IPoint, b: IPoint, subtract?: boolean): IPoint;
-    /**
-     * Find out if two points are equal.
-     *
-     * @param a First point.
-     * @param b Second point.
-     * @returns true if points are the same, false if they are not
-     */
-    function areEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean;
-    /**
-     * Find out if two points are equal after rounding.
-     *
-     * @param a First point.
-     * @param b Second point.
-     * @param accuracy Optional exemplar of number of decimal places.
-     * @returns true if points are the same, false if they are not
-     */
-    function areEqualRounded(a: IPoint, b: IPoint, accuracy?: number): boolean;
     /**
      * Get the average of two points.
      *
@@ -625,6 +629,15 @@ declare namespace MakerJs.point {
      * @returns Array with 2 elements: [0] is the point object corresponding to the origin, [1] is the point object corresponding to the end.
      */
     function fromPathEnds(pathContext: IPath): IPoint[];
+    /**
+     * Calculates the intersection of slopes of two lines.
+     *
+     * @param line1 First line to use for slope.
+     * @param line2 Second line to use for slope.
+     * @param options Optional IPathIntersectionOptions.
+     * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
+     */
+    function fromSlopeIntersection(line1: IPathLine, line2: IPathLine, options?: IPathIntersectionOptions): IPoint;
     /**
      * Get the middle point of a path.
      *
@@ -692,14 +705,6 @@ declare namespace MakerJs.point {
     function zero(): IPoint;
 }
 declare namespace MakerJs.path {
-    /**
-     * Find out if two paths are equal.
-     *
-     * @param a First path.
-     * @param b Second path.
-     * @returns true if paths are the same, false if they are not
-     */
-    function areEqual(path1: IPath, path2: IPath, withinPointDistance?: number): boolean;
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      *
@@ -1050,11 +1055,20 @@ declare namespace MakerJs.model {
      * Expand all paths in a model, then combine the resulting expansions.
      *
      * @param modelToExpand Model to expand.
-     * @param expansion Distance to expand.
+     * @param distance Distance to expand.
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
      * @returns Model which surrounds the paths of the original model.
      */
-    function expandPaths(modelToExpand: IModel, expansion: number, joints?: number): IModel;
+    function expandPaths(modelToExpand: IModel, distance: number, joints?: number): IModel;
+    /**
+     * Outline a model by a specified distance. Useful for accommadating for kerf.
+     *
+     * @param modelToOutline Model to outline.
+     * @param distance Distance to outline.
+     * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
+     * @returns Model which surrounds the paths outside of the original model.
+     */
+    function outline(modelToOutline: IModel, distance: number, joints?: number): IModel;
 }
 declare namespace MakerJs.units {
     /**
@@ -1068,12 +1082,39 @@ declare namespace MakerJs.units {
 }
 declare namespace MakerJs.measure {
     /**
-     * Total angle of an arc between its start and end angles.
+     * Find out if two angles are equal.
      *
-     * @param arc The arc to measure.
-     * @returns Angle of arc.
+     * @param a First angle.
+     * @param b Second angle.
+     * @returns true if angles are the same, false if they are not
      */
-    function arcAngle(arc: IPathArc): number;
+    function isAngleEqual(angle1: number, angle2: number, accuracy?: number): boolean;
+    /**
+     * Find out if two paths are equal.
+     *
+     * @param a First path.
+     * @param b Second path.
+     * @returns true if paths are the same, false if they are not
+     */
+    function isPathEqual(path1: IPath, path2: IPath, withinPointDistance?: number): boolean;
+    /**
+     * Find out if two points are equal.
+     *
+     * @param a First point.
+     * @param b Second point.
+     * @returns true if points are the same, false if they are not
+     */
+    function isPointEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean;
+    /**
+     * Check for slope equality.
+     *
+     * @param slope1 The ISlope to test.
+     * @param slope2 The ISlope to check for equality.
+     * @returns Boolean true if slopes are equal.
+     */
+    function isSlopeEqual(slope1: ISlope, slope2: ISlope): boolean;
+}
+declare namespace MakerJs.measure {
     /**
      * Check for arc being concave or convex towards a given point.
      *
@@ -1129,13 +1170,9 @@ declare namespace MakerJs.measure {
      */
     function isLineOverlapping(line1: IPathLine, line2: IPathLine, excludeTangents: boolean): boolean;
     /**
-     * Check for slope equality.
-     *
-     * @param slope1 The ISlope to test.
-     * @param slope2 The ISlope to check for equality.
-     * @returns Boolean true if slopes are equal.
+     * Gets the slope of a line.
      */
-    function isSlopeEqual(slope1: ISlope, slope2: ISlope): boolean;
+    function lineSlope(line: IPathLine): ISlope;
     /**
      * Calculates the distance between two points.
      *
@@ -1261,19 +1298,6 @@ declare namespace MakerJs.path {
      * @returns IPathIntersection object, with points(s) of intersection (and angles, when a path is an arc or circle); or null if the paths did not intersect.
      */
     function intersection(path1: IPath, path2: IPath, options?: IPathIntersectionOptions): IPathIntersection;
-    /**
-     * Gets the slope of a line.
-     */
-    function getSlope(line: IPathLine): ISlope;
-    /**
-     * Calculates the intersection of slopes of two lines.
-     *
-     * @param line1 First line to use for slope.
-     * @param line2 Second line to use for slope.
-     * @param options Optional IPathIntersectionOptions.
-     * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
-     */
-    function slopeIntersectionPoint(line1: IPathLine, line2: IPathLine, options?: IPathIntersectionOptions): IPoint;
 }
 declare namespace MakerJs.path {
     /**

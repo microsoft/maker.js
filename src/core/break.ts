@@ -16,7 +16,7 @@
 
         var angleAtBreakPoint = angle.ofPointInDegrees(arc.origin, pointOfBreak);
 
-        if (angle.areEqual(angleAtBreakPoint, arc.startAngle) || angle.areEqual(angleAtBreakPoint, arc.endAngle)) {
+        if (measure.isAngleEqual(angleAtBreakPoint, arc.startAngle) || measure.isAngleEqual(angleAtBreakPoint, arc.endAngle)) {
             return null;
         }
 
@@ -61,7 +61,7 @@
 
     breakPathFunctionMap[pathType.Line] = function (line: IPathLine, pointOfBreak: IPoint): IPath {
 
-        if (point.areEqual(line.origin, pointOfBreak) || point.areEqual(line.end, pointOfBreak)) {
+        if (measure.isPointEqual(line.origin, pointOfBreak) || measure.isPointEqual(line.end, pointOfBreak)) {
             return null;
         }
 

@@ -27,7 +27,7 @@
      */
     function breakAlongForeignPath(segments: ICrossedPathSegment[], overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
 
-        if (path.areEqual(segments[0].path, foreignPath, .0001)) {
+        if (measure.isPathEqual(segments[0].path, foreignPath, .0001)) {
             segments[0].overlapped = true;
             segments[0].duplicate = true;
 
@@ -102,7 +102,7 @@
 
         function addUniquePoint(pointToAdd: IPoint) {
             for (var i = 0; i < pointArray.length; i++) {
-                if (point.areEqual(pointArray[i], pointToAdd, .000000001)) {
+                if (measure.isPointEqual(pointArray[i], pointToAdd, .000000001)) {
                     return;
                 }
             }
@@ -261,7 +261,7 @@
     function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[], pointMatchingDistance: number) {
 
         function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
-            if (path.areEqual(segment1.path, segment2.path, pointMatchingDistance)) {
+            if (measure.isPathEqual(segment1.path, segment2.path, pointMatchingDistance)) {
                 segment1.duplicate = segment2.duplicate = true;
             }
         }

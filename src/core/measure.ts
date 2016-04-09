@@ -10,17 +10,6 @@ namespace MakerJs.measure {
     }
 
     /**
-     * Total angle of an arc between its start and end angles.
-     * 
-     * @param arc The arc to measure.
-     * @returns Angle of arc.
-     */
-    export function arcAngle(arc: IPathArc): number {
-        var endAngle = angle.ofArcEnd(arc);
-        return endAngle - arc.startAngle;
-    }
-
-    /**
      * Check for arc being concave or convex towards a given point.
      * 
      * @param arc The arc to test.
@@ -96,7 +85,7 @@ namespace MakerJs.measure {
     export function isBetweenArcAngles(angleInQuestion: number, arc: IPathArc, exclusive: boolean): boolean {
 
         var startAngle = angle.noRevolutions(arc.startAngle);
-        var span = arcAngle(arc);
+        var span = angle.ofArcSpan(arc);
         var endAngle = startAngle + span;
 
         angleInQuestion = angle.noRevolutions(angleInQuestion);
@@ -149,27 +138,28 @@ namespace MakerJs.measure {
     }
 
     /**
-     * Check for slope equality.
-     * 
-     * @param slope1 The ISlope to test.
-     * @param slope2 The ISlope to check for equality.
-     * @returns Boolean true if slopes are equal.
+     * Gets the slope of a line.
      */
-    export function isSlopeEqual(slope1: ISlope, slope2: ISlope): boolean {
-
-        if (!slope1.hasSlope && !slope2.hasSlope) {
-
-            //lines are both vertical, see if x are the same
-            return round(slope1.line.origin[0] - slope2.line.origin[0]) == 0;
+    export function lineSlope(line: IPathLine): ISlope {
+        var dx = line.end[0] - line.origin[0];
+        if (round(dx) == 0) {
+            return {
+                line: line,
+                hasSlope: false
+            };
         }
 
-        if (slope1.hasSlope && slope2.hasSlope && (round(slope1.slope - slope2.slope, .00001) == 0)) {
+        var dy = line.end[1] - line.origin[1];
 
-            //lines are parallel, but not vertical, see if y-intercept is the same
-            return round(slope1.yIntercept - slope2.yIntercept, .00001) == 0;
-        }
+        var slope = dy / dx;
+        var yIntercept = line.origin[1] - slope * line.origin[0];
 
-        return false;
+        return {
+            line: line,
+            hasSlope: true,
+            slope: slope,
+            yIntercept: yIntercept
+        };
     }
 
     /**
@@ -266,7 +256,7 @@ namespace MakerJs.measure {
 
         map[pathType.Arc] = function (arc: IPathArc) {
             map[pathType.Circle](arc); //this sets the value var
-            var pct = arcAngle(arc) / 360;
+            var pct = angle.ofArcSpan(arc) / 360;
             value *= pct;
         } 
 
