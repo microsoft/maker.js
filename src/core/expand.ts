@@ -160,14 +160,15 @@ namespace MakerJs.model {
     }
 
     /**
-     * Outline a model by a specified distance. Useful for accommadating for kerf.
+     * Outline a model by a specified distance. Useful for accommodating for kerf.
      *
      * @param modelToOutline Model to outline.
      * @param distance Distance to outline.
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
+     * @param inside Optional boolean to draw lines inside the model instead of outside.
      * @returns Model which surrounds the paths outside of the original model.
      */
-    export function outline(modelToOutline:IModel, distance: number, joints?: number): IModel {
+    export function outline(modelToOutline:IModel, distance: number, joints = 0, inside = false): IModel {
         var expanded = expandPaths(modelToOutline, distance, joints);
 
         if (!expanded) return null;
@@ -178,8 +179,15 @@ namespace MakerJs.model {
             var i = 0;
 
             while (loops.models[i]) {
-                delete loops.models[i + 1];
-                delete loops.models[i + 2];
+
+                if (inside) {
+                    delete loops.models[i];
+                    delete loops.models[i + 3];
+                } else {
+                    delete loops.models[i + 1];
+                    delete loops.models[i + 2];
+                }
+
                 i += 4;
             }
 
