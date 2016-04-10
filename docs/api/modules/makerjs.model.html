@@ -1109,13 +1109,13 @@ title: Api - model Module
 		<a name="outline" class="tsd-anchor"></a>
 		<h3>outline</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">outline<span class="tsd-signature-symbol">(</span>modelToOutline<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, joints<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">outline<span class="tsd-signature-symbol">(</span>modelToOutline<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, joints<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, inside<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/expand.ts#L170">core/expand.ts:170</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/expand.ts#L171">core/expand.ts:171</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1138,9 +1138,15 @@ title: Api - model Module
 						</div>
 					</li>
 					<li>
-						<h5><span class="tsd-flag ts-flagOptional">Optional</span> joints: <span class="tsd-signature-type">number</span></h5>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> joints: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> inside: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional boolean to draw lines inside the model instead of outside.</p>
 						</div>
 					</li>
 				</ul>
