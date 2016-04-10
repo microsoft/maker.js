@@ -1053,14 +1053,15 @@ declare namespace MakerJs.model {
      */
     function expandPaths(modelToExpand: IModel, distance: number, joints?: number): IModel;
     /**
-     * Outline a model by a specified distance. Useful for accommadating for kerf.
+     * Outline a model by a specified distance. Useful for accommodating for kerf.
      *
      * @param modelToOutline Model to outline.
      * @param distance Distance to outline.
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
+     * @param inside Optional boolean to draw lines inside the model instead of outside.
      * @returns Model which surrounds the paths outside of the original model.
      */
-    function outline(modelToOutline: IModel, distance: number, joints?: number): IModel;
+    function outline(modelToOutline: IModel, distance: number, joints?: number, inside?: boolean): IModel;
 }
 declare namespace MakerJs.units {
     /**
