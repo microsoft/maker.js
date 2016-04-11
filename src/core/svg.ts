@@ -199,7 +199,7 @@ namespace MakerJs.exporter {
                     d,
                     arc.radius,
                     arcPoints[1],
-                    Math.abs(arc.endAngle - arc.startAngle) > 180,
+                    angle.ofArcSpan(arc) > 180,
                     arc.startAngle > arc.endAngle
                     );
 
