@@ -92,11 +92,15 @@ var MakerJsRequireIframe;
     };
     window.onerror = function (e) {
         var errorEvent = window.event;
+        var errorName = 'Error';
+        if (error && error.name) {
+            errorName = error.name;
+        }
         var errorDetails = {
             colno: errorEvent.colno,
             lineno: errorEvent.lineno,
             message: errorEvent.message,
-            name: error.name
+            name: errorName
         };
         //send error results back to parent window
         parent.MakerJsPlayground.processResult('', errorDetails);
