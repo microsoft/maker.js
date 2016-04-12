@@ -8,7 +8,7 @@ namespace MakerJs.point {
      * @param subtract Optional boolean to subtract instead of add.
      * @returns A new point object.
      */
-    export function add(a: IPoint, b: IPoint, subtract?: boolean): IPoint{
+    export function add(a: IPoint, b: IPoint, subtract?: boolean): IPoint {
         var newPoint = clone(a);
 
         if (!b) return newPoint;
@@ -30,7 +30,7 @@ namespace MakerJs.point {
      * @param b Second point.
      * @returns New point object which is the average of a and b.
      */
-    export function average(a: IPoint, b: IPoint): IPoint{
+    export function average(a: IPoint, b: IPoint): IPoint {
         function avg(i): number {
             return (a[i] + b[i]) / 2;
         }
@@ -105,6 +105,19 @@ namespace MakerJs.point {
     }
 
     /**
+     * @private
+     */
+    var pathEndsMap: { [type: string]: (pathValue: IPath) => IPoint[] } = {};
+
+    pathEndsMap[pathType.Arc] = function (arc: IPathArc) {
+        return point.fromArc(arc);
+    };
+
+    pathEndsMap[pathType.Line] = function (line: IPathLine) {
+        return [line.origin, line.end];
+    }
+
+    /**
      * Get the two end points of a path.
      * 
      * @param pathContext The path object.
@@ -114,19 +127,9 @@ namespace MakerJs.point {
 
         var result: IPoint[] = null;
 
-        var map: IPathFunctionMap = {};
-
-        map[pathType.Arc] = function (arc: IPathArc) {
-            result = point.fromArc(arc);
-        };
-
-        map[pathType.Line] = function (line: IPathLine) {
-            result = [line.origin, line.end];
-        }
-
-        var fn = map[pathContext.type];
+        var fn = pathEndsMap[pathContext.type];
         if (fn) {
-            fn(pathContext);
+            result = fn(pathContext);
         }
 
         return result;
@@ -179,6 +182,32 @@ namespace MakerJs.point {
     }
 
     /**
+     * @private
+     */
+    var middleMap: { [type: string]: (pathValue: IPath, ratio: number) => IPoint } = {};
+
+    middleMap[pathType.Arc] = function (arc: IPathArc, ratio: number) {
+        var midAngle = angle.ofArcMiddle(arc, ratio);
+        return point.add(arc.origin, point.fromPolar(angle.toRadians(midAngle), arc.radius));
+    };
+
+    middleMap[pathType.Circle] = function (circle: IPathCircle, ratio: number) {
+        return point.add(circle.origin, [-circle.radius, 0]);
+    };
+
+    middleMap[pathType.Line] = function (line: IPathLine, ratio: number) {
+
+        function ration(a: number, b: number): number {
+            return a + (b - a) * ratio;
+        };
+
+        return [
+            ration(line.origin[0], line.end[0]),
+            ration(line.origin[1], line.end[1])
+        ];
+    };
+
+    /**
      * Get the middle point of a path.
      * 
      * @param pathContext The path object.
@@ -188,32 +217,9 @@ namespace MakerJs.point {
     export function middle(pathContext: IPath, ratio = .5): IPoint {
         var midPoint: IPoint = null;
 
-        var map: IPathFunctionMap = {};
-
-        map[pathType.Arc] = function (arc: IPathArc) {
-            var midAngle = angle.ofArcMiddle(arc, ratio);
-            midPoint = point.add(arc.origin, point.fromPolar(angle.toRadians(midAngle), arc.radius));
-        };
-
-        map[pathType.Circle] = function (circle: IPathCircle) {
-            midPoint = point.add(circle.origin, [-circle.radius, 0]);
-        };
-
-        map[pathType.Line] = function (line: IPathLine) {
-
-            function ration(a: number, b: number): number {
-                return a + (b - a) * ratio;
-            };
-
-            midPoint = [
-                ration(line.origin[0], line.end[0]),
-                ration(line.origin[1], line.end[1])
-            ];
-        };
-
-        var fn = map[pathContext.type];
+        var fn = middleMap[pathContext.type];
         if (fn) {
-            fn(pathContext);
+            midPoint = fn(pathContext, ratio);
         }
 
         return midPoint;
@@ -249,7 +255,7 @@ namespace MakerJs.point {
      * @returns A new point with the values rounded.
      */
     export function rounded(pointContext: IPoint, accuracy?: number): IPoint {
-        return [ round(pointContext[0], accuracy) , round(pointContext[1], accuracy) ];
+        return [round(pointContext[0], accuracy), round(pointContext[1], accuracy)];
     }
 
     /**
