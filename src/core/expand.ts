@@ -1,6 +1,23 @@
 ﻿namespace MakerJs.path {
 
     /**
+     * @private
+     */
+    var map: { [type: string]: (pathValue: IPath, expansion: number, isolateCaps: boolean) => IModel } = {};
+
+    map[pathType.Arc] = function (arc: IPathArc, expansion: number, isolateCaps: boolean) {
+        return new models.OvalArc(arc.startAngle, arc.endAngle, arc.radius, expansion, false, isolateCaps);
+    };
+
+    map[pathType.Circle] = function (circle: IPathCircle, expansion: number, isolateCaps: boolean) {
+        return new models.Ring(circle.radius + expansion, circle.radius - expansion);
+    }
+
+    map[pathType.Line] = function (line: IPathLine, expansion: number, isolateCaps: boolean) {
+        return new models.Slot(line.origin, line.end, expansion, isolateCaps);
+    }
+
+    /**
      * Expand path by creating a model which surrounds it.
      *
      * @param pathToExpand Path to expand.
@@ -12,25 +29,11 @@
 
         if (!pathToExpand) return null;
 
-        var result: IModel;
-
-        var map: IPathFunctionMap = {};
-
-        map[pathType.Arc] = function (arc: IPathArc) {
-            result = new models.OvalArc(arc.startAngle, arc.endAngle, arc.radius, expansion, false, isolateCaps);
-        };
-
-        map[pathType.Circle] = function (circle: IPathCircle) {
-            result = new models.Ring(circle.radius + expansion, circle.radius - expansion);
-        }
-
-        map[pathType.Line] = function (line: IPathLine) {
-            result = new models.Slot(line.origin, line.end, expansion, isolateCaps);
-        }
+        var result: IModel = null;
 
         var fn = map[pathToExpand.type];
         if (fn) {
-            fn(pathToExpand);
+            result = fn(pathToExpand, expansion, isolateCaps);
             result.origin = pathToExpand.origin;
         }
 
@@ -88,7 +91,7 @@ namespace MakerJs.model {
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
      * @returns Model which surrounds the paths of the original model.
      */
-    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0): IModel {
+    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions?: ICombineOptions): IModel {
 
         if (distance <= 0) return null;
 
@@ -113,7 +116,7 @@ namespace MakerJs.model {
                 model.originate(expandedPathModel);
 
                 if (!first) {
-                    model.combine(result, expandedPathModel);
+                    model.combine(result, expandedPathModel, false, true, false, true, combineOptions);
                 }
 
                 result.models['expansions'].models[newId] = expandedPathModel;
@@ -168,7 +171,7 @@ namespace MakerJs.model {
      * @param inside Optional boolean to draw lines inside the model instead of outside.
      * @returns Model which surrounds the paths outside of the original model.
      */
-    export function outline(modelToOutline:IModel, distance: number, joints = 0, inside = false): IModel {
+    export function outline(modelToOutline: IModel, distance: number, joints = 0, inside = false): IModel {
         var expanded = expandPaths(modelToOutline, distance, joints);
 
         if (!expanded) return null;
