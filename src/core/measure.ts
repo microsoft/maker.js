@@ -186,54 +186,83 @@ namespace MakerJs.measure {
     }
 
     /**
+     * @private
+     */
+    var pathExtentsMap: { [pathType: string]: (pathToMeasure: IPath) => IMeasure } = {};
+
+    pathExtentsMap[pathType.Line] = function (line: IPathLine) {
+        return {
+            low: getExtremePoint(line.origin, line.end, Math.min),
+            high: getExtremePoint(line.origin, line.end, Math.max)
+        }
+    }
+
+    pathExtentsMap[pathType.Circle] = function (circle: IPathCircle) {
+        var r = circle.radius;
+        return {
+            low: point.add(circle.origin, [-r, -r]),
+            high: point.add(circle.origin, [r, r])
+        }
+    }
+
+    pathExtentsMap[pathType.Arc] = function (arc: IPathArc) {
+        var r = arc.radius;
+        var arcPoints = point.fromArc(arc);
+
+        function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
+            var extremePoint = getExtremePoint(arcPoints[0], arcPoints[1], fn);
+
+            for (var i = 2; i--;) {
+                if (isBetweenArcAngles(xyAngle[i], arc, false)) {
+                    extremePoint[i] = value + arc.origin[i];
+                }
+            }
+
+            return extremePoint;
+        }
+
+        return {
+            low: extremeAngle([180, 270], -r, Math.min),
+            high: extremeAngle([360, 90], r, Math.max)
+        }
+    }
+
+    /**
      * Calculates the smallest rectangle which contains a path.
      * 
      * @param pathToMeasure The path to measure.
      * @returns object with low and high points.
      */
     export function pathExtents(pathToMeasure: IPath): IMeasure {
-        var map: IPathFunctionMap = {};
-        var measurement: IMeasure = { low: null, high: null };
-
-        map[pathType.Line] = function (line: IPathLine) {
-            measurement.low = getExtremePoint(line.origin, line.end, Math.min);
-            measurement.high = getExtremePoint(line.origin, line.end, Math.max);
-        }
-
-        map[pathType.Circle] = function (circle: IPathCircle) {
-            var r = circle.radius;
-            measurement.low = point.add(circle.origin, [-r, -r]);
-            measurement.high = point.add(circle.origin, [r, r]);
-        }
-
-        map[pathType.Arc] = function (arc: IPathArc) {
-            var r = arc.radius;
-            var arcPoints = point.fromArc(arc);
-
-            function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
-                var extremePoint = getExtremePoint(arcPoints[0], arcPoints[1], fn);
-
-                for (var i = 2; i--;) {
-                    if (isBetweenArcAngles(xyAngle[i], arc, false)) {
-                        extremePoint[i] = value + arc.origin[i];
-                    }
-                }
-
-                return extremePoint;
-            }
-
-            measurement.low = extremeAngle([180, 270], -r, Math.min);
-            measurement.high = extremeAngle([360, 90], r, Math.max);
-        }
 
         if (pathToMeasure) {
-            var fn = map[pathToMeasure.type];
+            var fn = pathExtentsMap[pathToMeasure.type];
             if (fn) {
-                fn(pathToMeasure);
+                return fn(pathToMeasure);
             }
         }
 
-        return measurement;
+        return { low: null, high: null };
+    }
+
+    /**
+     * @private
+     */
+    var pathLengthMap: { [pathType: string]: (pathToMeasure: IPath) => number } = {};
+
+    pathLengthMap[pathType.Line] = function (line: IPathLine) {
+        return pointDistance(line.origin, line.end);
+    }
+
+    pathLengthMap[pathType.Circle] = function (circle: IPathCircle) {
+        return 2 * Math.PI * circle.radius;
+    }
+
+    pathLengthMap[pathType.Arc] = function (arc: IPathArc) {
+        var value = pathLengthMap[pathType.Circle](arc);
+        var pct = angle.ofArcSpan(arc) / 360;
+        value *= pct;
+        return value;
     }
 
     /**
@@ -243,29 +272,15 @@ namespace MakerJs.measure {
      * @returns Length of the path.
      */
     export function pathLength(pathToMeasure: IPath): number {
-        var map: IPathFunctionMap = {};
-        var value = 0;
 
-        map[pathType.Line] = function (line: IPathLine) {
-            value = pointDistance(line.origin, line.end);
+        if (pathToMeasure) {
+            var fn = pathLengthMap[pathToMeasure.type];
+            if (fn) {
+                return fn(pathToMeasure);
+            }
         }
 
-        map[pathType.Circle] = function (circle: IPathCircle) {
-            value = 2 * Math.PI * circle.radius;
-        }
-
-        map[pathType.Arc] = function (arc: IPathArc) {
-            map[pathType.Circle](arc); //this sets the value var
-            var pct = angle.ofArcSpan(arc) / 360;
-            value *= pct;
-        } 
-
-        var fn = map[pathToMeasure.type];
-        if (fn) {
-            fn(pathToMeasure);
-        }
-
-        return value;
+        return 0;
     }
 
     /**
