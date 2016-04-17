@@ -10,6 +10,38 @@ namespace MakerJs.measure {
     }
 
     /**
+     * Increase a measurement by an additional measurement.
+     * 
+     * @param baseMeasure The measurement to increase.
+     * @param addMeasure The additional measurement.
+     * @param addOffset Optional offset point of the additional measurement.
+     * @returns The increased original measurement (for chaining).
+     */
+    export function increase(baseMeasure: IMeasure, addMeasure: IMeasure, addOffset: IPoint = [0, 0]): IMeasure {
+
+        function getExtreme(basePoint: IPoint, newPoint: IPoint, fn: IMathMinMax) {
+
+            for (var i = 2; i--;) {
+                if (newPoint[i] == null) continue;
+
+                var newValue = newPoint[i] + addOffset[i];
+
+                if (basePoint[i] == null) {
+                    basePoint[i] = newValue;
+                } else {
+                    basePoint[i] = fn(basePoint[i], newValue);
+                }
+            }
+
+        }
+
+        getExtreme(baseMeasure.low, addMeasure.low, Math.min);
+        getExtreme(baseMeasure.high, addMeasure.high, Math.max);
+
+        return baseMeasure;
+    }
+
+    /**
      * Check for arc being concave or convex towards a given point.
      * 
      * @param arc The arc to test.
@@ -292,19 +324,6 @@ namespace MakerJs.measure {
     export function modelExtents(modelToMeasure: IModel): IMeasure {
         var totalMeasurement: IMeasure = { low: [null, null], high: [null, null] };
 
-        function lowerOrHigher(offsetOrigin: IPoint, pathMeasurement: IMeasure) {
-
-            function getExtreme(a: IPoint, b: IPoint, fn: IMathMinMax) {
-                var c = point.add(b, offsetOrigin);
-                for (var i = 2; i--;) {
-                    a[i] = (a[i] == null ? c[i] : fn(a[i], c[i]));
-                }
-            }
-
-            getExtreme(totalMeasurement.low, pathMeasurement.low, Math.min);
-            getExtreme(totalMeasurement.high, pathMeasurement.high, Math.max);
-        }
-
         function measure(modelToMeasure: IModel, offsetOrigin?: IPoint) {
             if (!modelToMeasure) return;
 
@@ -312,7 +331,7 @@ namespace MakerJs.measure {
 
             if (modelToMeasure.paths) {
                 for (var id in modelToMeasure.paths) {
-                    lowerOrHigher(newOrigin, pathExtents(modelToMeasure.paths[id]));
+                    increase(totalMeasurement, pathExtents(modelToMeasure.paths[id]), newOrigin);
                 }
             }
 
