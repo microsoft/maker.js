@@ -93,6 +93,8 @@ namespace MakerJs.model {
     export function mirror(modelToMirror: IModel, mirrorX: boolean, mirrorY: boolean): IModel {
         var newModel: IModel = {};
 
+        if (!modelToMirror) return null;
+
         if (modelToMirror.origin) {
             newModel.origin = point.mirror(modelToMirror.origin, mirrorX, mirrorY);
         }
@@ -268,6 +270,65 @@ namespace MakerJs.model {
                 walkPaths(modelContext.models[id], callback);
             }
         }
+    }
+
+    /**
+     * Recursively walk through all paths for a given model.
+     * 
+     * @param modelContext The model to walk.
+     * @param pathCallback Callback for each path.
+     * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
+     * @param modelCallbackAfterWalk Callback for each model after recursion.
+     */
+    export function walk(modelContext: IModel, pathCallback?: IWalkPathCallback, modelCallbackBeforeWalk?: IWalkModelCancellableCallback, modelCallbackAfterWalk?: IWalkModelCallback) {
+
+        function walk2(modelContext: IModel, offset: IPoint, route: string[]) {
+
+            var newOffset = point.add(modelContext.origin, offset);
+
+            if (modelContext.paths) {
+                for (var pathId in modelContext.paths) {
+                    if (!modelContext.paths[pathId]) continue;
+
+                    var walkedPath: IWalkPath = {
+                        modelContext: modelContext,
+                        offset: newOffset,
+                        pathContext: modelContext.paths[pathId],
+                        pathId: pathId,
+                        route: route.concat(['paths', pathId])
+                    };
+
+                    if (pathCallback) pathCallback(walkedPath);
+                }
+            }
+
+            if (modelContext.models) {
+                for (var modelId in modelContext.models) {
+                    if (!modelContext.models[modelId]) continue;
+
+                    var walkedModel: IWalkModel = {
+                        parentModel: modelContext,
+                        offset: newOffset,
+                        route: route.concat(['models', modelId]),
+                        childId: modelId,
+                        childModel: modelContext.models[modelId]
+                    };
+
+                    if (modelCallbackBeforeWalk) {
+                        if (!modelCallbackBeforeWalk(walkedModel)) continue;
+                    }
+
+                    walk2(walkedModel.childModel, newOffset, walkedModel.route);
+
+                    if (modelCallbackAfterWalk) {
+                        modelCallbackAfterWalk(walkedModel);
+                    }
+                }
+            }
+        }
+
+        walk2(modelContext, [0, 0], []);
+
     }
 
 }

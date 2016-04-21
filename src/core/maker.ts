@@ -257,7 +257,7 @@ namespace MakerJs {
      * @private
      */
     export interface IPathFunctionMap {
-        
+
         /**
          * Key is the type of a path, value is a function which accepts a path object as its parameter.
          */
@@ -266,7 +266,6 @@ namespace MakerJs {
 
     /**
      * A map of functions which accept a path and an origin point as parameters.
-     * @private
      */
     export interface IPathOriginFunctionMap {
         
@@ -532,7 +531,6 @@ namespace MakerJs {
 
     /**
      * A map of functions which accept a path reference as a parameter.
-     * @private
      */
     export interface IRefPathInModelFunctionMap {
 
@@ -540,6 +538,51 @@ namespace MakerJs {
          * Key is the type of a path, value is a function which accepts a path object as its parameter.
          */
         [type: string]: (refPathInModel: IRefPathInModel) => void;
+    }
+
+    /**
+     * A route to either a path or a model, and the absolute offset of it.
+     */
+    export interface IRouteOffset {
+        routeKey: string;
+        route: string[];
+        offset: IPoint;
+    }
+
+    /**
+     * A path reference in a walk.
+     */
+    export interface IWalkPath extends IRefPathInModel, IRouteOffset {
+        parentRouteKey: string;
+    }
+
+    /**
+     * Callback signature for path in model.walk().
+     */
+    export interface IWalkPathCallback {
+        (context: IWalkPath): void;
+    }
+
+    /**
+     * Reference to a model within a model.
+     */
+    export interface IRefModelInModel {
+        parentModel: IModel;
+        childId: string;
+        childModel: IModel;
+    }
+
+    /**
+     * A model reference in a walk.
+     */
+    export interface IWalkModel extends IRefModelInModel, IRouteOffset {
+    }
+
+    /**
+     * Callback signature for model.walk().
+     */
+    export interface IWalkModelCallback {
+        (context: IWalkModel): void;
     }
 
     /**
