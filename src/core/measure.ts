@@ -17,26 +17,28 @@ namespace MakerJs.measure {
      * @param addOffset Optional offset point of the additional measurement.
      * @returns The increased original measurement (for chaining).
      */
-    export function increase(baseMeasure: IMeasure, addMeasure: IMeasure, addOffset: IPoint = [0, 0]): IMeasure {
+    export function increase(baseMeasure: IMeasure, addMeasure: IMeasure): IMeasure {
 
         function getExtreme(basePoint: IPoint, newPoint: IPoint, fn: IMathMinMax) {
+
+            if (!newPoint) return;
 
             for (var i = 2; i--;) {
                 if (newPoint[i] == null) continue;
 
-                var newValue = newPoint[i] + addOffset[i];
-
                 if (basePoint[i] == null) {
-                    basePoint[i] = newValue;
+                    basePoint[i] = newPoint[i];
                 } else {
-                    basePoint[i] = fn(basePoint[i], newValue);
+                    basePoint[i] = fn(basePoint[i], newPoint[i]);
                 }
             }
 
         }
 
-        getExtreme(baseMeasure.low, addMeasure.low, Math.min);
-        getExtreme(baseMeasure.high, addMeasure.high, Math.max);
+        if (addMeasure) {
+            getExtreme(baseMeasure.low, addMeasure.low, Math.min);
+            getExtreme(baseMeasure.high, addMeasure.high, Math.max);
+        }
 
         return baseMeasure;
     }
@@ -68,12 +70,12 @@ namespace MakerJs.measure {
     /**
      * Check for arc overlapping another arc.
      * 
-     * @param arc1 The arc to test.
-     * @param arc2 The arc to check for overlap.
+     * @param arcA The arc to test.
+     * @param arcB The arc to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if arc1 is overlapped with arc2.
+     * @returns Boolean true if arc1 is overlapped with arcB.
      */
-    export function isArcOverlapping(arc1: IPathArc, arc2: IPathArc, excludeTangents: boolean): boolean {
+    export function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
 
         function checkAngles(a: IPathArc, b: IPathArc) {
@@ -85,24 +87,23 @@ namespace MakerJs.measure {
             return checkAngle(b.startAngle) || checkAngle(b.endAngle);
         }
 
-        return checkAngles(arc1, arc2) || checkAngles(arc2, arc1) || (arc1.startAngle == arc2.startAngle && arc1.endAngle == arc2.endAngle);
+        return checkAngles(arcA, arcB) || checkAngles(arcB, arcA) || (arcA.startAngle == arcB.startAngle && arcA.endAngle == arcB.endAngle);
     }
-
 
     /**
      * Check if a given number is between two given limits.
      * 
      * @param valueInQuestion The number to test.
-     * @param limit1 First limit.
-     * @param limit2 Second limit.
+     * @param limitA First limit.
+     * @param limitB Second limit.
      * @param exclusive Flag to exclude equaling the limits.
      * @returns Boolean true if value is between (or equal to) the limits.
      */
-    export function isBetween(valueInQuestion: number, limit1: number, limit2: number, exclusive: boolean): boolean {
+    export function isBetween(valueInQuestion: number, limitA: number, limitB: number, exclusive: boolean): boolean {
         if (exclusive) {
-            return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
+            return Math.min(limitA, limitB) < valueInQuestion && valueInQuestion < Math.max(limitA, limitB);
         } else {
-            return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
+            return Math.min(limitA, limitB) <= valueInQuestion && valueInQuestion <= Math.max(limitA, limitB);
         }
     }
 
@@ -149,12 +150,12 @@ namespace MakerJs.measure {
     /**
      * Check for line overlapping another line.
      * 
-     * @param line1 The line to test.
-     * @param line2 The line to check for overlap.
+     * @param lineA The line to test.
+     * @param lineB The line to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if line1 is overlapped with line2.
+     * @returns Boolean true if line1 is overlapped with lineB.
      */
-    export function isLineOverlapping(line1: IPathLine, line2: IPathLine, excludeTangents: boolean): boolean {
+    export function isLineOverlapping(lineA: IPathLine, lineB: IPathLine, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
 
         function checkPoints(index: number, a: IPathLine, b: IPathLine) {
@@ -166,7 +167,22 @@ namespace MakerJs.measure {
             return checkPoint(b.origin) || checkPoint(b.end);
         }
 
-        return checkPoints(0, line1, line2) || checkPoints(1, line2, line1);
+        return checkPoints(0, lineA, lineB) || checkPoints(1, lineB, lineA);
+    }
+
+    /**
+     * Check for measurement overlapping another measurement.
+     * 
+     * @param measureA The measurement to test.
+     * @param measureB The measurement to check for overlap.
+     * @returns Boolean true if measure1 is overlapped with measureB.
+     */
+    export function isMeasurementOverlapping(measureA: IMeasure, measureB: IMeasure): boolean {
+        for (var i = 2; i--;) {
+            if (!(measureA.low[i] <= measureB.high[i] && measureA.high[i] >= measureB.low[i])) return false;
+        }
+
+        return true;
     }
 
     /**
@@ -265,12 +281,17 @@ namespace MakerJs.measure {
      * @param pathToMeasure The path to measure.
      * @returns object with low and high points.
      */
-    export function pathExtents(pathToMeasure: IPath): IMeasure {
+    export function pathExtents(pathToMeasure: IPath, addOffset: IPoint = [0, 0]): IMeasure {
 
         if (pathToMeasure) {
             var fn = pathExtentsMap[pathToMeasure.type];
             if (fn) {
-                return fn(pathToMeasure);
+                var m = fn(pathToMeasure);
+
+                m.high = point.add(m.high, addOffset);
+                m.low = point.add(m.low, addOffset);
+
+                return m;
             }
         }
 
@@ -331,7 +352,7 @@ namespace MakerJs.measure {
 
             if (modelToMeasure.paths) {
                 for (var id in modelToMeasure.paths) {
-                    increase(totalMeasurement, pathExtents(modelToMeasure.paths[id]), newOrigin);
+                    increase(totalMeasurement, pathExtents(modelToMeasure.paths[id], newOrigin));
                 }
             }
 
