@@ -65,9 +65,9 @@ namespace MakerJs.path {
     /**
      * @private
      */
-    function getMatchingPointProperties(path1: IPath, path2: IPath, options?: IPointMatchOptions): IMatchPointProperty[] {
-        var path1Properties = getPointProperties(path1);
-        var path2Properties = getPointProperties(path2);
+    function getMatchingPointProperties(pathA: IPath, pathB: IPath, options?: IPointMatchOptions): IMatchPointProperty[] {
+        var pathAProperties = getPointProperties(pathA);
+        var pathBProperties = getPointProperties(pathB);
 
         var result: IMatchPointProperty[] = null;
 
@@ -81,11 +81,11 @@ namespace MakerJs.path {
             };
         }
 
-        function check(i1: number, i2: number) {
-            if (measure.isPointEqual(path1Properties[i1].point, path2Properties[i2].point, .0001)) {
+        function check(iA: number, iB: number) {
+            if (measure.isPointEqual(pathAProperties[iA].point, pathBProperties[iB].point, .0001)) {
                 result = [
-                    makeMatch(path1, path1Properties, i1),
-                    makeMatch(path2, path2Properties, i2)
+                    makeMatch(pathA, pathAProperties, iA),
+                    makeMatch(pathB, pathBProperties, iB)
                 ];
                 return true;
             }
@@ -299,13 +299,13 @@ namespace MakerJs.path {
     /**
      * Adds a round corner to the outside angle between 2 lines. The lines must meet at one point.
      *
-     * @param line1 First line to fillet, which will be modified to fit the fillet.
-     * @param line2 Second line to fillet, which will be modified to fit the fillet.
+     * @param lineA First line to fillet, which will be modified to fit the fillet.
+     * @param lineB Second line to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    export function dogbone(line1: IPathLine, line2: IPathLine, filletRadius: number, options?: IPointMatchOptions): IPathArc {
+    export function dogbone(lineA: IPathLine, lineB: IPathLine, filletRadius: number, options?: IPointMatchOptions): IPathArc {
 
-        if (isPathLine(line1) && isPathLine(line2) && filletRadius && filletRadius > 0) {
+        if (isPathLine(lineA) && isPathLine(lineB) && filletRadius && filletRadius > 0) {
 
             var opts: IPointMatchOptions = {
                 pointMatchingDistance: .005
@@ -313,11 +313,11 @@ namespace MakerJs.path {
             extendObject(opts, options);
 
             //first find the common point
-            var commonProperty = getMatchingPointProperties(line1, line2, options);
+            var commonProperty = getMatchingPointProperties(lineA, lineB, options);
             if (commonProperty) {
 
                 //get the ratio comparison of the two lines
-                var ratio = getLineRatio([line1, line2]);
+                var ratio = getLineRatio([lineA, lineB]);
 
                 //draw a line between the two endpoints, and get the bisection point at the ratio
                 var span = new paths.Line(commonProperty[0].oppositePoint, commonProperty[1].oppositePoint);
@@ -363,13 +363,13 @@ namespace MakerJs.path {
     /**
      * Adds a round corner to the inside angle between 2 paths. The paths must meet at one point.
      *
-     * @param path1 First path to fillet, which will be modified to fit the fillet.
-     * @param path2 Second path to fillet, which will be modified to fit the fillet.
+     * @param pathA First path to fillet, which will be modified to fit the fillet.
+     * @param pathB Second path to fillet, which will be modified to fit the fillet.
      * @returns Arc path object of the new fillet.
      */
-    export function fillet(path1: IPath, path2: IPath, filletRadius: number, options?: IPointMatchOptions): IPathArc {
+    export function fillet(pathA: IPath, pathB: IPath, filletRadius: number, options?: IPointMatchOptions): IPathArc {
 
-        if (path1 && path2 && filletRadius && filletRadius > 0) {
+        if (pathA && pathB && filletRadius && filletRadius > 0) {
 
             var opts: IPointMatchOptions = {
                 pointMatchingDistance: .005
@@ -377,7 +377,7 @@ namespace MakerJs.path {
             extendObject(opts, options);
 
             //first find the common point
-            var commonProperty = getMatchingPointProperties(path1, path2, options);
+            var commonProperty = getMatchingPointProperties(pathA, pathB, options);
             if (commonProperty) {
 
                 //since arcs can curl beyond, we need a local reference point. 

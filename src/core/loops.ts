@@ -255,8 +255,8 @@
 
         constructor(public pointMatchingDistance) {
 
-            function comparePoint(point1: IPoint, point2: IPoint): boolean {
-                var distance = measure.pointDistance(point1, point2);
+            function comparePoint(pointA: IPoint, pointB: IPoint): boolean {
+                var distance = measure.pointDistance(pointA, pointB);
                 return distance <= pointMatchingDistance;
             }
 

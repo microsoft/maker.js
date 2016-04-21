@@ -147,34 +147,34 @@ namespace MakerJs.point {
     /**
      * Calculates the intersection of slopes of two lines.
      * 
-     * @param line1 First line to use for slope.
-     * @param line2 Second line to use for slope.
+     * @param lineA First line to use for slope.
+     * @param lineB Second line to use for slope.
      * @param options Optional IPathIntersectionOptions.
      * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
      */
-    export function fromSlopeIntersection(line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions = {}): IPoint {
+    export function fromSlopeIntersection(lineA: IPathLine, lineB: IPathLine, options: IPathIntersectionOptions = {}): IPoint {
 
-        var slope1 = measure.lineSlope(line1);
-        var slope2 = measure.lineSlope(line2);
+        var slopeA = measure.lineSlope(lineA);
+        var slopeB = measure.lineSlope(lineB);
 
-        if (measure.isSlopeEqual(slope1, slope2)) {
+        if (measure.isSlopeEqual(slopeA, slopeB)) {
 
             //check for overlap
-            options.out_AreOverlapped = measure.isLineOverlapping(line1, line2, options.excludeTangents);
+            options.out_AreOverlapped = measure.isLineOverlapping(lineA, lineB, options.excludeTangents);
 
             return null;
         }
 
         var pointOfIntersection: IPoint;
 
-        if (!slope1.hasSlope) {
-            pointOfIntersection = verticalIntersectionPoint(line1, slope2);
-        } else if (!slope2.hasSlope) {
-            pointOfIntersection = verticalIntersectionPoint(line2, slope1);
+        if (!slopeA.hasSlope) {
+            pointOfIntersection = verticalIntersectionPoint(lineA, slopeB);
+        } else if (!slopeB.hasSlope) {
+            pointOfIntersection = verticalIntersectionPoint(lineB, slopeA);
         } else {
             // find intersection by line equation
-            var x = (slope2.yIntercept - slope1.yIntercept) / (slope1.slope - slope2.slope);
-            var y = slope1.slope * x + slope1.yIntercept;
+            var x = (slopeB.yIntercept - slopeA.yIntercept) / (slopeA.slope - slopeB.slope);
+            var y = slopeA.slope * x + slopeA.yIntercept;
             pointOfIntersection = [x, y];
         }
 
