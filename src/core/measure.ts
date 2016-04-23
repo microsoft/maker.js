@@ -337,6 +337,13 @@ namespace MakerJs.measure {
     }
 
     /**
+     * @private
+     */
+    function cloneMeasure(measureToclone: IMeasure): IMeasure {
+        return { high: [measureToclone.high[0], measureToclone.high[1]], low: [measureToclone.low[0], measureToclone.low[1]] };
+    }
+
+    /**
      * Measures the smallest rectangle which contains a model.
      * 
      * @param modelToMeasure The model to measure.
@@ -354,7 +361,7 @@ namespace MakerJs.measure {
 
             if (!(parentRouteKey in cache.models)) {
                 //just start with the known size
-                cache.models[parentRouteKey] = cloneObject(childMeasurement);
+                cache.models[parentRouteKey] = cloneMeasure(childMeasurement);
             } else {
                 measure.increase(cache.models[parentRouteKey], childMeasurement);
             }
