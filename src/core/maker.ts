@@ -169,6 +169,7 @@ namespace MakerJs {
      * A measurement of extents, the high and low points.
      */
     export interface ICachedMeasure {
+        invalid?: boolean;
         models: IMeasureMap;
         paths: IMeasureMap;
     }

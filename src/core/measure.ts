@@ -342,30 +342,44 @@ namespace MakerJs.measure {
      * @param modelToMeasure The model to measure.
      * @returns object with low and high points.
      */
-    export function modelExtents(modelToMeasure: IModel): IMeasure {
-        var totalMeasurement: IMeasure = { low: [null, null], high: [null, null] };
+    export function modelExtents(modelToMeasure: IModel, cache: ICachedMeasure = { models: {}, paths: {} }): IMeasure {
 
-        function measure(modelToMeasure: IModel, offsetOrigin?: IPoint) {
-            if (!modelToMeasure) return;
+        function increaseParentModel(childRoute: string[], childMeasurement: IMeasure) {
 
-            var newOrigin = point.add(modelToMeasure.origin, offsetOrigin);
+            if (!childMeasurement) return;
 
-            if (modelToMeasure.paths) {
-                for (var id in modelToMeasure.paths) {
-                    increase(totalMeasurement, pathExtents(modelToMeasure.paths[id], newOrigin));
-                }
-            }
+            //to get the parent route, just traverse backwards 2 to remove id and 'paths' / 'models'
+            var parentRoute = childRoute.slice(0, -2);
+            var parentRouteKey = createRouteKey(parentRoute);
 
-            if (modelToMeasure.models) {
-                for (var id in modelToMeasure.models) {
-                    measure(modelToMeasure.models[id], newOrigin);
-                }
+            if (!(parentRouteKey in cache.models)) {
+                //just start with the known size
+                cache.models[parentRouteKey] = cloneObject(childMeasurement);
+            } else {
+                measure.increase(cache.models[parentRouteKey], childMeasurement);
             }
         }
 
-        measure(modelToMeasure);
+        model.walk(modelToMeasure,
+            function (walkedPath: IWalkPath) {
 
-        return totalMeasurement;
+                //trust that the path measurement is good
+                if (!(walkedPath.routeKey in cache.paths)) {
+                    cache.paths[walkedPath.routeKey] = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
+                }
+
+                increaseParentModel(walkedPath.route, cache.paths[walkedPath.routeKey]);
+            },
+            null,
+            function (walkedModel: IWalkModel) {
+                //model has been updated by all its children, update parent
+                increaseParentModel(walkedModel.route, cache.models[walkedModel.routeKey]);
+            }
+        );
+
+        cache.invalid = false;
+
+        return cache.models[''];
     }
 
 }
