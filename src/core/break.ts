@@ -61,10 +61,6 @@
 
     breakPathFunctionMap[pathType.Line] = function (line: IPathLine, pointOfBreak: IPoint): IPath {
 
-        if (measure.isPointEqual(line.origin, pointOfBreak) || measure.isPointEqual(line.end, pointOfBreak)) {
-            return null;
-        }
-
         if (!measure.isBetweenPoints(pointOfBreak, line, true)) {
             return null;
         }
@@ -89,7 +85,13 @@
         if (pathToBreak && pointOfBreak) {
             var fn = breakPathFunctionMap[pathToBreak.type];
             if (fn) {
-                return fn(pathToBreak, pointOfBreak);
+                var result = fn(pathToBreak, pointOfBreak);
+
+                if (result && ('layer' in pathToBreak)) {
+                    result.layer = pathToBreak.layer;
+                }
+
+                return result;
             }
         }
         return null;
