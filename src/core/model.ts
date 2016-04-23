@@ -282,7 +282,7 @@ namespace MakerJs.model {
      */
     export function walk(modelContext: IModel, pathCallback?: IWalkPathCallback, modelCallbackBeforeWalk?: IWalkModelCancellableCallback, modelCallbackAfterWalk?: IWalkModelCallback) {
 
-        function walk2(modelContext: IModel, offset: IPoint, route: string[]) {
+        function walkRecursive(modelContext: IModel, offset: IPoint, route: string[], routeKey: string) {
 
             var newOffset = point.add(modelContext.origin, offset);
 
@@ -295,7 +295,8 @@ namespace MakerJs.model {
                         offset: newOffset,
                         pathContext: modelContext.paths[pathId],
                         pathId: pathId,
-                        route: route.concat(['paths', pathId])
+                        route: route.concat(['paths', pathId]),
+                        routeKey: routeKey + '.paths' + JSON.stringify([pathId])
                     };
 
                     if (pathCallback) pathCallback(walkedPath);
@@ -310,6 +311,7 @@ namespace MakerJs.model {
                         parentModel: modelContext,
                         offset: newOffset,
                         route: route.concat(['models', modelId]),
+                        routeKey: routeKey + '.models' + JSON.stringify([modelId]),
                         childId: modelId,
                         childModel: modelContext.models[modelId]
                     };
@@ -318,7 +320,7 @@ namespace MakerJs.model {
                         if (!modelCallbackBeforeWalk(walkedModel)) continue;
                     }
 
-                    walk2(walkedModel.childModel, newOffset, walkedModel.route);
+                    walkRecursive(walkedModel.childModel, newOffset, walkedModel.route, walkedModel.routeKey);
 
                     if (modelCallbackAfterWalk) {
                         modelCallbackAfterWalk(walkedModel);
@@ -327,7 +329,7 @@ namespace MakerJs.model {
             }
         }
 
-        walk2(modelContext, [0, 0], []);
+        walkRecursive(modelContext, [0, 0], [], '');
 
     }
 

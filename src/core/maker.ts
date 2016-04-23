@@ -59,6 +59,27 @@ namespace MakerJs {
     }
 
     /**
+     * Create a string representation of a route array.
+     * 
+     * @param route Array of strings which are segments of a route.
+     * @returns String of the flattened array.
+     */
+    export function createRouteKey(route: string[]) {
+        var converted: string[] = [];
+        for (var i = 0; i < route.length; i++) {
+            var element = route[i];
+            var newElement: string;
+            if (i % 2 === 0) {
+                newElement = '.' + element;
+            } else {
+                newElement = JSON.stringify([element]);
+            }
+            converted.push(newElement);
+        }
+        return converted.join('');
+    }
+
+    /**
      * @private
      */
     var clone = require('clone');
@@ -569,8 +590,9 @@ namespace MakerJs {
      * A route to either a path or a model, and the absolute offset of it.
      */
     export interface IRouteOffset {
-        route: string[];
         offset: IPoint;
+        route: string[];
+        routeKey: string;
     }
 
     /**

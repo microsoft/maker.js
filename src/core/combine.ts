@@ -217,7 +217,7 @@
     /**
      * @private
      */
-    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, checkIsInside: boolean, farPoint?: IPoint, cachedMeasurement: ICachedMeasure = { models: {}, paths: {} }): ICombinedModel {
+    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, checkIsInside: boolean, farPoint?: IPoint, outerMeasurement: ICachedMeasure = { models: {}, paths: {} }, innerMeasurement: ICachedMeasure = { models: {}, paths: {} }): ICombinedModel {
 
         var crossedPaths: ICrossedPath[] = [];
         var overlappedSegments: ICrossedPathSegment[] = [];
@@ -237,11 +237,22 @@
             thisPath.segments = [segment];
 
             //keep breaking the segments anywhere they intersect with paths of the other model
-            walk(modelToIntersect, function (innerWalkedPath: IWalkPath) {
-                if (outerWalkedPath.pathContext !== innerWalkedPath.pathContext) {
-                    breakAlongForeignPath(thisPath, overlappedSegments, innerWalkedPath.pathContext);
+            walk(modelToIntersect,
+
+                function (innerWalkedPath: IWalkPath) {
+                    if (outerWalkedPath.pathContext !== innerWalkedPath.pathContext && measure.isMeasurementOverlapping(outerMeasurement.paths[outerWalkedPath.routeKey], innerMeasurement.paths[innerWalkedPath.routeKey])) {
+                        breakAlongForeignPath(thisPath, overlappedSegments, innerWalkedPath.pathContext);
+                    }
+                },
+
+                function (innerWalkedModel: IWalkModel): boolean {
+
+                    //see if there is a model measurement. if not, it is because the model does not contain paths.
+                    var innerModelMeasurement = innerMeasurement.models[innerWalkedModel.routeKey];
+
+                    return innerModelMeasurement && measure.isMeasurementOverlapping(outerMeasurement.paths[outerWalkedPath.routeKey], innerModelMeasurement);
                 }
-            });
+            );
 
             if (checkIsInside) {
                 //check each segment whether it is inside or outside
@@ -282,11 +293,24 @@
     /**
      * @private
      */
-    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean) {
+    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean, cachedMeasurements: ICachedMeasure) {
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(modelContext, pathIdBase);
             modelContext.paths[id] = segment.path;
+
+            if (crossedPath.broken) {
+                //save the new measurement
+                var measurement = measure.pathExtents(segment.path, crossedPath.offset);
+                var newRouteKey = createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
+                cachedMeasurements.paths[crossedPath.routeKey] = measurement;
+
+                //invalidate model measurements
+                cachedMeasurements.models = {};
+            } else {
+                //keep the original measurement
+                cachedMeasurements.paths[crossedPath.routeKey] = savedMeasurement;
+            }
         }
 
         function checkAddSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
@@ -295,8 +319,12 @@
             }
         }
 
+        //save the original measurement
+        var savedMeasurement = cachedMeasurements.paths[crossedPath.routeKey];
+
         //delete the original, its segments will be added
         delete crossedPath.modelContext.paths[crossedPath.pathId];
+        delete cachedMeasurements.paths[crossedPath.routeKey];
 
         for (var i = 0; i < crossedPath.segments.length; i++) {
             if (crossedPath.segments[i].duplicate) {
@@ -307,6 +335,45 @@
                 checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
             }
         }
+    }
+
+    /**
+     * @private
+     */
+    function measureModel(modelToMeasure: IModel, cache: ICachedMeasure) {
+
+        function measureParent(route: string[], knownMeasurement: IMeasure) {
+
+            //to get the parent route, just traverse backwards 2 to remove id and 'paths' / 'models'
+            var parentRoute = route.slice(0, -2);
+            var firstParentModelRouteKey = createRouteKey(parentRoute);
+
+            if (!(firstParentModelRouteKey in cache.models)) {
+                //just start with the known size
+                cache.models[firstParentModelRouteKey] = cloneObject(knownMeasurement);
+            } else {
+                measure.increase(cache.models[firstParentModelRouteKey], knownMeasurement);
+            }
+
+            if (parentRoute.length > 0) {
+                measureParent(parentRoute, cache.models[firstParentModelRouteKey]);
+            }
+
+        }
+
+        walk(modelToMeasure,
+            function (walkedPath: IWalkPath) {
+
+                //trust that the path measurement is good
+                if (!(walkedPath.routeKey in cache.paths)) {
+                    var measurement = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
+                    cache.paths[walkedPath.routeKey] = measurement;
+                }
+
+                measureParent(walkedPath.route, cache.paths[walkedPath.routeKey]);
+
+            }
+        );
     }
 
     /**
@@ -331,17 +398,21 @@
         };
         extendObject(opts, options);
 
-        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.farPoint, opts.cachedMeasurementA);
-        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.farPoint, opts.cachedMeasurementB);
+        //make sure model measurements capture all paths
+        measureModel(modelA, opts.cachedMeasurementA);
+        measureModel(modelB, opts.cachedMeasurementB);
+
+        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.farPoint, opts.cachedMeasurementA, opts.cachedMeasurementB);
+        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.farPoint, opts.cachedMeasurementB, opts.cachedMeasurementA);
 
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true);
+            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.cachedMeasurementA);
         }
 
         for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false);
+            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.cachedMeasurementB);
         }
 
         if (opts.trimDeadEnds) {
