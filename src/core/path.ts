@@ -1,5 +1,8 @@
 namespace MakerJs.path {
 
+    /**
+     * @private
+     */
     function copyLayer(pathA: IPath, pathB: IPath) {
         if (pathA && pathB && ('layer' in pathA)) {
             pathB.layer = pathA.layer;
