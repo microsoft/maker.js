@@ -130,11 +130,26 @@ namespace MakerJs {
          * The point containing both the lowest x and y values of the rectangle containing the item being measured.
          */
         low: IPoint;
-        
+
         /**
          * The point containing both the highest x and y values of the rectangle containing the item being measured.
          */
         high: IPoint;
+    }
+
+    /**
+     * A map of measurements.
+     */
+    export interface IMeasureMap {
+        [key: string]: IMeasure;
+    }
+
+    /**
+     * A measurement of extents, the high and low points.
+     */
+    export interface ICachedMeasure {
+        models: IMeasureMap;
+        paths: IMeasureMap;
     }
 
     //paths
@@ -143,12 +158,12 @@ namespace MakerJs {
      * A line, curved line or other simple two dimensional shape.
      */
     export interface IPath {
-        
+
         /**
          * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
          */
         "type": string;
-        
+
         /**
          * The main point of reference for this path.
          */
@@ -179,7 +194,7 @@ namespace MakerJs {
      * ```
      */
     export interface IPathLine extends IPath {
-        
+
         /**
          * The end point defining the line. The start point is the origin.
          */
@@ -205,7 +220,7 @@ namespace MakerJs {
      * ```
      */
     export interface IPathCircle extends IPath {
-        
+
         /**
          * The radius of the circle.
          */
@@ -268,7 +283,7 @@ namespace MakerJs {
      * A map of functions which accept a path and an origin point as parameters.
      */
     export interface IPathOriginFunctionMap {
-        
+
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
@@ -382,6 +397,16 @@ namespace MakerJs {
          * Point which is known to be outside of the model.
          */
         farPoint?: IPoint;
+
+        /**
+         * Cached measurements for model A.
+         */
+        cachedMeasurementA?: ICachedMeasure;
+
+        /**
+         * Cached measurements for model B.
+         */
+        cachedMeasurementB?: ICachedMeasure;
     }
 
     /**
@@ -458,7 +483,7 @@ namespace MakerJs {
      * ```
      */
     export interface IModel {
-        
+
         /**
          * Optional origin location of this model.
          */
@@ -468,17 +493,17 @@ namespace MakerJs {
          * A model may want to specify its type, but this value is not employed yet.
          */
         "type"?: string;
-        
+
         /**
          * Optional array of path objects in this model.
          */
         paths?: IPathMap;
-        
+
         /**
          * Optional array of models within this model.
          */
         models?: IModelMap;
-        
+
         /**
          * Optional unit system of this model. See UnitType for possible values.
          */
@@ -544,7 +569,6 @@ namespace MakerJs {
      * A route to either a path or a model, and the absolute offset of it.
      */
     export interface IRouteOffset {
-        routeKey: string;
         route: string[];
         offset: IPoint;
     }
@@ -553,7 +577,6 @@ namespace MakerJs {
      * A path reference in a walk.
      */
     export interface IWalkPath extends IRefPathInModel, IRouteOffset {
-        parentRouteKey: string;
     }
 
     /**
@@ -584,12 +607,18 @@ namespace MakerJs {
     export interface IWalkModelCallback {
         (context: IWalkModel): void;
     }
+    /**
+     * Callback signature for model.walk(), which may return false to halt any further walking.
+     */
+    export interface IWalkModelCancellableCallback {
+        (context: IWalkModel): boolean;
+    }
 
     /**
      * Describes a parameter and its limits.
      */
     export interface IMetaParameter {
-        
+
         /**
          * Display text of the parameter.
          */

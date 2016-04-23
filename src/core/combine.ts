@@ -25,7 +25,9 @@
     /**
      * @private
      */
-    function breakAlongForeignPath(segments: ICrossedPathSegment[], overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
+    function breakAlongForeignPath(crossedPath: ICrossedPath, overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
+
+        var segments = crossedPath.segments;
 
         if (measure.isPathEqual(segments[0].path, foreignPath, .0001)) {
             segments[0].overlapped = true;
@@ -69,6 +71,8 @@
                 }
 
                 if (subSegments) {
+                    crossedPath.broken = true;
+
                     segments[i].path = subSegments[0];
 
                     if (subSegments[1]) {
@@ -187,7 +191,8 @@
     /**
      * @private
      */
-    interface ICrossedPath extends IRefPathIdInModel {
+    interface ICrossedPath extends IWalkPath {
+        broken: boolean;
         segments: ICrossedPathSegment[];
     }
 
@@ -212,33 +217,29 @@
     /**
      * @private
      */
-    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, checkIsInside: boolean, farPoint?: IPoint): ICombinedModel {
+    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, checkIsInside: boolean, farPoint?: IPoint, cachedMeasurement: ICachedMeasure = { models: {}, paths: {} }): ICombinedModel {
 
         var crossedPaths: ICrossedPath[] = [];
         var overlappedSegments: ICrossedPathSegment[] = [];
 
-        walkPaths(modelToBreak, function (modelContext: IModel, pathId1: string, path1: IPath) {
-
-            if (!path1) return;
+        walk(modelToBreak, function (outerWalkedPath: IWalkPath) {
 
             //clone this path and make it the first segment
             var segment: ICrossedPathSegment = {
-                path: cloneObject<IPath>(path1),
-                pathId: pathId1,
+                path: cloneObject<IPath>(outerWalkedPath.pathContext),
+                pathId: outerWalkedPath.pathId,
                 overlapped: false,
                 uniqueForeignIntersectionPoints: []
             };
 
-            var thisPath: ICrossedPath = {
-                modelContext: modelContext,
-                pathId: pathId1,
-                segments: [segment],
-            };
+            var thisPath: ICrossedPath = <ICrossedPath>outerWalkedPath;
+            thisPath.broken = false;
+            thisPath.segments = [segment];
 
             //keep breaking the segments anywhere they intersect with paths of the other model
-            walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
-                if (path2 && path1 !== path2) {
-                    breakAlongForeignPath(thisPath.segments, overlappedSegments, path2);
+            walk(modelToIntersect, function (innerWalkedPath: IWalkPath) {
+                if (outerWalkedPath.pathContext !== innerWalkedPath.pathContext) {
+                    breakAlongForeignPath(thisPath, overlappedSegments, innerWalkedPath.pathContext);
                 }
             });
 
@@ -324,12 +325,14 @@
 
         var opts: ICombineOptions = {
             trimDeadEnds: true,
-            pointMatchingDistance: .005
+            pointMatchingDistance: .005,
+            cachedMeasurementA: { models: {}, paths: {} },
+            cachedMeasurementB: { models: {}, paths: {} }
         };
         extendObject(opts, options);
 
-        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.farPoint);
-        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.farPoint);
+        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.farPoint, opts.cachedMeasurementA);
+        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.farPoint, opts.cachedMeasurementB);
 
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
@@ -344,6 +347,9 @@
         if (opts.trimDeadEnds) {
             removeDeadEnds(<IModel>{ models: { modelA: modelA, modelB: modelB } });
         }
+
+        //pass options back to caller
+        extendObject(options, opts);
     }
 
 }
