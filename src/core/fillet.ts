@@ -128,7 +128,7 @@ namespace MakerJs.path {
      * @private
      */
     function cloneAndBreakPath(pathToShard: IPath, shardPoint: IPoint): IPath[] {
-        var shardStart = cloneObject<IPath>(pathToShard);
+        var shardStart = path.clone(pathToShard);
         var shardEnd = breakAtPoint(shardStart, shardPoint);
         return [shardStart, shardEnd];
     }
