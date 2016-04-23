@@ -1,5 +1,42 @@
 namespace MakerJs.path {
 
+    function copyLayer(pathA: IPath, pathB: IPath) {
+        if (pathA && pathB && ('layer' in pathA)) {
+            pathB.layer = pathA.layer;
+        }
+    }
+    
+    /**
+     * Create a clone of a path. This is faster than cloneObject.
+     * 
+     * @param pathToClone The path to clone.
+     * @returns Cloned path.
+     */
+    export function clone(pathToClone: IPath): IPath {
+        var result: IPath = null;
+
+        switch (pathToClone.type) {
+            case pathType.Arc:
+                var arc = <IPathArc>pathToClone;
+                result = new paths.Arc(arc.origin, arc.radius, arc.startAngle, arc.endAngle);
+                break;
+
+            case pathType.Circle:
+                var circle = <IPathCircle>pathToClone;
+                result = new paths.Circle(circle.origin, circle.radius);
+                break;
+
+            case pathType.Line:
+                var line = <IPathLine>pathToClone;
+                result = new paths.Line(line.origin, line.end);
+                break;
+        }
+
+        copyLayer(pathToClone, result);
+
+        return result;
+    }
+
     /**
      * @private
      */
@@ -55,6 +92,8 @@ namespace MakerJs.path {
                 newPath = fn(pathToMirror, origin, mirrorX, mirrorY);
             }
         }
+
+        copyLayer(pathToMirror, newPath);
 
         return newPath;
     }
