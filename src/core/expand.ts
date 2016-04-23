@@ -91,7 +91,7 @@ namespace MakerJs.model {
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
      * @returns Model which surrounds the paths of the original model.
      */
-    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions?: ICombineOptions): IModel {
+    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions: ICombineOptions = {}): IModel {
 
         if (distance <= 0) return null;
 
@@ -107,16 +107,18 @@ namespace MakerJs.model {
         //TODO: work without origination
         var originated = originate(modelToExpand);
 
-        walkPaths(originated, function (modelContext: IModel, pathId: string, pathContext: IPath) {
-            var expandedPathModel = path.expand(pathContext, distance, true);
+        walk(originated, function (walkedPath: IWalkPath) {
+            var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
 
             if (expandedPathModel) {
-                var newId = getSimilarModelId(result.models['expansions'], pathId);
+                var newId = getSimilarModelId(result.models['expansions'], walkedPath.pathId);
 
                 model.originate(expandedPathModel);
 
                 if (!first) {
                     model.combine(result, expandedPathModel, false, true, false, true, combineOptions);
+                    combineOptions.cachedMeasurementA.invalid = true;
+                    delete combineOptions.cachedMeasurementB;
                 }
 
                 result.models['expansions'].models[newId] = expandedPathModel;
