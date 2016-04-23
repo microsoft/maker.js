@@ -4,8 +4,10 @@
      * @private
      */
     function getNonZeroSegments(pathToSegment: IPath, breakPoint: IPoint): IPath[] {
-        var segmentType = pathToSegment.type;
-        var segment1 = cloneObject<IPath>(pathToSegment);
+        var segment1 = path.clone(pathToSegment);
+
+        if (!segment1) return null;
+
         var segment2 = path.breakAtPoint(segment1, breakPoint);
 
         if (segment2) {
@@ -16,9 +18,11 @@
                 }
             }
             return segments;
-        } else if (segmentType == pathType.Circle) {
+
+        } else if (pathToSegment.type == pathType.Circle) {
             return [segment1];
         }
+
         return null;
     }
 
@@ -226,7 +230,7 @@
 
             //clone this path and make it the first segment
             var segment: ICrossedPathSegment = {
-                path: cloneObject<IPath>(outerWalkedPath.pathContext),
+                path: path.clone(outerWalkedPath.pathContext),
                 pathId: outerWalkedPath.pathId,
                 overlapped: false,
                 uniqueForeignIntersectionPoints: []
@@ -249,7 +253,6 @@
 
                     //see if there is a model measurement. if not, it is because the model does not contain paths.
                     var innerModelMeasurement = innerMeasurement.models[innerWalkedModel.routeKey];
-
                     return innerModelMeasurement && measure.isMeasurementOverlapping(outerMeasurement.paths[outerWalkedPath.routeKey], innerModelMeasurement);
                 }
             );
@@ -300,13 +303,11 @@
             modelContext.paths[id] = segment.path;
 
             if (crossedPath.broken) {
-                //save the new measurement
+                //save the new segment's measurement
                 var measurement = measure.pathExtents(segment.path, crossedPath.offset);
-                var newRouteKey = createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
+                var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
                 cachedMeasurements.paths[crossedPath.routeKey] = measurement;
-
-                //invalidate model measurements
-                cachedMeasurements.models = {};
+                cachedMeasurements.invalid = true;
             } else {
                 //keep the original measurement
                 cachedMeasurements.paths[crossedPath.routeKey] = savedMeasurement;
@@ -316,6 +317,8 @@
         function checkAddSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
                 addSegment(modelContext, pathIdBase, segment);
+            } else {
+                cachedMeasurements.invalid = true;
             }
         }
 
@@ -338,45 +341,6 @@
     }
 
     /**
-     * @private
-     */
-    function measureModel(modelToMeasure: IModel, cache: ICachedMeasure) {
-
-        function measureParent(route: string[], knownMeasurement: IMeasure) {
-
-            //to get the parent route, just traverse backwards 2 to remove id and 'paths' / 'models'
-            var parentRoute = route.slice(0, -2);
-            var firstParentModelRouteKey = createRouteKey(parentRoute);
-
-            if (!(firstParentModelRouteKey in cache.models)) {
-                //just start with the known size
-                cache.models[firstParentModelRouteKey] = cloneObject(knownMeasurement);
-            } else {
-                measure.increase(cache.models[firstParentModelRouteKey], knownMeasurement);
-            }
-
-            if (parentRoute.length > 0) {
-                measureParent(parentRoute, cache.models[firstParentModelRouteKey]);
-            }
-
-        }
-
-        walk(modelToMeasure,
-            function (walkedPath: IWalkPath) {
-
-                //trust that the path measurement is good
-                if (!(walkedPath.routeKey in cache.paths)) {
-                    var measurement = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
-                    cache.paths[walkedPath.routeKey] = measurement;
-                }
-
-                measureParent(walkedPath.route, cache.paths[walkedPath.routeKey]);
-
-            }
-        );
-    }
-
-    /**
      * Combine 2 models. The models should be originated, and every path within each model should be part of a loop.
      *
      * @param modelA First model to combine.
@@ -393,14 +357,14 @@
         var opts: ICombineOptions = {
             trimDeadEnds: true,
             pointMatchingDistance: .005,
-            cachedMeasurementA: { models: {}, paths: {} },
-            cachedMeasurementB: { models: {}, paths: {} }
+            cachedMeasurementA: { models: {}, paths: {}, invalid: true },
+            cachedMeasurementB: { models: {}, paths: {}, invalid: true }
         };
         extendObject(opts, options);
 
         //make sure model measurements capture all paths
-        measureModel(modelA, opts.cachedMeasurementA);
-        measureModel(modelB, opts.cachedMeasurementB);
+        if (opts.cachedMeasurementA.invalid) measure.modelExtents(modelA, opts.cachedMeasurementA);
+        if (opts.cachedMeasurementB.invalid) measure.modelExtents(modelB, opts.cachedMeasurementB);
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.farPoint, opts.cachedMeasurementA, opts.cachedMeasurementB);
         var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.farPoint, opts.cachedMeasurementB, opts.cachedMeasurementA);
