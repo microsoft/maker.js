@@ -290,18 +290,6 @@ namespace MakerJs.point {
     }
 
     /**
-     * Get a string representation of a point.
-     * 
-     * @param pointContext The point to serialize.
-     * @param accuracy Optional exemplar of number of decimal places.
-     * @returns String representing the point.
-     */
-    export function serialize(pointContext: IPoint, accuracy?: number) {
-        var roundedPoint = rounded(pointContext, accuracy);
-        return JSON.stringify(roundedPoint);
-    }
-
-    /**
      * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
      * 
      * @param a First point.
