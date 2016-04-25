@@ -300,17 +300,18 @@
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(modelContext, pathIdBase);
+            var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
+
             modelContext.paths[id] = segment.path;
 
             if (crossedPath.broken) {
                 //save the new segment's measurement
                 var measurement = measure.pathExtents(segment.path, crossedPath.offset);
-                var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
-                cachedMeasurements.paths[crossedPath.routeKey] = measurement;
+                cachedMeasurements.paths[newRouteKey] = measurement;
                 cachedMeasurements.invalid = true;
             } else {
                 //keep the original measurement
-                cachedMeasurements.paths[crossedPath.routeKey] = savedMeasurement;
+                cachedMeasurements.paths[newRouteKey] = savedMeasurement;
             }
         }
 
