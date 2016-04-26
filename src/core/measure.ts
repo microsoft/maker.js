@@ -179,7 +179,7 @@ namespace MakerJs.measure {
      */
     export function isMeasurementOverlapping(measureA: IMeasure, measureB: IMeasure): boolean {
         for (var i = 2; i--;) {
-            if (!(measureA.low[i] <= measureB.high[i] && measureA.high[i] >= measureB.low[i])) return false;
+            if (!(round(measureA.low[i] - measureB.high[i]) <= 0 && round(measureA.high[i] - measureB.low[i]) >= 0)) return false;
         }
 
         return true;
