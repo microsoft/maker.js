@@ -65,7 +65,7 @@
 
             var linkedPaths = connections.collections[i].items;
 
-            if (linkedPaths) {
+            if (linkedPaths && linkedPaths.length > 0) {
 
                 var loopModel: ILoopModel = {
                     paths: {},
@@ -83,13 +83,14 @@
                     var id = getSimilarPathId(loopModel, currPath.pathId);
                     loopModel.paths[id] = currPath;
 
-                    var findex: number;
-                    var f = connections.findCollection(currLink.nextConnection, function (index: number) { findex = index; });
+                    var items = connections.findCollection(currLink.nextConnection);
 
-                    if (!f) break;
+                    if (!items) break;
 
-                    var nextLink = getOpposedLink(f, currLink.path);
-                    connections.collections[findex].items = null;
+                    var nextLink = getOpposedLink(items, currLink.path);
+
+                    //remove the first 2 items, which should be currlink and nextlink
+                    items.splice(0, 2);
 
                     if (!nextLink) break;
 
@@ -157,7 +158,7 @@
             safePath.modelContext = modelContext;
 
             //circles are loops by nature
-            if (safePath.type == pathType.Circle) {
+            if (safePath.type == pathType.Circle || (safePath.type == pathType.Arc && angle.ofArcSpan(walkedPath.pathContext as IPathArc) == 360)) {
                 var loopModel: ILoopModel = {
                     paths: {},
                     insideCount: 0
@@ -167,8 +168,17 @@
                 collectLoop(loopModel, loops, opts.removeFromOriginal);
 
             } else {
+
                 //gather both endpoints from all non-circle segments
                 safePath.endPoints = point.fromPathEnds(safePath);
+
+                //don't add lines which are shorter than the tolerance
+                if (safePath.type == pathType.Line) {
+                    var distance = measure.pointDistance(safePath.endPoints[0], safePath.endPoints[1]);
+                    if (distance < opts.pointMatchingDistance) {
+                        return;
+                    }
+                }
 
                 for (var i = 2; i--;) {
                     var linkedPath: ILinkedPath = {
