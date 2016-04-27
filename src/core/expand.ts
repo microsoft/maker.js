@@ -117,8 +117,8 @@ namespace MakerJs.model {
 
                 if (!first) {
                     model.combine(result, expandedPathModel, false, true, false, true, combineOptions);
-                    combineOptions.cachedMeasurementA.invalid = true;
-                    delete combineOptions.cachedMeasurementB;
+                    combineOptions.measureA.invalid = true;
+                    delete combineOptions.measureB;
                 }
 
                 result.models['expansions'].models[newId] = expandedPathModel;

@@ -165,15 +165,6 @@ namespace MakerJs {
         [key: string]: IMeasure;
     }
 
-    /**
-     * A measurement of extents, the high and low points.
-     */
-    export interface ICachedMeasure {
-        invalid?: boolean;
-        models: IMeasureMap;
-        paths: IMeasureMap;
-    }
-
     //paths
 
     /**
@@ -423,12 +414,12 @@ namespace MakerJs {
         /**
          * Cached measurements for model A.
          */
-        cachedMeasurementA?: ICachedMeasure;
+        measureA?: measure.Atlas;
 
         /**
          * Cached measurements for model B.
          */
-        cachedMeasurementB?: ICachedMeasure;
+        measureB?: measure.Atlas;
     }
 
     /**

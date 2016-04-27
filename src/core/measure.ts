@@ -349,7 +349,7 @@ namespace MakerJs.measure {
      * @param modelToMeasure The model to measure.
      * @returns object with low and high points.
      */
-    export function modelExtents(modelToMeasure: IModel, cache: ICachedMeasure = { models: {}, paths: {} }): IMeasure {
+    export function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasure {
 
         function increaseParentModel(childRoute: string[], childMeasurement: IMeasure) {
 
@@ -359,34 +359,45 @@ namespace MakerJs.measure {
             var parentRoute = childRoute.slice(0, -2);
             var parentRouteKey = createRouteKey(parentRoute);
 
-            if (!(parentRouteKey in cache.models)) {
+            if (!(parentRouteKey in atlas.modelMap)) {
                 //just start with the known size
-                cache.models[parentRouteKey] = cloneMeasure(childMeasurement);
+                atlas.modelMap[parentRouteKey] = cloneMeasure(childMeasurement);
             } else {
-                measure.increase(cache.models[parentRouteKey], childMeasurement);
+                measure.increase(atlas.modelMap[parentRouteKey], childMeasurement);
             }
         }
+
+        if (!atlas) atlas = new measure.Atlas(modelToMeasure);
 
         model.walk(modelToMeasure,
             function (walkedPath: IWalkPath) {
 
                 //trust that the path measurement is good
-                if (!(walkedPath.routeKey in cache.paths)) {
-                    cache.paths[walkedPath.routeKey] = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
+                if (!(walkedPath.routeKey in atlas.pathMap)) {
+                    atlas.pathMap[walkedPath.routeKey] = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
                 }
 
-                increaseParentModel(walkedPath.route, cache.paths[walkedPath.routeKey]);
+                increaseParentModel(walkedPath.route, atlas.pathMap[walkedPath.routeKey]);
             },
             null,
             function (walkedModel: IWalkModel) {
                 //model has been updated by all its children, update parent
-                increaseParentModel(walkedModel.route, cache.models[walkedModel.routeKey]);
+                increaseParentModel(walkedModel.route, atlas.modelMap[walkedModel.routeKey]);
             }
         );
 
-        cache.invalid = false;
+        atlas.invalid = false;
 
-        return cache.models[''];
+        return atlas.modelMap[''];
     }
 
+    export class Atlas {
+        public invalid = true;
+        public modelMap: IMeasureMap = {};
+        public pathMap: IMeasureMap = {};
+
+        constructor(public modelContext: IModel) {
+        }
+
+    }
 }
