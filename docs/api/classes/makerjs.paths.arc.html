@@ -54,9 +54,9 @@ title: Api - Arc Class
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, startAngle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, endAngle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>p1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, largeArc<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, clockwise<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>p1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, clockwise<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>p1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, p3<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>pointA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, largeArc<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, clockwise<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>pointA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, clockwise<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Arc<span class="tsd-signature-symbol">(</span>pointA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointC<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -121,7 +121,7 @@ title: Api - Arc Class
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>p1: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<h5>pointA: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>First end point of the arc.</p>
@@ -129,7 +129,7 @@ title: Api - Arc Class
 						</div>
 					</li>
 					<li>
-						<h5>p2: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<h5>pointB: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Second end point of the arc.</p>
@@ -177,7 +177,7 @@ title: Api - Arc Class
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>p1: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<h5>pointA: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>First end point of the arc.</p>
@@ -185,7 +185,7 @@ title: Api - Arc Class
 						</div>
 					</li>
 					<li>
-						<h5>p2: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<h5>pointB: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Second end point of the arc.</p>
@@ -217,7 +217,7 @@ title: Api - Arc Class
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>p1: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<h5>pointA: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>First end point of the arc.</p>
@@ -225,7 +225,7 @@ title: Api - Arc Class
 						</div>
 					</li>
 					<li>
-						<h5>p2: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<h5>pointB: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Second end point of the arc.</p>
@@ -233,7 +233,7 @@ title: Api - Arc Class
 						</div>
 					</li>
 					<li>
-						<h5>p3: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<h5>pointC: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Second end point of the arc.</p>

@@ -1,20 +1,13 @@
 ---
 layout: posts
-title: Api - IKit Interface
+title: Api - Atlas Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
-<section class="tsd-panel tsd-comment">
-	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>An IKit is a model-producing class with some sample parameters. Think of it as a packaged model with instructions on how to best use it.</p>
-		</div>
-	</div>
-</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IKit</span>
+			<span class="target">Atlas</span>
 		</li>
 	</ul>
 </section>
@@ -25,14 +18,22 @@ title: Api - IKit Interface
 			<section class="tsd-index-section ">
 				<h3>Constructors</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-interface"><a href="makerjs.ikit.html#constructor" class="tsd-kind-icon">constructor</a></li>
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#constructor" class="tsd-kind-icon">constructor</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ikit.html#metaparameters" class="tsd-kind-icon">meta<wbr>Parameters</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ikit.html#notes" class="tsd-kind-icon">notes</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#modelcontext" class="tsd-kind-icon">model<wbr>Context</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#modelmap" class="tsd-kind-icon">model<wbr>Map</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#modelsmeasured" class="tsd-kind-icon">models<wbr>Measured</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#pathmap" class="tsd-kind-icon">path<wbr>Map</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Methods</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#measuremodels" class="tsd-kind-icon">measure<wbr>Models</a></li>
 				</ul>
 			</section>
 		</div>
@@ -40,68 +41,91 @@ title: Api - IKit Interface
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Constructors</h2>
-	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-interface">
+	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
-		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-interface">
-			<li class="tsd-signature tsd-kind-icon">new IKit<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.ikit.html" class="tsd-signature-type">IKit</a></li>
+		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Atlas<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L671">core/maker.ts:671</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L397">core/measure.ts:397</a></li>
 					</ul>
 				</aside>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>The constructor. The kit must be &quot;new-able&quot; and it must produce an IModel.
-						It can have any number of any type of parameters.</p>
-					</div>
-				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+						<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.ikit.html" class="tsd-signature-type">IKit</a></h4>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></h4>
 			</li>
 		</ul>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="metaparameters" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> meta<wbr>Parameters</h3>
-		<div class="tsd-signature tsd-kind-icon">meta<wbr>Parameters<span class="tsd-signature-symbol">:</span> <a href="makerjs.imetaparameter.html" class="tsd-signature-type">IMetaParameter</a><span class="tsd-signature-symbol">[]</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="modelcontext" class="tsd-anchor"></a>
+		<h3>model<wbr>Context</h3>
+		<div class="tsd-signature tsd-kind-icon">model<wbr>Context<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L683">core/maker.ts:683</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L399">core/measure.ts:399</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Attached to the constructor is a property named metaParameters which is an array of IMetaParameter objects.
-				Each element of the array corresponds to a parameter of the constructor, in order.</p>
-			</div>
-		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="notes" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> notes</h3>
-		<div class="tsd-signature tsd-kind-icon">notes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="modelmap" class="tsd-anchor"></a>
+		<h3>model<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">model<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imeasuremap.html" class="tsd-signature-type">IMeasureMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L688">core/maker.ts:688</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L396">core/measure.ts:396</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Information about this kit, in plain text or markdown format.</p>
-			</div>
-		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="modelsmeasured" class="tsd-anchor"></a>
+		<h3>models<wbr>Measured</h3>
+		<div class="tsd-signature tsd-kind-icon">models<wbr>Measured<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L395">core/measure.ts:395</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="pathmap" class="tsd-anchor"></a>
+		<h3>path<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">path<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imeasuremap.html" class="tsd-signature-type">IMeasureMap</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L397">core/measure.ts:397</a></li>
+			</ul>
+		</aside>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Methods</h2>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="measuremodels" class="tsd-anchor"></a>
+		<h3>measure<wbr>Models</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">measure<wbr>Models<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L402">core/measure.ts:402</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
 	</section>
 </section>
 </div>

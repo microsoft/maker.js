@@ -7,6 +7,12 @@ title: Api - measure Module
 	<h2>Index</h2>
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Classes</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/makerjs.measure.atlas.html" class="tsd-kind-icon">Atlas</a></li>
+				</ul>
+			</section>
 			<section class="tsd-index-section tsd-is-private tsd-is-private-protected tsd-is-not-exported">
 				<h3>Interfaces</h3>
 				<ul class="tsd-index-list">
@@ -18,12 +24,16 @@ title: Api - measure Module
 				<h3>Variables</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#pathareequalmap" class="tsd-kind-icon">path<wbr>Are<wbr>Equal<wbr>Map</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#pathextentsmap" class="tsd-kind-icon">path<wbr>Extents<wbr>Map</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#pathlengthmap" class="tsd-kind-icon">path<wbr>Length<wbr>Map</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#clonemeasure" class="tsd-kind-icon">clone<wbr>Measure</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#getextremepoint" class="tsd-kind-icon">get<wbr>Extreme<wbr>Point</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#increase" class="tsd-kind-icon">increase</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isangleequal" class="tsd-kind-icon">is<wbr>Angle<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcconcavetowardspoint" class="tsd-kind-icon">is<wbr>Arc<wbr>Concave<wbr>Towards<wbr>Point</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcoverlapping" class="tsd-kind-icon">is<wbr>Arc<wbr>Overlapping</a></li>
@@ -31,6 +41,7 @@ title: Api - measure Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenarcangles" class="tsd-kind-icon">is<wbr>Between<wbr>Arc<wbr>Angles</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenpoints" class="tsd-kind-icon">is<wbr>Between<wbr>Points</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#islineoverlapping" class="tsd-kind-icon">is<wbr>Line<wbr>Overlapping</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ismeasurementoverlapping" class="tsd-kind-icon">is<wbr>Measurement<wbr>Overlapping</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispathequal" class="tsd-kind-icon">is<wbr>Path<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispointequal" class="tsd-kind-icon">is<wbr>Point<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isslopeequal" class="tsd-kind-icon">is<wbr>Slope<wbr>Equal</a></li>
@@ -58,9 +69,110 @@ title: Api - measure Module
 		<div class="tsd-comment tsd-typography">
 		</div>
 	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="pathextentsmap" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> path<wbr>Extents<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">path<wbr>Extents<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L239">core/measure.ts:239</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pathType: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">function</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-siganture">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>pathToMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>pathToMeasure: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="pathlengthmap" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> path<wbr>Length<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">path<wbr>Length<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L304">core/measure.ts:304</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pathType: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">function</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-siganture">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>pathToMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>pathToMeasure: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="clonemeasure" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> clone<wbr>Measure</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">clone<wbr>Measure<span class="tsd-signature-symbol">(</span>measureToclone<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L342">core/measure.ts:342</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>measureToclone: <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h4>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="getextremepoint" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Extreme<wbr>Point</h3>
@@ -71,7 +183,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L181">core/measure.ts:181</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L229">core/measure.ts:229</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -93,10 +205,48 @@ title: Api - measure Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="increase" class="tsd-anchor"></a>
+		<h3>increase</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">increase<span class="tsd-signature-symbol">(</span>baseMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a>, addMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L20">core/measure.ts:20</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Increase a measurement by an additional measurement.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>baseMeasure: <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The measurement to increase.</p>
+						</div>
+					</li>
+					<li>
+						<h5>addMeasure: <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The additional measurement.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h4>
+				<p>The increased original measurement (for chaining).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="isangleequal" class="tsd-anchor"></a>
 		<h3>is<wbr>Angle<wbr>Equal</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">is<wbr>Angle<wbr>Equal<span class="tsd-signature-symbol">(</span>angle1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, angle2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Angle<wbr>Equal<span class="tsd-signature-symbol">(</span>angleA<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, angleB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -113,10 +263,16 @@ title: Api - measure Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>angle1: <span class="tsd-signature-type">number</span></h5>
+						<h5>angleA: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First angle.</p>
+						</div>
 					</li>
 					<li>
-						<h5>angle2: <span class="tsd-signature-type">number</span></h5>
+						<h5>angleB: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second angle.</p>
+						</div>
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> accuracy: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0.0001</span></h5>
@@ -137,7 +293,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L19">core/measure.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L53">core/measure.ts:53</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -169,13 +325,13 @@ title: Api - measure Module
 		<a name="isarcoverlapping" class="tsd-anchor"></a>
 		<h3>is<wbr>Arc<wbr>Overlapping</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">is<wbr>Arc<wbr>Overlapping<span class="tsd-signature-symbol">(</span>arc1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, arc2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, excludeTangents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Arc<wbr>Overlapping<span class="tsd-signature-symbol">(</span>arcA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, arcB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, excludeTangents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L44">core/measure.ts:44</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L78">core/measure.ts:78</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -186,13 +342,13 @@ title: Api - measure Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>arc1: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+						<h5>arcA: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The arc to test.</p>
 						</div>
 					</li>
 					<li>
-						<h5>arc2: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+						<h5>arcB: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The arc to check for overlap.</p>
 						</div>
@@ -205,7 +361,7 @@ title: Api - measure Module
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-				<p>Boolean true if arc1 is overlapped with arc2.</p>
+				<p>Boolean true if arc1 is overlapped with arcB.</p>
 			</li>
 		</ul>
 	</section>
@@ -213,13 +369,13 @@ title: Api - measure Module
 		<a name="isbetween" class="tsd-anchor"></a>
 		<h3>is<wbr>Between</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">is<wbr>Between<span class="tsd-signature-symbol">(</span>valueInQuestion<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limit1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limit2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, exclusive<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Between<span class="tsd-signature-symbol">(</span>valueInQuestion<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limitA<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limitB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, exclusive<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L69">core/measure.ts:69</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L102">core/measure.ts:102</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -236,13 +392,13 @@ title: Api - measure Module
 						</div>
 					</li>
 					<li>
-						<h5>limit1: <span class="tsd-signature-type">number</span></h5>
+						<h5>limitA: <span class="tsd-signature-type">number</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>First limit.</p>
 						</div>
 					</li>
 					<li>
-						<h5>limit2: <span class="tsd-signature-type">number</span></h5>
+						<h5>limitB: <span class="tsd-signature-type">number</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>Second limit.</p>
 						</div>
@@ -269,7 +425,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L85">core/measure.ts:85</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L118">core/measure.ts:118</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -313,7 +469,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L105">core/measure.ts:105</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L138">core/measure.ts:138</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -351,13 +507,13 @@ title: Api - measure Module
 		<a name="islineoverlapping" class="tsd-anchor"></a>
 		<h3>is<wbr>Line<wbr>Overlapping</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">is<wbr>Line<wbr>Overlapping<span class="tsd-signature-symbol">(</span>line1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, line2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, excludeTangents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Line<wbr>Overlapping<span class="tsd-signature-symbol">(</span>lineA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, lineB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, excludeTangents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L125">core/measure.ts:125</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L158">core/measure.ts:158</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -368,13 +524,13 @@ title: Api - measure Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>line1: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<h5>lineA: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The line to test.</p>
 						</div>
 					</li>
 					<li>
-						<h5>line2: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<h5>lineB: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The line to check for overlap.</p>
 						</div>
@@ -387,7 +543,45 @@ title: Api - measure Module
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-				<p>Boolean true if line1 is overlapped with line2.</p>
+				<p>Boolean true if line1 is overlapped with lineB.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ismeasurementoverlapping" class="tsd-anchor"></a>
+		<h3>is<wbr>Measurement<wbr>Overlapping</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Measurement<wbr>Overlapping<span class="tsd-signature-symbol">(</span>measureA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a>, measureB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L180">core/measure.ts:180</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check for measurement overlapping another measurement.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>measureA: <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The measurement to test.</p>
+						</div>
+					</li>
+					<li>
+						<h5>measureB: <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The measurement to check for overlap.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if measure1 is overlapped with measureB.</p>
 			</li>
 		</ul>
 	</section>
@@ -395,7 +589,7 @@ title: Api - measure Module
 		<a name="ispathequal" class="tsd-anchor"></a>
 		<h3>is<wbr>Path<wbr>Equal</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Equal<span class="tsd-signature-symbol">(</span>path1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, path2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, withinPointDistance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Equal<span class="tsd-signature-symbol">(</span>pathA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, pathB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, withinPointDistance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -412,10 +606,16 @@ title: Api - measure Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>path1: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<h5>pathA: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First path.</p>
+						</div>
 					</li>
 					<li>
-						<h5>path2: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<h5>pathB: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second path.</p>
+						</div>
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> withinPointDistance: <span class="tsd-signature-type">number</span></h5>
@@ -471,7 +671,7 @@ title: Api - measure Module
 		<a name="isslopeequal" class="tsd-anchor"></a>
 		<h3>is<wbr>Slope<wbr>Equal</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">is<wbr>Slope<wbr>Equal<span class="tsd-signature-symbol">(</span>slope1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a>, slope2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Slope<wbr>Equal<span class="tsd-signature-symbol">(</span>slopeA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a>, slopeB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -488,13 +688,13 @@ title: Api - measure Module
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>slope1: <a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a></h5>
+						<h5>slopeA: <a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The ISlope to test.</p>
 						</div>
 					</li>
 					<li>
-						<h5>slope2: <a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a></h5>
+						<h5>slopeB: <a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>The ISlope to check for equality.</p>
 						</div>
@@ -515,7 +715,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L143">core/measure.ts:143</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L191">core/measure.ts:191</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -537,13 +737,13 @@ title: Api - measure Module
 		<a name="modelextents" class="tsd-anchor"></a>
 		<h3>model<wbr>Extents</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">model<wbr>Extents<span class="tsd-signature-symbol">(</span>modelToMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></li>
+			<li class="tsd-signature tsd-kind-icon">model<wbr>Extents<span class="tsd-signature-symbol">(</span>modelToMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, atlas<span class="tsd-signature-symbol">?: </span><a href="../classes/makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L277">core/measure.ts:277</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L352">core/measure.ts:352</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -559,6 +759,9 @@ title: Api - measure Module
 							<p>The model to measure.</p>
 						</div>
 					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> atlas: <a href="../classes/makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></h5>
+					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h4>
 				<p>object with low and high points.</p>
@@ -569,13 +772,13 @@ title: Api - measure Module
 		<a name="pathextents" class="tsd-anchor"></a>
 		<h3>path<wbr>Extents</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">path<wbr>Extents<span class="tsd-signature-symbol">(</span>pathToMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></li>
+			<li class="tsd-signature tsd-kind-icon">path<wbr>Extents<span class="tsd-signature-symbol">(</span>pathToMeasure<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, addOffset<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L194">core/measure.ts:194</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L284">core/measure.ts:284</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -590,6 +793,9 @@ title: Api - measure Module
 						<div class="tsd-comment tsd-typography">
 							<p>The path to measure.</p>
 						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> addOffset: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol"> =&nbsp;[0, 0]</span></h5>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h4>
@@ -607,7 +813,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L245">core/measure.ts:245</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L327">core/measure.ts:327</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -639,7 +845,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L172">core/measure.ts:172</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L220">core/measure.ts:220</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

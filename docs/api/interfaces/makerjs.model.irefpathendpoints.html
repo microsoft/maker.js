@@ -11,7 +11,7 @@ title: Api - IRefPathEndpoints Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.irefpathidinmodel.html" class="tsd-signature-type">IRefPathIdInModel</a>
+			<a href="makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a>
 			<ul class="tsd-hierarchy">
 				<li>
 					<span class="target">IRefPathEndpoints</span>
@@ -29,7 +29,11 @@ title: Api - IRefPathEndpoints Interface
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.model.irefpathendpoints.html#endpoints" class="tsd-kind-icon">end<wbr>Points</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.irefpathendpoints.html#modelcontext" class="tsd-kind-icon">model<wbr>Context</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.irefpathendpoints.html#offset" class="tsd-kind-icon">offset</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.irefpathendpoints.html#pathcontext" class="tsd-kind-icon">path<wbr>Context</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.irefpathendpoints.html#pathid" class="tsd-kind-icon">path<wbr>Id</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.irefpathendpoints.html#route" class="tsd-kind-icon">route</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.irefpathendpoints.html#routekey" class="tsd-kind-icon">route<wbr>Key</a></li>
 				</ul>
 			</section>
 		</div>
@@ -43,7 +47,7 @@ title: Api - IRefPathEndpoints Interface
 		<div class="tsd-signature tsd-kind-icon">end<wbr>Points<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L246">core/loops.ts:246</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/loops.ts#L248">core/loops.ts:248</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -54,7 +58,29 @@ title: Api - IRefPathEndpoints Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#modelcontext">modelContext</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L523">core/maker.ts:523</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L560">core/maker.ts:560</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
+		<a name="offset" class="tsd-anchor"></a>
+		<h3>offset</h3>
+		<div class="tsd-signature tsd-kind-icon">offset<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.irouteoffset.html">IRouteOffset</a>.<a href="makerjs.irouteoffset.html#offset">offset</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L586">core/maker.ts:586</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
+		<a name="pathcontext" class="tsd-anchor"></a>
+		<h3>path<wbr>Context</h3>
+		<div class="tsd-signature tsd-kind-icon">path<wbr>Context<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.irefpathinmodel.html">IRefPathInModel</a>.<a href="makerjs.irefpathinmodel.html#pathcontext">pathContext</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L568">core/maker.ts:568</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -65,7 +91,29 @@ title: Api - IRefPathEndpoints Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#pathid">pathId</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L524">core/maker.ts:524</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L561">core/maker.ts:561</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
+		<a name="route" class="tsd-anchor"></a>
+		<h3>route</h3>
+		<div class="tsd-signature tsd-kind-icon">route<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.irouteoffset.html">IRouteOffset</a>.<a href="makerjs.irouteoffset.html#route">route</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L587">core/maker.ts:587</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
+		<a name="routekey" class="tsd-anchor"></a>
+		<h3>route<wbr>Key</h3>
+		<div class="tsd-signature tsd-kind-icon">route<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.irouteoffset.html">IRouteOffset</a>.<a href="makerjs.irouteoffset.html#routekey">routeKey</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L588">core/maker.ts:588</a></li>
 			</ul>
 		</aside>
 	</section>

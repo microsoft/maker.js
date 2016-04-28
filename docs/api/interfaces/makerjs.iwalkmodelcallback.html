@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IRefPathInModel Interface
+title: Api - IWalkModelCallback Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Path and its reference id within a model</p>
+			<p>Callback signature for model.walk().</p>
 		</div>
 	</div>
 </section>
@@ -14,69 +14,36 @@ title: Api - IRefPathInModel Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.irefpathidinmodel.html" class="tsd-signature-type">IRefPathIdInModel</a>
-			<ul class="tsd-hierarchy">
-				<li>
-					<span class="target">IRefPathInModel</span>
-					<ul class="tsd-hierarchy">
-						<li>
-							<a href="makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
+			<span class="target">IWalkModelCallback</span>
 		</li>
 	</ul>
 </section>
-<section class="tsd-panel-group tsd-index-group">
-	<h2>Index</h2>
-	<section class="tsd-panel tsd-index-panel">
-		<div class="tsd-index-content">
-			<section class="tsd-index-section ">
-				<h3>Properties</h3>
-				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.irefpathinmodel.html#modelcontext" class="tsd-kind-icon">model<wbr>Context</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.irefpathinmodel.html#pathcontext" class="tsd-kind-icon">path<wbr>Context</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.irefpathinmodel.html#pathid" class="tsd-kind-icon">path<wbr>Id</a></li>
+<section class="tsd-panel">
+	<h3 class="tsd-before-signature">Callable</h3>
+	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module">
+		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+	</ul>
+	<ul class="tsd-descriptions">
+		<li class="tsd-description">
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L622">core/maker.ts:622</a></li>
 				</ul>
-			</section>
-		</div>
-	</section>
-</section>
-<section class="tsd-panel-group tsd-member-group ">
-	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="modelcontext" class="tsd-anchor"></a>
-		<h3>model<wbr>Context</h3>
-		<div class="tsd-signature tsd-kind-icon">model<wbr>Context<span class="tsd-signature-symbol">:</span> <a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#modelcontext">modelContext</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L560">core/maker.ts:560</a></li>
+			</aside>
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>Callback signature for model.walk().</p>
+				</div>
+			</div>
+			<h4 class="tsd-parameters-title">Parameters</h4>
+			<ul class="tsd-parameters">
+				<li>
+					<h5>context: <a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a></h5>
+				</li>
 			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="pathcontext" class="tsd-anchor"></a>
-		<h3>path<wbr>Context</h3>
-		<div class="tsd-signature tsd-kind-icon">path<wbr>Context<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L568">core/maker.ts:568</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="pathid" class="tsd-anchor"></a>
-		<h3>path<wbr>Id</h3>
-		<div class="tsd-signature tsd-kind-icon">path<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#pathid">pathId</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L561">core/maker.ts:561</a></li>
-			</ul>
-		</aside>
-	</section>
+			<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+		</li>
+	</ul>
 </section>
 </div>
 <footer class="tsd-panel with-border-bottom">
