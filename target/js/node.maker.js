@@ -254,7 +254,13 @@ var MakerJs;
          */
         function ofArcSpan(arc) {
             var endAngle = angle.ofArcEnd(arc);
-            return noRevolutions(endAngle - arc.startAngle);
+            var a = endAngle - arc.startAngle;
+            if (a > 360) {
+                return noRevolutions(a);
+            }
+            else {
+                return a;
+            }
         }
         angle.ofArcSpan = ofArcSpan;
         /**
