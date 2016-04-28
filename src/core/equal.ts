@@ -3,14 +3,14 @@
     /**
      * Find out if two angles are equal.
      * 
-     * @param a First angle.
-     * @param b Second angle.
+     * @param angleA First angle.
+     * @param angleB Second angle.
      * @returns true if angles are the same, false if they are not
      */
-    export function isAngleEqual(angle1: number, angle2: number, accuracy: number = .0001) {
-        var a1 = angle.noRevolutions(angle1);
-        var a2 = angle.noRevolutions(angle2);
-        var d = angle.noRevolutions(round(a2 - a1, accuracy));
+    export function isAngleEqual(angleA: number, angleB: number, accuracy: number = .0001) {
+        var a = angle.noRevolutions(angleA);
+        var b = angle.noRevolutions(angleB);
+        var d = angle.noRevolutions(round(b - a, accuracy));
         return d == 0;
     }
 
@@ -18,7 +18,7 @@
      * @private
      */
     interface IPathAreEqualMap {
-        [type: string]: (path1: IPath, path2: IPath, withinPointDistance?: number) => boolean;
+        [type: string]: (pathA: IPath, pathB: IPath, withinPointDistance?: number) => boolean;
     }
 
     /**
@@ -26,34 +26,34 @@
      */
     var pathAreEqualMap: IPathAreEqualMap = {};
 
-    pathAreEqualMap[pathType.Line] = function (line1: IPathLine, line2: IPathLine, withinPointDistance?: number): boolean {
-        return (isPointEqual(line1.origin, line2.origin, withinPointDistance) && isPointEqual(line1.end, line2.end, withinPointDistance))
-            || (isPointEqual(line1.origin, line2.end, withinPointDistance) && isPointEqual(line1.end, line2.origin, withinPointDistance));
+    pathAreEqualMap[pathType.Line] = function (lineA: IPathLine, lineB: IPathLine, withinPointDistance?: number): boolean {
+        return (isPointEqual(lineA.origin, lineB.origin, withinPointDistance) && isPointEqual(lineA.end, lineB.end, withinPointDistance))
+            || (isPointEqual(lineA.origin, lineB.end, withinPointDistance) && isPointEqual(lineA.end, lineB.origin, withinPointDistance));
     };
 
-    pathAreEqualMap[pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle, withinPointDistance): boolean {
-        return isPointEqual(circle1.origin, circle2.origin, withinPointDistance) && circle1.radius == circle2.radius;
+    pathAreEqualMap[pathType.Circle] = function (circleA: IPathCircle, circleB: IPathCircle, withinPointDistance): boolean {
+        return isPointEqual(circleA.origin, circleB.origin, withinPointDistance) && circleA.radius == circleB.radius;
     };
 
-    pathAreEqualMap[pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc, withinPointDistance): boolean {
-        return pathAreEqualMap[pathType.Circle](arc1, arc2, withinPointDistance) && isAngleEqual(arc1.startAngle, arc2.startAngle) && isAngleEqual(arc1.endAngle, arc2.endAngle);
+    pathAreEqualMap[pathType.Arc] = function (arcA: IPathArc, arcB: IPathArc, withinPointDistance): boolean {
+        return pathAreEqualMap[pathType.Circle](arcA, arcB, withinPointDistance) && isAngleEqual(arcA.startAngle, arcB.startAngle) && isAngleEqual(arcA.endAngle, arcB.endAngle);
     };
 
     /**
      * Find out if two paths are equal.
      * 
-     * @param a First path.
-     * @param b Second path.
+     * @param pathA First path.
+     * @param pathB Second path.
      * @returns true if paths are the same, false if they are not
      */
-    export function isPathEqual(path1: IPath, path2: IPath, withinPointDistance?: number): boolean {
+    export function isPathEqual(pathA: IPath, pathB: IPath, withinPointDistance?: number): boolean {
 
         var result = false;
 
-        if (path1.type == path2.type) {
-            var fn = pathAreEqualMap[path1.type];
+        if (pathA.type == pathB.type) {
+            var fn = pathAreEqualMap[pathA.type];
             if (fn) {
-                result = fn(path1, path2, withinPointDistance);
+                result = fn(pathA, pathB, withinPointDistance);
             }
         }
 
@@ -79,22 +79,22 @@
     /**
      * Check for slope equality.
      * 
-     * @param slope1 The ISlope to test.
-     * @param slope2 The ISlope to check for equality.
+     * @param slopeA The ISlope to test.
+     * @param slopeB The ISlope to check for equality.
      * @returns Boolean true if slopes are equal.
      */
-    export function isSlopeEqual(slope1: ISlope, slope2: ISlope): boolean {
+    export function isSlopeEqual(slopeA: ISlope, slopeB: ISlope): boolean {
 
-        if (!slope1.hasSlope && !slope2.hasSlope) {
+        if (!slopeA.hasSlope && !slopeB.hasSlope) {
 
             //lines are both vertical, see if x are the same
-            return round(slope1.line.origin[0] - slope2.line.origin[0]) == 0;
+            return round(slopeA.line.origin[0] - slopeB.line.origin[0]) == 0;
         }
 
-        if (slope1.hasSlope && slope2.hasSlope && (round(slope1.slope - slope2.slope, .00001) == 0)) {
+        if (slopeA.hasSlope && slopeB.hasSlope && (round(slopeA.slope - slopeB.slope, .00001) == 0)) {
 
             //lines are parallel, but not vertical, see if y-intercept is the same
-            return round(slope1.yIntercept - slope2.yIntercept, .00001) == 0;
+            return round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
         }
 
         return false;

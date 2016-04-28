@@ -10,6 +10,40 @@ namespace MakerJs.measure {
     }
 
     /**
+     * Increase a measurement by an additional measurement.
+     * 
+     * @param baseMeasure The measurement to increase.
+     * @param addMeasure The additional measurement.
+     * @param addOffset Optional offset point of the additional measurement.
+     * @returns The increased original measurement (for chaining).
+     */
+    export function increase(baseMeasure: IMeasure, addMeasure: IMeasure): IMeasure {
+
+        function getExtreme(basePoint: IPoint, newPoint: IPoint, fn: IMathMinMax) {
+
+            if (!newPoint) return;
+
+            for (var i = 2; i--;) {
+                if (newPoint[i] == null) continue;
+
+                if (basePoint[i] == null) {
+                    basePoint[i] = newPoint[i];
+                } else {
+                    basePoint[i] = fn(basePoint[i], newPoint[i]);
+                }
+            }
+
+        }
+
+        if (addMeasure) {
+            getExtreme(baseMeasure.low, addMeasure.low, Math.min);
+            getExtreme(baseMeasure.high, addMeasure.high, Math.max);
+        }
+
+        return baseMeasure;
+    }
+
+    /**
      * Check for arc being concave or convex towards a given point.
      * 
      * @param arc The arc to test.
@@ -36,12 +70,12 @@ namespace MakerJs.measure {
     /**
      * Check for arc overlapping another arc.
      * 
-     * @param arc1 The arc to test.
-     * @param arc2 The arc to check for overlap.
+     * @param arcA The arc to test.
+     * @param arcB The arc to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if arc1 is overlapped with arc2.
+     * @returns Boolean true if arc1 is overlapped with arcB.
      */
-    export function isArcOverlapping(arc1: IPathArc, arc2: IPathArc, excludeTangents: boolean): boolean {
+    export function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
 
         function checkAngles(a: IPathArc, b: IPathArc) {
@@ -53,24 +87,23 @@ namespace MakerJs.measure {
             return checkAngle(b.startAngle) || checkAngle(b.endAngle);
         }
 
-        return checkAngles(arc1, arc2) || checkAngles(arc2, arc1) || (arc1.startAngle == arc2.startAngle && arc1.endAngle == arc2.endAngle);
+        return checkAngles(arcA, arcB) || checkAngles(arcB, arcA) || (arcA.startAngle == arcB.startAngle && arcA.endAngle == arcB.endAngle);
     }
-
 
     /**
      * Check if a given number is between two given limits.
      * 
      * @param valueInQuestion The number to test.
-     * @param limit1 First limit.
-     * @param limit2 Second limit.
+     * @param limitA First limit.
+     * @param limitB Second limit.
      * @param exclusive Flag to exclude equaling the limits.
      * @returns Boolean true if value is between (or equal to) the limits.
      */
-    export function isBetween(valueInQuestion: number, limit1: number, limit2: number, exclusive: boolean): boolean {
+    export function isBetween(valueInQuestion: number, limitA: number, limitB: number, exclusive: boolean): boolean {
         if (exclusive) {
-            return Math.min(limit1, limit2) < valueInQuestion && valueInQuestion < Math.max(limit1, limit2);
+            return Math.min(limitA, limitB) < valueInQuestion && valueInQuestion < Math.max(limitA, limitB);
         } else {
-            return Math.min(limit1, limit2) <= valueInQuestion && valueInQuestion <= Math.max(limit1, limit2);
+            return Math.min(limitA, limitB) <= valueInQuestion && valueInQuestion <= Math.max(limitA, limitB);
         }
     }
 
@@ -117,12 +150,12 @@ namespace MakerJs.measure {
     /**
      * Check for line overlapping another line.
      * 
-     * @param line1 The line to test.
-     * @param line2 The line to check for overlap.
+     * @param lineA The line to test.
+     * @param lineB The line to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if line1 is overlapped with line2.
+     * @returns Boolean true if line1 is overlapped with lineB.
      */
-    export function isLineOverlapping(line1: IPathLine, line2: IPathLine, excludeTangents: boolean): boolean {
+    export function isLineOverlapping(lineA: IPathLine, lineB: IPathLine, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
 
         function checkPoints(index: number, a: IPathLine, b: IPathLine) {
@@ -134,7 +167,22 @@ namespace MakerJs.measure {
             return checkPoint(b.origin) || checkPoint(b.end);
         }
 
-        return checkPoints(0, line1, line2) || checkPoints(1, line2, line1);
+        return checkPoints(0, lineA, lineB) || checkPoints(1, lineB, lineA);
+    }
+
+    /**
+     * Check for measurement overlapping another measurement.
+     * 
+     * @param measureA The measurement to test.
+     * @param measureB The measurement to check for overlap.
+     * @returns Boolean true if measure1 is overlapped with measureB.
+     */
+    export function isMeasurementOverlapping(measureA: IMeasure, measureB: IMeasure): boolean {
+        for (var i = 2; i--;) {
+            if (!(round(measureA.low[i] - measureB.high[i]) <= 0 && round(measureA.high[i] - measureB.low[i]) >= 0)) return false;
+        }
+
+        return true;
     }
 
     /**
@@ -186,54 +234,88 @@ namespace MakerJs.measure {
     }
 
     /**
+     * @private
+     */
+    var pathExtentsMap: { [pathType: string]: (pathToMeasure: IPath) => IMeasure } = {};
+
+    pathExtentsMap[pathType.Line] = function (line: IPathLine) {
+        return {
+            low: getExtremePoint(line.origin, line.end, Math.min),
+            high: getExtremePoint(line.origin, line.end, Math.max)
+        }
+    }
+
+    pathExtentsMap[pathType.Circle] = function (circle: IPathCircle) {
+        var r = circle.radius;
+        return {
+            low: point.add(circle.origin, [-r, -r]),
+            high: point.add(circle.origin, [r, r])
+        }
+    }
+
+    pathExtentsMap[pathType.Arc] = function (arc: IPathArc) {
+        var r = arc.radius;
+        var arcPoints = point.fromArc(arc);
+
+        function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
+            var extremePoint = getExtremePoint(arcPoints[0], arcPoints[1], fn);
+
+            for (var i = 2; i--;) {
+                if (isBetweenArcAngles(xyAngle[i], arc, false)) {
+                    extremePoint[i] = value + arc.origin[i];
+                }
+            }
+
+            return extremePoint;
+        }
+
+        return {
+            low: extremeAngle([180, 270], -r, Math.min),
+            high: extremeAngle([360, 90], r, Math.max)
+        }
+    }
+
+    /**
      * Calculates the smallest rectangle which contains a path.
      * 
      * @param pathToMeasure The path to measure.
      * @returns object with low and high points.
      */
-    export function pathExtents(pathToMeasure: IPath): IMeasure {
-        var map: IPathFunctionMap = {};
-        var measurement: IMeasure = { low: null, high: null };
-
-        map[pathType.Line] = function (line: IPathLine) {
-            measurement.low = getExtremePoint(line.origin, line.end, Math.min);
-            measurement.high = getExtremePoint(line.origin, line.end, Math.max);
-        }
-
-        map[pathType.Circle] = function (circle: IPathCircle) {
-            var r = circle.radius;
-            measurement.low = point.add(circle.origin, [-r, -r]);
-            measurement.high = point.add(circle.origin, [r, r]);
-        }
-
-        map[pathType.Arc] = function (arc: IPathArc) {
-            var r = arc.radius;
-            var arcPoints = point.fromArc(arc);
-
-            function extremeAngle(xyAngle: number[], value: number, fn: IMathMinMax): IPoint {
-                var extremePoint = getExtremePoint(arcPoints[0], arcPoints[1], fn);
-
-                for (var i = 2; i--;) {
-                    if (isBetweenArcAngles(xyAngle[i], arc, false)) {
-                        extremePoint[i] = value + arc.origin[i];
-                    }
-                }
-
-                return extremePoint;
-            }
-
-            measurement.low = extremeAngle([180, 270], -r, Math.min);
-            measurement.high = extremeAngle([360, 90], r, Math.max);
-        }
+    export function pathExtents(pathToMeasure: IPath, addOffset: IPoint = [0, 0]): IMeasure {
 
         if (pathToMeasure) {
-            var fn = map[pathToMeasure.type];
+            var fn = pathExtentsMap[pathToMeasure.type];
             if (fn) {
-                fn(pathToMeasure);
+                var m = fn(pathToMeasure);
+
+                m.high = point.add(m.high, addOffset);
+                m.low = point.add(m.low, addOffset);
+
+                return m;
             }
         }
 
-        return measurement;
+        return { low: null, high: null };
+    }
+
+    /**
+     * @private
+     */
+    var pathLengthMap: { [pathType: string]: (pathToMeasure: IPath) => number } = {};
+
+    pathLengthMap[pathType.Line] = function (line: IPathLine) {
+        return pointDistance(line.origin, line.end);
+    }
+
+    pathLengthMap[pathType.Circle] = function (circle: IPathCircle) {
+        return 2 * Math.PI * circle.radius;
+    }
+
+    pathLengthMap[pathType.Arc] = function (arc: IPathArc) {
+        var value = pathLengthMap[pathType.Circle](arc);
+        var pct = angle.ofArcSpan(arc) / 360;
+        value *= pct;
+        return value;
     }
 
     /**
@@ -243,29 +325,22 @@ namespace MakerJs.measure {
      * @returns Length of the path.
      */
     export function pathLength(pathToMeasure: IPath): number {
-        var map: IPathFunctionMap = {};
-        var value = 0;
 
-        map[pathType.Line] = function (line: IPathLine) {
-            value = pointDistance(line.origin, line.end);
+        if (pathToMeasure) {
+            var fn = pathLengthMap[pathToMeasure.type];
+            if (fn) {
+                return fn(pathToMeasure);
+            }
         }
 
-        map[pathType.Circle] = function (circle: IPathCircle) {
-            value = 2 * Math.PI * circle.radius;
-        }
+        return 0;
+    }
 
-        map[pathType.Arc] = function (arc: IPathArc) {
-            map[pathType.Circle](arc); //this sets the value var
-            var pct = angle.ofArcSpan(arc) / 360;
-            value *= pct;
-        } 
-
-        var fn = map[pathToMeasure.type];
-        if (fn) {
-            fn(pathToMeasure);
-        }
-
-        return value;
+    /**
+     * @private
+     */
+    function cloneMeasure(measureToclone: IMeasure): IMeasure {
+        return { high: [measureToclone.high[0], measureToclone.high[1]], low: [measureToclone.low[0], measureToclone.low[1]] };
     }
 
     /**
@@ -274,43 +349,60 @@ namespace MakerJs.measure {
      * @param modelToMeasure The model to measure.
      * @returns object with low and high points.
      */
-    export function modelExtents(modelToMeasure: IModel): IMeasure {
-        var totalMeasurement: IMeasure = { low: [null, null], high: [null, null] };
+    export function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasure {
 
-        function lowerOrHigher(offsetOrigin: IPoint, pathMeasurement: IMeasure) {
+        function increaseParentModel(childRoute: string[], childMeasurement: IMeasure) {
 
-            function getExtreme(a: IPoint, b: IPoint, fn: IMathMinMax) {
-                var c = point.add(b, offsetOrigin);
-                for (var i = 2; i--;) {
-                    a[i] = (a[i] == null ? c[i] : fn(a[i], c[i]));
-                }
-            }
+            if (!childMeasurement) return;
 
-            getExtreme(totalMeasurement.low, pathMeasurement.low, Math.min);
-            getExtreme(totalMeasurement.high, pathMeasurement.high, Math.max);
-        }
+            //to get the parent route, just traverse backwards 2 to remove id and 'paths' / 'models'
+            var parentRoute = childRoute.slice(0, -2);
+            var parentRouteKey = createRouteKey(parentRoute);
 
-        function measure(modelToMeasure: IModel, offsetOrigin?: IPoint) {
-            if (!modelToMeasure) return;
-
-            var newOrigin = point.add(modelToMeasure.origin, offsetOrigin);
-
-            if (modelToMeasure.paths) {
-                for (var id in modelToMeasure.paths) {
-                    lowerOrHigher(newOrigin, pathExtents(modelToMeasure.paths[id]));
-                }
-            }
-
-            if (modelToMeasure.models) {
-                for (var id in modelToMeasure.models) {
-                    measure(modelToMeasure.models[id], newOrigin);
-                }
+            if (!(parentRouteKey in atlas.modelMap)) {
+                //just start with the known size
+                atlas.modelMap[parentRouteKey] = cloneMeasure(childMeasurement);
+            } else {
+                measure.increase(atlas.modelMap[parentRouteKey], childMeasurement);
             }
         }
 
-        measure(modelToMeasure);
+        if (!atlas) atlas = new measure.Atlas(modelToMeasure);
 
-        return totalMeasurement;
+        model.walk(modelToMeasure,
+            function (walkedPath: IWalkPath) {
+
+                //trust that the path measurement is good
+                if (!(walkedPath.routeKey in atlas.pathMap)) {
+                    atlas.pathMap[walkedPath.routeKey] = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
+                }
+
+                increaseParentModel(walkedPath.route, atlas.pathMap[walkedPath.routeKey]);
+            },
+            null,
+            function (walkedModel: IWalkModel) {
+                //model has been updated by all its children, update parent
+                increaseParentModel(walkedModel.route, atlas.modelMap[walkedModel.routeKey]);
+            }
+        );
+
+        atlas.modelsMeasured = true;
+
+        return atlas.modelMap[''];
     }
 
+    export class Atlas {
+        public modelsMeasured = false;
+        public modelMap: IMeasureMap = {};
+        public pathMap: IMeasureMap = {};
+
+        constructor(public modelContext: IModel) {
+        }
+
+        public measureModels() {
+            if (!this.modelsMeasured) {
+                modelExtents(this.modelContext, this);
+            }
+        }
+    }
 }

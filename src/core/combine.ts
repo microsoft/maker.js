@@ -4,8 +4,10 @@
      * @private
      */
     function getNonZeroSegments(pathToSegment: IPath, breakPoint: IPoint): IPath[] {
-        var segmentType = pathToSegment.type;
-        var segment1 = cloneObject<IPath>(pathToSegment);
+        var segment1 = path.clone(pathToSegment);
+
+        if (!segment1) return null;
+
         var segment2 = path.breakAtPoint(segment1, breakPoint);
 
         if (segment2) {
@@ -16,16 +18,20 @@
                 }
             }
             return segments;
-        } else if (segmentType == pathType.Circle) {
+
+        } else if (pathToSegment.type == pathType.Circle) {
             return [segment1];
         }
+
         return null;
     }
 
     /**
      * @private
      */
-    function breakAlongForeignPath(segments: ICrossedPathSegment[], overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
+    function breakAlongForeignPath(crossedPath: ICrossedPath, overlappedSegments: ICrossedPathSegment[], foreignPath: IPath) {
+
+        var segments = crossedPath.segments;
 
         if (measure.isPathEqual(segments[0].path, foreignPath, .0001)) {
             segments[0].overlapped = true;
@@ -69,6 +75,8 @@
                 }
 
                 if (subSegments) {
+                    crossedPath.broken = true;
+
                     segments[i].path = subSegments[0];
 
                     if (subSegments[1]) {
@@ -187,7 +195,8 @@
     /**
      * @private
      */
-    interface ICrossedPath extends IRefPathIdInModel {
+    interface ICrossedPath extends IWalkPath {
+        broken: boolean;
         segments: ICrossedPathSegment[];
     }
 
@@ -206,41 +215,61 @@
      * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
      */
     export function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel) {
-        breakAllPathsAtIntersections(modelToBreak, modelToIntersect || modelToBreak, false);
+
+        var modelToBreakAtlas = new measure.Atlas(modelToBreak);
+        modelToBreakAtlas.measureModels();
+
+        var modelToIntersectAtlas: measure.Atlas;
+
+        if (!modelToIntersect) {
+            modelToIntersect = modelToBreak;
+            modelToIntersectAtlas = modelToBreakAtlas;
+        } else {
+            modelToIntersectAtlas = new measure.Atlas(modelToIntersect);
+            modelToIntersectAtlas.measureModels();
+        };
+
+        breakAllPathsAtIntersections(modelToBreak, modelToIntersect || modelToBreak, false, modelToBreakAtlas, modelToIntersectAtlas);
     }
 
     /**
      * @private
      */
-    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, checkIsInside: boolean, farPoint?: IPoint): ICombinedModel {
+    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, checkIsInside: boolean, modelToBreakAtlas: measure.Atlas, modelToIntersectAtlas: measure.Atlas, farPoint?: IPoint): ICombinedModel {
 
         var crossedPaths: ICrossedPath[] = [];
         var overlappedSegments: ICrossedPathSegment[] = [];
 
-        walkPaths(modelToBreak, function (modelContext: IModel, pathId1: string, path1: IPath) {
-
-            if (!path1) return;
+        walk(modelToBreak, function (outerWalkedPath: IWalkPath) {
 
             //clone this path and make it the first segment
             var segment: ICrossedPathSegment = {
-                path: cloneObject<IPath>(path1),
-                pathId: pathId1,
+                path: path.clone(outerWalkedPath.pathContext),
+                pathId: outerWalkedPath.pathId,
                 overlapped: false,
                 uniqueForeignIntersectionPoints: []
             };
 
-            var thisPath: ICrossedPath = {
-                modelContext: modelContext,
-                pathId: pathId1,
-                segments: [segment],
-            };
+            var thisPath: ICrossedPath = <ICrossedPath>outerWalkedPath;
+            thisPath.broken = false;
+            thisPath.segments = [segment];
 
             //keep breaking the segments anywhere they intersect with paths of the other model
-            walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
-                if (path2 && path1 !== path2) {
-                    breakAlongForeignPath(thisPath.segments, overlappedSegments, path2);
+            walk(modelToIntersect,
+
+                function (innerWalkedPath: IWalkPath) {
+                    if (outerWalkedPath.pathContext !== innerWalkedPath.pathContext && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], modelToIntersectAtlas.pathMap[innerWalkedPath.routeKey])) {
+                        breakAlongForeignPath(thisPath, overlappedSegments, innerWalkedPath.pathContext);
+                    }
+                },
+
+                function (innerWalkedModel: IWalkModel): boolean {
+
+                    //see if there is a model measurement. if not, it is because the model does not contain paths.
+                    var innerModelMeasurement = modelToIntersectAtlas.modelMap[innerWalkedModel.routeKey];
+                    return innerModelMeasurement && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], innerModelMeasurement);
                 }
-            });
+            );
 
             if (checkIsInside) {
                 //check each segment whether it is inside or outside
@@ -281,21 +310,39 @@
     /**
      * @private
      */
-    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean) {
+    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean, atlas: measure.Atlas) {
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(modelContext, pathIdBase);
+            var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
+
             modelContext.paths[id] = segment.path;
+
+            if (crossedPath.broken) {
+                //save the new segment's measurement
+                var measurement = measure.pathExtents(segment.path, crossedPath.offset);
+                atlas.pathMap[newRouteKey] = measurement;
+                atlas.modelsMeasured = false;
+            } else {
+                //keep the original measurement
+                atlas.pathMap[newRouteKey] = savedMeasurement;
+            }
         }
 
         function checkAddSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
                 addSegment(modelContext, pathIdBase, segment);
+            } else {
+                atlas.modelsMeasured = false;
             }
         }
 
+        //save the original measurement
+        var savedMeasurement = atlas.pathMap[crossedPath.routeKey];
+
         //delete the original, its segments will be added
         delete crossedPath.modelContext.paths[crossedPath.pathId];
+        delete atlas.pathMap[crossedPath.routeKey];
 
         for (var i = 0; i < crossedPath.segments.length; i++) {
             if (crossedPath.segments[i].duplicate) {
@@ -328,22 +375,32 @@
         };
         extendObject(opts, options);
 
-        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.farPoint);
-        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.farPoint);
+        opts.measureA = opts.measureA || new measure.Atlas(modelA);
+        opts.measureB = opts.measureB || new measure.Atlas(modelB);
+
+        //make sure model measurements capture all paths
+        opts.measureA.measureModels();
+        opts.measureB.measureModels();
+
+        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
+        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
 
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true);
+            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA);
         }
 
         for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false);
+            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB);
         }
 
         if (opts.trimDeadEnds) {
             removeDeadEnds(<IModel>{ models: { modelA: modelA, modelB: modelB } });
         }
+
+        //pass options back to caller
+        extendObject(options, opts);
     }
 
 }
