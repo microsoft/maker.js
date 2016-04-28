@@ -347,6 +347,7 @@ namespace MakerJs.measure {
      * Measures the smallest rectangle which contains a model.
      * 
      * @param modelToMeasure The model to measure.
+     * @param atlas Optional atlas to save measurements.
      * @returns object with low and high points.
      */
     export function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasure {
@@ -391,11 +392,34 @@ namespace MakerJs.measure {
         return atlas.modelMap[''];
     }
 
+    /**
+     * A list of maps of measurements.
+     * 
+     * @param modelToMeasure The model to measure.
+     * @param atlas Optional atlas to save measurements.
+     * @returns object with low and high points.
+     */
     export class Atlas {
+
+        /**
+         * Flag that models have been measured.
+         */
         public modelsMeasured = false;
+
+        /**
+         * Map of model measurements, mapped by routeKey.
+         */
         public modelMap: IMeasureMap = {};
+
+        /**
+         * Map of path measurements, mapped by routeKey.
+         */
         public pathMap: IMeasureMap = {};
 
+        /**
+         * Constructor.
+         * @param modelContext The model to measure.
+         */
         constructor(public modelContext: IModel) {
         }
 

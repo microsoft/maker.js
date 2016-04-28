@@ -2686,7 +2686,6 @@ var MakerJs;
          * Measures the smallest rectangle which contains a model.
          *
          * @param modelToMeasure The model to measure.
-         * @param atlas Optional atlas to save measurements.
          * @returns object with low and high points.
          */
         function modelExtents(modelToMeasure, atlas) {
@@ -2720,31 +2719,11 @@ var MakerJs;
             return atlas.modelMap[''];
         }
         measure.modelExtents = modelExtents;
-        /**
-         * A list of maps of measurements.
-         *
-         * @param modelToMeasure The model to measure.
-         * @param atlas Optional atlas to save measurements.
-         * @returns object with low and high points.
-         */
         var Atlas = (function () {
-            /**
-             * Constructor.
-             * @param modelContext The model to measure.
-             */
             function Atlas(modelContext) {
                 this.modelContext = modelContext;
-                /**
-                 * Flag that models have been measured.
-                 */
                 this.modelsMeasured = false;
-                /**
-                 * Map of model measurements, mapped by routeKey.
-                 */
                 this.modelMap = {};
-                /**
-                 * Map of path measurements, mapped by routeKey.
-                 */
                 this.pathMap = {};
             }
             Atlas.prototype.measureModels = function () {

@@ -1280,14 +1280,35 @@ declare namespace MakerJs.measure {
      * Measures the smallest rectangle which contains a model.
      *
      * @param modelToMeasure The model to measure.
+     * @param atlas Optional atlas to save measurements.
      * @returns object with low and high points.
      */
     function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasure;
+    /**
+     * A list of maps of measurements.
+     *
+     * @param modelToMeasure The model to measure.
+     * @param atlas Optional atlas to save measurements.
+     * @returns object with low and high points.
+     */
     class Atlas {
         modelContext: IModel;
+        /**
+         * Flag that models have been measured.
+         */
         modelsMeasured: boolean;
+        /**
+         * Map of model measurements, mapped by routeKey.
+         */
         modelMap: IMeasureMap;
+        /**
+         * Map of path measurements, mapped by routeKey.
+         */
         pathMap: IMeasureMap;
+        /**
+         * Constructor.
+         * @param modelContext The model to measure.
+         */
         constructor(modelContext: IModel);
         measureModels(): void;
     }
