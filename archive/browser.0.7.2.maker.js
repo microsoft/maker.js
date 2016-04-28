@@ -399,7 +399,7 @@ var MakerJs;
          */
         function ofArcSpan(arc) {
             var endAngle = angle.ofArcEnd(arc);
-            return endAngle - arc.startAngle;
+            return noRevolutions(endAngle - arc.startAngle);
         }
         angle.ofArcSpan = ofArcSpan;
         /**
@@ -1229,18 +1229,13 @@ var MakerJs;
         function originate(modelToOriginate, origin) {
             if (!modelToOriginate)
                 return;
-            var newOrigin = MakerJs.point.add(modelToOriginate.origin, origin);
-            if (modelToOriginate.paths) {
-                for (var id in modelToOriginate.paths) {
-                    MakerJs.path.moveRelative(modelToOriginate.paths[id], newOrigin);
+            walk(modelToOriginate, function (pathRef) {
+                MakerJs.path.moveRelative(pathRef.pathContext, pathRef.offset);
+            }, function (modelRef) {
+                if (modelRef.childModel.origin) {
+                    modelRef.childModel.origin = MakerJs.point.zero();
                 }
-            }
-            if (modelToOriginate.models) {
-                for (var id in modelToOriginate.models) {
-                    originate(modelToOriginate.models[id], newOrigin);
-                }
-            }
-            modelToOriginate.origin = MakerJs.point.zero();
+            });
             return modelToOriginate;
         }
         model.originate = originate;
@@ -1254,6 +1249,8 @@ var MakerJs;
          */
         function mirror(modelToMirror, mirrorX, mirrorY) {
             var newModel = {};
+            if (!modelToMirror)
+                return null;
             if (modelToMirror.origin) {
                 newModel.origin = MakerJs.point.mirror(modelToMirror.origin, mirrorX, mirrorY);
             }
@@ -1416,6 +1413,51 @@ var MakerJs;
             }
         }
         model.walkPaths = walkPaths;
+        /**
+         * Recursively walk through all paths for a given model.
+         *
+         * @param modelContext The model to walk.
+         * @param callback Callback for each path.
+         */
+        function walk(modelContext, pathCallback, modelCallback, offset, route, routeKey) {
+            if (route === void 0) { route = []; }
+            if (routeKey === void 0) { routeKey = ''; }
+            var newOffset = MakerJs.point.add(modelContext.origin, offset);
+            if (modelContext.paths) {
+                for (var pathId in modelContext.paths) {
+                    if (!modelContext.paths[pathId])
+                        continue;
+                    var walkedPath = {
+                        modelContext: modelContext,
+                        offset: newOffset,
+                        pathContext: modelContext.paths[pathId],
+                        pathId: pathId,
+                        route: route.concat(['paths', pathId]),
+                        routeKey: routeKey + '.paths.' + pathId
+                    };
+                    if (pathCallback)
+                        pathCallback(walkedPath);
+                }
+            }
+            if (modelContext.models) {
+                for (var modelId in modelContext.models) {
+                    if (!modelContext.models[modelId])
+                        continue;
+                    var walkedModel = {
+                        parentModel: modelContext,
+                        offset: newOffset,
+                        route: route.concat(['models', modelId]),
+                        routeKey: routeKey + '.models.' + modelId,
+                        childId: modelId,
+                        childModel: modelContext.models[modelId]
+                    };
+                    walk(walkedModel.childModel, pathCallback, modelCallback, newOffset, walkedModel.route);
+                    if (modelCallback)
+                        modelCallback(walkedModel);
+                }
+            }
+        }
+        model.walk = walk;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -1576,25 +1618,23 @@ var MakerJs;
         function breakAllPathsAtIntersections(modelToBreak, modelToIntersect, checkIsInside, farPoint) {
             var crossedPaths = [];
             var overlappedSegments = [];
-            model.walkPaths(modelToBreak, function (modelContext, pathId1, path1) {
-                if (!path1)
-                    return;
+            model.walk(modelToBreak, function (a) {
                 //clone this path and make it the first segment
                 var segment = {
-                    path: MakerJs.cloneObject(path1),
-                    pathId: pathId1,
+                    path: MakerJs.path.moveRelative(MakerJs.cloneObject(a.pathContext), a.offset),
+                    pathId: a.pathId,
                     overlapped: false,
                     uniqueForeignIntersectionPoints: []
                 };
                 var thisPath = {
-                    modelContext: modelContext,
-                    pathId: pathId1,
+                    modelContext: a.modelContext,
+                    pathId: a.pathId,
                     segments: [segment]
                 };
                 //keep breaking the segments anywhere they intersect with paths of the other model
-                model.walkPaths(modelToIntersect, function (mx, pathId2, path2) {
-                    if (path2 && path1 !== path2) {
-                        breakAlongForeignPath(thisPath.segments, overlappedSegments, path2);
+                model.walk(modelToIntersect, function (b) {
+                    if (a.pathContext !== b.pathContext) {
+                        breakAlongForeignPath(thisPath.segments, overlappedSegments, MakerJs.path.moveRelative(MakerJs.cloneObject(b.pathContext), b.offset));
                     }
                 });
                 if (checkIsInside) {
@@ -1652,7 +1692,7 @@ var MakerJs;
             }
         }
         /**
-         * Combine 2 models. The models should be originated, and every path within each model should be part of a loop.
+         * Combine 2 models. Every path within each model should be part of a loop.
          *
          * @param modelA First model to combine.
          * @param modelB Second model to combine.
@@ -1970,7 +2010,7 @@ var MakerJs;
          * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
          * @returns Model which surrounds the paths of the original model.
          */
-        function expandPaths(modelToExpand, distance, joints) {
+        function expandPaths(modelToExpand, distance, joints, combineOptions) {
             if (joints === void 0) { joints = 0; }
             if (distance <= 0)
                 return null;
@@ -1989,7 +2029,7 @@ var MakerJs;
                     var newId = model.getSimilarModelId(result.models['expansions'], pathId);
                     model.originate(expandedPathModel);
                     if (!first) {
-                        model.combine(result, expandedPathModel);
+                        model.combine(result, expandedPathModel, false, true, false, true, combineOptions);
                     }
                     result.models['expansions'].models[newId] = expandedPathModel;
                     if (expandedPathModel.models) {
@@ -2454,8 +2494,8 @@ var MakerJs;
          * @returns object with low and high points.
          */
         function modelExtents(modelToMeasure) {
-            var totalMeasurement = { low: [null, null], high: [null, null] };
-            function lowerOrHigher(offsetOrigin, pathMeasurement) {
+            var cached = {};
+            function lowerOrHigher(totalMeasurement, offsetOrigin, pathMeasurement) {
                 function getExtreme(a, b, fn) {
                     var c = MakerJs.point.add(b, offsetOrigin);
                     for (var i = 2; i--;) {
@@ -2468,20 +2508,24 @@ var MakerJs;
             function measure(modelToMeasure, offsetOrigin) {
                 if (!modelToMeasure)
                     return;
-                var newOrigin = MakerJs.point.add(modelToMeasure.origin, offsetOrigin);
-                if (modelToMeasure.paths) {
-                    for (var id in modelToMeasure.paths) {
-                        lowerOrHigher(newOrigin, pathExtents(modelToMeasure.paths[id]));
-                    }
-                }
-                if (modelToMeasure.models) {
-                    for (var id in modelToMeasure.models) {
-                        measure(modelToMeasure.models[id], newOrigin);
-                    }
-                }
+                var modelMeasurement = {
+                    low: [null, null],
+                    high: [null, null]
+                };
+                MakerJs.model.walk(modelToMeasure, function (a) {
+                    var p = pathExtents(a.pathContext);
+                    cached[a.routeKey] = p;
+                    lowerOrHigher(modelMeasurement, a.offset, p);
+                }, function (b) {
+                    var m = measure(b.childModel, b.offset);
+                    cached[b.routeKey] = m;
+                    lowerOrHigher(modelMeasurement, b.offset, m);
+                });
+                return modelMeasurement;
             }
-            measure(modelToMeasure);
-            return totalMeasurement;
+            var xtotalMeasurement = measure(modelToMeasure);
+            xtotalMeasurement.cached = cached;
+            return xtotalMeasurement;
         }
         measure_1.modelExtents = modelExtents;
     })(measure = MakerJs.measure || (MakerJs.measure = {}));
@@ -4146,7 +4190,7 @@ var MakerJs;
                 }
                 else {
                     var d = ['A'];
-                    svgArcData(d, arc.radius, arcPoints[1], Math.abs(arc.endAngle - arc.startAngle) > 180, arc.startAngle > arc.endAngle);
+                    svgArcData(d, arc.radius, arcPoints[1], MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
                     drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, MakerJs.point.middle(arc));
                 }
             };
