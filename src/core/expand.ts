@@ -45,9 +45,10 @@
      *
      * @param arc Arc to straighten.
      * @param bevel Optional flag to bevel the angle to prevent it from being too sharp.
+     * @param prefix Optional prefix to apply to path ids.
      * @returns Model of straight lines with same endpoints as the arc.
      */
-    export function straighten(arc: IPathArc, bevel?: boolean): IModel {
+    export function straighten(arc: IPathArc, bevel?: boolean, prefix?: string): IModel {
 
         var arcSpan = angle.ofArcSpan(arc);
         var joints = 1;
@@ -75,6 +76,10 @@
 
         var result = new models.ConnectTheDots(false, points);
         (<IModel>result).origin = arc.origin;
+
+        if (typeof prefix === 'string' && prefix.length) {
+            model.prefixPathIds(result, prefix);
+        }
 
         return result;
     }
@@ -113,10 +118,11 @@ namespace MakerJs.model {
             if (expandedPathModel) {
                 var newId = getSimilarModelId(result.models['expansions'], walkedPath.pathId);
 
-                model.originate(expandedPathModel);
+                prefixPathIds(expandedPathModel, walkedPath.pathId + '_');
+                originate(expandedPathModel);
 
                 if (!first) {
-                    model.combine(result, expandedPathModel, false, true, false, true, combineOptions);
+                    combine(result, expandedPathModel, false, true, false, true, combineOptions);
                     combineOptions.measureA.modelsMeasured = false;
                     delete combineOptions.measureB;
                 }
@@ -151,7 +157,7 @@ namespace MakerJs.model {
                 var straightened: IModel = { models: {} };
 
                 walkPaths(roundCaps.models[id], function (modelContext: IModel, pathId: string, pathContext: IPath) {
-                    straightened.models[pathId] = path.straighten(<IPathArc>pathContext, joints == 2);
+                    straightened.models[pathId] = path.straighten(<IPathArc>pathContext, joints == 2, pathId + '_');
                 });
 
                 straightCaps.models[id] = straightened;

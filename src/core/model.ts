@@ -161,6 +161,34 @@ namespace MakerJs.model {
     }
 
     /**
+     * Prefix the ids of paths in a model.
+     * 
+     * @param modelToPrefix The model to prefix.
+     * @param prefix The prefix to prepend on paths ids.
+     * @returns The original model (for chaining).
+     */
+    export function prefixPathIds(modelToPrefix: IModel, prefix: string) {
+
+        var walkedPaths: IWalkPath[] = [];
+
+        //first collect the paths because we don't want to modify keys during an iteration on keys
+        walk(modelToPrefix,
+            function (walkedPath: IWalkPath) {
+                walkedPaths.push(walkedPath);
+            }
+        );
+
+        //now modify the ids in our own iteration
+        for (var i = 0; i < walkedPaths.length; i++) {
+            var walkedPath = walkedPaths[i];
+            delete walkedPath.modelContext.paths[walkedPath.pathId];
+            walkedPath.modelContext.paths[prefix + walkedPath.pathId] = walkedPath.pathContext;
+        }
+
+        return modelToPrefix;
+    }
+
+    /**
      * Rotate a model.
      * 
      * @param modelToRotate The model to rotate.
