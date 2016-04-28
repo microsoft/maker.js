@@ -117,7 +117,7 @@ namespace MakerJs.model {
 
                 if (!first) {
                     model.combine(result, expandedPathModel, false, true, false, true, combineOptions);
-                    combineOptions.measureA.invalid = true;
+                    combineOptions.measureA.modelsMeasured = false;
                     delete combineOptions.measureB;
                 }
 

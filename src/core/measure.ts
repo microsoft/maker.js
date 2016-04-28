@@ -386,18 +386,23 @@ namespace MakerJs.measure {
             }
         );
 
-        atlas.invalid = false;
+        atlas.modelsMeasured = true;
 
         return atlas.modelMap[''];
     }
 
     export class Atlas {
-        public invalid = true;
+        public modelsMeasured = false;
         public modelMap: IMeasureMap = {};
         public pathMap: IMeasureMap = {};
 
         constructor(public modelContext: IModel) {
         }
 
+        public measureModels() {
+            if (!this.modelsMeasured) {
+                modelExtents(this.modelContext, this);
+            }
+        }
     }
 }
