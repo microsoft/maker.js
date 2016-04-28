@@ -85,7 +85,7 @@
 
                     var items = connections.findCollection(currLink.nextConnection);
 
-                    if (!items) break;
+                    if (!items || items.length == 0) break;
 
                     var nextLink = getOpposedLink(items, currLink.path);
 
