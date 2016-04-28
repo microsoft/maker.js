@@ -3,13 +3,13 @@ namespace MakerJs.solvers {
     /**
      * Solves for the angle of a triangle when you know lengths of 3 sides.
      * 
-     * @param length1 Length of side of triangle, opposite of the angle you are trying to find.
-     * @param length2 Length of any other side of the triangle.
-     * @param length3 Length of the remaining side of the triangle.
+     * @param lengthA Length of side of triangle, opposite of the angle you are trying to find.
+     * @param lengthB Length of any other side of the triangle.
+     * @param lengthC Length of the remaining side of the triangle.
      * @returns Angle opposite of the side represented by the first parameter.
      */
-    export function solveTriangleSSS(length1: number, length2: number, length3: number): number {
-        return angle.toDegrees(Math.acos((length2 * length2 + length3 * length3 - length1 * length1) / (2 * length2 * length3)));
+    export function solveTriangleSSS(lengthA: number, lengthB: number, lengthC: number): number {
+        return angle.toDegrees(Math.acos((lengthB * lengthB + lengthC * lengthC - lengthA * lengthA) / (2 * lengthB * lengthC)));
     }
 
     /**

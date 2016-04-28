@@ -5,8 +5,8 @@
      */
     function checkForOverlaps(
         refPaths: IRefPathInModel[],
-        isOverlapping: (path1: IPath, path2: IPath, excludeTangents: boolean) => boolean,
-        overlapUnion: (path1: IPath, path2: IPath) => void) {
+        isOverlapping: (pathA: IPath, pathB: IPath, excludeTangents: boolean) => boolean,
+        overlapUnion: (pathA: IPath, pathB: IPath) => void) {
 
         var currIndex = 0;
 
@@ -55,9 +55,9 @@
      */
     export function simplify(modelToSimplify: IModel, options?: ISimplifyOptions) {
 
-        function compareCircles(circle1: IPathCircle, circle2: IPathCircle): boolean {
-            if (Math.abs(circle1.radius - circle2.radius) <= opts.scalarMatchingDistance) {
-                var distance = measure.pointDistance(circle1.origin, circle2.origin);
+        function compareCircles(circleA: IPathCircle, circleB: IPathCircle): boolean {
+            if (Math.abs(circleA.radius - circleB.radius) <= opts.scalarMatchingDistance) {
+                var distance = measure.pointDistance(circleA.origin, circleB.origin);
                 return distance <= opts.pointMatchingDistance;
             }
             return false;
@@ -107,13 +107,13 @@
         //for all arcs that are similar, see if they overlap.
         //combine overlapping arcs into the first one and delete the second.
         similarArcs.getCollectionsOfMultiple(function (key: IPathCircle, arcRefs: IRefPathInModel[]) {
-            checkForOverlaps(arcRefs, measure.isArcOverlapping, function (arc1: IPathArc, arc2: IPathArc) {
+            checkForOverlaps(arcRefs, measure.isArcOverlapping, function (arcA: IPathArc, arcB: IPathArc) {
 
-                var limit1 = normalizedArcLimits(arc1);
-                var limit2 = normalizedArcLimits(arc2);
+                var limitA = normalizedArcLimits(arcA);
+                var limitB = normalizedArcLimits(arcB);
 
-                arc1.startAngle = Math.min(limit1.startAngle, limit2.startAngle);
-                arc1.endAngle = Math.max(limit1.endAngle, limit2.endAngle);
+                arcA.startAngle = Math.min(limitA.startAngle, limitB.startAngle);
+                arcA.endAngle = Math.max(limitA.endAngle, limitB.endAngle);
             });
         });
 
@@ -128,33 +128,33 @@
         //for all lines that are similar, see if they overlap.
         //combine overlapping lines into the first one and delete the second.
         similarLines.getCollectionsOfMultiple(function (slope: ISlope, arcRefs: IRefPathInModel[]) {
-            checkForOverlaps(arcRefs, measure.isLineOverlapping, function (line1: IPathLine, line2: IPathLine) {
+            checkForOverlaps(arcRefs, measure.isLineOverlapping, function (lineA: IPathLine, lineB: IPathLine) {
 
-                var box: IModel = { paths: { line1: line1, line2: line2 } };
+                var box: IModel = { paths: { lineA: lineA, lineB: lineB } };
                 var m = measure.modelExtents(box);
 
                 if (!slope.hasSlope) {
                     //vertical
-                    line1.origin[1] = m.low[1];
-                    line1.end[1] = m.high[1];
+                    lineA.origin[1] = m.low[1];
+                    lineA.end[1] = m.high[1];
 
                 } else {
                     //non-vertical
 
                     if (slope.slope < 0) {
                         //downward
-                        line1.origin = [m.low[0], m.high[1]];
-                        line1.end = [m.high[0], m.low[1]];
+                        lineA.origin = [m.low[0], m.high[1]];
+                        lineA.end = [m.high[0], m.low[1]];
 
                     } else if (slope.slope > 0) {
                         //upward
-                        line1.origin = m.low;
-                        line1.end = m.high;
+                        lineA.origin = m.low;
+                        lineA.end = m.high;
 
                     } else {
                         //horizontal
-                        line1.origin[0] = m.low[0];
-                        line1.end[0] = m.high[0];
+                        lineA.origin[0] = m.low[0];
+                        lineA.end[0] = m.high[0];
                     }
                 }
 

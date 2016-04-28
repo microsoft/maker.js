@@ -59,6 +59,27 @@ namespace MakerJs {
     }
 
     /**
+     * Create a string representation of a route array.
+     * 
+     * @param route Array of strings which are segments of a route.
+     * @returns String of the flattened array.
+     */
+    export function createRouteKey(route: string[]) {
+        var converted: string[] = [];
+        for (var i = 0; i < route.length; i++) {
+            var element = route[i];
+            var newElement: string;
+            if (i % 2 === 0) {
+                newElement = '.' + element;
+            } else {
+                newElement = JSON.stringify([element]);
+            }
+            converted.push(newElement);
+        }
+        return converted.join('');
+    }
+
+    /**
      * @private
      */
     var clone = require('clone');
@@ -130,11 +151,18 @@ namespace MakerJs {
          * The point containing both the lowest x and y values of the rectangle containing the item being measured.
          */
         low: IPoint;
-        
+
         /**
          * The point containing both the highest x and y values of the rectangle containing the item being measured.
          */
         high: IPoint;
+    }
+
+    /**
+     * A map of measurements.
+     */
+    export interface IMeasureMap {
+        [key: string]: IMeasure;
     }
 
     //paths
@@ -143,12 +171,12 @@ namespace MakerJs {
      * A line, curved line or other simple two dimensional shape.
      */
     export interface IPath {
-        
+
         /**
          * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
          */
         "type": string;
-        
+
         /**
          * The main point of reference for this path.
          */
@@ -179,7 +207,7 @@ namespace MakerJs {
      * ```
      */
     export interface IPathLine extends IPath {
-        
+
         /**
          * The end point defining the line. The start point is the origin.
          */
@@ -205,7 +233,7 @@ namespace MakerJs {
      * ```
      */
     export interface IPathCircle extends IPath {
-        
+
         /**
          * The radius of the circle.
          */
@@ -257,7 +285,7 @@ namespace MakerJs {
      * @private
      */
     export interface IPathFunctionMap {
-        
+
         /**
          * Key is the type of a path, value is a function which accepts a path object as its parameter.
          */
@@ -266,10 +294,9 @@ namespace MakerJs {
 
     /**
      * A map of functions which accept a path and an origin point as parameters.
-     * @private
      */
     export interface IPathOriginFunctionMap {
-        
+
         /**
          * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
          */
@@ -383,6 +410,16 @@ namespace MakerJs {
          * Point which is known to be outside of the model.
          */
         farPoint?: IPoint;
+
+        /**
+         * Cached measurements for model A.
+         */
+        measureA?: measure.Atlas;
+
+        /**
+         * Cached measurements for model B.
+         */
+        measureB?: measure.Atlas;
     }
 
     /**
@@ -459,7 +496,7 @@ namespace MakerJs {
      * ```
      */
     export interface IModel {
-        
+
         /**
          * Optional origin location of this model.
          */
@@ -469,17 +506,17 @@ namespace MakerJs {
          * A model may want to specify its type, but this value is not employed yet.
          */
         "type"?: string;
-        
+
         /**
          * Optional array of path objects in this model.
          */
         paths?: IPathMap;
-        
+
         /**
          * Optional array of models within this model.
          */
         models?: IModelMap;
-        
+
         /**
          * Optional unit system of this model. See UnitType for possible values.
          */
@@ -532,7 +569,6 @@ namespace MakerJs {
 
     /**
      * A map of functions which accept a path reference as a parameter.
-     * @private
      */
     export interface IRefPathInModelFunctionMap {
 
@@ -543,10 +579,60 @@ namespace MakerJs {
     }
 
     /**
+     * A route to either a path or a model, and the absolute offset of it.
+     */
+    export interface IRouteOffset {
+        offset: IPoint;
+        route: string[];
+        routeKey: string;
+    }
+
+    /**
+     * A path reference in a walk.
+     */
+    export interface IWalkPath extends IRefPathInModel, IRouteOffset {
+    }
+
+    /**
+     * Callback signature for path in model.walk().
+     */
+    export interface IWalkPathCallback {
+        (context: IWalkPath): void;
+    }
+
+    /**
+     * Reference to a model within a model.
+     */
+    export interface IRefModelInModel {
+        parentModel: IModel;
+        childId: string;
+        childModel: IModel;
+    }
+
+    /**
+     * A model reference in a walk.
+     */
+    export interface IWalkModel extends IRefModelInModel, IRouteOffset {
+    }
+
+    /**
+     * Callback signature for model.walk().
+     */
+    export interface IWalkModelCallback {
+        (context: IWalkModel): void;
+    }
+    /**
+     * Callback signature for model.walk(), which may return false to halt any further walking.
+     */
+    export interface IWalkModelCancellableCallback {
+        (context: IWalkModel): boolean;
+    }
+
+    /**
      * Describes a parameter and its limits.
      */
     export interface IMetaParameter {
-        
+
         /**
          * Display text of the parameter.
          */

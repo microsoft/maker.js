@@ -1,5 +1,5 @@
 ﻿namespace MakerJs.model {
-        
+
     /**
      * @private
      */
@@ -11,15 +11,8 @@
      */
     interface ILinkedPath {
         path: IPathDirectional;
-        nextConnection: string;
+        nextConnection: IPoint;
         reversed: boolean;
-    }
-
-    /**
-     * @private
-     */
-    interface IConnectionMap {
-        [serializedPoint: string]: ILinkedPath[];
     }
 
     /**
@@ -66,12 +59,13 @@
     /**
      * @private
      */
-    function follow(connections: IConnectionMap, loops: ILoopModel[], detach: boolean) {
+    function follow(connections: Collector<IPoint, ILinkedPath>, loops: ILoopModel[], detach: boolean) {
         //for a given point, follow the paths that connect to each other to form loops
-        for (var p in connections) {
-            var linkedPaths: ILinkedPath[] = connections[p];
+        for (var i = 0; i < connections.collections.length; i++) {
 
-            if (linkedPaths) {
+            var linkedPaths = connections.collections[i].items;
+
+            if (linkedPaths && linkedPaths.length > 0) {
 
                 var loopModel: ILoopModel = {
                     paths: {},
@@ -86,13 +80,17 @@
                     var currPath = <IPathDirectionalWithPrimeContext>currLink.path;
                     currPath.reversed = currLink.reversed;
 
-                    var id = model.getSimilarPathId(loopModel, currPath.pathId);
+                    var id = getSimilarPathId(loopModel, currPath.pathId);
                     loopModel.paths[id] = currPath;
 
-                    if (!connections[currLink.nextConnection]) break;
+                    var items = connections.findCollection(currLink.nextConnection);
 
-                    var nextLink = getOpposedLink(connections[currLink.nextConnection], currLink.path);
-                    connections[currLink.nextConnection] = null;
+                    if (!items || items.length == 0) break;
+
+                    var nextLink = getOpposedLink(items, currLink.path);
+
+                    //remove the first 2 items, which should be currlink and nextlink
+                    items.splice(0, 2);
 
                     if (!nextLink) break;
 
@@ -118,23 +116,12 @@
      */
     export function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel {
         var loops: ILoopModel[] = [];
-        var connections: IConnectionMap = {};
         var result: IModel = { models: {} };
 
         var opts: IFindLoopsOptions = {
             pointMatchingDistance: .005
         };
         extendObject(opts, options);
-
-        function getLinkedPathsOnConnectionPoint(p: IPoint) {
-            var serializedPoint = point.serialize(p, .0001);    //TODO convert to pointmap
-
-            if (!(serializedPoint in connections)) {
-                connections[serializedPoint] = [];
-            }
-
-            return connections[serializedPoint];
-        }
 
         function spin(callback: (loop: ILoopModel) => void) {
             for (var i = 0; i < loops.length; i++) {
@@ -153,39 +140,54 @@
             return result.models[id];
         }
 
+        function comparePoint(pointA: IPoint, pointB: IPoint): boolean {
+            var distance = measure.pointDistance(pointA, pointB);
+            return distance <= opts.pointMatchingDistance;
+        }
+
+        var connections = new Collector<IPoint, ILinkedPath>(comparePoint);
+
         //todo: remove dead ends first
-        model.originate(modelContext);
+        originate(modelContext);
 
         //find loops by looking at all paths in this model
-        model.walkPaths(modelContext, function (modelContext: IModel, pathId: string, pathContext: IPath) {
+        walk(modelContext, function (walkedPath: IWalkPath) {
 
-            if (!pathContext) return;
-
-            var safePath = <IPathDirectionalWithPrimeContext>cloneObject(pathContext);
-            safePath.pathId = pathId;
+            var safePath = <IPathDirectionalWithPrimeContext>path.clone(walkedPath.pathContext);
+            safePath.pathId = walkedPath.pathId;
             safePath.modelContext = modelContext;
 
             //circles are loops by nature
-            if (safePath.type == pathType.Circle) {
+            if (safePath.type == pathType.Circle || (safePath.type == pathType.Arc && angle.ofArcSpan(walkedPath.pathContext as IPathArc) == 360)) {
                 var loopModel: ILoopModel = {
                     paths: {},
                     insideCount: 0
                 };
-                loopModel.paths[pathId] = safePath;
+                loopModel.paths[walkedPath.pathId] = safePath;
 
                 collectLoop(loopModel, loops, opts.removeFromOriginal);
 
             } else {
+
                 //gather both endpoints from all non-circle segments
                 safePath.endPoints = point.fromPathEnds(safePath);
+
+                //don't add lines which are shorter than the tolerance
+                if (safePath.type == pathType.Line) {
+                    var distance = measure.pointDistance(safePath.endPoints[0], safePath.endPoints[1]);
+                    if (distance < opts.pointMatchingDistance) {
+                        return;
+                    }
+                }
 
                 for (var i = 2; i--;) {
                     var linkedPath: ILinkedPath = {
                         path: safePath,
-                        nextConnection: point.serialize(safePath.endPoints[1 - i], .0001),  //TODO convert to pointmap
+                        nextConnection: safePath.endPoints[1 - i],
                         reversed: i != 0
                     };
-                    getLinkedPathsOnConnectionPoint(safePath.endPoints[i]).push(linkedPath);
+
+                    connections.addItemToCollection(safePath.endPoints[i], linkedPath);
                 }
             }
         });
@@ -242,7 +244,7 @@
     /**
      * @private
      */
-    interface IRefPathEndpoints extends IRefPathIdInModel {
+    interface IRefPathEndpoints extends IWalkPath {
         endPoints: IPoint[];
     }
 
@@ -255,8 +257,8 @@
 
         constructor(public pointMatchingDistance) {
 
-            function comparePoint(point1: IPoint, point2: IPoint): boolean {
-                var distance = measure.pointDistance(point1, point2);
+            function comparePoint(pointA: IPoint, pointB: IPoint): boolean {
+                var distance = measure.pointDistance(pointA, pointB);
                 return distance <= pointMatchingDistance;
             }
 
@@ -345,15 +347,15 @@
      * @returns The input model (for chaining).
      */
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance = .005) {
-        var serializedPointAccuracy = .0001;
         var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
 
-        walkPaths(modelContext, function (modelContext: IModel, pathId: string, pathContext: IPath) {
-            var endPoints = point.fromPathEnds(pathContext);
+        walk(modelContext, function (walkedPath: IWalkPath) {
+            var endPoints = point.fromPathEnds(walkedPath.pathContext);
 
             if (!endPoints) return;
 
-            var pathRef: IRefPathEndpoints = { modelContext: modelContext, pathId: pathId, endPoints: endPoints };
+            var pathRef = <IRefPathEndpoints>walkedPath;
+            pathRef.endPoints = endPoints;
 
             for (var i = 2; i--;) {
                 deadEndFinder.pointMap.addItemToCollection(endPoints[i], pathRef);

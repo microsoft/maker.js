@@ -33,31 +33,31 @@ namespace MakerJs.paths {
         /**
          * Class for arc path, created from 2 points, radius, large Arc flag, and clockwise flag.
          * 
-         * @param p1 First end point of the arc.
-         * @param p2 Second end point of the arc.
+         * @param pointA First end point of the arc.
+         * @param pointB Second end point of the arc.
          * @param radius The radius of the arc.
          * @param largeArc Boolean flag to indicate clockwise direction.
          * @param clockwise Boolean flag to indicate clockwise direction.
          */
-        constructor(p1: IPoint, p2: IPoint, radius: number, largeArc: boolean, clockwise: boolean);
+        constructor(pointA: IPoint, pointB: IPoint, radius: number, largeArc: boolean, clockwise: boolean);
 
         /**
          * Class for arc path, created from 2 points and optional boolean flag indicating clockwise.
          * 
-         * @param p1 First end point of the arc.
-         * @param p2 Second end point of the arc.
+         * @param pointA First end point of the arc.
+         * @param pointB Second end point of the arc.
          * @param clockwise Boolean flag to indicate clockwise direction.
          */
-        constructor(p1: IPoint, p2: IPoint, clockwise?: boolean);
+        constructor(pointA: IPoint, pointB: IPoint, clockwise?: boolean);
 
         /**
          * Class for arc path, created from 3 points.
          * 
-         * @param p1 First end point of the arc.
-         * @param p2 Middle point on the arc.
-         * @param p3 Second end point of the arc.
+         * @param pointA First end point of the arc.
+         * @param pointB Middle point on the arc.
+         * @param pointC Second end point of the arc.
          */
-        constructor(p1: IPoint, p2: IPoint, p3: IPoint);
+        constructor(pointA: IPoint, pointB: IPoint, pointC: IPoint);
 
         constructor(...args: any[]) {
 
@@ -186,19 +186,19 @@ namespace MakerJs.paths {
         /**
          * Class for circle path, created from 2 points.
          * 
-         * @param p1 First point on the circle.
-         * @param p2 Second point on the circle.
+         * @param pointA First point on the circle.
+         * @param pointB Second point on the circle.
          */
-        constructor(p1: IPoint, p2: IPoint);
+        constructor(pointA: IPoint, pointB: IPoint);
 
         /**
          * Class for circle path, created from 3 points.
          * 
-         * @param p1 First point on the circle.
-         * @param p2 Second point on the circle.
-         * @param p3 Third point on the circle.
+         * @param pointA First point on the circle.
+         * @param pointB Second point on the circle.
+         * @param pointC Third point on the circle.
          */
-        constructor(p1: IPoint, p2: IPoint, p3: IPoint);
+        constructor(pointA: IPoint, pointB: IPoint, pointC: IPoint);
 
         constructor(...args: any[]) {
             this.type = pathType.Circle;
