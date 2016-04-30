@@ -208,7 +208,6 @@ declare namespace MakerJs {
     function isPathArc(item: any): boolean;
     /**
      * A map of functions which accept a path as a parameter.
-     * @private
      */
     interface IPathFunctionMap {
         /**
@@ -495,6 +494,14 @@ declare namespace MakerJs {
      */
     interface IWalkModelCancellableCallback {
         (context: IWalkModel): boolean;
+    }
+    /**
+     * Options to pass to model.walk().
+     */
+    interface IWalkOptions {
+        onPath?: IWalkPathCallback;
+        beforeChildWalk?: IWalkModelCancellableCallback;
+        afterChildWalk?: IWalkModelCallback;
     }
     /**
      * Describes a parameter and its limits.
@@ -983,6 +990,14 @@ declare namespace MakerJs.model {
      */
     function moveRelative(modelToMove: IModel, delta: IPoint): IModel;
     /**
+     * Prefix the ids of paths in a model.
+     *
+     * @param modelToPrefix The model to prefix.
+     * @param prefix The prefix to prepend on paths ids.
+     * @returns The original model (for chaining).
+     */
+    function prefixPathIds(modelToPrefix: IModel, prefix: string): IModel;
+    /**
      * Rotate a model.
      *
      * @param modelToRotate The model to rotate.
@@ -1023,7 +1038,7 @@ declare namespace MakerJs.model {
      * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
      * @param modelCallbackAfterWalk Callback for each model after recursion.
      */
-    function walk(modelContext: IModel, pathCallback?: IWalkPathCallback, modelCallbackBeforeWalk?: IWalkModelCancellableCallback, modelCallbackAfterWalk?: IWalkModelCallback): void;
+    function walk(modelContext: IModel, options: IWalkOptions): void;
 }
 declare namespace MakerJs.model {
     /**
@@ -1109,9 +1124,10 @@ declare namespace MakerJs.path {
      *
      * @param arc Arc to straighten.
      * @param bevel Optional flag to bevel the angle to prevent it from being too sharp.
+     * @param prefix Optional prefix to apply to path ids.
      * @returns Model of straight lines with same endpoints as the arc.
      */
-    function straighten(arc: IPathArc, bevel?: boolean): IModel;
+    function straighten(arc: IPathArc, bevel?: boolean, prefix?: string): IModel;
 }
 declare namespace MakerJs.model {
     /**
