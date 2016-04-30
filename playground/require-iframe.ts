@@ -34,7 +34,7 @@ namespace MakerJsRequireIframe {
         }
     }
 
-    class Dummy {
+    class Temp {
     }
 
     function runCodeIsolated(javaScript) {
@@ -96,7 +96,7 @@ namespace MakerJsRequireIframe {
 
             clearTimeout(timeout);
 
-            //save the requred module
+            //save the required module
             required[id] = window.module.exports;
 
             //reset so it does not get picked up again
@@ -107,7 +107,6 @@ namespace MakerJsRequireIframe {
         };
 
         head.appendChild(script);
-
     }
 
     var head: HTMLHeadElement;
@@ -164,7 +163,7 @@ namespace MakerJsRequireIframe {
         previousId = id;
 
         //return an object that may be treated like a class
-        return Dummy;
+        return Temp;
     };
 
     window.module = { exports: null } as NodeModule;
@@ -209,8 +208,16 @@ namespace MakerJsRequireIframe {
                         }
                     }
 
+                    var orderedDependencies: string[] = [];
+                    var scripts = head.getElementsByTagName('script');
+                    for (var i = 0; i < scripts.length; i++) {
+                        if (scripts[i].hasAttribute('id')) {
+                            orderedDependencies.push(scripts[i].id);
+                        }
+                    }
+
                     //send results back to parent window
-                    parent.MakerJsPlayground.processResult(html, window.module.exports || model);
+                    parent.MakerJsPlayground.processResult(html, window.module.exports || model, orderedDependencies);
 
                 }, 0);
 

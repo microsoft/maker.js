@@ -492,9 +492,10 @@
 
     function setZoom(panZoom: Pointer.IPanZoom) {
 
-        checkFitToScreen.checked = false;
-
         var svgElement = viewSvgContainer.children[0] as HTMLElement;
+        if (!svgElement) return;
+
+        checkFitToScreen.checked = false;
 
         viewPanOffset = panZoom.pan;
 
@@ -527,12 +528,14 @@
 
         //todo: find minimum viewScale
 
-        processed.measurement = makerjs.measure.modelExtents(processed.model);
+        if (processed.model) {
+            processed.measurement = makerjs.measure.modelExtents(processed.model);
 
-        if (!viewScale || checkFitToScreen.checked) {
-            fitOnScreen();
-        } else if (renderUnits != processed.model.units) {
-            fitNatural();
+            if (!viewScale || checkFitToScreen.checked) {
+                fitOnScreen();
+            } else if (renderUnits != processed.model.units) {
+                fitNatural();
+            }
         }
 
         render();
@@ -594,7 +597,7 @@
         z.innerText = '(' + (viewScale * (renderUnits ? 100 : 1)).toFixed(0) + '%)';
     }
 
-    export function processResult(html: string, result: any) {
+    export function processResult(html: string, result: any, orderedDependencies?: string[]) {
 
         if (errorMarker) {
             errorMarker.clear();

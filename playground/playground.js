@@ -367,8 +367,10 @@ var MakerJsPlayground;
         };
     }
     function setZoom(panZoom) {
-        checkFitToScreen.checked = false;
         var svgElement = viewSvgContainer.children[0];
+        if (!svgElement)
+            return;
+        checkFitToScreen.checked = false;
         viewPanOffset = panZoom.pan;
         if (panZoom.zoom == MakerJsPlayground.viewScale) {
             //just pan
@@ -391,12 +393,14 @@ var MakerJsPlayground;
     }
     function onProcessed() {
         //todo: find minimum viewScale
-        processed.measurement = makerjs.measure.modelExtents(processed.model);
-        if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
-            fitOnScreen();
-        }
-        else if (MakerJsPlayground.renderUnits != processed.model.units) {
-            fitNatural();
+        if (processed.model) {
+            processed.measurement = makerjs.measure.modelExtents(processed.model);
+            if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
+                fitOnScreen();
+            }
+            else if (MakerJsPlayground.renderUnits != processed.model.units) {
+                fitNatural();
+            }
         }
         render();
         updateLockedPathNotes();
@@ -443,7 +447,7 @@ var MakerJsPlayground;
         z.innerText = '(' + (MakerJsPlayground.viewScale * (MakerJsPlayground.renderUnits ? 100 : 1)).toFixed(0) + '%)';
     }
     MakerJsPlayground.updateZoomScale = updateZoomScale;
-    function processResult(html, result) {
+    function processResult(html, result, orderedDependencies) {
         if (errorMarker) {
             errorMarker.clear();
             errorMarker = null;
