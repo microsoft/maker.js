@@ -1317,13 +1317,13 @@ title: Api - path Module
 		<a name="straighten" class="tsd-anchor"></a>
 		<h3>straighten</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">straighten<span class="tsd-signature-symbol">(</span>arc<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, bevel<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">straighten<span class="tsd-signature-symbol">(</span>arc<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, bevel<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, prefix<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/expand.ts#L50">core/expand.ts:50</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/expand.ts#L51">core/expand.ts:51</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1343,6 +1343,12 @@ title: Api - path Module
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> bevel: <span class="tsd-signature-type">boolean</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>Optional flag to bevel the angle to prevent it from being too sharp.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> prefix: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional prefix to apply to path ids.</p>
 						</div>
 					</li>
 				</ul>

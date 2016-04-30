@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IFindLoopsOptions Interface
+title: Api - IWalkOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Options to pass to model.findLoops.</p>
+			<p>Options to pass to model.walk().</p>
 		</div>
 	</div>
 </section>
@@ -14,17 +14,7 @@ title: Api - IFindLoopsOptions Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipointmatchoptions.html" class="tsd-signature-type">IPointMatchOptions</a>
-			<ul class="tsd-hierarchy">
-				<li>
-					<span class="target">IFindLoopsOptions</span>
-					<ul class="tsd-hierarchy">
-						<li>
-							<a href="makerjs.exporter.iopenjscadoptions.html" class="tsd-signature-type">IOpenJsCadOptions</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
+			<span class="target">IWalkOptions</span>
 		</li>
 	</ul>
 </section>
@@ -35,8 +25,9 @@ title: Api - IFindLoopsOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ifindloopsoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindloopsoptions.html#removefromoriginal" class="tsd-kind-icon">remove<wbr>From<wbr>Original</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.iwalkoptions.html#afterchildwalk" class="tsd-kind-icon">after<wbr>Child<wbr>Walk</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.iwalkoptions.html#beforechildwalk" class="tsd-kind-icon">before<wbr>Child<wbr>Walk</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.iwalkoptions.html#onpath" class="tsd-kind-icon">on<wbr>Path</a></li>
 				</ul>
 			</section>
 		</div>
@@ -44,36 +35,35 @@ title: Api - IFindLoopsOptions Interface
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="pointmatchingdistance" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
-		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="afterchildwalk" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> after<wbr>Child<wbr>Walk</h3>
+		<div class="tsd-signature tsd-kind-icon">after<wbr>Child<wbr>Walk<span class="tsd-signature-symbol">:</span> <a href="makerjs.iwalkmodelcallback.html" class="tsd-signature-type">IWalkModelCallback</a></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L396">core/maker.ts:396</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L638">core/maker.ts:638</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Max distance to consider two points as the same.</p>
-			</div>
-		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="removefromoriginal" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> remove<wbr>From<wbr>Original</h3>
-		<div class="tsd-signature tsd-kind-icon">remove<wbr>From<wbr>Original<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<a name="beforechildwalk" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> before<wbr>Child<wbr>Walk</h3>
+		<div class="tsd-signature tsd-kind-icon">before<wbr>Child<wbr>Walk<span class="tsd-signature-symbol">:</span> <a href="makerjs.iwalkmodelcancellablecallback.html" class="tsd-signature-type">IWalkModelCancellableCallback</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L433">core/maker.ts:433</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L637">core/maker.ts:637</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Flag to remove looped paths from the original model.</p>
-			</div>
-		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="onpath" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Path</h3>
+		<div class="tsd-signature tsd-kind-icon">on<wbr>Path<span class="tsd-signature-symbol">:</span> <a href="makerjs.iwalkpathcallback.html" class="tsd-signature-type">IWalkPathCallback</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L636">core/maker.ts:636</a></li>
+			</ul>
+		</aside>
 	</section>
 </section>
 </div>
