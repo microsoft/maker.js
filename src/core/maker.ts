@@ -282,7 +282,6 @@ namespace MakerJs {
 
     /**
      * A map of functions which accept a path as a parameter.
-     * @private
      */
     export interface IPathFunctionMap {
 
@@ -621,11 +620,21 @@ namespace MakerJs {
     export interface IWalkModelCallback {
         (context: IWalkModel): void;
     }
+
     /**
      * Callback signature for model.walk(), which may return false to halt any further walking.
      */
     export interface IWalkModelCancellableCallback {
         (context: IWalkModel): boolean;
+    }
+
+    /**
+     * Options to pass to model.walk().
+     */
+    export interface IWalkOptions {
+        onPath?: IWalkPathCallback;
+        beforeChildWalk?: IWalkModelCancellableCallback;
+        afterChildWalk?: IWalkModelCallback;
     }
 
     /**

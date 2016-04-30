@@ -370,8 +370,8 @@ namespace MakerJs.measure {
 
         if (!atlas) atlas = new measure.Atlas(modelToMeasure);
 
-        model.walk(modelToMeasure,
-            function (walkedPath: IWalkPath) {
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
 
                 //trust that the path measurement is good
                 if (!(walkedPath.routeKey in atlas.pathMap)) {
@@ -380,12 +380,13 @@ namespace MakerJs.measure {
 
                 increaseParentModel(walkedPath.route, atlas.pathMap[walkedPath.routeKey]);
             },
-            null,
-            function (walkedModel: IWalkModel) {
+            afterChildWalk: function (walkedModel: IWalkModel) {
                 //model has been updated by all its children, update parent
                 increaseParentModel(walkedModel.route, atlas.modelMap[walkedModel.routeKey]);
             }
-        );
+        };
+
+        model.walk(modelToMeasure, walkOptions);
 
         atlas.modelsMeasured = true;
 

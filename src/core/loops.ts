@@ -151,46 +151,50 @@
         originate(modelContext);
 
         //find loops by looking at all paths in this model
-        walk(modelContext, function (walkedPath: IWalkPath) {
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
 
-            var safePath = <IPathDirectionalWithPrimeContext>path.clone(walkedPath.pathContext);
-            safePath.pathId = walkedPath.pathId;
-            safePath.modelContext = modelContext;
+                var safePath = <IPathDirectionalWithPrimeContext>path.clone(walkedPath.pathContext);
+                safePath.pathId = walkedPath.pathId;
+                safePath.modelContext = modelContext;
 
-            //circles are loops by nature
-            if (safePath.type == pathType.Circle || (safePath.type == pathType.Arc && angle.ofArcSpan(walkedPath.pathContext as IPathArc) == 360)) {
-                var loopModel: ILoopModel = {
-                    paths: {},
-                    insideCount: 0
-                };
-                loopModel.paths[walkedPath.pathId] = safePath;
+                //circles are loops by nature
+                if (safePath.type == pathType.Circle || (safePath.type == pathType.Arc && angle.ofArcSpan(walkedPath.pathContext as IPathArc) == 360)) {
+                    var loopModel: ILoopModel = {
+                        paths: {},
+                        insideCount: 0
+                    };
+                    loopModel.paths[walkedPath.pathId] = safePath;
 
-                collectLoop(loopModel, loops, opts.removeFromOriginal);
+                    collectLoop(loopModel, loops, opts.removeFromOriginal);
 
-            } else {
+                } else {
 
-                //gather both endpoints from all non-circle segments
-                safePath.endPoints = point.fromPathEnds(safePath);
+                    //gather both endpoints from all non-circle segments
+                    safePath.endPoints = point.fromPathEnds(safePath);
 
-                //don't add lines which are shorter than the tolerance
-                if (safePath.type == pathType.Line) {
-                    var distance = measure.pointDistance(safePath.endPoints[0], safePath.endPoints[1]);
-                    if (distance < opts.pointMatchingDistance) {
-                        return;
+                    //don't add lines which are shorter than the tolerance
+                    if (safePath.type == pathType.Line) {
+                        var distance = measure.pointDistance(safePath.endPoints[0], safePath.endPoints[1]);
+                        if (distance < opts.pointMatchingDistance) {
+                            return;
+                        }
+                    }
+
+                    for (var i = 2; i--;) {
+                        var linkedPath: ILinkedPath = {
+                            path: safePath,
+                            nextConnection: safePath.endPoints[1 - i],
+                            reversed: i != 0
+                        };
+
+                        connections.addItemToCollection(safePath.endPoints[i], linkedPath);
                     }
                 }
-
-                for (var i = 2; i--;) {
-                    var linkedPath: ILinkedPath = {
-                        path: safePath,
-                        nextConnection: safePath.endPoints[1 - i],
-                        reversed: i != 0
-                    };
-
-                    connections.addItemToCollection(safePath.endPoints[i], linkedPath);
-                }
             }
-        });
+        };
+
+        walk(modelContext, walkOptions);
 
         //follow paths to find loops
         follow(connections, loops, opts.removeFromOriginal);
@@ -349,18 +353,22 @@
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance = .005) {
         var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
 
-        walk(modelContext, function (walkedPath: IWalkPath) {
-            var endPoints = point.fromPathEnds(walkedPath.pathContext);
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
+                var endPoints = point.fromPathEnds(walkedPath.pathContext);
 
-            if (!endPoints) return;
+                if (!endPoints) return;
 
-            var pathRef = <IRefPathEndpoints>walkedPath;
-            pathRef.endPoints = endPoints;
+                var pathRef = <IRefPathEndpoints>walkedPath;
+                pathRef.endPoints = endPoints;
 
-            for (var i = 2; i--;) {
-                deadEndFinder.pointMap.addItemToCollection(endPoints[i], pathRef);
+                for (var i = 2; i--;) {
+                    deadEndFinder.pointMap.addItemToCollection(endPoints[i], pathRef);
+                }
             }
-        });
+        };
+
+        walk(modelContext, walkOptions);
 
         while (deadEndFinder.removeDeadEnd());
 

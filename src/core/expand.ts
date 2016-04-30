@@ -112,36 +112,40 @@ namespace MakerJs.model {
         //TODO: work without origination
         var originated = originate(modelToExpand);
 
-        walk(originated, function (walkedPath: IWalkPath) {
-            var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
+                var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
 
-            if (expandedPathModel) {
-                var newId = getSimilarModelId(result.models['expansions'], walkedPath.pathId);
+                if (expandedPathModel) {
+                    var newId = getSimilarModelId(result.models['expansions'], walkedPath.pathId);
 
-                prefixPathIds(expandedPathModel, walkedPath.pathId + '_');
-                originate(expandedPathModel);
+                    prefixPathIds(expandedPathModel, walkedPath.pathId + '_');
+                    originate(expandedPathModel);
 
-                if (!first) {
-                    combine(result, expandedPathModel, false, true, false, true, combineOptions);
-                    combineOptions.measureA.modelsMeasured = false;
-                    delete combineOptions.measureB;
-                }
-
-                result.models['expansions'].models[newId] = expandedPathModel;
-
-                if (expandedPathModel.models) {
-                    var caps = expandedPathModel.models['Caps'];
-
-                    if (caps) {
-                        delete expandedPathModel.models['Caps'];
-
-                        result.models['caps'].models[newId] = caps;
+                    if (!first) {
+                        combine(result, expandedPathModel, false, true, false, true, combineOptions);
+                        combineOptions.measureA.modelsMeasured = false;
+                        delete combineOptions.measureB;
                     }
-                }
 
-                first = false;
+                    result.models['expansions'].models[newId] = expandedPathModel;
+
+                    if (expandedPathModel.models) {
+                        var caps = expandedPathModel.models['Caps'];
+
+                        if (caps) {
+                            delete expandedPathModel.models['Caps'];
+
+                            result.models['caps'].models[newId] = caps;
+                        }
+                    }
+
+                    first = false;
+                }
             }
-        });
+        };
+
+        walk(originated, walkOptions);
 
         if (joints) {
 

@@ -172,11 +172,11 @@ namespace MakerJs.model {
         var walkedPaths: IWalkPath[] = [];
 
         //first collect the paths because we don't want to modify keys during an iteration on keys
-        walk(modelToPrefix,
-            function (walkedPath: IWalkPath) {
+        walk(modelToPrefix, {
+            onPath: function (walkedPath: IWalkPath) {
                 walkedPaths.push(walkedPath);
             }
-        );
+        });
 
         //now modify the ids in our own iteration
         for (var i = 0; i < walkedPaths.length; i++) {
@@ -308,7 +308,7 @@ namespace MakerJs.model {
      * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
      * @param modelCallbackAfterWalk Callback for each model after recursion.
      */
-    export function walk(modelContext: IModel, pathCallback?: IWalkPathCallback, modelCallbackBeforeWalk?: IWalkModelCancellableCallback, modelCallbackAfterWalk?: IWalkModelCallback) {
+    export function walk(modelContext: IModel, options: IWalkOptions) {
 
         function walkRecursive(modelContext: IModel, offset: IPoint, route: string[], routeKey: string) {
 
@@ -327,7 +327,7 @@ namespace MakerJs.model {
                         routeKey: routeKey + '.paths' + JSON.stringify([pathId])
                     };
 
-                    if (pathCallback) pathCallback(walkedPath);
+                    if (options.onPath) options.onPath(walkedPath);
                 }
             }
 
@@ -344,14 +344,14 @@ namespace MakerJs.model {
                         childModel: modelContext.models[modelId]
                     };
 
-                    if (modelCallbackBeforeWalk) {
-                        if (!modelCallbackBeforeWalk(walkedModel)) continue;
+                    if (options.beforeChildWalk) {
+                        if (!options.beforeChildWalk(walkedModel)) continue;
                     }
 
                     walkRecursive(walkedModel.childModel, newOffset, walkedModel.route, walkedModel.routeKey);
 
-                    if (modelCallbackAfterWalk) {
-                        modelCallbackAfterWalk(walkedModel);
+                    if (options.afterChildWalk) {
+                        options.afterChildWalk(walkedModel);
                     }
                 }
             }

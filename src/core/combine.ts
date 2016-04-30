@@ -240,46 +240,50 @@
         var crossedPaths: ICrossedPath[] = [];
         var overlappedSegments: ICrossedPathSegment[] = [];
 
-        walk(modelToBreak, function (outerWalkedPath: IWalkPath) {
+        var walkModelToBreakOptions: IWalkOptions = {
+            onPath: function (outerWalkedPath: IWalkPath) {
 
-            //clone this path and make it the first segment
-            var segment: ICrossedPathSegment = {
-                path: path.clone(outerWalkedPath.pathContext),
-                pathId: outerWalkedPath.pathId,
-                overlapped: false,
-                uniqueForeignIntersectionPoints: []
-            };
+                //clone this path and make it the first segment
+                var segment: ICrossedPathSegment = {
+                    path: path.clone(outerWalkedPath.pathContext),
+                    pathId: outerWalkedPath.pathId,
+                    overlapped: false,
+                    uniqueForeignIntersectionPoints: []
+                };
 
-            var thisPath: ICrossedPath = <ICrossedPath>outerWalkedPath;
-            thisPath.broken = false;
-            thisPath.segments = [segment];
+                var thisPath: ICrossedPath = <ICrossedPath>outerWalkedPath;
+                thisPath.broken = false;
+                thisPath.segments = [segment];
 
-            //keep breaking the segments anywhere they intersect with paths of the other model
-            walk(modelToIntersect,
+                var walkModelToIntersectOptions: IWalkOptions = {
+                    onPath: function (innerWalkedPath: IWalkPath) {
+                        if (outerWalkedPath.pathContext !== innerWalkedPath.pathContext && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], modelToIntersectAtlas.pathMap[innerWalkedPath.routeKey])) {
+                            breakAlongForeignPath(thisPath, overlappedSegments, innerWalkedPath.pathContext);
+                        }
+                    },
+                    beforeChildWalk: function (innerWalkedModel: IWalkModel): boolean {
 
-                function (innerWalkedPath: IWalkPath) {
-                    if (outerWalkedPath.pathContext !== innerWalkedPath.pathContext && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], modelToIntersectAtlas.pathMap[innerWalkedPath.routeKey])) {
-                        breakAlongForeignPath(thisPath, overlappedSegments, innerWalkedPath.pathContext);
+                        //see if there is a model measurement. if not, it is because the model does not contain paths.
+                        var innerModelMeasurement = modelToIntersectAtlas.modelMap[innerWalkedModel.routeKey];
+                        return innerModelMeasurement && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], innerModelMeasurement);
                     }
-                },
+                };
 
-                function (innerWalkedModel: IWalkModel): boolean {
+                //keep breaking the segments anywhere they intersect with paths of the other model
+                walk(modelToIntersect, walkModelToIntersectOptions);
 
-                    //see if there is a model measurement. if not, it is because the model does not contain paths.
-                    var innerModelMeasurement = modelToIntersectAtlas.modelMap[innerWalkedModel.routeKey];
-                    return innerModelMeasurement && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], innerModelMeasurement);
+                if (checkIsInside) {
+                    //check each segment whether it is inside or outside
+                    for (var i = 0; i < thisPath.segments.length; i++) {
+                        checkInsideForeignModel(thisPath.segments[i], modelToIntersect, farPoint);
+                    }
                 }
-            );
 
-            if (checkIsInside) {
-                //check each segment whether it is inside or outside
-                for (var i = 0; i < thisPath.segments.length; i++) {
-                    checkInsideForeignModel(thisPath.segments[i], modelToIntersect, farPoint);
-                }
+                crossedPaths.push(thisPath);
             }
+        };
 
-            crossedPaths.push(thisPath);
-        });
+        walk(modelToBreak, walkModelToBreakOptions);
 
         return { crossedPaths: crossedPaths, overlappedSegments: overlappedSegments };
     }
