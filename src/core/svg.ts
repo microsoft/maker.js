@@ -20,32 +20,6 @@ namespace MakerJs.exporter {
      */
     export function toSVG(itemToExport: any, options?: ISVGRenderOptions): string {
 
-        var opts: ISVGRenderOptions = {
-            annotate: false,
-            origin: null,
-            scale: 1,
-            stroke: "#000",
-            strokeWidth: '0.25mm',   //a somewhat average kerf of a laser cutter
-            fontSize: '9pt',
-            useSvgPathOnly: true,
-            viewBox: true
-        };
-
-        extendObject(opts, options);
-
-        var modelToExport: IModel;
-        var itemToExportIsModel = isModel(itemToExport);
-        if (itemToExportIsModel) {
-            modelToExport = itemToExport as IModel;
-
-            if (modelToExport.exporterOptions) {
-                extendObject(opts, modelToExport.exporterOptions['toSVG']);
-            }
-        }
-
-        var elements: string[] = [];
-        var layers: ILayerElements = {};
-
         function append(value: string, layer?: string) {
             if (layer) {
 
@@ -72,142 +46,32 @@ namespace MakerJs.exporter {
             return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
         }
 
-        function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null) {
-
-            attrs['vector-effect'] = 'non-scaling-stroke';
-
-            var tag = new XmlTag(tagname, attrs);
-
-            if (innerText) {
-                tag.innerText = innerText;
-            }
-
-            append(tag.toString(), layer);
-        }
-
-        function drawText(id: string, textPoint: IPoint) {
-            createElement(
-                "text",
-                {
-                    "id": id + "_text",
-                    "x": textPoint[0],
-                    "y": textPoint[1]
-                },
-                null,
-                id);
-        }
-
-        function drawPath(id: string, x: number, y: number, d: any[], layer: string, textPoint: IPoint) {
-            createElement(
-                "path",
-                {
-                    "id": id,
-                    "d": ["M", round(x), round(y)].concat(d).join(" ")
-                },
-                layer);
-
-            if (opts.annotate) {
-                drawText(id, textPoint);
-            }
-        }
-
-        var map: IPathOriginFunctionMap = {};
-
-        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string) {
-
-            var start = line.origin;
-            var end = line.end;
-
-            if (opts.useSvgPathOnly) {
-                drawPath(id, start[0], start[1], [round(end[0]), round(end[1])], layer, point.middle(line));
-            } else {
-                createElement(
-                    "line",
-                    {
-                        "id": id,
-                        "x1": round(start[0]),
-                        "y1": round(start[1]),
-                        "x2": round(end[0]),
-                        "y2": round(end[1])
-                    },
-                    layer);
-
-                if (opts.annotate) {
-                    drawText(id, point.middle(line));
-                }
-            }
-        };
-
-        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string) {
-
-            var center = circle.origin;
-
-            if (opts.useSvgPathOnly) {
-
-                circleInPaths(id, center, circle.radius, layer);
-
-            } else {
-                createElement(
-                    "circle",
-                    {
-                        "id": id,
-                        "r": circle.radius,
-                        "cx": round(center[0]),
-                        "cy": round(center[1])
-                    },
-                    layer);
-            }
-
-            if (opts.annotate) {
-                drawText(id, center);
-            }
-        };
-
-        function circleInPaths(id: string, center: IPoint, radius: number, layer: string) {
-            var d = ['m', -radius, 0];
-
-            function halfCircle(sign: number) {
-                d.push('a');
-                svgArcData(d, radius, [2 * radius * sign, 0]);
-            }
-
-            halfCircle(1);
-            halfCircle(-1);
-
-            drawPath(id, center[0], center[1], d, layer, center);
-        }
-
-        function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
-            var end: IPoint = endPoint;
-            d.push(radius, radius);
-            d.push(0);                   //0 = x-axis rotation
-            d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
-            d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
-            d.push(round(end[0]), round(end[1]));
-        }
-
-        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string) {
-
-            var arcPoints = point.fromArc(arc);
-
-            if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-                circleInPaths(id, arc.origin, arc.radius, layer);
-            } else {
-
-                var d = ['A'];
-                svgArcData(
-                    d,
-                    arc.radius,
-                    arcPoints[1],
-                    angle.ofArcSpan(arc) > 180,
-                    arc.startAngle > arc.endAngle
-                    );
-
-                drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, point.middle(arc));
-            }
-        };
-
         //fixup options
+        var opts: ISVGRenderOptions = {
+            annotate: false,
+            origin: null,
+            scale: 1,
+            stroke: "#000",
+            strokeWidth: '0.25mm',   //a somewhat average kerf of a laser cutter
+            fontSize: '9pt',
+            useSvgPathOnly: true,
+            viewBox: true
+        };
+
+        extendObject(opts, options);
+
+        var modelToExport: IModel;
+        var itemToExportIsModel = isModel(itemToExport);
+        if (itemToExportIsModel) {
+            modelToExport = itemToExport as IModel;
+
+            if (modelToExport.exporterOptions) {
+                extendObject(opts, modelToExport.exporterOptions['toSVG']);
+            }
+        }
+
+        var elements: string[] = [];
+        var layers: ILayerElements = {};
 
         //measure the item to move it into svg area
 
@@ -251,17 +115,6 @@ namespace MakerJs.exporter {
 
         //begin svg output
 
-        var modelGroup = new XmlTag('g');
-
-        function beginModel(id: string, modelContext: IModel) {
-            modelGroup.attrs = { id: id };
-            append(modelGroup.getOpeningTag(false), modelContext.layer);
-        }
-
-        function endModel(modelContext: IModel) {
-            append(modelGroup.getClosingTag(), modelContext.layer);
-        }
-
         var svgAttrs: IXmlTagAttrs;
 
         if (opts.viewBox) {
@@ -292,26 +145,177 @@ namespace MakerJs.exporter {
         });
         append(svgGroup.getOpeningTag(false));
 
-        var exp = new Exporter(map, fixPoint, fixPath, beginModel, endModel);
-        exp.exportItem('0', itemToExport, opts.origin);
+        if (true) {
 
-        //export layers as groups
-        for (var layer in layers) {
+            function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null) {
 
-            var layerGroup = new XmlTag('g', { id: layer });
+                attrs['vector-effect'] = 'non-scaling-stroke';
 
-            for (var i = 0; i < layers[layer].length; i++) {
-                layerGroup.innerText += layers[layer][i];
+                var tag = new XmlTag(tagname, attrs);
+
+                if (innerText) {
+                    tag.innerText = innerText;
+                }
+
+                append(tag.toString(), layer);
             }
 
-            layerGroup.innerTextEscaped = true;
-            append(layerGroup.toString());
+            function drawText(id: string, textPoint: IPoint) {
+                createElement(
+                    "text",
+                    {
+                        "id": id + "_text",
+                        "x": textPoint[0],
+                        "y": textPoint[1]
+                    },
+                    null,
+                    id);
+            }
+
+            function drawPath(id: string, x: number, y: number, d: any[], layer: string, textPoint: IPoint) {
+                createElement(
+                    "path",
+                    {
+                        "id": id,
+                        "d": ["M", round(x), round(y)].concat(d).join(" ")
+                    },
+                    layer);
+
+                if (opts.annotate) {
+                    drawText(id, textPoint);
+                }
+            }
+
+            function circleInPaths(id: string, center: IPoint, radius: number, layer: string) {
+                var d = ['m', -radius, 0];
+
+                function halfCircle(sign: number) {
+                    d.push('a');
+                    svgArcData(d, radius, [2 * radius * sign, 0]);
+                }
+
+                halfCircle(1);
+                halfCircle(-1);
+
+                drawPath(id, center[0], center[1], d, layer, center);
+            }
+
+            var map: IPathOriginFunctionMap = {};
+
+            map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string) {
+
+                var start = line.origin;
+                var end = line.end;
+
+                if (opts.useSvgPathOnly) {
+                    drawPath(id, start[0], start[1], [round(end[0]), round(end[1])], layer, point.middle(line));
+                } else {
+                    createElement(
+                        "line",
+                        {
+                            "id": id,
+                            "x1": round(start[0]),
+                            "y1": round(start[1]),
+                            "x2": round(end[0]),
+                            "y2": round(end[1])
+                        },
+                        layer);
+
+                    if (opts.annotate) {
+                        drawText(id, point.middle(line));
+                    }
+                }
+            };
+
+            map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string) {
+
+                var center = circle.origin;
+
+                if (opts.useSvgPathOnly) {
+
+                    circleInPaths(id, center, circle.radius, layer);
+
+                } else {
+                    createElement(
+                        "circle",
+                        {
+                            "id": id,
+                            "r": circle.radius,
+                            "cx": round(center[0]),
+                            "cy": round(center[1])
+                        },
+                        layer);
+                }
+
+                if (opts.annotate) {
+                    drawText(id, center);
+                }
+            };
+
+            map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string) {
+
+                var arcPoints = point.fromArc(arc);
+
+                if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
+                    circleInPaths(id, arc.origin, arc.radius, layer);
+                } else {
+
+                    var d = ['A'];
+                    svgArcData(
+                        d,
+                        arc.radius,
+                        arcPoints[1],
+                        angle.ofArcSpan(arc) > 180,
+                        arc.startAngle > arc.endAngle
+                    );
+
+                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, point.middle(arc));
+                }
+            };
+
+            function beginModel(id: string, modelContext: IModel) {
+                modelGroup.attrs = { id: id };
+                append(modelGroup.getOpeningTag(false), modelContext.layer);
+            }
+
+            function endModel(modelContext: IModel) {
+                append(modelGroup.getClosingTag(), modelContext.layer);
+            }
+
+            var modelGroup = new XmlTag('g');
+            var exp = new Exporter(map, fixPoint, fixPath, beginModel, endModel);
+            exp.exportItem('0', itemToExport, opts.origin);
+
+            //export layers as groups
+            for (var layer in layers) {
+
+                var layerGroup = new XmlTag('g', { id: layer });
+
+                for (var i = 0; i < layers[layer].length; i++) {
+                    layerGroup.innerText += layers[layer][i];
+                }
+
+                layerGroup.innerTextEscaped = true;
+                append(layerGroup.toString());
+            }
         }
 
         append(svgGroup.getClosingTag());
         append(svgTag.getClosingTag());
 
         return elements.join('');
+    }
+
+    /**
+     * @private
+     */
+    function svgArcData(d: any[], radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
+        var end: IPoint = endPoint;
+        d.push(radius, radius);
+        d.push(0);                   //0 = x-axis rotation
+        d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
+        d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
+        d.push(round(end[0]), round(end[1]));
     }
 
     /**
