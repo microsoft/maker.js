@@ -1,7 +1,5 @@
-/// <reference path="../../typings/lib.webworker.d.ts" />
-/// <reference path="../export-format.ts" />
-var _this = this;
 /* module system */
+var _this = this;
 var module = this;
 module.require = function (id) {
     if (id in module) {

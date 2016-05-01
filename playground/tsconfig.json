@@ -7,7 +7,8 @@
     "../typings/marked/marked.d.ts",
     "../typings/codemirror/codemirror.d.ts",
     "../target/ts/makerjs.d.ts",
-    "export-format.ts",
+    "iexport.ts",
+    "irender.ts",
     "pointer.ts",
     "playground.ts",
     "require-iframe.ts"

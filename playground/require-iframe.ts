@@ -37,14 +37,14 @@ namespace MakerJsRequireIframe {
     class Temp {
     }
 
-    function runCodeIsolated(javaScript) {
+    function runCodeIsolated(javaScript: string) {
         var Fn: any = new Function('require', 'module', 'document', 'console', javaScript);
         var result: any = new Fn(window.require, window.module, document, parent.console); //call function with the "new" keyword so the "this" keyword is an instance
 
         return window.module.exports || result;
     }
 
-    function runCodeGlobal(javaScript) {
+    function runCodeGlobal(javaScript: string) {
         var script: HTMLScriptElement = document.createElement('script');
 
         var fragment = document.createDocumentFragment();
@@ -70,7 +70,7 @@ namespace MakerJsRequireIframe {
             src = script.src;
             head.removeChild(script);
         } else {
-            src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+            src = parent.MakerJsPlayground.filenameFromRequireId(id, true);
         }
 
         //always create a new element so it fires the onload event
@@ -122,11 +122,11 @@ namespace MakerJsRequireIframe {
     };
 
     //override document.write
-    document.write = function (markup) {
+    document.write = function (markup: string) {
         html += markup;
     };
 
-    window.onerror = function (e) {
+    window.onerror = function () {
         var errorEvent = window.event as ErrorEvent;
         var errorName = 'Error';
 

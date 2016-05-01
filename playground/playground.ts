@@ -67,6 +67,13 @@
     var viewOrigin: MakerJs.IPoint;
     var viewPanOffset: MakerJs.IPoint = [0, 0];
     var keepEventElement: HTMLElement = null;
+    var renderInWorker = {
+        requestId: 0,
+        lastJavaScript: '',
+        lastOrderedDependencies: null,
+        worker: <Worker>null,
+        hasKit: false
+    };
 
     function isLandscapeOrientation() {
         return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -83,7 +90,7 @@
             message: '',
             name: ''
         };
-        
+
         for (var key in sample) {
             if (!(key in result)) {
                 return false;
@@ -315,7 +322,7 @@
     }
 
     function lockToPath(path: Node) {
-        
+
         //trace back to root
         var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGGElement;
         var route: string[] = [];
@@ -349,7 +356,7 @@
                     crumb += '["' + route[i] + '"]';
                 }
             }
-            
+
             processed.lockedPath = {
                 route: route,
                 notes: "Path Info|\n---|---\nRoute|``` " + crumb + " ```\nJSON|"
@@ -620,10 +627,30 @@
 
             processed.kit = result;
 
-            //construct an IModel from the Node module
-            processed.model = makerjs.kit.construct(result, processed.paramValues);
+            if (Worker) {
 
-            setNotes(processed.model.notes || processed.kit.notes);
+                constructInWorker(codeMirrorEditor.getDoc().getValue(), orderedDependencies,
+                    function (model: MakerJs.IModel) {
+
+                        processed.model = model;
+
+                        setNotes(processed.model.notes || processed.kit.notes);
+
+                        finish();
+
+                    }
+                );
+
+                setNotes(processed.kit.notes);
+
+                return;
+
+            } else {
+                //construct an IModel from the Node module
+                processed.model = makerjs.kit.construct(result, processed.paramValues);
+
+                setNotes(processed.model.notes || processed.kit.notes);
+            }
 
         } else if (makerjs.isModel(result)) {
             processed.model = result;
@@ -631,24 +658,99 @@
             setNotes(processed.model.notes);
 
         } else if (isIJavaScriptErrorDetails(result)) {
-            
+
             //render script error
             highlightCodeError(result as IJavaScriptErrorDetails);
         }
 
-        document.getElementById('params').innerHTML = processed.paramHtml;
+        function finish() {
+            document.getElementById('params').innerHTML = processed.paramHtml;
 
-        //now safe to render, so register a resize listener
-        if (init) {
-            init = false;
+            //now safe to render, so register a resize listener
+            if (init) {
+                init = false;
 
-            initialize();
+                initialize();
+            }
+
+            onProcessed();
         }
 
-        onProcessed();
+        finish();
     }
 
+    function constructInWorker(javaScript: string, orderedDependencies: string[], handler: (model: MakerJs.IModel) => void) {
+
+        var orderedSrc: { [id: string]: string };
+
+        renderInWorker.hasKit = false;
+
+        if (renderInWorker.worker) {
+            renderInWorker.worker.terminate();
+        }
+
+        renderInWorker.worker = new Worker('worker/render-worker.js');
+        renderInWorker.worker.onmessage = function (ev: MessageEvent) {
+            renderInWorker.hasKit = true;
+
+            var response = ev.data as MakerJsPlaygroundRender.IResponse;
+            handler(response.model);
+        };
+
+        orderedSrc = {};
+        for (var i = 0; i < orderedDependencies.length; i++) {
+            orderedSrc[orderedDependencies[i]] = filenameFromRequireId(orderedDependencies[i], true);
+        }
+
+        var options: MakerJsPlaygroundRender.IRenderModel = {
+            requestId: 0,
+            javaScript: javaScript,
+            orderedDependencies: orderedSrc,
+            paramValues: processed.paramValues
+        }
+
+        //tell the worker to process the job
+        renderInWorker.worker.postMessage(options);
+
+        renderInWorker.lastJavaScript = javaScript;
+        renderInWorker.lastOrderedDependencies = orderedSrc;
+    }
+
+    function reConstructInWorker(handler: (model: MakerJs.IModel) => any) {
+
+        if (!renderInWorker.hasKit) return;
+
+        renderInWorker.worker.onmessage = function (ev: MessageEvent) {
+            var response = ev.data as MakerJsPlaygroundRender.IResponse;
+            if (response.requestId == renderInWorker.requestId) {
+                handler(response.model);
+            }
+        };
+
+        renderInWorker.requestId = new Date().valueOf();
+
+        console.log('requesting ' + renderInWorker.requestId);
+
+        var options: MakerJsPlaygroundRender.IRenderModel = {
+            requestId: renderInWorker.requestId,
+            paramValues: processed.paramValues
+        }
+
+        //tell the worker to process the job
+        renderInWorker.worker.postMessage(options);
+
+    }
+
+    var setParamTimeoutId: NodeJS.Timer;
+
     export function setParam(index: number, value: any) {
+        clearTimeout(setParamTimeoutId);
+        setParamTimeoutId = setTimeout(function () {
+            _setParam(index, value);
+        }, 50);
+    }
+
+    export function _setParam(index: number, value: any) {
 
         //sync slider / numberbox
         var div = document.querySelectorAll('#params > div')[index];
@@ -669,11 +771,23 @@
 
         processed.paramValues[index] = value;
 
-        //construct an IModel from the kit
-        processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
-        processed.measurement = null;
+        if (Worker) {
 
-        onProcessed();
+            reConstructInWorker(function (model: MakerJs.IModel) {
+
+                processed.model = model;
+                processed.measurement = null;
+
+                onProcessed();
+            });
+
+        } else {
+            //construct an IModel from the kit
+            processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+            processed.measurement = null;
+
+            onProcessed();
+        }
     }
 
     export function toggleSliderNumberBox(label: HTMLLabelElement, index: number) {
@@ -852,8 +966,12 @@
 
     }
 
-    export function filenameFromRequireId(id: string): string {
-        return relativePath + id + '.js';
+    export function filenameFromRequireId(id: string, bustCache?: boolean): string {
+        var filename = relativePath + id + '.js';
+        if (bustCache) {
+            filename += '?' + new Date().valueOf();
+        }
+        return filename;
     }
 
     export function downloadScript(url: string, callback: (download: string) => void) {
@@ -918,7 +1036,7 @@
                 var uriPrefix = 'data:' + fe.mediaType + ',';
                 var filename = (querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
                 var dataUri = uriPrefix + encoded;
-            
+
                 //create a download link
                 var a = new makerjs.exporter.XmlTag('a', { href: dataUri, download: filename });
                 a.innerText = 'download ' + response.request.formatTitle;

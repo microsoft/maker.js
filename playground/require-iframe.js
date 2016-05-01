@@ -48,7 +48,7 @@ var MakerJsRequireIframe;
             head.removeChild(script);
         }
         else {
-            src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+            src = parent.MakerJsPlayground.filenameFromRequireId(id, true);
         }
         //always create a new element so it fires the onload event
         script = document.createElement('script');
@@ -90,7 +90,7 @@ var MakerJsRequireIframe;
     document.write = function (markup) {
         html += markup;
     };
-    window.onerror = function (e) {
+    window.onerror = function () {
         var errorEvent = window.event;
         var errorName = 'Error';
         if (error && error.name) {

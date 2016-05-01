@@ -41,6 +41,13 @@ var MakerJsPlayground;
     var viewOrigin;
     var viewPanOffset = [0, 0];
     var keepEventElement = null;
+    var renderInWorker = {
+        requestId: 0,
+        lastJavaScript: '',
+        lastOrderedDependencies: null,
+        worker: null,
+        hasKit: false
+    };
     function isLandscapeOrientation() {
         return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
     }
@@ -463,9 +470,20 @@ var MakerJsPlayground;
         if (typeof result === 'function') {
             populateParams(result.metaParameters);
             processed.kit = result;
-            //construct an IModel from the Node module
-            processed.model = makerjs.kit.construct(result, processed.paramValues);
-            setNotes(processed.model.notes || processed.kit.notes);
+            if (Worker) {
+                constructInWorker(MakerJsPlayground.codeMirrorEditor.getDoc().getValue(), orderedDependencies, function (model) {
+                    processed.model = model;
+                    setNotes(processed.model.notes || processed.kit.notes);
+                    finish();
+                });
+                setNotes(processed.kit.notes);
+                return;
+            }
+            else {
+                //construct an IModel from the Node module
+                processed.model = makerjs.kit.construct(result, processed.paramValues);
+                setNotes(processed.model.notes || processed.kit.notes);
+            }
         }
         else if (makerjs.isModel(result)) {
             processed.model = result;
@@ -475,16 +493,72 @@ var MakerJsPlayground;
             //render script error
             highlightCodeError(result);
         }
-        document.getElementById('params').innerHTML = processed.paramHtml;
-        //now safe to render, so register a resize listener
-        if (init) {
-            init = false;
-            initialize();
+        function finish() {
+            document.getElementById('params').innerHTML = processed.paramHtml;
+            //now safe to render, so register a resize listener
+            if (init) {
+                init = false;
+                initialize();
+            }
+            onProcessed();
         }
-        onProcessed();
+        finish();
     }
     MakerJsPlayground.processResult = processResult;
+    function constructInWorker(javaScript, orderedDependencies, handler) {
+        var orderedSrc;
+        renderInWorker.hasKit = false;
+        if (renderInWorker.worker) {
+            renderInWorker.worker.terminate();
+        }
+        renderInWorker.worker = new Worker('worker/render-worker.js');
+        renderInWorker.worker.onmessage = function (ev) {
+            renderInWorker.hasKit = true;
+            var response = ev.data;
+            handler(response.model);
+        };
+        orderedSrc = {};
+        for (var i = 0; i < orderedDependencies.length; i++) {
+            orderedSrc[orderedDependencies[i]] = filenameFromRequireId(orderedDependencies[i], true);
+        }
+        var options = {
+            requestId: 0,
+            javaScript: javaScript,
+            orderedDependencies: orderedSrc,
+            paramValues: processed.paramValues
+        };
+        //tell the worker to process the job
+        renderInWorker.worker.postMessage(options);
+        renderInWorker.lastJavaScript = javaScript;
+        renderInWorker.lastOrderedDependencies = orderedSrc;
+    }
+    function reConstructInWorker(handler) {
+        if (!renderInWorker.hasKit)
+            return;
+        renderInWorker.worker.onmessage = function (ev) {
+            var response = ev.data;
+            if (response.requestId == renderInWorker.requestId) {
+                handler(response.model);
+            }
+        };
+        renderInWorker.requestId = new Date().valueOf();
+        console.log('requesting ' + renderInWorker.requestId);
+        var options = {
+            requestId: renderInWorker.requestId,
+            paramValues: processed.paramValues
+        };
+        //tell the worker to process the job
+        renderInWorker.worker.postMessage(options);
+    }
+    var setParamTimeoutId;
     function setParam(index, value) {
+        clearTimeout(setParamTimeoutId);
+        setParamTimeoutId = setTimeout(function () {
+            _setParam(index, value);
+        }, 50);
+    }
+    MakerJsPlayground.setParam = setParam;
+    function _setParam(index, value) {
         //sync slider / numberbox
         var div = document.querySelectorAll('#params > div')[index];
         var slider = div.querySelector('input[type=range]');
@@ -501,12 +575,21 @@ var MakerJsPlayground;
         }
         resetDownload();
         processed.paramValues[index] = value;
-        //construct an IModel from the kit
-        processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
-        processed.measurement = null;
-        onProcessed();
+        if (Worker) {
+            reConstructInWorker(function (model) {
+                processed.model = model;
+                processed.measurement = null;
+                onProcessed();
+            });
+        }
+        else {
+            //construct an IModel from the kit
+            processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
+            processed.measurement = null;
+            onProcessed();
+        }
     }
-    MakerJsPlayground.setParam = setParam;
+    MakerJsPlayground._setParam = _setParam;
     function toggleSliderNumberBox(label, index) {
         var id;
         if (toggleClass('toggle-number', label.parentElement)) {
@@ -642,8 +725,12 @@ var MakerJsPlayground;
         }
     }
     MakerJsPlayground.render = render;
-    function filenameFromRequireId(id) {
-        return MakerJsPlayground.relativePath + id + '.js';
+    function filenameFromRequireId(id, bustCache) {
+        var filename = MakerJsPlayground.relativePath + id + '.js';
+        if (bustCache) {
+            filename += '?' + new Date().valueOf();
+        }
+        return filename;
     }
     MakerJsPlayground.filenameFromRequireId = filenameFromRequireId;
     function downloadScript(url, callback) {

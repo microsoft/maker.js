@@ -1,6 +1,4 @@
-﻿/// <reference path="../../typings/lib.webworker.d.ts" />
-/// <reference path="../export-format.ts" />
-
+﻿
 /* module system */
 
 var module = this as NodeModule;
