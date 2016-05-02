@@ -310,6 +310,8 @@ namespace MakerJs.model {
      */
     export function walk(modelContext: IModel, options: IWalkOptions) {
 
+        if (!modelContext) return;
+
         function walkRecursive(modelContext: IModel, offset: IPoint, route: string[], routeKey: string) {
 
             var newOffset = point.add(modelContext.origin, offset);

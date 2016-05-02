@@ -20,17 +20,18 @@ var MakerJsPlayground;
     var customizeMenu;
     var view;
     var viewSvgContainer;
+    var paramsDiv;
     var progress;
     var preview;
     var checkFitToScreen;
     var margin;
     var processed = {
+        error: '',
         html: '',
         kit: null,
         model: null,
         measurement: null,
-        paramValues: [],
-        paramHtml: ''
+        paramValues: []
     };
     var init = true;
     var errorMarker;
@@ -41,6 +42,12 @@ var MakerJsPlayground;
     var viewOrigin;
     var viewPanOffset = [0, 0];
     var keepEventElement = null;
+    var renderInWorker = {
+        requestId: 0,
+        worker: null,
+        hasKit: false
+    };
+    var setParamTimeoutId;
     function isLandscapeOrientation() {
         return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
     }
@@ -62,9 +69,9 @@ var MakerJsPlayground;
         return true;
     }
     function populateParams(metaParameters) {
+        var paramValues = [];
+        var paramHtml = '';
         if (metaParameters) {
-            var paramValues = [];
-            var paramHtml = '';
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
                 var id = 'slider_' + i;
@@ -142,7 +149,8 @@ var MakerJsPlayground;
             }
         }
         processed.paramValues = paramValues;
-        processed.paramHtml = paramHtml;
+        paramsDiv.innerHTML = paramHtml;
+        paramsDiv.setAttribute('disabled', 'true');
     }
     function generateCodeFromKit(id, kit) {
         var values = [];
@@ -202,9 +210,7 @@ var MakerJsPlayground;
             notes = error.name + ' : ' + error.message;
         }
         MakerJsPlayground.viewScale = null;
-        processed.model = new Frown();
-        setNotes(notes);
-        document.body.classList.remove('collapse-notes');
+        setProcessedModel(new Frown(), notes);
     }
     function dockEditor(dock) {
         if (dock) {
@@ -305,7 +311,9 @@ var MakerJsPlayground;
             else {
                 setNotes(processed.model.notes || processed.kit.notes);
             }
+            return true;
         }
+        return false;
     }
     function measureLockedPath() {
         var pathAndOffset = getLockedPathAndOffset();
@@ -367,8 +375,10 @@ var MakerJsPlayground;
         };
     }
     function setZoom(panZoom) {
-        checkFitToScreen.checked = false;
         var svgElement = viewSvgContainer.children[0];
+        if (!svgElement)
+            return;
+        checkFitToScreen.checked = false;
         viewPanOffset = panZoom.pan;
         if (panZoom.zoom == MakerJsPlayground.viewScale) {
             //just pan
@@ -389,17 +399,146 @@ var MakerJsPlayground;
             render();
         }
     }
-    function onProcessed() {
-        //todo: find minimum viewScale
-        processed.measurement = makerjs.measure.modelExtents(processed.model);
-        if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
-            fitOnScreen();
+    function setProcessedModel(model, error) {
+        processed.model = model;
+        processed.measurement = null;
+        processed.error = error;
+        if (!error) {
+            if (errorMarker) {
+                errorMarker.clear();
+                errorMarker = null;
+            }
         }
-        else if (MakerJsPlayground.renderUnits != processed.model.units) {
-            fitNatural();
+        if (model) {
+            onProcessed();
+        }
+    }
+    function onProcessed() {
+        //now safe to render, so register a resize listener
+        if (init) {
+            init = false;
+            initialize();
+        }
+        //todo: find minimum viewScale
+        if (processed.model) {
+            processed.measurement = makerjs.measure.modelExtents(processed.model);
+            if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
+                fitOnScreen();
+            }
+            else if (MakerJsPlayground.renderUnits != processed.model.units) {
+                fitNatural();
+            }
         }
         render();
-        updateLockedPathNotes();
+        if (processed.error) {
+            setNotes(processed.error);
+            //sync notes and checkbox
+            document.getElementById('check-notes').checked = true;
+            document.body.classList.remove('collapse-notes');
+        }
+        else if (!updateLockedPathNotes()) {
+            setNotes(processed.model.notes || processed.kit.notes);
+        }
+    }
+    function constructOnMainThread() {
+        try {
+            var model = makerjs.kit.construct(processed.kit, processed.paramValues);
+            setProcessedModel(model);
+        }
+        catch (e) {
+            var error = e;
+            var errorDetails = {
+                colno: 0,
+                lineno: 0,
+                message: 'Parameters=' + JSON.stringify(processed.paramValues),
+                name: e.toString()
+            };
+            //try to get column number and line number from stack
+            var re = /([0-9]{1,9999})\:([0-9]{1,9999})/;
+            var matches = re.exec(error.stack);
+            if (matches && matches.length == 3) {
+                errorDetails.lineno = parseInt(matches[1]);
+                errorDetails.colno = parseInt(matches[2]);
+            }
+            processResult('', errorDetails);
+        }
+    }
+    function constructInWorker(javaScript, orderedDependencies, successHandler, errorHandler) {
+        var orderedSrc;
+        renderInWorker.hasKit = false;
+        if (renderInWorker.worker) {
+            renderInWorker.worker.terminate();
+        }
+        renderInWorker.worker = new Worker('worker/render-worker.js');
+        renderInWorker.worker.onmessage = function (ev) {
+            var response = ev.data;
+            if (response.error) {
+                errorHandler();
+            }
+            else {
+                renderInWorker.hasKit = true;
+                successHandler(response.model);
+            }
+        };
+        orderedSrc = {};
+        for (var i = 0; i < orderedDependencies.length; i++) {
+            orderedSrc[orderedDependencies[i]] = filenameFromRequireId(orderedDependencies[i], true);
+        }
+        var options = {
+            requestId: 0,
+            javaScript: javaScript,
+            orderedDependencies: orderedSrc,
+            paramValues: processed.paramValues
+        };
+        //tell the worker to process the job
+        renderInWorker.worker.postMessage(options);
+    }
+    function reConstructInWorker(successHandler, errorHandler) {
+        if (!renderInWorker.hasKit)
+            return;
+        renderInWorker.worker.onmessage = function (ev) {
+            var response = ev.data;
+            if (response.requestId == renderInWorker.requestId) {
+                if (response.error) {
+                    errorHandler();
+                }
+                else if (response.model) {
+                    successHandler(response.model);
+                }
+            }
+        };
+        renderInWorker.requestId = new Date().valueOf();
+        console.log('requesting ' + renderInWorker.requestId);
+        var options = {
+            requestId: renderInWorker.requestId,
+            paramValues: processed.paramValues
+        };
+        //tell the worker to process the job
+        renderInWorker.worker.postMessage(options);
+    }
+    function throttledSetParam(index, value) {
+        //sync slider / numberbox
+        var div = document.querySelectorAll('#params > div')[index];
+        var slider = div.querySelector('input[type=range]');
+        var numberBox = div.querySelector('input[type=number]');
+        if (slider && numberBox) {
+            if (div.classList.contains('toggle-number')) {
+                //numberbox is master
+                slider.value = numberBox.value;
+            }
+            else {
+                //slider is master
+                numberBox.value = slider.value;
+            }
+        }
+        resetDownload();
+        processed.paramValues[index] = value;
+        if (MakerJsPlayground.renderOnWorkerThread && Worker) {
+            reConstructInWorker(setProcessedModel, constructOnMainThread);
+        }
+        else {
+            constructOnMainThread();
+        }
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
@@ -409,7 +548,10 @@ var MakerJsPlayground;
     MakerJsPlayground.relativePath = '';
     MakerJsPlayground.svgStrokeWidth = 2;
     MakerJsPlayground.svgFontSize = 14;
+    MakerJsPlayground.renderOnWorkerThread = true;
     function runCodeFromEditor() {
+        processed.kit = null;
+        populateParams(null);
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
@@ -443,64 +585,47 @@ var MakerJsPlayground;
         z.innerText = '(' + (MakerJsPlayground.viewScale * (MakerJsPlayground.renderUnits ? 100 : 1)).toFixed(0) + '%)';
     }
     MakerJsPlayground.updateZoomScale = updateZoomScale;
-    function processResult(html, result) {
-        if (errorMarker) {
-            errorMarker.clear();
-            errorMarker = null;
-        }
+    function processResult(html, result, orderedDependencies) {
         resetDownload();
-        setNotes('');
         processed.html = html;
-        processed.model = null;
-        processed.measurement = null;
-        processed.paramValues = null;
-        processed.paramHtml = '';
+        setProcessedModel(null);
         //see if output is either a Node module, or a MakerJs.IModel
         if (typeof result === 'function') {
-            populateParams(result.metaParameters);
             processed.kit = result;
-            //construct an IModel from the Node module
-            processed.model = makerjs.kit.construct(result, processed.paramValues);
-            setNotes(processed.model.notes || processed.kit.notes);
+            populateParams(processed.kit.metaParameters);
+            function enableKit() {
+                paramsDiv.removeAttribute('disabled');
+            }
+            function setKitOnMainThread() {
+                constructOnMainThread();
+                enableKit();
+            }
+            if (MakerJsPlayground.renderOnWorkerThread && Worker) {
+                constructInWorker(MakerJsPlayground.codeMirrorEditor.getDoc().getValue(), orderedDependencies, function (model) {
+                    enableKit();
+                    setProcessedModel(model);
+                }, setKitOnMainThread);
+            }
+            else {
+                setKitOnMainThread();
+            }
         }
         else if (makerjs.isModel(result)) {
-            processed.model = result;
-            setNotes(processed.model.notes);
+            processed.kit = null;
+            populateParams(null);
+            setProcessedModel(result);
         }
         else if (isIJavaScriptErrorDetails(result)) {
             //render script error
             highlightCodeError(result);
         }
-        document.getElementById('params').innerHTML = processed.paramHtml;
-        //now safe to render, so register a resize listener
-        if (init) {
-            init = false;
-            initialize();
-        }
-        onProcessed();
     }
     MakerJsPlayground.processResult = processResult;
     function setParam(index, value) {
-        //sync slider / numberbox
-        var div = document.querySelectorAll('#params > div')[index];
-        var slider = div.querySelector('input[type=range]');
-        var numberBox = div.querySelector('input[type=number]');
-        if (slider && numberBox) {
-            if (div.classList.contains('toggle-number')) {
-                //numberbox is master
-                slider.value = numberBox.value;
-            }
-            else {
-                //slider is master
-                numberBox.value = slider.value;
-            }
-        }
-        resetDownload();
-        processed.paramValues[index] = value;
-        //construct an IModel from the kit
-        processed.model = makerjs.kit.construct(processed.kit, processed.paramValues);
-        processed.measurement = null;
-        onProcessed();
+        clearTimeout(setParamTimeoutId);
+        setParamTimeoutId = setTimeout(function () {
+            throttledSetParam(index, value);
+        }, 50);
     }
     MakerJsPlayground.setParam = setParam;
     function toggleSliderNumberBox(label, index) {
@@ -638,8 +763,12 @@ var MakerJsPlayground;
         }
     }
     MakerJsPlayground.render = render;
-    function filenameFromRequireId(id) {
-        return MakerJsPlayground.relativePath + id + '.js';
+    function filenameFromRequireId(id, bustCache) {
+        var filename = MakerJsPlayground.relativePath + id + '.js';
+        if (bustCache) {
+            filename += '?' + new Date().valueOf();
+        }
+        return filename;
     }
     MakerJsPlayground.filenameFromRequireId = filenameFromRequireId;
     function downloadScript(url, callback) {
@@ -715,7 +844,7 @@ var MakerJsPlayground;
         };
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
-            exportWorker = new Worker('worker/export-worker.js');
+            exportWorker = new Worker('worker/export-worker.js?' + new Date().valueOf());
             exportWorker.onmessage = getExport;
         }
         //put the download ui into generation mode
@@ -766,6 +895,7 @@ var MakerJsPlayground;
         //}
         customizeMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
+        paramsDiv = document.getElementById('params');
         progress = document.getElementById('download-progress');
         preview = document.getElementById('download-preview');
         checkFitToScreen = document.getElementById('check-fit-on-screen');

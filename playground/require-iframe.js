@@ -18,10 +18,10 @@ var MakerJsRequireIframe;
         };
         return Counter;
     }());
-    var Dummy = (function () {
-        function Dummy() {
+    var Temp = (function () {
+        function Temp() {
         }
-        return Dummy;
+        return Temp;
     }());
     function runCodeIsolated(javaScript) {
         var Fn = new Function('require', 'module', 'document', 'console', javaScript);
@@ -48,7 +48,7 @@ var MakerJsRequireIframe;
             head.removeChild(script);
         }
         else {
-            src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+            src = parent.MakerJsPlayground.filenameFromRequireId(id, true);
         }
         //always create a new element so it fires the onload event
         script = document.createElement('script');
@@ -66,7 +66,7 @@ var MakerJsRequireIframe;
         }, 5000);
         script.onload = function () {
             clearTimeout(timeout);
-            //save the requred module
+            //save the required module
             required[id] = window.module.exports;
             //reset so it does not get picked up again
             window.module.exports = null;
@@ -90,7 +90,7 @@ var MakerJsRequireIframe;
     document.write = function (markup) {
         html += markup;
     };
-    window.onerror = function (e) {
+    window.onerror = function () {
         var errorEvent = window.event;
         var errorName = 'Error';
         if (error && error.name) {
@@ -117,7 +117,7 @@ var MakerJsRequireIframe;
         load(id, previousId);
         previousId = id;
         //return an object that may be treated like a class
-        return Dummy;
+        return Temp;
     };
     window.module = { exports: null };
     window.onload = function () {
@@ -149,8 +149,15 @@ var MakerJsRequireIframe;
                             model[prop] = window[prop];
                         }
                     }
+                    var orderedDependencies = [];
+                    var scripts = head.getElementsByTagName('script');
+                    for (var i = 0; i < scripts.length; i++) {
+                        if (scripts[i].hasAttribute('id')) {
+                            orderedDependencies.push(scripts[i].id);
+                        }
+                    }
                     //send results back to parent window
-                    parent.MakerJsPlayground.processResult(html, window.module.exports || model);
+                    parent.MakerJsPlayground.processResult(html, window.module.exports || model, orderedDependencies);
                 }, 0);
             }
         }

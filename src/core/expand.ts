@@ -175,6 +175,13 @@ namespace MakerJs.model {
     }
 
     /**
+     * Copy of the same name in loops.ts
+     * @private
+     */
+    interface IPathDirectionalWithPrimeContext extends IPathDirectional, IRefPathIdInModel {
+    }
+
+    /**
      * Outline a model by a specified distance. Useful for accommodating for kerf.
      *
      * @param modelToOutline Model to outline.
@@ -191,16 +198,39 @@ namespace MakerJs.model {
         var loops = findLoops(expanded);
         if (loops && loops.models) {
 
+            function clean(modelToClean: IModel) {
+
+                if (!modelToClean) return;
+
+                var walkOptions: IWalkOptions = {
+                    onPath: function (walkedPath: IWalkPath) {
+                        var p = walkedPath.pathContext as IPathDirectionalWithPrimeContext;
+                        delete p.endPoints;
+                        delete p.modelContext;
+                        delete p.pathId;
+                        delete p.reversed;                        
+                    }
+                };
+
+                walk(modelToClean, walkOptions);
+            }
+
             var i = 0;
 
             while (loops.models[i]) {
 
+                var keep: IPoint;
+
                 if (inside) {
                     delete loops.models[i];
+                    clean(loops.models[i + 1]);
+                    clean(loops.models[i + 2]);
                     delete loops.models[i + 3];
                 } else {
+                    clean(loops.models[i]);
                     delete loops.models[i + 1];
                     delete loops.models[i + 2];
+                    clean(loops.models[i + 3]);
                 }
 
                 i += 4;
