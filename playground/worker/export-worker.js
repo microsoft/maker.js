@@ -1,7 +1,5 @@
-/// <reference path="../../typings/lib.webworker.d.ts" />
-/// <reference path="../export-format.ts" />
-var _this = this;
 /* module system */
+var _this = this;
 var module = this;
 module.require = function (id) {
     if (id in module) {
@@ -9,7 +7,7 @@ module.require = function (id) {
     }
     return _this;
 };
-importScripts("../../external/OpenJsCad/csg.js", "../../external/OpenJsCad/formats.js", "../../target/js/browser.maker.js", "../export-format.js");
+importScripts('../../external/OpenJsCad/csg.js', '../../external/OpenJsCad/formats.js', '../../target/js/browser.maker.js', '../export-format.js');
 var makerjs = require('makerjs');
 var unionCount = 0;
 var unionIndex = 0;

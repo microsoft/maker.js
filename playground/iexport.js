@@ -31,4 +31,4 @@ var MakerJsPlaygroundExport;
         fileExtension: 'stl'
     };
 })(MakerJsPlaygroundExport || (MakerJsPlaygroundExport = {}));
-//# sourceMappingURL=export-format.js.map
+//# sourceMappingURL=iexport.js.map

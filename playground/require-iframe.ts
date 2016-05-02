@@ -34,17 +34,17 @@ namespace MakerJsRequireIframe {
         }
     }
 
-    class Dummy {
+    class Temp {
     }
 
-    function runCodeIsolated(javaScript) {
+    function runCodeIsolated(javaScript: string) {
         var Fn: any = new Function('require', 'module', 'document', 'console', javaScript);
         var result: any = new Fn(window.require, window.module, document, parent.console); //call function with the "new" keyword so the "this" keyword is an instance
 
         return window.module.exports || result;
     }
 
-    function runCodeGlobal(javaScript) {
+    function runCodeGlobal(javaScript: string) {
         var script: HTMLScriptElement = document.createElement('script');
 
         var fragment = document.createDocumentFragment();
@@ -70,7 +70,7 @@ namespace MakerJsRequireIframe {
             src = script.src;
             head.removeChild(script);
         } else {
-            src = parent.MakerJsPlayground.filenameFromRequireId(id) + '?' + new Date().getMilliseconds();
+            src = parent.MakerJsPlayground.filenameFromRequireId(id, true);
         }
 
         //always create a new element so it fires the onload event
@@ -96,7 +96,7 @@ namespace MakerJsRequireIframe {
 
             clearTimeout(timeout);
 
-            //save the requred module
+            //save the required module
             required[id] = window.module.exports;
 
             //reset so it does not get picked up again
@@ -107,7 +107,6 @@ namespace MakerJsRequireIframe {
         };
 
         head.appendChild(script);
-
     }
 
     var head: HTMLHeadElement;
@@ -123,11 +122,11 @@ namespace MakerJsRequireIframe {
     };
 
     //override document.write
-    document.write = function (markup) {
+    document.write = function (markup: string) {
         html += markup;
     };
 
-    window.onerror = function (e) {
+    window.onerror = function () {
         var errorEvent = window.event as ErrorEvent;
         var errorName = 'Error';
 
@@ -164,7 +163,7 @@ namespace MakerJsRequireIframe {
         previousId = id;
 
         //return an object that may be treated like a class
-        return Dummy;
+        return Temp;
     };
 
     window.module = { exports: null } as NodeModule;
@@ -209,8 +208,16 @@ namespace MakerJsRequireIframe {
                         }
                     }
 
+                    var orderedDependencies: string[] = [];
+                    var scripts = head.getElementsByTagName('script');
+                    for (var i = 0; i < scripts.length; i++) {
+                        if (scripts[i].hasAttribute('id')) {
+                            orderedDependencies.push(scripts[i].id);
+                        }
+                    }
+
                     //send results back to parent window
-                    parent.MakerJsPlayground.processResult(html, window.module.exports || model);
+                    parent.MakerJsPlayground.processResult(html, window.module.exports || model, orderedDependencies);
 
                 }, 0);
 
