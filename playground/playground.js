@@ -482,7 +482,8 @@ var MakerJsPlayground;
         };
         orderedSrc = {};
         for (var i = 0; i < orderedDependencies.length; i++) {
-            orderedSrc[orderedDependencies[i]] = filenameFromRequireId(orderedDependencies[i], true);
+            //add extra path traversal for worker subfolder
+            orderedSrc[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
         }
         var options = {
             requestId: 0,
