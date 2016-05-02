@@ -1,5 +1,8 @@
 ﻿
+/* module system */
+
 var module = {} as NodeModule;
+var requireError = '';
 
 module.require = (id: string): any => {
 
@@ -7,13 +10,21 @@ module.require = (id: string): any => {
         return module[id];
     }
 
+    requireError = 'could not require module "' + id + '"';
+
     return null;
 };
 
-importScripts("../../target/js/browser.maker.js");
+function load(id, src) {
+    importScripts(src);
+    module[id] = module.exports;
+}
 
+//add the makerjs module
+importScripts('../../target/js/browser.maker.js');
 var makerjs: typeof MakerJs = require('makerjs');
 module['makerjs'] = makerjs;
+module['./../target/js/node.maker.js'] = makerjs;
 
 function runCodeIsolated(javaScript: string) {
     var Fn: any = new Function('require', 'module', javaScript);
@@ -22,28 +33,59 @@ function runCodeIsolated(javaScript: string) {
     return module.exports || result;
 }
 
+function postError(requestId: number, error: string) {
+
+    var response: MakerJsPlaygroundRender.IRenderResponse = {
+        requestId: requestId,
+        error: error
+    };
+
+    postMessage(response);
+}
+
 var kit: MakerJs.IKit;
 
 onmessage = (ev: MessageEvent) => {
 
-    var request = ev.data as MakerJsPlaygroundRender.IRenderModel;
+    var request = ev.data as MakerJsPlaygroundRender.IRenderRequest;
 
     if (request.orderedDependencies) {
         for (var id in request.orderedDependencies) {
-            importScripts(request.orderedDependencies[id]);
-            module[id] = module.exports;
+            load(id, request.orderedDependencies[id]);
         }
+    }
+
+    if (requireError) {
+        postError(request.requestId, requireError);
+        return;
     }
 
     if (request.javaScript) {
         kit = runCodeIsolated(request.javaScript);
     }
 
-    var result: MakerJsPlaygroundRender.IResponse = {
-        requestId: request.requestId,
-        model: makerjs.kit.construct(kit, request.paramValues)
-    };
+    if (requireError) {
+        postError(request.requestId, requireError);
+        return;
+    }
 
-    postMessage(result);
+    if (!kit) {
+        postError(request.requestId, 'kit was not created');
+
+    } else {
+        try {
+            var model = makerjs.kit.construct(kit, request.paramValues);
+
+            var response: MakerJsPlaygroundRender.IRenderResponse = {
+                requestId: request.requestId,
+                model: model
+            };
+
+            postMessage(response);
+
+        } catch (e) {
+            postError(request.requestId, 'runtime error');
+        }
+    }
 
 };

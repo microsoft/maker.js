@@ -1,14 +1,15 @@
 ﻿namespace MakerJsPlaygroundRender {
 
-    export interface IRenderModel {
+    export interface IRenderRequest {
         requestId: number;
         orderedDependencies?: { [id: string]: string };
         javaScript?: string;
         paramValues: any[]
     }
 
-    export interface IResponse {
+    export interface IRenderResponse {
         requestId: number;
-        model: MakerJs.IModel;
+        model?: MakerJs.IModel;
+        error?: string;
     }
 }
