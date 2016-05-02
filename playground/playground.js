@@ -482,7 +482,7 @@ var MakerJsPlayground;
         };
         orderedSrc = {};
         for (var i = 0; i < orderedDependencies.length; i++) {
-            orderedSrc[orderedDependencies[i]] = filenameFromRequireId(orderedDependencies[i], true);
+            orderedSrc[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
         }
         var options = {
             requestId: 0,
