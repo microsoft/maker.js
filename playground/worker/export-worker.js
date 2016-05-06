@@ -7,7 +7,7 @@ module.require = function (id) {
     }
     return _this;
 };
-importScripts('../../external/OpenJsCad/csg.js', '../../external/OpenJsCad/formats.js', '../../target/js/browser.maker.js', '../export-format.js');
+importScripts('../../external/OpenJsCad/csg.js', '../../external/OpenJsCad/formats.js', '../../target/js/browser.maker.js', '../iexport.js');
 var makerjs = require('makerjs');
 var unionCount = 0;
 var unionIndex = 0;
