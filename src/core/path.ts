@@ -135,10 +135,10 @@ namespace MakerJs.path {
     /**
      * @private
      */
-    var moveRelativeMap: { [pathType: string]: (pathToMove: IPath, delta: IPoint) => void } = {};
+    var moveRelativeMap: { [pathType: string]: (pathToMove: IPath, delta: IPoint, subtract: boolean) => void } = {};
 
-    moveRelativeMap[pathType.Line] = function (line: IPathLine, delta: IPoint) {
-        line.end = point.add(line.end, delta);
+    moveRelativeMap[pathType.Line] = function (line: IPathLine, delta: IPoint, subtract: boolean) {
+        line.end = point.add(line.end, delta, subtract);
     };
 
     /**
@@ -146,17 +146,18 @@ namespace MakerJs.path {
      * 
      * @param pathToMove The path to move.
      * @param delta The x & y adjustments as a point object.
+     * @param subtract Optional boolean to subtract instead of add.
      * @returns The original path (for chaining).
      */
-    export function moveRelative(pathToMove: IPath, delta: IPoint): IPath {
+    export function moveRelative(pathToMove: IPath, delta: IPoint, subtract?: boolean): IPath {
 
         if (pathToMove) {
 
-            pathToMove.origin = point.add(pathToMove.origin, delta);
+            pathToMove.origin = point.add(pathToMove.origin, delta, subtract);
 
             var fn = moveRelativeMap[pathToMove.type];
             if (fn) {
-                fn(pathToMove, delta);
+                fn(pathToMove, delta, subtract);
             }
         }
 
