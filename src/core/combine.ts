@@ -128,28 +128,38 @@
     /**
      * @private
      */
-    function checkIntersectsForeignPath(segment: IPathInside, foreignPath: IPath, foreignPathId: string, farPoint: IPoint = [7654321, 1234567]) {
+    function checkInsideForeignModel(segment: IPathInside, modelToIntersect: IModel, modelToIntersectAtlas: measure.Atlas, farPoint: IPoint = [7654321, 1234567]) {
         var origin = point.middle(segment.path);
         var lineToFarPoint = new paths.Line(origin, farPoint);
-        var farInt = path.intersection(lineToFarPoint, foreignPath);
+        var measureFarPoint = measure.pathExtents(lineToFarPoint);
 
-        if (farInt) {
-            var added = addUniquePoints(segment.uniqueForeignIntersectionPoints, farInt.intersectionPoints);
-
-            //if number of intersections is an odd number, flip the flag.
-            if (added % 2 == 1) {
-                segment.isInside = !!!segment.isInside;
-            }
-        }
-    }
-
-    /**
-     * @private
-     */
-    function checkInsideForeignModel(segment: IPathInside, modelToIntersect: IModel, farPoint?: IPoint) {
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
-                checkIntersectsForeignPath(segment, walkedPath.pathContext, walkedPath.pathId, farPoint);
+
+                if (modelToIntersectAtlas && !measure.isMeasurementOverlapping(measureFarPoint, modelToIntersectAtlas.pathMap[walkedPath.routeKey])) {
+                    return;
+                }
+
+                var farInt = path.intersection(lineToFarPoint, walkedPath.pathContext);
+
+                if (farInt) {
+                    var added = addUniquePoints(segment.uniqueForeignIntersectionPoints, farInt.intersectionPoints);
+
+                    //if number of intersections is an odd number, flip the flag.
+                    if (added % 2 == 1) {
+                        segment.isInside = !!!segment.isInside;
+                    }
+                }
+            },
+            beforeChildWalk: function (innerWalkedModel: IWalkModel): boolean {
+
+                if (!modelToIntersectAtlas) {
+                    return true;
+                }
+
+                //see if there is a model measurement. if not, it is because the model does not contain paths.
+                var innerModelMeasurement = modelToIntersectAtlas.modelMap[innerWalkedModel.routeKey];
+                return innerModelMeasurement && measure.isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
             }
         };
         walk(modelToIntersect, walkOptions);
@@ -163,14 +173,14 @@
      * @param farPoint Optional point of reference which is outside the bounds of the modelContext.
      * @returns Boolean true if the path is inside of the modelContext.
      */
-    export function isPathInsideModel(pathContext: IPath, modelContext: IModel, farPoint?: IPoint): boolean {
+    export function isPathInsideModel(pathContext: IPath, modelContext: IModel, farPoint?: IPoint, measureAtlas?: measure.Atlas): boolean {
         var segment: IPathInside = {
             path: pathContext,
             isInside: false,
             uniqueForeignIntersectionPoints: []
         };
 
-        checkInsideForeignModel(segment, modelContext, farPoint);
+        checkInsideForeignModel(segment, modelContext, measureAtlas, farPoint);
 
         return !!segment.isInside;
     }
@@ -276,7 +286,7 @@
                 if (checkIsInside) {
                     //check each segment whether it is inside or outside
                     for (var i = 0; i < thisPath.segments.length; i++) {
-                        checkInsideForeignModel(thisPath.segments[i], modelToIntersect, farPoint);
+                        checkInsideForeignModel(thisPath.segments[i], modelToIntersect, modelToIntersectAtlas, farPoint);
                     }
                 }
 
