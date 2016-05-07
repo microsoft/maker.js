@@ -147,11 +147,12 @@
      * @private
      */
     function checkInsideForeignModel(segment: IPathInside, modelToIntersect: IModel, farPoint?: IPoint) {
-        walkPaths(modelToIntersect, function (mx: IModel, pathId2: string, path2: IPath) {
-            if (path2) {
-                checkIntersectsForeignPath(segment, path2, pathId2, farPoint);
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
+                checkIntersectsForeignPath(segment, walkedPath.pathContext, walkedPath.pathId, farPoint);
             }
-        });
+        };
+        walk(modelToIntersect, walkOptions);
     }
 
     /**
