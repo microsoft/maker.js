@@ -17,12 +17,13 @@ namespace MakerJs.path {
     map[pathType.Line] = {};
 
     map[pathType.Arc][pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc, options: IPathIntersectionOptions) {
+        var result: IPathIntersection = null;
         var angles = circleToCircle(arc1, arc2, options);
         if (angles) {
             var arc1Angles = getAnglesWithinArc(angles[0], arc1, options);
             var arc2Angles = getAnglesWithinArc(angles[1], arc2, options);
             if (arc1Angles && arc2Angles) {
-                return {
+                result = {
                     intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
                     path1Angles: arc1Angles,
                     path2Angles: arc2Angles
@@ -35,10 +36,11 @@ namespace MakerJs.path {
                 options.out_AreOverlapped = measure.isArcOverlapping(arc1, arc2, options.excludeTangents);
             }
         }
-        return null;
+        return result;
     };
 
     map[pathType.Arc][pathType.Circle] = function (arc: IPathArc, circle: IPathArc, options: IPathIntersectionOptions) {
+        var result: IPathIntersection = null;
         var angles = circleToCircle(arc, circle, options);
         if (angles) {
             var arcAngles = getAnglesWithinArc(angles[0], arc, options);
@@ -54,28 +56,29 @@ namespace MakerJs.path {
                     circleAngles = [angles[1][index]];
                 }
 
-                return {
+                result = {
                     intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
                     path1Angles: arcAngles,
                     path2Angles: circleAngles
                 };
             }
         }
-        return null;
+        return result;
     };
 
     map[pathType.Arc][pathType.Line] = function (arc: IPathArc, line: IPathLine, options: IPathIntersectionOptions) {
+        var result: IPathIntersection = null;
         var angles = lineToCircle(line, arc, options);
         if (angles) {
             var arcAngles = getAnglesWithinArc(angles, arc, options);
             if (arcAngles) {
-                return {
+                result = {
                     intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
                     path1Angles: arcAngles
                 };
             }
         }
-        return null;
+        return result;
     };
 
     map[pathType.Circle][pathType.Arc] = function (circle: IPathCircle, arc: IPathArc, options: IPathIntersectionOptions) {
@@ -87,26 +90,28 @@ namespace MakerJs.path {
     };
 
     map[pathType.Circle][pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions) {
+        var result: IPathIntersection = null;
         var angles = circleToCircle(circle1, circle2, options);
         if (angles) {
-            return {
+            result = {
                 intersectionPoints: pointsFromAnglesOnCircle(angles[0], circle1),
                 path1Angles: angles[0],
                 path2Angles: angles[1]
             };
         }
-        return null;
+        return result;
     };
 
     map[pathType.Circle][pathType.Line] = function (circle: IPathCircle, line: IPathLine, options: IPathIntersectionOptions) {
+        var result: IPathIntersection = null;
         var angles = lineToCircle(line, circle, options);
         if (angles) {
-            return {
+            result = {
                 intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
                 path1Angles: angles
             };
         }
-        return null;
+        return result;
     };
 
     map[pathType.Line][pathType.Arc] = function (line: IPathLine, arc: IPathArc, options: IPathIntersectionOptions) {
@@ -126,18 +131,19 @@ namespace MakerJs.path {
     };
 
     map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions) {
+        var result: IPathIntersection = null;
         var intersectionPoint = point.fromSlopeIntersection(line1, line2, options);
         if (intersectionPoint) {
 
             //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
             if (measure.isBetweenPoints(intersectionPoint, line1, options.excludeTangents) && measure.isBetweenPoints(intersectionPoint, line2, options.excludeTangents)) {
-                return {
+                result = {
                     intersectionPoints: [intersectionPoint]
                 };
             }
 
         }
-        return null;
+        return result;
     };
 
     /**
