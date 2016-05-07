@@ -21,17 +21,17 @@ namespace MakerJs.path {
         switch (pathToClone.type) {
             case pathType.Arc:
                 var arc = <IPathArc>pathToClone;
-                result = new paths.Arc(arc.origin, arc.radius, arc.startAngle, arc.endAngle);
+                result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
                 break;
 
             case pathType.Circle:
                 var circle = <IPathCircle>pathToClone;
-                result = new paths.Circle(circle.origin, circle.radius);
+                result = new paths.Circle(point.clone(circle.origin), circle.radius);
                 break;
 
             case pathType.Line:
                 var line = <IPathLine>pathToClone;
-                result = new paths.Line(line.origin, line.end);
+                result = new paths.Line(point.clone(line.origin), point.clone(line.end));
                 break;
         }
 
@@ -151,7 +151,7 @@ namespace MakerJs.path {
      */
     export function moveRelative(pathToMove: IPath, delta: IPoint, subtract?: boolean): IPath {
 
-        if (pathToMove) {
+        if (pathToMove && delta) {
 
             pathToMove.origin = point.add(pathToMove.origin, delta, subtract);
 
