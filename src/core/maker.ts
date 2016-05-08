@@ -346,7 +346,7 @@ namespace MakerJs {
     /**
      * Options to pass to path.intersection()
      */
-    export interface IPathIntersectionOptions {
+    export interface IPathIntersectionBaseOptions {
 
         /**
          * Optional boolean to only return deep intersections, i.e. not on an end point or tangent.
@@ -357,6 +357,22 @@ namespace MakerJs {
          * Optional output variable which will be set to true if the paths are overlapped.
          */
         out_AreOverlapped?: boolean;
+    }
+
+    /**
+     * Options to pass to path.intersection()
+     */
+    export interface IPathIntersectionOptions extends IPathIntersectionBaseOptions {
+
+        /**
+         * Optional boolean to only return deep intersections, i.e. not on an end point or tangent.
+         */
+        path1Offset?: IPoint;
+
+        /**
+         * Optional output variable which will be set to true if the paths are overlapped.
+         */
+        path2Offset?: IPoint;
     }
 
     /**

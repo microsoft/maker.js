@@ -16,7 +16,7 @@ importScripts(
     '../../external/OpenJsCad/csg.js',
     '../../external/OpenJsCad/formats.js',
     '../../target/js/browser.maker.js',
-    '../export-format.js');
+    '../iexport.js');
 
 var makerjs: typeof MakerJs = require('makerjs');
 

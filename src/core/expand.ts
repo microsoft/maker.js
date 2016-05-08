@@ -109,9 +109,6 @@ namespace MakerJs.model {
 
         var first = true;
 
-        //TODO: work without origination
-        var originated = originate(modelToExpand);
-
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
                 var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
@@ -145,7 +142,7 @@ namespace MakerJs.model {
             }
         };
 
-        walk(originated, walkOptions);
+        walk(modelToExpand, walkOptions);
 
         if (joints) {
 

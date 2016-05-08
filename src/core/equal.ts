@@ -46,14 +46,23 @@
      * @param pathB Second path.
      * @returns true if paths are the same, false if they are not
      */
-    export function isPathEqual(pathA: IPath, pathB: IPath, withinPointDistance?: number): boolean {
+    export function isPathEqual(pathA: IPath, pathB: IPath, withinPointDistance?: number, pathAOffset?: IPoint, pathBOffset?: IPoint): boolean {
 
         var result = false;
 
         if (pathA.type == pathB.type) {
             var fn = pathAreEqualMap[pathA.type];
             if (fn) {
-                result = fn(pathA, pathB, withinPointDistance);
+
+                function getResult() {
+                    result = fn(pathA, pathB, withinPointDistance);
+                }
+
+                if (pathAOffset || pathBOffset) {
+                    path.moveTemporary([pathA, pathB], [pathAOffset, pathBOffset], getResult);
+                } else {
+                    getResult();
+                }
             }
         }
 

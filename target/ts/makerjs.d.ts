@@ -262,7 +262,7 @@ declare namespace MakerJs {
     /**
      * Options to pass to path.intersection()
      */
-    interface IPathIntersectionOptions {
+    interface IPathIntersectionBaseOptions {
         /**
          * Optional boolean to only return deep intersections, i.e. not on an end point or tangent.
          */
@@ -271,6 +271,19 @@ declare namespace MakerJs {
          * Optional output variable which will be set to true if the paths are overlapped.
          */
         out_AreOverlapped?: boolean;
+    }
+    /**
+     * Options to pass to path.intersection()
+     */
+    interface IPathIntersectionOptions extends IPathIntersectionBaseOptions {
+        /**
+         * Optional boolean to only return deep intersections, i.e. not on an end point or tangent.
+         */
+        path1Offset?: IPoint;
+        /**
+         * Optional output variable which will be set to true if the paths are overlapped.
+         */
+        path2Offset?: IPoint;
     }
     /**
      * An intersection of two paths.
@@ -690,7 +703,7 @@ declare namespace MakerJs.point {
      * @param pathContext The path object.
      * @returns Array with 2 elements: [0] is the point object corresponding to the origin, [1] is the point object corresponding to the end.
      */
-    function fromPathEnds(pathContext: IPath): IPoint[];
+    function fromPathEnds(pathContext: IPath, pathOffset?: IPoint): IPoint[];
     /**
      * Calculates the intersection of slopes of two lines.
      *
@@ -699,7 +712,7 @@ declare namespace MakerJs.point {
      * @param options Optional IPathIntersectionOptions.
      * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
      */
-    function fromSlopeIntersection(lineA: IPathLine, lineB: IPathLine, options?: IPathIntersectionOptions): IPoint;
+    function fromSlopeIntersection(lineA: IPathLine, lineB: IPathLine, options?: IPathIntersectionBaseOptions): IPoint;
     /**
      * Get the middle point of a path.
      *
@@ -789,9 +802,18 @@ declare namespace MakerJs.path {
      *
      * @param pathToMove The path to move.
      * @param delta The x & y adjustments as a point object.
+     * @param subtract Optional boolean to subtract instead of add.
      * @returns The original path (for chaining).
      */
-    function moveRelative(pathToMove: IPath, delta: IPoint): IPath;
+    function moveRelative(pathToMove: IPath, delta: IPoint, subtract?: boolean): IPath;
+    /**
+     * Move some paths relatively during a task execution, then unmove them.
+     *
+     * @param pathsToMove The paths to move.
+     * @param deltas The x & y adjustments as a point object array.
+     * @param task The function to call while the paths are temporarily moved.
+     */
+    function moveTemporary(pathsToMove: IPath[], deltas: IPoint[], task: Function): void;
     /**
      * Rotate a path.
      *
@@ -1049,7 +1071,7 @@ declare namespace MakerJs.model {
      * @param farPoint Optional point of reference which is outside the bounds of the modelContext.
      * @returns Boolean true if the path is inside of the modelContext.
      */
-    function isPathInsideModel(pathContext: IPath, modelContext: IModel, farPoint?: IPoint): boolean;
+    function isPathInsideModel(pathContext: IPath, modelContext: IModel, pathOffset?: IPoint, farPoint?: IPoint, measureAtlas?: measure.Atlas): boolean;
     /**
      * Break a model's paths everywhere they intersect with another path.
      *
@@ -1058,7 +1080,7 @@ declare namespace MakerJs.model {
      */
     function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel): void;
     /**
-     * Combine 2 models. The models should be originated, and every path within each model should be part of a loop.
+     * Combine 2 models.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
@@ -1176,7 +1198,7 @@ declare namespace MakerJs.measure {
      * @param pathB Second path.
      * @returns true if paths are the same, false if they are not
      */
-    function isPathEqual(pathA: IPath, pathB: IPath, withinPointDistance?: number): boolean;
+    function isPathEqual(pathA: IPath, pathB: IPath, withinPointDistance?: number, pathAOffset?: IPoint, pathBOffset?: IPoint): boolean;
     /**
      * Find out if two points are equal.
      *

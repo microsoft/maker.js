@@ -281,15 +281,17 @@ namespace MakerJs.measure {
      * @param pathToMeasure The path to measure.
      * @returns object with low and high points.
      */
-    export function pathExtents(pathToMeasure: IPath, addOffset: IPoint = [0, 0]): IMeasure {
+    export function pathExtents(pathToMeasure: IPath, addOffset?: IPoint): IMeasure {
 
         if (pathToMeasure) {
             var fn = pathExtentsMap[pathToMeasure.type];
             if (fn) {
                 var m = fn(pathToMeasure);
 
-                m.high = point.add(m.high, addOffset);
-                m.low = point.add(m.low, addOffset);
+                if (addOffset) {
+                    m.high = point.add(m.high, addOffset);
+                    m.low = point.add(m.low, addOffset);
+                }
 
                 return m;
             }
