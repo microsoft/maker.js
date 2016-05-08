@@ -56,12 +56,14 @@ title: Api - path Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#mirror" class="tsd-kind-icon">mirror</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#move" class="tsd-kind-icon">move</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#moverelative" class="tsd-kind-icon">move<wbr>Relative</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#movetemp" class="tsd-kind-icon">move<wbr>Temp</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#movetemporary" class="tsd-kind-icon">move<wbr>Temporary</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#pointsfromanglesoncircle" class="tsd-kind-icon">points<wbr>From<wbr>Angles<wbr>OnCircle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#populateshardpointsfromreferencecircle" class="tsd-kind-icon">populate<wbr>Shard<wbr>Points<wbr>From<wbr>Reference<wbr>Circle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#rotate" class="tsd-kind-icon">rotate</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#scale" class="tsd-kind-icon">scale</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#straighten" class="tsd-kind-icon">straighten</a></li>
-					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#swap" class="tsd-kind-icon">swap</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#swapangles" class="tsd-kind-icon">swap<wbr>Angles</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#testfilletresult" class="tsd-kind-icon">test<wbr>Fillet<wbr>Result</a></li>
 				</ul>
 			</section>
@@ -299,7 +301,7 @@ title: Api - path Module
 					<ul class="tsd-parameters">
 						<li class="tsd-parameter-siganture">
 							<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>pathToMove<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, delta<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>pathToMove<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, delta<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, subtract<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 							</ul>
 							<ul class="tsd-descriptions">
 								<li class="tsd-description">
@@ -310,6 +312,9 @@ title: Api - path Module
 										</li>
 										<li>
 											<h5>delta: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+										</li>
+										<li>
+											<h5>subtract: <span class="tsd-signature-type">boolean</span></h5>
 										</li>
 									</ul>
 									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -365,7 +370,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">rotate<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L169">core/path.ts:169</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L193">core/path.ts:193</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -409,7 +414,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">scale<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L204">core/path.ts:204</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L228">core/path.ts:228</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -497,7 +502,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L290">core/intersect.ts:290</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L337">core/intersect.ts:337</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -748,7 +753,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L180">core/intersect.ts:180</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L227">core/intersect.ts:227</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -776,7 +781,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L200">core/intersect.ts:200</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L247">core/intersect.ts:247</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -978,7 +983,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L166">core/intersect.ts:166</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L213">core/intersect.ts:213</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1022,7 +1027,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L220">core/intersect.ts:220</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L267">core/intersect.ts:267</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1135,13 +1140,13 @@ title: Api - path Module
 		<a name="moverelative" class="tsd-anchor"></a>
 		<h3>move<wbr>Relative</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">move<wbr>Relative<span class="tsd-signature-symbol">(</span>pathToMove<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, delta<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
+			<li class="tsd-signature tsd-kind-icon">move<wbr>Relative<span class="tsd-signature-symbol">(</span>pathToMove<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, delta<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, subtract<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L151">core/path.ts:151</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L152">core/path.ts:152</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1163,9 +1168,92 @@ title: Api - path Module
 							<p>The x &amp; y adjustments as a point object.</p>
 						</div>
 					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> subtract: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional boolean to subtract instead of add.</p>
+						</div>
+					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h4>
 				<p>The original path (for chaining).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="movetemp" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> move<wbr>Temp</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">move<wbr>Temp<span class="tsd-signature-symbol">(</span>pathsToOffset<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathintersectionoptions.html" class="tsd-signature-type">IPathIntersectionOptions</a>, swapOffsets<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, task<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L181">core/intersect.ts:181</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pathsToOffset: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>options: <a href="../interfaces/makerjs.ipathintersectionoptions.html" class="tsd-signature-type">IPathIntersectionOptions</a></h5>
+					</li>
+					<li>
+						<h5>swapOffsets: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5>task: <span class="tsd-signature-type">Function</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="movetemporary" class="tsd-anchor"></a>
+		<h3>move<wbr>Temporary</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">move<wbr>Temporary<span class="tsd-signature-symbol">(</span>pathsToMove<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span>, deltas<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, task<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L174">core/path.ts:174</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Move some paths relatively during a task execution, then unmove them.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pathsToMove: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The paths to move.</p>
+						</div>
+					</li>
+					<li>
+						<h5>deltas: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The x &amp; y adjustments as a point object array.</p>
+						</div>
+					</li>
+					<li>
+						<h5>task: <span class="tsd-signature-type">Function</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The function to call while the paths are temporarily moved.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 			</li>
 		</ul>
 	</section>
@@ -1179,7 +1267,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L189">core/intersect.ts:189</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L236">core/intersect.ts:236</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1241,7 +1329,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L188">core/path.ts:188</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L212">core/path.ts:212</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1285,7 +1373,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L223">core/path.ts:223</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L247">core/path.ts:247</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1358,16 +1446,16 @@ title: Api - path Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
-		<a name="swap" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagPrivate">Private</span> swap</h3>
+		<a name="swapangles" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> swap<wbr>Angles</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
-			<li class="tsd-signature tsd-kind-icon">swap<span class="tsd-signature-symbol">(</span>result<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathintersection.html" class="tsd-signature-type">IPathIntersection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathintersection.html" class="tsd-signature-type">IPathIntersection</a></li>
+			<li class="tsd-signature tsd-kind-icon">swap<wbr>Angles<span class="tsd-signature-symbol">(</span>result<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathintersection.html" class="tsd-signature-type">IPathIntersection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathintersection.html" class="tsd-signature-type">IPathIntersection</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L146">core/intersect.ts:146</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L189">core/intersect.ts:189</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

@@ -14,7 +14,12 @@ title: Api - IPathIntersectionOptions Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IPathIntersectionOptions</span>
+			<a href="makerjs.ipathintersectionbaseoptions.html" class="tsd-signature-type">IPathIntersectionBaseOptions</a>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">IPathIntersectionOptions</span>
+				</li>
+			</ul>
 		</li>
 	</ul>
 </section>
@@ -25,8 +30,10 @@ title: Api - IPathIntersectionOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersectionoptions.html#excludetangents" class="tsd-kind-icon">exclude<wbr>Tangents</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersectionoptions.html#out_areoverlapped" class="tsd-kind-icon">out_<wbr><wbr>Are<wbr>Overlapped</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathintersectionoptions.html#excludetangents" class="tsd-kind-icon">exclude<wbr>Tangents</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathintersectionoptions.html#out_areoverlapped" class="tsd-kind-icon">out_<wbr><wbr>Are<wbr>Overlapped</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersectionoptions.html#path1offset" class="tsd-kind-icon">path1<wbr>Offset</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersectionoptions.html#path2offset" class="tsd-kind-icon">path2<wbr>Offset</a></li>
 				</ul>
 			</section>
 		</div>
@@ -34,11 +41,12 @@ title: Api - IPathIntersectionOptions Interface
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="excludetangents" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> exclude<wbr>Tangents</h3>
 		<div class="tsd-signature tsd-kind-icon">exclude<wbr>Tangents<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipathintersectionbaseoptions.html">IPathIntersectionBaseOptions</a>.<a href="makerjs.ipathintersectionbaseoptions.html#excludetangents">excludeTangents</a></p>
 			<ul>
 				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L355">core/maker.ts:355</a></li>
 			</ul>
@@ -49,13 +57,44 @@ title: Api - IPathIntersectionOptions Interface
 			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="out_areoverlapped" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> out_<wbr><wbr>Are<wbr>Overlapped</h3>
 		<div class="tsd-signature tsd-kind-icon">out_<wbr><wbr>Are<wbr>Overlapped<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipathintersectionbaseoptions.html">IPathIntersectionBaseOptions</a>.<a href="makerjs.ipathintersectionbaseoptions.html#out_areoverlapped">out_AreOverlapped</a></p>
 			<ul>
 				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L360">core/maker.ts:360</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional output variable which will be set to true if the paths are overlapped.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="path1offset" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> path1<wbr>Offset</h3>
+		<div class="tsd-signature tsd-kind-icon">path1<wbr>Offset<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L371">core/maker.ts:371</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional boolean to only return deep intersections, i.e. not on an end point or tangent.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="path2offset" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> path2<wbr>Offset</h3>
+		<div class="tsd-signature tsd-kind-icon">path2<wbr>Offset<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L376">core/maker.ts:376</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">

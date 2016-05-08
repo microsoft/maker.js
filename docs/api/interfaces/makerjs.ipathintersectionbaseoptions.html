@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IFindLoopsOptions Interface
+title: Api - IPathIntersectionBaseOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Options to pass to model.findLoops.</p>
+			<p>Options to pass to path.intersection()</p>
 		</div>
 	</div>
 </section>
@@ -14,15 +14,10 @@ title: Api - IFindLoopsOptions Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipointmatchoptions.html" class="tsd-signature-type">IPointMatchOptions</a>
+			<span class="target">IPathIntersectionBaseOptions</span>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">IFindLoopsOptions</span>
-					<ul class="tsd-hierarchy">
-						<li>
-							<a href="makerjs.exporter.iopenjscadoptions.html" class="tsd-signature-type">IOpenJsCadOptions</a>
-						</li>
-					</ul>
+					<a href="makerjs.ipathintersectionoptions.html" class="tsd-signature-type">IPathIntersectionOptions</a>
 				</li>
 			</ul>
 		</li>
@@ -35,8 +30,8 @@ title: Api - IFindLoopsOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ifindloopsoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindloopsoptions.html#removefromoriginal" class="tsd-kind-icon">remove<wbr>From<wbr>Original</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersectionbaseoptions.html#excludetangents" class="tsd-kind-icon">exclude<wbr>Tangents</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathintersectionbaseoptions.html#out_areoverlapped" class="tsd-kind-icon">out_<wbr><wbr>Are<wbr>Overlapped</a></li>
 				</ul>
 			</section>
 		</div>
@@ -44,34 +39,33 @@ title: Api - IFindLoopsOptions Interface
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="pointmatchingdistance" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
-		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="excludetangents" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> exclude<wbr>Tangents</h3>
+		<div class="tsd-signature tsd-kind-icon">exclude<wbr>Tangents<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L412">core/maker.ts:412</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L355">core/maker.ts:355</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Max distance to consider two points as the same.</p>
+				<p>Optional boolean to only return deep intersections, i.e. not on an end point or tangent.</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="removefromoriginal" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> remove<wbr>From<wbr>Original</h3>
-		<div class="tsd-signature tsd-kind-icon">remove<wbr>From<wbr>Original<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<a name="out_areoverlapped" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> out_<wbr><wbr>Are<wbr>Overlapped</h3>
+		<div class="tsd-signature tsd-kind-icon">out_<wbr><wbr>Are<wbr>Overlapped<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L449">core/maker.ts:449</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L360">core/maker.ts:360</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Flag to remove looped paths from the original model.</p>
+				<p>Optional output variable which will be set to true if the paths are overlapped.</p>
 			</div>
 		</div>
 	</section>

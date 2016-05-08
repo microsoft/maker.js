@@ -113,7 +113,7 @@ title: Api - measure Module
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Length<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L304">core/measure.ts:304</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L306">core/measure.ts:306</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -158,7 +158,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L342">core/measure.ts:342</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L344">core/measure.ts:344</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -589,7 +589,7 @@ title: Api - measure Module
 		<a name="ispathequal" class="tsd-anchor"></a>
 		<h3>is<wbr>Path<wbr>Equal</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Equal<span class="tsd-signature-symbol">(</span>pathA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, pathB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, withinPointDistance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Equal<span class="tsd-signature-symbol">(</span>pathA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, pathB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, withinPointDistance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, pathAOffset<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pathBOffset<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -620,6 +620,12 @@ title: Api - measure Module
 					<li>
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> withinPointDistance: <span class="tsd-signature-type">number</span></h5>
 					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> pathAOffset: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> pathBOffset: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 				<p>true if paths are the same, false if they are not</p>
@@ -636,7 +642,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/equal.ts#L70">core/equal.ts:70</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/equal.ts#L79">core/equal.ts:79</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -677,7 +683,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/equal.ts#L86">core/equal.ts:86</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/equal.ts#L95">core/equal.ts:95</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -743,7 +749,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L353">core/measure.ts:353</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L355">core/measure.ts:355</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -798,7 +804,7 @@ title: Api - measure Module
 						</div>
 					</li>
 					<li>
-						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> addOffset: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol"> =&nbsp;[0, 0]</span></h5>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> addOffset: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a></h4>
@@ -816,7 +822,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L327">core/measure.ts:327</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L329">core/measure.ts:329</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
