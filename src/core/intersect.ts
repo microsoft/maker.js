@@ -4,7 +4,7 @@ namespace MakerJs.path {
      * @private
      */
     interface IPathIntersectionMap {
-        [type: string]: { [type: string]: (path1: IPath, path2: IPath, options: IPathIntersectionOptions) => IPathIntersection };
+        [type: string]: { [type: string]: (path1: IPath, path2: IPath, options: IPathIntersectionOptions, swapOffsets?: boolean) => IPathIntersection };
     }
 
     /**
@@ -16,147 +16,188 @@ namespace MakerJs.path {
     map[pathType.Circle] = {};
     map[pathType.Line] = {};
 
-    map[pathType.Arc][pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc, options: IPathIntersectionOptions) {
+    map[pathType.Arc][pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc, options: IPathIntersectionOptions, swapOffsets: boolean) {
         var result: IPathIntersection = null;
-        var angles = circleToCircle(arc1, arc2, options);
-        if (angles) {
-            var arc1Angles = getAnglesWithinArc(angles[0], arc1, options);
-            var arc2Angles = getAnglesWithinArc(angles[1], arc2, options);
-            if (arc1Angles && arc2Angles) {
-                result = {
-                    intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
-                    path1Angles: arc1Angles,
-                    path2Angles: arc2Angles
-                };
-            }
-        } else {
-            if (options.out_AreOverlapped) {
-                //overlapped for circle, reset and see if arcs actually overlap.
 
-                options.out_AreOverlapped = measure.isArcOverlapping(arc1, arc2, options.excludeTangents);
-            }
-        }
-        return result;
-    };
+        moveTemp([arc1, arc2], options, swapOffsets, function () {
 
-    map[pathType.Arc][pathType.Circle] = function (arc: IPathArc, circle: IPathArc, options: IPathIntersectionOptions) {
-        var result: IPathIntersection = null;
-        var angles = circleToCircle(arc, circle, options);
-        if (angles) {
-            var arcAngles = getAnglesWithinArc(angles[0], arc, options);
-            if (arcAngles) {
-                var circleAngles: number[];
-
-                //if both point are on arc, use both on circle
-                if (arcAngles.length == 2) {
-                    circleAngles = angles[1];
-                } else {
-                    //use the corresponding point on circle 
-                    var index = findCorrespondingAngleIndex(angles, arcAngles);
-                    circleAngles = [angles[1][index]];
+            var angles = circleToCircle(arc1, arc2, options);
+            if (angles) {
+                var arc1Angles = getAnglesWithinArc(angles[0], arc1, options);
+                var arc2Angles = getAnglesWithinArc(angles[1], arc2, options);
+                if (arc1Angles && arc2Angles) {
+                    result = {
+                        intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
+                        path1Angles: arc1Angles,
+                        path2Angles: arc2Angles
+                    };
                 }
+            } else {
+                if (options.out_AreOverlapped) {
+                    //overlapped for circle, reset and see if arcs actually overlap.
 
-                result = {
-                    intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
-                    path1Angles: arcAngles,
-                    path2Angles: circleAngles
-                };
+                    options.out_AreOverlapped = measure.isArcOverlapping(arc1, arc2, options.excludeTangents);
+                }
             }
-        }
+        });
+
         return result;
     };
 
-    map[pathType.Arc][pathType.Line] = function (arc: IPathArc, line: IPathLine, options: IPathIntersectionOptions) {
+    map[pathType.Arc][pathType.Circle] = function (arc: IPathArc, circle: IPathArc, options: IPathIntersectionOptions, swapOffsets: boolean) {
         var result: IPathIntersection = null;
-        var angles = lineToCircle(line, arc, options);
-        if (angles) {
-            var arcAngles = getAnglesWithinArc(angles, arc, options);
-            if (arcAngles) {
-                result = {
-                    intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
-                    path1Angles: arcAngles
-                };
+
+        moveTemp([arc, circle], options, swapOffsets, function () {
+
+            var angles = circleToCircle(arc, circle, options);
+            if (angles) {
+                var arcAngles = getAnglesWithinArc(angles[0], arc, options);
+                if (arcAngles) {
+                    var circleAngles: number[];
+
+                    //if both point are on arc, use both on circle
+                    if (arcAngles.length == 2) {
+                        circleAngles = angles[1];
+                    } else {
+                        //use the corresponding point on circle 
+                        var index = findCorrespondingAngleIndex(angles, arcAngles);
+                        circleAngles = [angles[1][index]];
+                    }
+
+                    result = {
+                        intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
+                        path1Angles: arcAngles,
+                        path2Angles: circleAngles
+                    };
+                }
             }
-        }
+        });
+
+        return result;
+    };
+
+    map[pathType.Arc][pathType.Line] = function (arc: IPathArc, line: IPathLine, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        var result: IPathIntersection = null;
+
+        moveTemp([arc, line], options, swapOffsets, function () {
+
+            var angles = lineToCircle(line, arc, options);
+            if (angles) {
+                var arcAngles = getAnglesWithinArc(angles, arc, options);
+                if (arcAngles) {
+                    result = {
+                        intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
+                        path1Angles: arcAngles
+                    };
+                }
+            }
+        });
+
         return result;
     };
 
     map[pathType.Circle][pathType.Arc] = function (circle: IPathCircle, arc: IPathArc, options: IPathIntersectionOptions) {
-        var result = map[pathType.Arc][pathType.Circle](arc, circle, options);
+        var result = map[pathType.Arc][pathType.Circle](arc, circle, options, true);
         if (result) {
-            return swap(result);
+            return swapAngles(result);
         }
         return null;
     };
 
-    map[pathType.Circle][pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions) {
+    map[pathType.Circle][pathType.Circle] = function (circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions, swapOffsets: boolean) {
         var result: IPathIntersection = null;
-        var angles = circleToCircle(circle1, circle2, options);
-        if (angles) {
-            result = {
-                intersectionPoints: pointsFromAnglesOnCircle(angles[0], circle1),
-                path1Angles: angles[0],
-                path2Angles: angles[1]
-            };
-        }
+
+        moveTemp([circle1, circle2], options, swapOffsets, function () {
+
+            var angles = circleToCircle(circle1, circle2, options);
+            if (angles) {
+                result = {
+                    intersectionPoints: pointsFromAnglesOnCircle(angles[0], circle1),
+                    path1Angles: angles[0],
+                    path2Angles: angles[1]
+                };
+            }
+        });
+
         return result;
     };
 
-    map[pathType.Circle][pathType.Line] = function (circle: IPathCircle, line: IPathLine, options: IPathIntersectionOptions) {
+    map[pathType.Circle][pathType.Line] = function (circle: IPathCircle, line: IPathLine, options: IPathIntersectionOptions, swapOffsets: boolean) {
         var result: IPathIntersection = null;
-        var angles = lineToCircle(line, circle, options);
-        if (angles) {
-            result = {
-                intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
-                path1Angles: angles
-            };
-        }
+
+        moveTemp([circle, line], options, swapOffsets, function () {
+
+            var angles = lineToCircle(line, circle, options);
+            if (angles) {
+                result = {
+                    intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
+                    path1Angles: angles
+                };
+            }
+        });
+
         return result;
     };
 
     map[pathType.Line][pathType.Arc] = function (line: IPathLine, arc: IPathArc, options: IPathIntersectionOptions) {
-        var result = map[pathType.Arc][pathType.Line](arc, line, options);
+        var result = map[pathType.Arc][pathType.Line](arc, line, options, true);
         if (result) {
-            return swap(result);
+            return swapAngles(result);
         }
         return null;
     };
 
     map[pathType.Line][pathType.Circle] = function (line: IPathLine, circle: IPathCircle, options: IPathIntersectionOptions) {
-        var result = map[pathType.Circle][pathType.Line](circle, line, options);
+        var result = map[pathType.Circle][pathType.Line](circle, line, options, true);
         if (result) {
-            return swap(result);
+            return swapAngles(result);
         }
         return null;
     };
 
-    map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions) {
+    map[pathType.Line][pathType.Line] = function (line1: IPathLine, line2: IPathLine, options: IPathIntersectionOptions, swapOffsets: boolean) {
         var result: IPathIntersection = null;
-        var intersectionPoint = point.fromSlopeIntersection(line1, line2, options);
-        if (intersectionPoint) {
 
-            //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
-            if (measure.isBetweenPoints(intersectionPoint, line1, options.excludeTangents) && measure.isBetweenPoints(intersectionPoint, line2, options.excludeTangents)) {
-                result = {
-                    intersectionPoints: [intersectionPoint]
-                };
+        moveTemp([line1, line2], options, swapOffsets, function () {
+
+            var intersectionPoint = point.fromSlopeIntersection(line1, line2, options);
+            if (intersectionPoint) {
+
+                //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
+                if (measure.isBetweenPoints(intersectionPoint, line1, options.excludeTangents) && measure.isBetweenPoints(intersectionPoint, line2, options.excludeTangents)) {
+                    result = {
+                        intersectionPoints: [intersectionPoint]
+                    };
+                }
             }
+        });
 
-        }
         return result;
     };
 
     /**
      * @private
      */
-    function swap(result: IPathIntersection) {
+    function moveTemp(pathsToOffset: IPath[], options: IPathIntersectionOptions, swapOffsets: boolean, task: Function) {
+        var offsets = swapOffsets ? [options.path2Offset, options.path1Offset] : [options.path1Offset, options.path2Offset];
+        moveTemporary(pathsToOffset, offsets, task);
+    };
+
+    /**
+     * @private
+     */
+    function swapAngles(result: IPathIntersection) {
         var temp = result.path1Angles;
+
         if (result.path2Angles) {
             result.path1Angles = result.path2Angles;
         } else {
             delete result.path1Angles;
         }
-        result.path2Angles = temp;
+
+        if (temp) {
+            result.path2Angles = temp;
+        }
 
         return result;
     }
