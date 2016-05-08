@@ -355,7 +355,7 @@
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
-                var endPoints = point.fromPathEnds(walkedPath.pathContext);
+                var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
 
                 if (!endPoints) return;
 

@@ -21,17 +21,17 @@ namespace MakerJs.path {
         switch (pathToClone.type) {
             case pathType.Arc:
                 var arc = <IPathArc>pathToClone;
-                result = new paths.Arc(arc.origin, arc.radius, arc.startAngle, arc.endAngle);
+                result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
                 break;
 
             case pathType.Circle:
                 var circle = <IPathCircle>pathToClone;
-                result = new paths.Circle(circle.origin, circle.radius);
+                result = new paths.Circle(point.clone(circle.origin), circle.radius);
                 break;
 
             case pathType.Line:
                 var line = <IPathLine>pathToClone;
-                result = new paths.Line(line.origin, line.end);
+                result = new paths.Line(point.clone(line.origin), point.clone(line.end));
                 break;
         }
 
@@ -135,10 +135,10 @@ namespace MakerJs.path {
     /**
      * @private
      */
-    var moveRelativeMap: { [pathType: string]: (pathToMove: IPath, delta: IPoint) => void } = {};
+    var moveRelativeMap: { [pathType: string]: (pathToMove: IPath, delta: IPoint, subtract: boolean) => void } = {};
 
-    moveRelativeMap[pathType.Line] = function (line: IPathLine, delta: IPoint) {
-        line.end = point.add(line.end, delta);
+    moveRelativeMap[pathType.Line] = function (line: IPathLine, delta: IPoint, subtract: boolean) {
+        line.end = point.add(line.end, delta, subtract);
     };
 
     /**
@@ -146,21 +146,45 @@ namespace MakerJs.path {
      * 
      * @param pathToMove The path to move.
      * @param delta The x & y adjustments as a point object.
+     * @param subtract Optional boolean to subtract instead of add.
      * @returns The original path (for chaining).
      */
-    export function moveRelative(pathToMove: IPath, delta: IPoint): IPath {
+    export function moveRelative(pathToMove: IPath, delta: IPoint, subtract?: boolean): IPath {
 
-        if (pathToMove) {
+        if (pathToMove && delta) {
 
-            pathToMove.origin = point.add(pathToMove.origin, delta);
+            pathToMove.origin = point.add(pathToMove.origin, delta, subtract);
 
             var fn = moveRelativeMap[pathToMove.type];
             if (fn) {
-                fn(pathToMove, delta);
+                fn(pathToMove, delta, subtract);
             }
         }
 
         return pathToMove;
+    }
+
+    /**
+     * Move some paths relatively during a task execution, then unmove them.
+     * 
+     * @param pathsToMove The paths to move.
+     * @param deltas The x & y adjustments as a point object array.
+     * @param task The function to call while the paths are temporarily moved.
+     */
+    export function moveTemporary(pathsToMove: IPath[], deltas: IPoint[], task: Function) {
+
+        var subtract = false;
+
+        function move(pathToOffset: IPath, i: number) {
+            if (deltas[i]) {
+                moveRelative(pathToOffset, deltas[i], subtract);
+            }
+        }
+
+        pathsToMove.map(move);
+        task();
+        subtract = true;
+        pathsToMove.map(move);
     }
 
     /**

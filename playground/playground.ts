@@ -349,7 +349,7 @@
         if (processed.lockedPath && arraysEqual(processed.lockedPath.route, route)) {
 
             processed.lockedPath = null;
-            setNotes(processed.model.notes || processed.kit.notes);
+            setNotesFromModelOrKit();
 
         } else {
 
@@ -417,7 +417,7 @@
             if (pathAndOffset) {
                 setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.path) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
             } else {
-                setNotes(processed.model.notes || processed.kit.notes);
+                setNotesFromModelOrKit();
             }
             return true;
         }
@@ -586,7 +586,7 @@
             document.body.classList.remove('collapse-notes');
 
         } else if (!updateLockedPathNotes()) {
-            setNotes(processed.model.notes || processed.kit.notes);
+            setNotesFromModelOrKit();
         }
     }
 
@@ -714,6 +714,10 @@
         } else {
             constructOnMainThread();
         }
+    }
+
+    function setNotesFromModelOrKit() {
+        setNotes(processed.model.notes || (processed.kit ? processed.kit.notes : ''));
     }
 
     //public members
