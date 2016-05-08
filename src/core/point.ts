@@ -123,13 +123,17 @@ namespace MakerJs.point {
      * @param pathContext The path object.
      * @returns Array with 2 elements: [0] is the point object corresponding to the origin, [1] is the point object corresponding to the end.
      */
-    export function fromPathEnds(pathContext: IPath): IPoint[] {
+    export function fromPathEnds(pathContext: IPath, pathOffset?: IPoint): IPoint[] {
 
         var result: IPoint[] = null;
 
         var fn = pathEndsMap[pathContext.type];
         if (fn) {
             result = fn(pathContext);
+
+            if (pathOffset) {
+                result = result.map(function (p: IPoint) { return add(p, pathOffset); });
+            }
         }
 
         return result;
@@ -152,7 +156,7 @@ namespace MakerJs.point {
      * @param options Optional IPathIntersectionOptions.
      * @returns point of intersection of the two slopes, or null if the slopes did not intersect.
      */
-    export function fromSlopeIntersection(lineA: IPathLine, lineB: IPathLine, options: IPathIntersectionOptions = {}): IPoint {
+    export function fromSlopeIntersection(lineA: IPathLine, lineB: IPathLine, options: IPathIntersectionBaseOptions = {}): IPoint {
 
         var slopeA = measure.lineSlope(lineA);
         var slopeB = measure.lineSlope(lineB);
