@@ -165,6 +165,29 @@ namespace MakerJs.path {
     }
 
     /**
+     * Move some paths relatively during a task execution, then unmove them.
+     * 
+     * @param pathsToMove The paths to move.
+     * @param deltas The x & y adjustments as a point object array.
+     * @param task The function to call while the paths are temporarily moved.
+     */
+    export function moveTemporary(pathsToMove: IPath[], deltas: IPoint[], task: Function) {
+
+        var subtract = false;
+
+        function move(pathToOffset: IPath, i: number) {
+            if (deltas[i]) {
+                moveRelative(pathToOffset, deltas[i], subtract);
+            }
+        }
+
+        pathsToMove.map(move);
+        task();
+        subtract = true;
+        pathsToMove.map(move);
+    }
+
+    /**
      * @private
      */
     var rotateMap: { [pathType: string]: (pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint) => void } = {};
