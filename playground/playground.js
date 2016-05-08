@@ -253,7 +253,7 @@ var MakerJsPlayground;
         }
         if (processed.lockedPath && arraysEqual(processed.lockedPath.route, route)) {
             processed.lockedPath = null;
-            setNotes(processed.model.notes || processed.kit.notes);
+            setNotesFromModelOrKit();
         }
         else {
             var crumb = 'this';
@@ -309,7 +309,7 @@ var MakerJsPlayground;
                 setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.path) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
             }
             else {
-                setNotes(processed.model.notes || processed.kit.notes);
+                setNotesFromModelOrKit();
             }
             return true;
         }
@@ -437,7 +437,7 @@ var MakerJsPlayground;
             document.body.classList.remove('collapse-notes');
         }
         else if (!updateLockedPathNotes()) {
-            setNotes(processed.model.notes || processed.kit.notes);
+            setNotesFromModelOrKit();
         }
     }
     function constructOnMainThread() {
@@ -540,6 +540,9 @@ var MakerJsPlayground;
         else {
             constructOnMainThread();
         }
+    }
+    function setNotesFromModelOrKit() {
+        setNotes(processed.model.notes || (processed.kit ? processed.kit.notes : ''));
     }
     MakerJsPlayground.codeMirrorOptions = {
         lineNumbers: true,
