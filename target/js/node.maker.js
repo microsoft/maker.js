@@ -254,7 +254,7 @@ var MakerJs;
          */
         function ofArcSpan(arc) {
             var endAngle = angle.ofArcEnd(arc);
-            var a = endAngle - arc.startAngle;
+            var a = MakerJs.round(endAngle - arc.startAngle);
             if (a > 360) {
                 return noRevolutions(a);
             }
@@ -1755,6 +1755,36 @@ var MakerJs;
             MakerJs.extendObject(options, opts);
         }
         model.combine = combine;
+        /**
+         * Combine 2 models, resulting in a intersection.
+         *
+         * @param modelA First model to combine.
+         * @param modelB Second model to combine.
+         */
+        function combineIntersection(modelA, modelB) {
+            return combine(modelA, modelB, true, false, true, false);
+        }
+        model.combineIntersection = combineIntersection;
+        /**
+         * Combine 2 models, resulting in a subtraction of B from A.
+         *
+         * @param modelA First model to combine.
+         * @param modelB Second model to combine.
+         */
+        function combineSubtraction(modelA, modelB) {
+            return combine(modelA, modelB, false, true, true, false);
+        }
+        model.combineSubtraction = combineSubtraction;
+        /**
+         * Combine 2 models, resulting in a union.
+         *
+         * @param modelA First model to combine.
+         * @param modelB Second model to combine.
+         */
+        function combineUnion(modelA, modelB) {
+            return combine(modelA, modelB, false, true, false, true);
+        }
+        model.combineUnion = combineUnion;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;

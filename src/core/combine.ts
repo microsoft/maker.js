@@ -422,4 +422,33 @@
         extendObject(options, opts);
     }
 
+    /**
+     * Combine 2 models, resulting in a intersection.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     */
+    export function combineIntersection(modelA: IModel, modelB: IModel) {
+        return combine(modelA, modelB, true, false, true, false);
+    }
+
+    /**
+     * Combine 2 models, resulting in a subtraction of B from A.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     */
+    export function combineSubtraction(modelA: IModel, modelB: IModel) {
+        return combine(modelA, modelB, false, true, true, false);
+    }
+
+    /**
+     * Combine 2 models, resulting in a union.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     */
+    export function combineUnion(modelA: IModel, modelB: IModel) {
+        return combine(modelA, modelB, false, true, false, true);
+    }
 }

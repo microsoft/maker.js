@@ -66,7 +66,7 @@ namespace MakerJs.angle {
      */
     export function ofArcSpan(arc: IPathArc): number {
         var endAngle = angle.ofArcEnd(arc);
-        var a = endAngle - arc.startAngle;
+        var a = round(endAngle - arc.startAngle);
         if (a > 360) {
             return noRevolutions(a);
         } else {

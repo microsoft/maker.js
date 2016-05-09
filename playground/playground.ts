@@ -672,8 +672,6 @@
 
         renderInWorker.requestId = new Date().valueOf();
 
-        console.log('requesting ' + renderInWorker.requestId);
-
         var options: MakerJsPlaygroundRender.IRenderRequest = {
             requestId: renderInWorker.requestId,
             paramValues: processed.paramValues

@@ -509,7 +509,6 @@ var MakerJsPlayground;
             }
         };
         renderInWorker.requestId = new Date().valueOf();
-        console.log('requesting ' + renderInWorker.requestId);
         var options = {
             requestId: renderInWorker.requestId,
             paramValues: processed.paramValues
