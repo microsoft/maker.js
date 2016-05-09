@@ -47,6 +47,17 @@
     }
 
     /**
+     * @private
+     */
+    interface IRefPathInModelFunctionMap {
+
+        /**
+         * Key is the type of a path, value is a function which accepts a path object as its parameter.
+         */
+        [type: string]: (refPathInModel: IRefPathInModel) => void;
+    }
+
+    /**
      * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path.
      * 
      * @param modelContext The model to search for similar paths.

@@ -583,17 +583,6 @@ namespace MakerJs {
     }
 
     /**
-     * A map of functions which accept a path reference as a parameter.
-     */
-    export interface IRefPathInModelFunctionMap {
-
-        /**
-         * Key is the type of a path, value is a function which accepts a path object as its parameter.
-         */
-        [type: string]: (refPathInModel: IRefPathInModel) => void;
-    }
-
-    /**
      * A route to either a path or a model, and the absolute offset of it.
      */
     export interface IRouteOffset {
