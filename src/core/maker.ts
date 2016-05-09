@@ -586,6 +586,7 @@ namespace MakerJs {
      * A route to either a path or a model, and the absolute offset of it.
      */
     export interface IRouteOffset {
+        layer: string;
         offset: IPoint;
         route: string[];
         routeKey: string;
