@@ -1092,6 +1092,27 @@ declare namespace MakerJs.model {
      * @param farPoint Optional point of reference which is outside the bounds of both models.
      */
     function combine(modelA: IModel, modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, options?: ICombineOptions): void;
+    /**
+     * Combine 2 models, resulting in a intersection.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     */
+    function combineIntersection(modelA: IModel, modelB: IModel): void;
+    /**
+     * Combine 2 models, resulting in a subtraction of B from A.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     */
+    function combineSubtraction(modelA: IModel, modelB: IModel): void;
+    /**
+     * Combine 2 models, resulting in a union.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     */
+    function combineUnion(modelA: IModel, modelB: IModel): void;
 }
 declare namespace MakerJs {
     /**
