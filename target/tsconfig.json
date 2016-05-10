@@ -26,6 +26,7 @@
     "../src/core/intersect.ts",
     "../src/core/fillet.ts",
     "../src/core/kit.ts",
+    "../src/core/chain.ts",
     "../src/core/loops.ts",
     "../src/core/xml.ts",
     "../src/core/openjscad.ts",

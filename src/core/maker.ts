@@ -606,6 +606,49 @@ namespace MakerJs {
     }
 
     /**
+     * TODO
+     */
+    export interface IChainLink {
+        walkedPath: IWalkPath;
+        nextConnection: IPoint;
+        prevConnection: IPoint;
+        reversed: boolean;
+    }
+
+    /**
+     * TODO
+     */
+    export interface IChain {
+        links: IChainLink[];
+        endless?: boolean
+    }
+
+    /**
+     * TODO
+     */
+    export interface IChainFound {
+        (chain: IChain, layer: string): void;
+    }
+
+    /**
+     * TODO
+     */
+    export interface IChainNotFound {
+        (path: IWalkPath, layer: string): void;
+    }
+
+    /**
+     * Options to pass to model.findLoops.
+     */
+    export interface IFindChainsOptions extends IPointMatchOptions {
+
+        /**
+         * Flag to separate chains by layers.
+         */
+        byLayers?: boolean;
+    }
+
+    /**
      * Reference to a model within a model.
      */
     export interface IRefModelInModel {
