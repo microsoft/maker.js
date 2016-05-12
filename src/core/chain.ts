@@ -31,6 +31,8 @@
 
         function followLink(currLink: IChainLink, chain: IChain, firstLink: IChainLink, reverse: boolean) {
 
+            var flip = false;
+
             while (currLink) {
 
                 if (reverse) {
@@ -40,13 +42,12 @@
                 }
 
                 var items = connections.findCollection(currLink.nextConnection);
-
                 if (!items || items.length === 0) {
-
                     items = connections.findCollection(currLink.prevConnection);
-
                     if (!items || items.length === 0) {
                         break;
+                    } else {
+                        flip = !flip;
                     }
                 }
 
@@ -57,6 +58,10 @@
 
                 if (!nextLink) {
                     break;
+                }
+
+                if (flip) {
+                    nextLink.reversed = !nextLink.reversed;
                 }
 
                 if (nextLink.walkedPath.pathContext === firstLink.walkedPath.pathContext) {
@@ -92,7 +97,9 @@
                     var lastLink = chain.links[chain.links.length - 1];
 
                     //remove the first link, it will be added in the call
-                    followLink(chain.links.shift(), chain, lastLink, true);
+                    var currLink = chain.links.shift();
+
+                    followLink(currLink, chain, lastLink, true);
 
                     if (chain.links.length > 1) {
                         if (handler) {
@@ -103,6 +110,11 @@
                             chainNotFound(chain.links[0].walkedPath, layer);
                         }
                     }
+                }
+
+                //if there were more than 2 paths on this point, follow those too.
+                if (linkedPaths.length > 0) {
+                    i--;
                 }
             }
         }
@@ -168,7 +180,7 @@
                         }
                     }
 
-                    for (var i = 2; i--;) {
+                    for (var i = 0; i < 2; i++) {
                         var link: IChainLink = {
                             walkedPath: walkedPath,
                             nextConnection: endPoints[1 - i],
