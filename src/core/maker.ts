@@ -606,35 +606,47 @@ namespace MakerJs {
     }
 
     /**
-     * TODO
+     * A link in a chain, with direction of flow.
      */
     export interface IChainLink {
+
+        /**
+         * Reference to the path.
+         */
         walkedPath: IWalkPath;
-        nextConnection: IPoint;
-        prevConnection: IPoint;
+
+        /**
+         * Path flows forwards or reverse.
+         */
         reversed: boolean;
+
+        /**
+         * The endpoints of the path, in absolute coords.
+         */
+        endPoints: IPoint[];
     }
 
     /**
-     * TODO
+     * A chain of paths which connect end to end.
      */
     export interface IChain {
+
+        /**
+         * The links in this chain.
+         */
         links: IChainLink[];
+
+        /**
+         * Flag if this chain forms a loop end to end.
+         */
         endless?: boolean
     }
 
     /**
-     * TODO
+     * Callback to model.findChains() with resulting array of chains and unchained paths.
      */
-    export interface IChainFound {
-        (chain: IChain, layer: string): void;
-    }
-
-    /**
-     * TODO
-     */
-    export interface IChainNotFound {
-        (path: IWalkPath, layer: string): void;
+    export interface IChainCallback {
+        (chains: IChain[], loose: IWalkPath[]): void;
     }
 
     /**

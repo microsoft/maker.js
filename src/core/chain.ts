@@ -17,6 +17,20 @@
     /**
      * @private
      */
+    interface IChainFound {
+        (chain: IChain): void;
+    }
+
+    /**
+     * @private
+     */
+    interface IChainNotFound {
+        (path: IWalkPath): void;
+    }
+
+    /**
+     * @private
+     */
     function getOpposedLink(linkedPaths: IChainLink[], pathContext: IPath): IChainLink {
         if (linkedPaths[0].walkedPath.pathContext === pathContext) {
             return linkedPaths[1];
@@ -27,7 +41,7 @@
     /**
      * @private
      */
-    function followLinks(connections: Collector<IPoint, IChainLink>, layer: string, handler: IChainFound, chainNotFound?: IChainNotFound) {
+    function followLinks(connections: Collector<IPoint, IChainLink>, chainFound: IChainFound, chainNotFound?: IChainNotFound) {
 
         function followLink(currLink: IChainLink, chain: IChain, firstLink: IChainLink, reverse: boolean) {
 
@@ -41,9 +55,12 @@
                     chain.links.push(currLink);
                 }
 
-                var items = connections.findCollection(currLink.nextConnection);
+                //find next connection
+                var items = connections.findCollection(currLink.endPoints[currLink.reversed ? 0 : 1]);
                 if (!items || items.length === 0) {
-                    items = connections.findCollection(currLink.prevConnection);
+
+                    //find previous connection
+                    items = connections.findCollection(currLink.endPoints[currLink.reversed ? 1 : 0]);
                     if (!items || items.length === 0) {
                         break;
                     } else {
@@ -87,9 +104,7 @@
                 followLink(linkedPaths[0], chain, linkedPaths[0], false);
 
                 if (chain.endless) {
-                    if (handler) {
-                        handler(chain, layer);
-                    }
+                    chainFound(chain);
                 } else {
                     //need to go in reverse
 
@@ -102,13 +117,9 @@
                     followLink(currLink, chain, lastLink, true);
 
                     if (chain.links.length > 1) {
-                        if (handler) {
-                            handler(chain, layer);
-                        }
+                        chainFound(chain);
                     } else {
-                        if (chainNotFound) {
-                            chainNotFound(chain.links[0].walkedPath, layer);
-                        }
+                        chainNotFound(chain.links[0].walkedPath);
                     }
                 }
 
@@ -127,7 +138,7 @@
      * @param options Optional options object.
      * @returns A list of chains.
      */
-    export function findChains(modelContext: IModel, chainFound: IChainFound, chainNotFound?: IChainNotFound, options?: IFindChainsOptions) {
+    export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions) {
 
         var opts: IFindChainsOptions = {
             pointMatchingDistance: .005,
@@ -141,7 +152,7 @@
         }
 
         var connectionMap: IConnectionsMap = {};
-        var circles: IChainsMap = {};
+        var chainsByLayer: IChainsMap = {};
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
@@ -154,18 +165,25 @@
                 var connections = connectionMap[layer];
 
                 //circles are loops by nature
-                if (walkedPath.pathContext.type == pathType.Circle || (walkedPath.pathContext.type == pathType.Arc && angle.ofArcSpan(walkedPath.pathContext as IPathArc) == 360)) {
+                if (
+                    walkedPath.pathContext.type == pathType.Circle ||
+                    (walkedPath.pathContext.type == pathType.Arc && angle.ofArcSpan(walkedPath.pathContext as IPathArc) == 360)
+                ) {
 
                     var chain: IChain = {
-                        links: [{ walkedPath: walkedPath, nextConnection: null, prevConnection: null, reversed: null }],
+                        links: [{
+                            walkedPath: walkedPath,
+                            reversed: null,
+                            endPoints: null
+                        }],
                         endless: true
                     };
 
                     //store circles so that layers fire grouped
-                    if (!circles[layer]) {
-                        circles[layer] = [];
+                    if (!chainsByLayer[layer]) {
+                        chainsByLayer[layer] = [];
                     }
-                    circles[layer].push(chain);
+                    chainsByLayer[layer].push(chain);
 
                 } else {
 
@@ -183,8 +201,7 @@
                     for (var i = 0; i < 2; i++) {
                         var link: IChainLink = {
                             walkedPath: walkedPath,
-                            nextConnection: endPoints[1 - i],
-                            prevConnection: endPoints[i],
+                            endPoints: endPoints,
                             reversed: i != 0
                         };
 
@@ -197,21 +214,25 @@
         walk(modelContext, walkOptions);
 
         for (var layer in connectionMap) {
-
             var connections = connectionMap[layer];
+            var loose: IWalkPath[] = [];
 
-            //follow paths to find loops
-            followLinks(connections, layer, chainFound, chainNotFound);
-
-            //fire off circles with the rest of the layer
-            if (circles[layer]) {
-                circles[layer].map(function (circleChain: IChain) {
-                    if (chainFound) {
-                        chainFound(circleChain, layer);
-                    }
-                });
+            if (!chainsByLayer[layer]) {
+                chainsByLayer[layer] = [];
             }
 
+            //follow paths to find loops
+            followLinks(
+                connections,
+                function (chain: IChain) {
+                    chainsByLayer[layer].push(chain);
+                },
+                function (walkedPath: IWalkPath) {
+                    loose.push(walkedPath);
+                }
+            );
+
+            callback(chainsByLayer[layer], loose);
         }
 
     }
