@@ -136,6 +136,23 @@ namespace MakerJs.exporter {
     };
 
     /**
+     * Convert a path to SVG path data.
+     */
+    export function pathToSVGPathData(pathToExport: IPath, offset: IPoint = [0, 0]): string {
+        var fn = svgPathDataMap[pathToExport.type];
+        if (fn) {
+            var fixedPath: IPath;
+            path.moveTemporary([pathToExport], [offset], function () {
+                fixedPath = path.mirror(pathToExport, false, true);
+            });
+
+            var d = fn(fixedPath, offset);
+            return d.join(' ');
+        }
+        return '';
+    }
+
+    /**
      * @private
      */
     function getPathDataByLayer(modelToExport: IModel, offset: IPoint, options: IFindChainsOptions) {
@@ -146,17 +163,8 @@ namespace MakerJs.exporter {
             function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 function single(walkedPath: IWalkPath) {
-                    var fn = svgPathDataMap[walkedPath.pathContext.type];
-                    if (fn) {
-                        var fixedPath: IPath;
-                        path.moveTemporary([walkedPath.pathContext], [walkedPath.offset], function () {
-                            fixedPath = path.mirror(walkedPath.pathContext, false, true);
-                        });
-
-                        var d = fn(fixedPath, offset);
-                        var pathData = d.join(' ');
-                        pathDataByLayer[layer].push(pathData);
-                    }
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset);
+                    pathDataByLayer[layer].push(pathData);
                 }
 
                 pathDataByLayer[layer] = [];
@@ -177,22 +185,6 @@ namespace MakerJs.exporter {
         );
 
         return pathDataByLayer;
-    }
-
-    /**
-     * Convert a model to SVG path data.
-     */
-    export function modelToSVGPathData(modelToExport: IModel, offset: IPoint) {
-        var pathDataByLayer = getPathDataByLayer(modelToExport, offset, { byLayers: false });
-
-        var allPathData: string[] = [];
-
-        for (var layer in pathDataByLayer) {
-            var pathData = pathDataByLayer[layer].join(' ');
-            allPathData.push(pathData);
-        }
-
-        return allPathData.join(' ');
     }
 
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
