@@ -3,6 +3,13 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
+    interface IPathDataMap {
+        [layer: string]: string[];
+    }
+
+    /**
+     * @private
+     */
     interface ISvgPathData extends Array<any> { }
 
     /**
@@ -44,7 +51,7 @@ namespace MakerJs.exporter {
     }
 
     /**
-     * Map of MakerJs unit system to SVG unit system
+     * Convert a chain to SVG path data.
      */
     export function chainToSVGPathData(chain: IChain, offset: IPoint): string {
 
@@ -63,8 +70,11 @@ namespace MakerJs.exporter {
 
             var fn = chainLinkToPathDataMap[pathContext.type];
             if (fn) {
-                var fixedPath = path.mirror(pathContext, false, true);
-                path.moveRelative(fixedPath, offsetPoint(link.walkedPath.offset));
+                var fixedPath: IPath;
+                path.moveTemporary([pathContext], [link.walkedPath.offset], function () {
+                    fixedPath = path.mirror(pathContext, false, true);
+                });
+                path.moveRelative(fixedPath, offset);
 
                 fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1])), link.reversed, d);
             }
@@ -75,6 +85,114 @@ namespace MakerJs.exporter {
         }
 
         return d.join(' ');
+    }
+
+    /**
+     * @private
+     */
+    function startSvgPathData(start: IPoint, d: ISvgPathData): ISvgPathData {
+        return ["M", round(start[0]), round(start[1])].concat(d);
+    }
+
+    /**
+     * @private
+     */
+    interface ISvgPathDataMap {
+        [pathType: string]: (pathContext: IPath, offset: IPoint) => ISvgPathData;
+    }
+
+    /**
+     * @private
+     */
+    var svgPathDataMap: ISvgPathDataMap = {};
+
+    svgPathDataMap[pathType.Line] = function (line: IPathLine, offset: IPoint) {
+        return startSvgPathData(point.add(line.origin, offset), point.rounded(point.add(line.end, offset)) as Array<number>);
+    };
+
+    svgPathDataMap[pathType.Circle] = function (circle: IPathCircle, offset: IPoint) {
+        return startSvgPathData(point.add(circle.origin, offset), svgCircleData(circle.radius));
+    };
+
+    svgPathDataMap[pathType.Arc] = function (arc: IPathArc, offset: IPoint) {
+
+        var arcPoints = point.fromArc(arc);
+
+        if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
+            return svgPathDataMap[pathType.Circle](arc, offset);
+        } else {
+
+            var d = ['A'];
+            svgArcData(
+                d,
+                arc.radius,
+                point.add(arcPoints[1], offset),
+                angle.ofArcSpan(arc) > 180,
+                arc.startAngle > arc.endAngle
+            );
+
+            return startSvgPathData(point.add(arcPoints[0], offset), d);
+        }
+    };
+
+    /**
+     * @private
+     */
+    function getPathDataByLayer(modelToExport: IModel, offset: IPoint, options: IFindChainsOptions) {
+        var pathDataByLayer: IPathDataMap = {};
+
+        model.findChains(
+            modelToExport,
+            function (chains: IChain[], loose: IWalkPath[], layer: string) {
+
+                function single(walkedPath: IWalkPath) {
+                    var fn = svgPathDataMap[walkedPath.pathContext.type];
+                    if (fn) {
+                        var fixedPath: IPath;
+                        path.moveTemporary([walkedPath.pathContext], [walkedPath.offset], function () {
+                            fixedPath = path.mirror(walkedPath.pathContext, false, true);
+                        });
+
+                        var d = fn(fixedPath, offset);
+                        var pathData = d.join(' ');
+                        pathDataByLayer[layer].push(pathData);
+                    }
+                }
+
+                pathDataByLayer[layer] = [];
+
+                chains.map(function (chain: IChain) {
+                    if (chain.links.length > 1) {
+                        var pathData = chainToSVGPathData(chain, offset);
+                        pathDataByLayer[layer].push(pathData);
+                    } else {
+                        single(chain.links[0].walkedPath);
+                    }
+                });
+
+                loose.map(single);
+
+            },
+            options
+        );
+
+        return pathDataByLayer;
+    }
+
+    /**
+     * Convert a model to SVG path data.
+     */
+    export function modelToSVGPathData(modelToExport: IModel, offset: IPoint) {
+        var pathDataByLayer = getPathDataByLayer(modelToExport, offset, { byLayers: false });
+
+        var allPathData: string[] = [];
+
+        for (var layer in pathDataByLayer) {
+            var pathData = pathDataByLayer[layer].join(' ');
+            allPathData.push(pathData);
+        }
+
+        return allPathData.join(' ');
     }
 
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
@@ -98,7 +216,7 @@ namespace MakerJs.exporter {
     export function toSVG(itemToExport: any, options?: ISVGRenderOptions): string {
 
         function append(value: string, layer?: string) {
-            if (layer) {
+            if (typeof layer == "string" && layer.length > 0) {
 
                 if (!(layer in layers)) {
                     layers[layer] = [];
@@ -109,6 +227,19 @@ namespace MakerJs.exporter {
             } else {
                 elements.push(value);
             }
+        }
+
+        function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null) {
+
+            attrs['vector-effect'] = 'non-scaling-stroke';
+
+            var tag = new XmlTag(tagname, attrs);
+
+            if (innerText) {
+                tag.innerText = innerText;
+            }
+
+            append(tag.toString(), layer);
         }
 
         function fixPoint(pointToFix: IPoint): IPoint {
@@ -130,6 +261,7 @@ namespace MakerJs.exporter {
             scale: 1,
             stroke: "#000",
             strokeWidth: '0.25mm',   //a somewhat average kerf of a laser cutter
+            fill: "none",
             fontSize: '9pt',
             useSvgPathOnly: true,
             viewBox: true
@@ -217,25 +349,22 @@ namespace MakerJs.exporter {
             stroke: opts.stroke,
             "stroke-width": opts.strokeWidth,
             "stroke-linecap": "round",
-            "fill": "none",
+            "fill": opts.fill,
+            "fill-rule": "evenodd",
             "font-size": opts.fontSize
         });
         append(svgGroup.getOpeningTag(false));
 
-        if (true) {
+        if (opts.useSvgPathOnly) {
 
-            function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null) {
+            var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true });
 
-                attrs['vector-effect'] = 'non-scaling-stroke';
-
-                var tag = new XmlTag(tagname, attrs);
-
-                if (innerText) {
-                    tag.innerText = innerText;
-                }
-
-                append(tag.toString(), layer);
+            for (var layer in pathDataByLayer) {
+                var pathData = pathDataByLayer[layer].join(' ');
+                createElement("path", { "d": pathData }, layer);
             }
+
+        } else {
 
             function drawText(id: string, textPoint: IPoint) {
                 createElement(
@@ -276,23 +405,19 @@ namespace MakerJs.exporter {
                 var start = line.origin;
                 var end = line.end;
 
-                if (opts.useSvgPathOnly) {
-                    drawPath(id, start[0], start[1], [round(end[0]), round(end[1])], layer, point.middle(line));
-                } else {
-                    createElement(
-                        "line",
-                        {
-                            "id": id,
-                            "x1": round(start[0]),
-                            "y1": round(start[1]),
-                            "x2": round(end[0]),
-                            "y2": round(end[1])
-                        },
-                        layer);
+                createElement(
+                    "line",
+                    {
+                        "id": id,
+                        "x1": round(start[0]),
+                        "y1": round(start[1]),
+                        "x2": round(end[0]),
+                        "y2": round(end[1])
+                    },
+                    layer);
 
-                    if (opts.annotate) {
-                        drawText(id, point.middle(line));
-                    }
+                if (opts.annotate) {
+                    drawText(id, point.middle(line));
                 }
             };
 
@@ -300,21 +425,15 @@ namespace MakerJs.exporter {
 
                 var center = circle.origin;
 
-                if (opts.useSvgPathOnly) {
-
-                    circleInPaths(id, center, circle.radius, layer);
-
-                } else {
-                    createElement(
-                        "circle",
-                        {
-                            "id": id,
-                            "r": circle.radius,
-                            "cx": round(center[0]),
-                            "cy": round(center[1])
-                        },
-                        layer);
-                }
+                createElement(
+                    "circle",
+                    {
+                        "id": id,
+                        "r": circle.radius,
+                        "cx": round(center[0]),
+                        "cy": round(center[1])
+                    },
+                    layer);
 
                 if (opts.annotate) {
                     drawText(id, center);
@@ -379,17 +498,17 @@ namespace MakerJs.exporter {
      * @private
      */
     function svgCircleData(radius: number): ISvgPathData {
-        var d: ISvgPathData = ['M', -radius, 0];
+        var d: ISvgPathData = ['m', -radius, 0];
 
         function halfCircle(sign: number) {
-            d.push('A');
+            d.push('a');
             svgArcData(d, radius, [2 * radius * sign, 0]);
         }
 
         halfCircle(1);
         halfCircle(-1);
 
-        d.push('Z');
+        d.push('z');
 
         return d;
     }
@@ -446,6 +565,11 @@ namespace MakerJs.exporter {
          * Optional attributes to add to the root svg tag.
          */
         svgAttrs?: IXmlTagAttrs;
+
+        /**
+         * SVG fill color.
+         */
+        fill?: string;
 
         /**
          * SVG font size and font size units.
