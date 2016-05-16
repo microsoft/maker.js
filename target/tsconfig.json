@@ -30,6 +30,7 @@
     "../src/core/loops.ts",
     "../src/core/xml.ts",
     "../src/core/openjscad.ts",
+    "../src/core/pdf.ts",
     "../src/core/svg.ts",
     "../src/models/ConnectTheDots.ts",
     "../src/models/Polygon.ts",
