@@ -232,7 +232,7 @@
                 }
             );
 
-            callback(chainsByLayer[layer], loose);
+            callback(chainsByLayer[layer], loose, layer);
         }
 
     }
