@@ -43,29 +43,18 @@
      */
     function followLinks(connections: Collector<IPoint, IChainLink>, chainFound: IChainFound, chainNotFound?: IChainNotFound) {
 
-        function followLink(currLink: IChainLink, chain: IChain, firstLink: IChainLink, reverse: boolean) {
-
-            var flip = false;
+        function followLink(currLink: IChainLink, chain: IChain, firstLink: IChainLink) {
 
             while (currLink) {
 
-                if (reverse) {
-                    chain.links.unshift(currLink);
-                } else {
-                    chain.links.push(currLink);
-                }
+                chain.links.push(currLink);
 
-                //find next connection
-                var items = connections.findCollection(currLink.endPoints[currLink.reversed ? 0 : 1]);
+                var next = currLink.reversed ? 0 : 1;
+                var nextPoint = currLink.endPoints[next];
+
+                var items = connections.findCollection(nextPoint);
                 if (!items || items.length === 0) {
-
-                    //find previous connection
-                    items = connections.findCollection(currLink.endPoints[currLink.reversed ? 1 : 0]);
-                    if (!items || items.length === 0) {
-                        break;
-                    } else {
-                        flip = !flip;
-                    }
+                    break;
                 }
 
                 var nextLink = getOpposedLink(items, currLink.walkedPath.pathContext);
@@ -75,10 +64,6 @@
 
                 if (!nextLink) {
                     break;
-                }
-
-                if (flip) {
-                    nextLink.reversed = !nextLink.reversed;
                 }
 
                 if (nextLink.walkedPath.pathContext === firstLink.walkedPath.pathContext) {
@@ -101,20 +86,22 @@
                     links: []
                 };
 
-                followLink(linkedPaths[0], chain, linkedPaths[0], false);
+                followLink(linkedPaths[0], chain, linkedPaths[0]);
 
                 if (chain.endless) {
                     chainFound(chain);
                 } else {
                     //need to go in reverse
+                    chain.links.reverse();
 
-                    //use end as the beginning
-                    var lastLink = chain.links[chain.links.length - 1];
+                    var firstLink = chain.links[0];
 
-                    //remove the first link, it will be added in the call
-                    var currLink = chain.links.shift();
+                    chain.links.map(function (link: IChainLink) { link.reversed = !link.reversed; });
 
-                    followLink(currLink, chain, lastLink, true);
+                    //remove the last link, it will be added in the call
+                    var currLink = chain.links.pop();
+
+                    followLink(currLink, chain, firstLink);
 
                     if (chain.links.length > 1) {
                         chainFound(chain);
