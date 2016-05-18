@@ -35,10 +35,6 @@ namespace MakerJs.exporter {
         );
     };
 
-    chainLinkToPathDataMap[pathType.Circle] = function (circle: IPathCircle, endPoint: IPoint, reversed: boolean, d: ISvgPathData) {
-        d.push.apply(d, svgCircleData(circle.radius));
-    };
-
     chainLinkToPathDataMap[pathType.Line] = function (line: IPathLine, endPoint: IPoint, reversed: boolean, d: ISvgPathData) {
         d.push('L', round(endPoint[0]), round(endPoint[1]));
     };
@@ -98,7 +94,7 @@ namespace MakerJs.exporter {
      * @private
      */
     interface ISvgPathDataMap {
-        [pathType: string]: (pathContext: IPath, offset: IPoint) => ISvgPathData;
+        [pathType: string]: (pathContext: IPath) => ISvgPathData;
     }
 
     /**
@@ -106,47 +102,49 @@ namespace MakerJs.exporter {
      */
     var svgPathDataMap: ISvgPathDataMap = {};
 
-    svgPathDataMap[pathType.Line] = function (line: IPathLine, offset: IPoint) {
-        return startSvgPathData(point.add(line.origin, offset), point.rounded(point.add(line.end, offset)) as Array<number>);
+    svgPathDataMap[pathType.Line] = function (line: IPathLine) {
+        return startSvgPathData(line.origin, point.rounded(line.end) as Array<number>);
     };
 
-    svgPathDataMap[pathType.Circle] = function (circle: IPathCircle, offset: IPoint) {
-        return startSvgPathData(point.add(circle.origin, offset), svgCircleData(circle.radius));
+    svgPathDataMap[pathType.Circle] = function (circle: IPathCircle) {
+        return startSvgPathData(circle.origin, svgCircleData(circle.radius));
     };
 
-    svgPathDataMap[pathType.Arc] = function (arc: IPathArc, offset: IPoint) {
+    svgPathDataMap[pathType.Arc] = function (arc: IPathArc) {
 
         var arcPoints = point.fromArc(arc);
 
         if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-            return svgPathDataMap[pathType.Circle](arc, offset);
+            return svgPathDataMap[pathType.Circle](arc);
         } else {
 
-            var d = ['A'];
+            var r = round(arc.radius);
+            var d: ISvgPathData = ['A'];
             svgArcData(
                 d,
-                arc.radius,
-                point.add(arcPoints[1], offset),
+                r,
+                arcPoints[1],
                 angle.ofArcSpan(arc) > 180,
                 arc.startAngle > arc.endAngle
             );
 
-            return startSvgPathData(point.add(arcPoints[0], offset), d);
+            return startSvgPathData(arcPoints[0], d);
         }
     };
 
     /**
      * Convert a path to SVG path data.
      */
-    export function pathToSVGPathData(pathToExport: IPath, offset: IPoint = [0, 0]): string {
+    export function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint): string {
         var fn = svgPathDataMap[pathToExport.type];
         if (fn) {
             var fixedPath: IPath;
             path.moveTemporary([pathToExport], [offset], function () {
                 fixedPath = path.mirror(pathToExport, false, true);
             });
+            path.moveRelative(fixedPath, offset2);
 
-            var d = fn(fixedPath, offset);
+            var d = fn(fixedPath);
             return d.join(' ');
         }
         return '';
@@ -163,7 +161,7 @@ namespace MakerJs.exporter {
             function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 function single(walkedPath: IWalkPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset);
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
                     pathDataByLayer[layer].push(pathData);
                 }
 
@@ -490,11 +488,12 @@ namespace MakerJs.exporter {
      * @private
      */
     function svgCircleData(radius: number): ISvgPathData {
-        var d: ISvgPathData = ['m', -radius, 0];
+        var r = round(radius);
+        var d: ISvgPathData = ['m', -r, 0];
 
         function halfCircle(sign: number) {
             d.push('a');
-            svgArcData(d, radius, [2 * radius * sign, 0]);
+            svgArcData(d, r, [2 * r * sign, 0]);
         }
 
         halfCircle(1);
@@ -509,8 +508,9 @@ namespace MakerJs.exporter {
      * @private
      */
     function svgArcData(d: ISvgPathData, radius: number, endPoint: IPoint, largeArc?: boolean, decreasing?: boolean) {
+        var r = round(radius);
         var end: IPoint = endPoint;
-        d.push(radius, radius);
+        d.push(r, r);
         d.push(0);                   //0 = x-axis rotation
         d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
         d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
