@@ -51,13 +51,13 @@
 
                 function single(walkedPath: IWalkPath) {
                     var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
-                    doc.path(pathData);
+                    doc.path(pathData).stroke(opts.stroke);
                 }
 
                 chains.map(function (chain: IChain) {
                     if (chain.links.length > 1) {
                         var pathData = chainToSVGPathData(chain, offset);
-                        var p = doc.path(pathData).stroke(opts.stroke);
+                        doc.path(pathData).stroke(opts.stroke);
 
                     } else {
                         var walkedPath = chain.links[0].walkedPath;
