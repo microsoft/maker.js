@@ -450,24 +450,10 @@ declare namespace MakerJs {
         pathId: string;
     }
     /**
-     * Path and its reference id within a model
-     */
-    interface IRefPathInModel extends IRefPathIdInModel {
-        pathContext: IPath;
-    }
-    /**
-     * A map of functions which accept a path reference as a parameter.
-     */
-    interface IRefPathInModelFunctionMap {
-        /**
-         * Key is the type of a path, value is a function which accepts a path object as its parameter.
-         */
-        [type: string]: (refPathInModel: IRefPathInModel) => void;
-    }
-    /**
      * A route to either a path or a model, and the absolute offset of it.
      */
     interface IRouteOffset {
+        layer: string;
         offset: IPoint;
         route: string[];
         routeKey: string;
@@ -475,13 +461,59 @@ declare namespace MakerJs {
     /**
      * A path reference in a walk.
      */
-    interface IWalkPath extends IRefPathInModel, IRouteOffset {
+    interface IWalkPath extends IRefPathIdInModel, IRouteOffset {
+        pathContext: IPath;
     }
     /**
      * Callback signature for path in model.walk().
      */
     interface IWalkPathCallback {
         (context: IWalkPath): void;
+    }
+    /**
+     * A link in a chain, with direction of flow.
+     */
+    interface IChainLink {
+        /**
+         * Reference to the path.
+         */
+        walkedPath: IWalkPath;
+        /**
+         * Path flows forwards or reverse.
+         */
+        reversed: boolean;
+        /**
+         * The endpoints of the path, in absolute coords.
+         */
+        endPoints: IPoint[];
+    }
+    /**
+     * A chain of paths which connect end to end.
+     */
+    interface IChain {
+        /**
+         * The links in this chain.
+         */
+        links: IChainLink[];
+        /**
+         * Flag if this chain forms a loop end to end.
+         */
+        endless?: boolean;
+    }
+    /**
+     * Callback to model.findChains() with resulting array of chains and unchained paths.
+     */
+    interface IChainCallback {
+        (chains: IChain[], loose: IWalkPath[], layer: string): void;
+    }
+    /**
+     * Options to pass to model.findLoops.
+     */
+    interface IFindChainsOptions extends IPointMatchOptions {
+        /**
+         * Flag to separate chains by layers.
+         */
+        byLayers?: boolean;
     }
     /**
      * Reference to a model within a model.
@@ -1144,9 +1176,9 @@ declare namespace MakerJs {
 }
 declare namespace MakerJs.model {
     /**
-     * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path.
+     * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path. The model must be originated.
      *
-     * @param modelContext The model to search for similar paths.
+     * @param modelContext The originated model to search for similar paths.
      * @param options Optional options object.
      * @returns The simplified model (for chaining).
      */
@@ -1505,6 +1537,16 @@ declare namespace MakerJs.kit {
 }
 declare namespace MakerJs.model {
     /**
+     * Find paths that have common endpoints and form chains.
+     *
+     * @param modelContext The model to search for chains.
+     * @param options Optional options object.
+     * @returns A list of chains.
+     */
+    function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): void;
+}
+declare namespace MakerJs.model {
+    /**
      * Find paths that have common endpoints and form loops.
      *
      * @param modelContext The model to search for loops.
@@ -1621,6 +1663,37 @@ declare namespace MakerJs.exporter {
     }
 }
 declare namespace MakerJs.exporter {
+    /**
+     * Injects drawing into a PDFKit document.
+     *
+     * @param modelToExport Model object to export.
+     * @param options Export options object.
+     * @returns String of PDF file contents.
+     */
+    function toPDF(doc: PDFKit.PDFDocument, modelToExport: IModel, options?: IPDFRenderOptions): void;
+    /**
+     * PDF rendering options.
+     */
+    interface IPDFRenderOptions extends IExportOptions {
+        /**
+         * Rendered reference origin.
+         */
+        origin?: IPoint;
+        /**
+         * SVG color of the rendered paths.
+         */
+        stroke?: string;
+    }
+}
+declare namespace MakerJs.exporter {
+    /**
+     * Convert a chain to SVG path data.
+     */
+    function chainToSVGPathData(chain: IChain, offset: IPoint): string;
+    /**
+     * Convert a path to SVG path data.
+     */
+    function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint): string;
     function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
@@ -1645,6 +1718,10 @@ declare namespace MakerJs.exporter {
          * Optional attributes to add to the root svg tag.
          */
         svgAttrs?: IXmlTagAttrs;
+        /**
+         * SVG fill color.
+         */
+        fill?: string;
         /**
          * SVG font size and font size units.
          */
