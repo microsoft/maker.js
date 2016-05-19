@@ -5,7 +5,8 @@
         Dxf,
         Svg,
         OpenJsCad,
-        Stl
+        Stl,
+        Pdf
     };
 
     export interface IExportRequest {
@@ -54,6 +55,11 @@
     formatMap[ExportFormat.Stl] = {
         mediaType: 'application/stl',
         fileExtension: 'stl'
+    };
+
+    formatMap[ExportFormat.Pdf] = {
+        mediaType: 'application/pdf',
+        fileExtension: 'pdf'
     };
 
 }

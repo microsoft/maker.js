@@ -114,6 +114,8 @@ namespace MakerJs.model {
                 var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
 
                 if (expandedPathModel) {
+                    moveRelative(expandedPathModel, walkedPath.offset);
+
                     var newId = getSimilarModelId(result.models['expansions'], walkedPath.pathId);
 
                     prefixPathIds(expandedPathModel, walkedPath.pathId + '_');

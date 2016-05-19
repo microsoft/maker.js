@@ -576,27 +576,10 @@ namespace MakerJs {
     }
 
     /**
-     * Path and its reference id within a model
-     */
-    export interface IRefPathInModel extends IRefPathIdInModel {
-        pathContext: IPath;
-    }
-
-    /**
-     * A map of functions which accept a path reference as a parameter.
-     */
-    export interface IRefPathInModelFunctionMap {
-
-        /**
-         * Key is the type of a path, value is a function which accepts a path object as its parameter.
-         */
-        [type: string]: (refPathInModel: IRefPathInModel) => void;
-    }
-
-    /**
      * A route to either a path or a model, and the absolute offset of it.
      */
     export interface IRouteOffset {
+        layer: string;
         offset: IPoint;
         route: string[];
         routeKey: string;
@@ -605,7 +588,8 @@ namespace MakerJs {
     /**
      * A path reference in a walk.
      */
-    export interface IWalkPath extends IRefPathInModel, IRouteOffset {
+    export interface IWalkPath extends IRefPathIdInModel, IRouteOffset {
+        pathContext: IPath;
     }
 
     /**
@@ -613,6 +597,61 @@ namespace MakerJs {
      */
     export interface IWalkPathCallback {
         (context: IWalkPath): void;
+    }
+
+    /**
+     * A link in a chain, with direction of flow.
+     */
+    export interface IChainLink {
+
+        /**
+         * Reference to the path.
+         */
+        walkedPath: IWalkPath;
+
+        /**
+         * Path flows forwards or reverse.
+         */
+        reversed: boolean;
+
+        /**
+         * The endpoints of the path, in absolute coords.
+         */
+        endPoints: IPoint[];
+    }
+
+    /**
+     * A chain of paths which connect end to end.
+     */
+    export interface IChain {
+
+        /**
+         * The links in this chain.
+         */
+        links: IChainLink[];
+
+        /**
+         * Flag if this chain forms a loop end to end.
+         */
+        endless?: boolean
+    }
+
+    /**
+     * Callback to model.findChains() with resulting array of chains and unchained paths.
+     */
+    export interface IChainCallback {
+        (chains: IChain[], loose: IWalkPath[], layer: string): void;
+    }
+
+    /**
+     * Options to pass to model.findLoops.
+     */
+    export interface IFindChainsOptions extends IPointMatchOptions {
+
+        /**
+         * Flag to separate chains by layers.
+         */
+        byLayers?: boolean;
     }
 
     /**
