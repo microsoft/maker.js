@@ -1,54 +1,78 @@
 ﻿namespace MakerJs.exporter {
 
     /**
-     * Creates a string of PDF file with PDFKit.
+     * Injects drawing into a PDFKit document.
      * 
      * @param modelToExport Model object to export.
      * @param options Export options object.
      * @returns String of PDF file contents.
      */
-    export function toPDF(modelToExport: IModel, complete: IPDFRenderComplete, options?: IPDFRenderOptions) {
-        if (!modelToExport) return '';
+    export function toPDF(doc: PDFKit.PDFDocument, modelToExport: IModel, options?: IPDFRenderOptions) {
+        if (!modelToExport) return;
 
-        var PDFDocument = require('pdfkit');
+        //fixup options
+        var opts: IPDFRenderOptions = {
+            origin: [0, 0],
+            stroke: "#000",
+        };
 
-        //TODO: title, author from options
+        extendObject(opts, options);
 
-        var pdfOptions: PDFKit.PDFDocumentOptions = { compress: false, info: { Producer: 'MakerJs', Author: 'MakerJs' } };
-        var doc: PDFKit.PDFDocument = new PDFDocument(pdfOptions);
-        var reader = new PDFStreamReader(complete);
-        var stream = doc.pipe(reader);
+        //try to get the unit system from the itemToExport
+        var scale = 1;
+        var exportUnits = opts.units || modelToExport.units;
+        if (exportUnits) {
+            //convert to inch
+            scale = units.conversionScale(exportUnits, unitType.Inch);
+        } else {
+            //assume pixels, convert to inch
+            scale = 1 / 100;
+        }
 
-        var size = measure.modelExtents(modelToExport);
+        //from inch to PDF PPI
+        scale *= 72;
+
+        //TODO scale each element without a whole clone
+        var scaledModel = model.scale(cloneObject(modelToExport), scale);
+
+        var size = measure.modelExtents(scaledModel);
 
         var left = 0;
         if (size.low[0] < 0) {
             left = -size.low[0];
         }
-        var offset = [left, size.high[1]];
+        var offset: IPoint = [left, size.high[1]];
 
-        //TODO must specify units
-        //TODO give some margin
-        //TODO break model into page size blocks
+        offset = point.add(offset, options.origin);
 
         model.findChains(
-            modelToExport,
+            scaledModel,
             function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 function single(walkedPath: IWalkPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset);
-                    doc.path(pathData).stroke();
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
+                    doc.path(pathData);
                 }
 
                 chains.map(function (chain: IChain) {
                     if (chain.links.length > 1) {
                         var pathData = chainToSVGPathData(chain, offset);
-                        doc.path(pathData).stroke();
+                        var p = doc.path(pathData).stroke(opts.stroke);
+
                     } else {
                         var walkedPath = chain.links[0].walkedPath;
                         if (walkedPath.pathContext.type === pathType.Circle) {
-                            var p = point.add(point.add(offset, walkedPath.pathContext.origin), walkedPath.offset)
-                            doc.circle(p[0], p[1], (<IPathCircle>walkedPath.pathContext).radius).stroke();
+
+                            var fixedPath: IPath;
+                            path.moveTemporary([walkedPath.pathContext], [walkedPath.offset], function () {
+                                fixedPath = path.mirror(walkedPath.pathContext, false, true);
+                            });
+                            path.moveRelative(fixedPath, offset);
+
+                            //TODO use only chainToSVGPathData instead of circle, so that we can use fill
+                            
+                            doc.circle(fixedPath.origin[0], fixedPath.origin[1], (<IPathCircle>walkedPath.pathContext).radius).stroke(opts.stroke);
+
                         } else {
                             single(walkedPath);
                         }
@@ -60,79 +84,21 @@
             },
             { byLayers: false }
         );
-
-        doc.end();
-    }
-
-    class PDFStreamReader implements NodeJS.WritableStream {
-
-        public data = '';
-
-        constructor(public complete: IPDFRenderComplete) {
-        }
-
-        public addListener(event: string, listener: Function): NodeJS.EventEmitter {
-            return this;
-        }
-
-        public on(event: string, listener: Function): NodeJS.EventEmitter {
-            return this;
-        }
-
-        public once(event: string, listener: Function): NodeJS.EventEmitter {
-            return this;
-        }
-
-        public removeListener(event: string, listener: Function): NodeJS.EventEmitter {
-            return this;
-        }
-
-        public removeAllListeners(event?: string): NodeJS.EventEmitter {
-            return this;
-        }
-
-        public setMaxListeners(n: number): void {
-        }
-
-        public listeners(event: string): Function[] {
-            return [];
-        }
-
-        public emit(event: string, ...args: any[]): boolean {
-            return true;
-        }
-
-        public writable: boolean;
-
-        public write(buffer: Buffer | string, cb?: Function): boolean;
-        public write(str: string, encoding?: string, cb?: Function): boolean;
-        public write(...any) {
-            var string = new TextDecoder("utf-8").decode(arguments[0]);
-            this.data += string;
-            return true;
-        }
-
-        public end(): void;
-        public end(buffer: Buffer, cb?: Function): void;
-        public end(str: string, cb?: Function): void;
-        public end(str: string, encoding?: string, cb?: Function): void;
-        public end() {
-            this.complete(this.data);
-        }
-
     }
 
     /**
-     * jsPDF export options.
-     */
-    export interface IPDFRenderComplete {
-        (pdfData: string): void;
-    }
-
-    /**
-     * jsPDF export options.
+     * PDF rendering options.
      */
     export interface IPDFRenderOptions extends IExportOptions {
-    }
 
+        /**
+         * Rendered reference origin. 
+         */
+        origin?: IPoint;
+
+        /**
+         * SVG color of the rendered paths.
+         */
+        stroke?: string;
+    }
 }
