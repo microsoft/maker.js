@@ -1383,16 +1383,19 @@ var MakerJs;
         function walk(modelContext, options) {
             if (!modelContext)
                 return;
-            function walkRecursive(modelContext, offset, route, routeKey) {
+            function walkRecursive(modelContext, layer, offset, route, routeKey) {
                 var newOffset = MakerJs.point.add(modelContext.origin, offset);
+                layer = modelContext.layer || '';
                 if (modelContext.paths) {
                     for (var pathId in modelContext.paths) {
-                        if (!modelContext.paths[pathId])
+                        var pathContext = modelContext.paths[pathId];
+                        if (!pathContext)
                             continue;
                         var walkedPath = {
                             modelContext: modelContext,
+                            layer: pathContext.layer || layer,
                             offset: newOffset,
-                            pathContext: modelContext.paths[pathId],
+                            pathContext: pathContext,
                             pathId: pathId,
                             route: route.concat(['paths', pathId]),
                             routeKey: routeKey + '.paths' + JSON.stringify([pathId])
@@ -1403,28 +1406,30 @@ var MakerJs;
                 }
                 if (modelContext.models) {
                     for (var modelId in modelContext.models) {
-                        if (!modelContext.models[modelId])
+                        var childModel = modelContext.models[modelId];
+                        if (!childModel)
                             continue;
                         var walkedModel = {
                             parentModel: modelContext,
+                            layer: childModel.layer || layer,
                             offset: newOffset,
                             route: route.concat(['models', modelId]),
                             routeKey: routeKey + '.models' + JSON.stringify([modelId]),
                             childId: modelId,
-                            childModel: modelContext.models[modelId]
+                            childModel: childModel
                         };
                         if (options.beforeChildWalk) {
                             if (!options.beforeChildWalk(walkedModel))
                                 continue;
                         }
-                        walkRecursive(walkedModel.childModel, newOffset, walkedModel.route, walkedModel.routeKey);
+                        walkRecursive(walkedModel.childModel, layer, newOffset, walkedModel.route, walkedModel.routeKey);
                         if (options.afterChildWalk) {
                             options.afterChildWalk(walkedModel);
                         }
                     }
                 }
             }
-            walkRecursive(modelContext, [0, 0], [], '');
+            walkRecursive(modelContext, '', [0, 0], [], '');
         }
         model.walk = walk;
     })(model = MakerJs.model || (MakerJs.model = {}));
@@ -1888,9 +1893,9 @@ var MakerJs;
             };
         }
         /**
-         * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path.
+         * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path. The model must be originated.
          *
-         * @param modelContext The model to search for similar paths.
+         * @param modelContext The originated model to search for similar paths.
          * @param options Optional options object.
          * @returns The simplified model (for chaining).
          */
@@ -1922,17 +1927,15 @@ var MakerJs;
             };
             MakerJs.extendObject(opts, options);
             //walk the model and collect: arcs on same center / radius, circles on same center / radius, lines on same y-intercept / slope.
-            model.walkPaths(modelToSimplify, function (modelContext, pathId, pathContext) {
-                var ref = {
-                    modelContext: modelContext,
-                    pathContext: pathContext,
-                    pathId: pathId
-                };
-                var fn = map[pathContext.type];
-                if (fn) {
-                    fn(ref);
+            var walkOptions = {
+                onPath: function (walkedPath) {
+                    var fn = map[walkedPath.pathContext.type];
+                    if (fn) {
+                        fn(walkedPath);
+                    }
                 }
-            });
+            };
+            model.walk(modelToSimplify, walkOptions);
             //for all arcs that are similar, see if they overlap.
             //combine overlapping arcs into the first one and delete the second.
             similarArcs.getCollectionsOfMultiple(function (key, arcRefs) {
@@ -2091,6 +2094,7 @@ var MakerJs;
                 onPath: function (walkedPath) {
                     var expandedPathModel = MakerJs.path.expand(walkedPath.pathContext, distance, true);
                     if (expandedPathModel) {
+                        model.moveRelative(expandedPathModel, walkedPath.offset);
                         var newId = model.getSimilarModelId(result.models['expansions'], walkedPath.pathId);
                         model.prefixPathIds(expandedPathModel, walkedPath.pathId + '_');
                         model.originate(expandedPathModel);
@@ -3727,6 +3731,160 @@ var MakerJs;
          * @private
          */
         function getOpposedLink(linkedPaths, pathContext) {
+            if (linkedPaths[0].walkedPath.pathContext === pathContext) {
+                return linkedPaths[1];
+            }
+            return linkedPaths[0];
+        }
+        /**
+         * @private
+         */
+        function followLinks(connections, chainFound, chainNotFound) {
+            function followLink(currLink, chain, firstLink) {
+                while (currLink) {
+                    chain.links.push(currLink);
+                    var next = currLink.reversed ? 0 : 1;
+                    var nextPoint = currLink.endPoints[next];
+                    var items = connections.findCollection(nextPoint);
+                    if (!items || items.length === 0) {
+                        break;
+                    }
+                    var nextLink = getOpposedLink(items, currLink.walkedPath.pathContext);
+                    //remove the first 2 items, which should be currlink and nextlink
+                    items.splice(0, 2);
+                    if (!nextLink) {
+                        break;
+                    }
+                    if (nextLink.walkedPath.pathContext === firstLink.walkedPath.pathContext) {
+                        chain.endless = true;
+                        break;
+                    }
+                    currLink = nextLink;
+                }
+            }
+            for (var i = 0; i < connections.collections.length; i++) {
+                var linkedPaths = connections.collections[i].items;
+                if (linkedPaths && linkedPaths.length > 0) {
+                    var chain = {
+                        links: []
+                    };
+                    followLink(linkedPaths[0], chain, linkedPaths[0]);
+                    if (chain.endless) {
+                        chainFound(chain);
+                    }
+                    else {
+                        //need to go in reverse
+                        chain.links.reverse();
+                        var firstLink = chain.links[0];
+                        chain.links.map(function (link) { link.reversed = !link.reversed; });
+                        //remove the last link, it will be added in the call
+                        var currLink = chain.links.pop();
+                        followLink(currLink, chain, firstLink);
+                        if (chain.links.length > 1) {
+                            chainFound(chain);
+                        }
+                        else {
+                            chainNotFound(chain.links[0].walkedPath);
+                        }
+                    }
+                    //if there were more than 2 paths on this point, follow those too.
+                    if (linkedPaths.length > 0) {
+                        i--;
+                    }
+                }
+            }
+        }
+        /**
+         * Find paths that have common endpoints and form chains.
+         *
+         * @param modelContext The model to search for chains.
+         * @param options Optional options object.
+         * @returns A list of chains.
+         */
+        function findChains(modelContext, callback, options) {
+            var opts = {
+                pointMatchingDistance: .005,
+                byLayers: false
+            };
+            MakerJs.extendObject(opts, options);
+            function comparePoint(pointA, pointB) {
+                var distance = MakerJs.measure.pointDistance(pointA, pointB);
+                return distance <= opts.pointMatchingDistance;
+            }
+            var connectionMap = {};
+            var chainsByLayer = {};
+            var walkOptions = {
+                onPath: function (walkedPath) {
+                    var layer = opts.byLayers ? walkedPath.layer : '';
+                    if (!connectionMap[layer]) {
+                        connectionMap[layer] = new MakerJs.Collector(comparePoint);
+                    }
+                    var connections = connectionMap[layer];
+                    //circles are loops by nature
+                    if (walkedPath.pathContext.type == MakerJs.pathType.Circle ||
+                        (walkedPath.pathContext.type == MakerJs.pathType.Arc && MakerJs.angle.ofArcSpan(walkedPath.pathContext) == 360)) {
+                        var chain = {
+                            links: [{
+                                    walkedPath: walkedPath,
+                                    reversed: null,
+                                    endPoints: null
+                                }],
+                            endless: true
+                        };
+                        //store circles so that layers fire grouped
+                        if (!chainsByLayer[layer]) {
+                            chainsByLayer[layer] = [];
+                        }
+                        chainsByLayer[layer].push(chain);
+                    }
+                    else {
+                        //gather both endpoints from all non-circle segments
+                        var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
+                        //don't add lines which are shorter than the tolerance
+                        if (walkedPath.pathContext.type == MakerJs.pathType.Line) {
+                            var distance = MakerJs.measure.pointDistance(endPoints[0], endPoints[1]);
+                            if (distance < opts.pointMatchingDistance) {
+                                return;
+                            }
+                        }
+                        for (var i = 0; i < 2; i++) {
+                            var link = {
+                                walkedPath: walkedPath,
+                                endPoints: endPoints,
+                                reversed: i != 0
+                            };
+                            connections.addItemToCollection(endPoints[i], link);
+                        }
+                    }
+                }
+            };
+            model.walk(modelContext, walkOptions);
+            for (var layer in connectionMap) {
+                var connections = connectionMap[layer];
+                var loose = [];
+                if (!chainsByLayer[layer]) {
+                    chainsByLayer[layer] = [];
+                }
+                //follow paths to find loops
+                followLinks(connections, function (chain) {
+                    chainsByLayer[layer].push(chain);
+                }, function (walkedPath) {
+                    loose.push(walkedPath);
+                });
+                callback(chainsByLayer[layer], loose, layer);
+            }
+        }
+        model.findChains = findChains;
+    })(model = MakerJs.model || (MakerJs.model = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var model;
+    (function (model) {
+        /**
+         * @private
+         */
+        function getOpposedLink(linkedPaths, pathContext) {
             if (linkedPaths[0].path === pathContext) {
                 return linkedPaths[1];
             }
@@ -4298,6 +4456,195 @@ var MakerJs;
     var exporter;
     (function (exporter) {
         /**
+         * Injects drawing into a PDFKit document.
+         *
+         * @param modelToExport Model object to export.
+         * @param options Export options object.
+         * @returns String of PDF file contents.
+         */
+        function toPDF(doc, modelToExport, options) {
+            if (!modelToExport)
+                return;
+            //fixup options
+            var opts = {
+                origin: [0, 0],
+                stroke: "#000"
+            };
+            MakerJs.extendObject(opts, options);
+            //try to get the unit system from the itemToExport
+            var scale = 1;
+            var exportUnits = opts.units || modelToExport.units;
+            if (exportUnits) {
+                //convert to inch
+                scale = MakerJs.units.conversionScale(exportUnits, MakerJs.unitType.Inch);
+            }
+            else {
+                //assume pixels, convert to inch
+                scale = 1 / 100;
+            }
+            //from inch to PDF PPI
+            scale *= 72;
+            //TODO scale each element without a whole clone
+            var scaledModel = MakerJs.model.scale(MakerJs.cloneObject(modelToExport), scale);
+            var size = MakerJs.measure.modelExtents(scaledModel);
+            var left = 0;
+            if (size.low[0] < 0) {
+                left = -size.low[0];
+            }
+            var offset = [left, size.high[1]];
+            offset = MakerJs.point.add(offset, options.origin);
+            MakerJs.model.findChains(scaledModel, function (chains, loose, layer) {
+                function single(walkedPath) {
+                    var pathData = exporter.pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
+                    doc.path(pathData).stroke(opts.stroke);
+                }
+                chains.map(function (chain) {
+                    if (chain.links.length > 1) {
+                        var pathData = exporter.chainToSVGPathData(chain, offset);
+                        doc.path(pathData).stroke(opts.stroke);
+                    }
+                    else {
+                        var walkedPath = chain.links[0].walkedPath;
+                        if (walkedPath.pathContext.type === MakerJs.pathType.Circle) {
+                            var fixedPath;
+                            MakerJs.path.moveTemporary([walkedPath.pathContext], [walkedPath.offset], function () {
+                                fixedPath = MakerJs.path.mirror(walkedPath.pathContext, false, true);
+                            });
+                            MakerJs.path.moveRelative(fixedPath, offset);
+                            //TODO use only chainToSVGPathData instead of circle, so that we can use fill
+                            doc.circle(fixedPath.origin[0], fixedPath.origin[1], walkedPath.pathContext.radius).stroke(opts.stroke);
+                        }
+                        else {
+                            single(walkedPath);
+                        }
+                    }
+                });
+                loose.map(single);
+            }, { byLayers: false });
+        }
+        exporter.toPDF = toPDF;
+    })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var exporter;
+    (function (exporter) {
+        /**
+         * @private
+         */
+        var chainLinkToPathDataMap = {};
+        chainLinkToPathDataMap[MakerJs.pathType.Arc] = function (arc, endPoint, reversed, d) {
+            d.push('A');
+            svgArcData(d, arc.radius, endPoint, MakerJs.angle.ofArcSpan(arc) > 180, reversed ? (arc.startAngle > arc.endAngle) : (arc.startAngle < arc.endAngle));
+        };
+        chainLinkToPathDataMap[MakerJs.pathType.Line] = function (line, endPoint, reversed, d) {
+            d.push('L', MakerJs.round(endPoint[0]), MakerJs.round(endPoint[1]));
+        };
+        /**
+         * @private
+         */
+        function svgCoords(p) {
+            return MakerJs.point.mirror(p, false, true);
+        }
+        /**
+         * Convert a chain to SVG path data.
+         */
+        function chainToSVGPathData(chain, offset) {
+            function offsetPoint(p) {
+                return MakerJs.point.add(p, offset);
+            }
+            var first = chain.links[0];
+            var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0]));
+            var d = ['M', MakerJs.round(firstPoint[0]), MakerJs.round(firstPoint[1])];
+            for (var i = 0; i < chain.links.length; i++) {
+                var link = chain.links[i];
+                var pathContext = link.walkedPath.pathContext;
+                var fn = chainLinkToPathDataMap[pathContext.type];
+                if (fn) {
+                    var fixedPath;
+                    MakerJs.path.moveTemporary([pathContext], [link.walkedPath.offset], function () {
+                        fixedPath = MakerJs.path.mirror(pathContext, false, true);
+                    });
+                    MakerJs.path.moveRelative(fixedPath, offset);
+                    fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1])), link.reversed, d);
+                }
+            }
+            if (chain.endless) {
+                d.push('Z');
+            }
+            return d.join(' ');
+        }
+        exporter.chainToSVGPathData = chainToSVGPathData;
+        /**
+         * @private
+         */
+        function startSvgPathData(start, d) {
+            return ["M", MakerJs.round(start[0]), MakerJs.round(start[1])].concat(d);
+        }
+        /**
+         * @private
+         */
+        var svgPathDataMap = {};
+        svgPathDataMap[MakerJs.pathType.Line] = function (line) {
+            return startSvgPathData(line.origin, MakerJs.point.rounded(line.end));
+        };
+        svgPathDataMap[MakerJs.pathType.Circle] = function (circle) {
+            return startSvgPathData(circle.origin, svgCircleData(circle.radius));
+        };
+        svgPathDataMap[MakerJs.pathType.Arc] = function (arc) {
+            var arcPoints = MakerJs.point.fromArc(arc);
+            if (MakerJs.measure.isPointEqual(arcPoints[0], arcPoints[1])) {
+                return svgPathDataMap[MakerJs.pathType.Circle](arc);
+            }
+            else {
+                var r = MakerJs.round(arc.radius);
+                var d = ['A'];
+                svgArcData(d, r, arcPoints[1], MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
+                return startSvgPathData(arcPoints[0], d);
+            }
+        };
+        /**
+         * Convert a path to SVG path data.
+         */
+        function pathToSVGPathData(pathToExport, offset, offset2) {
+            var fn = svgPathDataMap[pathToExport.type];
+            if (fn) {
+                var fixedPath;
+                MakerJs.path.moveTemporary([pathToExport], [offset], function () {
+                    fixedPath = MakerJs.path.mirror(pathToExport, false, true);
+                });
+                MakerJs.path.moveRelative(fixedPath, offset2);
+                var d = fn(fixedPath);
+                return d.join(' ');
+            }
+            return '';
+        }
+        exporter.pathToSVGPathData = pathToSVGPathData;
+        /**
+         * @private
+         */
+        function getPathDataByLayer(modelToExport, offset, options) {
+            var pathDataByLayer = {};
+            MakerJs.model.findChains(modelToExport, function (chains, loose, layer) {
+                function single(walkedPath) {
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
+                    pathDataByLayer[layer].push(pathData);
+                }
+                pathDataByLayer[layer] = [];
+                chains.map(function (chain) {
+                    if (chain.links.length > 1) {
+                        var pathData = chainToSVGPathData(chain, offset);
+                        pathDataByLayer[layer].push(pathData);
+                    }
+                    else {
+                        single(chain.links[0].walkedPath);
+                    }
+                });
+                loose.map(single);
+            }, options);
+            return pathDataByLayer;
+        }
+        /**
          * Renders an item in SVG markup.
          *
          * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
@@ -4313,7 +4660,7 @@ var MakerJs;
          */
         function toSVG(itemToExport, options) {
             function append(value, layer) {
-                if (layer) {
+                if (typeof layer == "string" && layer.length > 0) {
                     if (!(layer in layers)) {
                         layers[layer] = [];
                     }
@@ -4323,9 +4670,18 @@ var MakerJs;
                     elements.push(value);
                 }
             }
+            function createElement(tagname, attrs, layer, innerText) {
+                if (innerText === void 0) { innerText = null; }
+                attrs['vector-effect'] = 'non-scaling-stroke';
+                var tag = new exporter.XmlTag(tagname, attrs);
+                if (innerText) {
+                    tag.innerText = innerText;
+                }
+                append(tag.toString(), layer);
+            }
             function fixPoint(pointToFix) {
                 //in DXF Y increases upward. in SVG, Y increases downward
-                var pointMirroredY = MakerJs.point.mirror(pointToFix, false, true);
+                var pointMirroredY = svgCoords(pointToFix);
                 return MakerJs.point.scale(pointMirroredY, opts.scale);
             }
             function fixPath(pathToFix, origin) {
@@ -4340,6 +4696,7 @@ var MakerJs;
                 scale: 1,
                 stroke: "#000",
                 strokeWidth: '0.25mm',
+                fill: "none",
                 fontSize: '9pt',
                 useSvgPathOnly: true,
                 viewBox: true
@@ -4408,20 +4765,19 @@ var MakerJs;
                 stroke: opts.stroke,
                 "stroke-width": opts.strokeWidth,
                 "stroke-linecap": "round",
-                "fill": "none",
+                "fill": opts.fill,
+                "fill-rule": "evenodd",
                 "font-size": opts.fontSize
             });
             append(svgGroup.getOpeningTag(false));
-            if (true) {
-                function createElement(tagname, attrs, layer, innerText) {
-                    if (innerText === void 0) { innerText = null; }
-                    attrs['vector-effect'] = 'non-scaling-stroke';
-                    var tag = new exporter.XmlTag(tagname, attrs);
-                    if (innerText) {
-                        tag.innerText = innerText;
-                    }
-                    append(tag.toString(), layer);
+            if (opts.useSvgPathOnly) {
+                var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true });
+                for (var layer in pathDataByLayer) {
+                    var pathData = pathDataByLayer[layer].join(' ');
+                    createElement("path", { "d": pathData }, layer);
                 }
+            }
+            else {
                 function drawText(id, textPoint) {
                     createElement("text", {
                         "id": id + "_text",
@@ -4439,48 +4795,32 @@ var MakerJs;
                     }
                 }
                 function circleInPaths(id, center, radius, layer) {
-                    var d = ['m', -radius, 0];
-                    function halfCircle(sign) {
-                        d.push('a');
-                        svgArcData(d, radius, [2 * radius * sign, 0]);
-                    }
-                    halfCircle(1);
-                    halfCircle(-1);
+                    var d = svgCircleData(radius);
                     drawPath(id, center[0], center[1], d, layer, center);
                 }
                 var map = {};
                 map[MakerJs.pathType.Line] = function (id, line, origin, layer) {
                     var start = line.origin;
                     var end = line.end;
-                    if (opts.useSvgPathOnly) {
-                        drawPath(id, start[0], start[1], [MakerJs.round(end[0]), MakerJs.round(end[1])], layer, MakerJs.point.middle(line));
-                    }
-                    else {
-                        createElement("line", {
-                            "id": id,
-                            "x1": MakerJs.round(start[0]),
-                            "y1": MakerJs.round(start[1]),
-                            "x2": MakerJs.round(end[0]),
-                            "y2": MakerJs.round(end[1])
-                        }, layer);
-                        if (opts.annotate) {
-                            drawText(id, MakerJs.point.middle(line));
-                        }
+                    createElement("line", {
+                        "id": id,
+                        "x1": MakerJs.round(start[0]),
+                        "y1": MakerJs.round(start[1]),
+                        "x2": MakerJs.round(end[0]),
+                        "y2": MakerJs.round(end[1])
+                    }, layer);
+                    if (opts.annotate) {
+                        drawText(id, MakerJs.point.middle(line));
                     }
                 };
                 map[MakerJs.pathType.Circle] = function (id, circle, origin, layer) {
                     var center = circle.origin;
-                    if (opts.useSvgPathOnly) {
-                        circleInPaths(id, center, circle.radius, layer);
-                    }
-                    else {
-                        createElement("circle", {
-                            "id": id,
-                            "r": circle.radius,
-                            "cx": MakerJs.round(center[0]),
-                            "cy": MakerJs.round(center[1])
-                        }, layer);
-                    }
+                    createElement("circle", {
+                        "id": id,
+                        "r": circle.radius,
+                        "cx": MakerJs.round(center[0]),
+                        "cy": MakerJs.round(center[1])
+                    }, layer);
                     if (opts.annotate) {
                         drawText(id, center);
                     }
@@ -4524,9 +4864,25 @@ var MakerJs;
         /**
          * @private
          */
+        function svgCircleData(radius) {
+            var r = MakerJs.round(radius);
+            var d = ['m', -r, 0];
+            function halfCircle(sign) {
+                d.push('a');
+                svgArcData(d, r, [2 * r * sign, 0]);
+            }
+            halfCircle(1);
+            halfCircle(-1);
+            d.push('z');
+            return d;
+        }
+        /**
+         * @private
+         */
         function svgArcData(d, radius, endPoint, largeArc, decreasing) {
+            var r = MakerJs.round(radius);
             var end = endPoint;
-            d.push(radius, radius);
+            d.push(r, r);
             d.push(0); //0 = x-axis rotation
             d.push(largeArc ? 1 : 0); //large arc=1, small arc=0
             d.push(decreasing ? 0 : 1); //sweep-flag 0=decreasing, 1=increasing 

@@ -312,18 +312,22 @@ namespace MakerJs.model {
 
         if (!modelContext) return;
 
-        function walkRecursive(modelContext: IModel, offset: IPoint, route: string[], routeKey: string) {
+        function walkRecursive(modelContext: IModel, layer: string, offset: IPoint, route: string[], routeKey: string) {
 
             var newOffset = point.add(modelContext.origin, offset);
+            layer = modelContext.layer || '';
 
             if (modelContext.paths) {
                 for (var pathId in modelContext.paths) {
-                    if (!modelContext.paths[pathId]) continue;
+
+                    var pathContext = modelContext.paths[pathId];
+                    if (!pathContext) continue;
 
                     var walkedPath: IWalkPath = {
                         modelContext: modelContext,
+                        layer: pathContext.layer || layer,
                         offset: newOffset,
-                        pathContext: modelContext.paths[pathId],
+                        pathContext: pathContext,
                         pathId: pathId,
                         route: route.concat(['paths', pathId]),
                         routeKey: routeKey + '.paths' + JSON.stringify([pathId])
@@ -335,22 +339,25 @@ namespace MakerJs.model {
 
             if (modelContext.models) {
                 for (var modelId in modelContext.models) {
-                    if (!modelContext.models[modelId]) continue;
+
+                    var childModel = modelContext.models[modelId];
+                    if (!childModel) continue;
 
                     var walkedModel: IWalkModel = {
                         parentModel: modelContext,
+                        layer: childModel.layer || layer,
                         offset: newOffset,
                         route: route.concat(['models', modelId]),
                         routeKey: routeKey + '.models' + JSON.stringify([modelId]),
                         childId: modelId,
-                        childModel: modelContext.models[modelId]
+                        childModel: childModel
                     };
 
                     if (options.beforeChildWalk) {
                         if (!options.beforeChildWalk(walkedModel)) continue;
                     }
 
-                    walkRecursive(walkedModel.childModel, newOffset, walkedModel.route, walkedModel.routeKey);
+                    walkRecursive(walkedModel.childModel, layer, newOffset, walkedModel.route, walkedModel.routeKey);
 
                     if (options.afterChildWalk) {
                         options.afterChildWalk(walkedModel);
@@ -359,7 +366,7 @@ namespace MakerJs.model {
             }
         }
 
-        walkRecursive(modelContext, [0, 0], [], '');
+        walkRecursive(modelContext, '', [0, 0], [], '');
 
     }
 

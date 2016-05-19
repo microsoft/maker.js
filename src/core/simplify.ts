@@ -4,7 +4,7 @@
      * @private
      */
     function checkForOverlaps(
-        refPaths: IRefPathInModel[],
+        refPaths: IWalkPath[],
         isOverlapping: (pathA: IPath, pathB: IPath, excludeTangents: boolean) => boolean,
         overlapUnion: (pathA: IPath, pathB: IPath) => void) {
 
@@ -47,9 +47,20 @@
     }
 
     /**
-     * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path.
+     * @private
+     */
+    interface IWalkPathFunctionMap {
+
+        /**
+         * Key is the type of a path, value is a function which accepts a path object as its parameter.
+         */
+        [type: string]: (walkedPath: IWalkPath) => void;
+    }
+
+    /**
+     * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path. The model must be originated.
      * 
-     * @param modelContext The model to search for similar paths.
+     * @param modelContext The originated model to search for similar paths.
      * @param options Optional options object.
      * @returns The simplified model (for chaining).
      */
@@ -63,21 +74,21 @@
             return false;
         }
 
-        var similarArcs = new Collector<IPathCircle, IRefPathInModel>(compareCircles);
-        var similarCircles = new Collector<IPathCircle, IRefPathInModel>(compareCircles);
-        var similarLines = new Collector<ISlope, IRefPathInModel>(measure.isSlopeEqual);
+        var similarArcs = new Collector<IPathCircle, IWalkPath>(compareCircles);
+        var similarCircles = new Collector<IPathCircle, IWalkPath>(compareCircles);
+        var similarLines = new Collector<ISlope, IWalkPath>(measure.isSlopeEqual);
 
-        var map: IRefPathInModelFunctionMap = {};
+        var map: IWalkPathFunctionMap = {};
 
-        map[pathType.Arc] = function (arcRef: IRefPathInModel) {
+        map[pathType.Arc] = function (arcRef: IWalkPath) {
             similarArcs.addItemToCollection(<IPathCircle>arcRef.pathContext, arcRef);
         };
 
-        map[pathType.Circle] = function (circleRef: IRefPathInModel) {
+        map[pathType.Circle] = function (circleRef: IWalkPath) {
             similarCircles.addItemToCollection(<IPathCircle>circleRef.pathContext, circleRef);
         };
 
-        map[pathType.Line] = function (lineRef: IRefPathInModel) {
+        map[pathType.Line] = function (lineRef: IWalkPath) {
             var slope = measure.lineSlope(<IPathLine>lineRef.pathContext);
             similarLines.addItemToCollection(slope, lineRef);
         };
@@ -89,24 +100,19 @@
         extendObject(opts, options);
 
         //walk the model and collect: arcs on same center / radius, circles on same center / radius, lines on same y-intercept / slope.
-        walkPaths(modelToSimplify, function (modelContext: IModel, pathId: string, pathContext: IPath) {
-
-            var ref: IRefPathInModel = {
-                modelContext: modelContext,
-                pathContext: pathContext,
-                pathId: pathId
-            };
-
-            var fn = map[pathContext.type];
-            if (fn) {
-                fn(ref);
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
+                var fn = map[walkedPath.pathContext.type];
+                if (fn) {
+                    fn(walkedPath);
+                }
             }
-
-        });
+        };
+        walk(modelToSimplify, walkOptions);
 
         //for all arcs that are similar, see if they overlap.
         //combine overlapping arcs into the first one and delete the second.
-        similarArcs.getCollectionsOfMultiple(function (key: IPathCircle, arcRefs: IRefPathInModel[]) {
+        similarArcs.getCollectionsOfMultiple(function (key: IPathCircle, arcRefs: IWalkPath[]) {
             checkForOverlaps(arcRefs, measure.isArcOverlapping, function (arcA: IPathArc, arcB: IPathArc) {
 
                 var limitA = normalizedArcLimits(arcA);
@@ -118,7 +124,7 @@
         });
 
         //for all circles that are similar, delete all but the first.
-        similarCircles.getCollectionsOfMultiple(function (key: IPathCircle, circleRefs: IRefPathInModel[]) {
+        similarCircles.getCollectionsOfMultiple(function (key: IPathCircle, circleRefs: IWalkPath[]) {
             for (var i = 1; i < circleRefs.length; i++) {
                 var circleRef = circleRefs[i];
                 delete circleRef.modelContext.paths[circleRef.pathId];
@@ -127,7 +133,7 @@
 
         //for all lines that are similar, see if they overlap.
         //combine overlapping lines into the first one and delete the second.
-        similarLines.getCollectionsOfMultiple(function (slope: ISlope, arcRefs: IRefPathInModel[]) {
+        similarLines.getCollectionsOfMultiple(function (slope: ISlope, arcRefs: IWalkPath[]) {
             checkForOverlaps(arcRefs, measure.isLineOverlapping, function (lineA: IPathLine, lineB: IPathLine) {
 
                 var box: IModel = { paths: { lineA: lineA, lineB: lineB } };

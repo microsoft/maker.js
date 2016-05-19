@@ -40,20 +40,20 @@ NEW: [Outline model](http://microsoft.github.io/maker.js/docs/api/modules/makerj
 
 ### Built-in models
 
-* [Bolt Circle](http://microsoft.github.io/maker.js/demos/demo.html?demo=BoltCircle)
-* [Bolt Rectangle](http://microsoft.github.io/maker.js/demos/demo.html?demo=BoltRectangle)
-* [Connect the dots](http://microsoft.github.io/maker.js/demos/demo.html?demo=ConnectTheDots)
-* [Dome](http://microsoft.github.io/maker.js/demos/demo.html?demo=Dome)
-* [Oval](http://microsoft.github.io/maker.js/demos/demo.html?demo=Oval)
-* [OvalArc](http://microsoft.github.io/maker.js/demos/demo.html?demo=OvalArc)
-* [Polygon](http://microsoft.github.io/maker.js/demos/demo.html?demo=Polygon)
-* [Rectangle](http://microsoft.github.io/maker.js/demos/demo.html?demo=Rectangle)
-* [Ring](http://microsoft.github.io/maker.js/demos/demo.html?demo=Ring)
-* [RoundRectangle](http://microsoft.github.io/maker.js/demos/demo.html?demo=RoundRectangle)
-* [S curve](http://microsoft.github.io/maker.js/demos/demo.html?demo=SCurve)
-* [Slot](http://microsoft.github.io/maker.js/demos/demo.html?demo=Slot)
-* [Square](http://microsoft.github.io/maker.js/demos/demo.html?demo=Square)
-* [Star](http://microsoft.github.io/maker.js/demos/demo.html?demo=Star)
+* [Bolt Circle](http://microsoft.github.io/maker.js/playground/?script=BoltCircle)
+* [Bolt Rectangle](http://microsoft.github.io/maker.js/playground/?script=BoltRectangle)
+* [Connect the dots](http://microsoft.github.io/maker.js/playground/?script=ConnectTheDots)
+* [Dome](http://microsoft.github.io/maker.js/playground/?script=Dome)
+* [Oval](http://microsoft.github.io/maker.js/playground/?script=Oval)
+* [OvalArc](http://microsoft.github.io/maker.js/playground/?script=OvalArc)
+* [Polygon](http://microsoft.github.io/maker.js/playground/?script=Polygon)
+* [Rectangle](http://microsoft.github.io/maker.js/playground/?script=Rectangle)
+* [Ring](http://microsoft.github.io/maker.js/playground/?script=Ring)
+* [RoundRectangle](http://microsoft.github.io/maker.js/playground/?script=RoundRectangle)
+* [S curve](http://microsoft.github.io/maker.js/playground/?script=SCurve)
+* [Slot](http://microsoft.github.io/maker.js/playground/?script=Slot)
+* [Square](http://microsoft.github.io/maker.js/playground/?script=Square)
+* [Star](http://microsoft.github.io/maker.js/playground/?script=Star)
 
 ## Getting Started
 
