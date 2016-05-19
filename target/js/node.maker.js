@@ -4496,12 +4496,12 @@ var MakerJs;
             MakerJs.model.findChains(scaledModel, function (chains, loose, layer) {
                 function single(walkedPath) {
                     var pathData = exporter.pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
-                    doc.path(pathData);
+                    doc.path(pathData).stroke(opts.stroke);
                 }
                 chains.map(function (chain) {
                     if (chain.links.length > 1) {
                         var pathData = exporter.chainToSVGPathData(chain, offset);
-                        var p = doc.path(pathData).stroke(opts.stroke);
+                        doc.path(pathData).stroke(opts.stroke);
                     }
                     else {
                         var walkedPath = chain.links[0].walkedPath;
