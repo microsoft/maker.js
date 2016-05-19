@@ -576,13 +576,6 @@ namespace MakerJs {
     }
 
     /**
-     * Path and its reference id within a model
-     */
-    export interface IRefPathInModel extends IRefPathIdInModel {
-        pathContext: IPath;
-    }
-
-    /**
      * A route to either a path or a model, and the absolute offset of it.
      */
     export interface IRouteOffset {
@@ -595,7 +588,8 @@ namespace MakerJs {
     /**
      * A path reference in a walk.
      */
-    export interface IWalkPath extends IRefPathInModel, IRouteOffset {
+    export interface IWalkPath extends IRefPathIdInModel, IRouteOffset {
+        pathContext: IPath;
     }
 
     /**
