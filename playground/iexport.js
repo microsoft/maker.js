@@ -6,6 +6,7 @@ var MakerJsPlaygroundExport;
         ExportFormat[ExportFormat["Svg"] = 2] = "Svg";
         ExportFormat[ExportFormat["OpenJsCad"] = 3] = "OpenJsCad";
         ExportFormat[ExportFormat["Stl"] = 4] = "Stl";
+        ExportFormat[ExportFormat["Pdf"] = 5] = "Pdf";
     })(MakerJsPlaygroundExport.ExportFormat || (MakerJsPlaygroundExport.ExportFormat = {}));
     var ExportFormat = MakerJsPlaygroundExport.ExportFormat;
     ;
@@ -29,6 +30,10 @@ var MakerJsPlaygroundExport;
     MakerJsPlaygroundExport.formatMap[ExportFormat.Stl] = {
         mediaType: 'application/stl',
         fileExtension: 'stl'
+    };
+    MakerJsPlaygroundExport.formatMap[ExportFormat.Pdf] = {
+        mediaType: 'application/pdf',
+        fileExtension: 'pdf'
     };
 })(MakerJsPlaygroundExport || (MakerJsPlaygroundExport = {}));
 //# sourceMappingURL=iexport.js.map
