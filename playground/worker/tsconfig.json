@@ -6,12 +6,15 @@
   "files": [
     "../../typings/node/node.d.ts",
     "../../typings/OpenJsCad/csg.d.ts",
+    "../../typings/pdfkit/pdfkit.d.ts",
+    "../../typings/text-encoding/text-encoding.d.ts",
     "../../target/ts/makerjs.d.ts",
     "../../typings/lib.core.d.ts",
     "../../typings/lib.webworker.d.ts",
     "../iexport.ts",
     "../irender.ts",
     "export-worker.ts",
-    "render-worker.ts"
+    "render-worker.ts",
+    "string-reader.ts"
   ]
 }
