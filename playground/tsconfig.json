@@ -6,6 +6,7 @@
     "../typings/node/node.d.ts",
     "../typings/marked/marked.d.ts",
     "../typings/codemirror/codemirror.d.ts",
+    "../typings/pdfkit/pdfkit.d.ts",
     "../target/ts/makerjs.d.ts",
     "iexport.ts",
     "irender.ts",
