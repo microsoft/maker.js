@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IWalkModelCallback Interface
+title: Api - IPDFRenderOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Callback signature for model.walk().</p>
+			<p>PDF rendering options.</p>
 		</div>
 	</div>
 </section>
@@ -14,36 +14,78 @@ title: Api - IWalkModelCallback Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IWalkModelCallback</span>
+			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">IPDFRenderOptions</span>
+				</li>
+			</ul>
 		</li>
 	</ul>
 </section>
-<section class="tsd-panel">
-	<h3 class="tsd-before-signature">Callable</h3>
-	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module">
-		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-	</ul>
-	<ul class="tsd-descriptions">
-		<li class="tsd-description">
-			<aside class="tsd-sources">
-				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L676">core/maker.ts:676</a></li>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Properties</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ipdfrenderoptions.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ipdfrenderoptions.html#stroke" class="tsd-kind-icon">stroke</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ipdfrenderoptions.html#units" class="tsd-kind-icon">units</a></li>
 				</ul>
-			</aside>
-			<div class="tsd-comment tsd-typography">
-				<div class="lead">
-					<p>Callback signature for model.walk().</p>
-				</div>
-			</div>
-			<h4 class="tsd-parameters-title">Parameters</h4>
-			<ul class="tsd-parameters">
-				<li>
-					<h5>context: <a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a></h5>
-				</li>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="origin" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> origin</h3>
+		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/pdf.ts#L97">core/pdf.ts:97</a></li>
 			</ul>
-			<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-		</li>
-	</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Rendered reference origin.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="stroke" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> stroke</h3>
+		<div class="tsd-signature tsd-kind-icon">stroke<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/pdf.ts#L102">core/pdf.ts:102</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG color of the rendered paths.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="units" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
+		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#units">units</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/exporter.ts#L10">core/exporter.ts:10</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Unit system to embed in exported file.</p>
+			</div>
+		</div>
+	</section>
 </section>
 </div>
 <footer class="tsd-panel with-border-bottom">
