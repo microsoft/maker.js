@@ -59,7 +59,7 @@
 
                 if (!foreignPathEndPoints) {
                     //make sure endpoints are in absolute coords
-                    foreignPathEndPoints = point.fromPathEnds(foreignPath, crossedPath.offset);
+                    foreignPathEndPoints = point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
                 }
 
                 pointsToCheck = foreignPathEndPoints;
