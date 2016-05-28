@@ -260,8 +260,8 @@ namespace MakerJs.path {
     /**
      * Connect 2 lines at their slope intersection point.
      * 
-     * @param lineA First line to trim.
-     * @param lineB Second line to trim.
+     * @param lineA First line to converge.
+     * @param lineB Second line to converge.
      * @param useOriginA Optional flag to converge the origin point of lineA instead of the end point.
      * @param useOriginB Optional flag to converge the origin point of lineB instead of the end point.
      */
