@@ -26,6 +26,19 @@ namespace MakerJs.path {
                 var arc1Angles = getAnglesWithinArc(angles[0], arc1, options);
                 var arc2Angles = getAnglesWithinArc(angles[1], arc2, options);
                 if (arc1Angles && arc2Angles) {
+
+                    //must correspond to the same angle indexes
+                    if (arc1Angles.length === 1 && arc2Angles.length === 1) {
+
+                        var index1 = findCorrespondingAngleIndex(angles, arc1Angles);
+                        var index2 = findCorrespondingAngleIndex(angles, arc2Angles);
+
+                        //if they do not correspond then they don't intersect
+                        if (index1 !== index2) {
+                            return;
+                        }
+                    }
+
                     result = {
                         intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
                         path1Angles: arc1Angles,
