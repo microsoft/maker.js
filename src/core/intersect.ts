@@ -30,11 +30,11 @@ namespace MakerJs.path {
                     //must correspond to the same angle indexes
                     if (arc1Angles.length === 1 && arc2Angles.length === 1) {
 
-                        var index1 = findCorrespondingAngleIndex(angles, arc1Angles);
-                        var index2 = findCorrespondingAngleIndex(angles, arc2Angles);
+                        var p1 = point.fromAngleOnCircle(arc1Angles[0], arc1);
+                        var p2 = point.fromAngleOnCircle(arc2Angles[0], arc2);
 
                         //if they do not correspond then they don't intersect
-                        if (index1 !== index2) {
+                        if (!measure.isPointEqual(p1, p2, .001)) {
                             return;
                         }
                     }
@@ -377,17 +377,17 @@ namespace MakerJs.path {
         var x = c2.origin[0];
 
         //see if c2 is outside of c1
-        if (x - c2.radius > c1.radius) {
+        if (round(x - c2.radius) > c1.radius) {
             return null;
         }
 
         //see if c2 is within c1
-        if (x + c2.radius < c1.radius) {
+        if (round(x + c2.radius) < c1.radius) {
             return null;
         }
 
         //see if c1 is within c2
-        if (x - c2.radius < -c1.radius) {
+        if (round(x - c2.radius) < -c1.radius) {
             return null;
         }
 
