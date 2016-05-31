@@ -600,6 +600,13 @@ namespace MakerJs {
     }
 
     /**
+     * Callback for returning a boolean from an IWalkPath.
+     */
+    export interface IWalkPathBooleanCallback {
+        (context: IWalkPath): boolean;
+    }
+
+    /**
      * A link in a chain, with direction of flow.
      */
     export interface IChainLink {
