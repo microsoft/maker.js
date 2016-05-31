@@ -28,22 +28,36 @@ namespace MakerJs.path {
                 if (arc1Angles && arc2Angles) {
 
                     //must correspond to the same angle indexes
-                    if (arc1Angles.length === 1 && arc2Angles.length === 1) {
+                    if (arc1Angles.length === 1 || arc2Angles.length === 1) {
 
-                        var p1 = point.fromAngleOnCircle(arc1Angles[0], arc1);
-                        var p2 = point.fromAngleOnCircle(arc2Angles[0], arc2);
+                        for (var i1 = 0; i1 < arc1Angles.length; i1++) {
+                            for (var i2 = 0; i2 < arc2Angles.length; i2++) {
 
-                        //if they do not correspond then they don't intersect
-                        if (!measure.isPointEqual(p1, p2, .001)) {
-                            return;
+                                var p1 = point.fromAngleOnCircle(arc1Angles[i1], arc1);
+                                var p2 = point.fromAngleOnCircle(arc2Angles[i2], arc2);
+
+                                //if they do not correspond then they don't intersect
+                                if (measure.isPointEqual(p1, p2, .0001)) {
+
+                                    result = {
+                                        intersectionPoints: [p1],
+                                        path1Angles: [arc1Angles[i1]],
+                                        path2Angles: [arc2Angles[i2]]
+                                    };
+
+                                    return;
+                                }
+                            }
                         }
-                    }
 
-                    result = {
-                        intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
-                        path1Angles: arc1Angles,
-                        path2Angles: arc2Angles
-                    };
+                    } else {
+
+                        result = {
+                            intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
+                            path1Angles: arc1Angles,
+                            path2Angles: arc2Angles
+                        };
+                    }
                 }
             } else {
                 if (options.out_AreOverlapped) {
