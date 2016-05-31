@@ -259,7 +259,9 @@
 
         public pointMap: Collector<IPoint, IRefPathEndpoints>;
 
-        constructor(public pointMatchingDistance) {
+        constructor(public pointMatchingDistance, public keep?: IWalkPathBooleanCallback) {
+
+            pointMatchingDistance = pointMatchingDistance || .005;
 
             function comparePoint(pointA: IPoint, pointB: IPoint): boolean {
                 var distance = measure.pointDistance(pointA, pointB);
@@ -267,21 +269,6 @@
             }
 
             this.pointMap = new Collector<IPoint, IRefPathEndpoints>(comparePoint);
-        }
-
-        private removeMatchingPathRefs(a: IRefPathEndpoints[], b: IRefPathEndpoints[]) {
-            //see if any are the same in each array
-            for (var ai = 0; ai < a.length; ai++) {
-                for (var bi = 0; bi < b.length; bi++) {
-                    if (a[ai] === b[bi]) {
-                        var pathRef = a[ai];
-                        a.splice(ai, 1);
-                        b.splice(bi, 1);
-                        return pathRef;
-                    }
-                }
-            }
-            return null;
         }
 
         private removePathRef(pathRef: IRefPathEndpoints) {
@@ -304,7 +291,6 @@
 
         public removeDeadEnd(): boolean {
             var found = false;
-            var oddPathRefs: IRefPathEndpoints[] = null;
 
             for (var i = 0; i < this.pointMap.collections.length; i++) {
 
@@ -314,29 +300,24 @@
 
                 if (pathRefs.length == 1) {
                     var pathRef = pathRefs[0];
-                    this.removePathRef(pathRef);
 
+                    this.removePathRef(pathRef);
                     delete pathRef.modelContext.paths[pathRef.pathId];
                     found = true;
 
-                } else {
+                } else if (this.keep) {
 
-                    if (!oddPathRefs) {
-                        //save this for another iteration
-                        oddPathRefs = pathRefs;
-                    } else {
+                    //allow caller to decide to keep each path
+                    pathRefs.map((pathRef: IRefPathEndpoints, i: number) => {
+                        if (!this.keep(pathRef)) {
 
-                        //compare with the saved
-                        var pathRef = this.removeMatchingPathRefs(oddPathRefs, pathRefs);
-                        if (pathRef) {
-
+                            this.removePathRef(pathRef);
                             delete pathRef.modelContext.paths[pathRef.pathId];
                             found = true;
 
-                            //clear the saved
-                            oddPathRefs = null;
                         }
-                    }
+                    });
+
                 }
             }
             return found;
@@ -350,8 +331,8 @@
      * @param options Optional options object.
      * @returns The input model (for chaining).
      */
-    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance = .005) {
-        var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
+    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?, keep?: IWalkPathBooleanCallback) {
+        var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep);
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
