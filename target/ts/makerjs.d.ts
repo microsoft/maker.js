@@ -471,6 +471,12 @@ declare namespace MakerJs {
         (context: IWalkPath): void;
     }
     /**
+     * Callback for returning a boolean from an IWalkPath.
+     */
+    interface IWalkPathBooleanCallback {
+        (context: IWalkPath): boolean;
+    }
+    /**
      * A link in a chain, with direction of flow.
      */
     interface IChainLink {
@@ -863,6 +869,15 @@ declare namespace MakerJs.path {
      * @returns The original path (for chaining).
      */
     function scale(pathToScale: IPath, scaleValue: number): IPath;
+    /**
+     * Connect 2 lines at their slope intersection point.
+     *
+     * @param lineA First line to converge.
+     * @param lineB Second line to converge.
+     * @param useOriginA Optional flag to converge the origin point of lineA instead of the end point.
+     * @param useOriginB Optional flag to converge the origin point of lineB instead of the end point.
+     */
+    function converge(lineA: IPathLine, lineB: IPathLine, useOriginA?: boolean, useOriginB?: boolean): IPoint;
 }
 declare namespace MakerJs.path {
     /**
@@ -1567,7 +1582,7 @@ declare namespace MakerJs.model {
      * @param options Optional options object.
      * @returns The input model (for chaining).
      */
-    function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number): IModel;
+    function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: any, keep?: IWalkPathBooleanCallback): IModel;
 }
 declare namespace MakerJs.exporter {
     /**

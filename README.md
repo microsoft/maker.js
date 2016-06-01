@@ -14,7 +14,7 @@ Paths can be [grouped into Models](http://microsoft.github.io/maker.js/docs/basi
 
 Behind the scenes, drawings are a [simple Javascript object](http://microsoft.github.io/maker.js/docs/basic-drawing/#It%27s%20Just%20JSON) which can be serialized / deserialized conventionally with JSON.
 
-Other people's Models can be imported, [modified](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Modifying%20models), and re-exported.
+Other people's Models can be required the Node.js way, [modified](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Modifying%20models), and re-exported.
 
 Models can be [scaled](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Scaling), [measured](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](http://microsoft.github.io/maker.js/docs/basic-drawing/#Units).
 
@@ -26,15 +26,16 @@ Easily add a curvature at the joint between any 2 paths, using a [traditional fi
 
 [Combine models](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#combine) with boolean operations to get unions, intersections, or punches.
 
-[Detect loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
+Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains) or [loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
 
-NEW: [Expand paths](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#expandpaths) to simulate a stroke thickness, with the option to bevel joints.
+[Expand paths](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#expandpaths) to simulate a stroke thickness, with the option to bevel joints.
 
-NEW: [Outline model](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#outline) to create a surrounding outline, with the option to bevel joints.
+[Outline model](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#outline) to create a surrounding outline, with the option to bevel joints.
 
 ### Output formats
 
-2D: [DXF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf), [SVG](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg)
+2D: [DXF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf), [SVG](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg),
+NEW: [PDF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#topdf)
 
 3D: [OpenJsCad script](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#toopenjscad), [STL](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tostl) (Must include [OpenJsCad](http://joostn.github.io/OpenJsCad/) or [openjscad-csg](https://www.npmjs.com/package/openjscad-csg))
 
@@ -59,7 +60,7 @@ NEW: [Outline model](http://microsoft.github.io/maker.js/docs/api/modules/makerj
 
 ### Try it now
 
-Visit the [Maker.js Playground](http://microsoft.github.io/maker.js/playground/) to edit and run JavaScript from your browser.
+Visit the [Maker.js Playground](http://microsoft.github.io/maker.js/playground/) a sample app to edit and run JavaScript from your browser.
 
 Each of the [demos](http://microsoft.github.io/maker.js/demos/#content) will also open in the playground so that you can explore and modify their code.
 

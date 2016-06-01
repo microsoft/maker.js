@@ -38,17 +38,6 @@
     /**
      * @private
      */
-    function normalizedArcLimits(arc: IPathArc) {
-        var startAngle = angle.noRevolutions(arc.startAngle);
-        return {
-            startAngle: startAngle,
-            endAngle: angle.ofArcSpan(arc) + startAngle
-        };
-    }
-
-    /**
-     * @private
-     */
     interface IWalkPathFunctionMap {
 
         /**
@@ -115,11 +104,22 @@
         similarArcs.getCollectionsOfMultiple(function (key: IPathCircle, arcRefs: IWalkPath[]) {
             checkForOverlaps(arcRefs, measure.isArcOverlapping, function (arcA: IPathArc, arcB: IPathArc) {
 
-                var limitA = normalizedArcLimits(arcA);
-                var limitB = normalizedArcLimits(arcB);
+                //find ends within the other
+                var aEndsInB = measure.isBetweenArcAngles(arcA.endAngle, arcB, false);
+                var bEndsInA = measure.isBetweenArcAngles(arcB.endAngle, arcA, false);
 
-                arcA.startAngle = Math.min(limitA.startAngle, limitB.startAngle);
-                arcA.endAngle = Math.max(limitA.endAngle, limitB.endAngle);
+                //check for complete circle
+                if (aEndsInB && bEndsInA) {
+                    arcA.endAngle = arcA.startAngle + 360;
+                    return;
+                }
+
+                //find the leader, in polar terms
+                var ordered: IPathArc[] = aEndsInB ? [arcA, arcB] : [arcB, arcA];
+
+                //save in arcA
+                arcA.startAngle = angle.noRevolutions(ordered[0].startAngle);
+                arcA.endAngle = ordered[1].endAngle;
             });
         });
 
