@@ -8,7 +8,7 @@ namespace MakerJs.path {
             pathB.layer = pathA.layer;
         }
     }
-    
+
     /**
      * Create a clone of a path. This is faster than cloneObject.
      * 
@@ -255,6 +255,34 @@ namespace MakerJs.path {
         }
 
         return pathToScale;
+    }
+
+    /**
+     * Connect 2 lines at their slope intersection point.
+     * 
+     * @param lineA First line to converge.
+     * @param lineB Second line to converge.
+     * @param useOriginA Optional flag to converge the origin point of lineA instead of the end point.
+     * @param useOriginB Optional flag to converge the origin point of lineB instead of the end point.
+     */
+    export function converge(lineA: IPathLine, lineB: IPathLine, useOriginA?: boolean, useOriginB?: boolean): IPoint {
+        var p = point.fromSlopeIntersection(lineA, lineB);
+
+        if (p) {
+
+            function setPoint(line: IPathLine, useOrigin: boolean) {
+                if (useOrigin) {
+                    line.origin = p;
+                } else {
+                    line.end = p;
+                }
+            }
+
+            setPoint(lineA, useOriginA);
+            setPoint(lineB, useOriginB);
+        }
+
+        return p;
     }
 
 }

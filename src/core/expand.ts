@@ -152,22 +152,44 @@ namespace MakerJs.model {
 
             simplify(roundCaps);
 
-            var straightCaps: IModel = { models: {} };
-
             //straighten each cap, optionally beveling
             for (var id in roundCaps.models) {
 
-                var straightened: IModel = { models: {} };
+                //add a model container to the caps
+                roundCaps.models[id].models = {};
 
-                walkPaths(roundCaps.models[id], function (modelContext: IModel, pathId: string, pathContext: IPath) {
-                    straightened.models[pathId] = path.straighten(<IPathArc>pathContext, joints == 2, pathId + '_');
+                walk(roundCaps.models[id], {
+
+                    beforeChildWalk: function () {
+                        //don't crawl the model we just added
+                        return false;
+                    },
+
+                    onPath: function (walkedPath: IWalkPath) {
+
+                        var arc = <IPathArc>walkedPath.pathContext;
+
+                        //make a small closed shape using the arc itself and the straightened arc
+                        var straightened = path.straighten(arc, joints == 2, walkedPath.pathId + '_');
+                        var arcClone = path.clone(arc);
+                        arcClone.origin = [0, 0];
+                        straightened.paths['arc'] = arcClone;
+
+                        //union this little pointy shape with the rest of the result
+                        combine(result, straightened, false, true, false, true, combineOptions);
+                        combineOptions.measureA.modelsMeasured = false;
+                        delete combineOptions.measureB;
+
+                        //replace the rounded path with the straightened model
+                        roundCaps.models[id].models[walkedPath.pathId] = straightened;
+                        delete roundCaps.models[id].paths[walkedPath.pathId];
+                    }
                 });
 
-                straightCaps.models[id] = straightened;
+                //delete the paths in the caps
+                delete roundCaps.models[id].paths;
             }
 
-            //replace the rounded with the straightened
-            result.models['caps'] = straightCaps;
         }
 
         return result;
@@ -207,7 +229,7 @@ namespace MakerJs.model {
                         delete p.endPoints;
                         delete p.modelContext;
                         delete p.pathId;
-                        delete p.reversed;                        
+                        delete p.reversed;
                     }
                 };
 

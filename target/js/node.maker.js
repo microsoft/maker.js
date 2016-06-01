@@ -824,6 +824,31 @@ var MakerJs;
             return pathToScale;
         }
         path.scale = scale;
+        /**
+         * Connect 2 lines at their slope intersection point.
+         *
+         * @param lineA First line to converge.
+         * @param lineB Second line to converge.
+         * @param useOriginA Optional flag to converge the origin point of lineA instead of the end point.
+         * @param useOriginB Optional flag to converge the origin point of lineB instead of the end point.
+         */
+        function converge(lineA, lineB, useOriginA, useOriginB) {
+            var p = MakerJs.point.fromSlopeIntersection(lineA, lineB);
+            if (p) {
+                function setPoint(line, useOrigin) {
+                    if (useOrigin) {
+                        line.origin = p;
+                    }
+                    else {
+                        line.end = p;
+                    }
+                }
+                setPoint(lineA, useOriginA);
+                setPoint(lineB, useOriginB);
+            }
+            return p;
+        }
+        path.converge = converge;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -1485,7 +1510,7 @@ var MakerJs;
                     overlappedSegments.push(segments[i]);
                     if (!foreignPathEndPoints) {
                         //make sure endpoints are in absolute coords
-                        foreignPathEndPoints = MakerJs.point.fromPathEnds(foreignPath, crossedPath.offset);
+                        foreignPathEndPoints = MakerJs.point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
                     }
                     pointsToCheck = foreignPathEndPoints;
                 }
@@ -1506,7 +1531,8 @@ var MakerJs;
                                 path: subSegments[1],
                                 pathId: segments[0].pathId,
                                 overlapped: segments[i].overlapped,
-                                uniqueForeignIntersectionPoints: []
+                                uniqueForeignIntersectionPoints: [],
+                                offset: crossedPath.offset
                             };
                             if (segments[i].overlapped) {
                                 overlappedSegments.push(newSegment);
@@ -1625,7 +1651,8 @@ var MakerJs;
                         path: MakerJs.path.clone(outerWalkedPath.pathContext),
                         pathId: outerWalkedPath.pathId,
                         overlapped: false,
-                        uniqueForeignIntersectionPoints: []
+                        uniqueForeignIntersectionPoints: [],
+                        offset: outerWalkedPath.offset
                     };
                     var thisPath = outerWalkedPath;
                     thisPath.broken = false;
@@ -1661,7 +1688,7 @@ var MakerJs;
          */
         function checkForEqualOverlaps(crossedPathsA, crossedPathsB, pointMatchingDistance) {
             function compareSegments(segment1, segment2) {
-                if (MakerJs.measure.isPathEqual(segment1.path, segment2.path, pointMatchingDistance)) {
+                if (MakerJs.measure.isPathEqual(segment1.path, segment2.path, pointMatchingDistance, segment1.offset, segment2.offset)) {
                     segment1.duplicate = segment2.duplicate = true;
                 }
             }
@@ -1754,7 +1781,22 @@ var MakerJs;
                 addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB);
             }
             if (opts.trimDeadEnds) {
-                model.removeDeadEnds({ models: { modelA: modelA, modelB: modelB } });
+                var shouldKeep;
+                //union
+                if (!includeAInsideB && !includeBInsideA) {
+                    shouldKeep = function (walkedPath) {
+                        //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
+                        //Duplicates were discarded from B but kept in A
+                        for (var i = 0; i < pathsA.overlappedSegments.length; i++) {
+                            if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].path) {
+                                return false;
+                            }
+                        }
+                        //default - keep the path
+                        return true;
+                    };
+                }
+                model.removeDeadEnds({ models: { modelA: modelA, modelB: modelB } }, null, shouldKeep);
             }
             //pass options back to caller
             MakerJs.extendObject(options, opts);
@@ -1883,16 +1925,6 @@ var MakerJs;
             } while (currIndex < refPaths.length);
         }
         /**
-         * @private
-         */
-        function normalizedArcLimits(arc) {
-            var startAngle = MakerJs.angle.noRevolutions(arc.startAngle);
-            return {
-                startAngle: startAngle,
-                endAngle: MakerJs.angle.ofArcSpan(arc) + startAngle
-            };
-        }
-        /**
          * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path. The model must be originated.
          *
          * @param modelContext The originated model to search for similar paths.
@@ -1940,10 +1972,19 @@ var MakerJs;
             //combine overlapping arcs into the first one and delete the second.
             similarArcs.getCollectionsOfMultiple(function (key, arcRefs) {
                 checkForOverlaps(arcRefs, MakerJs.measure.isArcOverlapping, function (arcA, arcB) {
-                    var limitA = normalizedArcLimits(arcA);
-                    var limitB = normalizedArcLimits(arcB);
-                    arcA.startAngle = Math.min(limitA.startAngle, limitB.startAngle);
-                    arcA.endAngle = Math.max(limitA.endAngle, limitB.endAngle);
+                    //find ends within the other
+                    var aEndsInB = MakerJs.measure.isBetweenArcAngles(arcA.endAngle, arcB, false);
+                    var bEndsInA = MakerJs.measure.isBetweenArcAngles(arcB.endAngle, arcA, false);
+                    //check for complete circle
+                    if (aEndsInB && bEndsInA) {
+                        arcA.endAngle = arcA.startAngle + 360;
+                        return;
+                    }
+                    //find the leader, in polar terms
+                    var ordered = aEndsInB ? [arcA, arcB] : [arcB, arcA];
+                    //save in arcA
+                    arcA.startAngle = MakerJs.angle.noRevolutions(ordered[0].startAngle);
+                    arcA.endAngle = ordered[1].endAngle;
                 });
             });
             //for all circles that are similar, delete all but the first.
@@ -2119,17 +2160,34 @@ var MakerJs;
             if (joints) {
                 var roundCaps = result.models['caps'];
                 model.simplify(roundCaps);
-                var straightCaps = { models: {} };
                 //straighten each cap, optionally beveling
                 for (var id in roundCaps.models) {
-                    var straightened = { models: {} };
-                    model.walkPaths(roundCaps.models[id], function (modelContext, pathId, pathContext) {
-                        straightened.models[pathId] = MakerJs.path.straighten(pathContext, joints == 2, pathId + '_');
+                    //add a model container to the caps
+                    roundCaps.models[id].models = {};
+                    model.walk(roundCaps.models[id], {
+                        beforeChildWalk: function () {
+                            //don't crawl the model we just added
+                            return false;
+                        },
+                        onPath: function (walkedPath) {
+                            var arc = walkedPath.pathContext;
+                            //make a small closed shape using the arc itself and the straightened arc
+                            var straightened = MakerJs.path.straighten(arc, joints == 2, walkedPath.pathId + '_');
+                            var arcClone = MakerJs.path.clone(arc);
+                            arcClone.origin = [0, 0];
+                            straightened.paths['arc'] = arcClone;
+                            //union this little pointy shape with the rest of the result
+                            model.combine(result, straightened, false, true, false, true, combineOptions);
+                            combineOptions.measureA.modelsMeasured = false;
+                            delete combineOptions.measureB;
+                            //replace the rounded path with the straightened model
+                            roundCaps.models[id].models[walkedPath.pathId] = straightened;
+                            delete roundCaps.models[id].paths[walkedPath.pathId];
+                        }
                     });
-                    straightCaps.models[id] = straightened;
+                    //delete the paths in the caps
+                    delete roundCaps.models[id].paths;
                 }
-                //replace the rounded with the straightened
-                result.models['caps'] = straightCaps;
             }
             return result;
         }
@@ -3018,11 +3076,31 @@ var MakerJs;
                     var arc1Angles = getAnglesWithinArc(angles[0], arc1, options);
                     var arc2Angles = getAnglesWithinArc(angles[1], arc2, options);
                     if (arc1Angles && arc2Angles) {
-                        result = {
-                            intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
-                            path1Angles: arc1Angles,
-                            path2Angles: arc2Angles
-                        };
+                        //must correspond to the same angle indexes
+                        if (arc1Angles.length === 1 || arc2Angles.length === 1) {
+                            for (var i1 = 0; i1 < arc1Angles.length; i1++) {
+                                for (var i2 = 0; i2 < arc2Angles.length; i2++) {
+                                    var p1 = MakerJs.point.fromAngleOnCircle(arc1Angles[i1], arc1);
+                                    var p2 = MakerJs.point.fromAngleOnCircle(arc2Angles[i2], arc2);
+                                    //if they do not correspond then they don't intersect
+                                    if (MakerJs.measure.isPointEqual(p1, p2, .0001)) {
+                                        result = {
+                                            intersectionPoints: [p1],
+                                            path1Angles: [arc1Angles[i1]],
+                                            path2Angles: [arc2Angles[i2]]
+                                        };
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            result = {
+                                intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
+                                path1Angles: arc1Angles,
+                                path2Angles: arc2Angles
+                            };
+                        }
                     }
                 }
                 else {
@@ -3295,15 +3373,15 @@ var MakerJs;
             //get X of c2 origin
             var x = c2.origin[0];
             //see if c2 is outside of c1
-            if (x - c2.radius > c1.radius) {
+            if (MakerJs.round(x - c2.radius) > c1.radius) {
                 return null;
             }
             //see if c2 is within c1
-            if (x + c2.radius < c1.radius) {
+            if (MakerJs.round(x + c2.radius) < c1.radius) {
                 return null;
             }
             //see if c1 is within c2
-            if (x - c2.radius < -c1.radius) {
+            if (MakerJs.round(x - c2.radius) < -c1.radius) {
                 return null;
             }
             //see if circles are tangent interior
@@ -4062,28 +4140,16 @@ var MakerJs;
          * @private
          */
         var DeadEndFinder = (function () {
-            function DeadEndFinder(pointMatchingDistance) {
+            function DeadEndFinder(pointMatchingDistance, keep) {
                 this.pointMatchingDistance = pointMatchingDistance;
+                this.keep = keep;
+                pointMatchingDistance = pointMatchingDistance || .005;
                 function comparePoint(pointA, pointB) {
                     var distance = MakerJs.measure.pointDistance(pointA, pointB);
                     return distance <= pointMatchingDistance;
                 }
                 this.pointMap = new MakerJs.Collector(comparePoint);
             }
-            DeadEndFinder.prototype.removeMatchingPathRefs = function (a, b) {
-                //see if any are the same in each array
-                for (var ai = 0; ai < a.length; ai++) {
-                    for (var bi = 0; bi < b.length; bi++) {
-                        if (a[ai] === b[bi]) {
-                            var pathRef = a[ai];
-                            a.splice(ai, 1);
-                            b.splice(bi, 1);
-                            return pathRef;
-                        }
-                    }
-                }
-                return null;
-            };
             DeadEndFinder.prototype.removePathRef = function (pathRef) {
                 var _this = this;
                 var removePath = function (p) {
@@ -4100,8 +4166,8 @@ var MakerJs;
                 }
             };
             DeadEndFinder.prototype.removeDeadEnd = function () {
+                var _this = this;
                 var found = false;
-                var oddPathRefs = null;
                 for (var i = 0; i < this.pointMap.collections.length; i++) {
                     var pathRefs = this.pointMap.collections[i].items;
                     if (pathRefs.length % 2 == 0)
@@ -4112,21 +4178,15 @@ var MakerJs;
                         delete pathRef.modelContext.paths[pathRef.pathId];
                         found = true;
                     }
-                    else {
-                        if (!oddPathRefs) {
-                            //save this for another iteration
-                            oddPathRefs = pathRefs;
-                        }
-                        else {
-                            //compare with the saved
-                            var pathRef = this.removeMatchingPathRefs(oddPathRefs, pathRefs);
-                            if (pathRef) {
+                    else if (this.keep) {
+                        //allow caller to decide to keep each path
+                        pathRefs.map(function (pathRef, i) {
+                            if (!_this.keep(pathRef)) {
+                                _this.removePathRef(pathRef);
                                 delete pathRef.modelContext.paths[pathRef.pathId];
                                 found = true;
-                                //clear the saved
-                                oddPathRefs = null;
                             }
-                        }
+                        });
                     }
                 }
                 return found;
@@ -4140,9 +4200,8 @@ var MakerJs;
          * @param options Optional options object.
          * @returns The input model (for chaining).
          */
-        function removeDeadEnds(modelContext, pointMatchingDistance) {
-            if (pointMatchingDistance === void 0) { pointMatchingDistance = .005; }
-            var deadEndFinder = new DeadEndFinder(pointMatchingDistance);
+        function removeDeadEnds(modelContext, pointMatchingDistance, keep) {
+            var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep);
             var walkOptions = {
                 onPath: function (walkedPath) {
                     var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);

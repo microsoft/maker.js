@@ -26,11 +26,38 @@ namespace MakerJs.path {
                 var arc1Angles = getAnglesWithinArc(angles[0], arc1, options);
                 var arc2Angles = getAnglesWithinArc(angles[1], arc2, options);
                 if (arc1Angles && arc2Angles) {
-                    result = {
-                        intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
-                        path1Angles: arc1Angles,
-                        path2Angles: arc2Angles
-                    };
+
+                    //must correspond to the same angle indexes
+                    if (arc1Angles.length === 1 || arc2Angles.length === 1) {
+
+                        for (var i1 = 0; i1 < arc1Angles.length; i1++) {
+                            for (var i2 = 0; i2 < arc2Angles.length; i2++) {
+
+                                var p1 = point.fromAngleOnCircle(arc1Angles[i1], arc1);
+                                var p2 = point.fromAngleOnCircle(arc2Angles[i2], arc2);
+
+                                //if they do not correspond then they don't intersect
+                                if (measure.isPointEqual(p1, p2, .0001)) {
+
+                                    result = {
+                                        intersectionPoints: [p1],
+                                        path1Angles: [arc1Angles[i1]],
+                                        path2Angles: [arc2Angles[i2]]
+                                    };
+
+                                    return;
+                                }
+                            }
+                        }
+
+                    } else {
+
+                        result = {
+                            intersectionPoints: pointsFromAnglesOnCircle(arc1Angles, arc1),
+                            path1Angles: arc1Angles,
+                            path2Angles: arc2Angles
+                        };
+                    }
                 }
             } else {
                 if (options.out_AreOverlapped) {
@@ -364,17 +391,17 @@ namespace MakerJs.path {
         var x = c2.origin[0];
 
         //see if c2 is outside of c1
-        if (x - c2.radius > c1.radius) {
+        if (round(x - c2.radius) > c1.radius) {
             return null;
         }
 
         //see if c2 is within c1
-        if (x + c2.radius < c1.radius) {
+        if (round(x + c2.radius) < c1.radius) {
             return null;
         }
 
         //see if c1 is within c2
-        if (x - c2.radius < -c1.radius) {
+        if (round(x - c2.radius) < -c1.radius) {
             return null;
         }
 

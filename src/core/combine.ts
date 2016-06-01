@@ -59,7 +59,7 @@
 
                 if (!foreignPathEndPoints) {
                     //make sure endpoints are in absolute coords
-                    foreignPathEndPoints = point.fromPathEnds(foreignPath, crossedPath.offset);
+                    foreignPathEndPoints = point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
                 }
 
                 pointsToCheck = foreignPathEndPoints;
@@ -86,7 +86,8 @@
                             path: subSegments[1],
                             pathId: segments[0].pathId,
                             overlapped: segments[i].overlapped,
-                            uniqueForeignIntersectionPoints: []
+                            uniqueForeignIntersectionPoints: [],
+                            offset: crossedPath.offset
                         };
 
                         if (segments[i].overlapped) {
@@ -205,6 +206,7 @@
         pathId: string;
         overlapped: boolean;
         duplicate?: boolean;
+        offset: IPoint;
     }
 
     /**
@@ -263,7 +265,8 @@
                     path: path.clone(outerWalkedPath.pathContext),
                     pathId: outerWalkedPath.pathId,
                     overlapped: false,
-                    uniqueForeignIntersectionPoints: []
+                    uniqueForeignIntersectionPoints: [],
+                    offset: outerWalkedPath.offset
                 };
 
                 var thisPath: ICrossedPath = <ICrossedPath>outerWalkedPath;
@@ -309,7 +312,7 @@
     function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[], pointMatchingDistance: number) {
 
         function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
-            if (measure.isPathEqual(segment1.path, segment2.path, pointMatchingDistance)) {
+            if (measure.isPathEqual(segment1.path, segment2.path, pointMatchingDistance, segment1.offset, segment2.offset)) {
                 segment1.duplicate = segment2.duplicate = true;
             }
         }
@@ -415,7 +418,27 @@
         }
 
         if (opts.trimDeadEnds) {
-            removeDeadEnds(<IModel>{ models: { modelA: modelA, modelB: modelB } });
+
+            var shouldKeep: IWalkPathBooleanCallback;
+
+            //union
+            if (!includeAInsideB && !includeBInsideA) {
+                shouldKeep = function (walkedPath: IWalkPath): boolean {
+
+                    //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
+                    //Duplicates were discarded from B but kept in A
+                    for (var i = 0; i < pathsA.overlappedSegments.length; i++) {
+                        if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].path) {
+                            return false;
+                        }
+                    }
+
+                    //default - keep the path
+                    return true;
+                }
+            }
+
+            removeDeadEnds(<IModel>{ models: { modelA: modelA, modelB: modelB } }, null, shouldKeep);
         }
 
         //pass options back to caller
