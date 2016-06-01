@@ -39,6 +39,7 @@ title: Api - path Module
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#circletocircle" class="tsd-kind-icon">circle<wbr>ToCircle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#clone" class="tsd-kind-icon">clone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#cloneandbreakpath" class="tsd-kind-icon">clone<wbr>And<wbr>Break<wbr>Path</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#converge" class="tsd-kind-icon">converge</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#copylayer" class="tsd-kind-icon">copy<wbr>Layer</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#dogbone" class="tsd-kind-icon">dogbone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#expand" class="tsd-kind-icon">expand</a></li>
@@ -502,7 +503,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L337">core/intersect.ts:337</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L364">core/intersect.ts:364</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -580,6 +581,55 @@ title: Api - path Module
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="converge" class="tsd-anchor"></a>
+		<h3>converge</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">converge<span class="tsd-signature-symbol">(</span>lineA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, lineB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, useOriginA<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, useOriginB<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L268">core/path.ts:268</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Connect 2 lines at their slope intersection point.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>lineA: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First line to converge.</p>
+						</div>
+					</li>
+					<li>
+						<h5>lineB: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second line to converge.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> useOriginA: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional flag to converge the origin point of lineA instead of the end point.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> useOriginB: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional flag to converge the origin point of lineB instead of the end point.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h4>
 			</li>
 		</ul>
 	</section>
@@ -753,7 +803,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L227">core/intersect.ts:227</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L254">core/intersect.ts:254</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -781,7 +831,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L247">core/intersect.ts:247</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L274">core/intersect.ts:274</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -983,7 +1033,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L213">core/intersect.ts:213</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L240">core/intersect.ts:240</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1027,7 +1077,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L267">core/intersect.ts:267</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L294">core/intersect.ts:294</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1190,7 +1240,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L181">core/intersect.ts:181</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L208">core/intersect.ts:208</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1267,7 +1317,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L236">core/intersect.ts:236</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L263">core/intersect.ts:263</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1455,7 +1505,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L189">core/intersect.ts:189</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/intersect.ts#L216">core/intersect.ts:216</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
