@@ -80,6 +80,7 @@
         if (!withinDistance) {
             return a[0] == b[0] && a[1] == b[1];
         } else {
+            if (!a || !b) return false;
             var distance = measure.pointDistance(a, b);
             return distance <= withinDistance;
         }
