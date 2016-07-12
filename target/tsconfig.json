@@ -32,6 +32,7 @@
     "../src/core/openjscad.ts",
     "../src/core/pdf.ts",
     "../src/core/svg.ts",
+    "../src/models/BezierArcs.ts",
     "../src/models/ConnectTheDots.ts",
     "../src/models/Polygon.ts",
     "../src/models/BoltCircle.ts",
