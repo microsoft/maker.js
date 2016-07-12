@@ -81,10 +81,9 @@ namespace MakerJs.path {
      * @param pathToMirror The path to mirror.
      * @param mirrorX Boolean to mirror on the x axis.
      * @param mirrorY Boolean to mirror on the y axis.
-     * @param newId Optional id to assign to the new path.
      * @returns Mirrored path.
      */
-    export function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IPath {
+    export function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean): IPath {
         var newPath: IPath = null;
 
         if (pathToMirror) {
