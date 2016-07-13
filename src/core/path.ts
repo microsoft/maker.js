@@ -22,6 +22,14 @@ namespace MakerJs.path {
             case pathType.Arc:
                 var arc = <IPathArc>pathToClone;
                 result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
+
+                //carry extra props if this is an IPathArcInBezier
+                if (IPathArcInBezier(arc)) {
+                    (<IPathArcInBezier>result).startT = (<IPathArcInBezier>arc).startT;
+                    (<IPathArcInBezier>result).midT = (<IPathArcInBezier>arc).midT;
+                    (<IPathArcInBezier>result).endT = (<IPathArcInBezier>arc).endT;
+                }
+
                 break;
 
             case pathType.Circle:

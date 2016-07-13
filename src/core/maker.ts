@@ -117,6 +117,29 @@ namespace MakerJs {
         return target;
     }
 
+    /**
+     * @private
+     */
+    var x = {} as IPath;
+
+    /**
+     * @private
+     */
+    function reflectName(value?: any) {
+        for (var prop in x) {
+            delete x[prop];
+            return prop;
+        }
+    }
+
+    /**
+     * @private
+     */
+    function hasNamedProperty(p: IPath, value: any) {
+        var prop = reflectName();
+        return (prop in p);
+    }
+
     //points
 
     /**
@@ -246,7 +269,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathCircle(item: any): boolean {
-        return isPath(item) && item.type == pathType.Circle && item.radius;
+        return isPath(item) && item.type == pathType.Circle && hasNamedProperty(item, (<IPathCircle>x).radius = null);
     }
 
     /**
@@ -277,7 +300,37 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathArc(item: any): boolean {
-        return isPath(item) && item.type == pathType.Arc && item.radius && item.startAngle && item.endAngle;
+        return isPath(item) && item.type == pathType.Arc && hasNamedProperty(item, (<IPathArc>x).radius = null) && hasNamedProperty(item, (<IPathArc>x).startAngle = null) && hasNamedProperty(item, (<IPathArc>x).endAngle = null);
+    }
+
+    /**
+     * An arc path segment in a bezier curve.
+     */
+    export interface IPathArcInBezier extends IPathArc {
+
+        /**
+         * The bezier t-value at the starting point.
+         */
+        startT: number;
+
+        /**
+         * The bezier t-value at the mid point.
+         */
+        midT: number;
+
+        /**
+         * The bezier t-value at the end point.
+         */
+        endT: number;
+    }
+
+    /**
+     * Test to see if an object implements the required properties of an arc.
+     * 
+     * @param item The item to test.
+     */
+    export function IPathArcInBezier(item: any): boolean {
+        return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezier>x).startT = null) && hasNamedProperty(item, (<IPathArcInBezier>x).midT = null) && hasNamedProperty(item, (<IPathArcInBezier>x).endT = null);
     }
 
     /**
