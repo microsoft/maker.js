@@ -117,6 +117,8 @@ namespace MakerJs.point {
         return [line.origin, line.end];
     }
 
+    pathEndsMap[models.BezierArcs.typeName] = pathEndsMap[pathType.Line];
+
     /**
      * Get the two end points of a path.
      * 
