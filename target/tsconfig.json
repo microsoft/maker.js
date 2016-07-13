@@ -33,6 +33,7 @@
     "../src/core/pdf.ts",
     "../src/core/svg.ts",
     "../src/models/BezierArcs.ts",
+    "../src/models/Ellipse.ts",
     "../src/models/ConnectTheDots.ts",
     "../src/models/Polygon.ts",
     "../src/models/BoltCircle.ts",
