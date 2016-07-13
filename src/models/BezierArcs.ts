@@ -1,6 +1,19 @@
 ﻿namespace MakerJs.models {
 
-    //todo: note adapted from Pomax
+    //The following code is an adapted excerpt from Bezier.js by Pomax
+    //https://github.com/Pomax/bezierjs
+
+    /**
+      A javascript Bezier curve library by Pomax.
+
+      Based on http://pomax.github.io/bezierinfo
+
+      This code is MIT licensed.
+    **/
+
+    /**
+     * @private
+     */
     function compute(bez: BezierArcs, t: number): IPoint {
         // shortcuts
         if (t === 0) { return bez.origin; }
@@ -50,18 +63,22 @@
 
     }
 
-    //todo: note adapted from Pomax
+    /**
+     * @private
+     */
     function _error(bez: BezierArcs, pc: IPoint, np1: IPoint, s: number, e: number) {
         var q = (e - s) / 4,
-            c1 = compute(bez, s + q),
-            c2 = compute(bez, e - q),
+            c1 = computeRelative(bez, s + q),
+            c2 = computeRelative(bez, e - q),
             ref = measure.pointDistance(pc, np1),
             d1 = measure.pointDistance(pc, c1),
             d2 = measure.pointDistance(pc, c2);
         return Math.abs(d1 - ref) + Math.abs(d2 - ref);
     }
 
-    //todo: note adapted from Pomax
+    /**
+     * @private
+     */
     function iterate(bez: BezierArcs, errorThreshold: number) {
 
         var s = 0, e = 1, safety: number, i = 1;
@@ -74,7 +91,7 @@
             e = 1;
 
             // points:
-            var np1 = compute(bez, s), np2: IPoint, np3: IPoint, arc: IPathArc, prev_arc: IPathArc;
+            var np1 = computeRelative(bez, s), np2: IPoint, np3: IPoint, arc: IPathArcInBezier, prev_arc: IPathArcInBezier;
 
             // booleans:
             var curr_good = false, prev_good = false, done: boolean;
@@ -89,10 +106,14 @@
                 m = (s + e) / 2;
                 step++;
 
-                np2 = compute(bez, m);
-                np3 = compute(bez, e);
+                np2 = computeRelative(bez, m);
+                np3 = computeRelative(bez, e);
 
-                arc = new paths.Arc(np1, np2, np3);
+                arc = new paths.Arc(np1, np2, np3) as IPathArcInBezier;
+                arc.startT = s;
+                arc.midT = m;
+                arc.endT = e;
+
                 var error = _error(bez, arc.origin, np1, s, e);
                 curr_good = (error <= errorThreshold);
 
@@ -134,6 +155,17 @@
         while (e < 1);
     }
 
+    //The above code is an adapted excerpt from Bezier.js by Pomax
+    //https://github.com/Pomax/bezierjs
+
+    /**
+     * @private
+     */
+    function computeRelative(bez: BezierArcs, t: number): IPoint {
+        var p = compute(bez, t);
+        return point.subtract(p, bez.origin);
+    }
+
     export class BezierArcs implements IModel {
 
         protected intactString: string;
@@ -151,7 +183,7 @@
 
         constructor(...args: any[]) {
 
-            var accuracy = .001;
+            var accuracy: number;
 
             var realArgs = (numArgs: number) => {
 
@@ -218,6 +250,9 @@
                     }
                     break;
             }
+
+            //set the default to be a combination of fast rendering and good smoothing. Accuracy can be specified if necessary.
+            accuracy = accuracy || .1;
 
             iterate(this, accuracy);
 
