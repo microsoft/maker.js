@@ -166,7 +166,7 @@
         return point.subtract(p, bez.origin);
     }
 
-    export class BezierArcs implements IModel {
+    export class BezierArcs implements IModel, IPathLine {
 
         protected intactString: string;
 
@@ -175,6 +175,7 @@
         public control: IPoint;
         public controls: IPoint[];
         public end: IPoint;
+        public type = BezierArcs.typeName;
 
         constructor(points: IPoint[], accuracy?: number);
         constructor(origin: IPoint, control: IPoint, end: IPoint, accuracy?: number);
@@ -259,6 +260,8 @@
             //store for comparison
             this.intactString = JSON.stringify(this.paths);
         }
+
+        public static typeName = 'BezierArcs';
 
         public static isIntact(bez: BezierArcs): boolean {
 
