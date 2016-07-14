@@ -23,11 +23,11 @@ namespace MakerJs.path {
                 var arc = <IPathArc>pathToClone;
                 result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
 
-                //carry extra props if this is an IPathArcInBezier
-                if (IPathArcInBezier(arc)) {
-                    (<IPathArcInBezier>result).startT = (<IPathArcInBezier>arc).startT;
-                    (<IPathArcInBezier>result).midT = (<IPathArcInBezier>arc).midT;
-                    (<IPathArcInBezier>result).endT = (<IPathArcInBezier>arc).endT;
+                //carry extra props if this is an IPathArcInBezierCurve
+                if (isIPathArcInBezierCurve(arc)) {
+                    (<IPathArcInBezierCurve>result).startT = (<IPathArcInBezierCurve>arc).startT;
+                    (<IPathArcInBezierCurve>result).midT = (<IPathArcInBezierCurve>arc).midT;
+                    (<IPathArcInBezierCurve>result).endT = (<IPathArcInBezierCurve>arc).endT;
                 }
 
                 break;
@@ -80,6 +80,15 @@ namespace MakerJs.path {
             arc.radius,
             xor ? endAngle : startAngle,
             xor ? startAngle : endAngle
+        );
+    };
+
+    mirrorMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, origin: IPoint, mirrorX: boolean, mirrorY: boolean) {
+
+        return new paths.BezierSeed(
+            origin,
+            bez.controls.map(function (c) { return point.mirror(c, mirrorX, mirrorY); }),
+            point.mirror(bez.end, mirrorX, mirrorY)
         );
     };
 
@@ -146,6 +155,11 @@ namespace MakerJs.path {
 
     moveRelativeMap[pathType.Line] = function (line: IPathLine, delta: IPoint, subtract: boolean) {
         line.end = point.add(line.end, delta, subtract);
+    };
+
+    moveRelativeMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, delta: IPoint, subtract: boolean) {
+        moveRelativeMap[pathType.Line](bez, delta, subtract);
+        bez.controls = bez.controls.map(function (c) { return point.add(c, delta, subtract); });
     };
 
     /**

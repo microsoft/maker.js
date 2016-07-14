@@ -68,7 +68,7 @@ namespace MakerJs.models {
         constructor(cx: number, cy: number, rx: number, ry: number, accuracy?: number);
         constructor(...args: any[]) {
 
-            var n = 4;
+            var n = 8;
             var accuracy: number;
 
             var isPointArgs0 = isPoint(args[0]);
@@ -130,7 +130,7 @@ namespace MakerJs.models {
                             break;
                     }
 
-                    this.models['Curve' + (1 + i)] = new BezierArcs(bezierPoints, accuracy);
+                    this.models['Curve' + (1 + i)] = new BezierCurve(bezierPoints, accuracy);
 
                     arc.startAngle += a;
                     arc.endAngle += a;

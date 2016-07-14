@@ -1,182 +1,14 @@
 ﻿namespace MakerJs.models {
 
-    //The following code is an adapted excerpt from Bezier.js by Pomax
-    //https://github.com/Pomax/bezierjs
+    export class BezierCurve implements IModel {
 
-    /**
-      A javascript Bezier curve library by Pomax.
-
-      Based on http://pomax.github.io/bezierinfo
-
-      This code is MIT licensed.
-    **/
-
-    /**
-     * @private
-     */
-    function compute(bez: BezierArcs, t: number): IPoint {
-        // shortcuts
-        if (t === 0) { return bez.origin; }
-        if (t === 1) { return bez.end; }
-
-        var mt = 1 - t;
-        var p: IPoint[]
-
-        // linear?
-        if (!bez.control && !bez.controls) {
-
-            p = [bez.origin, bez.end];
-
-            return [
-                mt * p[0][0] + t * p[1][0],
-                mt * p[0][1] + t * p[1][1]
-            ];
-        }
-
-        // quadratic/cubic curve?
-        var mt2 = mt * mt,
-            t2 = t * t,
-            a, b, c, d = 0;
-
-        if (bez.control) {
-            //quadratic
-
-            p = [bez.origin, bez.control, bez.end, [0, 0]];
-            a = mt2;
-            b = mt * t * 2;
-            c = t2;
-
-        } else if (bez.controls) {
-            //cubic
-
-            p = [bez.origin, bez.controls[0], bez.controls[1], bez.end];
-            a = mt2 * mt;
-            b = mt2 * t * 3;
-            c = mt * t2 * 3;
-            d = t * t2;
-        }
-
-        return [
-            a * p[0][0] + b * p[1][0] + c * p[2][0] + d * p[3][0],
-            a * p[0][1] + b * p[1][1] + c * p[2][1] + d * p[3][1]
-        ];
-
-    }
-
-    /**
-     * @private
-     */
-    function _error(bez: BezierArcs, pc: IPoint, np1: IPoint, s: number, e: number) {
-        var q = (e - s) / 4,
-            c1 = computeRelative(bez, s + q),
-            c2 = computeRelative(bez, e - q),
-            ref = measure.pointDistance(pc, np1),
-            d1 = measure.pointDistance(pc, c1),
-            d2 = measure.pointDistance(pc, c2);
-        return Math.abs(d1 - ref) + Math.abs(d2 - ref);
-    }
-
-    /**
-     * @private
-     */
-    function iterate(bez: BezierArcs, errorThreshold: number) {
-
-        var s = 0, e = 1, safety: number, i = 1;
-
-        // we do a binary search to find the "good `t` closest to no-longer-good"
-        do {
-            safety = 0;
-
-            // step 1: start with the maximum possible arc
-            e = 1;
-
-            // points:
-            var np1 = computeRelative(bez, s), np2: IPoint, np3: IPoint, arc: IPathArcInBezier, prev_arc: IPathArcInBezier;
-
-            // booleans:
-            var curr_good = false, prev_good = false, done: boolean;
-
-            // numbers:
-            var m = e, prev_e = 1, step = 0;
-
-            // step 2: find the best possible arc
-            do {
-                prev_good = curr_good;
-                prev_arc = arc;
-                m = (s + e) / 2;
-                step++;
-
-                np2 = computeRelative(bez, m);
-                np3 = computeRelative(bez, e);
-
-                arc = new paths.Arc(np1, np2, np3) as IPathArcInBezier;
-                arc.startT = s;
-                arc.midT = m;
-                arc.endT = e;
-
-                var error = _error(bez, arc.origin, np1, s, e);
-                curr_good = (error <= errorThreshold);
-
-                done = prev_good && !curr_good;
-                if (!done) prev_e = e;
-
-                // this arc is fine: we can move 'e' up to see if we can find a wider arc
-                if (curr_good) {
-                    // if e is already at max, then we're done for this arc.
-                    if (e >= 1) {
-                        prev_e = 1;
-                        prev_arc = arc;
-                        break;
-                    }
-                    // if not, move it up by half the iteration distance
-                    e = e + (e - s) / 2;
-                }
-
-                // this is a bad arc: we need to move 'e' down to find a good arc
-                else {
-                    e = m;
-                }
-            }
-            while (!done && safety++ < 100);
-
-            //if (safety >= 100) {
-            //    console.error("arc abstraction somehow failed...");
-            //    break;
-            //}
-
-            // console.log("[F] arc found", s, prev_e, prev_arc[0], prev_arc[1], prev_arc.s, prev_arc.e);
-
-            prev_arc = (prev_arc ? prev_arc : arc);
-
-            bez.paths['arc_' + i++] = prev_arc;
-
-            s = prev_e;
-        }
-        while (e < 1);
-    }
-
-    //The above code is an adapted excerpt from Bezier.js by Pomax
-    //https://github.com/Pomax/bezierjs
-
-    /**
-     * @private
-     */
-    function computeRelative(bez: BezierArcs, t: number): IPoint {
-        var p = compute(bez, t);
-        return point.subtract(p, bez.origin);
-    }
-
-    export class BezierArcs implements IModel, IPathLine {
-
-        protected intactString: string;
-
-        public paths: IPathMap = {};
+        public models: IModelMap;
+        public paths: IPathMap;
         public origin: IPoint;
-        public control: IPoint;
-        public controls: IPoint[];
-        public end: IPoint;
-        public type = BezierArcs.typeName;
+        public type = BezierCurve.typeName;
+        public seed: IPathBezierSeed;
 
+        constructor(seed: IPathBezierSeed, accuracy?: number);
         constructor(points: IPoint[], accuracy?: number);
         constructor(origin: IPoint, control: IPoint, end: IPoint, accuracy?: number);
         constructor(origin: IPoint, controls: IPoint[], end: IPoint, accuracy?: number);
@@ -186,52 +18,22 @@
 
             var accuracy: number;
 
-            var realArgs = (numArgs: number) => {
-
-                this.origin = args[0] as IPoint;
-
-                switch (numArgs) {
-
-                    case 3: //quadratic or cubic
-                        if (Array.isArray(args[1])) {
-                            this.controls = args[1] as IPoint[];
-                        } else {
-                            this.control = args[1] as IPoint;
-                        }
-
-                        this.end = args[2] as IPoint;
-                        break;
-
-                    case 4: //cubic params
-                        this.controls = [args[1] as IPoint, args[2] as IPoint];
-                        this.end = args[3] as IPoint;
-                        break;
-                }
-            };
-
             switch (args.length) {
 
-                case 2: //point array + accuracy
+                case 2:
                     accuracy = args[1] as number;
-                //fall through
+
+                    if (!Array.isArray(args[0])) {
+                        //seed
+                        this.seed = args[0] as IPathBezierSeed;
+                        break;
+                    }
+                //fall through to point array
 
                 case 1: //point array
                     var points = args[0] as IPoint[];
 
-                    this.origin = points[0];
-
-                    if (points.length === 3) {
-                        this.control = points[1];
-                        this.end = points[2];
-
-                    } else if (points.length === 4) {
-                        this.controls = [points[1], points[2]];
-                        this.end = points[3];
-
-                    } else {
-                        this.end = points[1];
-                    }
-
+                    this.seed = new paths.BezierSeed(points);
                     break;
 
                 default:
@@ -241,12 +43,12 @@
                         //fall through
 
                         case 3:
-                            realArgs(3);
+                            this.seed = new paths.BezierSeed(args.slice(0, 3) as IPoint[]);
                             break;
 
                         case 5:
                             accuracy = args[4] as number;
-                            realArgs(4);
+                            this.seed = new paths.BezierSeed(args.slice(0, 4) as IPoint[]);
                             break;
                     }
                     break;
@@ -255,33 +57,40 @@
             //set the default to be a combination of fast rendering and good smoothing. Accuracy can be specified if necessary.
             accuracy = accuracy || .1;
 
-            iterate(this, accuracy);
+            //TODO: use extrema() and create child models
 
-            //store for comparison
-            this.intactString = JSON.stringify(this.paths);
+            var arcs: IPathArcInBezierCurve[] = [];
+            bezier.iterate(this.seed, accuracy, arcs);
+
+            this.paths = {};
+            arcs.forEach((arc, i) => { this.paths['arc_' + i] = arc; });
         }
 
-        public static typeName = 'BezierArcs';
+        public static getBezierSeeds(bez: BezierCurve, options: IFindChainsOptions = {}): IPathBezierSeed[] {
 
-        public static isIntact(bez: BezierArcs): boolean {
+            options.shallow = true;
 
-            //quick check
-            if (JSON.stringify(bez.paths) === bez.intactString) return true;
+            var seeds: IPathBezierSeed[] = [];
 
-            //more thorough check
-            var copy = JSON.parse(bez.intactString) as IPathMap;
+            model.findChains(bez, function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
-            for (var id in bez.paths) {
-                if (!(id in copy)) return false;
-                if (!measure.isPathEqual(bez.paths[id], copy[id])) return false;
-            }
+                if (chains.length === 1) {
+                    //unbroken, just use the seed
 
-            return true
+                    seeds.push(bez.seed)
+                }
+
+                //TODO: find bezier seeds from a split chain
+
+            }, options);
+
+            return seeds;
         }
 
+        public static typeName = 'BezierCurve';
     }
 
-    (<IKit>BezierArcs).metaParameters = [
+    (<IKit>BezierCurve).metaParameters = [
         {
             title: "points", type: "select", value: [
                 [[0, 0], [100, 0], [100, 100]],

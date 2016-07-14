@@ -308,4 +308,91 @@ namespace MakerJs.paths {
         }
     }
 
+    /**
+     * Class for bezier seed.
+     */
+    export class BezierSeed implements IPathBezierSeed {
+        public type: string;
+        public origin: IPoint;
+        public end: IPoint
+        public controls: IPoint[];
+
+        /**
+         * Class for bezier seed, created from point array.
+         * 
+         * @param points Array of points, with the first being the origin, and the last being the end, and points between used as control points.
+         */
+        constructor(points: IPoint[]);
+
+        /**
+         * Class for quadratic bezier seed.
+         * 
+         * @param origin The origin point of the curve.
+         * @param control The control point of the curve.
+         * @param end The end point of the curve.
+         */
+        constructor(origin: IPoint, control: IPoint, end: IPoint);
+
+        /**
+         * Class for cubic bezier seed.
+         * 
+         * @param origin The origin point of the curve.
+         * @param controls The control points of the curve.
+         * @param end The end point of the curve.
+         */
+        constructor(origin: IPoint, controls: IPoint[], end: IPoint);
+
+        /**
+         * Class for cubic bezier seed.
+         * 
+         * @param origin The origin point of the curve.
+         * @param control1 The control point of the curve origin.
+         * @param control1 The control point of the curve end.
+         * @param end The end point of the curve.
+         */
+        constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint);
+
+        constructor(...args: any[]) {
+            this.type = pathType.BezierSeed;
+
+            switch (args.length) {
+
+                case 1: //point array
+                    var points = args[0] as IPoint[];
+
+                    this.origin = points[0];
+
+                    if (points.length === 3) {
+                        this.controls = [points[1]];
+                        this.end = points[2];
+
+                    } else if (points.length === 4) {
+                        this.controls = [points[1], points[2]];
+                        this.end = points[3];
+
+                    } else {
+                        this.end = points[1];
+                    }
+
+                    break;
+
+                case 3: //quadratic or cubic
+                    if (Array.isArray(args[1])) {
+                        this.controls = args[1] as IPoint[];
+                    } else {
+                        this.controls = [args[1] as IPoint];
+                    }
+
+                    this.end = args[2] as IPoint;
+                    break;
+
+                case 4: //cubic params
+                    this.controls = [args[1] as IPoint, args[2] as IPoint];
+                    this.end = args[3] as IPoint;
+                    break;
+            }
+
+        }
+    }
+
 }

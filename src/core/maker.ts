@@ -304,9 +304,16 @@ namespace MakerJs {
     }
 
     /**
+     * A bezier curve.
+     */
+    export interface IPathBezierSeed extends IPathLine {
+        controls: IPoint[];
+    }
+
+    /**
      * An arc path segment in a bezier curve.
      */
-    export interface IPathArcInBezier extends IPathArc {
+    export interface IPathArcInBezierCurve extends IPathArc {
 
         /**
          * The bezier t-value at the starting point.
@@ -329,8 +336,8 @@ namespace MakerJs {
      * 
      * @param item The item to test.
      */
-    export function IPathArcInBezier(item: any): boolean {
-        return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezier>x).startT = null) && hasNamedProperty(item, (<IPathArcInBezier>x).midT = null) && hasNamedProperty(item, (<IPathArcInBezier>x).endT = null);
+    export function isIPathArcInBezierCurve(item: any): boolean {
+        return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).startT = null) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).midT = null) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).endT = null);
     }
 
     /**
@@ -367,7 +374,8 @@ namespace MakerJs {
     export var pathType = {
         Line: "line",
         Circle: "circle",
-        Arc: "arc"
+        Arc: "arc",
+        BezierSeed: "bezier-seed"
     };
 
     /**
@@ -712,6 +720,11 @@ namespace MakerJs {
          * Flag to separate chains by layers.
          */
         byLayers?: boolean;
+
+        /**
+         * Flag to not recurse models, look only within current model's immediate paths.
+         */
+        shallow?: boolean;
     }
 
     /**

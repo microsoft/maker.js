@@ -123,13 +123,11 @@
      * 
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
-     * @returns A list of chains.
      */
     export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions) {
 
         var opts: IFindChainsOptions = {
-            pointMatchingDistance: .005,
-            byLayers: false
+            pointMatchingDistance: .005
         };
         extendObject(opts, options);
 
@@ -197,6 +195,10 @@
                 }
             }
         };
+
+        if (opts.shallow) {
+            walkOptions.beforeChildWalk = function () { return true; };
+        }
 
         walk(modelContext, walkOptions);
 

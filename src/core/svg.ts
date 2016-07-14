@@ -39,7 +39,7 @@ namespace MakerJs.exporter {
         d.push('L', round(endPoint[0]), round(endPoint[1]));
     };
 
-    chainLinkToPathDataMap[models.BezierArcs.typeName] = function (bez: models.BezierArcs, endPoint: IPoint, reversed: boolean, d: ISvgPathData) {
+    chainLinkToPathDataMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, endPoint: IPoint, reversed: boolean, d: ISvgPathData) {
         svgBezierData(d, bez, reversed);
     };
 
@@ -136,7 +136,7 @@ namespace MakerJs.exporter {
         }
     };
 
-    svgPathDataMap[models.BezierArcs.typeName] = function (bez: models.BezierArcs) {
+    svgPathDataMap[pathType.BezierSeed] = function (bez: IPathBezierSeed) {
         var d: ISvgPathData = [];
         svgBezierData(d, bez);
         return startSvgPathData(bez.origin, d);
@@ -163,8 +163,56 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
+    function getBezierModelsWithPaths(modelToExport: IModel): IModel[] {
+
+        var beziers: IModel[] = [];
+
+        function checkIsBezierWithPaths(b: IModel) {
+            if (b.type && b.type === models.BezierCurve.typeName && b.paths) {
+                beziers.push(b);
+            }
+        }
+
+        var options: IWalkOptions = {
+            beforeChildWalk: function (walkedModel: IWalkModel): boolean {
+                checkIsBezierWithPaths(walkedModel.childModel);
+                return true;
+            }
+        };
+
+        checkIsBezierWithPaths(modelToExport);
+
+        model.walk(modelToExport, options);
+
+        return beziers;
+    }
+
+    /**
+     * @private
+     */
     function getPathDataByLayer(modelToExport: IModel, offset: IPoint, options: IFindChainsOptions) {
         var pathDataByLayer: IPathDataMap = {};
+
+        var beziers = getBezierModelsWithPaths(modelToExport);
+        var tempKey = 'tempPaths';
+
+        beziers.forEach(function (b: models.BezierCurve) {
+
+            //use seeds as path, hide the arc paths from findChains()
+            var bezierSeeds = models.BezierCurve.getBezierSeeds(b);
+            if (bezierSeeds.length > 0) {
+                b[tempKey] = b.paths;
+
+                var newPaths: IPathMap = {};
+
+                bezierSeeds.forEach(function (seed, i) {
+                    newPaths['seed_' + i] = seed;
+                });
+
+                b.paths = newPaths;
+            }
+
+        });
 
         model.findChains(
             modelToExport,
@@ -191,6 +239,14 @@ namespace MakerJs.exporter {
             },
             options
         );
+
+        //revert
+        beziers.forEach(function (b: models.BezierCurve) {
+            if (tempKey in b) {
+                b.paths = b[tempKey];
+                delete b[tempKey];
+            }
+        });
 
         return pathDataByLayer;
     }
@@ -461,16 +517,11 @@ namespace MakerJs.exporter {
                 }
             };
 
-            map[models.BezierArcs.typeName] = function (id: string, bez: models.BezierArcs, origin: IPoint, layer: string) {
-
-                var start = bez.origin;
-                var end = bez.end;
-
+            map[pathType.BezierSeed] = function (id: string, bez: IPathBezierSeed, origin: IPoint, layer: string) {
                 var d: ISvgPathData = [];
                 svgBezierData(d, bez);
                 drawPath(id, bez.origin[0], bez.origin[1], d, layer, point.middle(bez));
             };
-
 
             function beginModel(id: string, modelContext: IModel) {
                 modelGroup.attrs = { id: id };
@@ -528,9 +579,9 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function svgBezierData(d: ISvgPathData, bez: models.BezierArcs, reversed?: boolean) {
-        if (bez.control) {
-            d.push('Q', round(bez.control[0]), round(bez.control[1]));
+    function svgBezierData(d: ISvgPathData, bez: IPathBezierSeed, reversed?: boolean) {
+        if (bez.controls.length === 1) {
+            d.push('Q', round(bez.controls[0][0]), round(bez.controls[0][1]));
         } else {
             var controls = reversed ? [bez.controls[1], bez.controls[0]] : bez.controls;
             d.push('C', round(controls[0][0]), round(controls[0][1]), round(controls[1][0]), round(controls[1][1]));
