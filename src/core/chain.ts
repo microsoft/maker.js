@@ -197,7 +197,7 @@
         };
 
         if (opts.shallow) {
-            walkOptions.beforeChildWalk = function () { return true; };
+            walkOptions.beforeChildWalk = function () { return false; };
         }
 
         walk(modelContext, walkOptions);
