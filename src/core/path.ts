@@ -222,6 +222,11 @@ namespace MakerJs.path {
         arc.endAngle = angle.noRevolutions(arc.endAngle + angleInDegrees);
     }
 
+    rotateMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, angleInDegrees: number, rotationOrigin: IPoint) {
+        rotateMap[pathType.Line](bez, angleInDegrees, rotationOrigin);
+        bez.controls = bez.controls.map(function (c) { return point.rotate(c, angleInDegrees, rotationOrigin); });
+    }
+
     /**
      * Rotate a path.
      * 
@@ -250,6 +255,11 @@ namespace MakerJs.path {
 
     scaleMap[pathType.Line] = function (line: IPathLine, scaleValue: number) {
         line.end = point.scale(line.end, scaleValue);
+    }
+
+    scaleMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, scaleValue: number) {
+        scaleMap[pathType.Line](bez, scaleValue);
+        bez.controls = bez.controls.map(function (c) { return point.scale(c, scaleValue); });
     }
 
     scaleMap[pathType.Circle] = function (circle: IPathCircle, scaleValue: number) {
