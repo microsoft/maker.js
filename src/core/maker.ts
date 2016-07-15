@@ -304,7 +304,7 @@ namespace MakerJs {
     }
 
     /**
-     * A bezier curve.
+     * A bezier curve seed defines the endpoints and control points of a bezier curve.
      */
     export interface IPathBezierSeed extends IPathLine {
         controls: IPoint[];
