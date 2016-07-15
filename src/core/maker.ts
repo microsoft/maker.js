@@ -311,7 +311,7 @@ namespace MakerJs {
     }
 
     /**
-     * An arc path segment in a bezier curve.
+     * Bezier t values for an arc path segment in a bezier curve.
      */
     export interface IBezierToArcData {
 
