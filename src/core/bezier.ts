@@ -110,9 +110,10 @@
                 np3 = compute(bez, e);
 
                 arc = new paths.Arc(np1, np2, np3) as IPathArcInBezierCurve;
-                arc.startT = s;
-                arc.midT = m;
-                arc.endT = e;
+                arc.bezierData = {
+                    startT: s,
+                    endT: e
+                };
 
                 var error = _error(bez, arc.origin, np1, s, e);
                 curr_good = (error <= errorThreshold);

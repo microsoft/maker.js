@@ -25,9 +25,7 @@ namespace MakerJs.path {
 
                 //carry extra props if this is an IPathArcInBezierCurve
                 if (isIPathArcInBezierCurve(arc)) {
-                    (<IPathArcInBezierCurve>result).startT = (<IPathArcInBezierCurve>arc).startT;
-                    (<IPathArcInBezierCurve>result).midT = (<IPathArcInBezierCurve>arc).midT;
-                    (<IPathArcInBezierCurve>result).endT = (<IPathArcInBezierCurve>arc).endT;
+                    (<IPathArcInBezierCurve>result).bezierData = (<IPathArcInBezierCurve>arc).bezierData;
                 }
 
                 break;

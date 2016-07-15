@@ -313,17 +313,12 @@ namespace MakerJs {
     /**
      * An arc path segment in a bezier curve.
      */
-    export interface IPathArcInBezierCurve extends IPathArc {
+    export interface IBezierToArcData {
 
         /**
          * The bezier t-value at the starting point.
          */
         startT: number;
-
-        /**
-         * The bezier t-value at the mid point.
-         */
-        midT: number;
 
         /**
          * The bezier t-value at the end point.
@@ -332,12 +327,20 @@ namespace MakerJs {
     }
 
     /**
+     * An arc path segment in a bezier curve.
+     */
+    export interface IPathArcInBezierCurve extends IPathArc {
+
+        bezierData: IBezierToArcData;
+    }
+
+    /**
      * Test to see if an object implements the required properties of an arc.
      * 
      * @param item The item to test.
      */
     export function isIPathArcInBezierCurve(item: any): boolean {
-        return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).startT = null) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).midT = null) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).endT = null);
+        return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).bezierData = null);
     }
 
     /**
