@@ -75,9 +75,30 @@
             model.findChains(bez, function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 if (chains.length === 1) {
-                    //unbroken, just use the seed
+                    //check if endpoints are 0 and 1
 
-                    seeds.push(bez.seed)
+                    var chain = chains[0];
+                    var chainEnds = [chain.links[0].walkedPath.pathContext, chain.links[chain.links.length - 1].walkedPath.pathContext] as IPathArcInBezierCurve[];
+                    if (chain.links[0].reversed) {
+                        chainEnds = [chainEnds[1], chainEnds[0]];
+                    }
+
+                    var intact = true;
+
+                    for (var i = 2; i--;) {
+                        var chainEnd = chainEnds[i];
+                        var endPoints = point.fromPathEnds(chainEnd);
+                        var chainEndPoint = endPoints[i];
+                        var trueEndpoint = bezier.compute(bez.seed, i == 0 ? chainEnd.bezierData.startT : chainEnd.bezierData.endT);
+                        if (!measure.isPointEqual(chainEndPoint, trueEndpoint, .00001)) {
+                            intact = false;
+                            break;
+                        }
+                    }
+
+                    if (intact) {
+                        seeds.push(bez.seed)
+                    }
                 }
 
                 //TODO: find bezier seeds from a split chain
