@@ -39,8 +39,8 @@ namespace MakerJs.exporter {
         d.push('L', round(endPoint[0]), round(endPoint[1]));
     };
 
-    chainLinkToPathDataMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, endPoint: IPoint, reversed: boolean, d: ISvgPathData) {
-        svgBezierData(d, bez, reversed);
+    chainLinkToPathDataMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, endPoint: IPoint, reversed: boolean, d: ISvgPathData) {
+        svgBezierData(d, seed, reversed);
     };
 
     /**
@@ -136,10 +136,10 @@ namespace MakerJs.exporter {
         }
     };
 
-    svgPathDataMap[pathType.BezierSeed] = function (bez: IPathBezierSeed) {
+    svgPathDataMap[pathType.BezierSeed] = function (seed: IPathBezierSeed) {
         var d: ISvgPathData = [];
-        svgBezierData(d, bez);
-        return startSvgPathData(bez.origin, d);
+        svgBezierData(d, seed);
+        return startSvgPathData(seed.origin, d);
     };
 
     /**
@@ -517,10 +517,10 @@ namespace MakerJs.exporter {
                 }
             };
 
-            map[pathType.BezierSeed] = function (id: string, bez: IPathBezierSeed, origin: IPoint, layer: string) {
+            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, origin: IPoint, layer: string) {
                 var d: ISvgPathData = [];
-                svgBezierData(d, bez);
-                drawPath(id, bez.origin[0], bez.origin[1], d, layer, point.middle(bez));
+                svgBezierData(d, seed);
+                drawPath(id, seed.origin[0], seed.origin[1], d, layer, point.middle(seed));
             };
 
             function beginModel(id: string, modelContext: IModel) {
@@ -579,14 +579,14 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function svgBezierData(d: ISvgPathData, bez: IPathBezierSeed, reversed?: boolean) {
-        if (bez.controls.length === 1) {
-            d.push('Q', round(bez.controls[0][0]), round(bez.controls[0][1]));
+    function svgBezierData(d: ISvgPathData, seed: IPathBezierSeed, reversed?: boolean) {
+        if (seed.controls.length === 1) {
+            d.push('Q', round(seed.controls[0][0]), round(seed.controls[0][1]));
         } else {
-            var controls = reversed ? [bez.controls[1], bez.controls[0]] : bez.controls;
+            var controls = reversed ? [seed.controls[1], seed.controls[0]] : seed.controls;
             d.push('C', round(controls[0][0]), round(controls[0][1]), round(controls[1][0]), round(controls[1][1]));
         }
-        var final = reversed ? bez.origin : bez.end;
+        var final = reversed ? seed.origin : seed.end;
         d.push(round(final[0]), round(final[1]));
     }
 

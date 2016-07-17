@@ -81,12 +81,12 @@ namespace MakerJs.path {
         );
     };
 
-    mirrorMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, origin: IPoint, mirrorX: boolean, mirrorY: boolean) {
+    mirrorMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, origin: IPoint, mirrorX: boolean, mirrorY: boolean) {
 
         return new paths.BezierSeed(
             origin,
-            bez.controls.map(function (c) { return point.mirror(c, mirrorX, mirrorY); }),
-            point.mirror(bez.end, mirrorX, mirrorY)
+            seed.controls.map(function (c) { return point.mirror(c, mirrorX, mirrorY); }),
+            point.mirror(seed.end, mirrorX, mirrorY)
         );
     };
 
@@ -155,9 +155,9 @@ namespace MakerJs.path {
         line.end = point.add(line.end, delta, subtract);
     };
 
-    moveRelativeMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, delta: IPoint, subtract: boolean) {
-        moveRelativeMap[pathType.Line](bez, delta, subtract);
-        bez.controls = bez.controls.map(function (c) { return point.add(c, delta, subtract); });
+    moveRelativeMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, delta: IPoint, subtract: boolean) {
+        moveRelativeMap[pathType.Line](seed, delta, subtract);
+        seed.controls = seed.controls.map(function (c) { return point.add(c, delta, subtract); });
     };
 
     /**
@@ -220,9 +220,9 @@ namespace MakerJs.path {
         arc.endAngle = angle.noRevolutions(arc.endAngle + angleInDegrees);
     }
 
-    rotateMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, angleInDegrees: number, rotationOrigin: IPoint) {
-        rotateMap[pathType.Line](bez, angleInDegrees, rotationOrigin);
-        bez.controls = bez.controls.map(function (c) { return point.rotate(c, angleInDegrees, rotationOrigin); });
+    rotateMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, angleInDegrees: number, rotationOrigin: IPoint) {
+        rotateMap[pathType.Line](seed, angleInDegrees, rotationOrigin);
+        seed.controls = seed.controls.map(function (c) { return point.rotate(c, angleInDegrees, rotationOrigin); });
     }
 
     /**
@@ -255,9 +255,9 @@ namespace MakerJs.path {
         line.end = point.scale(line.end, scaleValue);
     }
 
-    scaleMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, scaleValue: number) {
-        scaleMap[pathType.Line](bez, scaleValue);
-        bez.controls = bez.controls.map(function (c) { return point.scale(c, scaleValue); });
+    scaleMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, scaleValue: number) {
+        scaleMap[pathType.Line](seed, scaleValue);
+        seed.controls = seed.controls.map(function (c) { return point.scale(c, scaleValue); });
     }
 
     scaleMap[pathType.Circle] = function (circle: IPathCircle, scaleValue: number) {
