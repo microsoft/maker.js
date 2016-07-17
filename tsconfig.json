@@ -8,7 +8,6 @@
     "src/core/angle.ts",
     "src/core/point.ts",
     "src/core/path.ts",
-    "src/core/bezier.ts",
     "src/core/break.ts",
     "src/core/paths.ts",
     "src/core/model.ts",

@@ -488,6 +488,36 @@ svg#pointers line {
     text-decoration: none;
 }
 
+.about {
+    font-size: smaller;
+    margin-top: 1em;
+    padding-top: 2em;
+    color: #aaa;
+}
+
+.about a {
+    color: #aaa;
+}
+
+.about h4 {
+    margin-bottom: 0;
+}
+
+.about ul {
+    margin-top: 0;
+    overflow: hidden;
+}
+
+.about li {
+    float: left;
+    padding-right: 4ex;
+}
+
+.about blockquote {
+    margin: 0;
+    letter-spacing: 0.2pt;
+}
+
 footer {
     font-size: smaller;
     line-height: 2em;
@@ -498,7 +528,6 @@ footer {
 
 footer a {
     color: inherit;
-    text-decoration: none;
     display: inline-block;
     margin-right: 1em;
 }
@@ -564,6 +593,11 @@ body.side-by-side {
 
 .side-by-side .code-header button.side-by-side .undock {
     display: inline;
+}
+
+.side-by-side .about {
+    border-top: 1px solid #ccc;
+    margin-top: 3em;
 }
 
 .side-by-side .scroll-nav-links {

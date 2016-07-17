@@ -213,8 +213,8 @@ namespace MakerJs.point {
         ];
     };
 
-    middleMap[pathType.BezierSeed] = function (bez: IPathBezierSeed, ratio: number) {
-        return bezier.compute(bez, ratio);
+    middleMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, ratio: number) {
+        return models.BezierCurve.computePoint(seed, ratio);
     }
 
     /**

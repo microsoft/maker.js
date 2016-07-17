@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "compile-playground": "tsc -p playground && tsc -p playground/worker",
-    "cat-browser": "cat target/js/header.txt target/js/browser.js > target/js/browser.maker.js && rm target/js/browser.js",
-    "cat-node": "cat target/js/header.txt target/js/node.js > target/js/node.maker.js && rm target/js/node.js",
-    "cat-tsd": "cat target/ts/tsd-header.txt target/maker.d.ts > target/ts/makerjs.d.ts && rm target/maker.d.ts",
+    "cat-browser": "cat target/header.txt target/js/browser.js > target/js/browser.maker.js && rm target/js/browser.js",
+    "cat-node": "cat target/header.txt target/js/node.js target/node-requires.js > target/js/node.maker.js && rm target/js/node.js",
+    "cat-tsd": "cat target/tsd-header.txt target/maker.d.ts > target/ts/makerjs.d.ts && rm target/maker.d.ts",
     "target-node-platform": "cd target && mv maker.js js/node.js && cd ..",
     "target-browser-platform": "cd target/js && browserify --ignore buffer -o browser.js -r ./node.js:makerjs && cd ../..",
     "build-debug": "tsc",
@@ -55,6 +55,7 @@
     "typescript": "^1.8.2"
   },
   "dependencies": {
+    "bezier-js": "^2.1.0",
     "clone": "^1.0.2"
   }
 }
