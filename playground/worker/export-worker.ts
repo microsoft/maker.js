@@ -16,6 +16,7 @@ module.require = (id: string): any => {
 
 importScripts(
     '../../target/js/browser.maker.js?' + new Date().valueOf(),
+    '../../external/bezier-js/bezier.js',
     '../iexport.js');
 
 var makerjs: typeof MakerJs = require('makerjs');
