@@ -5,3 +5,4 @@
 /// <reference path="text-encoding/text-encoding.d.ts" />
 /// <reference path="codemirror/codemirror.d.ts" />
 /// <reference path="marked/marked.d.ts" />
+/// <reference path="bezier-js/bezier-js.d.ts" />

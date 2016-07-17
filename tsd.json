@@ -19,6 +19,9 @@
     },
     "text-encoding/text-encoding.d.ts": {
       "commit": "de82425735f84a10b43921ae4b1d085b3752a626"
+    },
+    "bezier-js/bezier-js.d.ts": {
+      "commit": "415de78bb5108cd2c58078011819c26aa4fac3f9"
     }
   }
 }
