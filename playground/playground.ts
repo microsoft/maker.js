@@ -285,8 +285,10 @@
                 line: editorLine, ch: error.colno - 1
             };
 
+            var line = codeMirrorEditor.getDoc().getLine(editorLine);
+
             var to: CodeMirror.Position = {
-                line: editorLine, ch: codeMirrorEditor.getDoc().getLine(editorLine).length
+                line: editorLine, ch: line ? line.length : 0
             };
 
             errorMarker = codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
