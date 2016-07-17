@@ -83,11 +83,13 @@ namespace MakerJs.path {
 
     mirrorMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, origin: IPoint, mirrorX: boolean, mirrorY: boolean) {
 
-        return new paths.BezierSeed(
-            origin,
-            seed.controls.map(function (c) { return point.mirror(c, mirrorX, mirrorY); }),
-            point.mirror(seed.end, mirrorX, mirrorY)
-        );
+        var mirrored = mirrorMap[pathType.Line](seed, origin, mirrorX, mirrorY) as IPathBezierSeed;
+
+        mirrored.type = pathType.BezierSeed;
+
+        mirrored.controls = seed.controls.map(function (c) { return point.mirror(c, mirrorX, mirrorY); });
+
+        return mirrored;
     };
 
     /**
