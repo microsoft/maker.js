@@ -43,10 +43,17 @@
 
         arc.endAngle = angleAtBreakPointBetween;
 
-        return new paths.Arc(arc.origin, arc.radius, angleAtBreakPointBetween, savedEndAngle);
+        //clone the original to carry other properties
+        var copy = clone(arc) as IPathArc;
+        copy.startAngle = angleAtBreakPointBetween;
+        copy.endAngle = savedEndAngle;
+
+        return copy;
     };
 
     breakPathFunctionMap[pathType.Circle] = function (circle: IPathCircle, pointOfBreak: IPoint): IPath {
+
+        //breaking a circle turns it into an arc
         circle.type = pathType.Arc;
 
         var arc: IPathArc = <IPathArc>circle;
@@ -69,7 +76,12 @@
 
         line.end = pointOfBreak;
 
-        return new paths.Line(pointOfBreak, savedEndPoint);
+        //clone the original to carry other properties
+        var copy = clone(line) as IPathLine;
+        copy.origin = pointOfBreak;
+        copy.end = savedEndPoint;
+
+        return copy;
     };
 
     /**

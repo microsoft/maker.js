@@ -7,6 +7,7 @@
     "../typings/marked/marked.d.ts",
     "../typings/codemirror/codemirror.d.ts",
     "../typings/pdfkit/pdfkit.d.ts",
+    "../typings/bezier-js/bezier-js.d.ts",
     "../target/ts/makerjs.d.ts",
     "iexport.ts",
     "irender.ts",

@@ -65,6 +65,10 @@ namespace MakerJs.model {
 
         var newOrigin = point.add(modelToOriginate.origin, origin);
 
+        if (modelToOriginate.type === models.BezierCurve.typeName) {
+            path.moveRelative((modelToOriginate as models.BezierCurve).seed, newOrigin);
+        }
+
         if (modelToOriginate.paths) {
             for (var id in modelToOriginate.paths) {
                 path.moveRelative(modelToOriginate.paths[id], newOrigin);
@@ -107,6 +111,11 @@ namespace MakerJs.model {
             newModel.units = modelToMirror.units;
         }
 
+        if (modelToMirror.type === models.BezierCurve.typeName) {
+            newModel.type = models.BezierCurve.typeName;
+            (newModel as models.BezierCurve).seed = path.mirror((modelToMirror as models.BezierCurve).seed, mirrorX, mirrorY) as IPathBezierSeed;
+        }
+
         if (modelToMirror.paths) {
             newModel.paths = {};
             for (var id in modelToMirror.paths) {
@@ -123,7 +132,7 @@ namespace MakerJs.model {
             for (var id in modelToMirror.models) {
                 var childModelToMirror = modelToMirror.models[id];
                 if (!childModelToMirror) continue;
-                var childModelMirrored = model.mirror(childModelToMirror, mirrorX, mirrorY);
+                var childModelMirrored = mirror(childModelToMirror, mirrorX, mirrorY);
                 if (!childModelMirrored) continue;
                 newModel.models[id] = childModelMirrored;
             }
@@ -201,6 +210,10 @@ namespace MakerJs.model {
 
             var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
 
+            if (modelToRotate.type === models.BezierCurve.typeName) {
+                path.rotate((modelToRotate as models.BezierCurve).seed, angleInDegrees, offsetOrigin);
+            }
+
             if (modelToRotate.paths) {
                 for (var id in modelToRotate.paths) {
                     path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
@@ -228,6 +241,10 @@ namespace MakerJs.model {
 
         if (scaleOrigin && modelToScale.origin) {
             modelToScale.origin = point.scale(modelToScale.origin, scaleValue);
+        }
+
+        if (modelToScale.type === models.BezierCurve.typeName) {
+            path.scale((modelToScale as models.BezierCurve).seed, scaleValue);
         }
 
         if (modelToScale.paths) {

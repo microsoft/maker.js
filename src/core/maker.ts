@@ -1,20 +1,3 @@
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved. 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0  
- 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, 
-MERCHANTABLITY OR NON-INFRINGEMENT. 
- 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-
-//https://github.com/Microsoft/maker.js
-
 /**
  * Root module for Maker.js.
  * 
@@ -115,6 +98,29 @@ namespace MakerJs {
             }
         }
         return target;
+    }
+
+    /**
+     * @private
+     */
+    var x = {} as IPath;
+
+    /**
+     * @private
+     */
+    function reflectName(value?: any) {
+        for (var prop in x) {
+            delete x[prop];
+            return prop;
+        }
+    }
+
+    /**
+     * @private
+     */
+    function hasNamedProperty(p: IPath, value: any) {
+        var prop = reflectName();
+        return (prop in p);
     }
 
     //points
@@ -246,7 +252,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathCircle(item: any): boolean {
-        return isPath(item) && item.type == pathType.Circle && item.radius;
+        return isPath(item) && item.type == pathType.Circle && hasNamedProperty(item, (<IPathCircle>x).radius = null);
     }
 
     /**
@@ -277,7 +283,47 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathArc(item: any): boolean {
-        return isPath(item) && item.type == pathType.Arc && item.radius && item.startAngle && item.endAngle;
+        return isPath(item) && item.type == pathType.Arc && hasNamedProperty(item, (<IPathArc>x).radius = null) && hasNamedProperty(item, (<IPathArc>x).startAngle = null) && hasNamedProperty(item, (<IPathArc>x).endAngle = null);
+    }
+
+    /**
+     * A bezier seed defines the endpoints and control points of a bezier curve.
+     */
+    export interface IPathBezierSeed extends IPathLine {
+        controls: IPoint[];
+    }
+
+    /**
+     * Bezier t values for an arc path segment in a bezier curve.
+     */
+    export interface IBezierToArcData {
+
+        /**
+         * The bezier t-value at the starting point.
+         */
+        startT: number;
+
+        /**
+         * The bezier t-value at the end point.
+         */
+        endT: number;
+    }
+
+    /**
+     * An arc path segment in a bezier curve.
+     */
+    export interface IPathArcInBezierCurve extends IPathArc {
+
+        bezierData: IBezierToArcData;
+    }
+
+    /**
+     * Test to see if an object implements the required properties of an arc in a bezier curve.
+     * 
+     * @param item The item to test.
+     */
+    export function isIPathArcInBezierCurve(item: any): boolean {
+        return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).bezierData = null);
     }
 
     /**
@@ -314,7 +360,8 @@ namespace MakerJs {
     export var pathType = {
         Line: "line",
         Circle: "circle",
-        Arc: "arc"
+        Arc: "arc",
+        BezierSeed: "bezier-seed"
     };
 
     /**
@@ -659,6 +706,11 @@ namespace MakerJs {
          * Flag to separate chains by layers.
          */
         byLayers?: boolean;
+
+        /**
+         * Flag to not recurse models, look only within current model's immediate paths.
+         */
+        shallow?: boolean;
     }
 
     /**

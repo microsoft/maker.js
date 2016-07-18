@@ -1,18 +1,35 @@
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
+﻿/*
+__________________________________________________________________________________________________________________________________________            
+ __________________________________________________________________________________________________________________________________________           
+  ________/\\\\____________/\\\\_____/\\\\\\\\\_____/\\\________/\\\__/\\\\\\\\\\\\\\\__/\\\\\\\\\\\________________________________________          
+   _______\/\\\\\\________/\\\\\\___/\\\\/////\\\\__\/\\\_____/\\\//__\/\\\///////////__\/\\\///////\\\_______________/\\\___________________         
+    _______\/\\\//\\\____/\\\//\\\__/\\\/____\///\\\_\/\\\__/\\\//_____\/\\\_____________\/\\\_____\/\\\______________\///____________________        
+     _______\/\\\\///\\\/\\\/_\/\\\_\/\\\_______\/\\\_\/\\\\\\//\\\_____\/\\\\\\\\\\\_____\/\\\\\\\\\\\/________________/\\\__/\\\\\\\\\\______       
+      _______\/\\\__\///\\\/___\/\\\_\/\\\\\\\\\\\\\\\_\/\\\//_\//\\\____\/\\\///////______\/\\\//////\\\_______________\/\\\_\/\\\//////_______      
+       _______\/\\\____\///_____\/\\\_\/\\\/////////\\\_\/\\\____\//\\\___\/\\\_____________\/\\\____\//\\\______________\/\\\_\/\\\\\\\\\\______     
+        _______\/\\\_____________\/\\\_\/\\\_______\/\\\_\/\\\_____\//\\\__\/\\\_____________\/\\\_____\//\\\_________/\\_\/\\\_\////////\\\______    
+         _______\/\\\_____________\/\\\_\/\\\_______\/\\\_\/\\\______\//\\\_\/\\\\\\\\\\\\\\\_\/\\\______\//\\\__/\\\_\//\\\\\\___/\\\\\\\\\\______   
+          _______\///______________\///__\///________\///__\///________\///__\///////////////__\///________\///__\///___\//////___\//////////_______  
+           __________________________________________________________________________________________________________________________________________ 
+            __________________________________________________________________________________________________________________________________________
+
+Maker.js
+https://github.com/Microsoft/maker.js
+
+Copyright (c) Microsoft Corporation. All rights reserved. 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+License at http://www.apache.org/licenses/LICENSE-2.0  
  
 THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, 
+MERCHANTABLITY OR NON-INFRINGEMENT. 
  
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
-***************************************************************************** */
-//https://github.com/Microsoft/maker.js
+
+*/
 /**
  * Root module for Maker.js.
  *
@@ -115,6 +132,26 @@ var MakerJs;
     }
     MakerJs.extendObject = extendObject;
     /**
+     * @private
+     */
+    var x = {};
+    /**
+     * @private
+     */
+    function reflectName(value) {
+        for (var prop in x) {
+            delete x[prop];
+            return prop;
+        }
+    }
+    /**
+     * @private
+     */
+    function hasNamedProperty(p, value) {
+        var prop = reflectName();
+        return (prop in p);
+    }
+    /**
      * Test to see if an object implements the required properties of a point.
      *
      * @param item The item to test.
@@ -147,7 +184,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPathCircle(item) {
-        return isPath(item) && item.type == MakerJs.pathType.Circle && item.radius;
+        return isPath(item) && item.type == MakerJs.pathType.Circle && hasNamedProperty(item, x.radius = null);
     }
     MakerJs.isPathCircle = isPathCircle;
     /**
@@ -156,9 +193,18 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPathArc(item) {
-        return isPath(item) && item.type == MakerJs.pathType.Arc && item.radius && item.startAngle && item.endAngle;
+        return isPath(item) && item.type == MakerJs.pathType.Arc && hasNamedProperty(item, x.radius = null) && hasNamedProperty(item, x.startAngle = null) && hasNamedProperty(item, x.endAngle = null);
     }
     MakerJs.isPathArc = isPathArc;
+    /**
+     * Test to see if an object implements the required properties of an arc in a bezier curve.
+     *
+     * @param item The item to test.
+     */
+    function isIPathArcInBezierCurve(item) {
+        return isPathArc(item) && hasNamedProperty(item, x.bezierData = null);
+    }
+    MakerJs.isIPathArcInBezierCurve = isIPathArcInBezierCurve;
     /**
      * String-based enumeration of all paths types.
      *
@@ -171,7 +217,8 @@ var MakerJs;
     MakerJs.pathType = {
         Line: "line",
         Circle: "circle",
-        Arc: "arc"
+        Arc: "arc",
+        BezierSeed: "bezier-seed"
     };
     /**
      * Test to see if an object implements the required properties of a model.
@@ -437,6 +484,7 @@ var MakerJs;
         pathEndsMap[MakerJs.pathType.Line] = function (line) {
             return [line.origin, line.end];
         };
+        pathEndsMap[MakerJs.pathType.BezierSeed] = pathEndsMap[MakerJs.pathType.Line];
         /**
          * Get the two end points of a path.
          *
@@ -516,6 +564,9 @@ var MakerJs;
                 ration(line.origin[0], line.end[0]),
                 ration(line.origin[1], line.end[1])
             ];
+        };
+        middleMap[MakerJs.pathType.BezierSeed] = function (seed, ratio) {
+            return MakerJs.models.BezierCurve.computePoint(seed, ratio);
         };
         /**
          * Get the middle point of a path.
@@ -641,6 +692,10 @@ var MakerJs;
                 case MakerJs.pathType.Arc:
                     var arc = pathToClone;
                     result = new MakerJs.paths.Arc(MakerJs.point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
+                    //carry extra props if this is an IPathArcInBezierCurve
+                    if (MakerJs.isIPathArcInBezierCurve(arc)) {
+                        result.bezierData = arc.bezierData;
+                    }
                     break;
                 case MakerJs.pathType.Circle:
                     var circle = pathToClone;
@@ -671,16 +726,21 @@ var MakerJs;
             var xor = mirrorX != mirrorY;
             return new MakerJs.paths.Arc(origin, arc.radius, xor ? endAngle : startAngle, xor ? startAngle : endAngle);
         };
+        mirrorMap[MakerJs.pathType.BezierSeed] = function (seed, origin, mirrorX, mirrorY) {
+            var mirrored = mirrorMap[MakerJs.pathType.Line](seed, origin, mirrorX, mirrorY);
+            mirrored.type = MakerJs.pathType.BezierSeed;
+            mirrored.controls = seed.controls.map(function (c) { return MakerJs.point.mirror(c, mirrorX, mirrorY); });
+            return mirrored;
+        };
         /**
          * Create a clone of a path, mirrored on either or both x and y axes.
          *
          * @param pathToMirror The path to mirror.
          * @param mirrorX Boolean to mirror on the x axis.
          * @param mirrorY Boolean to mirror on the y axis.
-         * @param newId Optional id to assign to the new path.
          * @returns Mirrored path.
          */
-        function mirror(pathToMirror, mirrorX, mirrorY, newId) {
+        function mirror(pathToMirror, mirrorX, mirrorY) {
             var newPath = null;
             if (pathToMirror) {
                 var origin = MakerJs.point.mirror(pathToMirror.origin, mirrorX, mirrorY);
@@ -725,6 +785,10 @@ var MakerJs;
         var moveRelativeMap = {};
         moveRelativeMap[MakerJs.pathType.Line] = function (line, delta, subtract) {
             line.end = MakerJs.point.add(line.end, delta, subtract);
+        };
+        moveRelativeMap[MakerJs.pathType.BezierSeed] = function (seed, delta, subtract) {
+            moveRelativeMap[MakerJs.pathType.Line](seed, delta, subtract);
+            seed.controls = seed.controls.map(function (c) { return MakerJs.point.add(c, delta, subtract); });
         };
         /**
          * Move a path's origin by a relative amount.
@@ -776,6 +840,10 @@ var MakerJs;
             arc.startAngle = MakerJs.angle.noRevolutions(arc.startAngle + angleInDegrees);
             arc.endAngle = MakerJs.angle.noRevolutions(arc.endAngle + angleInDegrees);
         };
+        rotateMap[MakerJs.pathType.BezierSeed] = function (seed, angleInDegrees, rotationOrigin) {
+            rotateMap[MakerJs.pathType.Line](seed, angleInDegrees, rotationOrigin);
+            seed.controls = seed.controls.map(function (c) { return MakerJs.point.rotate(c, angleInDegrees, rotationOrigin); });
+        };
         /**
          * Rotate a path.
          *
@@ -801,6 +869,10 @@ var MakerJs;
         var scaleMap = {};
         scaleMap[MakerJs.pathType.Line] = function (line, scaleValue) {
             line.end = MakerJs.point.scale(line.end, scaleValue);
+        };
+        scaleMap[MakerJs.pathType.BezierSeed] = function (seed, scaleValue) {
+            scaleMap[MakerJs.pathType.Line](seed, scaleValue);
+            seed.controls = seed.controls.map(function (c) { return MakerJs.point.scale(c, scaleValue); });
         };
         scaleMap[MakerJs.pathType.Circle] = function (circle, scaleValue) {
             circle.radius *= scaleValue;
@@ -882,9 +954,14 @@ var MakerJs;
             }
             var savedEndAngle = arc.endAngle;
             arc.endAngle = angleAtBreakPointBetween;
-            return new MakerJs.paths.Arc(arc.origin, arc.radius, angleAtBreakPointBetween, savedEndAngle);
+            //clone the original to carry other properties
+            var copy = path_1.clone(arc);
+            copy.startAngle = angleAtBreakPointBetween;
+            copy.endAngle = savedEndAngle;
+            return copy;
         };
         breakPathFunctionMap[MakerJs.pathType.Circle] = function (circle, pointOfBreak) {
+            //breaking a circle turns it into an arc
             circle.type = MakerJs.pathType.Arc;
             var arc = circle;
             var angleAtBreakPoint = MakerJs.angle.ofPointInDegrees(circle.origin, pointOfBreak);
@@ -898,7 +975,11 @@ var MakerJs;
             }
             var savedEndPoint = line.end;
             line.end = pointOfBreak;
-            return new MakerJs.paths.Line(pointOfBreak, savedEndPoint);
+            //clone the original to carry other properties
+            var copy = path_1.clone(line);
+            copy.origin = pointOfBreak;
+            copy.end = savedEndPoint;
+            return copy;
         };
         /**
          * Breaks a path in two. The supplied path will end at the supplied pointOfBreak,
@@ -1185,6 +1266,9 @@ var MakerJs;
             if (!modelToOriginate)
                 return;
             var newOrigin = MakerJs.point.add(modelToOriginate.origin, origin);
+            if (modelToOriginate.type === MakerJs.models.BezierCurve.typeName) {
+                MakerJs.path.moveRelative(modelToOriginate.seed, newOrigin);
+            }
             if (modelToOriginate.paths) {
                 for (var id in modelToOriginate.paths) {
                     MakerJs.path.moveRelative(modelToOriginate.paths[id], newOrigin);
@@ -1220,6 +1304,10 @@ var MakerJs;
             if (modelToMirror.units) {
                 newModel.units = modelToMirror.units;
             }
+            if (modelToMirror.type === MakerJs.models.BezierCurve.typeName) {
+                newModel.type = MakerJs.models.BezierCurve.typeName;
+                newModel.seed = MakerJs.path.mirror(modelToMirror.seed, mirrorX, mirrorY);
+            }
             if (modelToMirror.paths) {
                 newModel.paths = {};
                 for (var id in modelToMirror.paths) {
@@ -1238,7 +1326,7 @@ var MakerJs;
                     var childModelToMirror = modelToMirror.models[id];
                     if (!childModelToMirror)
                         continue;
-                    var childModelMirrored = model.mirror(childModelToMirror, mirrorX, mirrorY);
+                    var childModelMirrored = mirror(childModelToMirror, mirrorX, mirrorY);
                     if (!childModelMirrored)
                         continue;
                     newModel.models[id] = childModelMirrored;
@@ -1308,6 +1396,9 @@ var MakerJs;
         function rotate(modelToRotate, angleInDegrees, rotationOrigin) {
             if (modelToRotate) {
                 var offsetOrigin = MakerJs.point.subtract(rotationOrigin, modelToRotate.origin);
+                if (modelToRotate.type === MakerJs.models.BezierCurve.typeName) {
+                    MakerJs.path.rotate(modelToRotate.seed, angleInDegrees, offsetOrigin);
+                }
                 if (modelToRotate.paths) {
                     for (var id in modelToRotate.paths) {
                         MakerJs.path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
@@ -1334,6 +1425,9 @@ var MakerJs;
             if (scaleOrigin === void 0) { scaleOrigin = false; }
             if (scaleOrigin && modelToScale.origin) {
                 modelToScale.origin = MakerJs.point.scale(modelToScale.origin, scaleValue);
+            }
+            if (modelToScale.type === MakerJs.models.BezierCurve.typeName) {
+                MakerJs.path.scale(modelToScale.seed, scaleValue);
             }
             if (modelToScale.paths) {
                 for (var id in modelToScale.paths) {
@@ -2389,6 +2483,8 @@ var MakerJs;
                 return a[0] == b[0] && a[1] == b[1];
             }
             else {
+                if (!a || !b)
+                    return false;
                 var distance = measure.pointDistance(a, b);
                 return distance <= withinDistance;
             }
@@ -2969,6 +3065,8 @@ var MakerJs;
                 append("51");
                 append(arc.endAngle);
             };
+            //TODO - handle scenario if any bezier seeds get passed
+            //map[pathType.BezierSeed]
             function section(sectionFn) {
                 append("0");
                 append("SECTION");
@@ -3877,12 +3975,10 @@ var MakerJs;
          *
          * @param modelContext The model to search for chains.
          * @param options Optional options object.
-         * @returns A list of chains.
          */
         function findChains(modelContext, callback, options) {
             var opts = {
-                pointMatchingDistance: .005,
-                byLayers: false
+                pointMatchingDistance: .005
             };
             MakerJs.extendObject(opts, options);
             function comparePoint(pointA, pointB) {
@@ -3899,8 +3995,9 @@ var MakerJs;
                     }
                     var connections = connectionMap[layer];
                     //circles are loops by nature
-                    if (walkedPath.pathContext.type == MakerJs.pathType.Circle ||
-                        (walkedPath.pathContext.type == MakerJs.pathType.Arc && MakerJs.angle.ofArcSpan(walkedPath.pathContext) == 360)) {
+                    if (walkedPath.pathContext.type === MakerJs.pathType.Circle ||
+                        (walkedPath.pathContext.type === MakerJs.pathType.Arc && MakerJs.round(MakerJs.angle.ofArcSpan(walkedPath.pathContext) - 360) === 0) ||
+                        (walkedPath.pathContext.type === MakerJs.pathType.BezierSeed && MakerJs.measure.isPointEqual(walkedPath.pathContext.origin, walkedPath.pathContext.end, opts.pointMatchingDistance))) {
                         var chain = {
                             links: [{
                                     walkedPath: walkedPath,
@@ -3936,6 +4033,9 @@ var MakerJs;
                     }
                 }
             };
+            if (opts.shallow) {
+                walkOptions.beforeChildWalk = function () { return false; };
+            }
             model.walk(modelContext, walkOptions);
             for (var layer in connectionMap) {
                 var connections = connectionMap[layer];
@@ -4599,6 +4699,9 @@ var MakerJs;
         chainLinkToPathDataMap[MakerJs.pathType.Line] = function (line, endPoint, reversed, d) {
             d.push('L', MakerJs.round(endPoint[0]), MakerJs.round(endPoint[1]));
         };
+        chainLinkToPathDataMap[MakerJs.pathType.BezierSeed] = function (seed, endPoint, reversed, d) {
+            svgBezierData(d, seed, reversed);
+        };
         /**
          * @private
          */
@@ -4662,6 +4765,11 @@ var MakerJs;
                 return startSvgPathData(arcPoints[0], d);
             }
         };
+        svgPathDataMap[MakerJs.pathType.BezierSeed] = function (seed) {
+            var d = [];
+            svgBezierData(d, seed);
+            return startSvgPathData(seed.origin, d);
+        };
         /**
          * Convert a path to SVG path data.
          */
@@ -4682,8 +4790,42 @@ var MakerJs;
         /**
          * @private
          */
+        function getBezierModelsWithPaths(modelToExport) {
+            var beziers = [];
+            function checkIsBezierWithPaths(b) {
+                if (b.type && b.type === MakerJs.models.BezierCurve.typeName && b.paths) {
+                    beziers.push(b);
+                }
+            }
+            var options = {
+                beforeChildWalk: function (walkedModel) {
+                    checkIsBezierWithPaths(walkedModel.childModel);
+                    return true;
+                }
+            };
+            checkIsBezierWithPaths(modelToExport);
+            MakerJs.model.walk(modelToExport, options);
+            return beziers;
+        }
+        /**
+         * @private
+         */
         function getPathDataByLayer(modelToExport, offset, options) {
             var pathDataByLayer = {};
+            var beziers = getBezierModelsWithPaths(modelToExport);
+            var tempKey = 'tempPaths';
+            beziers.forEach(function (b) {
+                //use seeds as path, hide the arc paths from findChains()
+                var bezierSeeds = MakerJs.models.BezierCurve.getBezierSeeds(b);
+                if (bezierSeeds.length > 0) {
+                    b[tempKey] = b.paths;
+                    var newPaths = {};
+                    bezierSeeds.forEach(function (seed, i) {
+                        newPaths['seed_' + i] = seed;
+                    });
+                    b.paths = newPaths;
+                }
+            });
             MakerJs.model.findChains(modelToExport, function (chains, loose, layer) {
                 function single(walkedPath) {
                     var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
@@ -4701,6 +4843,13 @@ var MakerJs;
                 });
                 loose.map(single);
             }, options);
+            //revert
+            beziers.forEach(function (b) {
+                if (tempKey in b) {
+                    b.paths = b[tempKey];
+                    delete b[tempKey];
+                }
+            });
             return pathDataByLayer;
         }
         /**
@@ -4895,6 +5044,11 @@ var MakerJs;
                         drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, MakerJs.point.middle(arc));
                     }
                 };
+                map[MakerJs.pathType.BezierSeed] = function (id, seed, origin, layer) {
+                    var d = [];
+                    svgBezierData(d, seed);
+                    drawPath(id, seed.origin[0], seed.origin[1], d, layer, MakerJs.point.middle(seed));
+                };
                 function beginModel(id, modelContext) {
                     modelGroup.attrs = { id: id };
                     append(modelGroup.getOpeningTag(false), modelContext.layer);
@@ -4938,6 +5092,20 @@ var MakerJs;
         /**
          * @private
          */
+        function svgBezierData(d, seed, reversed) {
+            if (seed.controls.length === 1) {
+                d.push('Q', MakerJs.round(seed.controls[0][0]), MakerJs.round(seed.controls[0][1]));
+            }
+            else {
+                var controls = reversed ? [seed.controls[1], seed.controls[0]] : seed.controls;
+                d.push('C', MakerJs.round(controls[0][0]), MakerJs.round(controls[0][1]), MakerJs.round(controls[1][0]), MakerJs.round(controls[1][1]));
+            }
+            var final = reversed ? seed.origin : seed.end;
+            d.push(MakerJs.round(final[0]), MakerJs.round(final[1]));
+        }
+        /**
+         * @private
+         */
         function svgArcData(d, radius, endPoint, largeArc, decreasing) {
             var r = MakerJs.round(radius);
             var end = endPoint;
@@ -4961,6 +5129,436 @@ var MakerJs;
         exporter.svgUnit[MakerJs.unitType.Foot] = { svgUnitType: "in", scaleConversion: 12 };
         exporter.svgUnit[MakerJs.unitType.Meter] = { svgUnitType: "cm", scaleConversion: 100 };
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        var hasLib = false;
+        function ensureBezierLib() {
+            if (hasLib)
+                return;
+            try {
+                var lib = Bezier.prototype;
+                hasLib = true;
+            }
+            catch (e) {
+                throw "Bezier library not found. If you are using Node, try running 'npm install' or if you are in the browser, download http://pomax.github.io/bezierjs/bezier.js to your website and add a script tag.";
+            }
+        }
+        /**
+         * @private
+         */
+        var scratch;
+        /**
+         * @private
+         */
+        function getScratch() {
+            if (!scratch) {
+                ensureBezierLib();
+                scratch = new Bezier(0, 0, 0, 0, 0, 0);
+            }
+            return scratch;
+        }
+        /**
+         * @private
+         */
+        function BezierToSeed(b) {
+            var points = b.points.map(function (p) { return [p.x, p.y]; });
+            return new BezierSeed(points);
+        }
+        /**
+         * @private
+         */
+        function seedToBezier(seed) {
+            var coords = [];
+            coords.push.apply(coords, seed.origin);
+            coords.push.apply(coords, seed.controls[0]);
+            if (seed.controls.length > 1) {
+                coords.push.apply(coords, seed.controls[1]);
+            }
+            coords.push.apply(coords, seed.end);
+            ensureBezierLib();
+            return new Bezier(coords);
+        }
+        /**
+         * @private
+         */
+        function getArcs(b, accuracy) {
+            var arcs = b.arcs(accuracy);
+            return arcs.map(function (a) {
+                var arc = new MakerJs.paths.Arc([a.x, a.y], a.r, MakerJs.angle.toDegrees(a.s), MakerJs.angle.toDegrees(a.e));
+                arc.bezierData = { startT: a.interval.start, endT: a.interval.end };
+                return arc;
+            });
+        }
+        /**
+         * @private
+         * Class for bezier seed.
+         */
+        var BezierSeed = (function () {
+            function BezierSeed() {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i - 0] = arguments[_i];
+                }
+                this.type = MakerJs.pathType.BezierSeed;
+                switch (args.length) {
+                    case 1:
+                        var points = args[0];
+                        this.origin = points[0];
+                        if (points.length === 3) {
+                            this.controls = [points[1]];
+                            this.end = points[2];
+                        }
+                        else if (points.length === 4) {
+                            this.controls = [points[1], points[2]];
+                            this.end = points[3];
+                        }
+                        else {
+                            this.end = points[1];
+                        }
+                        break;
+                    case 3:
+                        if (Array.isArray(args[1])) {
+                            this.controls = args[1];
+                        }
+                        else {
+                            this.controls = [args[1]];
+                        }
+                        this.end = args[2];
+                        break;
+                    case 4:
+                        this.controls = [args[1], args[2]];
+                        this.end = args[3];
+                        break;
+                }
+            }
+            return BezierSeed;
+        }());
+        var BezierCurve = (function () {
+            function BezierCurve() {
+                var _this = this;
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i - 0] = arguments[_i];
+                }
+                this.type = BezierCurve.typeName;
+                var isLeaf = false;
+                var isArrayArg0 = Array.isArray(args[0]);
+                switch (args.length) {
+                    case 2:
+                        if (!isArrayArg0) {
+                            //seed
+                            this.seed = args[0];
+                            if (typeof args[1] === "boolean") {
+                                isLeaf = args[1];
+                            }
+                            else {
+                                this.accuracy = args[1];
+                            }
+                            break;
+                        }
+                    //fall through to point array
+                    case 1:
+                        if (isArrayArg0) {
+                            var points = args[0];
+                            this.seed = new BezierSeed(points);
+                        }
+                        else {
+                            this.seed = args[0];
+                        }
+                        break;
+                    default:
+                        switch (args.length) {
+                            case 4:
+                                if (MakerJs.isPoint(args[3])) {
+                                    this.seed = new BezierSeed(args);
+                                    break;
+                                }
+                                else {
+                                    this.accuracy = args[3];
+                                }
+                            case 3:
+                                this.seed = new BezierSeed(args.slice(0, 3));
+                                break;
+                            case 5:
+                                this.accuracy = args[4];
+                                this.seed = new BezierSeed(args.slice(0, 4));
+                                break;
+                        }
+                        break;
+                }
+                var b = seedToBezier(this.seed);
+                if (!isLeaf) {
+                    //breaking the bezier into its extrema will make the models better correspond to rectangular measurements.
+                    var extrema = b.extrema().values;
+                    //remove leading zero
+                    if (extrema.length > 0 && extrema[0] === 0) {
+                        extrema.shift();
+                    }
+                    //remove ending 1
+                    if (extrema.length > 0 && extrema[extrema.length - 1] === 1) {
+                        extrema.pop();
+                    }
+                    if (extrema.length === 0) {
+                        isLeaf = true;
+                    }
+                    else {
+                        //need to create children
+                        //this is now not a curve, but just an ordinary model container
+                        delete this.type;
+                        this.models = {};
+                        var childSeeds = [];
+                        if (extrema.length === 1) {
+                            var split = b.split(extrema[0]);
+                            childSeeds.push(split.left, split.right);
+                        }
+                        else {
+                            //add 0 and 1 endings
+                            extrema.unshift(0);
+                            extrema.push(1);
+                            for (var i = 1; i < extrema.length; i++) {
+                                //get the bezier between 
+                                childSeeds.push(b.split(extrema[i - 1], extrema[i]));
+                            }
+                        }
+                        childSeeds.forEach(function (b, i) {
+                            var seed = BezierToSeed(b);
+                            _this.models['Curve_' + i] = new BezierCurve(seed, true);
+                        });
+                    }
+                }
+                if (isLeaf) {
+                    if (!this.accuracy) {
+                        //get a default accuracy relative to the size of the bezier
+                        var len = b.length();
+                        //set the default to be a combination of fast rendering and good smoothing.
+                        this.accuracy = len / 1000;
+                    }
+                    var arcs = getArcs(b, this.accuracy);
+                    this.paths = {};
+                    var i = 0;
+                    arcs.forEach(function (arc) {
+                        var span = MakerJs.angle.ofArcSpan(arc);
+                        if (span === 0 || span === 360)
+                            return;
+                        _this.paths['arc_' + i] = arc;
+                        i++;
+                    });
+                }
+            }
+            BezierCurve.getBezierSeeds = function (curve, options) {
+                if (options === void 0) { options = {}; }
+                options.shallow = true;
+                var b = seedToBezier(curve.seed);
+                var seeds = [];
+                MakerJs.model.findChains(curve, function (chains, loose, layer) {
+                    if (chains.length === 1) {
+                        //check if endpoints are 0 and 1
+                        var chain = chains[0];
+                        var chainEnds = [chain.links[0].walkedPath.pathContext, chain.links[chain.links.length - 1].walkedPath.pathContext];
+                        if (chain.links[0].reversed) {
+                            chainEnds = [chainEnds[1], chainEnds[0]];
+                        }
+                        var intact = true;
+                        for (var i = 2; i--;) {
+                            var chainEnd = chainEnds[i];
+                            var endPoints = MakerJs.point.fromPathEnds(chainEnd);
+                            var chainEndPoint = endPoints[i];
+                            var trueEndpoint = b.compute(i == 0 ? chainEnd.bezierData.startT : chainEnd.bezierData.endT);
+                            if (!MakerJs.measure.isPointEqual(chainEndPoint, [trueEndpoint.x, trueEndpoint.y], .00001)) {
+                                intact = false;
+                                break;
+                            }
+                        }
+                        if (intact) {
+                            seeds.push(curve.seed);
+                        }
+                    }
+                    //TODO: find bezier seeds from a split chain
+                }, options);
+                return seeds;
+            };
+            BezierCurve.computePoint = function (seed, t) {
+                var points = [seed.origin];
+                points.push.apply(points, seed.controls);
+                points.push(seed.end);
+                var bezierJsPoints = points.map(function (p) {
+                    var bp = {
+                        x: p[0], y: p[1]
+                    };
+                    return bp;
+                });
+                var s = getScratch();
+                s.points = bezierJsPoints;
+                var computedPoint = s.compute(t);
+                return [computedPoint.x, computedPoint.y];
+            };
+            BezierCurve.typeName = 'BezierCurve';
+            return BezierCurve;
+        }());
+        models.BezierCurve = BezierCurve;
+        BezierCurve.metaParameters = [
+            {
+                title: "points", type: "select", value: [
+                    [[0, 0], [100, 0], [100, 100]],
+                    [[0, 0], [20, 0], [80, 100], [100, 100]]
+                ]
+            }
+        ];
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
+        /**
+         * @private
+         */
+        function controlYForCircularCubic(arcSpanInRadians) {
+            //from http://pomax.github.io/bezierinfo/#circles_cubic
+            return 4 * (Math.tan(arcSpanInRadians / 4) / 3);
+        }
+        /**
+         * @private
+         */
+        function controlPointsForCircularCubic(arc) {
+            var arcSpan = MakerJs.angle.ofArcSpan(arc);
+            //compute y for radius of 1
+            var y = controlYForCircularCubic(MakerJs.angle.toRadians(arcSpan));
+            //multiply by radius
+            var c1 = [arc.radius, arc.radius * y];
+            //get second control point by mirroring, then rotating
+            var c2 = MakerJs.point.rotate(MakerJs.point.mirror(c1, false, true), arcSpan, [0, 0]);
+            //rotate again to start angle, then offset by arc's origin
+            return [c1, c2].map(function (p) { return MakerJs.point.add(arc.origin, MakerJs.point.rotate(p, arc.startAngle, [0, 0])); });
+        }
+        /**
+         * @private
+         */
+        function bezierPointsFromArc(arc) {
+            var span = MakerJs.angle.ofArcSpan(arc);
+            if (span <= 90) {
+                var endPoints = MakerJs.point.fromPathEnds(arc);
+                var controls = controlPointsForCircularCubic(arc);
+                return [endPoints[0], controls[0], controls[1], endPoints[1]];
+            }
+            return null;
+        }
+        /**
+         * @private
+         */
+        function scaleDim(bezierPoints, i, s) {
+            bezierPoints.map(function (p) { p[i] *= s; });
+        }
+        /**
+         * @private
+         */
+        function scaleXY(bezierPoints, x, y) {
+            if (y === void 0) { y = x; }
+            scaleDim(bezierPoints, 0, x);
+            scaleDim(bezierPoints, 1, y);
+        }
+        var Ellipse = (function () {
+            function Ellipse() {
+                var _this = this;
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i - 0] = arguments[_i];
+                }
+                this.models = {};
+                var n = 8;
+                var accuracy;
+                var isPointArgs0 = MakerJs.isPoint(args[0]);
+                var realArgs = function (numArgs) {
+                    switch (numArgs) {
+                        case 2:
+                            if (isPointArgs0) {
+                                //origin, radius
+                                _this.origin = args[0];
+                            }
+                            break;
+                        case 3:
+                            //origin, rx, ry
+                            _this.origin = args[0];
+                            break;
+                        case 4:
+                            //cx, cy, rx, ry
+                            _this.origin = [args[0], args[1]];
+                            break;
+                    }
+                    //construct a bezier approximation for an arc with radius of 1.
+                    var a = 360 / n;
+                    var arc = new MakerJs.paths.Arc([0, 0], 1, 0, a);
+                    //clone and rotate to complete a circle
+                    for (var i = 0; i < n; i++) {
+                        var bezierPoints = bezierPointsFromArc(arc);
+                        switch (numArgs) {
+                            case 1:
+                                //radius
+                                scaleXY(bezierPoints, args[0]);
+                                break;
+                            case 2:
+                                if (isPointArgs0) {
+                                    //origin, radius
+                                    scaleXY(bezierPoints, args[1]);
+                                }
+                                else {
+                                    //rx, ry
+                                    scaleXY(bezierPoints, args[0], args[1]);
+                                }
+                                break;
+                            case 3:
+                                //origin, rx, ry
+                                scaleXY(bezierPoints, args[1], args[2]);
+                                break;
+                            case 4:
+                                //cx, cy, rx, ry
+                                scaleXY(bezierPoints, args[2], args[3]);
+                                break;
+                        }
+                        _this.models['Curve' + (1 + i)] = new models.BezierCurve(bezierPoints, accuracy);
+                        arc.startAngle += a;
+                        arc.endAngle += a;
+                    }
+                };
+                switch (args.length) {
+                    case 2:
+                        realArgs(2);
+                        break;
+                    case 3:
+                        if (isPointArgs0) {
+                            realArgs(3);
+                        }
+                        else {
+                            accuracy = args[2];
+                            realArgs(2);
+                        }
+                        break;
+                    case 4:
+                        if (isPointArgs0) {
+                            accuracy = args[3];
+                            realArgs(3);
+                        }
+                        else {
+                            realArgs(4);
+                        }
+                        break;
+                    case 5:
+                        accuracy = args[4];
+                        realArgs(4);
+                        break;
+                }
+            }
+            return Ellipse;
+        }());
+        models.Ellipse = Ellipse;
+        Ellipse.metaParameters = [
+            { title: "radiusX", type: "range", min: 1, max: 50, value: 50 },
+            { title: "radiusY", type: "range", min: 1, max: 50, value: 25 }
+        ];
+    })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
@@ -5442,3 +6040,4 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
+﻿var Bezier = require('bezier-js');

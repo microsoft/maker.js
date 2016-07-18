@@ -33,6 +33,7 @@
     <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
+    <script src="../external/bezier-js/bezier.js"></script>
 
     <script>
         //pretend we are in node
@@ -76,6 +77,8 @@
     <script src="../src/models/RoundRectangle.js"></script>
     <script src="../src/models/Oval.js"></script>
     <script src="../src/models/OvalArc.js"></script>
+    <script src="../src/models/BezierCurve.js"></script>
+    <script src="../src/models/Ellipse.js"></script>
     <script src="../src/models/ConnectTheDots.js"></script>
     <script src="../src/models/Rectangle.js"></script>
     <script src="../src/models/Ring.js"></script>
@@ -185,8 +188,8 @@
                 <a name="code"></a>
 
                 <pre id="init-javascript-code">
-var makerjs = require('makerjs');
-this.paths = {
+                    var makerjs = require('makerjs');
+                    this.paths = {
     head: new makerjs.paths.Circle([0, 0], 90),
     eye: new makerjs.paths.Circle([25, 25], 10),
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
@@ -202,6 +205,25 @@ this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScrip
             <span>jump to</span>
             <span><a href="#code" onclick="document.querySelector('a[name=code]').scrollIntoView();return false;">code</a></span>
             <span><a href="#top" onclick="document.querySelector('a[name=top]').scrollIntoView();return false;">top</a></span>
+        </div>
+
+        <div class="about">
+
+            <blockquote>
+                The <b>Maker.js Playground</b> is a sample app demonstrating the features of the Maker.js core library.
+                You can build your own apps using Maker.js, or it can be used command-line style with <a href="https://nodejs.org/" target="_blank">Node.js</a>.
+            </blockquote>
+
+            <h4>Credits:</h4>
+
+            <ul>
+                <li>JavaScript editor by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></li>
+                <li>Markdown rendering by <a href="https://github.com/chjj/marked">Marked</a></li>
+                <li>3D generation by <a href="https://joostn.github.io/OpenJsCad/" target="_blank">OpenJSCAD</a></li>
+                <li>PDF generation by <a href="http://pdfkit.org/" target="_blank">PDFKit</a></li>
+                <li>Multitouch pointer events polyfill by <a href="https://github.com/jquery/PEP" target="_blank">Jquery PEP</a></li>
+                <li>Binary data polyfill by <a href="https://github.com/inexorabletash/text-encoding">text-encoding</a></li>
+            </ul>
         </div>
 
         <footer>

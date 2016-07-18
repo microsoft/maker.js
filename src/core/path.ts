@@ -22,6 +22,12 @@ namespace MakerJs.path {
             case pathType.Arc:
                 var arc = <IPathArc>pathToClone;
                 result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
+
+                //carry extra props if this is an IPathArcInBezierCurve
+                if (isIPathArcInBezierCurve(arc)) {
+                    (<IPathArcInBezierCurve>result).bezierData = (<IPathArcInBezierCurve>arc).bezierData;
+                }
+
                 break;
 
             case pathType.Circle:
@@ -75,16 +81,26 @@ namespace MakerJs.path {
         );
     };
 
+    mirrorMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, origin: IPoint, mirrorX: boolean, mirrorY: boolean) {
+
+        var mirrored = mirrorMap[pathType.Line](seed, origin, mirrorX, mirrorY) as IPathBezierSeed;
+
+        mirrored.type = pathType.BezierSeed;
+
+        mirrored.controls = seed.controls.map(function (c) { return point.mirror(c, mirrorX, mirrorY); });
+
+        return mirrored;
+    };
+
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      * 
      * @param pathToMirror The path to mirror.
      * @param mirrorX Boolean to mirror on the x axis.
      * @param mirrorY Boolean to mirror on the y axis.
-     * @param newId Optional id to assign to the new path.
      * @returns Mirrored path.
      */
-    export function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IPath {
+    export function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean): IPath {
         var newPath: IPath = null;
 
         if (pathToMirror) {
@@ -139,6 +155,11 @@ namespace MakerJs.path {
 
     moveRelativeMap[pathType.Line] = function (line: IPathLine, delta: IPoint, subtract: boolean) {
         line.end = point.add(line.end, delta, subtract);
+    };
+
+    moveRelativeMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, delta: IPoint, subtract: boolean) {
+        moveRelativeMap[pathType.Line](seed, delta, subtract);
+        seed.controls = seed.controls.map(function (c) { return point.add(c, delta, subtract); });
     };
 
     /**
@@ -201,6 +222,11 @@ namespace MakerJs.path {
         arc.endAngle = angle.noRevolutions(arc.endAngle + angleInDegrees);
     }
 
+    rotateMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, angleInDegrees: number, rotationOrigin: IPoint) {
+        rotateMap[pathType.Line](seed, angleInDegrees, rotationOrigin);
+        seed.controls = seed.controls.map(function (c) { return point.rotate(c, angleInDegrees, rotationOrigin); });
+    }
+
     /**
      * Rotate a path.
      * 
@@ -229,6 +255,11 @@ namespace MakerJs.path {
 
     scaleMap[pathType.Line] = function (line: IPathLine, scaleValue: number) {
         line.end = point.scale(line.end, scaleValue);
+    }
+
+    scaleMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, scaleValue: number) {
+        scaleMap[pathType.Line](seed, scaleValue);
+        seed.controls = seed.controls.map(function (c) { return point.scale(c, scaleValue); });
     }
 
     scaleMap[pathType.Circle] = function (circle: IPathCircle, scaleValue: number) {

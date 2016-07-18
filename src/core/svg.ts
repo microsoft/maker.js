@@ -39,6 +39,10 @@ namespace MakerJs.exporter {
         d.push('L', round(endPoint[0]), round(endPoint[1]));
     };
 
+    chainLinkToPathDataMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, endPoint: IPoint, reversed: boolean, d: ISvgPathData) {
+        svgBezierData(d, seed, reversed);
+    };
+
     /**
      * @private
      */
@@ -132,6 +136,12 @@ namespace MakerJs.exporter {
         }
     };
 
+    svgPathDataMap[pathType.BezierSeed] = function (seed: IPathBezierSeed) {
+        var d: ISvgPathData = [];
+        svgBezierData(d, seed);
+        return startSvgPathData(seed.origin, d);
+    };
+
     /**
      * Convert a path to SVG path data.
      */
@@ -153,8 +163,56 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
+    function getBezierModelsWithPaths(modelToExport: IModel): IModel[] {
+
+        var beziers: IModel[] = [];
+
+        function checkIsBezierWithPaths(b: IModel) {
+            if (b.type && b.type === models.BezierCurve.typeName && b.paths) {
+                beziers.push(b);
+            }
+        }
+
+        var options: IWalkOptions = {
+            beforeChildWalk: function (walkedModel: IWalkModel): boolean {
+                checkIsBezierWithPaths(walkedModel.childModel);
+                return true;
+            }
+        };
+
+        checkIsBezierWithPaths(modelToExport);
+
+        model.walk(modelToExport, options);
+
+        return beziers;
+    }
+
+    /**
+     * @private
+     */
     function getPathDataByLayer(modelToExport: IModel, offset: IPoint, options: IFindChainsOptions) {
         var pathDataByLayer: IPathDataMap = {};
+
+        var beziers = getBezierModelsWithPaths(modelToExport);
+        var tempKey = 'tempPaths';
+
+        beziers.forEach(function (b: models.BezierCurve) {
+
+            //use seeds as path, hide the arc paths from findChains()
+            var bezierSeeds = models.BezierCurve.getBezierSeeds(b);
+            if (bezierSeeds.length > 0) {
+                b[tempKey] = b.paths;
+
+                var newPaths: IPathMap = {};
+
+                bezierSeeds.forEach(function (seed, i) {
+                    newPaths['seed_' + i] = seed;
+                });
+
+                b.paths = newPaths;
+            }
+
+        });
 
         model.findChains(
             modelToExport,
@@ -181,6 +239,14 @@ namespace MakerJs.exporter {
             },
             options
         );
+
+        //revert
+        beziers.forEach(function (b: models.BezierCurve) {
+            if (tempKey in b) {
+                b.paths = b[tempKey];
+                delete b[tempKey];
+            }
+        });
 
         return pathDataByLayer;
     }
@@ -451,6 +517,12 @@ namespace MakerJs.exporter {
                 }
             };
 
+            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, origin: IPoint, layer: string) {
+                var d: ISvgPathData = [];
+                svgBezierData(d, seed);
+                drawPath(id, seed.origin[0], seed.origin[1], d, layer, point.middle(seed));
+            };
+
             function beginModel(id: string, modelContext: IModel) {
                 modelGroup.attrs = { id: id };
                 append(modelGroup.getOpeningTag(false), modelContext.layer);
@@ -502,6 +574,20 @@ namespace MakerJs.exporter {
         d.push('z');
 
         return d;
+    }
+
+    /**
+     * @private
+     */
+    function svgBezierData(d: ISvgPathData, seed: IPathBezierSeed, reversed?: boolean) {
+        if (seed.controls.length === 1) {
+            d.push('Q', round(seed.controls[0][0]), round(seed.controls[0][1]));
+        } else {
+            var controls = reversed ? [seed.controls[1], seed.controls[0]] : seed.controls;
+            d.push('C', round(controls[0][0]), round(controls[0][1]), round(controls[1][0]), round(controls[1][1]));
+        }
+        var final = reversed ? seed.origin : seed.end;
+        d.push(round(final[0]), round(final[1]));
     }
 
     /**
