@@ -300,7 +300,7 @@
 
                     childSeeds.forEach((b, i) => {
                         var seed = BezierToSeed(b);
-                        this.models['Curve_' + i] = new BezierCurve(seed, true, this.accuracy);
+                        this.models['Curve_' + (1 + i)] = new BezierCurve(seed, true, this.accuracy);
                     });
                 }
             }
@@ -325,7 +325,7 @@
                     var span = angle.ofArcSpan(arc);
                     if (span === 0 || span === 360) return;
 
-                    this.paths['arc_' + i] = arc;
+                    this.paths['Arc_' + (1 + i)] = arc;
                     i++;
                 });
             }
@@ -349,22 +349,21 @@
                     var chain = chains[0];
                     var chainEnds = [chain.links[0], chain.links[chain.links.length - 1]];
 
+                    var chainReversed = false;
+
                     //put them in bezier t order
                     if ((chainEnds[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (chainEnds[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT) {
                         chainEnds.reverse();
+                        chainReversed = true;
                     }
 
                     var intact = true;
 
                     for (var i = 2; i--;) {
-                        var chainEnd = chainEnds[i].walkedPath.pathContext as IPathArcInBezierCurve;
-                        var endPoints = point.fromPathEnds(chainEnd);
-
-                        if (chainEnds[i].reversed) {
-                            endPoints.reverse();
-                        }
-
-                        var chainEndPoint = endPoints[i];
+                        var chainLink = chainEnds[i];
+                        var chainEnd = chainLink.walkedPath.pathContext as IPathArcInBezierCurve;
+                        var reversed = (chainReversed !== chainLink.reversed);
+                        var chainEndPoint = chainLink.endPoints[reversed ? 1 - i : i];
                         var trueEndpoint = b.compute(i == 0 ? chainEnd.bezierData.startT : chainEnd.bezierData.endT);
                         if (!measure.isPointEqual(chainEndPoint, [trueEndpoint.x, trueEndpoint.y], .00001)) {
                             intact = false;
