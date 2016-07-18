@@ -368,10 +368,7 @@ namespace MakerJs.exporter {
         }
 
         if (!opts.origin) {
-            var left = 0;
-            if (size.low[0] < 0) {
-                left = -size.low[0] * opts.scale;
-            }
+            var left = -size.low[0] * opts.scale;
             opts.origin = [left, size.high[1] * opts.scale];
         }
 

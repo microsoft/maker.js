@@ -23,12 +23,28 @@
     /**
      * @private
      */
-    function getScratch() {
+    function getScratch(seed: IPathBezierSeed) {
+
+        var points: IPoint[] = [seed.origin];
+        points.push.apply(points, seed.controls);
+        points.push(seed.end);
+
+        var bezierJsPoints = points.map(function (p: IPoint) {
+            var bp: BezierJs.Point = {
+                x: p[0], y: p[1]
+            };
+            return bp;
+        });
+
         if (!scratch) {
 
             ensureBezierLib();
-            scratch = new Bezier(0, 0, 0, 0, 0, 0);
+            scratch = new Bezier(bezierJsPoints);
+        } else {
+            scratch.points = bezierJsPoints;
+            scratch.update();
         }
+
         return scratch;
     }
 
@@ -244,6 +260,7 @@
             if (!isLeaf) {
 
                 //breaking the bezier into its extrema will make the models better correspond to rectangular measurements.
+                //however, the potential drawback is that these broken curves will not get reconciled to this overall curve.
                 var extrema = b.extrema().values;
 
                 //remove leading zero
@@ -261,8 +278,7 @@
                 } else {
                     //need to create children
 
-                    //this is now not a curve, but just an ordinary model container
-                    delete this.type;
+                    //this will not contain paths, but will contain other curves
                     this.models = {}
 
                     var childSeeds: BezierJs.Bezier[] = [];
@@ -331,16 +347,23 @@
                     //check if endpoints are 0 and 1
 
                     var chain = chains[0];
-                    var chainEnds = [chain.links[0].walkedPath.pathContext, chain.links[chain.links.length - 1].walkedPath.pathContext] as IPathArcInBezierCurve[];
-                    if (chain.links[0].reversed) {
-                        chainEnds = [chainEnds[1], chainEnds[0]];
+                    var chainEnds = [chain.links[0], chain.links[chain.links.length - 1]];
+
+                    //put them in bezier t order
+                    if ((chainEnds[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (chainEnds[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT) {
+                        chainEnds.reverse();
                     }
 
                     var intact = true;
 
                     for (var i = 2; i--;) {
-                        var chainEnd = chainEnds[i];
+                        var chainEnd = chainEnds[i].walkedPath.pathContext as IPathArcInBezierCurve;
                         var endPoints = point.fromPathEnds(chainEnd);
+
+                        if (chainEnds[i].reversed) {
+                            endPoints.reverse();
+                        }
+
                         var chainEndPoint = endPoints[i];
                         var trueEndpoint = b.compute(i == 0 ? chainEnd.bezierData.startT : chainEnd.bezierData.endT);
                         if (!measure.isPointEqual(chainEndPoint, [trueEndpoint.x, trueEndpoint.y], .00001)) {
@@ -362,20 +385,7 @@
         }
 
         public static computePoint(seed: IPathBezierSeed, t: number): IPoint {
-
-            var points: IPoint[] = [seed.origin];
-            points.push.apply(points, seed.controls);
-            points.push(seed.end);
-
-            var bezierJsPoints = points.map(function (p: IPoint) {
-                var bp: BezierJs.Point = {
-                    x: p[0], y: p[1]
-                };
-                return bp;
-            });
-
-            var s = getScratch();
-            s.points = bezierJsPoints;
+            var s = getScratch(seed);
 
             var computedPoint = s.compute(t);
 
