@@ -5248,7 +5248,10 @@ var MakerJs;
                 var isArrayArg0 = Array.isArray(args[0]);
                 switch (args.length) {
                     case 2:
-                        if (!isArrayArg0) {
+                        if (isArrayArg0) {
+                            this.accuracy = args[1];
+                        }
+                        else {
                             //seed
                             this.seed = args[0];
                             if (typeof args[1] === "boolean") {
@@ -5280,7 +5283,14 @@ var MakerJs;
                                     this.accuracy = args[3];
                                 }
                             case 3:
-                                this.seed = new BezierSeed(args.slice(0, 3));
+                                if (isArrayArg0) {
+                                    this.seed = new BezierSeed(args.slice(0, 3));
+                                }
+                                else {
+                                    this.seed = args[0];
+                                    isLeaf = args[1];
+                                    this.accuracy = args[2];
+                                }
                                 break;
                             case 5:
                                 this.accuracy = args[4];
@@ -5325,7 +5335,7 @@ var MakerJs;
                         }
                         childSeeds.forEach(function (b, i) {
                             var seed = BezierToSeed(b);
-                            _this.models['Curve_' + i] = new BezierCurve(seed, true);
+                            _this.models['Curve_' + i] = new BezierCurve(seed, true, _this.accuracy);
                         });
                     }
                 }
