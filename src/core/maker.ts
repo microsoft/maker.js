@@ -318,7 +318,7 @@ namespace MakerJs {
     }
 
     /**
-     * Test to see if an object implements the required properties of an arc.
+     * Test to see if an object implements the required properties of an arc in a bezier curve.
      * 
      * @param item The item to test.
      */
