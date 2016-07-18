@@ -30,6 +30,14 @@
     /**
      * @private
      */
+    function BezierToSeed(b: BezierJs.Bezier): IPathBezierSeed {
+        var points = b.points.map(function (p) { return [p.x, p.y] as IPoint; });
+        return new BezierSeed(points);
+    }
+
+    /**
+     * @private
+     */
     function seedToBezier(seed: IPathBezierSeed): BezierJs.Bezier {
         var coords: number[] = [];
 
@@ -153,64 +161,145 @@
         public origin: IPoint;
         public type = BezierCurve.typeName;
         public seed: IPathBezierSeed;
+        public accuracy: number;
 
-        constructor(seed: IPathBezierSeed, accuracy?: number);
         constructor(points: IPoint[], accuracy?: number);
+        constructor(seed: IPathBezierSeed, accuracy?: number);
+        constructor(seed: IPathBezierSeed, isChild: boolean);
         constructor(origin: IPoint, control: IPoint, end: IPoint, accuracy?: number);
         constructor(origin: IPoint, controls: IPoint[], end: IPoint, accuracy?: number);
         constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint, accuracy?: number);
 
         constructor(...args: any[]) {
 
-            var accuracy: number;
+            var isLeaf = false;
+
+            var isArrayArg0 = Array.isArray(args[0]);
 
             switch (args.length) {
 
                 case 2:
-                    accuracy = args[1] as number;
-
-                    if (!Array.isArray(args[0])) {
+                    if (!isArrayArg0) {
                         //seed
                         this.seed = args[0] as IPathBezierSeed;
+
+                        if (typeof args[1] === "boolean") {
+                            isLeaf = args[1] as boolean;
+                        } else {
+                            this.accuracy = args[1] as number;
+                        }
+
                         break;
                     }
                 //fall through to point array
 
-                case 1: //point array
-                    var points = args[0] as IPoint[];
+                case 1: //point array or seed
+                    if (isArrayArg0) {
 
-                    this.seed = new BezierSeed(points);
+                        var points = args[0] as IPoint[];
+
+                        this.seed = new BezierSeed(points);
+                    } else {
+                        this.seed = args[0] as IPathBezierSeed;
+                    }
                     break;
 
                 default:
                     switch (args.length) {
                         case 4:
-                            accuracy = args[3] as number;
-                        //fall through
-
+                            if (isPoint(args[3])) {
+                                this.seed = new BezierSeed(args as IPoint[]);
+                                break;
+                            } else {
+                                this.accuracy = args[3] as number;
+                                //fall through
+                            }
                         case 3:
                             this.seed = new BezierSeed(args.slice(0, 3) as IPoint[]);
                             break;
 
                         case 5:
-                            accuracy = args[4] as number;
+                            this.accuracy = args[4] as number;
                             this.seed = new BezierSeed(args.slice(0, 4) as IPoint[]);
                             break;
                     }
                     break;
             }
 
-            //set the default to be a combination of fast rendering and good smoothing. Accuracy can be specified if necessary.
-            accuracy = accuracy || .1;
-
-            //TODO: use extrema() and create child models
-
             var b = seedToBezier(this.seed);
 
-            var arcs = getArcs(b, accuracy);
+            if (!isLeaf) {
 
-            this.paths = {};
-            arcs.forEach((arc, i) => { this.paths['arc_' + i] = arc; });
+                //breaking the bezier into its extrema will make the models better correspond to rectangular measurements.
+                var extrema = b.extrema().values;
+
+                //remove leading zero
+                if (extrema.length > 0 && extrema[0] === 0) {
+                    extrema.shift();
+                }
+
+                //remove ending 1
+                if (extrema.length > 0 && extrema[extrema.length - 1] === 1) {
+                    extrema.pop();
+                }
+
+                if (extrema.length === 0) {
+                    isLeaf = true;
+                } else {
+                    //need to create children
+
+                    //this is now not a curve, but just an ordinary model container
+                    delete this.type;
+                    this.models = {}
+
+                    var childSeeds: BezierJs.Bezier[] = [];
+
+                    if (extrema.length === 1) {
+                        var split = b.split(extrema[0]);
+                        childSeeds.push(split.left, split.right);
+                    } else {
+
+                        //add 0 and 1 endings
+                        extrema.unshift(0);
+                        extrema.push(1);
+
+                        for (var i = 1; i < extrema.length; i++) {
+                            //get the bezier between 
+                            childSeeds.push(b.split(extrema[i - 1], extrema[i]));
+                        }
+                    }
+
+                    childSeeds.forEach((b, i) => {
+                        var seed = BezierToSeed(b);
+                        this.models['Curve_' + i] = new BezierCurve(seed, true);
+                    });
+                }
+            }
+
+            if (isLeaf) {
+
+                if (!this.accuracy) {
+                    //get a default accuracy relative to the size of the bezier
+                    var len = b.length();
+
+                    //set the default to be a combination of fast rendering and good smoothing.
+                    this.accuracy = len / 1000;
+                }
+
+                var arcs = getArcs(b, this.accuracy);
+
+                this.paths = {};
+
+                var i = 0;
+                arcs.forEach((arc) => {
+
+                    var span = angle.ofArcSpan(arc);
+                    if (span === 0 || span === 360) return;
+
+                    this.paths['arc_' + i] = arc;
+                    i++;
+                });
+            }
         }
 
         public static typeName = 'BezierCurve';
@@ -279,7 +368,6 @@
 
             return [computedPoint.x, computedPoint.y];
         }
-
 
     }
 
