@@ -8,7 +8,7 @@ Maker.js, a Microsoft Garage project, is a JavaScript library for creating line 
 
 ### Drawing with JavaScript code
 
-Draw using four primitive paths: [Line, Circle, Arc and NEW: Bezier](http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths).
+Draw using [Line, Circle, and Arc paths](http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths) and NEW [Bezier Curves](http://microsoft.github.io/maker.js/playground/?script=BezierCurve).
 
 Paths can be [grouped into Models](http://microsoft.github.io/maker.js/docs/basic-drawing/#Models) to form more complex drawings.
 
