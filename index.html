@@ -12,7 +12,7 @@ title: Create parametric CNC drawings using JavaScript
 <p><a href="/maker.js/demos/#content">see all demos</a></p></section>
 <section class="tsd-panel"><h2 id="features">Features</h2>
 <h3 id="drawing-with-javascript-code">Drawing with JavaScript code</h3>
-<p>Draw using three primitive paths: <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths">Line, Circle, and Arc</a>.</p>
+<p>Draw using four primitive paths: <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths">Line, Circle, Arc and NEW: Bezier</a>.</p>
 <p>Paths can be <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#Models">grouped into Models</a> to form more complex drawings.</p>
 <p>Behind the scenes, drawings are a <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#It%27s%20Just%20JSON">simple Javascript object</a> which can be serialized / deserialized conventionally with JSON.</p>
 <p>Other people&#39;s Models can be required the Node.js way, <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Modifying%20models">modified</a>, and re-exported.</p>
@@ -25,15 +25,21 @@ title: Create parametric CNC drawings using JavaScript
 <p><a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#expandpaths">Expand paths</a> to simulate a stroke thickness, with the option to bevel joints.</p>
 <p><a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#outline">Outline model</a> to create a surrounding outline, with the option to bevel joints.</p>
 <h3 id="output-formats">Output formats</h3>
-<p>2D: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf">DXF</a>, <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg">SVG</a>,
-NEW: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#topdf">PDF</a></p>
-<p>3D: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#toopenjscad">OpenJsCad script</a>, <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tostl">STL</a> (Must include <a href="http://joostn.github.io/OpenJsCad/">OpenJsCad</a> or <a href="https://www.npmjs.com/package/openjscad-csg">openjscad-csg</a>)</p>
+<p>2D: 
+<a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf">DXF</a>, 
+<a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg">SVG</a>,
+<a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#topdf">PDF</a> (Requires <a href="https://pdfkit.org/">PDFKit</a>)</p>
+<p>3D: 
+<a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#toopenjscad">OpenJsCad script</a>, 
+<a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tostl">STL</a> (Requires <a href="http://joostn.github.io/OpenJsCad/">OpenJsCad</a> or <a href="https://www.npmjs.com/package/openjscad-csg">openjscad-csg</a>)</p>
 <h3 id="built-in-models">Built-in models</h3>
 <ul>
+<li>NEW: <a href="http://microsoft.github.io/maker.js/playground/?script=BezierCurve">Bezier Curve</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=BoltCircle">Bolt Circle</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=BoltRectangle">Bolt Rectangle</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=ConnectTheDots">Connect the dots</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Dome">Dome</a></li>
+<li>NEW: <a href="http://microsoft.github.io/maker.js/playground/?script=Ellipse">Ellipse</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Oval">Oval</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=OvalArc">OvalArc</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Polygon">Polygon</a></li>
@@ -69,6 +75,12 @@ NEW: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.expor
 <p>Learn how to draw in Maker.js by folowing <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/">the tutorial</a></p>
 <h3 id="api">API</h3>
 <p>Browse all the library features in the <a href="http://microsoft.github.io/maker.js/docs/api/">API Documentation</a></p>
+<h3 id="credits">Credits</h3>
+<p>Maker.js depends on:</p>
+<ul>
+<li><a href="https://github.com/pvorb/node-clone">Clone</a> by Paul Vorbach</li>
+<li><a href="https://github.com/Pomax/bezierjs">Bezier-js</a> by Pomax</li>
+</ul>
 <hr>
 <p><strong><a href="CONTRIBUTING.md">Contribute to this project!</a></strong></p>
 <p>The Microsoft Garage turns fresh ideas into real projects. Learn more at <a href="http://microsoft.com/garage">http://microsoft.com/garage</a>.</p>
