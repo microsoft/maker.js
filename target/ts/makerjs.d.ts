@@ -1801,7 +1801,7 @@ declare namespace MakerJs.models {
         accuracy: number;
         constructor(points: IPoint[], accuracy?: number);
         constructor(seed: IPathBezierSeed, accuracy?: number);
-        constructor(seed: IPathBezierSeed, isChild: boolean);
+        constructor(seed: IPathBezierSeed, isChild: boolean, accuracy?: number);
         constructor(origin: IPoint, control: IPoint, end: IPoint, accuracy?: number);
         constructor(origin: IPoint, controls: IPoint[], end: IPoint, accuracy?: number);
         constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint, accuracy?: number);

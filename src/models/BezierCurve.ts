@@ -170,7 +170,7 @@
 
         constructor(points: IPoint[], accuracy?: number);
         constructor(seed: IPathBezierSeed, accuracy?: number);
-        constructor(seed: IPathBezierSeed, isChild: boolean);
+        constructor(seed: IPathBezierSeed, isChild: boolean, accuracy?: number);
         constructor(origin: IPoint, control: IPoint, end: IPoint, accuracy?: number);
         constructor(origin: IPoint, controls: IPoint[], end: IPoint, accuracy?: number);
         constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint, accuracy?: number);
@@ -184,7 +184,9 @@
             switch (args.length) {
 
                 case 2:
-                    if (!isArrayArg0) {
+                    if (isArrayArg0) {
+                        this.accuracy = args[1] as number;
+                    } else {
                         //seed
                         this.seed = args[0] as IPathBezierSeed;
 
@@ -220,7 +222,13 @@
                                 //fall through
                             }
                         case 3:
-                            this.seed = new BezierSeed(args.slice(0, 3) as IPoint[]);
+                            if (isArrayArg0) {
+                                this.seed = new BezierSeed(args.slice(0, 3) as IPoint[]);
+                            } else {
+                                this.seed = args[0] as IPathBezierSeed;
+                                isLeaf = args[1] as boolean;
+                                this.accuracy = args[2] as number;
+                            }
                             break;
 
                         case 5:
@@ -276,7 +284,7 @@
 
                     childSeeds.forEach((b, i) => {
                         var seed = BezierToSeed(b);
-                        this.models['Curve_' + i] = new BezierCurve(seed, true);
+                        this.models['Curve_' + i] = new BezierCurve(seed, true, this.accuracy);
                     });
                 }
             }
