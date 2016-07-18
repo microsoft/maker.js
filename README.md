@@ -8,7 +8,7 @@ Maker.js, a Microsoft Garage project, is a JavaScript library for creating line 
 
 ### Drawing with JavaScript code
 
-Draw using three primitive paths: [Line, Circle, and Arc](http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths).
+Draw using four primitive paths: [Line, Circle, Arc and NEW: Bezier](http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths).
 
 Paths can be [grouped into Models](http://microsoft.github.io/maker.js/docs/basic-drawing/#Models) to form more complex drawings.
 
@@ -34,17 +34,23 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 
 ### Output formats
 
-2D: [DXF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf), [SVG](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg),
-NEW: [PDF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#topdf)
+2D: 
+[DXF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf), 
+[SVG](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tosvg),
+[PDF](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#topdf) (Requires [PDFKit](https://pdfkit.org/))
 
-3D: [OpenJsCad script](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#toopenjscad), [STL](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tostl) (Must include [OpenJsCad](http://joostn.github.io/OpenJsCad/) or [openjscad-csg](https://www.npmjs.com/package/openjscad-csg))
+3D: 
+[OpenJsCad script](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#toopenjscad), 
+[STL](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#tostl) (Requires [OpenJsCad](http://joostn.github.io/OpenJsCad/) or [openjscad-csg](https://www.npmjs.com/package/openjscad-csg))
 
 ### Built-in models
 
+* NEW: [Bezier Curve](http://microsoft.github.io/maker.js/playground/?script=BezierCurve)
 * [Bolt Circle](http://microsoft.github.io/maker.js/playground/?script=BoltCircle)
 * [Bolt Rectangle](http://microsoft.github.io/maker.js/playground/?script=BoltRectangle)
 * [Connect the dots](http://microsoft.github.io/maker.js/playground/?script=ConnectTheDots)
 * [Dome](http://microsoft.github.io/maker.js/playground/?script=Dome)
+* NEW: [Ellipse](http://microsoft.github.io/maker.js/playground/?script=Ellipse)
 * [Oval](http://microsoft.github.io/maker.js/playground/?script=Oval)
 * [OvalArc](http://microsoft.github.io/maker.js/playground/?script=OvalArc)
 * [Polygon](http://microsoft.github.io/maker.js/playground/?script=Polygon)
@@ -98,6 +104,11 @@ Learn how to draw in Maker.js by folowing [the tutorial](http://microsoft.github
 
 ### API
 Browse all the library features in the [API Documentation](http://microsoft.github.io/maker.js/docs/api/)
+
+### Credits
+Maker.js depends on:
+* [Clone](https://github.com/pvorb/node-clone) by Paul Vorbach
+* [Bezier-js](https://github.com/Pomax/bezierjs) by Pomax
 
 ---
 
