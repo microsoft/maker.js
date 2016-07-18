@@ -5412,6 +5412,7 @@ var MakerJs;
         BezierCurve.metaParameters = [
             {
                 title: "points", type: "select", value: [
+                    [[100, 0], [-80, -60], [100, 220], [100, 60]],
                     [[0, 0], [100, 0], [100, 100]],
                     [[0, 0], [20, 0], [80, 100], [100, 100]]
                 ]
