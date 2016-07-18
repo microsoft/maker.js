@@ -1,9 +1,14 @@
 ﻿namespace MakerJs.models {
 
+    var hasLib = false;
+
     function ensureBezierLib() {
 
+        if (hasLib) return;
+
         try {
-            var lib = Bezier;
+            var lib = Bezier.prototype;
+            hasLib = true;
         }
         catch (e) {
             throw "Bezier library not found. If you are using Node, try running 'npm install' or if you are in the browser, download http://pomax.github.io/bezierjs/bezier.js to your website and add a script tag.";
