@@ -49,11 +49,13 @@ title: Api - exporter Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.exporter.html#chaintosvgpathdata" class="tsd-kind-icon">chain<wbr>ToSVGPath<wbr>Data</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.exporter.html#exportfromoptionsmap" class="tsd-kind-icon">export<wbr>From<wbr>Options<wbr>Map</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#facetsizetoresolution" class="tsd-kind-icon">facet<wbr>Size<wbr>ToResolution</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#getbeziermodelswithpaths" class="tsd-kind-icon">get<wbr>Bezier<wbr>Models<wbr>With<wbr>Paths</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#getpathdatabylayer" class="tsd-kind-icon">get<wbr>Path<wbr>Data<wbr>ByLayer</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.exporter.html#pathtosvgpathdata" class="tsd-kind-icon">path<wbr>ToSVGPath<wbr>Data</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#pathstoopenjscad" class="tsd-kind-icon">paths<wbr>ToOpen<wbr>JsCad</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#startsvgpathdata" class="tsd-kind-icon">start<wbr>Svg<wbr>Path<wbr>Data</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#svgarcdata" class="tsd-kind-icon">svg<wbr>Arc<wbr>Data</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#svgbezierdata" class="tsd-kind-icon">svg<wbr>Bezier<wbr>Data</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#svgcircledata" class="tsd-kind-icon">svg<wbr>Circle<wbr>Data</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.exporter.html#svgcoords" class="tsd-kind-icon">svg<wbr>Coords</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.exporter.html#todxf" class="tsd-kind-icon">toDXF</a></li>
@@ -88,7 +90,7 @@ title: Api - exporter Module
 		<div class="tsd-signature tsd-kind-icon">dxf<wbr>Unit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/dxf.ts#L147">core/dxf.ts:147</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/dxf.ts#L150">core/dxf.ts:150</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -108,7 +110,7 @@ title: Api - exporter Module
 		<div class="tsd-signature tsd-kind-icon">svg<wbr>Path<wbr>Data<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.exporter.isvgpathdatamap.html" class="tsd-signature-type">ISvgPathDataMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L103">core/svg.ts:103</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L107">core/svg.ts:107</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -120,7 +122,7 @@ title: Api - exporter Module
 		<div class="tsd-signature tsd-kind-icon">svg<wbr>Unit<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.exporter.svgunitconversion.html" class="tsd-signature-type">svgUnitConversion</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L537">core/svg.ts:537</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L623">core/svg.ts:623</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -142,7 +144,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L52">core/svg.ts:52</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L56">core/svg.ts:56</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -218,6 +220,31 @@ title: Api - exporter Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="getbeziermodelswithpaths" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Bezier<wbr>Models<wbr>With<wbr>Paths</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Bezier<wbr>Models<wbr>With<wbr>Paths<span class="tsd-signature-symbol">(</span>modelToExport<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L166">core/svg.ts:166</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelToExport: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="getpathdatabylayer" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Path<wbr>Data<wbr>ByLayer</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
@@ -227,7 +254,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L156">core/svg.ts:156</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L193">core/svg.ts:193</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -258,7 +285,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L138">core/svg.ts:138</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L148">core/svg.ts:148</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -320,7 +347,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L89">core/svg.ts:89</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L93">core/svg.ts:93</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -348,7 +375,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L510">core/svg.ts:510</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L596">core/svg.ts:596</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -376,6 +403,37 @@ title: Api - exporter Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="svgbezierdata" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> svg<wbr>Bezier<wbr>Data</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">svg<wbr>Bezier<wbr>Data<span class="tsd-signature-symbol">(</span>d<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.exporter.isvgpathdata.html" class="tsd-signature-type">ISvgPathData</a>, seed<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a>, reversed<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L582">core/svg.ts:582</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>d: <a href="../interfaces/makerjs.exporter.isvgpathdata.html" class="tsd-signature-type">ISvgPathData</a></h5>
+					</li>
+					<li>
+						<h5>seed: <a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> reversed: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="svgcircledata" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> svg<wbr>Circle<wbr>Data</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
@@ -385,7 +443,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L490">core/svg.ts:490</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L562">core/svg.ts:562</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -410,7 +468,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L45">core/svg.ts:45</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L49">core/svg.ts:49</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -711,7 +769,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L188">core/svg.ts:188</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L254">core/svg.ts:254</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -739,7 +797,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L189">core/svg.ts:189</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L255">core/svg.ts:255</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -767,7 +825,7 @@ title: Api - exporter Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L190">core/svg.ts:190</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L256">core/svg.ts:256</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

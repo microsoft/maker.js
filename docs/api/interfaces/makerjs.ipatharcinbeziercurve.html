@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IPathDirectionalWithPrimeContext Interface
+title: Api - IPathArcInBezierCurve Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Copy of the same name in loops.ts</p>
+			<p>An arc path segment in a bezier curve.</p>
 		</div>
 	</div>
 </section>
@@ -14,19 +14,10 @@ title: Api - IPathDirectionalWithPrimeContext Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipathdirectional.html" class="tsd-signature-type">IPathDirectional</a>
-		</li>
-		<li>
-			<a href="makerjs.irefpathidinmodel.html" class="tsd-signature-type">IRefPathIdInModel</a>
-		</li>
-		<li>
-			<a href="makerjs.ipathdirectional.html" class="tsd-signature-type">IPathDirectional</a>
-		</li>
-		<li>
-			<a href="makerjs.irefpathidinmodel.html" class="tsd-signature-type">IRefPathIdInModel</a>
+			<a href="makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">IPathDirectionalWithPrimeContext</span>
+					<span class="target">IPathArcInBezierCurve</span>
 				</li>
 			</ul>
 		</li>
@@ -36,47 +27,55 @@ title: Api - IPathDirectionalWithPrimeContext Interface
 	<h2>Index</h2>
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
-			<section class="tsd-index-section tsd-is-inherited tsd-is-not-exported">
+			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.ipathdirectionalwithprimecontext.html#endpoints" class="tsd-kind-icon">end<wbr>Points</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.ipathdirectionalwithprimecontext.html#layer" class="tsd-kind-icon">layer</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.ipathdirectionalwithprimecontext.html#modelcontext" class="tsd-kind-icon">model<wbr>Context</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.ipathdirectionalwithprimecontext.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.ipathdirectionalwithprimecontext.html#pathid" class="tsd-kind-icon">path<wbr>Id</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.ipathdirectionalwithprimecontext.html#reversed" class="tsd-kind-icon">reversed</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported"><a href="makerjs.model.ipathdirectionalwithprimecontext.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipatharcinbeziercurve.html#bezierdata" class="tsd-kind-icon">bezier<wbr>Data</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharcinbeziercurve.html#endangle" class="tsd-kind-icon">end<wbr>Angle</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharcinbeziercurve.html#layer" class="tsd-kind-icon">layer</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharcinbeziercurve.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharcinbeziercurve.html#radius" class="tsd-kind-icon">radius</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharcinbeziercurve.html#startangle" class="tsd-kind-icon">start<wbr>Angle</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharcinbeziercurve.html#type" class="tsd-kind-icon">type</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
-<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-not-exported">
+<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported">
-		<a name="endpoints" class="tsd-anchor"></a>
-		<h3>end<wbr>Points</h3>
-		<div class="tsd-signature tsd-kind-icon">end<wbr>Points<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="bezierdata" class="tsd-anchor"></a>
+		<h3>bezier<wbr>Data</h3>
+		<div class="tsd-signature tsd-kind-icon">bezier<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="makerjs.ibeziertoarcdata.html" class="tsd-signature-type">IBezierToArcData</a></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipathdirectional.html">IPathDirectional</a>.<a href="makerjs.ipathdirectional.html#endpoints">endPoints</a></p>
-			<p>Overwrites <a href="makerjs.ipathdirectional.html">IPathDirectional</a>.<a href="makerjs.ipathdirectional.html#endpoints">endPoints</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L524">core/maker.ts:524</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L318">core/maker.ts:318</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="endangle" class="tsd-anchor"></a>
+		<h3>end<wbr>Angle</h3>
+		<div class="tsd-signature tsd-kind-icon">end<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipatharc.html">IPathArc</a>.<a href="makerjs.ipatharc.html#endangle">endAngle</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L278">core/maker.ts:278</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The endpoints of the path.</p>
+				<p>The angle (in degrees) to end drawing the arc, in polar (counter-clockwise) direction. May be less than start angle if it past 360.</p>
 			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="layer" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> layer</h3>
 		<div class="tsd-signature tsd-kind-icon">layer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#layer">layer</a></p>
-			<p>Overwrites <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#layer">layer</a></p>
 			<ul>
 				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L195">core/maker.ts:195</a></li>
 			</ul>
@@ -87,25 +86,12 @@ title: Api - IPathDirectionalWithPrimeContext Interface
 			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported">
-		<a name="modelcontext" class="tsd-anchor"></a>
-		<h3>model<wbr>Context</h3>
-		<div class="tsd-signature tsd-kind-icon">model<wbr>Context<span class="tsd-signature-symbol">:</span> <a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#modelcontext">modelContext</a></p>
-			<p>Overwrites <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#modelcontext">modelContext</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L622">core/maker.ts:622</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="origin" class="tsd-anchor"></a>
 		<h3>origin</h3>
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
-			<p>Overwrites <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
 			<ul>
 				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L190">core/maker.ts:190</a></li>
 			</ul>
@@ -116,42 +102,44 @@ title: Api - IPathDirectionalWithPrimeContext Interface
 			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported">
-		<a name="pathid" class="tsd-anchor"></a>
-		<h3>path<wbr>Id</h3>
-		<div class="tsd-signature tsd-kind-icon">path<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="radius" class="tsd-anchor"></a>
+		<h3>radius</h3>
+		<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#pathid">pathId</a></p>
-			<p>Overwrites <a href="makerjs.irefpathidinmodel.html">IRefPathIdInModel</a>.<a href="makerjs.irefpathidinmodel.html#pathid">pathId</a></p>
+			<p>Inherited from <a href="makerjs.ipathcircle.html">IPathCircle</a>.<a href="makerjs.ipathcircle.html#radius">radius</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L623">core/maker.ts:623</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported">
-		<a name="reversed" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> reversed</h3>
-		<div class="tsd-signature tsd-kind-icon">reversed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipathdirectional.html">IPathDirectional</a>.<a href="makerjs.ipathdirectional.html#reversed">reversed</a></p>
-			<p>Overwrites <a href="makerjs.ipathdirectional.html">IPathDirectional</a>.<a href="makerjs.ipathdirectional.html#reversed">reversed</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L529">core/maker.ts:529</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L247">core/maker.ts:247</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Path flows forwards or reverse.</p>
+				<p>The radius of the circle.</p>
 			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-not-exported">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="startangle" class="tsd-anchor"></a>
+		<h3>start<wbr>Angle</h3>
+		<div class="tsd-signature tsd-kind-icon">start<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipatharc.html">IPathArc</a>.<a href="makerjs.ipatharc.html#startangle">startAngle</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L273">core/maker.ts:273</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="type" class="tsd-anchor"></a>
 		<h3>type</h3>
 		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
-			<p>Overwrites <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
 			<ul>
 				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L185">core/maker.ts:185</a></li>
 			</ul>

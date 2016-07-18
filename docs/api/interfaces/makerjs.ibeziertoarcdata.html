@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IWalkModelCancellableCallback Interface
+title: Api - IBezierToArcData Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Callback signature for model.walk(), which may return false to halt any further walking.</p>
+			<p>Bezier t values for an arc path segment in a bezier curve.</p>
 		</div>
 	</div>
 </section>
@@ -14,36 +14,56 @@ title: Api - IWalkModelCancellableCallback Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IWalkModelCancellableCallback</span>
+			<span class="target">IBezierToArcData</span>
 		</li>
 	</ul>
 </section>
-<section class="tsd-panel">
-	<h3 class="tsd-before-signature">Callable</h3>
-	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module">
-		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-	</ul>
-	<ul class="tsd-descriptions">
-		<li class="tsd-description">
-			<aside class="tsd-sources">
-				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L742">core/maker.ts:742</a></li>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Properties</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ibeziertoarcdata.html#endt" class="tsd-kind-icon">endT</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ibeziertoarcdata.html#startt" class="tsd-kind-icon">startT</a></li>
 				</ul>
-			</aside>
-			<div class="tsd-comment tsd-typography">
-				<div class="lead">
-					<p>Callback signature for model.walk(), which may return false to halt any further walking.</p>
-				</div>
-			</div>
-			<h4 class="tsd-parameters-title">Parameters</h4>
-			<ul class="tsd-parameters">
-				<li>
-					<h5>context: <a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a></h5>
-				</li>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="endt" class="tsd-anchor"></a>
+		<h3>endT</h3>
+		<div class="tsd-signature tsd-kind-icon">endT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L310">core/maker.ts:310</a></li>
 			</ul>
-			<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-		</li>
-	</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The bezier t-value at the end point.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="startt" class="tsd-anchor"></a>
+		<h3>startT</h3>
+		<div class="tsd-signature tsd-kind-icon">startT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L305">core/maker.ts:305</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The bezier t-value at the starting point.</p>
+			</div>
+		</div>
+	</section>
 </section>
 </div>
 <footer class="tsd-panel with-border-bottom">
