@@ -57,7 +57,7 @@ title: Api - BezierCurve Class
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>seed<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>seed<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a>, isChild<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>seed<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a>, isChild<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, control<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, controls<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, control1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, control2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
@@ -110,6 +110,9 @@ title: Api - BezierCurve Class
 					</li>
 					<li>
 						<h5>isChild: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></h4>
@@ -257,7 +260,7 @@ title: Api - BezierCurve Class
 		<div class="tsd-signature tsd-kind-icon">type<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/BezierCurve.ts#L310">models/BezierCurve.ts:310</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/BezierCurve.ts#L318">models/BezierCurve.ts:318</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -274,7 +277,7 @@ title: Api - BezierCurve Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/BezierCurve.ts#L356">models/BezierCurve.ts:356</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/BezierCurve.ts#L364">models/BezierCurve.ts:364</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -300,7 +303,7 @@ title: Api - BezierCurve Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/BezierCurve.ts#L312">models/BezierCurve.ts:312</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/BezierCurve.ts#L320">models/BezierCurve.ts:320</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-parameters-title">Parameters</h4>
