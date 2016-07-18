@@ -5345,7 +5345,7 @@ var MakerJs;
                         }
                         childSeeds.forEach(function (b, i) {
                             var seed = BezierToSeed(b);
-                            _this.models['Curve_' + i] = new BezierCurve(seed, true, _this.accuracy);
+                            _this.models['Curve_' + (1 + i)] = new BezierCurve(seed, true, _this.accuracy);
                         });
                     }
                 }
@@ -5363,7 +5363,7 @@ var MakerJs;
                         var span = MakerJs.angle.ofArcSpan(arc);
                         if (span === 0 || span === 360)
                             return;
-                        _this.paths['arc_' + i] = arc;
+                        _this.paths['Arc_' + (1 + i)] = arc;
                         i++;
                     });
                 }
@@ -5378,18 +5378,18 @@ var MakerJs;
                         //check if endpoints are 0 and 1
                         var chain = chains[0];
                         var chainEnds = [chain.links[0], chain.links[chain.links.length - 1]];
+                        var chainReversed = false;
                         //put them in bezier t order
                         if (chainEnds[0].walkedPath.pathContext.bezierData.startT > chainEnds[1].walkedPath.pathContext.bezierData.endT) {
                             chainEnds.reverse();
+                            chainReversed = true;
                         }
                         var intact = true;
                         for (var i = 2; i--;) {
-                            var chainEnd = chainEnds[i].walkedPath.pathContext;
-                            var endPoints = MakerJs.point.fromPathEnds(chainEnd);
-                            if (chainEnds[i].reversed) {
-                                endPoints.reverse();
-                            }
-                            var chainEndPoint = endPoints[i];
+                            var chainLink = chainEnds[i];
+                            var chainEnd = chainLink.walkedPath.pathContext;
+                            var reversed = (chainReversed !== chainLink.reversed);
+                            var chainEndPoint = chainLink.endPoints[reversed ? 1 - i : i];
                             var trueEndpoint = b.compute(i == 0 ? chainEnd.bezierData.startT : chainEnd.bezierData.endT);
                             if (!MakerJs.measure.isPointEqual(chainEndPoint, [trueEndpoint.x, trueEndpoint.y], .00001)) {
                                 intact = false;
@@ -5533,7 +5533,7 @@ var MakerJs;
                                 scaleXY(bezierPoints, args[2], args[3]);
                                 break;
                         }
-                        _this.models['Curve' + (1 + i)] = new models.BezierCurve(bezierPoints, accuracy);
+                        _this.models['Curve_' + (1 + i)] = new models.BezierCurve(bezierPoints, accuracy);
                         arc.startAngle += a;
                         arc.endAngle += a;
                     }
