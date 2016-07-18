@@ -130,7 +130,7 @@ namespace MakerJs.models {
                             break;
                     }
 
-                    this.models['Curve' + (1 + i)] = new BezierCurve(bezierPoints, accuracy);
+                    this.models['Curve_' + (1 + i)] = new BezierCurve(bezierPoints, accuracy);
 
                     arc.startAngle += a;
                     arc.endAngle += a;
