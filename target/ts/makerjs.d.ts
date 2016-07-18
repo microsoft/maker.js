@@ -2,20 +2,6 @@
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
- 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
- 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
 /**
  * Root module for Maker.js.
  *
@@ -207,6 +193,37 @@ declare namespace MakerJs {
      */
     function isPathArc(item: any): boolean;
     /**
+     * A bezier seed defines the endpoints and control points of a bezier curve.
+     */
+    interface IPathBezierSeed extends IPathLine {
+        controls: IPoint[];
+    }
+    /**
+     * Bezier t values for an arc path segment in a bezier curve.
+     */
+    interface IBezierToArcData {
+        /**
+         * The bezier t-value at the starting point.
+         */
+        startT: number;
+        /**
+         * The bezier t-value at the end point.
+         */
+        endT: number;
+    }
+    /**
+     * An arc path segment in a bezier curve.
+     */
+    interface IPathArcInBezierCurve extends IPathArc {
+        bezierData: IBezierToArcData;
+    }
+    /**
+     * Test to see if an object implements the required properties of an arc in a bezier curve.
+     *
+     * @param item The item to test.
+     */
+    function isIPathArcInBezierCurve(item: any): boolean;
+    /**
      * A map of functions which accept a path as a parameter.
      */
     interface IPathFunctionMap {
@@ -237,6 +254,7 @@ declare namespace MakerJs {
         Line: string;
         Circle: string;
         Arc: string;
+        BezierSeed: string;
     };
     /**
      * Slope and y-intercept of a line.
@@ -520,6 +538,10 @@ declare namespace MakerJs {
          * Flag to separate chains by layers.
          */
         byLayers?: boolean;
+        /**
+         * Flag to not recurse models, look only within current model's immediate paths.
+         */
+        shallow?: boolean;
     }
     /**
      * Reference to a model within a model.
@@ -823,10 +845,9 @@ declare namespace MakerJs.path {
      * @param pathToMirror The path to mirror.
      * @param mirrorX Boolean to mirror on the x axis.
      * @param mirrorY Boolean to mirror on the y axis.
-     * @param newId Optional id to assign to the new path.
      * @returns Mirrored path.
      */
-    function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean, newId?: string): IPath;
+    function mirror(pathToMirror: IPath, mirrorX: boolean, mirrorY: boolean): IPath;
     /**
      * Move a path to an absolute point.
      *
@@ -1556,7 +1577,6 @@ declare namespace MakerJs.model {
      *
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
-     * @returns A list of chains.
      */
     function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): void;
 }
@@ -1769,6 +1789,35 @@ declare namespace MakerJs.exporter {
          * Flag to use SVG viewbox.
          */
         viewBox?: boolean;
+    }
+}
+declare namespace MakerJs.models {
+    class BezierCurve implements IModel {
+        models: IModelMap;
+        paths: IPathMap;
+        origin: IPoint;
+        type: string;
+        seed: IPathBezierSeed;
+        accuracy: number;
+        constructor(points: IPoint[], accuracy?: number);
+        constructor(seed: IPathBezierSeed, accuracy?: number);
+        constructor(seed: IPathBezierSeed, isChild: boolean);
+        constructor(origin: IPoint, control: IPoint, end: IPoint, accuracy?: number);
+        constructor(origin: IPoint, controls: IPoint[], end: IPoint, accuracy?: number);
+        constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint, accuracy?: number);
+        static typeName: string;
+        static getBezierSeeds(curve: BezierCurve, options?: IFindChainsOptions): IPathBezierSeed[];
+        static computePoint(seed: IPathBezierSeed, t: number): IPoint;
+    }
+}
+declare var Bezier: typeof BezierJs.Bezier;
+declare namespace MakerJs.models {
+    class Ellipse implements IModel {
+        models: IModelMap;
+        origin: IPoint;
+        constructor(radiusX: number, radiusY: number, accuracy?: number);
+        constructor(origin: IPoint, radiusX: number, radiusY: number, accuracy?: number);
+        constructor(cx: number, cy: number, rx: number, ry: number, accuracy?: number);
     }
 }
 declare namespace MakerJs.models {

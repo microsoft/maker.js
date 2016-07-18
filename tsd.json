@@ -6,19 +6,22 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "066819c65ff561ca109955e0b725c253e243f0a2"
+      "commit": "de82425735f84a10b43921ae4b1d085b3752a626"
     },
     "codemirror/codemirror.d.ts": {
-      "commit": "fe563dff3428bac1260d1794e2c2ecf8f097535a"
+      "commit": "de82425735f84a10b43921ae4b1d085b3752a626"
     },
     "marked/marked.d.ts": {
-      "commit": "6eebd5e90a1cbd6b47b0705ba72dbcd5baf846f3"
+      "commit": "de82425735f84a10b43921ae4b1d085b3752a626"
     },
     "pdfkit/pdfkit.d.ts": {
-      "commit": "398bd742115e2b071ab3edf8b543b6df6fa62dc2"
+      "commit": "de82425735f84a10b43921ae4b1d085b3752a626"
     },
     "text-encoding/text-encoding.d.ts": {
-      "commit": "398bd742115e2b071ab3edf8b543b6df6fa62dc2"
+      "commit": "de82425735f84a10b43921ae4b1d085b3752a626"
+    },
+    "bezier-js/bezier-js.d.ts": {
+      "commit": "415de78bb5108cd2c58078011819c26aa4fac3f9"
     }
   }
 }

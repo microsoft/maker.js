@@ -201,8 +201,9 @@ var MakerJsPlayground;
             var from = {
                 line: editorLine, ch: error.colno - 1
             };
+            var line = MakerJsPlayground.codeMirrorEditor.getDoc().getLine(editorLine);
             var to = {
-                line: editorLine, ch: MakerJsPlayground.codeMirrorEditor.getDoc().getLine(editorLine).length
+                line: editorLine, ch: line ? line.length : 0
             };
             errorMarker = MakerJsPlayground.codeMirrorEditor.getDoc().markText(from, to, { title: error.message, clearOnEnter: true, className: 'code-error' });
         }

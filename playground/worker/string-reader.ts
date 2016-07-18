@@ -5,31 +5,40 @@
     constructor(public complete: (stringData: string) => void) {
     }
 
-    public addListener(event: string, listener: Function): NodeJS.EventEmitter {
+    public addListener(event: string, listener: Function): this {
         return this;
     }
 
-    public on(event: string, listener: Function): NodeJS.EventEmitter {
+    public on(event: string, listener: Function): this {
         return this;
     }
 
-    public once(event: string, listener: Function): NodeJS.EventEmitter {
+    public once(event: string, listener: Function): this {
         return this;
     }
 
-    public removeListener(event: string, listener: Function): NodeJS.EventEmitter {
+    public removeListener(event: string, listener: Function): this {
         return this;
     }
 
-    public removeAllListeners(event?: string): NodeJS.EventEmitter {
+    public removeAllListeners(event?: string): this {
         return this;
     }
 
-    public setMaxListeners(n: number): void {
+    public getMaxListeners(): number {
+        return 1;
+    }
+
+    public setMaxListeners(n: number): this {
+        return this;
     }
 
     public listeners(event: string): Function[] {
         return [];
+    }
+
+    public listenerCount(type: string): number {
+        return 1;
     }
 
     public emit(event: string, ...args: any[]): boolean {

@@ -123,13 +123,11 @@
      * 
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
-     * @returns A list of chains.
      */
     export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions) {
 
         var opts: IFindChainsOptions = {
-            pointMatchingDistance: .005,
-            byLayers: false
+            pointMatchingDistance: .005
         };
         extendObject(opts, options);
 
@@ -153,8 +151,9 @@
 
                 //circles are loops by nature
                 if (
-                    walkedPath.pathContext.type == pathType.Circle ||
-                    (walkedPath.pathContext.type == pathType.Arc && angle.ofArcSpan(walkedPath.pathContext as IPathArc) == 360)
+                    walkedPath.pathContext.type === pathType.Circle ||
+                    (walkedPath.pathContext.type === pathType.Arc && round(angle.ofArcSpan(walkedPath.pathContext as IPathArc) - 360) === 0) ||
+                    (walkedPath.pathContext.type === pathType.BezierSeed && measure.isPointEqual(walkedPath.pathContext.origin, (walkedPath.pathContext as IPathBezierSeed).end, opts.pointMatchingDistance))
                 ) {
 
                     var chain: IChain = {
@@ -197,6 +196,10 @@
                 }
             }
         };
+
+        if (opts.shallow) {
+            walkOptions.beforeChildWalk = function () { return false; };
+        }
 
         walk(modelContext, walkOptions);
 

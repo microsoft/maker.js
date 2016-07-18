@@ -117,6 +117,8 @@ namespace MakerJs.point {
         return [line.origin, line.end];
     }
 
+    pathEndsMap[pathType.BezierSeed] = pathEndsMap[pathType.Line];
+
     /**
      * Get the two end points of a path.
      * 
@@ -210,6 +212,10 @@ namespace MakerJs.point {
             ration(line.origin[1], line.end[1])
         ];
     };
+
+    middleMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, ratio: number) {
+        return models.BezierCurve.computePoint(seed, ratio);
+    }
 
     /**
      * Get the middle point of a path.

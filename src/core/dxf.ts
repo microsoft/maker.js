@@ -85,6 +85,9 @@ namespace MakerJs.exporter {
             append(arc.endAngle);
         };
 
+        //TODO - handle scenario if any bezier seeds get passed
+        //map[pathType.BezierSeed]
+
         function section(sectionFn: () => void) {
             append("0");
             append("SECTION");

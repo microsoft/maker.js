@@ -33,6 +33,7 @@
     <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
+    <script src="../external/bezier-js/bezier.js"></script>
 
     <script src="../target/js/browser.maker.js"></script>
     <script>
@@ -155,9 +156,28 @@ this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScrip
         <span><a href="#top" onclick="document.querySelector('a[name=top]').scrollIntoView();return false;">top</a></span>
     </div>
 
-    <footer>
-        <a href="https://github.com/Microsoft"><img src="microsoft.png" height="16" /> Open source, from Microsoft with love.</a> <a href="http://aka.ms/privacy">Privacy Statement</a> &copy;2016&nbsp;Microsoft
-    </footer>
+        <div class="about">
+
+            <blockquote>
+                The <b>Maker.js Playground</b> is a sample app demonstrating the features of the Maker.js core library.
+                You can build your own apps using Maker.js, or it can be used command-line style with <a href="https://nodejs.org/" target="_blank">Node.js</a>.
+            </blockquote>
+
+            <h4>Credits:</h4>
+
+            <ul>
+                <li>JavaScript editor by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></li>
+                <li>Markdown rendering by <a href="https://github.com/chjj/marked">Marked</a></li>
+                <li>3D generation by <a href="https://joostn.github.io/OpenJsCad/" target="_blank">OpenJSCAD</a></li>
+                <li>PDF generation by <a href="http://pdfkit.org/" target="_blank">PDFKit</a></li>
+                <li>Multitouch pointer events polyfill by <a href="https://github.com/jquery/PEP" target="_blank">Jquery PEP</a></li>
+                <li>Binary data polyfill by <a href="https://github.com/inexorabletash/text-encoding">text-encoding</a></li>
+            </ul>
+        </div>
+
+        <footer>
+            <a href="https://github.com/Microsoft"><img src="microsoft.png" height="16" /> Open source, from Microsoft with love.</a> <a href="http://aka.ms/privacy">Privacy Statement</a> &copy;2016&nbsp;Microsoft
+        </footer>
 
     </main>
 

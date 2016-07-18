@@ -18,10 +18,17 @@ var StringReader = (function () {
     StringReader.prototype.removeAllListeners = function (event) {
         return this;
     };
+    StringReader.prototype.getMaxListeners = function () {
+        return 1;
+    };
     StringReader.prototype.setMaxListeners = function (n) {
+        return this;
     };
     StringReader.prototype.listeners = function (event) {
         return [];
+    };
+    StringReader.prototype.listenerCount = function (type) {
+        return 1;
     };
     StringReader.prototype.emit = function (event) {
         var args = [];

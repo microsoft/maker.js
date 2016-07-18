@@ -238,14 +238,14 @@ namespace MakerJs.measure {
      */
     var pathExtentsMap: { [pathType: string]: (pathToMeasure: IPath) => IMeasure } = {};
 
-    pathExtentsMap[pathType.Line] = function (line: IPathLine) {
+    pathExtentsMap[pathType.Line] = function (line: IPathLine): IMeasure {
         return {
             low: getExtremePoint(line.origin, line.end, Math.min),
             high: getExtremePoint(line.origin, line.end, Math.max)
         }
     }
 
-    pathExtentsMap[pathType.Circle] = function (circle: IPathCircle) {
+    pathExtentsMap[pathType.Circle] = function (circle: IPathCircle): IMeasure {
         var r = circle.radius;
         return {
             low: point.add(circle.origin, [-r, -r]),
@@ -253,7 +253,7 @@ namespace MakerJs.measure {
         }
     }
 
-    pathExtentsMap[pathType.Arc] = function (arc: IPathArc) {
+    pathExtentsMap[pathType.Arc] = function (arc: IPathArc): IMeasure {
         var r = arc.radius;
         var arcPoints = point.fromArc(arc);
 
