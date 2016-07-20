@@ -348,11 +348,10 @@
 
                     var chain = chains[0];
                     var chainEnds = [chain.links[0], chain.links[chain.links.length - 1]];
-
                     var chainReversed = false;
 
                     //put them in bezier t order
-                    if ((chainEnds[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (chainEnds[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT) {
+                    if ((chainEnds[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (chainEnds[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT) {
                         chainEnds.reverse();
                         chainReversed = true;
                     }
@@ -360,11 +359,11 @@
                     var intact = true;
 
                     for (var i = 2; i--;) {
-                        var chainLink = chainEnds[i];
-                        var chainEnd = chainLink.walkedPath.pathContext as IPathArcInBezierCurve;
-                        var reversed = (chainReversed !== chainLink.reversed);
-                        var chainEndPoint = chainLink.endPoints[reversed ? 1 - i : i];
-                        var trueEndpoint = b.compute(i == 0 ? chainEnd.bezierData.startT : chainEnd.bezierData.endT);
+                        var chainEnd = chainEnds[i];
+                        var arc = chainEnd.walkedPath.pathContext as IPathArcInBezierCurve;
+                        var reversed = (chainReversed !== chainEnd.reversed);
+                        var chainEndPoint = chainEnd.endPoints[reversed ? 1 - i : i];
+                        var trueEndpoint = b.compute(i === 0 ? arc.bezierData.startT : arc.bezierData.endT);
                         if (!measure.isPointEqual(chainEndPoint, [trueEndpoint.x, trueEndpoint.y], .00001)) {
                             intact = false;
                             break;
