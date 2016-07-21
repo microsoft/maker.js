@@ -24,8 +24,9 @@ var MakerJsRequireIframe;
         return Temp;
     }());
     function runCodeIsolated(javaScript) {
-        var Fn = new Function('require', 'module', 'document', 'console', javaScript);
-        var result = new Fn(window.require, window.module, document, parent.console); //call function with the "new" keyword so the "this" keyword is an instance
+        function devNull() { }
+        var Fn = new Function('require', 'module', 'document', 'console', 'alert', 'render', javaScript);
+        var result = new Fn(window.require, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
         return window.module.exports || result;
     }
     function runCodeGlobal(javaScript) {
@@ -187,6 +188,9 @@ var MakerJsRequireIframe;
         if (counter.required == 0) {
             counter.complete();
         }
+    };
+    window.playground = function (result) {
+        parent.MakerJsPlayground.processResult('', result);
     };
 })(MakerJsRequireIframe || (MakerJsRequireIframe = {}));
 //# sourceMappingURL=require-iframe.js.map

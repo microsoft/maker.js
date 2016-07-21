@@ -22,6 +22,9 @@
     },
     "bezier-js/bezier-js.d.ts": {
       "commit": "415de78bb5108cd2c58078011819c26aa4fac3f9"
+    },
+    "opentype/opentype.d.ts": {
+      "commit": "91d45c49a3b5cd6a0abbf5f319c1406fd4f2b1e7"
     }
   }
 }

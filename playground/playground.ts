@@ -747,8 +747,10 @@
 
         document.body.appendChild(iframe);
 
+        var scripts = ['require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
+
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write('<html><head><script src="require-iframe.js"></script></head><body></body></html>');
+        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '</head><body></body></html>');
         iframe.contentWindow.document.close();
     }
 

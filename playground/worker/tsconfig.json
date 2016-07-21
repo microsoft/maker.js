@@ -9,6 +9,7 @@
     "../../typings/pdfkit/pdfkit.d.ts",
     "../../typings/text-encoding/text-encoding.d.ts",
     "../../typings/bezier-js/bezier-js.d.ts",
+    "../../typings/opentype/opentype.d.ts",
     "../../target/ts/makerjs.d.ts",
     "../../typings/lib.core.d.ts",
     "../../typings/lib.webworker.d.ts",

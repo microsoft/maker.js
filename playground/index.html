@@ -34,6 +34,7 @@
     <script src="../external/codemirror/lib/codemirror.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
     <script src="../external/bezier-js/bezier.js"></script>
+    <script src="../external/opentype/opentype.js"></script>
 
     <script>
         //pretend we are in node
@@ -87,6 +88,7 @@
     <script src="../src/models/Slot.js"></script>
     <script src="../src/models/SCurve.js"></script>
     <script src="../src/models/Star.js"></script>
+    <script src="../src/models/OpentypeText.js"></script>
 
     <script>
         //pretend it's been required
@@ -188,8 +190,8 @@
                 <a name="code"></a>
 
                 <pre id="init-javascript-code">
-                    var makerjs = require('makerjs');
-                    this.paths = {
+var makerjs = require('makerjs');
+this.paths = {
     head: new makerjs.paths.Circle([0, 0], 90),
     eye: new makerjs.paths.Circle([25, 25], 10),
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),

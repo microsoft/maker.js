@@ -1,8 +1,9 @@
 ﻿interface Window {
     require: NodeRequireFunction;
     module: NodeModule;
-    MakerJsPlayground: typeof MakerJsPlayground;
+    MakerJsPlayground: typeof MakerJsPlayground;    //this is not in this window but it is in the parent
     makerjs: typeof MakerJs;
+    playground: Function;
 }
 
 namespace MakerJsRequireIframe {
@@ -38,8 +39,9 @@ namespace MakerJsRequireIframe {
     }
 
     function runCodeIsolated(javaScript: string) {
-        var Fn: any = new Function('require', 'module', 'document', 'console', javaScript);
-        var result: any = new Fn(window.require, window.module, document, parent.console); //call function with the "new" keyword so the "this" keyword is an instance
+        function devNull() { }
+        var Fn: any = new Function('require', 'module', 'document', 'console', 'alert', 'render', javaScript);
+        var result: any = new Fn(window.require, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
 
         return window.module.exports || result;
     }
@@ -56,7 +58,7 @@ namespace MakerJsRequireIframe {
     }
 
     function load(id: string, requiredById: string) {
-        
+
         //bookkeeping
         if (!(id in loads)) {
             loads[id] = requiredById;
@@ -179,7 +181,7 @@ namespace MakerJsRequireIframe {
 
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
 
-        function complete2 () {
+        function complete2() {
 
             if (error) {
 
@@ -196,7 +198,7 @@ namespace MakerJsRequireIframe {
                 runCodeGlobal(javaScript);
 
                 //yield thread for the script tag to execute
-                setTimeout(function () { 
+                setTimeout(function () {
 
                     //restore properties from the "this" keyword
                     var model: MakerJs.IModel = {};
@@ -224,7 +226,7 @@ namespace MakerJsRequireIframe {
             }
         };
 
-        function complete1 () {
+        function complete1() {
 
             if (reloads.length) {
                 counter.complete = complete2;
@@ -243,7 +245,7 @@ namespace MakerJsRequireIframe {
         counter.complete = complete1;
 
         try {
-            
+
             //run for the collection pass
             runCodeIsolated(javaScript);
 
@@ -259,4 +261,9 @@ namespace MakerJsRequireIframe {
             counter.complete();
         }
     }
+
+    window.playground = function (result) {
+        parent.MakerJsPlayground.processResult('', result);
+    }
+
 }

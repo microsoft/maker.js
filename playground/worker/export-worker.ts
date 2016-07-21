@@ -1,4 +1,8 @@
 ﻿
+//this is here for compilation in a web worker
+interface CanvasRenderingContext2D {
+}
+
 declare var PDFDocument: PDFKit.PDFDocument;
 
 /* module system */
