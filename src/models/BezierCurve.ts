@@ -313,27 +313,35 @@
 
             if (isLeaf) {
 
-                if (!this.accuracy) {
-                    //get a default accuracy relative to the size of the bezier
-                    var len = b.length();
-
-                    //set the default to be a combination of fast rendering and good smoothing.
-                    this.accuracy = len / 1000;
-                }
-
-                var arcs = getArcs(b, this.accuracy);
-
                 this.paths = {};
 
-                var i = 0;
-                arcs.forEach((arc) => {
+                if (measure.isBezierSeedLinear(this.seed)) {
+                    //use a line
+                    this.paths['Line'] = new paths.Line(point.clone(this.seed.origin), point.clone(this.seed.end));
 
-                    var span = angle.ofArcSpan(arc);
-                    if (span === 0 || span === 360) return;
+                } else {
+                    //use arcs
 
-                    this.paths['Arc_' + (1 + i)] = arc;
-                    i++;
-                });
+                    if (!this.accuracy) {
+                        //get a default accuracy relative to the size of the bezier
+                        var len = b.length();
+
+                        //set the default to be a combination of fast rendering and good smoothing.
+                        this.accuracy = len / 1000;
+                    }
+
+                    var arcs = getArcs(b, this.accuracy);
+
+                    var i = 0;
+                    arcs.forEach((arc) => {
+
+                        var span = angle.ofArcSpan(arc);
+                        if (span === 0 || span === 360) return;
+
+                        this.paths['Arc_' + (1 + i)] = arc;
+                        i++;
+                    });
+                }
             }
         }
 
@@ -349,7 +357,17 @@
 
             model.findChains(curve, function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
-                if (chains.length === 1) {
+                if (chains.length === 0) {
+
+                    //if this is a linear curve then look if line ends are the same as bezier ends.
+                    if (loose.length === 1 && loose[0].pathContext.type === pathType.Line) {
+                        var line = loose[0].pathContext as IPathLine;
+                        if (measure.isPointEqual(line.origin, curve.seed.origin) && measure.isPointEqual(line.end, curve.seed.end)) {
+                            seeds.push(curve.seed)
+                        }
+                    }
+
+                } else if (chains.length === 1) {
                     //check if endpoints are 0 and 1
 
                     var chain = chains[0];
@@ -379,9 +397,10 @@
                     if (intact) {
                         seeds.push(curve.seed)
                     }
-                }
 
-                //TODO: find bezier seeds from a split chain
+                } else {
+                    //TODO: find bezier seeds from a split chain
+                }
 
             }, options);
 
