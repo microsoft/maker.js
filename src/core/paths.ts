@@ -243,15 +243,43 @@ namespace MakerJs.paths {
 
     /**
      * Class for line path.
-     * 
-     * @param origin The origin point of the line.
-     * @param end The end point of the line.
      */
     export class Line implements IPathLine {
         public type: string;
+        public origin: IPoint;
+        public end: IPoint;
 
-        constructor(public origin: IPoint, public end: IPoint) {
+        /**
+         * Class for line path, constructed from array of 2 points.
+         * 
+         * @param points Array of 2 points.
+         */
+        constructor(points: IPoint[]);
+
+        /**
+         * Class for line path, constructed from 2 points.
+         * 
+         * @param origin The origin point of the line.
+         * @param end The end point of the line.
+         */
+        constructor(origin: IPoint, end: IPoint);
+
+        constructor(...args: any[]) {
             this.type = pathType.Line;
+
+            switch (args.length) {
+
+                case 1:
+                    var points = args[0] as IPoint[];
+                    this.origin = points[0];
+                    this.end = points[1];
+                    break;
+
+                case 2:
+                    this.origin = args[0] as IPoint;
+                    this.end = args[1] as IPoint;
+                    break;
+            }
         }
     }
 
