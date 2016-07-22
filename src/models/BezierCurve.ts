@@ -51,9 +51,13 @@
     /**
      * @private
      */
-    function BezierToSeed(b: BezierJs.Bezier): IPathBezierSeed {
+    function BezierToSeed(b: BezierJs.Bezier, range?: IBezierRange): IPathBezierSeed {
         var points = b.points.map(function (p) { return [p.x, p.y] as IPoint; });
-        return new BezierSeed(points);
+        var seed = new BezierSeed(points) as IPathBezierSeed;
+        if (range) {
+            seed.parentRange = range;
+        }
+        return seed;
     }
 
     /**
@@ -281,11 +285,14 @@
                     //this will not contain paths, but will contain other curves
                     this.models = {}
 
-                    var childSeeds: BezierJs.Bezier[] = [];
+                    var childSeeds: IPathBezierSeed[] = [];
 
                     if (extrema.length === 1) {
                         var split = b.split(extrema[0]);
-                        childSeeds.push(split.left, split.right);
+                        childSeeds.push(
+                            BezierToSeed(split.left, { startT: 0, endT: extrema[0] }),
+                            BezierToSeed(split.right, { startT: extrema[0], endT: 1 })
+                        );
                     } else {
 
                         //add 0 and 1 endings
@@ -294,12 +301,11 @@
 
                         for (var i = 1; i < extrema.length; i++) {
                             //get the bezier between 
-                            childSeeds.push(b.split(extrema[i - 1], extrema[i]));
+                            childSeeds.push(BezierToSeed(b.split(extrema[i - 1], extrema[i]), { startT: extrema[i - 1], endT: extrema[i] }));
                         }
                     }
 
-                    childSeeds.forEach((b, i) => {
-                        var seed = BezierToSeed(b);
+                    childSeeds.forEach((seed, i) => {
                         this.models['Curve_' + (1 + i)] = new BezierCurve(seed, true, this.accuracy);
                     });
                 }

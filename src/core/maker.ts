@@ -290,13 +290,22 @@ namespace MakerJs {
      * A bezier seed defines the endpoints and control points of a bezier curve.
      */
     export interface IPathBezierSeed extends IPathLine {
+
+        /**
+         * The bezier control points. One point for quadratic, 2 points for cubic.
+         */
         controls: IPoint[];
+
+        /**
+         * T values of the parent if this is a child that represents a split.
+         */
+        parentRange?: IBezierRange;
     }
 
     /**
      * Bezier t values for an arc path segment in a bezier curve.
      */
-    export interface IBezierToArcData {
+    export interface IBezierRange {
 
         /**
          * The bezier t-value at the starting point.
@@ -314,7 +323,7 @@ namespace MakerJs {
      */
     export interface IPathArcInBezierCurve extends IPathArc {
 
-        bezierData: IBezierToArcData;
+        bezierData: IBezierRange;
     }
 
     /**
