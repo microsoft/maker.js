@@ -59,5 +59,3 @@
     }
 
 }
-
-declare var opentype: typeof opentypejs;
