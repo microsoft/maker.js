@@ -259,6 +259,16 @@
                     break;
             }
 
+            this.paths = {};
+
+            if (measure.isBezierSeedLinear(this.seed)) {
+                //use a line and exit
+                this.paths = {
+                    'Line': new paths.Line(point.clone(this.seed.origin), point.clone(this.seed.end))
+                };
+                return;
+            }
+
             var b = seedToBezier(this.seed);
 
             if (!isLeaf) {
@@ -315,33 +325,27 @@
 
                 this.paths = {};
 
-                if (measure.isBezierSeedLinear(this.seed)) {
-                    //use a line
-                    this.paths['Line'] = new paths.Line(point.clone(this.seed.origin), point.clone(this.seed.end));
+                //use arcs
 
-                } else {
-                    //use arcs
+                if (!this.accuracy) {
+                    //get a default accuracy relative to the size of the bezier
+                    var len = b.length();
 
-                    if (!this.accuracy) {
-                        //get a default accuracy relative to the size of the bezier
-                        var len = b.length();
-
-                        //set the default to be a combination of fast rendering and good smoothing.
-                        this.accuracy = len / 1000;
-                    }
-
-                    var arcs = getArcs(b, this.accuracy);
-
-                    var i = 0;
-                    arcs.forEach((arc) => {
-
-                        var span = angle.ofArcSpan(arc);
-                        if (span === 0 || span === 360) return;
-
-                        this.paths['Arc_' + (1 + i)] = arc;
-                        i++;
-                    });
+                    //set the default to be a combination of fast rendering and good smoothing.
+                    this.accuracy = len / 1000;
                 }
+
+                var arcs = getArcs(b, this.accuracy);
+
+                var i = 0;
+                arcs.forEach((arc) => {
+
+                    var span = angle.ofArcSpan(arc);
+                    if (span === 0 || span === 360) return;
+
+                    this.paths['Arc_' + (1 + i)] = arc;
+                    i++;
+                });
             }
         }
 
