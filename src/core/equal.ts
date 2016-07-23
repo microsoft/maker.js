@@ -97,10 +97,10 @@
 
         if (slope.hasSlope) {
             // y = mx * b
-            return p[1] === slope.slope * p[0] + slope.yIntercept;
+            return round(p[1] - (slope.slope * p[0] + slope.yIntercept)) === 0;
         } else {
             //vertical slope
-            return p[0] === slope.line.origin[0];
+            return round(p[0] - slope.line.origin[0]) === 0;
         }
 
     }
