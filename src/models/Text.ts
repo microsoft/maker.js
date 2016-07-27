@@ -1,6 +1,6 @@
 ﻿namespace MakerJs.models {
 
-    export class OpentypeText implements IModel {
+    export class Text implements IModel {
 
         public models: IModelMap = {};
 

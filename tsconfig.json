@@ -30,7 +30,6 @@
     "src/core/openjscad.ts",
     "src/core/pdf.ts",
     "src/core/svg.ts",
-    "src/models/OpentypeText.ts",
     "src/models/BezierCurve.ts",
     "src/models/Ellipse.ts",
     "src/models/ConnectTheDots.ts",
@@ -46,6 +45,7 @@
     "src/models/SCurve.ts",
     "src/models/Slot.ts",
     "src/models/Square.ts",
-    "src/models/Star.ts"
+    "src/models/Star.ts",
+    "src/models/Text.ts"
   ]
 }
