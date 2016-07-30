@@ -289,6 +289,54 @@ namespace MakerJs.path {
     }
 
     /**
+     * @private
+     */
+    var distortMap: { [pathType: string]: (pathValue: IPath, scaleX: number, scaleY: number) => IModel | IPath } = {};
+
+    distortMap[pathType.Arc] = function (arc: IPathArc, scaleX: number, scaleY: number) {
+        return new models.EllipticArc(arc, scaleX, scaleY);
+    };
+
+    distortMap[pathType.Circle] = function (circle: IPathCircle, scaleX: number, scaleY: number) {
+        var ellipse = new models.Ellipse(circle.radius * scaleX, circle.radius * scaleY);
+        ellipse.origin = point.distort(circle.origin, scaleX, scaleY);
+        return ellipse
+    };
+
+    distortMap[pathType.Line] = function (line: IPathLine, scaleX: number, scaleY: number) {
+        return new paths.Line([line.origin, line.end].map(function (p) { return point.distort(p, scaleX, scaleY); }));
+    };
+
+    distortMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, scaleX: number, scaleY: number) {
+        var d = point.distort;
+        return {
+            type: pathType.BezierSeed,
+            origin: d(seed.origin, scaleX, scaleY),
+            controls: seed.controls.map(function (c) { return d(c, scaleX, scaleY); }),
+            end: d(seed.end, scaleX, scaleY)
+        } as IPathBezierSeed;
+    };
+
+    /**
+     * Distort a path - scale x and y individually.
+     * 
+     * @param pathToDistort The path to distort.
+     * @param scaleX The amount of x scaling.
+     * @param scaleY The amount of y scaling.
+     * @returns A new IModel (for circles and arcs) or IPath (for lines and bezier seeds).
+     */
+    export function distort(pathToDistort: IPath, scaleX: number, scaleY: number): IModel | IPath {
+        if (!pathToDistort || (scaleX === 1 && scaleY === 1)) return null;
+
+        var fn = distortMap[pathToDistort.type];
+        if (fn) {
+            return fn(pathToDistort, scaleX, scaleY);
+        }
+
+        return null;
+    }
+
+    /**
      * Connect 2 lines at their slope intersection point.
      * 
      * @param lineA First line to converge.
