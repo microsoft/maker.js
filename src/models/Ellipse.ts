@@ -54,27 +54,6 @@ namespace MakerJs.models {
         return null;
     }
 
-    /**
-     * @private
-     */
-    function scaleDim(seed: IPathBezierSeed, i: number, s: number) {
-        function d(p: IPoint) {
-            p[i] *= s;
-        }
-
-        d(seed.origin);
-        seed.controls.forEach(d);
-        d(seed.end);
-    }
-
-    /**
-     * @private
-     */
-    function scaleXY(seed: IPathBezierSeed, x: number, y: number = x) {
-        scaleDim(seed, 0, x);
-        scaleDim(seed, 1, y);
-    }
-
     export class Ellipse implements IModel {
 
         public models: IModelMap = {};
@@ -149,28 +128,28 @@ namespace MakerJs.models {
                     switch (numArgs) {
                         case 1:
                             //radius
-                            scaleXY(seed, args[0] as number);
+                            seed = path.scale(seed, args[0] as number) as IPathBezierSeed;
                             break;
 
                         case 2:
                             if (isPointArgs0) {
                                 //origin, radius
-                                scaleXY(seed, args[1] as number);
+                                seed = path.scale(seed, args[1] as number) as IPathBezierSeed;
 
                             } else {
                                 //rx, ry
-                                scaleXY(seed, args[0] as number, args[1] as number);
+                                seed = path.distort(seed, args[0] as number, args[1] as number) as IPathBezierSeed;
                             }
                             break;
 
                         case 3:
                             //origin, rx, ry
-                            scaleXY(seed, args[1] as number, args[2] as number);
+                            seed = path.distort(seed, args[1] as number, args[2] as number) as IPathBezierSeed;
                             break;
 
                         case 4:
                             //cx, cy, rx, ry
-                            scaleXY(seed, args[2] as number, args[3] as number);
+                            seed = path.distort(seed, args[2] as number, args[3] as number) as IPathBezierSeed;
                             break;
                     }
 
@@ -272,7 +251,7 @@ namespace MakerJs.models {
                 subArc.endAngle = subArc.startAngle + subSpan;
 
                 var seed = bezierSeedFromArc(subArc);
-                scaleXY(seed, distortX, distortY);
+                seed = path.distort(seed, distortX, distortY) as IPathBezierSeed;
 
                 this.models['Curve_' + (1 + i)] = new BezierCurve(seed, accuracy);
             }
