@@ -331,7 +331,7 @@ namespace MakerJs {
      * 
      * @param item The item to test.
      */
-    export function isIPathArcInBezierCurve(item: any): boolean {
+    export function isPathArcInBezierCurve(item: any): boolean {
         return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).bezierData = null);
     }
 

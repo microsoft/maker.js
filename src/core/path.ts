@@ -24,7 +24,7 @@ namespace MakerJs.path {
                 result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
 
                 //carry extra props if this is an IPathArcInBezierCurve
-                if (isIPathArcInBezierCurve(arc)) {
+                if (isPathArcInBezierCurve(arc)) {
                     (<IPathArcInBezierCurve>result).bezierData = (<IPathArcInBezierCurve>arc).bezierData;
                 }
 
