@@ -13,7 +13,7 @@ function load(id, src) {
     module[id] = module.exports;
 }
 //add the makerjs module
-importScripts('../../target/js/browser.maker.js');
+importScripts('../../target/js/browser.maker.js', '../../external/bezier-js/bezier.js');
 var makerjs = require('makerjs');
 module['makerjs'] = makerjs;
 module['./../target/js/node.maker.js'] = makerjs;
