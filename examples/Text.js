@@ -4,6 +4,7 @@ function Text(fontPath, text, fontSize, combine) {
 
     var _this = this;
 
+    //load a font asynchronously
     opentype.load('../fonts/' + fontPath, function (err, font) {
         if (!err) {
 
@@ -11,6 +12,7 @@ function Text(fontPath, text, fontSize, combine) {
 
             _this.models = textModel.models;
 
+            //"playgroundRender" is strictly a Playground function - in your app, call your own callback.
             playgroundRender(_this);
         }
     });
@@ -20,8 +22,16 @@ function Text(fontPath, text, fontSize, combine) {
 Text.metaParameters = [
     {
         title: "font", type: "select", value: [
+            'allertastencil/AllertaStencil-Regular.ttf',
+            'blackopsone/BlackOpsOne-Regular.ttf',
+            'emblemaone/EmblemaOne-Regular.ttf',
+            'keaniaone/KeaniaOne-Regular.ttf',
+            'montserratsubrayada/MontserratSubrayada-Regular.ttf',
+            'plaster/Plaster-Regular.ttf',
+            'sirinstencil/SirinStencil-Regular.ttf',
             'stardosstencil/StardosStencil-Bold.ttf',
-            'montserratsubrayada/MontserratSubrayada-Regular.ttf'
+            'stardosstencil/StardosStencil-Regular.ttf',
+            'wallpoet/Wallpoet-Regular.ttf'
         ]
     },
     { title: "text", type: "text", value: 'Hello' },
