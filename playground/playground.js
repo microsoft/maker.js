@@ -136,6 +136,11 @@ var MakerJsPlayground;
                         input.innerTextEscaped = true;
                         paramValues.push(attrs.value[0]);
                         break;
+                    case 'text':
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.value)';
+                        input = new makerjs.exporter.XmlTag('input', attrs);
+                        paramValues.push(attrs.value);
+                        break;
                 }
                 if (!input)
                     continue;
@@ -185,14 +190,32 @@ var MakerJsPlayground;
         cancelExport();
         document.body.classList.remove('download-ready');
     }
-    function Frown() {
-        this.paths = {
-            head: new makerjs.paths.Circle([0, 0], 85),
-            eye1: new makerjs.paths.Circle([-25, 25], 10),
-            eye2: new makerjs.paths.Circle([25, 25], 10),
-            frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
-        };
-    }
+    var Frown = (function () {
+        function Frown() {
+            this.paths = {
+                head: new makerjs.paths.Circle([0, 0], 85),
+                eye1: new makerjs.paths.Circle([-25, 25], 10),
+                eye2: new makerjs.paths.Circle([25, 25], 10),
+                frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
+            };
+        }
+        return Frown;
+    }());
+    var Wait = (function () {
+        function Wait() {
+            var wireFrame = {
+                paths: {
+                    rim: new makerjs.paths.Circle([0, 0], 85),
+                    hand1: new makerjs.paths.Line([0, 0], [40, 30]),
+                    hand2: new makerjs.paths.Line([0, 0], [0, 60])
+                }
+            };
+            this.models = {
+                x: makerjs.model.expandPaths(wireFrame, 5)
+            };
+        }
+        return Wait;
+    }());
     function highlightCodeError(error) {
         var notes = '';
         if (error.lineno || error.colno) {
@@ -400,7 +423,7 @@ var MakerJsPlayground;
             render();
         }
     }
-    function setProcessedModel(model, error) {
+    function setProcessedModel(model, error, doInit) {
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
@@ -411,18 +434,23 @@ var MakerJsPlayground;
             }
         }
         if (model) {
-            onProcessed();
+            onProcessed(doInit);
         }
     }
-    function onProcessed() {
+    function onProcessed(doInit) {
+        if (doInit === void 0) { doInit = true; }
         //now safe to render, so register a resize listener
-        if (init) {
+        if (init && doInit) {
             init = false;
             initialize();
         }
         //todo: find minimum viewScale
         if (processed.model) {
             processed.measurement = makerjs.measure.modelExtents(processed.model);
+            if (!processed.measurement) {
+                processed.model = null;
+                return;
+            }
             if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
                 fitOnScreen();
             }
@@ -554,13 +582,15 @@ var MakerJsPlayground;
     MakerJsPlayground.svgFontSize = 14;
     MakerJsPlayground.renderOnWorkerThread = true;
     function runCodeFromEditor() {
+        setProcessedModel(new Wait());
         processed.kit = null;
         populateParams(null);
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
+        var scripts = ['require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write('<html><head><script src="require-iframe.js"></script></head><body></body></html>');
+        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '</head><body></body></html>');
         iframe.contentWindow.document.close();
     }
     MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
@@ -691,7 +721,8 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.fitNatural = fitNatural;
     function fitOnScreen() {
-        MakerJsPlayground.pointers.reset();
+        if (MakerJsPlayground.pointers)
+            MakerJsPlayground.pointers.reset();
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -914,10 +945,11 @@ var MakerJsPlayground;
             toggleClass('side-by-side');
             dockEditor(true);
         }
+        setProcessedModel(new Wait(), '', false);
         MakerJsPlayground.querystringParams = new QueryStringParams();
         var scriptname = MakerJsPlayground.querystringParams['script'];
         if (scriptname && !isHttp(scriptname)) {
-            if (scriptname in makerjs.models) {
+            if ((scriptname in makerjs.models) && scriptname !== 'Text') {
                 var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
                 MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
                 runCodeFromEditor();

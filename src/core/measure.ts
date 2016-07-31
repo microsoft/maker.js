@@ -148,6 +148,26 @@ namespace MakerJs.measure {
     }
 
     /**
+     * Check if a given bezier seed is simply a line.
+     * 
+     * @param seed The bezier seed to test.
+     * @returns Boolean true if bezier seed has control points on the line slope and between the line endpoints.
+     */
+    export function isBezierSeedLinear(seed: IPathBezierSeed): boolean {
+
+        //create a slope from the endpoints
+        var slope = lineSlope(seed);
+
+        for (var i = 0; i < seed.controls.length; i++) {
+            if (!(isPointOnSlope(seed.controls[i], slope) && isBetweenPoints(seed.controls[i], seed, false))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Check for line overlapping another line.
      * 
      * @param lineA The line to test.

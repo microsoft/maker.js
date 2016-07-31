@@ -8,6 +8,7 @@
     "../typings/codemirror/codemirror.d.ts",
     "../typings/pdfkit/pdfkit.d.ts",
     "../typings/bezier-js/bezier-js.d.ts",
+    "../typings/opentype/opentype.d.ts",
     "../target/ts/makerjs.d.ts",
     "iexport.ts",
     "irender.ts",

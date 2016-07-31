@@ -300,6 +300,18 @@ namespace MakerJs.point {
     }
 
     /**
+     * Distort a point's coordinates.
+     * 
+     * @param pointToDistort The point to distort.
+     * @param scaleX The amount of x scaling.
+     * @param scaleY The amount of y scaling.
+     * @returns A new point.
+     */
+    export function distort(pointToDistort: IPoint, scaleX: number, scaleY: number): IPoint {
+        return [pointToDistort[0] * scaleX, pointToDistort[1] * scaleY];
+    }
+
+    /**
      * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
      * 
      * @param a First point.

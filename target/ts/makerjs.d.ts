@@ -196,12 +196,19 @@ declare namespace MakerJs {
      * A bezier seed defines the endpoints and control points of a bezier curve.
      */
     interface IPathBezierSeed extends IPathLine {
+        /**
+         * The bezier control points. One point for quadratic, 2 points for cubic.
+         */
         controls: IPoint[];
+        /**
+         * T values of the parent if this is a child that represents a split.
+         */
+        parentRange?: IBezierRange;
     }
     /**
      * Bezier t values for an arc path segment in a bezier curve.
      */
-    interface IBezierToArcData {
+    interface IBezierRange {
         /**
          * The bezier t-value at the starting point.
          */
@@ -215,14 +222,14 @@ declare namespace MakerJs {
      * An arc path segment in a bezier curve.
      */
     interface IPathArcInBezierCurve extends IPathArc {
-        bezierData: IBezierToArcData;
+        bezierData: IBezierRange;
     }
     /**
      * Test to see if an object implements the required properties of an arc in a bezier curve.
      *
      * @param item The item to test.
      */
-    function isIPathArcInBezierCurve(item: any): boolean;
+    function isPathArcInBezierCurve(item: any): boolean;
     /**
      * A map of functions which accept a path as a parameter.
      */
@@ -816,6 +823,15 @@ declare namespace MakerJs.point {
      */
     function scale(pointToScale: IPoint, scaleValue: number): IPoint;
     /**
+     * Distort a point's coordinates.
+     *
+     * @param pointToDistort The point to distort.
+     * @param scaleX The amount of x scaling.
+     * @param scaleY The amount of y scaling.
+     * @returns A new point.
+     */
+    function distort(pointToDistort: IPoint, scaleX: number, scaleY: number): IPoint;
+    /**
      * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
      *
      * @param a First point.
@@ -890,6 +906,15 @@ declare namespace MakerJs.path {
      * @returns The original path (for chaining).
      */
     function scale(pathToScale: IPath, scaleValue: number): IPath;
+    /**
+     * Distort a path - scale x and y individually.
+     *
+     * @param pathToDistort The path to distort.
+     * @param scaleX The amount of x scaling.
+     * @param scaleY The amount of y scaling.
+     * @returns A new IModel (for circles and arcs) or IPath (for lines and bezier seeds).
+     */
+    function distort(pathToDistort: IPath, scaleX: number, scaleY: number): IModel | IPath;
     /**
      * Connect 2 lines at their slope intersection point.
      *
@@ -990,14 +1015,23 @@ declare namespace MakerJs.paths {
     }
     /**
      * Class for line path.
-     *
-     * @param origin The origin point of the line.
-     * @param end The end point of the line.
      */
     class Line implements IPathLine {
+        type: string;
         origin: IPoint;
         end: IPoint;
-        type: string;
+        /**
+         * Class for line path, constructed from array of 2 points.
+         *
+         * @param points Array of 2 points.
+         */
+        constructor(points: IPoint[]);
+        /**
+         * Class for line path, constructed from 2 points.
+         *
+         * @param origin The origin point of the line.
+         * @param end The end point of the line.
+         */
         constructor(origin: IPoint, end: IPoint);
     }
     /**
@@ -1297,6 +1331,14 @@ declare namespace MakerJs.measure {
      */
     function isPointEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean;
     /**
+     * Find out if point is on a slope.
+     *
+     * @param p Point to check.
+     * @param b Slope.
+     * @returns true if point is on the slope
+     */
+    function isPointOnSlope(p: IPoint, slope: ISlope, withinDistance?: number): boolean;
+    /**
      * Check for slope equality.
      *
      * @param slopeA The ISlope to test.
@@ -1360,6 +1402,13 @@ declare namespace MakerJs.measure {
      * @returns Boolean true if point is between (or equal to) the line's origin and end points.
      */
     function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, exclusive: boolean): boolean;
+    /**
+     * Check if a given bezier seed is simply a line.
+     *
+     * @param seed The bezier seed to test.
+     * @returns Boolean true if bezier seed has control points on the line slope and between the line endpoints.
+     */
+    function isBezierSeedLinear(seed: IPathBezierSeed): boolean;
     /**
      * Check for line overlapping another line.
      *
@@ -1724,11 +1773,11 @@ declare namespace MakerJs.exporter {
     /**
      * Convert a chain to SVG path data.
      */
-    function chainToSVGPathData(chain: IChain, offset: IPoint): string;
+    function chainToSVGPathData(chain: IChain, offset: IPoint, scale: number): string;
     /**
      * Convert a path to SVG path data.
      */
-    function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint): string;
+    function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint, scale: number): string;
     function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
@@ -1791,6 +1840,9 @@ declare namespace MakerJs.exporter {
         viewBox?: boolean;
     }
 }
+declare namespace MakerJs.importer {
+    function fromSVGPathData(pathData: string): IModel;
+}
 declare namespace MakerJs.models {
     class BezierCurve implements IModel {
         models: IModelMap;
@@ -1815,9 +1867,54 @@ declare namespace MakerJs.models {
     class Ellipse implements IModel {
         models: IModelMap;
         origin: IPoint;
+        /**
+         * Class for Ellipse created with 2 radii.
+         *
+         * @param radiusX The x radius of the ellipse.
+         * @param radiusY The y radius of the ellipse.
+         * @param accuracy Optional accuracy of the underlying BezierCurve.
+         */
         constructor(radiusX: number, radiusY: number, accuracy?: number);
+        /**
+         * Class for Ellipse created at a specific origin and 2 radii.
+         *
+         * @param origin The center of the ellipse.
+         * @param radiusX The x radius of the ellipse.
+         * @param radiusY The y radius of the ellipse.
+         * @param accuracy Optional accuracy of the underlying BezierCurve.
+         */
         constructor(origin: IPoint, radiusX: number, radiusY: number, accuracy?: number);
+        /**
+         * Class for Ellipse created at a specific x, y and 2 radii.
+         *
+         * @param cx The x coordinate of the center of the ellipse.
+         * @param cy The y coordinate of the center of the ellipse.
+         * @param rX The x radius of the ellipse.
+         * @param rY The y radius of the ellipse.
+         * @param accuracy Optional accuracy of the underlying BezierCurve.
+         */
         constructor(cx: number, cy: number, rx: number, ry: number, accuracy?: number);
+    }
+    class EllipticArc implements IModel {
+        models: IModelMap;
+        /**
+         * Class for Elliptic Arc created by distorting a circular arc.
+         *
+         * @param arc The circular arc to use as the basis of the elliptic arc.
+         * @param radiusX The x radius of the ellipse.
+         * @param radiusY The y radius of the ellipse.
+         * @param accuracy Optional accuracy of the underlying BezierCurve.
+         */
+        constructor(startAngle: number, endAngle: number, radiusX: number, radiusY: number, accuracy?: number);
+        /**
+         * Class for Elliptic Arc created by distorting a circular arc.
+         *
+         * @param arc The circular arc to use as the basis of the elliptic arc.
+         * @param distortX The x scale of the ellipse.
+         * @param distortY The y scale of the ellipse.
+         * @param accuracy Optional accuracy of the underlying BezierCurve.
+         */
+        constructor(arc: IPathArc, distortX: number, distortY: number, accuracy?: number);
     }
 }
 declare namespace MakerJs.models {
@@ -1910,5 +2007,11 @@ declare namespace MakerJs.models {
         paths: IPathMap;
         constructor(numberOfPoints: number, outerRadius: number, innerRadius?: number, skipPoints?: number);
         static InnerRadiusRatio(numberOfPoints: number, skipPoints: number): number;
+    }
+}
+declare namespace MakerJs.models {
+    class Text implements IModel {
+        models: IModelMap;
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine?: boolean);
     }
 }

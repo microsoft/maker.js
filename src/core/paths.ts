@@ -1,5 +1,5 @@
 namespace MakerJs.paths {
-    
+
     /**
      * @private
      */
@@ -66,37 +66,48 @@ namespace MakerJs.paths {
                 case 5:
                     //SVG style arc designation
 
-                    this.radius = args[2];
+                    var pointA = args[0] as IPoint;
+                    var pointB = args[1] as IPoint;
+                    this.radius = args[2] as number;
+                    var largeArc = args[3] as boolean;
+                    var clockwise = args[4] as boolean;
+                    var span: IArcSpan;
 
-                    //find the 2 potential origins
-                    var origins = path.intersection(
-                        new Circle(args[0], this.radius),
-                        new Circle(args[1], this.radius)
-                    );
+                    function getSpan(origin: IPoint): IArcSpan {
+                        var startAngle = angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
+                        var endAngle = angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
 
-                    //there may be a condition where the radius is insufficient! Why does the SVG spec allow this?
-                    if (origins) {
+                        if (endAngle < startAngle) {
+                            endAngle += 360;
+                        }
 
-                        var largeArc = args[3] as boolean;
-                        var clockwise = args[4] as boolean;
-                        var span: IArcSpan;
+                        return {
+                            origin: origin,
+                            startAngle: startAngle,
+                            endAngle: endAngle,
+                            size: endAngle - startAngle
+                        };
+                    }
+
+                    //make sure arc can reach. if not, scale up.
+                    var smallestRadius = measure.pointDistance(pointA, pointB) / 2;
+                    if (round(this.radius - smallestRadius) <= 0) {
+                        this.radius = smallestRadius;
+
+                        span = getSpan(point.average(pointA, pointB));
+
+                    } else {
+
+                        //find the 2 potential origins
+                        var origins = path.intersection(
+                            new Circle(pointA, this.radius),
+                            new Circle(pointB, this.radius)
+                        );
+
                         var spans: IArcSpan[] = [];
 
-                        for (var i = 2; i--;) {
-                            var origin = origins.intersectionPoints[i];
-                            var startAngle = angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
-                            var endAngle = angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
-
-                            if (endAngle < startAngle) {
-                                endAngle += 360;
-                            }
-
-                            span = {
-                                origin: origin,
-                                startAngle: startAngle,
-                                endAngle: endAngle,
-                                size: endAngle - startAngle
-                            };
+                        for (var i = origins.intersectionPoints.length; i--;) {
+                            span = getSpan(origins.intersectionPoints[i])
 
                             //insert sorted by size ascending
                             if (spans.length == 0 || span.size > spans[0].size) {
@@ -108,11 +119,11 @@ namespace MakerJs.paths {
 
                         var index = largeArc ? 1 : 0;
                         span = spans[index];
-
-                        this.origin = span.origin;
-                        this.startAngle = span.startAngle;
-                        this.endAngle = span.endAngle;
                     }
+
+                    this.origin = span.origin;
+                    this.startAngle = span.startAngle;
+                    this.endAngle = span.endAngle;
 
                     break;
 
@@ -243,15 +254,43 @@ namespace MakerJs.paths {
 
     /**
      * Class for line path.
-     * 
-     * @param origin The origin point of the line.
-     * @param end The end point of the line.
      */
     export class Line implements IPathLine {
         public type: string;
+        public origin: IPoint;
+        public end: IPoint;
 
-        constructor(public origin: IPoint, public end: IPoint) {
+        /**
+         * Class for line path, constructed from array of 2 points.
+         * 
+         * @param points Array of 2 points.
+         */
+        constructor(points: IPoint[]);
+
+        /**
+         * Class for line path, constructed from 2 points.
+         * 
+         * @param origin The origin point of the line.
+         * @param end The end point of the line.
+         */
+        constructor(origin: IPoint, end: IPoint);
+
+        constructor(...args: any[]) {
             this.type = pathType.Line;
+
+            switch (args.length) {
+
+                case 1:
+                    var points = args[0] as IPoint[];
+                    this.origin = points[0];
+                    this.end = points[1];
+                    break;
+
+                case 2:
+                    this.origin = args[0] as IPoint;
+                    this.end = args[1] as IPoint;
+                    break;
+            }
         }
     }
 

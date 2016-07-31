@@ -7,3 +7,4 @@
 /// <reference path="codemirror/codemirror.d.ts" />
 /// <reference path="marked/marked.d.ts" />
 /// <reference path="bezier-js/bezier-js.d.ts" />
+/// <reference path="opentype/opentype.d.ts" />

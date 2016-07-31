@@ -51,9 +51,13 @@
     /**
      * @private
      */
-    function BezierToSeed(b: BezierJs.Bezier): IPathBezierSeed {
+    function BezierToSeed(b: BezierJs.Bezier, range?: IBezierRange): IPathBezierSeed {
         var points = b.points.map(function (p) { return [p.x, p.y] as IPoint; });
-        return new BezierSeed(points);
+        var seed = new BezierSeed(points) as IPathBezierSeed;
+        if (range) {
+            seed.parentRange = range;
+        }
+        return seed;
     }
 
     /**
@@ -255,6 +259,16 @@
                     break;
             }
 
+            this.paths = {};
+
+            if (measure.isBezierSeedLinear(this.seed)) {
+                //use a line and exit
+                this.paths = {
+                    'Line': new paths.Line(point.clone(this.seed.origin), point.clone(this.seed.end))
+                };
+                return;
+            }
+
             var b = seedToBezier(this.seed);
 
             if (!isLeaf) {
@@ -281,11 +295,14 @@
                     //this will not contain paths, but will contain other curves
                     this.models = {}
 
-                    var childSeeds: BezierJs.Bezier[] = [];
+                    var childSeeds: IPathBezierSeed[] = [];
 
                     if (extrema.length === 1) {
                         var split = b.split(extrema[0]);
-                        childSeeds.push(split.left, split.right);
+                        childSeeds.push(
+                            BezierToSeed(split.left, { startT: 0, endT: extrema[0] }),
+                            BezierToSeed(split.right, { startT: extrema[0], endT: 1 })
+                        );
                     } else {
 
                         //add 0 and 1 endings
@@ -294,18 +311,21 @@
 
                         for (var i = 1; i < extrema.length; i++) {
                             //get the bezier between 
-                            childSeeds.push(b.split(extrema[i - 1], extrema[i]));
+                            childSeeds.push(BezierToSeed(b.split(extrema[i - 1], extrema[i]), { startT: extrema[i - 1], endT: extrema[i] }));
                         }
                     }
 
-                    childSeeds.forEach((b, i) => {
-                        var seed = BezierToSeed(b);
+                    childSeeds.forEach((seed, i) => {
                         this.models['Curve_' + (1 + i)] = new BezierCurve(seed, true, this.accuracy);
                     });
                 }
             }
 
             if (isLeaf) {
+
+                this.paths = {};
+
+                //use arcs
 
                 if (!this.accuracy) {
                     //get a default accuracy relative to the size of the bezier
@@ -316,8 +336,6 @@
                 }
 
                 var arcs = getArcs(b, this.accuracy);
-
-                this.paths = {};
 
                 var i = 0;
                 arcs.forEach((arc) => {
@@ -343,7 +361,17 @@
 
             model.findChains(curve, function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
-                if (chains.length === 1) {
+                if (chains.length === 0) {
+
+                    //if this is a linear curve then look if line ends are the same as bezier ends.
+                    if (loose.length === 1 && loose[0].pathContext.type === pathType.Line) {
+                        var line = loose[0].pathContext as IPathLine;
+                        if (measure.isPointEqual(line.origin, curve.seed.origin) && measure.isPointEqual(line.end, curve.seed.end)) {
+                            seeds.push(curve.seed)
+                        }
+                    }
+
+                } else if (chains.length === 1) {
                     //check if endpoints are 0 and 1
 
                     var chain = chains[0];
@@ -373,9 +401,10 @@
                     if (intact) {
                         seeds.push(curve.seed)
                     }
-                }
 
-                //TODO: find bezier seeds from a split chain
+                } else {
+                    //TODO: find bezier seeds from a split chain
+                }
 
             }, options);
 
