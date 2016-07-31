@@ -203,7 +203,7 @@
 
                     case 'text':
 
-                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.checked)';
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.value)';
 
                         input = new makerjs.exporter.XmlTag('input', attrs);
 
@@ -602,6 +602,11 @@
 
         if (processed.model) {
             processed.measurement = makerjs.measure.modelExtents(processed.model);
+
+            if (!processed.measurement) {
+                processed.model = null;
+                return;
+            }
 
             if (!viewScale || checkFitToScreen.checked) {
                 fitOnScreen();
@@ -1238,7 +1243,7 @@
 
         if (scriptname && !isHttp(scriptname)) {
 
-            if (scriptname in makerjs.models) {
+            if ((scriptname in makerjs.models) && scriptname !== 'Text') {
 
                 var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
                 codeMirrorEditor.getDoc().setValue(code);

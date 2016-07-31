@@ -137,7 +137,7 @@ var MakerJsPlayground;
                         paramValues.push(attrs.value[0]);
                         break;
                     case 'text':
-                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.checked)';
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.value)';
                         input = new makerjs.exporter.XmlTag('input', attrs);
                         paramValues.push(attrs.value);
                         break;
@@ -447,6 +447,10 @@ var MakerJsPlayground;
         //todo: find minimum viewScale
         if (processed.model) {
             processed.measurement = makerjs.measure.modelExtents(processed.model);
+            if (!processed.measurement) {
+                processed.model = null;
+                return;
+            }
             if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
                 fitOnScreen();
             }
@@ -945,7 +949,7 @@ var MakerJsPlayground;
         MakerJsPlayground.querystringParams = new QueryStringParams();
         var scriptname = MakerJsPlayground.querystringParams['script'];
         if (scriptname && !isHttp(scriptname)) {
-            if (scriptname in makerjs.models) {
+            if ((scriptname in makerjs.models) && scriptname !== 'Text') {
                 var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
                 MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
                 runCodeFromEditor();
