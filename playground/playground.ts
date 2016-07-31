@@ -263,13 +263,35 @@
         document.body.classList.remove('download-ready');
     }
 
-    function Frown() {
-        this.paths = {
-            head: new makerjs.paths.Circle([0, 0], 85),
-            eye1: new makerjs.paths.Circle([-25, 25], 10),
-            eye2: new makerjs.paths.Circle([25, 25], 10),
-            frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
-        };
+    class Frown implements MakerJs.IModel {
+        public paths: MakerJs.IPathMap;
+
+        constructor() {
+            this.paths = {
+                head: new makerjs.paths.Circle([0, 0], 85),
+                eye1: new makerjs.paths.Circle([-25, 25], 10),
+                eye2: new makerjs.paths.Circle([25, 25], 10),
+                frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
+            };
+        }
+    }
+
+    class Wait implements MakerJs.IModel {
+        public models: MakerJs.IModelMap;
+
+        constructor() {
+            var wireFrame: MakerJs.IModel = {
+                paths: {
+                    rim: new makerjs.paths.Circle([0, 0], 85),
+                    hand1: new makerjs.paths.Line([0, 0], [40, 30]),
+                    hand2: new makerjs.paths.Line([0, 0], [0, 60])
+                }
+            };
+
+            this.models = {
+                x: makerjs.model.expandPaths(wireFrame, 5)
+            }
+        }
     }
 
     function highlightCodeError(error: IJavaScriptErrorDetails) {
@@ -738,6 +760,8 @@
     export var renderOnWorkerThread = true;
 
     export function runCodeFromEditor() {
+
+        setProcessedModel(new Wait());
 
         processed.kit = null;
         populateParams(null);

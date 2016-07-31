@@ -185,14 +185,32 @@ var MakerJsPlayground;
         cancelExport();
         document.body.classList.remove('download-ready');
     }
-    function Frown() {
-        this.paths = {
-            head: new makerjs.paths.Circle([0, 0], 85),
-            eye1: new makerjs.paths.Circle([-25, 25], 10),
-            eye2: new makerjs.paths.Circle([25, 25], 10),
-            frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
-        };
-    }
+    var Frown = (function () {
+        function Frown() {
+            this.paths = {
+                head: new makerjs.paths.Circle([0, 0], 85),
+                eye1: new makerjs.paths.Circle([-25, 25], 10),
+                eye2: new makerjs.paths.Circle([25, 25], 10),
+                frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
+            };
+        }
+        return Frown;
+    }());
+    var Wait = (function () {
+        function Wait() {
+            var wireFrame = {
+                paths: {
+                    rim: new makerjs.paths.Circle([0, 0], 85),
+                    hand1: new makerjs.paths.Line([0, 0], [40, 30]),
+                    hand2: new makerjs.paths.Line([0, 0], [0, 60])
+                }
+            };
+            this.models = {
+                x: makerjs.model.expandPaths(wireFrame, 5)
+            };
+        }
+        return Wait;
+    }());
     function highlightCodeError(error) {
         var notes = '';
         if (error.lineno || error.colno) {
@@ -554,6 +572,7 @@ var MakerJsPlayground;
     MakerJsPlayground.svgFontSize = 14;
     MakerJsPlayground.renderOnWorkerThread = true;
     function runCodeFromEditor() {
+        setProcessedModel(new Wait());
         processed.kit = null;
         populateParams(null);
         iframe = document.createElement('iframe');
