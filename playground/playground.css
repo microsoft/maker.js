@@ -157,6 +157,10 @@ header h1 {
     margin-bottom: .5em;
 }
 
+#params select, input[type=text] {
+    width: 100%;
+}
+
 #params input[type=range] {
     width: 8em;
     margin: 0;

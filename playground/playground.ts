@@ -200,6 +200,16 @@
                         paramValues.push(attrs.value[0]);
 
                         break;
+
+                    case 'text':
+
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.value)';
+
+                        input = new makerjs.exporter.XmlTag('input', attrs);
+
+                        paramValues.push(attrs.value);
+
+                        break;
                 }
 
                 if (!input) continue;
@@ -263,13 +273,35 @@
         document.body.classList.remove('download-ready');
     }
 
-    function Frown() {
-        this.paths = {
-            head: new makerjs.paths.Circle([0, 0], 85),
-            eye1: new makerjs.paths.Circle([-25, 25], 10),
-            eye2: new makerjs.paths.Circle([25, 25], 10),
-            frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
-        };
+    class Frown implements MakerJs.IModel {
+        public paths: MakerJs.IPathMap;
+
+        constructor() {
+            this.paths = {
+                head: new makerjs.paths.Circle([0, 0], 85),
+                eye1: new makerjs.paths.Circle([-25, 25], 10),
+                eye2: new makerjs.paths.Circle([25, 25], 10),
+                frown: new makerjs.paths.Arc([0, -75], 50, 45, 135)
+            };
+        }
+    }
+
+    class Wait implements MakerJs.IModel {
+        public models: MakerJs.IModelMap;
+
+        constructor() {
+            var wireFrame: MakerJs.IModel = {
+                paths: {
+                    rim: new makerjs.paths.Circle([0, 0], 85),
+                    hand1: new makerjs.paths.Line([0, 0], [40, 30]),
+                    hand2: new makerjs.paths.Line([0, 0], [0, 60])
+                }
+            };
+
+            this.models = {
+                x: makerjs.model.expandPaths(wireFrame, 5)
+            }
+        }
     }
 
     function highlightCodeError(error: IJavaScriptErrorDetails) {
@@ -540,7 +572,7 @@
         }
     }
 
-    function setProcessedModel(model: MakerJs.IModel, error?: string) {
+    function setProcessedModel(model: MakerJs.IModel, error?: string, doInit?: boolean) {
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
@@ -553,14 +585,14 @@
         }
 
         if (model) {
-            onProcessed();
+            onProcessed(doInit);
         }
     }
 
-    function onProcessed() {
+    function onProcessed(doInit = true) {
 
         //now safe to render, so register a resize listener
-        if (init) {
+        if (init && doInit) {
             init = false;
 
             initialize();
@@ -570,6 +602,11 @@
 
         if (processed.model) {
             processed.measurement = makerjs.measure.modelExtents(processed.model);
+
+            if (!processed.measurement) {
+                processed.model = null;
+                return;
+            }
 
             if (!viewScale || checkFitToScreen.checked) {
                 fitOnScreen();
@@ -739,6 +776,8 @@
 
     export function runCodeFromEditor() {
 
+        setProcessedModel(new Wait());
+
         processed.kit = null;
         populateParams(null);
 
@@ -747,8 +786,10 @@
 
         document.body.appendChild(iframe);
 
+        var scripts = ['require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
+
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write('<html><head><script src="require-iframe.js"></script></head><body></body></html>');
+        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '</head><body></body></html>');
         iframe.contentWindow.document.close();
     }
 
@@ -913,7 +954,7 @@
 
     export function fitOnScreen() {
 
-        pointers.reset();
+        if (pointers) pointers.reset();
 
         var size = getViewSize();
         var halfWidth = size[0] / 2;
@@ -1195,12 +1236,14 @@
             dockEditor(true);
         }
 
+        setProcessedModel(new Wait(), '', false);
+
         querystringParams = new QueryStringParams();
         var scriptname = querystringParams['script'];
 
         if (scriptname && !isHttp(scriptname)) {
 
-            if (scriptname in makerjs.models) {
+            if ((scriptname in makerjs.models) && scriptname !== 'Text') {
 
                 var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
                 codeMirrorEditor.getDoc().setValue(code);

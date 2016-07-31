@@ -45,6 +45,7 @@
     "src/models/SCurve.ts",
     "src/models/Slot.ts",
     "src/models/Square.ts",
-    "src/models/Star.ts"
+    "src/models/Star.ts",
+    "src/models/Text.ts"
   ]
 }

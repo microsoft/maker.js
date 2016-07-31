@@ -37,10 +37,7 @@
 
         var size = measure.modelExtents(scaledModel);
 
-        var left = 0;
-        if (size.low[0] < 0) {
-            left = -size.low[0];
-        }
+        var left = -size.low[0];
         var offset: IPoint = [left, size.high[1]];
 
         offset = point.add(offset, options.origin);
@@ -50,13 +47,13 @@
             function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 function single(walkedPath: IWalkPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, 1);
                     doc.path(pathData).stroke(opts.stroke);
                 }
 
                 chains.map(function (chain: IChain) {
                     if (chain.links.length > 1) {
-                        var pathData = chainToSVGPathData(chain, offset);
+                        var pathData = chainToSVGPathData(chain, offset, 1);
                         doc.path(pathData).stroke(opts.stroke);
 
                     } else {
@@ -70,7 +67,7 @@
                             path.moveRelative(fixedPath, offset);
 
                             //TODO use only chainToSVGPathData instead of circle, so that we can use fill
-                            
+
                             doc.circle(fixedPath.origin[0], fixedPath.origin[1], (<IPathCircle>walkedPath.pathContext).radius).stroke(opts.stroke);
 
                         } else {
