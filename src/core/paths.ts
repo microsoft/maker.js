@@ -82,7 +82,7 @@ namespace MakerJs.paths {
                         var span: IArcSpan;
                         var spans: IArcSpan[] = [];
 
-                        for (var i = 2; i--;) {
+                        for (var i = origins.intersectionPoints.length; i--;) {
                             var origin = origins.intersectionPoints[i];
                             var startAngle = angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
                             var endAngle = angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
