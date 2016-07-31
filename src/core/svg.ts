@@ -702,3 +702,194 @@ namespace MakerJs.exporter {
     }
 
 }
+
+namespace MakerJs.importer {
+
+    export function fromSVGPathData(pathData: string): IModel {
+        var result: IModel = {};
+
+        function addPath(p: IPath) {
+            if (!result.paths) {
+                result.paths = {};
+            }
+            result.paths['p_' + ++pathCount] = p;
+        }
+
+        function addModel(m: IModel) {
+            if (!result.models) {
+                result.models = {};
+            }
+            result.models['p_' + ++pathCount] = m;
+        }
+
+        function getPoint(absolute: boolean, data: number[], offset = 0) {
+            var p = point.mirror([data[0 + offset], data[1 + offset]], false, true);
+
+            if (absolute) {
+                return p;
+            } else {
+                return point.add(p, currPoint);
+            }
+        }
+
+        function lineTo(end: IPoint) {
+            if (!measure.isPointEqual(currPoint, end)) {
+                addPath(new paths.Line(currPoint, end));
+            }
+            return end;
+        }
+
+        var map: { [command: string]: (absolute: boolean, data: number[]) => IPoint } = {};
+
+        map['M'] = function (absolute: boolean, data: number[]) {
+            firstPoint = getPoint(absolute, data);
+            return firstPoint;
+        };
+
+        map['Z'] = function (absolute: boolean, data: number[]) {
+            return lineTo(firstPoint);
+        };
+
+        map['H'] = function (absolute: boolean, data: number[]) {
+            var end = point.clone(currPoint);
+
+            if (absolute) {
+                end[0] = data[0];
+            } else {
+                end[0] += data[0];
+            }
+
+            return lineTo(end);
+        };
+
+        map['V'] = function (absolute: boolean, data: number[]) {
+            var end = point.clone(currPoint);
+
+            //subtract to mirror on y axis: SVG coords
+            if (absolute) {
+                end[1] = -data[0];
+            } else {
+                end[1] -= data[0];
+            }
+
+            return lineTo(end);
+        };
+
+        map['L'] = function (absolute: boolean, data: number[]) {
+            var end = getPoint(absolute, data);
+            return lineTo(end);
+        };
+
+        map['A'] = function (absolute: boolean, data: number[]) {
+            var rx = data[0];
+            var ry = data[1];
+            var rotation = data[2];
+            var large = data[3] === 1;
+            var decreasing = data[4] === 1;
+            var end = getPoint(absolute, data, 5);
+            var elliptic = rx !== ry;
+            
+            //first, rotate so we are dealing with a zero angle x-axis
+            var xAxis = new paths.Line(currPoint, point.rotate(end, rotation, currPoint));
+
+            //next, un-distort any ellipse back into a circle in terms of x axis
+            if (elliptic) {
+                xAxis = path.distort(xAxis, 1, rx / ry) as IPathLine;
+            }
+
+            //now create an arc, making sure we use the large and decreasing flags
+            var arc = new paths.Arc(xAxis.origin, xAxis.end, rx, large, decreasing);
+
+            if (elliptic) {
+
+                //scale up if radius was insufficient.
+                if (rx < arc.radius) {
+                    var scaleUp = arc.radius / rx;
+                    rx *= scaleUp;
+                    ry *= scaleUp;
+                }
+
+                //create an elliptical arc, this will re-distort
+                var e = new models.EllipticArc(arc, 1, ry / rx);
+
+                //un-rotate back to where it should be.
+                model.rotate(e, -rotation, currPoint);
+
+                addModel(e);
+
+            } else {
+                //just use the arc
+
+                //un-rotate back to where it should be.
+                path.rotate(arc, -rotation, currPoint);
+
+                addPath(arc);
+            }
+
+            return end;
+        };
+
+        map['C'] = function (absolute: boolean, data: number[]) {
+            var control1 = getPoint(absolute, data, 0);
+            var control2 = getPoint(absolute, data, 2);
+            var end = getPoint(absolute, data, 4);
+            addModel(new models.BezierCurve(currPoint, control1, control2, end));
+            return end;
+        };
+
+        map['Q'] = function (absolute: boolean, data: number[]) {
+            var control = getPoint(absolute, data, 0);
+            var end = getPoint(absolute, data, 2);
+            addModel(new models.BezierCurve(currPoint, control, end));
+            return end;
+        };
+
+        map['S'] = function (absolute: boolean, data: number[]) {
+            //TODO smooth cubic
+            return currPoint;
+        };
+
+        map['T'] = function (absolute: boolean, data: number[]) {
+            //TODO smooth quad
+            return currPoint;
+        };
+
+        var firstPoint: IPoint;
+        var currPoint: IPoint;
+        var pathCount = 0;
+
+        var regexpCommands = /([a-z])(.?[^a-z]*)/ig;
+        var commandMatches: RegExpExecArray;
+
+        while ((commandMatches = regexpCommands.exec(pathData)) !== null) {
+            if (commandMatches.index === regexpCommands.lastIndex) {
+                regexpCommands.lastIndex++;
+            }
+
+            var command = commandMatches[1]; //0 = command and data, 1 = command, 2 = data
+            var dataString = commandMatches[2];
+            var upperCommand = command.toUpperCase();
+            var absolute = (command === upperCommand);
+
+            var regexpCommandData = /-?[\d\.]+/g;
+            var dataMatches: RegExpExecArray;
+            var data: number[] = [];
+
+            while ((dataMatches = regexpCommandData.exec(dataString)) !== null) {
+                if (dataMatches.index === regexpCommandData.lastIndex) {
+                    regexpCommandData.lastIndex++;
+                }
+                data.push(parseFloat(dataMatches[0]));
+            }
+
+            var fn = map[upperCommand];
+            if (fn) {
+                currPoint = fn(absolute, data);
+            }
+
+        }
+
+        return result;
+    }
+
+}
