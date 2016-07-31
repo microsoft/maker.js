@@ -7,6 +7,7 @@ var packageJson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
 var marked = <MarkedStatic>require('marked');
 var detective = require('detective');
+var opentype = require('opentype.js') as typeof opentypejs;
 
 // Synchronous highlighting with highlight.js
 marked.setOptions({
@@ -20,6 +21,14 @@ var allRequires = { 'makerjs': 1 };
 
 function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
     var parameters = makerjs.kit.getParameterValues(constructor);
+
+    if (key === 'Text') {
+        parameters = [
+            opentype.loadSync('./playground/fonts/stardosstencil/StardosStencil-Regular.ttf'),
+            'A'
+        ];
+    }
+
     var model = makerjs.kit.construct(constructor, parameters);
 
     var measurement = makerjs.measure.modelExtents(model);
