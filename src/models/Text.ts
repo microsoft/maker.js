@@ -4,12 +4,12 @@
 
         public models: IModelMap = {};
 
-        constructor(text: string, font: opentypejs.Font, fontSize: number, combine = false) {
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false) {
 
             var charIndex = 0;
             var combineOptions: ICombineOptions = {};
 
-            var cb = (glyph: opentypejs.Glyph, x: number, y: number, fontSize: number, options: opentypejs.RenderOptions) => {
+            var cb = (glyph: opentypejs.Glyph, x: number, y: number, _fontSize: number, options: opentypejs.RenderOptions) => {
                 var m = glyph.getMetrics();
                 var charModel: IModel = {};
                 var firstPoint: IPoint;
@@ -30,7 +30,7 @@
                     charModel.models['p_' + ++pathCount] = m;
                 }
 
-                var p = glyph.getPath(0, 0, fontSize);
+                var p = glyph.getPath(0, 0, _fontSize);
                 p.commands.map((command, i) => {
 
                     var points: IPoint[] = [[command.x, command.y], [command.x1, command.y1], [command.x2, command.y2]].map(
