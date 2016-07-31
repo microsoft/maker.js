@@ -1,4 +1,5 @@
 ﻿interface Window {
+    collectRequire: NodeRequireFunction;
     require: NodeRequireFunction;
     module: NodeModule;
     MakerJsPlayground: typeof MakerJsPlayground;    //this is not in this window but it is in the parent
@@ -39,9 +40,8 @@ namespace MakerJsRequireIframe {
     }
 
     function runCodeIsolated(javaScript: string) {
-        function devNull() { }
         var Fn: any = new Function('require', 'module', 'document', 'console', 'alert', 'render', javaScript);
-        var result: any = new Fn(window.require, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
+        var result: any = new Fn(window.collectRequire, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
 
         return window.module.exports || result;
     }
@@ -147,7 +147,11 @@ namespace MakerJsRequireIframe {
         parent.MakerJsPlayground.processResult('', errorDetails);
     };
 
-    window.require = function (id: string) {
+    window.collectRequire = function (id: string) {
+
+        if (id === 'makerjs') {
+            return mockMakerJs;
+        }
 
         if (id in required) {
             //return cached required file
@@ -168,6 +172,13 @@ namespace MakerJsRequireIframe {
         return Temp;
     };
 
+    window.require = function (id: string) {
+
+        //return cached required file
+        return required[id];
+
+    };
+
     window.module = { exports: null } as NodeModule;
 
     window.onload = function () {
@@ -177,7 +188,7 @@ namespace MakerJsRequireIframe {
         var javaScript = parent.MakerJsPlayground.codeMirrorEditor.getDoc().getValue();
 
         var originalAlert = window.alert;
-        window.alert = function () { };
+        window.alert = devNull;
 
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
 
@@ -265,5 +276,33 @@ namespace MakerJsRequireIframe {
     window.playground = function (result) {
         parent.MakerJsPlayground.processResult('', result);
     }
+
+    function devNull() { }
+
+    var mockMakerJs = {};
+
+    function mockWalk(src: Object, dest: Object) {
+
+        for (var id in src) {
+
+            switch (typeof src[id]) {
+
+                case 'function':
+                    dest[id] = devNull;
+                    break;
+
+                case 'object':
+                    dest[id] = {};
+                    mockWalk(src[id], dest[id]);
+                    break;
+
+                default:
+                    dest[id] = src[id];
+                    break;
+            }
+        }
+    }
+
+    mockWalk(parent.makerjs, mockMakerJs);
 
 }

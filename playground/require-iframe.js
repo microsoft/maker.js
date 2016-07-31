@@ -24,9 +24,8 @@ var MakerJsRequireIframe;
         return Temp;
     }());
     function runCodeIsolated(javaScript) {
-        function devNull() { }
         var Fn = new Function('require', 'module', 'document', 'console', 'alert', 'render', javaScript);
-        var result = new Fn(window.require, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
+        var result = new Fn(window.collectRequire, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
         return window.module.exports || result;
     }
     function runCodeGlobal(javaScript) {
@@ -106,7 +105,10 @@ var MakerJsRequireIframe;
         //send error results back to parent window
         parent.MakerJsPlayground.processResult('', errorDetails);
     };
-    window.require = function (id) {
+    window.collectRequire = function (id) {
+        if (id === 'makerjs') {
+            return mockMakerJs;
+        }
         if (id in required) {
             //return cached required file
             return required[id];
@@ -120,13 +122,17 @@ var MakerJsRequireIframe;
         //return an object that may be treated like a class
         return Temp;
     };
+    window.require = function (id) {
+        //return cached required file
+        return required[id];
+    };
     window.module = { exports: null };
     window.onload = function () {
         head = document.getElementsByTagName('head')[0];
         //get the code from the editor
         var javaScript = parent.MakerJsPlayground.codeMirrorEditor.getDoc().getValue();
         var originalAlert = window.alert;
-        window.alert = function () { };
+        window.alert = devNull;
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
         function complete2() {
             if (error) {
@@ -192,5 +198,24 @@ var MakerJsRequireIframe;
     window.playground = function (result) {
         parent.MakerJsPlayground.processResult('', result);
     };
+    function devNull() { }
+    var mockMakerJs = {};
+    function mockWalk(src, dest) {
+        for (var id in src) {
+            switch (typeof src[id]) {
+                case 'function':
+                    dest[id] = devNull;
+                    break;
+                case 'object':
+                    dest[id] = {};
+                    mockWalk(src[id], dest[id]);
+                    break;
+                default:
+                    dest[id] = src[id];
+                    break;
+            }
+        }
+    }
+    mockWalk(parent.makerjs, mockMakerJs);
 })(MakerJsRequireIframe || (MakerJsRequireIframe = {}));
 //# sourceMappingURL=require-iframe.js.map
