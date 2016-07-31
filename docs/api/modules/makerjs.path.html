@@ -21,6 +21,7 @@ title: Api - path Module
 				<h3>Variables</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#breakpathfunctionmap" class="tsd-kind-icon">break<wbr>Path<wbr>Function<wbr>Map</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#distortmap" class="tsd-kind-icon">distort<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#filletresultmap" class="tsd-kind-icon">fillet<wbr>Result<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#guidepathmap" class="tsd-kind-icon">guide<wbr>Path<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#map" class="tsd-kind-icon">map</a></li>
@@ -41,6 +42,7 @@ title: Api - path Module
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#cloneandbreakpath" class="tsd-kind-icon">clone<wbr>And<wbr>Break<wbr>Path</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#converge" class="tsd-kind-icon">converge</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#copylayer" class="tsd-kind-icon">copy<wbr>Layer</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#distort" class="tsd-kind-icon">distort</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#dogbone" class="tsd-kind-icon">dogbone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#expand" class="tsd-kind-icon">expand</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#fillet" class="tsd-kind-icon">fillet</a></li>
@@ -83,6 +85,53 @@ title: Api - path Module
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="distortmap" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> distort<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">distort<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L294">core/path.ts:294</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pathType: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">function</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-siganture">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>pathValue<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, scaleX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, scaleY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>pathValue: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+										</li>
+										<li>
+											<h5>scaleX: <span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li>
+											<h5>scaleY: <span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>
+										<span class="tsd-signature-symbol"> | </span>
+										<a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>
+									</h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
@@ -594,7 +643,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L299">core/path.ts:299</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L347">core/path.ts:347</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -658,6 +707,53 @@ title: Api - path Module
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="distort" class="tsd-anchor"></a>
+		<h3>distort</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">distort<span class="tsd-signature-symbol">(</span>pathToDistort<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, scaleX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, scaleY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/path.ts#L328">core/path.ts:328</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Distort a path - scale x and y individually.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pathToDistort: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The path to distort.</p>
+						</div>
+					</li>
+					<li>
+						<h5>scaleX: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The amount of x scaling.</p>
+						</div>
+					</li>
+					<li>
+						<h5>scaleY: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The amount of y scaling.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>
+					<span class="tsd-signature-symbol"> | </span>
+					<a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>
+				</h4>
+				<p>A new IModel (for circles and arcs) or IPath (for lines and bezier seeds).</p>
 			</li>
 		</ul>
 	</section>

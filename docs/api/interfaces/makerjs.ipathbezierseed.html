@@ -40,6 +40,7 @@ title: Api - IPathBezierSeed Interface
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathbezierseed.html#end" class="tsd-kind-icon">end</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathbezierseed.html#layer" class="tsd-kind-icon">layer</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathbezierseed.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathbezierseed.html#parentrange" class="tsd-kind-icon">parent<wbr>Range</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathbezierseed.html#type" class="tsd-kind-icon">type</a></li>
 				</ul>
 			</section>
@@ -54,9 +55,14 @@ title: Api - IPathBezierSeed Interface
 		<div class="tsd-signature tsd-kind-icon">controls<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L294">core/maker.ts:294</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L298">core/maker.ts:298</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The bezier control points. One point for quadratic, 2 points for cubic.</p>
+			</div>
+		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="end" class="tsd-anchor"></a>
@@ -103,6 +109,21 @@ title: Api - IPathBezierSeed Interface
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
 				<p>The main point of reference for this path.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="parentrange" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> parent<wbr>Range</h3>
+		<div class="tsd-signature tsd-kind-icon">parent<wbr>Range<span class="tsd-signature-symbol">:</span> <a href="makerjs.ibezierrange.html" class="tsd-signature-type">IBezierRange</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L303">core/maker.ts:303</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>T values of the parent if this is a child that represents a split.</p>
 			</div>
 		</div>
 	</section>

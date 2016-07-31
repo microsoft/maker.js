@@ -21,6 +21,7 @@ title: Api - point Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#average" class="tsd-kind-icon">average</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#clone" class="tsd-kind-icon">clone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#closest" class="tsd-kind-icon">closest</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#distort" class="tsd-kind-icon">distort</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#fromangleoncircle" class="tsd-kind-icon">from<wbr>Angle<wbr>OnCircle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#fromarc" class="tsd-kind-icon">from<wbr>Arc</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.point.html#frompathends" class="tsd-kind-icon">from<wbr>Path<wbr>Ends</a></li>
@@ -272,6 +273,50 @@ title: Api - point Module
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h4>
 				<p>The first closest point from the pointOptions.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="distort" class="tsd-anchor"></a>
+		<h3>distort</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">distort<span class="tsd-signature-symbol">(</span>pointToDistort<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, scaleX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, scaleY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L310">core/point.ts:310</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Distort a point&#39;s coordinates.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pointToDistort: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The point to distort.</p>
+						</div>
+					</li>
+					<li>
+						<h5>scaleX: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The amount of x scaling.</p>
+						</div>
+					</li>
+					<li>
+						<h5>scaleY: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The amount of y scaling.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h4>
+				<p>A new point.</p>
 			</li>
 		</ul>
 	</section>
@@ -674,7 +719,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L309">core/point.ts:309</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L321">core/point.ts:321</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -740,7 +785,7 @@ title: Api - point Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L319">core/point.ts:319</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/point.ts#L331">core/point.ts:331</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

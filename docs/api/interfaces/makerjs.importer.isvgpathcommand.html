@@ -1,20 +1,13 @@
 ---
 layout: posts
-title: Api - IChainLink Interface
+title: Api - ISVGPathCommand Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
-<section class="tsd-panel tsd-comment">
-	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>A link in a chain, with direction of flow.</p>
-		</div>
-	</div>
-</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IChainLink</span>
+			<span class="target">ISVGPathCommand</span>
 		</li>
 	</ul>
 </section>
@@ -22,63 +15,70 @@ title: Api - IChainLink Interface
 	<h2>Index</h2>
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
-			<section class="tsd-index-section ">
+			<section class="tsd-index-section tsd-is-not-exported">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ichainlink.html#endpoints" class="tsd-kind-icon">end<wbr>Points</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ichainlink.html#reversed" class="tsd-kind-icon">reversed</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ichainlink.html#walkedpath" class="tsd-kind-icon">walked<wbr>Path</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.importer.isvgpathcommand.html#absolute" class="tsd-kind-icon">absolute</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.importer.isvgpathcommand.html#command" class="tsd-kind-icon">command</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.importer.isvgpathcommand.html#data" class="tsd-kind-icon">data</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.importer.isvgpathcommand.html#from" class="tsd-kind-icon">from</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.importer.isvgpathcommand.html#prev" class="tsd-kind-icon">prev</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
-<section class="tsd-panel-group tsd-member-group ">
+<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="endpoints" class="tsd-anchor"></a>
-		<h3>end<wbr>Points</h3>
-		<div class="tsd-signature tsd-kind-icon">end<wbr>Points<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+		<a name="absolute" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> absolute</h3>
+		<div class="tsd-signature tsd-kind-icon">absolute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L684">core/maker.ts:684</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L710">core/svg.ts:710</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>The endpoints of the path, in absolute coords.</p>
-			</div>
-		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="reversed" class="tsd-anchor"></a>
-		<h3>reversed</h3>
-		<div class="tsd-signature tsd-kind-icon">reversed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+		<a name="command" class="tsd-anchor"></a>
+		<h3>command</h3>
+		<div class="tsd-signature tsd-kind-icon">command<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L679">core/maker.ts:679</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L709">core/svg.ts:709</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Path flows forwards or reverse.</p>
-			</div>
-		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="walkedpath" class="tsd-anchor"></a>
-		<h3>walked<wbr>Path</h3>
-		<div class="tsd-signature tsd-kind-icon">walked<wbr>Path<span class="tsd-signature-symbol">:</span> <a href="makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+		<a name="data" class="tsd-anchor"></a>
+		<h3>data</h3>
+		<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L674">core/maker.ts:674</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L711">core/svg.ts:711</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Reference to the path.</p>
-			</div>
-		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+		<a name="from" class="tsd-anchor"></a>
+		<h3>from</h3>
+		<div class="tsd-signature tsd-kind-icon">from<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L712">core/svg.ts:712</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+		<a name="prev" class="tsd-anchor"></a>
+		<h3>prev</h3>
+		<div class="tsd-signature tsd-kind-icon">prev<span class="tsd-signature-symbol">:</span> <a href="makerjs.importer.isvgpathcommand.html" class="tsd-signature-type">ISVGPathCommand</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L713">core/svg.ts:713</a></li>
+			</ul>
+		</aside>
 	</section>
 </section>
 </div>

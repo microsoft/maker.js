@@ -1,21 +1,20 @@
 ---
 layout: posts
-title: Api - IChainLink Interface
+title: Api - Text Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
-<section class="tsd-panel tsd-comment">
-	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>A link in a chain, with direction of flow.</p>
-		</div>
-	</div>
-</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IChainLink</span>
+			<span class="target">Text</span>
 		</li>
+	</ul>
+</section>
+<section class="tsd-panel">
+	<h3>Implements</h3>
+	<ul class="tsd-hierarchy">
+		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -23,62 +22,66 @@ title: Api - IChainLink Interface
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
+				<h3>Constructors</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.text.html#constructor" class="tsd-kind-icon">constructor</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ichainlink.html#endpoints" class="tsd-kind-icon">end<wbr>Points</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ichainlink.html#reversed" class="tsd-kind-icon">reversed</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ichainlink.html#walkedpath" class="tsd-kind-icon">walked<wbr>Path</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.text.html#models" class="tsd-kind-icon">models</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
+	<h2>Constructors</h2>
+	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+		<a name="constructor" class="tsd-anchor"></a>
+		<h3>constructor</h3>
+		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Text<span class="tsd-signature-symbol">(</span>font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Font</span>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, combine<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.text.html" class="tsd-signature-type">Text</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Text.ts#L5">models/Text.ts:5</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>font: <span class="tsd-signature-type">Font</span></h5>
+					</li>
+					<li>
+						<h5>text: <span class="tsd-signature-type">string</span></h5>
+					</li>
+					<li>
+						<h5>fontSize: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> combine: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.text.html" class="tsd-signature-type">Text</a></h4>
+			</li>
+		</ul>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="endpoints" class="tsd-anchor"></a>
-		<h3>end<wbr>Points</h3>
-		<div class="tsd-signature tsd-kind-icon">end<wbr>Points<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="models" class="tsd-anchor"></a>
+		<h3>models</h3>
+		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L684">core/maker.ts:684</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Text.ts#L5">models/Text.ts:5</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>The endpoints of the path, in absolute coords.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="reversed" class="tsd-anchor"></a>
-		<h3>reversed</h3>
-		<div class="tsd-signature tsd-kind-icon">reversed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L679">core/maker.ts:679</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Path flows forwards or reverse.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="walkedpath" class="tsd-anchor"></a>
-		<h3>walked<wbr>Path</h3>
-		<div class="tsd-signature tsd-kind-icon">walked<wbr>Path<span class="tsd-signature-symbol">:</span> <a href="makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L674">core/maker.ts:674</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Reference to the path.</p>
-			</div>
-		</div>
 	</section>
 </section>
 </div>

@@ -1,13 +1,13 @@
 ---
 layout: posts
-title: Api - Ellipse Class
+title: Api - EllipticArc Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">Ellipse</span>
+			<span class="target">EllipticArc</span>
 		</li>
 	</ul>
 </section>
@@ -24,14 +24,13 @@ title: Api - Ellipse Class
 			<section class="tsd-index-section ">
 				<h3>Constructors</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.ellipse.html#constructor" class="tsd-kind-icon">constructor</a></li>
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.ellipticarc.html#constructor" class="tsd-kind-icon">constructor</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.ellipse.html#models" class="tsd-kind-icon">models</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.ellipse.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.ellipticarc.html#models" class="tsd-kind-icon">models</a></li>
 				</ul>
 			</section>
 		</div>
@@ -43,71 +42,28 @@ title: Api - Ellipse Class
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Ellipse<span class="tsd-signature-symbol">(</span>radiusX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, radiusY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.ellipse.html" class="tsd-signature-type">Ellipse</a></li>
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Ellipse<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radiusX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, radiusY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.ellipse.html" class="tsd-signature-type">Ellipse</a></li>
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Ellipse<span class="tsd-signature-symbol">(</span>cx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, cy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, rx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, ry<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.ellipse.html" class="tsd-signature-type">Ellipse</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Elliptic<wbr>Arc<span class="tsd-signature-symbol">(</span>startAngle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, endAngle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, radiusX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, radiusY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.ellipticarc.html" class="tsd-signature-type">EllipticArc</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Elliptic<wbr>Arc<span class="tsd-signature-symbol">(</span>arc<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, distortX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, distortY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.ellipticarc.html" class="tsd-signature-type">EllipticArc</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L60">models/Ellipse.ts:60</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L201">models/Ellipse.ts:201</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Class for Ellipse created with 2 radii.</p>
+						<p>Class for Elliptic Arc created by distorting a circular arc.</p>
 					</div>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>radiusX: <span class="tsd-signature-type">number</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>The x radius of the ellipse.</p>
-							</div>
-						</div>
+						<h5>startAngle: <span class="tsd-signature-type">number</span></h5>
 					</li>
 					<li>
-						<h5>radiusY: <span class="tsd-signature-type">number</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>The y radius of the ellipse.</p>
-							</div>
-						</div>
-					</li>
-					<li>
-						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Optional accuracy of the underlying BezierCurve.</p>
-							</div>
-						</div>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.ellipse.html" class="tsd-signature-type">Ellipse</a></h4>
-			</li>
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L69">models/Ellipse.ts:69</a></li>
-					</ul>
-				</aside>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Class for Ellipse created at a specific origin and 2 radii.</p>
-					</div>
-				</div>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>The center of the ellipse.</p>
-							</div>
-						</div>
+						<h5>endAngle: <span class="tsd-signature-type">number</span></h5>
 					</li>
 					<li>
 						<h5>radiusX: <span class="tsd-signature-type">number</span></h5>
@@ -134,42 +90,44 @@ title: Api - Ellipse Class
 						</div>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.ellipse.html" class="tsd-signature-type">Ellipse</a></h4>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.ellipticarc.html" class="tsd-signature-type">EllipticArc</a></h4>
 			</li>
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L79">models/Ellipse.ts:79</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L211">models/Ellipse.ts:211</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Class for Ellipse created at a specific x, y and 2 radii.</p>
+						<p>Class for Elliptic Arc created by distorting a circular arc.</p>
 					</div>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>cx: <span class="tsd-signature-type">number</span></h5>
+						<h5>arc: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>The x coordinate of the center of the ellipse.</p>
+								<p>The circular arc to use as the basis of the elliptic arc.</p>
 							</div>
 						</div>
 					</li>
 					<li>
-						<h5>cy: <span class="tsd-signature-type">number</span></h5>
+						<h5>distortX: <span class="tsd-signature-type">number</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>The y coordinate of the center of the ellipse.</p>
+								<p>The x scale of the ellipse.</p>
 							</div>
 						</div>
 					</li>
 					<li>
-						<h5>rx: <span class="tsd-signature-type">number</span></h5>
-					</li>
-					<li>
-						<h5>ry: <span class="tsd-signature-type">number</span></h5>
+						<h5>distortY: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The y scale of the ellipse.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
@@ -180,7 +138,7 @@ title: Api - Ellipse Class
 						</div>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.ellipse.html" class="tsd-signature-type">Ellipse</a></h4>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.ellipticarc.html" class="tsd-signature-type">EllipticArc</a></h4>
 			</li>
 		</ul>
 	</section>
@@ -193,17 +151,7 @@ title: Api - Ellipse Class
 		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L59">models/Ellipse.ts:59</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="origin" class="tsd-anchor"></a>
-		<h3>origin</h3>
-		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L60">models/Ellipse.ts:60</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Ellipse.ts#L201">models/Ellipse.ts:201</a></li>
 			</ul>
 		</aside>
 	</section>
