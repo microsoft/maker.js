@@ -4,7 +4,7 @@
     module: NodeModule;
     MakerJsPlayground: typeof MakerJsPlayground;    //this is not in this window but it is in the parent
     makerjs: typeof MakerJs;
-    playground: Function;
+    playgroundRender: Function;
 }
 
 namespace MakerJsRequireIframe {
@@ -40,7 +40,7 @@ namespace MakerJsRequireIframe {
     }
 
     function runCodeIsolated(javaScript: string) {
-        var Fn: any = new Function('require', 'module', 'document', 'console', 'alert', 'render', javaScript);
+        var Fn: any = new Function('require', 'module', 'document', 'console', 'alert', 'playgroundRender', javaScript);
         var result: any = new Fn(window.collectRequire, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
 
         return window.module.exports || result;
@@ -273,7 +273,7 @@ namespace MakerJsRequireIframe {
         }
     }
 
-    window.playground = function (result) {
+    window.playgroundRender = function (result) {
         parent.MakerJsPlayground.processResult('', result);
     }
 
