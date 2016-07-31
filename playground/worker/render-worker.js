@@ -1,7 +1,7 @@
 /*
     Some libraries are not web-worker aware, they are either browser or Node.
     A web worker should use the browser flavor.
-    So trick libs inbto thinking this is a browser, by existence of a 'window' in the global space.
+    So trick libs into thinking this is a browser, by existence of a 'window' in the global space.
 */
 var window = {
     alert: function () {
@@ -22,8 +22,7 @@ function load(id, src) {
     module[id] = module.exports;
 }
 //add the makerjs module
-importScripts('../../target/js/browser.maker.js', '../../external/bezier-js/bezier.js');
-importScripts('../../external/opentype/opentype.js');
+importScripts('../../target/js/browser.maker.js', '../../external/bezier-js/bezier.js', '../../external/opentype/opentype.js');
 var makerjs = require('makerjs');
 module['makerjs'] = makerjs;
 module['./../target/js/node.maker.js'] = makerjs;
