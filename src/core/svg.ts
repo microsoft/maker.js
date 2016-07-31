@@ -705,6 +705,14 @@ namespace MakerJs.exporter {
 
 namespace MakerJs.importer {
 
+    interface ISVGPathCommand {
+        command: string;
+        absolute?: boolean;
+        data: number[];
+        from: IPoint;
+        prev: ISVGPathCommand;
+    }
+
     export function fromSVGPathData(pathData: string): IModel {
         var result: IModel = {};
 
@@ -722,75 +730,75 @@ namespace MakerJs.importer {
             result.models['p_' + ++pathCount] = m;
         }
 
-        function getPoint(absolute: boolean, data: number[], offset = 0) {
-            var p = point.mirror([data[0 + offset], data[1 + offset]], false, true);
+        function getPoint(cmd: ISVGPathCommand, offset = 0) {
+            var p = point.mirror([cmd.data[0 + offset], cmd.data[1 + offset]], false, true);
 
-            if (absolute) {
+            if (cmd.absolute) {
                 return p;
             } else {
-                return point.add(p, currPoint);
+                return point.add(p, cmd.from);
             }
         }
 
-        function lineTo(end: IPoint) {
-            if (!measure.isPointEqual(currPoint, end)) {
-                addPath(new paths.Line(currPoint, end));
+        function lineTo(cmd: ISVGPathCommand, end: IPoint) {
+            if (!measure.isPointEqual(cmd.from, end)) {
+                addPath(new paths.Line(cmd.from, end));
             }
             return end;
         }
 
-        var map: { [command: string]: (absolute: boolean, data: number[]) => IPoint } = {};
+        var map: { [command: string]: (cmd: ISVGPathCommand) => IPoint } = {};
 
-        map['M'] = function (absolute: boolean, data: number[]) {
-            firstPoint = getPoint(absolute, data);
+        map['M'] = function (cmd: ISVGPathCommand) {
+            firstPoint = getPoint(cmd);
             return firstPoint;
         };
 
-        map['Z'] = function (absolute: boolean, data: number[]) {
-            return lineTo(firstPoint);
+        map['Z'] = function (cmd: ISVGPathCommand) {
+            return lineTo(cmd, firstPoint);
         };
 
-        map['H'] = function (absolute: boolean, data: number[]) {
-            var end = point.clone(currPoint);
+        map['H'] = function (cmd: ISVGPathCommand) {
+            var end = point.clone(cmd.from);
 
-            if (absolute) {
-                end[0] = data[0];
+            if (cmd.absolute) {
+                end[0] = cmd.data[0];
             } else {
-                end[0] += data[0];
+                end[0] += cmd.data[0];
             }
 
-            return lineTo(end);
+            return lineTo(cmd, end);
         };
 
-        map['V'] = function (absolute: boolean, data: number[]) {
-            var end = point.clone(currPoint);
+        map['V'] = function (cmd: ISVGPathCommand) {
+            var end = point.clone(cmd.from);
 
             //subtract to mirror on y axis: SVG coords
-            if (absolute) {
-                end[1] = -data[0];
+            if (cmd.absolute) {
+                end[1] = -cmd.data[0];
             } else {
-                end[1] -= data[0];
+                end[1] -= cmd.data[0];
             }
 
-            return lineTo(end);
+            return lineTo(cmd, end);
         };
 
-        map['L'] = function (absolute: boolean, data: number[]) {
-            var end = getPoint(absolute, data);
-            return lineTo(end);
+        map['L'] = function (cmd: ISVGPathCommand) {
+            var end = getPoint(cmd);
+            return lineTo(cmd, end);
         };
 
-        map['A'] = function (absolute: boolean, data: number[]) {
-            var rx = data[0];
-            var ry = data[1];
-            var rotation = data[2];
-            var large = data[3] === 1;
-            var decreasing = data[4] === 1;
-            var end = getPoint(absolute, data, 5);
+        map['A'] = function (cmd: ISVGPathCommand) {
+            var rx = cmd.data[0];
+            var ry = cmd.data[1];
+            var rotation = cmd.data[2];
+            var large = cmd.data[3] === 1;
+            var decreasing = cmd.data[4] === 1;
+            var end = getPoint(cmd, 5);
             var elliptic = rx !== ry;
             
             //first, rotate so we are dealing with a zero angle x-axis
-            var xAxis = new paths.Line(currPoint, point.rotate(end, rotation, currPoint));
+            var xAxis = new paths.Line(cmd.from, point.rotate(end, rotation, cmd.from));
 
             //next, un-distort any ellipse back into a circle in terms of x axis
             if (elliptic) {
@@ -813,7 +821,7 @@ namespace MakerJs.importer {
                 var e = new models.EllipticArc(arc, 1, ry / rx);
 
                 //un-rotate back to where it should be.
-                model.rotate(e, -rotation, currPoint);
+                model.rotate(e, -rotation, cmd.from);
 
                 addModel(e);
 
@@ -821,7 +829,7 @@ namespace MakerJs.importer {
                 //just use the arc
 
                 //un-rotate back to where it should be.
-                path.rotate(arc, -rotation, currPoint);
+                path.rotate(arc, -rotation, cmd.from);
 
                 addPath(arc);
             }
@@ -829,36 +837,70 @@ namespace MakerJs.importer {
             return end;
         };
 
-        map['C'] = function (absolute: boolean, data: number[]) {
-            var control1 = getPoint(absolute, data, 0);
-            var control2 = getPoint(absolute, data, 2);
-            var end = getPoint(absolute, data, 4);
-            addModel(new models.BezierCurve(currPoint, control1, control2, end));
+        map['C'] = function (cmd: ISVGPathCommand) {
+            var control1 = getPoint(cmd, 0);
+            var control2 = getPoint(cmd, 2);
+            var end = getPoint(cmd, 4);
+            addModel(new models.BezierCurve(cmd.from, control1, control2, end));
             return end;
         };
 
-        map['Q'] = function (absolute: boolean, data: number[]) {
-            var control = getPoint(absolute, data, 0);
-            var end = getPoint(absolute, data, 2);
-            addModel(new models.BezierCurve(currPoint, control, end));
+        map['S'] = function (cmd: ISVGPathCommand) {
+            var control1: IPoint;
+            var prevControl2: IPoint;
+
+            if (cmd.prev.command === 'C') {
+                prevControl2 = getPoint(cmd.prev, 2);
+                control1 = point.rotate(prevControl2, 180, cmd.from);
+            } else if (cmd.prev.command === 'S') {
+                prevControl2 = getPoint(cmd.prev, 0);
+                control1 = point.rotate(prevControl2, 180, cmd.from);
+            } else {
+                control1 = cmd.from;
+            }
+
+            var control2 = getPoint(cmd, 0);
+            var end = getPoint(cmd, 2);
+            addModel(new models.BezierCurve(cmd.from, control1, control2, end));
             return end;
         };
 
-        map['S'] = function (absolute: boolean, data: number[]) {
-            //TODO smooth cubic
-            return currPoint;
+        map['Q'] = function (cmd: ISVGPathCommand) {
+            var control = getPoint(cmd, 0);
+            var end = getPoint(cmd, 2);
+            addModel(new models.BezierCurve(cmd.from, control, end));
+            return end;
         };
 
-        map['T'] = function (absolute: boolean, data: number[]) {
-            //TODO smooth quad
-            return currPoint;
+        map['T'] = function (cmd: ISVGPathCommand) {
+            var control: IPoint;
+            var prevControl: IPoint;
+
+            if (cmd.prev.command === 'Q') {
+                prevControl = getPoint(cmd.prev, 0);
+                control = point.rotate(prevControl, 180, cmd.from);
+            } else if (cmd.prev.command === 'T') {
+                prevControl = getPoint(cmd.prev, 2); //see below *
+                control = point.rotate(prevControl, 180, cmd.from);
+            } else {
+                control = cmd.from;
+            }
+
+            //* save the control point in the data list, will be accessible from index 2
+            var p = point.mirror(control, false, true);
+            cmd.data.push.apply(cmd.data, p);
+
+            var end = getPoint(cmd, 0);
+
+            addModel(new models.BezierCurve(cmd.from, control, end));
+            return end;
         };
 
-        var firstPoint: IPoint;
-        var currPoint: IPoint;
+        var firstPoint: IPoint = [0, 0];
+        var currPoint: IPoint = [0, 0];
         var pathCount = 0;
-
-        var regexpCommands = /([a-z])(.?[^a-z]*)/ig;
+        var prevCommand: ISVGPathCommand;
+        var regexpCommands = /([achlmqstvz])(.?[^achlmqstvz]*)/ig;
         var commandMatches: RegExpExecArray;
 
         while ((commandMatches = regexpCommands.exec(pathData)) !== null) {
@@ -868,25 +910,35 @@ namespace MakerJs.importer {
 
             var command = commandMatches[1]; //0 = command and data, 1 = command, 2 = data
             var dataString = commandMatches[2];
-            var upperCommand = command.toUpperCase();
-            var absolute = (command === upperCommand);
 
-            var regexpCommandData = /-?[\d\.]+/g;
+            var currCmd: ISVGPathCommand = {
+                command: command.toUpperCase(),
+                data: [],
+                from: currPoint,
+                prev: prevCommand
+            };
+
+            if (command === currCmd.command) {
+                currCmd.absolute = true;
+            }
+
+            //http://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly
+            var regexpCommandData = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
             var dataMatches: RegExpExecArray;
-            var data: number[] = [];
 
             while ((dataMatches = regexpCommandData.exec(dataString)) !== null) {
                 if (dataMatches.index === regexpCommandData.lastIndex) {
                     regexpCommandData.lastIndex++;
                 }
-                data.push(parseFloat(dataMatches[0]));
+                currCmd.data.push(parseFloat(dataMatches[0]));
             }
 
-            var fn = map[upperCommand];
+            var fn = map[currCmd.command];
             if (fn) {
-                currPoint = fn(absolute, data);
+                currPoint = fn(currCmd);
             }
 
+            prevCommand = currCmd;
         }
 
         return result;
