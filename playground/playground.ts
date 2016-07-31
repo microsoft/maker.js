@@ -200,6 +200,16 @@
                         paramValues.push(attrs.value[0]);
 
                         break;
+
+                    case 'text':
+
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.checked)';
+
+                        input = new makerjs.exporter.XmlTag('input', attrs);
+
+                        paramValues.push(attrs.value);
+
+                        break;
                 }
 
                 if (!input) continue;
@@ -562,7 +572,7 @@
         }
     }
 
-    function setProcessedModel(model: MakerJs.IModel, error?: string) {
+    function setProcessedModel(model: MakerJs.IModel, error?: string, doInit?: boolean) {
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
@@ -575,14 +585,14 @@
         }
 
         if (model) {
-            onProcessed();
+            onProcessed(doInit);
         }
     }
 
-    function onProcessed() {
+    function onProcessed(doInit = true) {
 
         //now safe to render, so register a resize listener
-        if (init) {
+        if (init && doInit) {
             init = false;
 
             initialize();
@@ -939,7 +949,7 @@
 
     export function fitOnScreen() {
 
-        pointers.reset();
+        if (pointers) pointers.reset();
 
         var size = getViewSize();
         var halfWidth = size[0] / 2;
@@ -1220,6 +1230,8 @@
             toggleClass('side-by-side');
             dockEditor(true);
         }
+
+        setProcessedModel(new Wait(), '', false);
 
         querystringParams = new QueryStringParams();
         var scriptname = querystringParams['script'];

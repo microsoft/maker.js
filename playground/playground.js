@@ -136,6 +136,11 @@ var MakerJsPlayground;
                         input.innerTextEscaped = true;
                         paramValues.push(attrs.value[0]);
                         break;
+                    case 'text':
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.checked)';
+                        input = new makerjs.exporter.XmlTag('input', attrs);
+                        paramValues.push(attrs.value);
+                        break;
                 }
                 if (!input)
                     continue;
@@ -418,7 +423,7 @@ var MakerJsPlayground;
             render();
         }
     }
-    function setProcessedModel(model, error) {
+    function setProcessedModel(model, error, doInit) {
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
@@ -429,12 +434,13 @@ var MakerJsPlayground;
             }
         }
         if (model) {
-            onProcessed();
+            onProcessed(doInit);
         }
     }
-    function onProcessed() {
+    function onProcessed(doInit) {
+        if (doInit === void 0) { doInit = true; }
         //now safe to render, so register a resize listener
-        if (init) {
+        if (init && doInit) {
             init = false;
             initialize();
         }
@@ -711,7 +717,8 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.fitNatural = fitNatural;
     function fitOnScreen() {
-        MakerJsPlayground.pointers.reset();
+        if (MakerJsPlayground.pointers)
+            MakerJsPlayground.pointers.reset();
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -934,6 +941,7 @@ var MakerJsPlayground;
             toggleClass('side-by-side');
             dockEditor(true);
         }
+        setProcessedModel(new Wait(), '', false);
         MakerJsPlayground.querystringParams = new QueryStringParams();
         var scriptname = MakerJsPlayground.querystringParams['script'];
         if (scriptname && !isHttp(scriptname)) {
