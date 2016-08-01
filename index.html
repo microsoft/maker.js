@@ -17,6 +17,7 @@ title: Create parametric CNC drawings using JavaScript
 <p>Behind the scenes, drawings are a <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#It%27s%20Just%20JSON">simple Javascript object</a> which can be serialized / deserialized conventionally with JSON.</p>
 <p>Other people&#39;s Models can be required the Node.js way, <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Modifying%20models">modified</a>, and re-exported.</p>
 <p>Models can be <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Scaling">scaled</a>, <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents">measured</a>, and <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#Units">converted to different unit systems</a>.</p>
+<p>NEW: Models can be <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort">distorted</a>.</p>
 <p>Models can be <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Rotating">rotated</a> or <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Mirroring">mirrored</a>.</p>
 <p>Find <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#intersection">intersection points or intersection angles</a> of paths.</p>
 <p>Easily add a curvature at the joint between any 2 paths, using a <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#fillet">traditional fillet</a> or a <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#dogbone">dogbone fillet</a>.</p>
@@ -40,6 +41,7 @@ title: Create parametric CNC drawings using JavaScript
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=ConnectTheDots">Connect the dots</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Dome">Dome</a></li>
 <li>NEW: <a href="http://microsoft.github.io/maker.js/playground/?script=Ellipse">Ellipse</a></li>
+<li>NEW: <a href="http://microsoft.github.io/maker.js/playground/?script=EllipticArc">Elliptic Arc</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Oval">Oval</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=OvalArc">OvalArc</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Polygon">Polygon</a></li>
@@ -50,7 +52,11 @@ title: Create parametric CNC drawings using JavaScript
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Slot">Slot</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Square">Square</a></li>
 <li><a href="http://microsoft.github.io/maker.js/playground/?script=Star">Star</a></li>
+<li>NEW: <a href="http://microsoft.github.io/maker.js/playground/?script=Text">Text</a></li>
 </ul>
+<h3 id="import-formats">Import formats</h3>
+<p>NEW: <a href="http://microsoft.github.io/maker.js/playground/?script=Text">Fonts</a> (Requires <a href="http://opentype.js.org/">opentype.js</a>)</p>
+<p>NEW: <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.importer.html#fromsvgpathdata">SVG Path Data</a></p>
 </section><section class="tsd-panel"><h2 id="getting-started">Getting Started</h2>
 <h3 id="try-it-now">Try it now</h3>
 <p>Visit the <a href="http://microsoft.github.io/maker.js/playground/">Maker.js Playground</a> a sample app to edit and run JavaScript from your browser.</p>
@@ -75,6 +81,19 @@ title: Create parametric CNC drawings using JavaScript
 <p>Learn how to draw in Maker.js by folowing <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/">the tutorial</a></p>
 <h3 id="api">API</h3>
 <p>Browse all the library features in the <a href="http://microsoft.github.io/maker.js/docs/api/">API Documentation</a></p>
+<h3 id="contributing">Contributing</h3>
+<p>There are many ways to contribute to Maker.js:</p>
+<ul>
+<li>Submit bugs and feature requests <a href="https://github.com/Microsoft/maker.js/issues">on GitHub</a>.</li>
+<li>Create a demo for the <a href="http://microsoft.github.io/maker.js/demos/#content">gallery</a>.</li>
+<li>Create lessons or videos(!) for the <a href="http://microsoft.github.io/maker.js/docs/#content">documentation</a>.</li>
+<li>Enhance the <a href="https://github.com/Microsoft/maker.js/tree/gh-pages">website</a>.</li>
+<li>Add features to the <a href="https://github.com/Microsoft/maker.js/tree/master/playground">Playground app</a>.</li>
+<li>Create a new Maker.js app, and we will link to it here.</li>
+<li>Find some TODO&#39;s in the <a href="https://github.com/Microsoft/maker.js/tree/master/src">core source code</a>.</li>
+<li>Create unit tests for the core.</li>
+</ul>
+<p>Some of these may require a <a href="https://github.com/Microsoft/maker.js/blob/master/CONTRIBUTING.md">contributor agreement</a>.</p>
 <h3 id="credits">Credits</h3>
 <p>Maker.js depends on:</p>
 <ul>
@@ -82,6 +101,5 @@ title: Create parametric CNC drawings using JavaScript
 <li><a href="https://github.com/Pomax/bezierjs">Bezier-js</a> by Pomax</li>
 </ul>
 <hr>
-<p><strong><a href="CONTRIBUTING.md">Contribute to this project!</a></strong></p>
 <p>The Microsoft Garage turns fresh ideas into real projects. Learn more at <a href="http://microsoft.com/garage">http://microsoft.com/garage</a>.</p>
 </section>
