@@ -107,6 +107,10 @@ function demoIndexPage() {
 
         writeHeading(1, 'Demos');
 
+        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/gh-pages/demos/js).\n 3. Submit a pull request!');
+
+        stream.write(section(yourDemoHtml));
+
         stream.write(st.getOpeningTag(false));
 
         writeHeading(2, 'Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
