@@ -69,6 +69,7 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 ### Import formats
 
 NEW: [Fonts](http://microsoft.github.io/maker.js/playground/?script=Text) (Requires [opentype.js](http://opentype.js.org/))
+
 NEW: [SVG Path Data](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.importer.html#fromsvgpathdata)
 
 ## Getting Started
@@ -115,17 +116,17 @@ Learn how to draw in Maker.js by folowing [the tutorial](http://microsoft.github
 Browse all the library features in the [API Documentation](http://microsoft.github.io/maker.js/docs/api/)
 
 ### Contributing
-There are so many ways to contribute to Maker.js!
-* Submit bugs and feature requests [on GitHub](https://github.com/Microsoft/maker.js/issues)
-* Create a demo for the [gallery](http://microsoft.github.io/maker.js/demos/#content)
-* Create lessons or videos(!) for the [documentation](http://microsoft.github.io/maker.js/docs/#content)
-* Enhance the [website](https://github.com/Microsoft/maker.js/tree/gh-pages)
-* Add features to the [Playground app](https://github.com/Microsoft/maker.js/tree/master/playground)
-* Create a new Maker.js app, and we will link to it here
-* Find some TODO's in the [core source code](https://github.com/Microsoft/maker.js/tree/master/src)
+There are many ways to contribute to Maker.js:
+* Submit bugs and feature requests [on GitHub](https://github.com/Microsoft/maker.js/issues).
+* Create a demo for the [gallery](http://microsoft.github.io/maker.js/demos/#content).
+* Create lessons or videos(!) for the [documentation](http://microsoft.github.io/maker.js/docs/#content).
+* Enhance the [website](https://github.com/Microsoft/maker.js/tree/gh-pages).
+* Add features to the [Playground app](https://github.com/Microsoft/maker.js/tree/master/playground).
+* Create a new Maker.js app, and we will link to it here.
+* Find some TODO's in the [core source code](https://github.com/Microsoft/maker.js/tree/master/src).
 * Create unit tests for the core.
 
-Some of these may require a [contributor agreement](https://github.com/Microsoft/maker.js/blob/master/CONTRIBUTING.md)
+Some of these may require a [contributor agreement](https://github.com/Microsoft/maker.js/blob/master/CONTRIBUTING.md).
 
 ### Credits
 Maker.js depends on:
@@ -133,7 +134,5 @@ Maker.js depends on:
 * [Bezier-js](https://github.com/Pomax/bezierjs) by Pomax
 
 ---
-
-**[Contribute to this project!](CONTRIBUTING.md)**
 
 The Microsoft Garage turns fresh ideas into real projects. Learn more at [http://microsoft.com/garage](http://microsoft.com/garage).
