@@ -18,6 +18,8 @@ Other people's Models can be required the Node.js way, [modified](http://microso
 
 Models can be [scaled](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Scaling), [measured](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](http://microsoft.github.io/maker.js/docs/basic-drawing/#Units).
 
+NEW: Models can be [distorted](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort).
+
 Models can be [rotated](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Rotating) or [mirrored](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Mirroring).
 
 Find [intersection points or intersection angles](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#intersection) of paths.
@@ -51,6 +53,7 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 * [Connect the dots](http://microsoft.github.io/maker.js/playground/?script=ConnectTheDots)
 * [Dome](http://microsoft.github.io/maker.js/playground/?script=Dome)
 * NEW: [Ellipse](http://microsoft.github.io/maker.js/playground/?script=Ellipse)
+* NEW: [Elliptic Arc](http://microsoft.github.io/maker.js/playground/?script=EllipticArc)
 * [Oval](http://microsoft.github.io/maker.js/playground/?script=Oval)
 * [OvalArc](http://microsoft.github.io/maker.js/playground/?script=OvalArc)
 * [Polygon](http://microsoft.github.io/maker.js/playground/?script=Polygon)
@@ -61,6 +64,12 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 * [Slot](http://microsoft.github.io/maker.js/playground/?script=Slot)
 * [Square](http://microsoft.github.io/maker.js/playground/?script=Square)
 * [Star](http://microsoft.github.io/maker.js/playground/?script=Star)
+* NEW: [Text](http://microsoft.github.io/maker.js/playground/?script=Text)
+
+### Import formats
+
+NEW: [Fonts](http://microsoft.github.io/maker.js/playground/?script=Text) (Requires [opentype.js](http://opentype.js.org/))
+NEW: [SVG Path Data](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.importer.html#fromsvgpathdata)
 
 ## Getting Started
 
@@ -104,6 +113,19 @@ Learn how to draw in Maker.js by folowing [the tutorial](http://microsoft.github
 
 ### API
 Browse all the library features in the [API Documentation](http://microsoft.github.io/maker.js/docs/api/)
+
+### Contributing
+There are so many ways to contribute to Maker.js!
+* Submit bugs and feature requests [on GitHub](https://github.com/Microsoft/maker.js/issues)
+* Create a demo for the [gallery](http://microsoft.github.io/maker.js/demos/#content)
+* Create lessons or videos(!) for the [documentation](http://microsoft.github.io/maker.js/docs/#content)
+* Enhance the [website](https://github.com/Microsoft/maker.js/tree/gh-pages)
+* Add features to the [Playground app](https://github.com/Microsoft/maker.js/tree/master/playground)
+* Create a new Maker.js app, and we will link to it here
+* Find some TODO's in the [core source code](https://github.com/Microsoft/maker.js/tree/master/src)
+* Create unit tests for the core.
+
+Some of these may require a [contributor agreement](https://github.com/Microsoft/maker.js/blob/master/CONTRIBUTING.md)
 
 ### Credits
 Maker.js depends on:
