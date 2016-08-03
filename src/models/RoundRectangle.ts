@@ -23,8 +23,8 @@ namespace MakerJs.models {
          * 
          * Example:
          * ```
-         * var e = new makerjs.models.Ellipse(20, 30); // draw an ellipse so we have something to surround.
-         * var r = new makerjs.models.RoundRectangle(e, 3); // draws a rectangle surrounding the ellipse by 3 units.
+         * var b = new makerjs.models.BoltRectangle(30, 20, 1); //draw a bolt rectangle so we have something to surround
+         * var r = new makerjs.models.RoundRectangle(b, 2.5);   //surround it
          * ```
          * 
          * @param modelToSurround IModel object.
