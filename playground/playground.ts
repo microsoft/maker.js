@@ -249,7 +249,7 @@
                 value = value[0];
             }
 
-            if (typeof value === 'object') {
+            if (makerjs.isObject(value)) {
                 values.push(JSON.stringify(value));
             } else {
                 values.push(value);

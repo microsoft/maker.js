@@ -100,6 +100,18 @@ namespace MakerJs {
         return target;
     }
 
+    export function isFunction(value: any): boolean {
+        return typeof value === 'function';
+    }
+
+    export function isNumber(value: any): boolean {
+        return typeof value === 'number';
+    }
+
+    export function isObject(value: any): boolean {
+        return typeof value === 'object';
+    }
+
     /**
      * @private
      */

@@ -216,7 +216,7 @@ namespace MakerJs.paths {
 
             if (args.length == 2) {
 
-                if (typeof args[1] === 'number') {
+                if (isNumber(args[1])) {
                     this.origin = args[0];
                     this.radius = args[1];
 
