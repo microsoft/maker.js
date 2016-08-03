@@ -102,7 +102,10 @@ title: Api - MakerJs Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#createroutekey" class="tsd-kind-icon">create<wbr>Route<wbr>Key</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#extendobject" class="tsd-kind-icon">extend<wbr>Object</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="index.html#hasnamedproperty" class="tsd-kind-icon">has<wbr>Named<wbr>Property</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#isfunction" class="tsd-kind-icon">is<wbr>Function</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ismodel" class="tsd-kind-icon">is<wbr>Model</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#isobject" class="tsd-kind-icon">is<wbr>Object</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispath" class="tsd-kind-icon">is<wbr>Path</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispatharc" class="tsd-kind-icon">is<wbr>Path<wbr>Arc</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispatharcinbeziercurve" class="tsd-kind-icon">is<wbr>Path<wbr>Arc<wbr>InBezier<wbr>Curve</a></li>
@@ -143,7 +146,7 @@ title: Api - MakerJs Module
 		<div class="tsd-signature tsd-kind-icon">x<span class="tsd-signature-symbol">:</span> <a href="interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L107">core/maker.ts:107</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L137">core/maker.ts:137</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -273,7 +276,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L122">core/maker.ts:122</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L152">core/maker.ts:152</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -292,6 +295,38 @@ title: Api - MakerJs Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isfunction" class="tsd-anchor"></a>
+		<h3>is<wbr>Function</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Function<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L110">core/maker.ts:110</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if a variable is a function.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>value: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>True if the object is a function type.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="ismodel" class="tsd-anchor"></a>
 		<h3>is<wbr>Model</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -301,7 +336,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L623">core/maker.ts:623</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L653">core/maker.ts:653</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -320,6 +355,70 @@ title: Api - MakerJs Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isnumber" class="tsd-anchor"></a>
+		<h3>is<wbr>Number</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Number<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L120">core/maker.ts:120</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if a variable is a number.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>value: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>True if the object is a number type.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isobject" class="tsd-anchor"></a>
+		<h3>is<wbr>Object</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Object<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L130">core/maker.ts:130</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if a variable is an object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>value: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>True if the object is an object type.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="ispath" class="tsd-anchor"></a>
 		<h3>is<wbr>Path</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -329,7 +428,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L203">core/maker.ts:203</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L233">core/maker.ts:233</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -360,7 +459,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L286">core/maker.ts:286</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L316">core/maker.ts:316</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -391,7 +490,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L335">core/maker.ts:335</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L365">core/maker.ts:365</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -422,7 +521,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L255">core/maker.ts:255</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L285">core/maker.ts:285</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -453,7 +552,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L229">core/maker.ts:229</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L259">core/maker.ts:259</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -484,7 +583,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L148">core/maker.ts:148</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L178">core/maker.ts:178</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -515,7 +614,7 @@ title: Api - MakerJs Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L112">core/maker.ts:112</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L142">core/maker.ts:142</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -579,7 +678,7 @@ title: Api - MakerJs Module
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L370">core/maker.ts:370</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L400">core/maker.ts:400</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -597,7 +696,7 @@ var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span cla
 			<div class="tsd-signature tsd-kind-icon">Arc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L373">core/maker.ts:373</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L403">core/maker.ts:403</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -607,7 +706,7 @@ var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span cla
 			<div class="tsd-signature tsd-kind-icon">Bezier<wbr>Seed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L374">core/maker.ts:374</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L404">core/maker.ts:404</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -617,7 +716,7 @@ var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span cla
 			<div class="tsd-signature tsd-kind-icon">Circle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L372">core/maker.ts:372</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L402">core/maker.ts:402</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -627,7 +726,7 @@ var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span cla
 			<div class="tsd-signature tsd-kind-icon">Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L371">core/maker.ts:371</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/maker.ts#L401">core/maker.ts:401</a></li>
 				</ul>
 			</aside>
 		</section>

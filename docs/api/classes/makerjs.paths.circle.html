@@ -51,6 +51,7 @@ title: Api - Circle Class
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Circle<span class="tsd-signature-symbol">(</span>radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.circle.html" class="tsd-signature-type">Circle</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Circle<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.circle.html" class="tsd-signature-type">Circle</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Circle<span class="tsd-signature-symbol">(</span>pointA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.circle.html" class="tsd-signature-type">Circle</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Circle<span class="tsd-signature-symbol">(</span>pointA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, pointC<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.circle.html" class="tsd-signature-type">Circle</a></li>
@@ -64,8 +65,38 @@ title: Api - Circle Class
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
+						<p>Class for circle path, created from radius. Origin will be [0, 0].</p>
+					</div>
+					<p>Example:</p>
+					<pre><code><span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> makerjs.paths.Circle(<span class="hljs-number">7</span>);
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>radius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The radius of the circle.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.circle.html" class="tsd-signature-type">Circle</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L199">core/paths.ts:199</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
 						<p>Class for circle path, created from origin point and radius.</p>
 					</div>
+					<p>Example:</p>
+					<pre><code>var c = <span class="hljs-keyword">new</span> makerjs.paths.Circle([<span class="hljs-number">10</span>, <span class="hljs-number">10</span>], <span class="hljs-number">7</span>);
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -91,13 +122,16 @@ title: Api - Circle Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L195">core/paths.ts:195</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L212">core/paths.ts:212</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Class for circle path, created from 2 points.</p>
 					</div>
+					<p>Example:</p>
+					<pre><code>var c = <span class="hljs-keyword">new</span> makerjs.paths.Circle([<span class="hljs-number">5</span>, <span class="hljs-number">15</span>], [<span class="hljs-number">25</span>, <span class="hljs-number">15</span>]);
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -123,13 +157,16 @@ title: Api - Circle Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L203">core/paths.ts:203</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/paths.ts#L225">core/paths.ts:225</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Class for circle path, created from 3 points.</p>
 					</div>
+					<p>Example:</p>
+					<pre><code>var c = <span class="hljs-keyword">new</span> makerjs.paths.Circle([<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">10</span>], [<span class="hljs-number">20</span>, <span class="hljs-number">0</span>]);
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">

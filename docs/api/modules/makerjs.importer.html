@@ -17,6 +17,7 @@ title: Api - importer Module
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.importer.html#fromsvgpathdata" class="tsd-kind-icon">fromSVGPath<wbr>Data</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.importer.html#parsenumericlist" class="tsd-kind-icon">parse<wbr>Numeric<wbr>List</a></li>
 				</ul>
 			</section>
 		</div>
@@ -44,6 +45,41 @@ title: Api - importer Module
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="parsenumericlist" class="tsd-anchor"></a>
+		<h3>parse<wbr>Numeric<wbr>List</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">parse<wbr>Numeric<wbr>List<span class="tsd-signature-symbol">(</span>s<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/importer.ts#L14">core/importer.ts:14</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a numeric array from a string of numbers. The numbers may be delimited by anything non-numeric.</p>
+					</div>
+					<p>Example:</p>
+					<pre><code><span class="hljs-keyword">var</span> n = makerjs.importer.parseNumericList(<span class="hljs-string">'5, 10, 15.20 25-30-35 4e1 .5'</span>);
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>s: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The string of numbers.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array of numbers.</p>
 			</li>
 		</ul>
 	</section>

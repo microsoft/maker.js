@@ -30,6 +30,7 @@ title: Api - RoundRectangle Class
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.roundrectangle.html#origin" class="tsd-kind-icon">origin</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.roundrectangle.html#paths" class="tsd-kind-icon">paths</a></li>
 				</ul>
 			</section>
@@ -43,6 +44,7 @@ title: Api - RoundRectangle Class
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Round<wbr>Rectangle<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.roundrectangle.html" class="tsd-signature-type">RoundRectangle</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Round<wbr>Rectangle<span class="tsd-signature-symbol">(</span>modelToSurround<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, margin<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.roundrectangle.html" class="tsd-signature-type">RoundRectangle</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
@@ -51,16 +53,75 @@ title: Api - RoundRectangle Class
 						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/RoundRectangle.ts#L5">models/RoundRectangle.ts:5</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a round rectangle from width, height, and corner radius.</p>
+					</div>
+					<p>Example:</p>
+					<pre><code>var r = <span class="hljs-keyword">new</span> makerjs.models.RoundRectangle(<span class="hljs-number">100</span>, <span class="hljs-number">50</span>, <span class="hljs-number">5</span>);
+</code></pre>
+				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
 						<h5>width: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Width of the rectangle.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5>height: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Height of the rectangle.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5>radius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Corner radius.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.roundrectangle.html" class="tsd-signature-type">RoundRectangle</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/RoundRectangle.ts#L19">models/RoundRectangle.ts:19</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a round rectangle which will surround a model.</p>
+					</div>
+					<p>Example:</p>
+					<pre><code>var b = <span class="hljs-keyword">new</span> makerjs.models.BoltRectangle(<span class="hljs-number">30</span>, <span class="hljs-number">20</span>, <span class="hljs-number">1</span>); <span class="hljs-comment">//draw a bolt rectangle so we have something to surround</span>
+var r = <span class="hljs-keyword">new</span> makerjs.models.RoundRectangle(b, <span class="hljs-number">2.5</span>);   <span class="hljs-comment">//surround it</span>
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelToSurround: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>IModel object.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>margin: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Distance from the model. This will also become the corner radius.</p>
+							</div>
+						</div>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.roundrectangle.html" class="tsd-signature-type">RoundRectangle</a></h4>
@@ -70,6 +131,16 @@ title: Api - RoundRectangle Class
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="origin" class="tsd-anchor"></a>
+		<h3>origin</h3>
+		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/RoundRectangle.ts#L4">models/RoundRectangle.ts:4</a></li>
+			</ul>
+		</aside>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 		<a name="paths" class="tsd-anchor"></a>
 		<h3>paths</h3>
