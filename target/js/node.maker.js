@@ -132,6 +132,36 @@ var MakerJs;
     }
     MakerJs.extendObject = extendObject;
     /**
+     * Test to see if a variable is a function.
+     *
+     * @param value The object to test.
+     * @returns True if the object is a function type.
+     */
+    function isFunction(value) {
+        return typeof value === 'function';
+    }
+    MakerJs.isFunction = isFunction;
+    /**
+     * Test to see if a variable is a number.
+     *
+     * @param value The object to test.
+     * @returns True if the object is a number type.
+     */
+    function isNumber(value) {
+        return typeof value === 'number';
+    }
+    MakerJs.isNumber = isNumber;
+    /**
+     * Test to see if a variable is an object.
+     *
+     * @param value The object to test.
+     * @returns True if the object is an object type.
+     */
+    function isObject(value) {
+        return typeof value === 'object';
+    }
+    MakerJs.isObject = isObject;
+    /**
      * @private
      */
     var x = {};
@@ -1171,34 +1201,40 @@ var MakerJs;
                     args[_i - 0] = arguments[_i];
                 }
                 this.type = MakerJs.pathType.Circle;
-                if (args.length == 2) {
-                    if (typeof args[1] === 'number') {
-                        this.origin = args[0];
-                        this.radius = args[1];
-                    }
-                    else {
-                        //Circle from 2 points
-                        this.origin = MakerJs.point.average(args[0], args[1]);
+                switch (args.length) {
+                    case 1:
+                        this.origin = [0, 0];
+                        this.radius = args[0];
+                        break;
+                    case 2:
+                        if (MakerJs.isNumber(args[1])) {
+                            this.origin = args[0];
+                            this.radius = args[1];
+                        }
+                        else {
+                            //Circle from 2 points
+                            this.origin = MakerJs.point.average(args[0], args[1]);
+                            this.radius = MakerJs.measure.pointDistance(this.origin, args[0]);
+                        }
+                        break;
+                    default:
+                        //Circle from 3 points
+                        //create 2 lines with 2nd point in common
+                        var lines = [
+                            new Line(args[0], args[1]),
+                            new Line(args[1], args[2])
+                        ];
+                        //create perpendicular lines
+                        var perpendiculars = [];
+                        for (var i = 2; i--;) {
+                            var midpoint = MakerJs.point.middle(lines[i]);
+                            perpendiculars.push(MakerJs.path.rotate(lines[i], 90, midpoint));
+                        }
+                        //find intersection of slopes of perpendiculars
+                        this.origin = MakerJs.point.fromSlopeIntersection(perpendiculars[0], perpendiculars[1]);
+                        //radius is distance to any of the 3 points
                         this.radius = MakerJs.measure.pointDistance(this.origin, args[0]);
-                    }
-                }
-                else {
-                    //Circle from 3 points
-                    //create 2 lines with 2nd point in common
-                    var lines = [
-                        new Line(args[0], args[1]),
-                        new Line(args[1], args[2])
-                    ];
-                    //create perpendicular lines
-                    var perpendiculars = [];
-                    for (var i = 2; i--;) {
-                        var midpoint = MakerJs.point.middle(lines[i]);
-                        perpendiculars.push(MakerJs.path.rotate(lines[i], 90, midpoint));
-                    }
-                    //find intersection of slopes of perpendiculars
-                    this.origin = MakerJs.point.fromSlopeIntersection(perpendiculars[0], perpendiculars[1]);
-                    //radius is distance to any of the 3 points
-                    this.radius = MakerJs.measure.pointDistance(this.origin, args[0]);
+                        break;
                 }
             }
             return Circle;
@@ -3098,6 +3134,37 @@ var MakerJs;
         }());
         exporter.Exporter = Exporter;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var importer;
+    (function (importer) {
+        /**
+         * Create a numeric array from a string of numbers. The numbers may be delimited by anything non-numeric.
+         *
+         * Example:
+         * ```
+         * var n = makerjs.importer.parseNumericList('5, 10, 15.20 25-30-35 4e1 .5');
+         * ```
+         *
+         * @param s The string of numbers.
+         * @returns Array of numbers.
+         */
+        function parseNumericList(s) {
+            var result = [];
+            //http://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly
+            var re = /[\.-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+            var matches;
+            while ((matches = re.exec(s)) !== null) {
+                if (matches.index === re.lastIndex) {
+                    re.lastIndex++;
+                }
+                result.push(parseFloat(matches[0]));
+            }
+            return result;
+        }
+        importer.parseNumericList = parseNumericList;
+    })(importer = MakerJs.importer || (MakerJs.importer = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
@@ -5422,15 +5489,7 @@ var MakerJs;
                 if (command === currCmd.command) {
                     currCmd.absolute = true;
                 }
-                //http://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly
-                var regexpCommandData = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
-                var dataMatches;
-                while ((dataMatches = regexpCommandData.exec(dataString)) !== null) {
-                    if (dataMatches.index === regexpCommandData.lastIndex) {
-                        regexpCommandData.lastIndex++;
-                    }
-                    currCmd.data.push(parseFloat(dataMatches[0]));
-                }
+                currCmd.data = importer.parseNumericList(dataString);
                 var fn = map[currCmd.command];
                 if (fn) {
                     currPoint = fn(currCmd);
@@ -5958,9 +6017,35 @@ var MakerJs;
     var models;
     (function (models) {
         var ConnectTheDots = (function () {
-            function ConnectTheDots(isClosed, points) {
+            function ConnectTheDots() {
                 var _this = this;
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i - 0] = arguments[_i];
+                }
                 this.paths = {};
+                var isClosed;
+                var points;
+                switch (args.length) {
+                    case 1:
+                        isClosed = true;
+                        var coords;
+                        if (Array.isArray(args[0])) {
+                            coords = args[0];
+                        }
+                        else {
+                            coords = MakerJs.importer.parseNumericList(args[0]);
+                        }
+                        points = [];
+                        for (var i = 0; i < coords.length; i += 2) {
+                            points.push([coords[i], coords[i + 1]]);
+                        }
+                        break;
+                    case 2:
+                        isClosed = args[0];
+                        points = args[1];
+                        break;
+                }
                 var connect = function (a, b) {
                     _this.paths["ShapeLine" + i] = new MakerJs.paths.Line(points[a], points[b]);
                 };
@@ -6116,8 +6201,31 @@ var MakerJs;
     var models;
     (function (models) {
         var RoundRectangle = (function () {
-            function RoundRectangle(width, height, radius) {
+            function RoundRectangle() {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i - 0] = arguments[_i];
+                }
                 this.paths = {};
+                var width;
+                var height;
+                var radius = 0;
+                switch (args.length) {
+                    case 3:
+                        width = args[0];
+                        height = args[1];
+                        radius = args[2];
+                        break;
+                    case 2:
+                        radius = args[1];
+                    //fall through to 1
+                    case 1:
+                        var m = MakerJs.measure.modelExtents(args[0]);
+                        this.origin = MakerJs.point.subtract(m.low, [radius, radius]);
+                        width = m.high[0] - m.low[0] + 2 * radius;
+                        height = m.high[1] - m.low[1] + 2 * radius;
+                        break;
+                }
                 var maxRadius = Math.min(height, width) / 2;
                 radius = Math.min(radius, maxRadius);
                 var wr = width - radius;
@@ -6244,16 +6352,26 @@ var MakerJs;
                 this.paths = {};
                 var width;
                 var height;
-                if (args.length == 2) {
+                if (args.length === 2 && !MakerJs.isObject(args[0])) {
                     width = args[0];
                     height = args[1];
                 }
                 else {
-                    //use measurement
-                    var m = args[0];
-                    this.origin = m.low;
-                    width = m.high[0] - m.low[0];
-                    height = m.high[1] - m.low[1];
+                    var margin = 0;
+                    var m;
+                    if (MakerJs.isModel(args[0])) {
+                        m = MakerJs.measure.modelExtents(args[0]);
+                        if (args.length === 2) {
+                            margin = args[1];
+                        }
+                    }
+                    else {
+                        //use measurement
+                        m = args[0];
+                    }
+                    this.origin = MakerJs.point.subtract(m.low, [margin, margin]);
+                    width = m.high[0] - m.low[0] + 2 * margin;
+                    height = m.high[1] - m.low[1] + 2 * margin;
                 }
                 this.paths = new models.ConnectTheDots(true, [[0, 0], [width, 0], [width, height], [0, height]]).paths;
             }

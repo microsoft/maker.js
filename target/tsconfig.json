@@ -21,6 +21,7 @@
     "../src/core/equal.ts",
     "../src/core/measure.ts",
     "../src/core/exporter.ts",
+    "../src/core/importer.ts",
     "../src/core/dxf.ts",
     "../src/core/solvers.ts",
     "../src/core/intersect.ts",

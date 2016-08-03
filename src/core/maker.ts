@@ -101,6 +101,36 @@ namespace MakerJs {
     }
 
     /**
+     * Test to see if a variable is a function.
+     * 
+     * @param value The object to test.
+     * @returns True if the object is a function type.
+     */
+    export function isFunction(value: any): boolean {
+        return typeof value === 'function';
+    }
+
+    /**
+     * Test to see if a variable is a number.
+     * 
+     * @param value The object to test.
+     * @returns True if the object is a number type.
+     */
+    export function isNumber(value: any): boolean {
+        return typeof value === 'number';
+    }
+
+    /**
+     * Test to see if a variable is an object.
+     * 
+     * @param value The object to test.
+     * @returns True if the object is an object type.
+     */
+    export function isObject(value: any): boolean {
+        return typeof value === 'object';
+    }
+
+    /**
      * @private
      */
     var x = {} as IPath;
