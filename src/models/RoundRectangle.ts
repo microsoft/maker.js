@@ -1,10 +1,63 @@
 namespace MakerJs.models {
 
     export class RoundRectangle implements IModel {
-
+        public origin: IPoint;
         public paths: IPathMap = {};
 
-        constructor(width: number, height: number, radius: number) {
+        /**
+         * Create a round rectangle from width, height, and corner radius.
+         * 
+         * Example:
+         * ```
+         * var r = new makerjs.models.RoundRectangle(100, 50, 5);
+         * ```
+         * 
+         * @param width Width of the rectangle.
+         * @param height Height of the rectangle.
+         * @param radius Corner radius.
+         */
+        constructor(width: number, height: number, radius: number);
+
+        /**
+         * Create a round rectangle which will surround a model.
+         * 
+         * Example:
+         * ```
+         * var e = new makerjs.models.Ellipse(20, 30); // draw an ellipse so we have something to surround.
+         * var r = new makerjs.models.RoundRectangle(e, 3); // draws a rectangle surrounding the ellipse by 3 units.
+         * ```
+         * 
+         * @param modelToSurround IModel object.
+         * @param margin Distance from the model. This will also become the corner radius.
+         */
+        constructor(modelToSurround: IModel, margin: number);
+
+        constructor(...args: any[]) {
+            var width: number;
+            var height: number;
+            var radius = 0;
+
+            switch (args.length) {
+
+                case 3:
+                    width = args[0] as number;
+                    height = args[1] as number;
+                    radius = args[2] as number;
+                    break;
+
+                case 2:
+                    radius = args[1] as number;
+                    //fall through to 1
+
+                case 1:
+                    var m = measure.modelExtents(args[0] as IModel);
+                    this.origin = point.subtract(m.low, [radius, radius]);
+
+                    width = m.high[0] - m.low[0] + 2 * radius;
+                    height = m.high[1] - m.low[1] + 2 * radius;
+
+                    break;
+            }
 
             var maxRadius = Math.min(height, width) / 2;
 
