@@ -922,16 +922,7 @@ namespace MakerJs.importer {
                 currCmd.absolute = true;
             }
 
-            //http://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly
-            var regexpCommandData = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
-            var dataMatches: RegExpExecArray;
-
-            while ((dataMatches = regexpCommandData.exec(dataString)) !== null) {
-                if (dataMatches.index === regexpCommandData.lastIndex) {
-                    regexpCommandData.lastIndex++;
-                }
-                currCmd.data.push(parseFloat(dataMatches[0]));
-            }
+            currCmd.data = parseNumericList(dataString);
 
             var fn = map[currCmd.command];
             if (fn) {

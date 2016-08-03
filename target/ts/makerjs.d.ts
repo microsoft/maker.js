@@ -65,6 +65,27 @@ declare namespace MakerJs {
      */
     function extendObject(target: Object, other: Object): Object;
     /**
+     * Test to see if a variable is a function.
+     *
+     * @param value The object to test.
+     * @returns True if the object is a function type.
+     */
+    function isFunction(value: any): boolean;
+    /**
+     * Test to see if a variable is a number.
+     *
+     * @param value The object to test.
+     * @returns True if the object is a number type.
+     */
+    function isNumber(value: any): boolean;
+    /**
+     * Test to see if a variable is an object.
+     *
+     * @param value The object to test.
+     * @returns True if the object is an object type.
+     */
+    function isObject(value: any): boolean;
+    /**
      * An x-y point in a two-dimensional space.
      * Implemented as an array with 2 elements. The first element is x, the second element is y.
      *
@@ -991,7 +1012,23 @@ declare namespace MakerJs.paths {
         origin: IPoint;
         radius: number;
         /**
+         * Class for circle path, created from radius. Origin will be [0, 0].
+         *
+         * Example:
+         * ```
+         * var c = new makerjs.paths.Circle(7);
+         * ```
+         *
+         * @param radius The radius of the circle.
+         */
+        constructor(radius: number);
+        /**
          * Class for circle path, created from origin point and radius.
+         *
+         * Example:
+         * ```
+         * var c = new makerjs.paths.Circle([10, 10], 7);
+         * ```
          *
          * @param origin The center point of the circle.
          * @param radius The radius of the circle.
@@ -1000,12 +1037,22 @@ declare namespace MakerJs.paths {
         /**
          * Class for circle path, created from 2 points.
          *
+         * Example:
+         * ```
+         * var c = new makerjs.paths.Circle([5, 15], [25, 15]);
+         * ```
+         *
          * @param pointA First point on the circle.
          * @param pointB Second point on the circle.
          */
         constructor(pointA: IPoint, pointB: IPoint);
         /**
          * Class for circle path, created from 3 points.
+         *
+         * Example:
+         * ```
+         * var c = new makerjs.paths.Circle([0, 0], [0, 10], [20, 0]);
+         * ```
          *
          * @param pointA First point on the circle.
          * @param pointB Second point on the circle.
@@ -1544,6 +1591,20 @@ declare namespace MakerJs.exporter {
         exportItem(itemId: string, itemToExport: any, origin: IPoint): void;
     }
 }
+declare namespace MakerJs.importer {
+    /**
+     * Create a numeric array from a string of numbers. The numbers may be delimited by anything non-numeric.
+     *
+     * Example:
+     * ```
+     * var n = makerjs.importer.parseNumericList('5, 10, 15.20 25-30-35 4e1 .5');
+     * ```
+     *
+     * @param s The string of numbers.
+     * @returns Array of numbers.
+     */
+    function parseNumericList(s: string): number[];
+}
 declare namespace MakerJs.exporter {
     function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;
     function toDXF(pathsToExport: IPath[], options?: IDXFRenderOptions): string;
@@ -1920,6 +1981,39 @@ declare namespace MakerJs.models {
 declare namespace MakerJs.models {
     class ConnectTheDots implements IModel {
         paths: IPathMap;
+        /**
+         * Create a model by connecting points designated in a string. The model will be 'closed' - i.e. the last point will connect to the first point.
+         *
+         * Example:
+         * ```
+         * var c = new makerjs.models.ConnectTheDots('-10 0 10 0 0 20'); // 3 coordinates to form a triangle
+         * ```
+         *
+         * @param numericList String containing a list of numbers which can be delimited by spaces, commas, or anything non-numeric (Note: [exponential notation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential) is allowed).
+         */
+        constructor(numericList: string);
+        /**
+         * Create a model by connecting points designated in a numeric array. The model will be 'closed' - i.e. the last point will connect to the first point.
+         *
+         * Example:
+         * ```
+         * var c = new makerjs.models.ConnectTheDots([-10, 0, 10, 0, 0, 20]); // 3 coordinates to form a triangle
+         * ```
+         *
+         * @param coords Array of coordinates.
+         */
+        constructor(coords: number[]);
+        /**
+         * Create a model by connecting points designated in an array of points. The model may be closed, or left open.
+         *
+         * Example:
+         * ```
+         * var c = new makerjs.models.ConnectTheDots(false, [[-10, 0], [10, 0], [0, 20]]); // 3 coordinates left open
+         * ```
+         *
+         * @param isClosed Flag to specify if last point should connect to the first point.
+         * @param points Array of IPoints.
+         */
         constructor(isClosed: boolean, points: IPoint[]);
     }
 }
@@ -1951,8 +2045,34 @@ declare namespace MakerJs.models {
 }
 declare namespace MakerJs.models {
     class RoundRectangle implements IModel {
+        origin: IPoint;
         paths: IPathMap;
+        /**
+         * Create a round rectangle from width, height, and corner radius.
+         *
+         * Example:
+         * ```
+         * var r = new makerjs.models.RoundRectangle(100, 50, 5);
+         * ```
+         *
+         * @param width Width of the rectangle.
+         * @param height Height of the rectangle.
+         * @param radius Corner radius.
+         */
         constructor(width: number, height: number, radius: number);
+        /**
+         * Create a round rectangle which will surround a model.
+         *
+         * Example:
+         * ```
+         * var b = new makerjs.models.BoltRectangle(30, 20, 1); //draw a bolt rectangle so we have something to surround
+         * var r = new makerjs.models.RoundRectangle(b, 2.5);   //surround it
+         * ```
+         *
+         * @param modelToSurround IModel object.
+         * @param margin Distance from the model. This will also become the corner radius.
+         */
+        constructor(modelToSurround: IModel, margin: number);
     }
 }
 declare namespace MakerJs.models {
@@ -1972,7 +2092,43 @@ declare namespace MakerJs.models {
     class Rectangle implements IModel {
         paths: IPathMap;
         origin: IPoint;
+        /**
+         * Create a rectangle from width and height.
+         *
+         * Example:
+         * ```
+         * var r = new makerjs.models.Rectangle(100, 50);
+         * ```
+         *
+         * @param width Width of the rectangle.
+         * @param height Height of the rectangle.
+         */
         constructor(width: number, height: number);
+        /**
+         * Create a rectangle which will surround a model.
+         *
+         * Example:
+         * ```
+         * var e = new makerjs.models.Ellipse(17, 10); // draw an ellipse so we have something to surround.
+         * var r = new makerjs.models.Rectangle(e, 3); // draws a rectangle surrounding the ellipse by 3 units.
+         * ```
+         *
+         * @param modelToSurround IModel object.
+         * @param margin Optional distance from the model.
+         */
+        constructor(modelToSurround: IModel, margin?: number);
+        /**
+         * Create a rectangle from a measurement.
+         *
+         * Example:
+         * ```
+         * var e = new makerjs.models.Ellipse(17, 10); // draw an ellipse so we have something to measure.
+         * var m = makerjs.measure.modelExtents(e);    // measure the ellipse.
+         * var r = new makerjs.models.Rectangle(m);    // draws a rectangle surrounding the ellipse.
+         * ```
+         *
+         * @param measurement IMeasure object. See http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#pathextents and http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents to get measurements of paths and models.
+         */
         constructor(measurement: IMeasure);
     }
 }
