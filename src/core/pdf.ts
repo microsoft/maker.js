@@ -47,13 +47,13 @@
             function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 function single(walkedPath: IWalkPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, 1);
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
                     doc.path(pathData).stroke(opts.stroke);
                 }
 
                 chains.map(function (chain: IChain) {
                     if (chain.links.length > 1) {
-                        var pathData = chainToSVGPathData(chain, offset, 1);
+                        var pathData = chainToSVGPathData(chain, offset);
                         doc.path(pathData).stroke(opts.stroke);
 
                     } else {

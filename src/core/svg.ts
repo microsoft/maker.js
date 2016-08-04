@@ -46,22 +46,21 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function svgCoords(p: IPoint, scale: number): IPoint {
-        var pointMirroredY = point.mirror(p, false, true);
-        return point.scale(pointMirroredY, scale);
+    function svgCoords(p: IPoint): IPoint {
+        return point.mirror(p, false, true);
     }
 
     /**
      * Convert a chain to SVG path data.
      */
-    export function chainToSVGPathData(chain: IChain, offset: IPoint, scale: number): string {
+    export function chainToSVGPathData(chain: IChain, offset: IPoint): string {
 
         function offsetPoint(p: IPoint) {
             return point.add(p, offset);
         }
 
         var first = chain.links[0];
-        var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0], scale));
+        var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0]));
 
         var d: ISvgPathData = ['M', round(firstPoint[0]), round(firstPoint[1])];
 
@@ -77,7 +76,7 @@ namespace MakerJs.exporter {
                 });
                 path.moveRelative(fixedPath, offset);
 
-                fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1], scale)), link.reversed, d);
+                fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1])), link.reversed, d);
             }
         }
 
@@ -146,14 +145,14 @@ namespace MakerJs.exporter {
     /**
      * Convert a path to SVG path data.
      */
-    export function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint, scale: number): string {
+    export function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint): string {
         var fn = svgPathDataMap[pathToExport.type];
         if (fn) {
             var fixedPath: IPath;
-            path.moveTemporary([pathToExport], [point.scale(offset, scale)], function () {
-                fixedPath = path.scale(path.mirror(pathToExport, false, true), scale);
+            path.moveTemporary([pathToExport], [offset], function () {
+                fixedPath = path.mirror(pathToExport, false, true);
             });
-            path.moveRelative(fixedPath, point.scale(offset2, scale));
+            path.moveRelative(fixedPath, offset2);
 
             var d = fn(fixedPath);
             return d.join(' ');
@@ -202,7 +201,7 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function getPathDataByLayer(modelToExport: IModel, offset: IPoint, scale: number, options: IFindChainsOptions) {
+    function getPathDataByLayer(modelToExport: IModel, offset: IPoint, options: IFindChainsOptions) {
         var pathDataByLayer: IPathDataMap = {};
 
         var beziers = getBezierModelsWithPaths(modelToExport);
@@ -233,7 +232,7 @@ namespace MakerJs.exporter {
             function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 function single(walkedPath: IWalkPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, scale);
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
                     pathDataByLayer[layer].push(pathData);
                 }
 
@@ -241,7 +240,7 @@ namespace MakerJs.exporter {
 
                 chains.map(function (chain: IChain) {
                     if (chain.links.length > 1) {
-                        var pathData = chainToSVGPathData(chain, offset, scale);
+                        var pathData = chainToSVGPathData(chain, offset);
                         pathDataByLayer[layer].push(pathData);
                     } else {
                         single(chain.links[0].walkedPath);
@@ -315,7 +314,8 @@ namespace MakerJs.exporter {
 
         function fixPoint(pointToFix: IPoint): IPoint {
             //in DXF Y increases upward. in SVG, Y increases downward
-            return svgCoords(pointToFix, opts.scale);
+            var pointMirroredY = svgCoords(pointToFix);
+            return point.scale(pointMirroredY, opts.scale);
         }
 
         function fixPath(pathToFix: IPath, origin: IPoint): IPath {
@@ -424,7 +424,7 @@ namespace MakerJs.exporter {
 
         if (opts.useSvgPathOnly) {
 
-            var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, opts.scale, { byLayers: true });
+            var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true });
 
             for (var layer in pathDataByLayer) {
                 var pathData = pathDataByLayer[layer].join(' ');
