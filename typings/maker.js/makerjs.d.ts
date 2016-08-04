@@ -1,7 +1,10 @@
 // Type definitions for Maker.js
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
-// Definitions: https://github.com/borisyankov/DefinitelyTyped
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+/// <reference path="../bezier-js/bezier-js.d.ts" />
+/// <reference path="../opentype/opentype.d.ts" />
+/// <reference path="../pdfkit/pdfkit.d.ts" />
 /**
  * Root module for Maker.js.
  *
@@ -1834,11 +1837,11 @@ declare namespace MakerJs.exporter {
     /**
      * Convert a chain to SVG path data.
      */
-    function chainToSVGPathData(chain: IChain, offset: IPoint, scale: number): string;
+    function chainToSVGPathData(chain: IChain, offset: IPoint): string;
     /**
      * Convert a path to SVG path data.
      */
-    function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint, scale: number): string;
+    function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint): string;
     function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
