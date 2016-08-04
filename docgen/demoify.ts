@@ -151,10 +151,12 @@ function homePage() {
 
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
 
+        var anim = new makerjs.exporter.XmlTag('img', {src: '/maker.js/images/anim-wheel.gif'});
+
         var h2 = new makerjs.exporter.XmlTag('h2');
         h2.innerText = 'Latest demos';
 
-        var demos = [h2.toString()];
+        var demos = [anim.toString(), h2.toString()];
 
         var max = 6;
 
