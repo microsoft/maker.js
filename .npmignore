@@ -1,5 +1,6 @@
 .npmignore
 node_modules/
+archive/*
 debug/*
 demos/*
 docgen/*
@@ -9,5 +10,7 @@ external/*
 playground/*
 src/*
 target/*
+test/*
 typings/*
+tsconfig.json
 tsd.json
