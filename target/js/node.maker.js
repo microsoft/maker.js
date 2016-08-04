@@ -4826,12 +4826,12 @@ var MakerJs;
             offset = MakerJs.point.add(offset, options.origin);
             MakerJs.model.findChains(scaledModel, function (chains, loose, layer) {
                 function single(walkedPath) {
-                    var pathData = exporter.pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, 1);
+                    var pathData = exporter.pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
                     doc.path(pathData).stroke(opts.stroke);
                 }
                 chains.map(function (chain) {
                     if (chain.links.length > 1) {
-                        var pathData = exporter.chainToSVGPathData(chain, offset, 1);
+                        var pathData = exporter.chainToSVGPathData(chain, offset);
                         doc.path(pathData).stroke(opts.stroke);
                     }
                     else {
@@ -4877,19 +4877,18 @@ var MakerJs;
         /**
          * @private
          */
-        function svgCoords(p, scale) {
-            var pointMirroredY = MakerJs.point.mirror(p, false, true);
-            return MakerJs.point.scale(pointMirroredY, scale);
+        function svgCoords(p) {
+            return MakerJs.point.mirror(p, false, true);
         }
         /**
          * Convert a chain to SVG path data.
          */
-        function chainToSVGPathData(chain, offset, scale) {
+        function chainToSVGPathData(chain, offset) {
             function offsetPoint(p) {
                 return MakerJs.point.add(p, offset);
             }
             var first = chain.links[0];
-            var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0], scale));
+            var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0]));
             var d = ['M', MakerJs.round(firstPoint[0]), MakerJs.round(firstPoint[1])];
             for (var i = 0; i < chain.links.length; i++) {
                 var link = chain.links[i];
@@ -4901,7 +4900,7 @@ var MakerJs;
                         fixedPath = MakerJs.path.mirror(pathContext, false, true);
                     });
                     MakerJs.path.moveRelative(fixedPath, offset);
-                    fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1], scale)), link.reversed, d);
+                    fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1])), link.reversed, d);
                 }
             }
             if (chain.endless) {
@@ -4946,14 +4945,14 @@ var MakerJs;
         /**
          * Convert a path to SVG path data.
          */
-        function pathToSVGPathData(pathToExport, offset, offset2, scale) {
+        function pathToSVGPathData(pathToExport, offset, offset2) {
             var fn = svgPathDataMap[pathToExport.type];
             if (fn) {
                 var fixedPath;
-                MakerJs.path.moveTemporary([pathToExport], [MakerJs.point.scale(offset, scale)], function () {
-                    fixedPath = MakerJs.path.scale(MakerJs.path.mirror(pathToExport, false, true), scale);
+                MakerJs.path.moveTemporary([pathToExport], [offset], function () {
+                    fixedPath = MakerJs.path.mirror(pathToExport, false, true);
                 });
-                MakerJs.path.moveRelative(fixedPath, MakerJs.point.scale(offset2, scale));
+                MakerJs.path.moveRelative(fixedPath, offset2);
                 var d = fn(fixedPath);
                 return d.join(' ');
             }
@@ -4993,7 +4992,7 @@ var MakerJs;
         /**
          * @private
          */
-        function getPathDataByLayer(modelToExport, offset, scale, options) {
+        function getPathDataByLayer(modelToExport, offset, options) {
             var pathDataByLayer = {};
             var beziers = getBezierModelsWithPaths(modelToExport);
             var tempKey = 'tempPaths';
@@ -5012,13 +5011,13 @@ var MakerJs;
             });
             MakerJs.model.findChains(modelToExport, function (chains, loose, layer) {
                 function single(walkedPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, scale);
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
                     pathDataByLayer[layer].push(pathData);
                 }
                 pathDataByLayer[layer] = [];
                 chains.map(function (chain) {
                     if (chain.links.length > 1) {
-                        var pathData = chainToSVGPathData(chain, offset, scale);
+                        var pathData = chainToSVGPathData(chain, offset);
                         pathDataByLayer[layer].push(pathData);
                     }
                     else {
@@ -5074,7 +5073,8 @@ var MakerJs;
             }
             function fixPoint(pointToFix) {
                 //in DXF Y increases upward. in SVG, Y increases downward
-                return svgCoords(pointToFix, opts.scale);
+                var pointMirroredY = svgCoords(pointToFix);
+                return MakerJs.point.scale(pointMirroredY, opts.scale);
             }
             function fixPath(pathToFix, origin) {
                 //mirror creates a copy, so we don't modify the original
@@ -5160,7 +5160,7 @@ var MakerJs;
             });
             append(svgGroup.getOpeningTag(false));
             if (opts.useSvgPathOnly) {
-                var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, opts.scale, { byLayers: true });
+                var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true });
                 for (var layer in pathDataByLayer) {
                     var pathData = pathDataByLayer[layer].join(' ');
                     createElement("path", { "d": pathData }, layer);
