@@ -4,6 +4,8 @@ Maker.js, a Microsoft Garage project, is a JavaScript library for creating line 
 
 [Demos](http://microsoft.github.io/maker.js/demos/) - [Documentation](http://microsoft.github.io/maker.js/docs/)
 
+![Sample animation](http://microsoft.github.io/maker.js/images/anim-wheel.gif)
+
 ## Features
 
 ### Drawing with JavaScript code
