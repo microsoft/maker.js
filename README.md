@@ -20,7 +20,7 @@ Other people's Models can be required the Node.js way, [modified](http://microso
 
 Models can be [scaled](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Scaling), [measured](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](http://microsoft.github.io/maker.js/docs/basic-drawing/#Units).
 
-NEW: Models can be [distorted](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort).
+NEW: Paths can be [distorted](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort).
 
 Models can be [rotated](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Rotating) or [mirrored](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Mirroring).
 
