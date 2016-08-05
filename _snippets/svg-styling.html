@@ -26,7 +26,7 @@ var model = {
     }
 };
 
-var svg = makerjs.exporter.toSVG(model);
+var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
 
 document.write(svg);
 document.write('<hr/><code>');
@@ -48,7 +48,7 @@ var model = {
     }
 };
 
-var svg = makerjs.exporter.toSVG(model);
+var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
 
 document.write(svg);
 document.write('<hr/><code>');
