@@ -5,7 +5,7 @@ function Text(fontPath, text, fontSize, combine) {
     var _this = this;
 
     //load a font asynchronously
-    opentype.load('../fonts/' + fontPath, function (err, font) {
+    opentype.load('/maker.js/fonts/' + fontPath, function (err, font) {
         if (!err) {
 
             var textModel = new makerjs.models.Text(font, text, fontSize, combine);
