@@ -602,3 +602,19 @@ body.side-by-side {
         height: 90px;
     }
 }
+
+body.full-screen {
+    padding: 0;
+}
+
+.full-screen header, .full-screen #rendering-options-menu, .full-screen section#download, .full-screen .about, .full-screen footer {
+    display: none;
+}
+
+.full-screen section#blueprint-canvas {
+    margin-bottom: 0;
+}
+
+.full-screen .code-header {
+    margin-top: 0;
+}
