@@ -44,7 +44,7 @@
     }
 
     //private members
-
+    var minDockSideBySide = 1024;
     var pixelsPerInch = 100;
     var iframe: HTMLIFrameElement;
     var customizeMenu: HTMLDivElement;
@@ -78,6 +78,11 @@
         hasKit: false
     };
     var setParamTimeoutId: NodeJS.Timer;
+    var dockModes = {
+        None: '',
+        SideBySide: 'side-by-side',
+        FullScreen: 'full-screen'
+    }
 
     function isLandscapeOrientation() {
         return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -334,20 +339,29 @@
         setProcessedModel(new Frown(), notes);
     }
 
-    function dockEditor(dock: boolean) {
+    function dockEditor(newDockMode: string) {
 
-        if (dock) {
+        for (var modeId in dockModes) {
+            var removeDockMode = dockModes[modeId];
+            if (!removeDockMode) continue;
+            document.body.classList.remove(removeDockMode);
+        }
+
+        if (newDockMode === dockModes.SideBySide) {
+
+            document.body.classList.add(dockModes.SideBySide);
+
             var sectionEditor = document.querySelector('section.editor') as HTMLElement;
             var codeHeader = document.querySelector('.code-header') as HTMLElement;
 
             codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
         } else {
 
-            document.body.classList.remove('side-by-side');
-
             codeMirrorEditor.setSize(null, 'auto');
             codeMirrorEditor.refresh();
         }
+
+        dockMode = newDockMode;
     }
 
     function arraysEqual(a, b) {
@@ -759,6 +773,7 @@
 
     //public members
 
+    export var dockMode: string;
     export var codeMirrorEditor: CodeMirror.Editor;
     export var codeMirrorOptions: CodeMirror.EditorConfiguration = {
         lineNumbers: true,
@@ -1190,10 +1205,10 @@
             render();
         }
 
-        if (document.body.classList.contains('side-by-side')) {
-            dockEditor(document.body.offsetWidth >= 960);
+        if (document.body.offsetWidth < minDockSideBySide) {
+            dockEditor(dockModes.None);
         } else {
-            dockEditor(false);
+            dockEditor(dockModes.SideBySide);
         }
 
     }
@@ -1231,9 +1246,8 @@
             codeMirrorOptions
         );
 
-        if (document.body.offsetWidth >= 1280) {
-            toggleClass('side-by-side');
-            dockEditor(true);
+        if (document.body.offsetWidth >= minDockSideBySide) {
+            dockEditor(dockModes.SideBySide);
         }
 
         setProcessedModel(new Wait(), '', false);

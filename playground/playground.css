@@ -587,18 +587,6 @@ body.side-by-side {
     margin-top: 0;
 }
 
-.code-header button.side-by-side .undock {
-    display: none;
-}
-
-.side-by-side .code-header button.side-by-side .dock {
-    display: none;
-}
-
-.side-by-side .code-header button.side-by-side .undock {
-    display: inline;
-}
-
 .side-by-side .about {
     border-top: 1px solid #ccc;
     margin-top: 3em;
@@ -612,12 +600,5 @@ body.side-by-side {
 @media only screen and (max-width: 540px) {
     header {
         height: 90px;
-    }
-}
-
-/* hide the dock button for smaller screens */
-@media only screen and (max-width: 1024px) {
-    .code-header button.side-by-side {
-        display: none;
     }
 }

@@ -15,6 +15,7 @@ var MakerJsPlayground;
         return QueryStringParams;
     }());
     //private members
+    var minDockSideBySide = 1024;
     var pixelsPerInch = 100;
     var iframe;
     var customizeMenu;
@@ -48,6 +49,11 @@ var MakerJsPlayground;
         hasKit: false
     };
     var setParamTimeoutId;
+    var dockModes = {
+        None: '',
+        SideBySide: 'side-by-side',
+        FullScreen: 'full-screen'
+    };
     function isLandscapeOrientation() {
         return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
     }
@@ -236,17 +242,24 @@ var MakerJsPlayground;
         MakerJsPlayground.viewScale = null;
         setProcessedModel(new Frown(), notes);
     }
-    function dockEditor(dock) {
-        if (dock) {
+    function dockEditor(newDockMode) {
+        for (var modeId in dockModes) {
+            var removeDockMode = dockModes[modeId];
+            if (!removeDockMode)
+                continue;
+            document.body.classList.remove(removeDockMode);
+        }
+        if (newDockMode === dockModes.SideBySide) {
+            document.body.classList.add(dockModes.SideBySide);
             var sectionEditor = document.querySelector('section.editor');
             var codeHeader = document.querySelector('.code-header');
             MakerJsPlayground.codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
         }
         else {
-            document.body.classList.remove('side-by-side');
             MakerJsPlayground.codeMirrorEditor.setSize(null, 'auto');
             MakerJsPlayground.codeMirrorEditor.refresh();
         }
+        MakerJsPlayground.dockMode = newDockMode;
     }
     function arraysEqual(a, b) {
         if (!a || !b)
@@ -911,11 +924,11 @@ var MakerJsPlayground;
             fitOnScreen();
             render();
         }
-        if (document.body.classList.contains('side-by-side')) {
-            dockEditor(document.body.offsetWidth >= 960);
+        if (document.body.offsetWidth < minDockSideBySide) {
+            dockEditor(dockModes.None);
         }
         else {
-            dockEditor(false);
+            dockEditor(dockModes.SideBySide);
         }
     }
     MakerJsPlayground.onWindowResize = onWindowResize;
@@ -941,9 +954,8 @@ var MakerJsPlayground;
         MakerJsPlayground.codeMirrorEditor = CodeMirror(function (elt) {
             pre.parentNode.replaceChild(elt, pre);
         }, MakerJsPlayground.codeMirrorOptions);
-        if (document.body.offsetWidth >= 1280) {
-            toggleClass('side-by-side');
-            dockEditor(true);
+        if (document.body.offsetWidth >= minDockSideBySide) {
+            dockEditor(dockModes.SideBySide);
         }
         setProcessedModel(new Wait(), '', false);
         MakerJsPlayground.querystringParams = new QueryStringParams();
