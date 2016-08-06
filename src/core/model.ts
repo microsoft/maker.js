@@ -102,9 +102,9 @@ namespace MakerJs.model {
      */
     export function center(modelToCenter: IModel) {
         var m = measure.modelExtents(modelToCenter);
-        var d = point.subtract(m.high, m.low);
-        var c = point.scale(d, -.5);
-        modelToCenter.origin = c;
+        var c = point.average(m.high, m.low);
+        var o = point.subtract(modelToCenter.origin || [0, 0], c);
+        modelToCenter.origin = o;
         return modelToCenter;
     }
 
@@ -407,6 +407,18 @@ namespace MakerJs.model {
 
         walkRecursive(modelContext, '', [0, 0], [], '');
 
+    }
+
+    /**
+     * Move a model so its bounding box begins at [0, 0].
+     * 
+     * @param modelToZero The model to zero.
+     */
+    export function zero(modelToZero: IModel) {
+        var m = measure.modelExtents(modelToZero);
+        var z = point.subtract(modelToZero.origin || [0, 0], m.low);
+        modelToZero.origin = z;
+        return modelToZero;
     }
 
 }
