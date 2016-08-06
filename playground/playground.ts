@@ -78,6 +78,7 @@
         hasKit: false
     };
     var setParamTimeoutId: NodeJS.Timer;
+    var animationTimeoutId: NodeJS.Timer;
     var dockModes = {
         None: '',
         SideBySide: 'side-by-side',
@@ -112,9 +113,11 @@
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
 
         var paramValues = [];
-        var paramHtml = '';
+        var paramHtml: string[] = [];
 
         if (metaParameters) {
+
+            var sliders = 0;
 
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
@@ -129,6 +132,8 @@
                 switch (attrs.type) {
 
                     case 'range':
+                        sliders++;
+
                         attrs.title = attrs.value;
                         attrs['id'] = id;
                         attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
@@ -227,13 +232,18 @@
                 }
 
                 div.innerTextEscaped = true;
-                paramHtml += div.toString();
+                paramHtml.push(div.toString());
             }
+
+            //if (sliders) {
+                //var button = new makerjs.exporter.XmlTag('input', { type: 'button', onclick:'MakerJsPlayground.animate()', value: 'animate'});
+                //paramHtml.push(button.toString());
+            //}
         }
 
         processed.paramValues = paramValues;
 
-        paramsDiv.innerHTML = paramHtml;
+        paramsDiv.innerHTML = paramHtml.join('');
         paramsDiv.setAttribute('disabled', 'true');
     }
 
@@ -734,12 +744,25 @@
         renderInWorker.worker.postMessage(options);
     }
 
+    function selectParamSlider(index: number) {
+        var div = document.querySelectorAll('#params > div')[index];
+        if (!div) return;
+
+        var slider = div.querySelector('input[type=range]') as HTMLInputElement;
+        var numberBox = div.querySelector('input[type=number]') as HTMLInputElement;
+        return {
+            classList: div.classList,
+            slider: slider,
+            numberBox: numberBox
+        };
+    }
+
     function throttledSetParam(index: number, value: any) {
 
         //sync slider / numberbox
-        var div = document.querySelectorAll('#params > div')[index];
-        var slider = div.querySelector('input[type=range]') as HTMLInputElement;
-        var numberBox = div.querySelector('input[type=number]') as HTMLInputElement;
+        var div = selectParamSlider(index);
+        var slider = div.slider;
+        var numberBox = div.numberBox;
 
         if (slider && numberBox) {
             if (div.classList.contains('toggle-number')) {
@@ -894,6 +917,41 @@
         setParamTimeoutId = setTimeout(function () {
             throttledSetParam(index, value);
         }, 50);
+    }
+
+    export function animate(paramIndex: number = 0, milliSeconds: number = 150, steps = 20) {
+        clearInterval(animationTimeoutId);
+
+        var div = selectParamSlider(paramIndex);
+        if (!div) return;
+        if (!div.slider) {
+            animate(paramIndex + 1);
+            return;
+        }
+
+        var max = parseFloat(div.slider.max);
+        var min = parseFloat(div.slider.min);
+
+        do {
+            var step = Math.floor((max - min) / steps);
+            steps /= 2;
+        } while (step === 0)
+
+        div.slider.value = min.toString();
+
+        animationTimeoutId = setInterval(function () {
+
+            var currValue = parseFloat(div.slider.value);
+
+            if (currValue < max) {
+                var newValue = currValue + step;
+                div.slider.value = newValue.toString();
+                throttledSetParam(paramIndex, newValue);
+            } else {
+                animate(paramIndex + 1);
+            }
+
+        }, milliSeconds);
     }
 
     export function toggleSliderNumberBox(label: HTMLLabelElement, index: number) {

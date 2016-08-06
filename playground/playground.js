@@ -49,6 +49,7 @@ var MakerJsPlayground;
         hasKit: false
     };
     var setParamTimeoutId;
+    var animationTimeoutId;
     var dockModes = {
         None: '',
         SideBySide: 'side-by-side',
@@ -76,8 +77,9 @@ var MakerJsPlayground;
     }
     function populateParams(metaParameters) {
         var paramValues = [];
-        var paramHtml = '';
+        var paramHtml = [];
         if (metaParameters) {
+            var sliders = 0;
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
                 var id = 'slider_' + i;
@@ -87,6 +89,7 @@ var MakerJsPlayground;
                 var numberBox = null;
                 switch (attrs.type) {
                     case 'range':
+                        sliders++;
                         attrs.title = attrs.value;
                         attrs['id'] = id;
                         attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
@@ -156,11 +159,11 @@ var MakerJsPlayground;
                     div.innerText += numberBox.toString();
                 }
                 div.innerTextEscaped = true;
-                paramHtml += div.toString();
+                paramHtml.push(div.toString());
             }
         }
         processed.paramValues = paramValues;
-        paramsDiv.innerHTML = paramHtml;
+        paramsDiv.innerHTML = paramHtml.join('');
         paramsDiv.setAttribute('disabled', 'true');
     }
     function generateCodeFromKit(id, kit) {
@@ -558,11 +561,23 @@ var MakerJsPlayground;
         //tell the worker to process the job
         renderInWorker.worker.postMessage(options);
     }
-    function throttledSetParam(index, value) {
-        //sync slider / numberbox
+    function selectParamSlider(index) {
         var div = document.querySelectorAll('#params > div')[index];
+        if (!div)
+            return;
         var slider = div.querySelector('input[type=range]');
         var numberBox = div.querySelector('input[type=number]');
+        return {
+            classList: div.classList,
+            slider: slider,
+            numberBox: numberBox
+        };
+    }
+    function throttledSetParam(index, value) {
+        //sync slider / numberbox
+        var div = selectParamSlider(index);
+        var slider = div.slider;
+        var numberBox = div.numberBox;
         if (slider && numberBox) {
             if (div.classList.contains('toggle-number')) {
                 //numberbox is master
@@ -675,6 +690,38 @@ var MakerJsPlayground;
         }, 50);
     }
     MakerJsPlayground.setParam = setParam;
+    function animate(paramIndex, milliSeconds, steps) {
+        if (paramIndex === void 0) { paramIndex = 0; }
+        if (milliSeconds === void 0) { milliSeconds = 150; }
+        if (steps === void 0) { steps = 20; }
+        clearInterval(animationTimeoutId);
+        var div = selectParamSlider(paramIndex);
+        if (!div)
+            return;
+        if (!div.slider) {
+            animate(paramIndex + 1);
+            return;
+        }
+        var max = parseFloat(div.slider.max);
+        var min = parseFloat(div.slider.min);
+        do {
+            var step = Math.floor((max - min) / steps);
+            steps /= 2;
+        } while (step === 0);
+        div.slider.value = min.toString();
+        animationTimeoutId = setInterval(function () {
+            var currValue = parseFloat(div.slider.value);
+            if (currValue < max) {
+                var newValue = currValue + step;
+                div.slider.value = newValue.toString();
+                throttledSetParam(paramIndex, newValue);
+            }
+            else {
+                animate(paramIndex + 1);
+            }
+        }, milliSeconds);
+    }
+    MakerJsPlayground.animate = animate;
     function toggleSliderNumberBox(label, index) {
         var id;
         if (toggleClass('toggle-number', label.parentElement)) {
