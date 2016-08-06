@@ -61,27 +61,36 @@ namespace MakerJs.model {
      * @param origin Optional offset reference point.
      */
     export function originate(modelToOriginate: IModel, origin?: IPoint) {
-        if (!modelToOriginate) return;
 
-        var newOrigin = point.add(modelToOriginate.origin, origin);
+        function innerOriginate(m: IModel, o: IPoint) {
+            if (!m) return;
 
-        if (modelToOriginate.type === models.BezierCurve.typeName) {
-            path.moveRelative((modelToOriginate as models.BezierCurve).seed, newOrigin);
-        }
+            var newOrigin = point.add(m.origin, o);
 
-        if (modelToOriginate.paths) {
-            for (var id in modelToOriginate.paths) {
-                path.moveRelative(modelToOriginate.paths[id], newOrigin);
+            if (m.type === models.BezierCurve.typeName) {
+                path.moveRelative((m as models.BezierCurve).seed, newOrigin);
             }
-        }
 
-        if (modelToOriginate.models) {
-            for (var id in modelToOriginate.models) {
-                originate(modelToOriginate.models[id], newOrigin);
+            if (m.paths) {
+                for (var id in m.paths) {
+                    path.moveRelative(m.paths[id], newOrigin);
+                }
             }
+
+            if (m.models) {
+                for (var id in m.models) {
+                    innerOriginate(m.models[id], newOrigin);
+                }
+            }
+
+            m.origin = point.zero();
         }
 
-        modelToOriginate.origin = point.zero();
+        innerOriginate(modelToOriginate, origin ? point.subtract([0, 0], origin) : [0, 0]);
+
+        if (origin) {
+            modelToOriginate.origin = origin;
+        }
 
         return modelToOriginate;
     }
