@@ -87,6 +87,19 @@ namespace MakerJs.model {
     }
 
     /**
+     * Center a model at [0, 0].
+     * 
+     * @param modelToCenter The model to center.
+     */
+    export function center(modelToCenter: IModel) {
+        var m = measure.modelExtents(modelToCenter);
+        var d = point.subtract(m.high, m.low);
+        var c = point.scale(d, -.5);
+        modelToCenter.origin = c;
+        return modelToCenter;
+    }
+
+    /**
      * Create a clone of a model, mirrored on either or both x and y axes.
      * 
      * @param modelToMirror The model to mirror.
