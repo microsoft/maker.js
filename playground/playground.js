@@ -62,6 +62,8 @@ var MakerJsPlayground;
         return "http" === url.substr(0, 4);
     }
     function isIJavaScriptErrorDetails(result) {
+        if (!result)
+            return false;
         var sample = {
             colno: 0,
             lineno: 0,
@@ -613,6 +615,9 @@ var MakerJsPlayground;
         setProcessedModel(new Wait());
         processed.kit = null;
         populateParams(null);
+        if (iframe) {
+            document.body.removeChild(iframe);
+        }
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
@@ -630,10 +635,19 @@ var MakerJsPlayground;
         else {
             markdown = JSON.stringify(value);
         }
-        var className = 'no-notes';
         var html = '';
         if (markdown) {
             html = marked(markdown);
+        }
+        else {
+            html = cleanHtml(processed.html);
+        }
+        setNotesHtml(html);
+    }
+    MakerJsPlayground.setNotes = setNotes;
+    function setNotesHtml(html) {
+        var className = 'no-notes';
+        if (html) {
             document.body.classList.remove(className);
         }
         else {
@@ -641,7 +655,6 @@ var MakerJsPlayground;
         }
         document.getElementById('notes').innerHTML = html;
     }
-    MakerJsPlayground.setNotes = setNotes;
     function updateZoomScale() {
         var z = document.getElementById('zoom-display');
         z.innerText = '(' + (MakerJsPlayground.viewScale * (MakerJsPlayground.renderUnits ? 100 : 1)).toFixed(0) + '%)';
@@ -813,9 +826,19 @@ var MakerJsPlayground;
         return false;
     }
     MakerJsPlayground.browserIsMicrosoft = browserIsMicrosoft;
+    function cleanHtml(html) {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        var svg = div.querySelector('svg');
+        if (svg) {
+            div.removeChild(svg);
+            return div.innerHTML;
+        }
+        return html;
+    }
     function render() {
         viewSvgContainer.innerHTML = '';
-        var html = processed.html;
+        var html = '';
         var unitScale = MakerJsPlayground.renderUnits ? makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
         var strokeWidth = MakerJsPlayground.svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
         if (processed.model) {

@@ -94,6 +94,8 @@
     }
 
     function isIJavaScriptErrorDetails(result: any) {
+        if (!result) return false;
+
         var sample: IJavaScriptErrorDetails = {
             colno: 0,
             lineno: 0,
@@ -819,6 +821,10 @@
         processed.kit = null;
         populateParams(null);
 
+        if (iframe) {
+            document.body.removeChild(iframe);
+        }
+
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
 
@@ -842,10 +848,19 @@
             markdown = JSON.stringify(value);
         }
 
-        var className = 'no-notes';
         var html = '';
         if (markdown) {
             html = marked(markdown);
+        } else {
+            html = cleanHtml(processed.html);
+        }
+
+        setNotesHtml(html);
+    }
+
+    function setNotesHtml(html: string) {
+        var className = 'no-notes';
+        if (html) {
             document.body.classList.remove(className);
         } else {
             document.body.classList.add(className);
@@ -1070,11 +1085,24 @@
         return false;
     }
 
+    function cleanHtml(html: string) {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+
+        var svg = div.querySelector('svg');
+        if (svg) {
+            div.removeChild(svg);
+            return div.innerHTML;
+        }
+
+        return html;
+    }
+
     export function render() {
 
         viewSvgContainer.innerHTML = '';
 
-        var html = processed.html;
+        var html = '';
 
         var unitScale = renderUnits ? makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
 
