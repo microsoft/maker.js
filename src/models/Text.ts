@@ -4,7 +4,7 @@
 
         public models: IModelMap = {};
 
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, center = false) {
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false) {
 
             var charIndex = 0;
             var combineOptions: ICombineOptions = {};
@@ -72,7 +72,7 @@
 
                 charModel.origin = [x, 0];
 
-                if (center) {
+                if (centerCharacterOrigin) {
                     var m = measure.modelExtents(charModel);
                     var w = m.high[0] - m.low[0];
                     model.originate(charModel, [x + w / 2, 0]);
