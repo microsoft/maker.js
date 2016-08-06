@@ -4,13 +4,12 @@
 
         public models: IModelMap = {};
 
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false) {
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, center = false) {
 
             var charIndex = 0;
             var combineOptions: ICombineOptions = {};
 
             var cb = (glyph: opentypejs.Glyph, x: number, y: number, _fontSize: number, options: opentypejs.RenderOptions) => {
-                var m = glyph.getMetrics();
                 var charModel: IModel = {};
                 var firstPoint: IPoint;
                 var currPoint: IPoint;
@@ -71,8 +70,13 @@
 
                 });
 
-                //TODO - add centering
                 charModel.origin = [x, 0];
+
+                if (center) {
+                    var m = measure.modelExtents(charModel);
+                    var w = m.high[0] - m.low[0];
+                    model.originate(charModel, [x + w / 2, 0]);
+                }
 
                 if (combine && charIndex > 0) {
                     model.combine(this, charModel, false, true, false, true, combineOptions);
