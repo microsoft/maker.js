@@ -144,8 +144,15 @@ var MakerJsRequireIframe;
             html = '';
             //reinstate alert
             window.alert = originalAlert;
+            var originalFn = parent.makerjs.exporter.toSVG;
+            var captureExportedModel;
+            parent.makerjs.exporter.toSVG = function (model, options) {
+                captureExportedModel = model;
+                return originalFn(model, options);
+            };
             //when all requirements are collected, run the code again, using its requirements
             runCodeGlobal(javaScript);
+            parent.makerjs.exporter.toSVG = originalFn;
             if (errorReported)
                 return;
             //yield thread for the script tag to execute
@@ -153,11 +160,16 @@ var MakerJsRequireIframe;
                 //restore properties from the "this" keyword
                 var model = {};
                 var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
+                var hasProps = false;
                 for (var i = 0; i < props.length; i++) {
                     var prop = props[i];
                     if (prop in window) {
                         model[prop] = window[prop];
+                        hasProps = true;
                     }
+                }
+                if (!hasProps) {
+                    model = null;
                 }
                 var orderedDependencies = [];
                 var scripts = head.getElementsByTagName('script');
@@ -167,7 +179,7 @@ var MakerJsRequireIframe;
                     }
                 }
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(html, window.module.exports || model, orderedDependencies);
+                parent.MakerJsPlayground.processResult(html, window.module.exports || model || captureExportedModel, orderedDependencies);
             }, 0);
         }
         ;

@@ -205,8 +205,18 @@ namespace MakerJsRequireIframe {
             //reinstate alert
             window.alert = originalAlert;
 
+            var originalFn = parent.makerjs.exporter.toSVG;
+            var captureExportedModel: MakerJs.IModel;
+
+            parent.makerjs.exporter.toSVG = function (model: MakerJs.IModel, options?: MakerJs.exporter.ISVGRenderOptions): string {
+                captureExportedModel = model;
+                return originalFn(model, options);
+            };
+
             //when all requirements are collected, run the code again, using its requirements
             runCodeGlobal(javaScript);
+
+            parent.makerjs.exporter.toSVG = originalFn;
 
             if (errorReported) return;
 
@@ -216,11 +226,17 @@ namespace MakerJsRequireIframe {
                 //restore properties from the "this" keyword
                 var model: MakerJs.IModel = {};
                 var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
+                var hasProps = false;
                 for (var i = 0; i < props.length; i++) {
                     var prop = props[i];
                     if (prop in window) {
                         model[prop] = window[prop];
+                        hasProps = true;
                     }
+                }
+
+                if (!hasProps) {
+                    model = null;
                 }
 
                 var orderedDependencies: string[] = [];
@@ -232,7 +248,7 @@ namespace MakerJsRequireIframe {
                 }
 
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(html, window.module.exports || model, orderedDependencies);
+                parent.MakerJsPlayground.processResult(html, window.module.exports || model || captureExportedModel, orderedDependencies);
 
             }, 0);
 
@@ -280,7 +296,7 @@ namespace MakerJsRequireIframe {
 
     function devNull() { }
 
-    var mockMakerJs = {};
+    var mockMakerJs = {} as typeof MakerJs;
 
     function mockWalk(src: Object, dest: Object) {
 
