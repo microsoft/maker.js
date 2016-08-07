@@ -249,13 +249,17 @@ var MakerJsPlayground;
     }
     function dockEditor(newDockMode) {
         for (var modeId in dockModes) {
-            var removeDockMode = dockModes[modeId];
-            if (!removeDockMode)
+            var dm = dockModes[modeId];
+            if (!dm)
                 continue;
-            document.body.classList.remove(removeDockMode);
+            if (newDockMode === dm) {
+                document.body.classList.add(dm);
+            }
+            else {
+                document.body.classList.remove(dm);
+            }
         }
         if (newDockMode === dockModes.SideBySide) {
-            document.body.classList.add(dockModes.SideBySide);
             var sectionEditor = document.querySelector('section.editor');
             var codeHeader = document.querySelector('.code-header');
             MakerJsPlayground.codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
@@ -314,6 +318,9 @@ var MakerJsPlayground;
             updateLockedPathNotes();
         }
         render();
+        if (MakerJsPlayground.onViewportChange) {
+            MakerJsPlayground.onViewportChange();
+        }
     }
     function getLockedPathSvgElement() {
         var root = viewSvgContainer.querySelector(viewModelRootSelector);
@@ -390,6 +397,9 @@ var MakerJsPlayground;
         window.addEventListener('resize', onWindowResize);
         window.addEventListener('orientationchange', onWindowResize);
         MakerJsPlayground.pointers = new Pointer.Manager(view, '#pointers', margin, getZoom, setZoom, onPointerClick, onPointerReset);
+        if (MakerJsPlayground.onInit) {
+            MakerJsPlayground.onInit();
+        }
     }
     function onPointerClick(srcElement) {
         if (!keepEventElement && srcElement && srcElement.tagName && srcElement.tagName == 'text') {
@@ -485,6 +495,9 @@ var MakerJsPlayground;
         }
         else if (!updateLockedPathNotes()) {
             setNotesFromModelOrKit();
+        }
+        if (MakerJsPlayground.onViewportChange) {
+            MakerJsPlayground.onViewportChange();
         }
     }
     function constructOnMainThread() {
@@ -693,6 +706,15 @@ var MakerJsPlayground;
         else if (isIJavaScriptErrorDetails(result)) {
             //render script error
             highlightCodeError(result);
+            if (MakerJsPlayground.onViewportChange) {
+                MakerJsPlayground.onViewportChange();
+            }
+        }
+        else {
+            render();
+            if (MakerJsPlayground.onViewportChange) {
+                MakerJsPlayground.onViewportChange();
+            }
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -775,6 +797,8 @@ var MakerJsPlayground;
     MakerJsPlayground.deActivateParam = deActivateParam;
     function fitNatural() {
         MakerJsPlayground.pointers.reset();
+        if (!processed.measurement)
+            return;
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -796,6 +820,8 @@ var MakerJsPlayground;
     function fitOnScreen() {
         if (MakerJsPlayground.pointers)
             MakerJsPlayground.pointers.reset();
+        if (!processed.measurement)
+            return;
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -994,7 +1020,10 @@ var MakerJsPlayground;
             fitOnScreen();
             render();
         }
-        if (document.body.offsetWidth < minDockSideBySide) {
+        if (MakerJsPlayground.fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        }
+        else if (document.body.offsetWidth < minDockSideBySide) {
             dockEditor(dockModes.None);
         }
         else {
@@ -1024,7 +1053,10 @@ var MakerJsPlayground;
         MakerJsPlayground.codeMirrorEditor = CodeMirror(function (elt) {
             pre.parentNode.replaceChild(elt, pre);
         }, MakerJsPlayground.codeMirrorOptions);
-        if (document.body.offsetWidth >= minDockSideBySide) {
+        if (MakerJsPlayground.fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        }
+        else if (document.body.offsetWidth >= minDockSideBySide) {
             dockEditor(dockModes.SideBySide);
         }
         setProcessedModel(new Wait(), '', false);

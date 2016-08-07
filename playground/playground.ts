@@ -238,8 +238,8 @@
             }
 
             //if (sliders) {
-                //var button = new makerjs.exporter.XmlTag('input', { type: 'button', onclick:'MakerJsPlayground.animate()', value: 'animate'});
-                //paramHtml.push(button.toString());
+            //var button = new makerjs.exporter.XmlTag('input', { type: 'button', onclick:'MakerJsPlayground.animate()', value: 'animate'});
+            //paramHtml.push(button.toString());
             //}
         }
 
@@ -354,14 +354,16 @@
     function dockEditor(newDockMode: string) {
 
         for (var modeId in dockModes) {
-            var removeDockMode = dockModes[modeId];
-            if (!removeDockMode) continue;
-            document.body.classList.remove(removeDockMode);
+            var dm = dockModes[modeId];
+            if (!dm) continue;
+            if (newDockMode === dm) {
+                document.body.classList.add(dm);
+            } else {
+                document.body.classList.remove(dm);
+            }
         }
 
         if (newDockMode === dockModes.SideBySide) {
-
-            document.body.classList.add(dockModes.SideBySide);
 
             var sectionEditor = document.querySelector('section.editor') as HTMLElement;
             var codeHeader = document.querySelector('.code-header') as HTMLElement;
@@ -431,6 +433,11 @@
         }
 
         render();
+
+        if (onViewportChange) {
+            onViewportChange();
+        }
+
     }
 
     function getLockedPathSvgElement() {
@@ -527,6 +534,10 @@
         window.addEventListener('orientationchange', onWindowResize);
 
         pointers = new Pointer.Manager(view, '#pointers', margin, getZoom, setZoom, onPointerClick, onPointerReset);
+
+        if (onInit) {
+            onInit();
+        }
     }
 
     function onPointerClick(srcElement: Element) {
@@ -652,6 +663,10 @@
 
         } else if (!updateLockedPathNotes()) {
             setNotesFromModelOrKit();
+        }
+
+        if (onViewportChange) {
+            onViewportChange();
         }
     }
 
@@ -798,6 +813,9 @@
 
     //public members
 
+    export var onInit: Function;
+    export var onViewportChange: Function;
+    export var fullScreen: boolean
     export var dockMode: string;
     export var codeMirrorEditor: CodeMirror.Editor;
     export var codeMirrorOptions: CodeMirror.EditorConfiguration = {
@@ -923,6 +941,16 @@
 
             //render script error
             highlightCodeError(result as IJavaScriptErrorDetails);
+
+            if (onViewportChange) {
+                onViewportChange();
+            }
+        } else {
+            render();
+
+            if (onViewportChange) {
+                onViewportChange();
+            }
         }
 
     }
@@ -1014,6 +1042,8 @@
 
         pointers.reset();
 
+        if (!processed.measurement) return;
+
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -1043,6 +1073,8 @@
     export function fitOnScreen() {
 
         if (pointers) pointers.reset();
+
+        if (!processed.measurement) return;
 
         var size = getViewSize();
         var halfWidth = size[0] / 2;
@@ -1291,7 +1323,9 @@
             render();
         }
 
-        if (document.body.offsetWidth < minDockSideBySide) {
+        if (fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        } else if (document.body.offsetWidth < minDockSideBySide) {
             dockEditor(dockModes.None);
         } else {
             dockEditor(dockModes.SideBySide);
@@ -1332,7 +1366,9 @@
             codeMirrorOptions
         );
 
-        if (document.body.offsetWidth >= minDockSideBySide) {
+        if (fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        } else if (document.body.offsetWidth >= minDockSideBySide) {
             dockEditor(dockModes.SideBySide);
         }
 
