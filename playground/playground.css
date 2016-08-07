@@ -449,6 +449,10 @@ svg#pointers line {
     left: 1em;
 }
 
+.code-header label {
+    font-size: inherit;
+}
+
 .code-header button {
     font-family: inherit;
     margin-left: 1em;
