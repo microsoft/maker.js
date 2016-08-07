@@ -869,9 +869,9 @@
         var html = '';
         if (markdown) {
             html = marked(markdown);
-        } else {
-            html = cleanHtml(processed.html);
         }
+
+        html += cleanHtml(processed.html)
 
         setNotesHtml(html);
     }
@@ -1375,26 +1375,35 @@
         setProcessedModel(new Wait(), '', false);
 
         querystringParams = new QueryStringParams();
-        var scriptname = querystringParams['script'];
+        var parentLoad = querystringParams['parentload'] as string;
+        if (parentLoad) {
 
-        if (scriptname && !isHttp(scriptname)) {
-
-            if ((scriptname in makerjs.models) && scriptname !== 'Text') {
-
-                var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
-                codeMirrorEditor.getDoc().setValue(code);
-                runCodeFromEditor();
-
-            } else {
-                downloadScript(filenameFromRequireId(scriptname), function (download: string) {
-                    codeMirrorEditor.getDoc().setValue(download);
-                    runCodeFromEditor();
-                });
-            }
-        } else {
+            var fn: Function = parent[parentLoad];
+            var loadCode = fn();
+            codeMirrorEditor.getDoc().setValue(loadCode);
             runCodeFromEditor();
-        }
 
+        } else {
+            var scriptname = querystringParams['script'] as string;
+
+            if (scriptname && !isHttp(scriptname)) {
+
+                if ((scriptname in makerjs.models) && scriptname !== 'Text') {
+
+                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                    codeMirrorEditor.getDoc().setValue(code);
+                    runCodeFromEditor();
+
+                } else {
+                    downloadScript(filenameFromRequireId(scriptname), function (download: string) {
+                        codeMirrorEditor.getDoc().setValue(download);
+                        runCodeFromEditor();
+                    });
+                }
+            } else {
+                runCodeFromEditor();
+            }
+        }
     };
 
 }

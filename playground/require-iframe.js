@@ -83,7 +83,8 @@ var MakerJsRequireIframe;
     var reloads = [];
     var previousId = null;
     var counter = new Counter();
-    var html = '';
+    var htmls = [];
+    var logs = [];
     var error = null;
     var errorReported = false;
     var required = {
@@ -91,8 +92,21 @@ var MakerJsRequireIframe;
         './../target/js/node.maker.js': parent.makerjs
     };
     //override document.write
-    document.write = function (markup) {
-        html += markup;
+    document.write = function (html) {
+        htmls.push(html);
+    };
+    //override console.log
+    console.log = function (entry) {
+        switch (typeof entry) {
+            case 'number':
+                logs.push('' + entry);
+                break;
+            case 'string':
+                logs.push(entry);
+                break;
+            default:
+                logs.push(JSON.stringify(entry));
+        }
     };
     window.onerror = function () {
         var errorEvent = window.event;
@@ -141,7 +155,8 @@ var MakerJsRequireIframe;
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
         function complete2() {
             //reset any calls to document.write
-            html = '';
+            htmls = [];
+            logs = [];
             //reinstate alert
             window.alert = originalAlert;
             var originalFn = parent.makerjs.exporter.toSVG;
@@ -178,8 +193,16 @@ var MakerJsRequireIframe;
                         orderedDependencies.push(scripts[i].id);
                     }
                 }
+                if (logs.length > 0) {
+                    htmls.push('<hr/><b>console:</b>');
+                    logs.forEach(function (log) {
+                        var logDiv = new parent.makerjs.exporter.XmlTag('div');
+                        logDiv.innerText = log;
+                        htmls.push(logDiv.toString());
+                    });
+                }
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(html, window.module.exports || model || captureExportedModel, orderedDependencies);
+                parent.MakerJsPlayground.processResult(htmls.join(''), window.module.exports || model || captureExportedModel, orderedDependencies);
             }, 0);
         }
         ;
