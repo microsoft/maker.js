@@ -31,19 +31,7 @@ document.write(svg);
 <p>Example output:</p>
 
 <script>
-var makerjs = require('makerjs');
-
-var model = { 
-  paths: {
-    "v": new makerjs.paths.Line([0, 0], [0, 100]),
-    "h": new makerjs.paths.Line([0, 0], [100, 0]),
-    "arc":new makerjs.paths.Arc([0, 0], 100, 0, 90)
-  }
-};
-
-var svg = makerjs.exporter.toSVG(model);
-
-document.write(svg);
+    evalLastPre();
 </script>
 
 <p>
