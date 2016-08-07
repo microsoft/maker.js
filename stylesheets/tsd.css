@@ -450,6 +450,8 @@ ul.tsd-parameters > li.tsd-parameter-siganture, ul.tsd-type-parameters > li.tsd-
 ul.tsd-parameters h5, ul.tsd-type-parameters h5 { font-size: 16px; margin: 1em 0 0.5em 0; }
 ul.tsd-parameters .tsd-comment, ul.tsd-type-parameters .tsd-comment { margin-top: -0.5em; }
 
+.tsd-comment { position: relative; }
+
 .tsd-sources { font-size: 14px; color: #808080; margin: 0 0 1em 0; }
 .tsd-sources a { color: #808080; text-decoration: underline; }
 .tsd-sources ul, .tsd-sources p { margin: 0 !important; }
@@ -580,7 +582,14 @@ svg path {
     stroke: #fff;
 }
 
-iframe.trynow {
+button.livedoc-play {
+    position: absolute;
+    right: 0;
+    background-color: green;
+    color: white;
+}
+
+iframe.play {
     width: 100%;
     margin-bottom: 20px;
 }

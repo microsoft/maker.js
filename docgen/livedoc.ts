@@ -25,13 +25,13 @@ namespace LiveDoc {
         var code = allCodes.item(codeIndex) as HTMLElement;
         var codeText = code.innerText;
         var pre = code.parentElement;
-        var button = pre.querySelector('button.livedoc-play') as HTMLElement;
+        var button = pre.previousSibling as HTMLElement;
 
         if (button.classList.contains('wait')) return;
         button.classList.add('wait');
 
         var iframe = document.createElement('iframe');
-        iframe.className = 'trynow';
+        iframe.className = 'play';
         iframe.src = 'https://microsoft.github.io/maker.js/playground/embed.html?parentload=getcode';
         iframe.frameBorder = '0';
         iframe.scrolling = 'no';
@@ -71,7 +71,7 @@ namespace LiveDoc {
 
             var pre = code.parentElement;
 
-            var button = '<button class="livedoc-play" onclick="LiveDoc.tryIt(' + i + ')" style="display:none" >play</button>';
+            var button = '<button class="livedoc-play" onclick="LiveDoc.tryIt(' + i + ')" style="display:none" >&nbsp;&#x25BA; Play&nbsp;</button>';
             pre.insertAdjacentHTML('beforebegin', button);
         }
 
