@@ -40,7 +40,7 @@ var model = {
     }
 };
 
-var svg = makerjs.exporter.toSVG(model);
+var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
 
 document.write(svg);
 {% endhighlight %}
@@ -48,29 +48,7 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/1yvfzmgn/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-var makerjs = require('makerjs');
-
-var arc = new makerjs.paths.Arc([0, 0], 100, 45, 135);
-var m = makerjs.measure.pathExtents(arc);
-
-var totalWidth = m.high[0] - m.low[0];
-var totalHeight = m.high[1] - m.low[1];
-
-var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
-measureRect.origin = m.low;
-
-var model = {
-    paths: {
-        arc: arc
-    },
-    models: {
-        measureRect: measureRect
-    }
-};
-
-var svg = makerjs.exporter.toSVG(model);
-
-document.write(svg);
+    evalLastPre();
 </script>
 
 <p>Measure model example:</p>
@@ -95,7 +73,7 @@ var model = {
     }
 };
 
-var svg = makerjs.exporter.toSVG(model);
+var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
 
 document.write(svg);
 {% endhighlight %}
@@ -103,28 +81,7 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/9hyo87d8/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-var makerjs = require('makerjs');
-
-var oval = new makerjs.models.Oval(100, 20);
-makerjs.model.rotate(oval, 30);
-var m = makerjs.measure.modelExtents(oval);
-
-var totalWidth = m.high[0] - m.low[0];
-var totalHeight = m.high[1] - m.low[1];
-
-var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
-measureRect.origin = m.low;
-
-var model = {
-    models: {
-        measureRect: measureRect,
-        oval: oval
-    }
-};
-
-var svg = makerjs.exporter.toSVG(model);
-
-document.write(svg);
+    evalLastPre();
 </script>
 
 <p>
