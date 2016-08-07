@@ -1,5 +1,5 @@
-function evalLastPre() {
-    var preAll = document.body.querySelectorAll('pre');
-    var pre = preAll[preAll.length - 1];
-    eval(pre.innerText);
+function evalLastCode() {
+    var allCodes = document.body.querySelectorAll('code');
+    var code = allCodes[allCodes.length - 1];
+    eval(code.innerText);
 }
