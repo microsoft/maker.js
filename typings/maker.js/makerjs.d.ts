@@ -1139,6 +1139,12 @@ declare namespace MakerJs.model {
      */
     function originate(modelToOriginate: IModel, origin?: IPoint): IModel;
     /**
+     * Center a model at [0, 0].
+     *
+     * @param modelToCenter The model to center.
+     */
+    function center(modelToCenter: IModel): IModel;
+    /**
      * Create a clone of a model, mirrored on either or both x and y axes.
      *
      * @param modelToMirror The model to mirror.
@@ -1213,6 +1219,12 @@ declare namespace MakerJs.model {
      * @param modelCallbackAfterWalk Callback for each model after recursion.
      */
     function walk(modelContext: IModel, options: IWalkOptions): void;
+    /**
+     * Move a model so its bounding box begins at [0, 0].
+     *
+     * @param modelToZero The model to zero.
+     */
+    function zero(modelToZero: IModel): IModel;
 }
 declare namespace MakerJs.model {
     /**
@@ -2171,6 +2183,6 @@ declare namespace MakerJs.models {
 declare namespace MakerJs.models {
     class Text implements IModel {
         models: IModelMap;
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine?: boolean);
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine?: boolean, centerCharacterOrigin?: boolean);
     }
 }
