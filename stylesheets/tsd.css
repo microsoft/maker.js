@@ -583,10 +583,11 @@ svg path {
 }
 
 button.livedoc-play {
-    position: absolute;
-    right: 0;
     background-color: green;
     color: white;
+    font-family: monospace;
+    position: absolute;
+    right: 0;
 }
 
 iframe.play {
