@@ -11,7 +11,7 @@ function evalLastCode() {
     var allCodes = getAllCodes();
     var code = allCodes[allCodes.length - 1];
 
-    document.write('<a name="' + codeOutputId(i) + '"></a>')
+    document.write('<a name="' + codeOutputId(allCodes.length - 1) + '"></a>')
 
     eval(code.innerText);
 }
