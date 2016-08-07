@@ -8,13 +8,18 @@ function getLastCode() {
 }
 
 function evalLastCode() {
-    var code = getLastCode();
+    var allCodes = getAllCodes();
+    var code = allCodes[allCodes.length - 1];
+
+    document.write('<div id="' + codeOutputId(i) + '">')
+
     eval(code.innerText);
 
-    var svgs = document.body.querySelectorAll('svg')
-    var lastSvg = svgs[svgs.length - 1];
+    document.write('</div>')
+}
 
-    code.svgOutput = lastSvg;
+function codeOutputId(i) {
+    return 'code-output-' + i;
 }
 
 function tryIt(codeIndex, button) {
@@ -35,10 +40,12 @@ function tryIt(codeIndex, button) {
     pre.style.display = 'none';
     pre.parentElement.appendChild(iframe);
 
-    if (code.svgOutput) {
-        code.svgOutput.style.display = 'none';
-    }
     button.style.display = 'none';
+
+    var svg = document.getElementById(codeOutputId(codeIndex));
+    if (svg) {
+        svg.style.display = 'none';
+    }
 }
 
 window.addEventListener("load", function load(event) {
