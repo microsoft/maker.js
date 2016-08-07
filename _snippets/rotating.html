@@ -36,16 +36,7 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/vj7uewyk/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
-
-    var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
-    var line2 = new makerjs.paths.Line([0, 0], [100, 0]);
-
-    var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
-
-    var svg = makerjs.exporter.toSVG(paths);
-
-    document.write(svg);
+    evalLastPre();
 </script>
 
 <p>Rotate model example:</p>
@@ -65,13 +56,5 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/8g6r3yjq/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
-
-    var rect1 = new makerjs.models.Rectangle(40, 80);
-
-    makerjs.model.rotate(rect1, 45, [0, 0]);
-
-    var svg = makerjs.exporter.toSVG(rect1);
-
-    document.write(svg);
+    evalLastPre();
 </script>
