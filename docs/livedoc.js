@@ -12,7 +12,7 @@ function evalLastCode() {
     eval(code.innerText);
 }
 
-function tryIt(codeIndex) {
+function tryIt(codeIndex, button) {
     var allCodes = getAllCodes();
     var code = allCodes[codeIndex];
 
@@ -21,13 +21,16 @@ function tryIt(codeIndex) {
     };
 
     var iframe = document.createElement('iframe');
-    iframe.src = 'http://microsoft.github.io/maker.js/playground/embed.html?parentload=getcode';
+    iframe.className = 'trynow';
+    iframe.src = 'https://microsoft.github.io/maker.js/playground/embed.html?parentload=getcode';
     iframe.frameBorder = '0';
     iframe.scrolling = 'no';
 
     var pre = code.parentElement;
     pre.style.display = 'none';
     pre.parentElement.appendChild(iframe);
+
+    button.style.display = 'none';
 }
 
 window.addEventListener("load", function load(event) {
@@ -41,7 +44,7 @@ window.addEventListener("load", function load(event) {
         var code = allCodes[i];
         var pre = code.parentElement;
 
-        var button = '<button onclick="tryIt(' + i + ')" style="display:none" >try it now</button>';
+        var button = '<button onclick="tryIt(' + i + ', this)" style="display:none" >try it now</button>';
         pre.insertAdjacentHTML('afterend', button);
     }
 
