@@ -1,5 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../target/ts/makerjs.d.ts" />
+/// <reference path="../typings/maker.js/makerjs.d.ts" />
 "use strict";
 var fs = require('fs');
 var browserify = require('browserify');
