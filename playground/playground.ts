@@ -869,9 +869,9 @@
         var html = '';
         if (markdown) {
             html = marked(markdown);
-        } else {
-            html = cleanHtml(processed.html);
         }
+
+        html += cleanHtml(processed.html)
 
         setNotesHtml(html);
     }
