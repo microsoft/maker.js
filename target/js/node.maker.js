@@ -1372,26 +1372,45 @@ var MakerJs;
          * @param origin Optional offset reference point.
          */
         function originate(modelToOriginate, origin) {
-            if (!modelToOriginate)
-                return;
-            var newOrigin = MakerJs.point.add(modelToOriginate.origin, origin);
-            if (modelToOriginate.type === MakerJs.models.BezierCurve.typeName) {
-                MakerJs.path.moveRelative(modelToOriginate.seed, newOrigin);
-            }
-            if (modelToOriginate.paths) {
-                for (var id in modelToOriginate.paths) {
-                    MakerJs.path.moveRelative(modelToOriginate.paths[id], newOrigin);
+            function innerOriginate(m, o) {
+                if (!m)
+                    return;
+                var newOrigin = MakerJs.point.add(m.origin, o);
+                if (m.type === MakerJs.models.BezierCurve.typeName) {
+                    MakerJs.path.moveRelative(m.seed, newOrigin);
                 }
-            }
-            if (modelToOriginate.models) {
-                for (var id in modelToOriginate.models) {
-                    originate(modelToOriginate.models[id], newOrigin);
+                if (m.paths) {
+                    for (var id in m.paths) {
+                        MakerJs.path.moveRelative(m.paths[id], newOrigin);
+                    }
                 }
+                if (m.models) {
+                    for (var id in m.models) {
+                        innerOriginate(m.models[id], newOrigin);
+                    }
+                }
+                m.origin = MakerJs.point.zero();
             }
-            modelToOriginate.origin = MakerJs.point.zero();
+            innerOriginate(modelToOriginate, origin ? MakerJs.point.subtract([0, 0], origin) : [0, 0]);
+            if (origin) {
+                modelToOriginate.origin = origin;
+            }
             return modelToOriginate;
         }
         model.originate = originate;
+        /**
+         * Center a model at [0, 0].
+         *
+         * @param modelToCenter The model to center.
+         */
+        function center(modelToCenter) {
+            var m = MakerJs.measure.modelExtents(modelToCenter);
+            var c = MakerJs.point.average(m.high, m.low);
+            var o = MakerJs.point.subtract(modelToCenter.origin || [0, 0], c);
+            modelToCenter.origin = o;
+            return modelToCenter;
+        }
+        model.center = center;
         /**
          * Create a clone of a model, mirrored on either or both x and y axes.
          *
@@ -1660,6 +1679,18 @@ var MakerJs;
             walkRecursive(modelContext, '', [0, 0], [], '');
         }
         model.walk = walk;
+        /**
+         * Move a model so its bounding box begins at [0, 0].
+         *
+         * @param modelToZero The model to zero.
+         */
+        function zero(modelToZero) {
+            var m = MakerJs.measure.modelExtents(modelToZero);
+            var z = MakerJs.point.subtract(modelToZero.origin || [0, 0], m.low);
+            modelToZero.origin = z;
+            return modelToZero;
+        }
+        model.zero = zero;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -6556,14 +6587,14 @@ var MakerJs;
     var models;
     (function (models) {
         var Text = (function () {
-            function Text(font, text, fontSize, combine) {
+            function Text(font, text, fontSize, combine, centerCharacterOrigin) {
                 var _this = this;
                 if (combine === void 0) { combine = false; }
+                if (centerCharacterOrigin === void 0) { centerCharacterOrigin = false; }
                 this.models = {};
                 var charIndex = 0;
                 var combineOptions = {};
                 var cb = function (glyph, x, y, _fontSize, options) {
-                    var m = glyph.getMetrics();
                     var charModel = {};
                     var firstPoint;
                     var currPoint;
@@ -6608,8 +6639,12 @@ var MakerJs;
                         }
                         currPoint = points[0];
                     });
-                    //TODO - add centering
                     charModel.origin = [x, 0];
+                    if (centerCharacterOrigin) {
+                        var m = MakerJs.measure.modelExtents(charModel);
+                        var w = m.high[0] - m.low[0];
+                        MakerJs.model.originate(charModel, [x + w / 2, 0]);
+                    }
                     if (combine && charIndex > 0) {
                         MakerJs.model.combine(_this, charModel, false, true, false, true, combineOptions);
                         delete combineOptions.measureB;
