@@ -119,7 +119,8 @@ namespace MakerJsRequireIframe {
     var reloads: string[] = [];
     var previousId: string = null;
     var counter = new Counter();
-    var html = '';
+    var htmls: string[] = [];
+    var logs: string[] = [];
     var error: Error = null;
     var errorReported = false;
     var required: IRequireMap = {
@@ -128,8 +129,25 @@ namespace MakerJsRequireIframe {
     };
 
     //override document.write
-    document.write = function (markup: string) {
-        html += markup;
+    document.write = function (html: string) {
+        htmls.push(html);
+    };
+
+    //override console.log
+    console.log = function (entry: any) {
+        switch (typeof entry) {
+
+            case 'number':
+                logs.push('' + entry);
+                break;
+
+            case 'string':
+                logs.push(entry);
+                break;
+
+            default:
+                logs.push(JSON.stringify(entry));
+        }
     };
 
     window.onerror = function () {
@@ -200,7 +218,8 @@ namespace MakerJsRequireIframe {
         function complete2() {
 
             //reset any calls to document.write
-            html = '';
+            htmls = [];
+            logs = [];
 
             //reinstate alert
             window.alert = originalAlert;
@@ -247,8 +266,19 @@ namespace MakerJsRequireIframe {
                     }
                 }
 
+                if (logs.length > 0) {
+                    htmls.push('<hr/><b>console:</b>');
+
+                    logs.forEach(function (log) {
+                        var logDiv = new parent.makerjs.exporter.XmlTag('div');
+                        logDiv.innerText = log;
+                        htmls.push(logDiv.toString());
+                    });
+
+                }
+
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(html, window.module.exports || model || captureExportedModel, orderedDependencies);
+                parent.MakerJsPlayground.processResult(htmls.join(''), window.module.exports || model || captureExportedModel, orderedDependencies);
 
             }, 0);
 
