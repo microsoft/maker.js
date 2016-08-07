@@ -54,7 +54,7 @@ var LiveDoc;
             //if (!(keywordPos === 2 || keywordPos === 3)) continue;
             var pre = code.parentElement;
             var button = '<button class="livedoc-play" onclick="LiveDoc.tryIt(' + i + ')" style="display:none" >play</button>';
-            pre.insertAdjacentHTML('afterbegin', button);
+            pre.insertAdjacentHTML('beforebegin', button);
         }
     }, false);
 })(LiveDoc || (LiveDoc = {}));

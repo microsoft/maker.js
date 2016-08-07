@@ -72,7 +72,7 @@ namespace LiveDoc {
             var pre = code.parentElement;
 
             var button = '<button class="livedoc-play" onclick="LiveDoc.tryIt(' + i + ')" style="display:none" >play</button>';
-            pre.insertAdjacentHTML('afterbegin', button);
+            pre.insertAdjacentHTML('beforebegin', button);
         }
 
 
