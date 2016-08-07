@@ -618,3 +618,28 @@ body.full-screen {
 .full-screen .code-header {
     margin-top: 0;
 }
+.full-screen #blueprint-canvas {
+    background-image: none;
+    background-color: inherit;
+}
+
+.full-screen svg#drawing line, .full-screen svg#drawing circle, .full-screen svg#drawing path {
+    stroke: #000;
+}
+
+.full-screen #view svg#drawing text {
+    fill: #777;
+}
+
+.full-screen #view svg#drawing .locked + text {
+    font-weight: bold;
+}
+
+.full-screen #notes {
+    color: #555;
+}
+
+.full-screen #notes h1, .full-screen #notes h2, .full-screen #notes h3, .full-screen #notes h4, .full-screen #notes h5, .full-screen #notes h6, .full-screen #notes th, .full-screen #notes td:first-child {
+    color: #333;
+}
+
