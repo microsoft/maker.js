@@ -30,14 +30,7 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/nrboLkLs/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
-
-    var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
-    var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
-
-    var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
-
-    document.write(svg);
+    evalLastPre();
 </script>
 
 <p>Scale model example:</p>
@@ -60,16 +53,5 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/fyqpqyho/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
-
-    var model = {
-        models: {
-            inner: new makerjs.models.Polygon(6, 40),
-            outer: makerjs.model.scale(new makerjs.models.Polygon(6, 40), 1.7)
-        }
-    };
-
-    var svg = makerjs.exporter.toSVG(model);
-
-    document.write(svg);
+    evalLastPre();
 </script>
