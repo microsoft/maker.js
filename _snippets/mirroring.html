@@ -37,16 +37,7 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/p6aj2ky6/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
-
-    var line1 = new makerjs.paths.Line([0, 0], [100, 100]);
-    var line2 = makerjs.path.mirror(line1, true, false);
-
-    var paths = [line1, line2];
-
-    var svg = makerjs.exporter.toSVG(paths);
-
-    document.write(svg);
+    evalLastPre();
 </script>
 
 <p>Mirror model example:</p>
@@ -71,20 +62,7 @@ document.write(svg);
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/h9fysusv/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-    var makerjs = require('makerjs');
-
-    var ovalArc1 = new makerjs.models.OvalArc(45, 135, 50, 10);
-
-    var model = {
-        models: {
-            ovalArc1: ovalArc1,
-            ovalArc2: makerjs.model.mirror(ovalArc1, false, true)
-        }
-    };
-
-    var svg = makerjs.exporter.toSVG(model);
-
-    document.write(svg);
+    evalLastPre();
 </script>
 
 <p>
