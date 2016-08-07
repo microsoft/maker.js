@@ -1061,22 +1061,31 @@ var MakerJsPlayground;
         }
         setProcessedModel(new Wait(), '', false);
         MakerJsPlayground.querystringParams = new QueryStringParams();
-        var scriptname = MakerJsPlayground.querystringParams['script'];
-        if (scriptname && !isHttp(scriptname)) {
-            if ((scriptname in makerjs.models) && scriptname !== 'Text') {
-                var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
-                MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
-                runCodeFromEditor();
-            }
-            else {
-                downloadScript(filenameFromRequireId(scriptname), function (download) {
-                    MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
-                    runCodeFromEditor();
-                });
-            }
+        var parentLoad = MakerJsPlayground.querystringParams['parentload'];
+        if (parentLoad) {
+            var fn = parent[parentLoad];
+            var loadCode = fn();
+            MakerJsPlayground.codeMirrorEditor.getDoc().setValue(loadCode);
+            runCodeFromEditor();
         }
         else {
-            runCodeFromEditor();
+            var scriptname = MakerJsPlayground.querystringParams['script'];
+            if (scriptname && !isHttp(scriptname)) {
+                if ((scriptname in makerjs.models) && scriptname !== 'Text') {
+                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                    MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
+                    runCodeFromEditor();
+                }
+                else {
+                    downloadScript(filenameFromRequireId(scriptname), function (download) {
+                        MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+                        runCodeFromEditor();
+                    });
+                }
+            }
+            else {
+                runCodeFromEditor();
+            }
         }
     };
 })(MakerJsPlayground || (MakerJsPlayground = {}));
