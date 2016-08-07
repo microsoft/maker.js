@@ -24,8 +24,11 @@ var MakerJsRequireIframe;
         return Temp;
     }());
     function runCodeIsolated(javaScript) {
+        var mockDocument = {
+            write: devNull
+        };
         var Fn = new Function('require', 'module', 'document', 'console', 'alert', 'playgroundRender', javaScript);
-        var result = new Fn(window.collectRequire, window.module, document, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
+        var result = new Fn(window.collectRequire, window.module, mockDocument, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
         return window.module.exports || result;
     }
     function runCodeGlobal(javaScript) {
@@ -82,6 +85,7 @@ var MakerJsRequireIframe;
     var counter = new Counter();
     var html = '';
     var error = null;
+    var errorReported = false;
     var required = {
         'makerjs': parent.makerjs,
         './../target/js/node.maker.js': parent.makerjs
@@ -104,6 +108,7 @@ var MakerJsRequireIframe;
         };
         //send error results back to parent window
         parent.MakerJsPlayground.processResult('', errorDetails);
+        errorReported = true;
     };
     window.collectRequire = function (id) {
         if (id === 'makerjs') {
@@ -135,38 +140,47 @@ var MakerJsRequireIframe;
         window.alert = devNull;
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
         function complete2() {
-            if (error) {
-                runCodeGlobal(javaScript);
-            }
-            else {
-                //reset any calls to document.write
-                html = '';
-                //reinstate alert
-                window.alert = originalAlert;
-                //when all requirements are collected, run the code again, using its requirements
-                runCodeGlobal(javaScript);
-                //yield thread for the script tag to execute
-                setTimeout(function () {
-                    //restore properties from the "this" keyword
-                    var model = {};
-                    var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
-                    for (var i = 0; i < props.length; i++) {
-                        var prop = props[i];
-                        if (prop in window) {
-                            model[prop] = window[prop];
-                        }
+            //reset any calls to document.write
+            html = '';
+            //reinstate alert
+            window.alert = originalAlert;
+            var originalFn = parent.makerjs.exporter.toSVG;
+            var captureExportedModel;
+            parent.makerjs.exporter.toSVG = function (model, options) {
+                captureExportedModel = model;
+                return originalFn(model, options);
+            };
+            //when all requirements are collected, run the code again, using its requirements
+            runCodeGlobal(javaScript);
+            parent.makerjs.exporter.toSVG = originalFn;
+            if (errorReported)
+                return;
+            //yield thread for the script tag to execute
+            setTimeout(function () {
+                //restore properties from the "this" keyword
+                var model = {};
+                var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
+                var hasProps = false;
+                for (var i = 0; i < props.length; i++) {
+                    var prop = props[i];
+                    if (prop in window) {
+                        model[prop] = window[prop];
+                        hasProps = true;
                     }
-                    var orderedDependencies = [];
-                    var scripts = head.getElementsByTagName('script');
-                    for (var i = 0; i < scripts.length; i++) {
-                        if (scripts[i].hasAttribute('id')) {
-                            orderedDependencies.push(scripts[i].id);
-                        }
+                }
+                if (!hasProps) {
+                    model = null;
+                }
+                var orderedDependencies = [];
+                var scripts = head.getElementsByTagName('script');
+                for (var i = 0; i < scripts.length; i++) {
+                    if (scripts[i].hasAttribute('id')) {
+                        orderedDependencies.push(scripts[i].id);
                     }
-                    //send results back to parent window
-                    parent.MakerJsPlayground.processResult(html, window.module.exports || model, orderedDependencies);
-                }, 0);
-            }
+                }
+                //send results back to parent window
+                parent.MakerJsPlayground.processResult(html, window.module.exports || model || captureExportedModel, orderedDependencies);
+            }, 0);
         }
         ;
         function complete1() {

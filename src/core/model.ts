@@ -61,29 +61,51 @@ namespace MakerJs.model {
      * @param origin Optional offset reference point.
      */
     export function originate(modelToOriginate: IModel, origin?: IPoint) {
-        if (!modelToOriginate) return;
 
-        var newOrigin = point.add(modelToOriginate.origin, origin);
+        function innerOriginate(m: IModel, o: IPoint) {
+            if (!m) return;
 
-        if (modelToOriginate.type === models.BezierCurve.typeName) {
-            path.moveRelative((modelToOriginate as models.BezierCurve).seed, newOrigin);
-        }
+            var newOrigin = point.add(m.origin, o);
 
-        if (modelToOriginate.paths) {
-            for (var id in modelToOriginate.paths) {
-                path.moveRelative(modelToOriginate.paths[id], newOrigin);
+            if (m.type === models.BezierCurve.typeName) {
+                path.moveRelative((m as models.BezierCurve).seed, newOrigin);
             }
-        }
 
-        if (modelToOriginate.models) {
-            for (var id in modelToOriginate.models) {
-                originate(modelToOriginate.models[id], newOrigin);
+            if (m.paths) {
+                for (var id in m.paths) {
+                    path.moveRelative(m.paths[id], newOrigin);
+                }
             }
+
+            if (m.models) {
+                for (var id in m.models) {
+                    innerOriginate(m.models[id], newOrigin);
+                }
+            }
+
+            m.origin = point.zero();
         }
 
-        modelToOriginate.origin = point.zero();
+        innerOriginate(modelToOriginate, origin ? point.subtract([0, 0], origin) : [0, 0]);
+
+        if (origin) {
+            modelToOriginate.origin = origin;
+        }
 
         return modelToOriginate;
+    }
+
+    /**
+     * Center a model at [0, 0].
+     * 
+     * @param modelToCenter The model to center.
+     */
+    export function center(modelToCenter: IModel) {
+        var m = measure.modelExtents(modelToCenter);
+        var c = point.average(m.high, m.low);
+        var o = point.subtract(modelToCenter.origin || [0, 0], c);
+        modelToCenter.origin = o;
+        return modelToCenter;
     }
 
     /**
@@ -385,6 +407,18 @@ namespace MakerJs.model {
 
         walkRecursive(modelContext, '', [0, 0], [], '');
 
+    }
+
+    /**
+     * Move a model so its bounding box begins at [0, 0].
+     * 
+     * @param modelToZero The model to zero.
+     */
+    export function zero(modelToZero: IModel) {
+        var m = measure.modelExtents(modelToZero);
+        var z = point.subtract(modelToZero.origin || [0, 0], m.low);
+        modelToZero.origin = z;
+        return modelToZero;
     }
 
 }

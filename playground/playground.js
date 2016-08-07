@@ -15,6 +15,7 @@ var MakerJsPlayground;
         return QueryStringParams;
     }());
     //private members
+    var minDockSideBySide = 1024;
     var pixelsPerInch = 100;
     var iframe;
     var customizeMenu;
@@ -48,6 +49,12 @@ var MakerJsPlayground;
         hasKit: false
     };
     var setParamTimeoutId;
+    var animationTimeoutId;
+    var dockModes = {
+        None: '',
+        SideBySide: 'side-by-side',
+        FullScreen: 'full-screen'
+    };
     function isLandscapeOrientation() {
         return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
     }
@@ -55,6 +62,8 @@ var MakerJsPlayground;
         return "http" === url.substr(0, 4);
     }
     function isIJavaScriptErrorDetails(result) {
+        if (!result)
+            return false;
         var sample = {
             colno: 0,
             lineno: 0,
@@ -70,8 +79,9 @@ var MakerJsPlayground;
     }
     function populateParams(metaParameters) {
         var paramValues = [];
-        var paramHtml = '';
+        var paramHtml = [];
         if (metaParameters) {
+            var sliders = 0;
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
                 var id = 'slider_' + i;
@@ -81,6 +91,7 @@ var MakerJsPlayground;
                 var numberBox = null;
                 switch (attrs.type) {
                     case 'range':
+                        sliders++;
                         attrs.title = attrs.value;
                         attrs['id'] = id;
                         attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
@@ -150,11 +161,11 @@ var MakerJsPlayground;
                     div.innerText += numberBox.toString();
                 }
                 div.innerTextEscaped = true;
-                paramHtml += div.toString();
+                paramHtml.push(div.toString());
             }
         }
         processed.paramValues = paramValues;
-        paramsDiv.innerHTML = paramHtml;
+        paramsDiv.innerHTML = paramHtml.join('');
         paramsDiv.setAttribute('disabled', 'true');
     }
     function generateCodeFromKit(id, kit) {
@@ -236,17 +247,28 @@ var MakerJsPlayground;
         MakerJsPlayground.viewScale = null;
         setProcessedModel(new Frown(), notes);
     }
-    function dockEditor(dock) {
-        if (dock) {
+    function dockEditor(newDockMode) {
+        for (var modeId in dockModes) {
+            var dm = dockModes[modeId];
+            if (!dm)
+                continue;
+            if (newDockMode === dm) {
+                document.body.classList.add(dm);
+            }
+            else {
+                document.body.classList.remove(dm);
+            }
+        }
+        if (newDockMode === dockModes.SideBySide) {
             var sectionEditor = document.querySelector('section.editor');
             var codeHeader = document.querySelector('.code-header');
             MakerJsPlayground.codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
         }
         else {
-            document.body.classList.remove('side-by-side');
             MakerJsPlayground.codeMirrorEditor.setSize(null, 'auto');
             MakerJsPlayground.codeMirrorEditor.refresh();
         }
+        MakerJsPlayground.dockMode = newDockMode;
     }
     function arraysEqual(a, b) {
         if (!a || !b)
@@ -296,6 +318,9 @@ var MakerJsPlayground;
             updateLockedPathNotes();
         }
         render();
+        if (MakerJsPlayground.onViewportChange) {
+            MakerJsPlayground.onViewportChange();
+        }
     }
     function getLockedPathSvgElement() {
         var root = viewSvgContainer.querySelector(viewModelRootSelector);
@@ -372,6 +397,9 @@ var MakerJsPlayground;
         window.addEventListener('resize', onWindowResize);
         window.addEventListener('orientationchange', onWindowResize);
         MakerJsPlayground.pointers = new Pointer.Manager(view, '#pointers', margin, getZoom, setZoom, onPointerClick, onPointerReset);
+        if (MakerJsPlayground.onInit) {
+            MakerJsPlayground.onInit();
+        }
     }
     function onPointerClick(srcElement) {
         if (!keepEventElement && srcElement && srcElement.tagName && srcElement.tagName == 'text') {
@@ -468,6 +496,9 @@ var MakerJsPlayground;
         else if (!updateLockedPathNotes()) {
             setNotesFromModelOrKit();
         }
+        if (MakerJsPlayground.onViewportChange) {
+            MakerJsPlayground.onViewportChange();
+        }
     }
     function constructOnMainThread() {
         try {
@@ -545,11 +576,23 @@ var MakerJsPlayground;
         //tell the worker to process the job
         renderInWorker.worker.postMessage(options);
     }
-    function throttledSetParam(index, value) {
-        //sync slider / numberbox
+    function selectParamSlider(index) {
         var div = document.querySelectorAll('#params > div')[index];
+        if (!div)
+            return;
         var slider = div.querySelector('input[type=range]');
         var numberBox = div.querySelector('input[type=number]');
+        return {
+            classList: div.classList,
+            slider: slider,
+            numberBox: numberBox
+        };
+    }
+    function throttledSetParam(index, value) {
+        //sync slider / numberbox
+        var div = selectParamSlider(index);
+        var slider = div.slider;
+        var numberBox = div.numberBox;
         if (slider && numberBox) {
             if (div.classList.contains('toggle-number')) {
                 //numberbox is master
@@ -585,6 +628,9 @@ var MakerJsPlayground;
         setProcessedModel(new Wait());
         processed.kit = null;
         populateParams(null);
+        if (iframe) {
+            document.body.removeChild(iframe);
+        }
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
@@ -602,10 +648,19 @@ var MakerJsPlayground;
         else {
             markdown = JSON.stringify(value);
         }
-        var className = 'no-notes';
         var html = '';
         if (markdown) {
             html = marked(markdown);
+        }
+        else {
+            html = cleanHtml(processed.html);
+        }
+        setNotesHtml(html);
+    }
+    MakerJsPlayground.setNotes = setNotes;
+    function setNotesHtml(html) {
+        var className = 'no-notes';
+        if (html) {
             document.body.classList.remove(className);
         }
         else {
@@ -613,7 +668,6 @@ var MakerJsPlayground;
         }
         document.getElementById('notes').innerHTML = html;
     }
-    MakerJsPlayground.setNotes = setNotes;
     function updateZoomScale() {
         var z = document.getElementById('zoom-display');
         z.innerText = '(' + (MakerJsPlayground.viewScale * (MakerJsPlayground.renderUnits ? 100 : 1)).toFixed(0) + '%)';
@@ -652,6 +706,15 @@ var MakerJsPlayground;
         else if (isIJavaScriptErrorDetails(result)) {
             //render script error
             highlightCodeError(result);
+            if (MakerJsPlayground.onViewportChange) {
+                MakerJsPlayground.onViewportChange();
+            }
+        }
+        else {
+            render();
+            if (MakerJsPlayground.onViewportChange) {
+                MakerJsPlayground.onViewportChange();
+            }
         }
     }
     MakerJsPlayground.processResult = processResult;
@@ -662,6 +725,38 @@ var MakerJsPlayground;
         }, 50);
     }
     MakerJsPlayground.setParam = setParam;
+    function animate(paramIndex, milliSeconds, steps) {
+        if (paramIndex === void 0) { paramIndex = 0; }
+        if (milliSeconds === void 0) { milliSeconds = 150; }
+        if (steps === void 0) { steps = 20; }
+        clearInterval(animationTimeoutId);
+        var div = selectParamSlider(paramIndex);
+        if (!div)
+            return;
+        if (!div.slider) {
+            animate(paramIndex + 1);
+            return;
+        }
+        var max = parseFloat(div.slider.max);
+        var min = parseFloat(div.slider.min);
+        do {
+            var step = Math.floor((max - min) / steps);
+            steps /= 2;
+        } while (step === 0);
+        div.slider.value = min.toString();
+        animationTimeoutId = setInterval(function () {
+            var currValue = parseFloat(div.slider.value);
+            if (currValue < max) {
+                var newValue = currValue + step;
+                div.slider.value = newValue.toString();
+                throttledSetParam(paramIndex, newValue);
+            }
+            else {
+                animate(paramIndex + 1);
+            }
+        }, milliSeconds);
+    }
+    MakerJsPlayground.animate = animate;
     function toggleSliderNumberBox(label, index) {
         var id;
         if (toggleClass('toggle-number', label.parentElement)) {
@@ -702,6 +797,8 @@ var MakerJsPlayground;
     MakerJsPlayground.deActivateParam = deActivateParam;
     function fitNatural() {
         MakerJsPlayground.pointers.reset();
+        if (!processed.measurement)
+            return;
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -723,6 +820,8 @@ var MakerJsPlayground;
     function fitOnScreen() {
         if (MakerJsPlayground.pointers)
             MakerJsPlayground.pointers.reset();
+        if (!processed.measurement)
+            return;
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -753,9 +852,19 @@ var MakerJsPlayground;
         return false;
     }
     MakerJsPlayground.browserIsMicrosoft = browserIsMicrosoft;
+    function cleanHtml(html) {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        var svg = div.querySelector('svg');
+        if (svg) {
+            div.removeChild(svg);
+            return div.innerHTML;
+        }
+        return html;
+    }
     function render() {
         viewSvgContainer.innerHTML = '';
-        var html = processed.html;
+        var html = '';
         var unitScale = MakerJsPlayground.renderUnits ? makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
         var strokeWidth = MakerJsPlayground.svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
         if (processed.model) {
@@ -911,11 +1020,14 @@ var MakerJsPlayground;
             fitOnScreen();
             render();
         }
-        if (document.body.classList.contains('side-by-side')) {
-            dockEditor(document.body.offsetWidth >= 960);
+        if (MakerJsPlayground.fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        }
+        else if (document.body.offsetWidth < minDockSideBySide) {
+            dockEditor(dockModes.None);
         }
         else {
-            dockEditor(false);
+            dockEditor(dockModes.SideBySide);
         }
     }
     MakerJsPlayground.onWindowResize = onWindowResize;
@@ -941,9 +1053,11 @@ var MakerJsPlayground;
         MakerJsPlayground.codeMirrorEditor = CodeMirror(function (elt) {
             pre.parentNode.replaceChild(elt, pre);
         }, MakerJsPlayground.codeMirrorOptions);
-        if (document.body.offsetWidth >= 1280) {
-            toggleClass('side-by-side');
-            dockEditor(true);
+        if (MakerJsPlayground.fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        }
+        else if (document.body.offsetWidth >= minDockSideBySide) {
+            dockEditor(dockModes.SideBySide);
         }
         setProcessedModel(new Wait(), '', false);
         MakerJsPlayground.querystringParams = new QueryStringParams();

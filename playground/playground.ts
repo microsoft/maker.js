@@ -44,7 +44,7 @@
     }
 
     //private members
-
+    var minDockSideBySide = 1024;
     var pixelsPerInch = 100;
     var iframe: HTMLIFrameElement;
     var customizeMenu: HTMLDivElement;
@@ -78,6 +78,12 @@
         hasKit: false
     };
     var setParamTimeoutId: NodeJS.Timer;
+    var animationTimeoutId: NodeJS.Timer;
+    var dockModes = {
+        None: '',
+        SideBySide: 'side-by-side',
+        FullScreen: 'full-screen'
+    }
 
     function isLandscapeOrientation() {
         return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
@@ -88,6 +94,8 @@
     }
 
     function isIJavaScriptErrorDetails(result: any) {
+        if (!result) return false;
+
         var sample: IJavaScriptErrorDetails = {
             colno: 0,
             lineno: 0,
@@ -107,9 +115,11 @@
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
 
         var paramValues = [];
-        var paramHtml = '';
+        var paramHtml: string[] = [];
 
         if (metaParameters) {
+
+            var sliders = 0;
 
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
@@ -124,6 +134,8 @@
                 switch (attrs.type) {
 
                     case 'range':
+                        sliders++;
+
                         attrs.title = attrs.value;
                         attrs['id'] = id;
                         attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
@@ -222,13 +234,18 @@
                 }
 
                 div.innerTextEscaped = true;
-                paramHtml += div.toString();
+                paramHtml.push(div.toString());
             }
+
+            //if (sliders) {
+            //var button = new makerjs.exporter.XmlTag('input', { type: 'button', onclick:'MakerJsPlayground.animate()', value: 'animate'});
+            //paramHtml.push(button.toString());
+            //}
         }
 
         processed.paramValues = paramValues;
 
-        paramsDiv.innerHTML = paramHtml;
+        paramsDiv.innerHTML = paramHtml.join('');
         paramsDiv.setAttribute('disabled', 'true');
     }
 
@@ -334,20 +351,31 @@
         setProcessedModel(new Frown(), notes);
     }
 
-    function dockEditor(dock: boolean) {
+    function dockEditor(newDockMode: string) {
 
-        if (dock) {
+        for (var modeId in dockModes) {
+            var dm = dockModes[modeId];
+            if (!dm) continue;
+            if (newDockMode === dm) {
+                document.body.classList.add(dm);
+            } else {
+                document.body.classList.remove(dm);
+            }
+        }
+
+        if (newDockMode === dockModes.SideBySide) {
+
             var sectionEditor = document.querySelector('section.editor') as HTMLElement;
             var codeHeader = document.querySelector('.code-header') as HTMLElement;
 
             codeMirrorEditor.setSize(null, sectionEditor.offsetHeight - codeHeader.offsetHeight);
         } else {
 
-            document.body.classList.remove('side-by-side');
-
             codeMirrorEditor.setSize(null, 'auto');
             codeMirrorEditor.refresh();
         }
+
+        dockMode = newDockMode;
     }
 
     function arraysEqual(a, b) {
@@ -405,6 +433,11 @@
         }
 
         render();
+
+        if (onViewportChange) {
+            onViewportChange();
+        }
+
     }
 
     function getLockedPathSvgElement() {
@@ -501,6 +534,10 @@
         window.addEventListener('orientationchange', onWindowResize);
 
         pointers = new Pointer.Manager(view, '#pointers', margin, getZoom, setZoom, onPointerClick, onPointerReset);
+
+        if (onInit) {
+            onInit();
+        }
     }
 
     function onPointerClick(srcElement: Element) {
@@ -627,6 +664,10 @@
         } else if (!updateLockedPathNotes()) {
             setNotesFromModelOrKit();
         }
+
+        if (onViewportChange) {
+            onViewportChange();
+        }
     }
 
     function constructOnMainThread() {
@@ -720,12 +761,25 @@
         renderInWorker.worker.postMessage(options);
     }
 
+    function selectParamSlider(index: number) {
+        var div = document.querySelectorAll('#params > div')[index];
+        if (!div) return;
+
+        var slider = div.querySelector('input[type=range]') as HTMLInputElement;
+        var numberBox = div.querySelector('input[type=number]') as HTMLInputElement;
+        return {
+            classList: div.classList,
+            slider: slider,
+            numberBox: numberBox
+        };
+    }
+
     function throttledSetParam(index: number, value: any) {
 
         //sync slider / numberbox
-        var div = document.querySelectorAll('#params > div')[index];
-        var slider = div.querySelector('input[type=range]') as HTMLInputElement;
-        var numberBox = div.querySelector('input[type=number]') as HTMLInputElement;
+        var div = selectParamSlider(index);
+        var slider = div.slider;
+        var numberBox = div.numberBox;
 
         if (slider && numberBox) {
             if (div.classList.contains('toggle-number')) {
@@ -759,6 +813,10 @@
 
     //public members
 
+    export var onInit: Function;
+    export var onViewportChange: Function;
+    export var fullScreen: boolean
+    export var dockMode: string;
     export var codeMirrorEditor: CodeMirror.Editor;
     export var codeMirrorOptions: CodeMirror.EditorConfiguration = {
         lineNumbers: true,
@@ -780,6 +838,10 @@
 
         processed.kit = null;
         populateParams(null);
+
+        if (iframe) {
+            document.body.removeChild(iframe);
+        }
 
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
@@ -804,10 +866,19 @@
             markdown = JSON.stringify(value);
         }
 
-        var className = 'no-notes';
         var html = '';
         if (markdown) {
             html = marked(markdown);
+        } else {
+            html = cleanHtml(processed.html);
+        }
+
+        setNotesHtml(html);
+    }
+
+    function setNotesHtml(html: string) {
+        var className = 'no-notes';
+        if (html) {
             document.body.classList.remove(className);
         } else {
             document.body.classList.add(className);
@@ -870,6 +941,16 @@
 
             //render script error
             highlightCodeError(result as IJavaScriptErrorDetails);
+
+            if (onViewportChange) {
+                onViewportChange();
+            }
+        } else {
+            render();
+
+            if (onViewportChange) {
+                onViewportChange();
+            }
         }
 
     }
@@ -879,6 +960,41 @@
         setParamTimeoutId = setTimeout(function () {
             throttledSetParam(index, value);
         }, 50);
+    }
+
+    export function animate(paramIndex: number = 0, milliSeconds: number = 150, steps = 20) {
+        clearInterval(animationTimeoutId);
+
+        var div = selectParamSlider(paramIndex);
+        if (!div) return;
+        if (!div.slider) {
+            animate(paramIndex + 1);
+            return;
+        }
+
+        var max = parseFloat(div.slider.max);
+        var min = parseFloat(div.slider.min);
+
+        do {
+            var step = Math.floor((max - min) / steps);
+            steps /= 2;
+        } while (step === 0)
+
+        div.slider.value = min.toString();
+
+        animationTimeoutId = setInterval(function () {
+
+            var currValue = parseFloat(div.slider.value);
+
+            if (currValue < max) {
+                var newValue = currValue + step;
+                div.slider.value = newValue.toString();
+                throttledSetParam(paramIndex, newValue);
+            } else {
+                animate(paramIndex + 1);
+            }
+
+        }, milliSeconds);
     }
 
     export function toggleSliderNumberBox(label: HTMLLabelElement, index: number) {
@@ -926,6 +1042,8 @@
 
         pointers.reset();
 
+        if (!processed.measurement) return;
+
         var size = getViewSize();
         var halfWidth = size[0] / 2;
         var modelNaturalSize = getModelNaturalSize();
@@ -955,6 +1073,8 @@
     export function fitOnScreen() {
 
         if (pointers) pointers.reset();
+
+        if (!processed.measurement) return;
 
         var size = getViewSize();
         var halfWidth = size[0] / 2;
@@ -997,11 +1117,24 @@
         return false;
     }
 
+    function cleanHtml(html: string) {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+
+        var svg = div.querySelector('svg');
+        if (svg) {
+            div.removeChild(svg);
+            return div.innerHTML;
+        }
+
+        return html;
+    }
+
     export function render() {
 
         viewSvgContainer.innerHTML = '';
 
-        var html = processed.html;
+        var html = '';
 
         var unitScale = renderUnits ? makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
 
@@ -1190,10 +1323,12 @@
             render();
         }
 
-        if (document.body.classList.contains('side-by-side')) {
-            dockEditor(document.body.offsetWidth >= 960);
+        if (fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        } else if (document.body.offsetWidth < minDockSideBySide) {
+            dockEditor(dockModes.None);
         } else {
-            dockEditor(false);
+            dockEditor(dockModes.SideBySide);
         }
 
     }
@@ -1231,9 +1366,10 @@
             codeMirrorOptions
         );
 
-        if (document.body.offsetWidth >= 1280) {
-            toggleClass('side-by-side');
-            dockEditor(true);
+        if (fullScreen) {
+            dockEditor(dockModes.FullScreen);
+        } else if (document.body.offsetWidth >= minDockSideBySide) {
+            dockEditor(dockModes.SideBySide);
         }
 
         setProcessedModel(new Wait(), '', false);
