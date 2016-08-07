@@ -5,18 +5,24 @@ title: Basic models
 <p>Maker.js provides these basic models:</p>
 
 <ul>
-    <li>makerjs.models.BoltCircle</li>
-    <li>makerjs.models.BoltRectangle</li>
-    <li>makerjs.models.ConnectTheDots</li>
-    <li>makerjs.models.GoldenRectangle</li>
-    <li>makerjs.models.Oval</li>
-    <li>makerjs.models.OvalArc</li>
-    <li>makerjs.models.Polygon</li>
-    <li>makerjs.models.Ring</li>
-    <li>makerjs.models.Rectangle</li>
-    <li>makerjs.models.RoundRectangle</li>
-    <li>makerjs.models.SCurve</li>
-    <li>makerjs.models.Square</li>
+    <li><a href="/maker.js/playground/?script=BezierCurve">Bezier Curve</a></li>
+    <li><a href="/maker.js/playground/?script=BoltCircle">Bolt Circle</a></li>
+    <li><a href="/maker.js/playground/?script=BoltRectangle">Bolt Rectangle</a></li>
+    <li><a href="/maker.js/playground/?script=ConnectTheDots">Connect the dots</a></li>
+    <li><a href="/maker.js/playground/?script=Dome">Dome</a></li>
+    <li><a href="/maker.js/playground/?script=Ellipse">Ellipse</a></li>
+    <li><a href="/maker.js/playground/?script=EllipticArc">Elliptic Arc</a></li>
+    <li><a href="/maker.js/playground/?script=Oval">Oval</a></li>
+    <li><a href="/maker.js/playground/?script=OvalArc">OvalArc</a></li>
+    <li><a href="/maker.js/playground/?script=Polygon">Polygon</a></li>
+    <li><a href="/maker.js/playground/?script=Rectangle">Rectangle</a></li>
+    <li><a href="/maker.js/playground/?script=Ring">Ring</a></li>
+    <li><a href="/maker.js/playground/?script=RoundRectangle">RoundRectangle</a></li>
+    <li><a href="/maker.js/playground/?script=SCurve">S curve</a></li>
+    <li><a href="/maker.js/playground/?script=Slot">Slot</a></li>
+    <li><a href="/maker.js/playground/?script=Square">Square</a></li>
+    <li><a href="/maker.js/playground/?script=Star">Star</a></li>
+    <li><a href="/maker.js/playground/?script=Text">Text</a></li>
 </ul>
 
 <p>Here are a few examples to illustrate how you might use these:</p>
@@ -24,6 +30,8 @@ title: Basic models
 <p>House:</p>
 
 {% highlight javascript %}
+//render a simple house using ConnectTheDots and Square
+
 var makerjs = require('makerjs');
 
 var points = [
@@ -48,8 +56,6 @@ var svg = makerjs.exporter.toSVG(houseWithWindows);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/hmf6koog/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -57,6 +63,8 @@ document.write(svg);
 <p>Tablet mount:</p>
 
 {% highlight javascript %}
+//render a tablet frame using BoltRectangle and RoundRectangle
+
 var makerjs = require('makerjs');
 
 var outer = new makerjs.models.RoundRectangle(200, 280, 8);
@@ -79,8 +87,6 @@ var svg = makerjs.exporter.toSVG(tabletFaceMount);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/mtjcv0k9/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -88,6 +94,8 @@ document.write(svg);
 <p>Circular adapter plate:</p>
 
 {% highlight javascript %}
+//render an adapter using Ring and BoltCircle
+
 var makerjs = require('makerjs');
 
 var model = { 
@@ -103,8 +111,6 @@ var svg = makerjs.exporter.toSVG(model);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/gds7h3aw/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -112,6 +118,8 @@ document.write(svg);
 <p>Skateboard deck:</p>
 
 {% highlight javascript %}
+//render a skateboard deck using BoltRectangle and Oval
+
 var makerjs = require('makerjs');
 
 function truckBolts() {
@@ -141,8 +149,6 @@ var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/grzm159o/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
