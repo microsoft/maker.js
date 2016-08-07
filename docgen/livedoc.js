@@ -15,19 +15,21 @@ var LiveDoc;
     function codeOutputId(i) {
         return 'code-output-' + i;
     }
-    function tryIt(codeIndex, button) {
+    function tryIt(codeIndex) {
+        var allCodes = getAllCodes();
+        var code = allCodes.item(codeIndex);
+        var codeText = code.innerText;
+        var pre = code.parentElement;
+        var button = pre.querySelector('button.livedoc-play');
         if (button.classList.contains('wait'))
             return;
         button.classList.add('wait');
-        var allCodes = getAllCodes();
-        var code = allCodes.item(codeIndex);
         var iframe = document.createElement('iframe');
         iframe.className = 'trynow';
         iframe.src = 'https://microsoft.github.io/maker.js/playground/embed.html?parentload=getcode';
         iframe.frameBorder = '0';
         iframe.scrolling = 'no';
         iframe.style.display = 'none';
-        var pre = code.parentElement;
         pre.parentElement.appendChild(iframe);
         window['getcode'] = function () {
             pre.style.display = 'none';
@@ -40,15 +42,19 @@ var LiveDoc;
             return code.innerText;
         };
     }
+    LiveDoc.tryIt = tryIt;
     window.addEventListener("load", function load(event) {
         window.removeEventListener("load", load, false); //remove listener, no longer needed
         var allCodes = getAllCodes();
         for (var i = 0; i < allCodes.length; i++) {
             //add a button
-            var code = allCodes[i];
+            var code = allCodes.item(i);
+            var codeText = code.innerText;
+            var keywordPos = codeText.toLowerCase().indexOf('render');
+            //if (!(keywordPos === 2 || keywordPos === 3)) continue;
             var pre = code.parentElement;
-            var button = '<button onclick="tryIt(' + i + ', this)" style="display:none" >play</button>';
-            pre.insertAdjacentHTML('afterend', button);
+            var button = '<button class="livedoc-play" onclick="LiveDoc.tryIt(' + i + ')" style="display:none" >play</button>';
+            pre.insertAdjacentHTML('afterbegin', button);
         }
     }, false);
 })(LiveDoc || (LiveDoc = {}));

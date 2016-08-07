@@ -16,16 +16,19 @@ namespace LiveDoc {
         document.write('</div>')
     }
 
-    function codeOutputId(i) {
+    function codeOutputId(i: number) {
         return 'code-output-' + i;
     }
 
-    function tryIt(codeIndex, button) {
-        if (button.classList.contains('wait')) return;
-        button.classList.add('wait');
-
+    export function tryIt(codeIndex: number) {
         var allCodes = getAllCodes();
         var code = allCodes.item(codeIndex) as HTMLElement;
+        var codeText = code.innerText;
+        var pre = code.parentElement;
+        var button = pre.querySelector('button.livedoc-play') as HTMLElement;
+
+        if (button.classList.contains('wait')) return;
+        button.classList.add('wait');
 
         var iframe = document.createElement('iframe');
         iframe.className = 'trynow';
@@ -34,7 +37,6 @@ namespace LiveDoc {
         iframe.scrolling = 'no';
         iframe.style.display = 'none';
 
-        var pre = code.parentElement;
         pre.parentElement.appendChild(iframe);
 
         window['getcode'] = function () {
@@ -62,11 +64,15 @@ namespace LiveDoc {
         for (var i = 0; i < allCodes.length; i++) {
             //add a button
 
-            var code = allCodes[i];
+            var code = allCodes.item(i) as HTMLElement;
+            var codeText = code.innerText;
+            var keywordPos = codeText.toLowerCase().indexOf('render');
+            //if (!(keywordPos === 2 || keywordPos === 3)) continue;
+
             var pre = code.parentElement;
 
-            var button = '<button onclick="tryIt(' + i + ', this)" style="display:none" >play</button>';
-            pre.insertAdjacentHTML('afterend', button);
+            var button = '<button class="livedoc-play" onclick="LiveDoc.tryIt(' + i + ')" style="display:none" >play</button>';
+            pre.insertAdjacentHTML('afterbegin', button);
         }
 
 
