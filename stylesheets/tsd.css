@@ -595,6 +595,13 @@ iframe.play {
     margin-bottom: 20px;
 }
 
+/* hide the play buton on mobile phones */
+@media only screen and (max-width: 540px) {
+    button.livedoc-play {
+        display: none;
+    }
+}
+
 @media only screen and (max-width: 767px) {
     .thumb {
         width: 140px;
