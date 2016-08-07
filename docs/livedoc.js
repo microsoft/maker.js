@@ -27,26 +27,31 @@ function tryIt(codeIndex, button) {
     var allCodes = getAllCodes();
     var code = allCodes[codeIndex];
 
-    window.getcode = function () {
-        return code.innerText;
-    };
-
     var iframe = document.createElement('iframe');
     iframe.className = 'trynow';
     iframe.src = 'https://microsoft.github.io/maker.js/playground/embed.html?parentload=getcode';
     iframe.frameBorder = '0';
     iframe.scrolling = 'no';
+    iframe.style.display = 'none';
 
     var pre = code.parentElement;
-    pre.style.display = 'none';
     pre.parentElement.appendChild(iframe);
 
-    button.style.display = 'none';
+    window.getcode = function () {
 
-    var svg = document.getElementById(codeOutputId(codeIndex));
-    if (svg) {
-        svg.style.display = 'none';
-    }
+        pre.style.display = 'none';
+        button.style.display = 'none';
+
+        var svg = document.getElementById(codeOutputId(codeIndex));
+        if (svg) {
+            svg.style.display = 'none';
+        }
+
+        iframe.style.display = '';
+
+        return code.innerText;
+    };
+
 }
 
 window.addEventListener("load", function load(event) {
