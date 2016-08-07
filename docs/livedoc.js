@@ -10,6 +10,11 @@ function getLastCode() {
 function evalLastCode() {
     var code = getLastCode();
     eval(code.innerText);
+
+    var svgs = document.body.querySelectorAll('svg')
+    var lastSvg = svgs[svgs.length - 1];
+
+    code.svgOutput = lastSvg;
 }
 
 function tryIt(codeIndex, button) {
@@ -30,6 +35,9 @@ function tryIt(codeIndex, button) {
     pre.style.display = 'none';
     pre.parentElement.appendChild(iframe);
 
+    if (code.svgOutput) {
+        code.svgOutput.style.display = 'none';
+    }
     button.style.display = 'none';
 }
 
