@@ -48,6 +48,8 @@ document.write(svg);
 First we will leave the code as is, and return the <b>model</b> variable.</p>
 
 {% highlight javascript %}
+//render a model created by a function
+
 var makerjs = require('makerjs');
 
 function myModel() {
@@ -76,12 +78,12 @@ var svg = makerjs.exporter.toSVG(myModel());
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/r9htw9ov/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <p>Alternatively, we can change our function to be usable with the <b>new</b> operator, 
 and our model properties are set using the <b>this</b> keyword:</p>
 
 {% highlight javascript %}
+//render a model created by a function, using the 'this' keyword
+
 var makerjs = require('makerjs');
 
 function myModel() {
@@ -110,8 +112,6 @@ var svg = makerjs.exporter.toSVG(new myModel());
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/sdpfffcd/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <p>The example output should be the same as above. While we changed the way we defined our model, 
 we haven't yet changed the functionality:</p>
 
@@ -123,6 +123,8 @@ we haven't yet changed the functionality:</p>
 We will create a new model which has 2 instances of myModel:</p>
 
 {% highlight javascript %}
+//render 2 instances of the same model
+
 var makerjs = require('makerjs');
 
 function myModel() {
@@ -159,8 +161,6 @@ var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/k85nhxcd/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
