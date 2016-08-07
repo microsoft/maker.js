@@ -68,8 +68,11 @@
             var iframes = parent.document.getElementsByTagName('iframe');
             if (iframes && iframes.length > 0) {
                 for (var i = 0; i < iframes.length; i++) {
-                    if (iframes[i].contentWindow.document === document) {
-                        return iframes[i];
+                    try {
+                        if (iframes[i].contentWindow.document === document) {
+                            return iframes[i];
+                        }
+                    } catch (e) {
                     }
                 }
             }

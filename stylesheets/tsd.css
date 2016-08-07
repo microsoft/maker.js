@@ -580,6 +580,10 @@ svg path {
     stroke: #fff;
 }
 
+iframe.trynow {
+    width: 100%;
+}
+
 @media only screen and (max-width: 767px) {
     .thumb {
         width: 140px;
