@@ -37,23 +37,7 @@ document.write('</code><hr/>');
 <a class="fiddle" href="https://jsfiddle.net/danmarshall/5u7Lr02n/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
-var makerjs = require('makerjs');
-
-var model = {
-    paths: {
-        circle1: new makerjs.paths.Circle([0, 0], 30)
-    },
-    models: {
-        bigOvalArc: new makerjs.models.OvalArc(120, 60, 50, 10)
-    }
-};
-
-var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
-
-document.write(svg);
-document.write('<hr/><code>');
-document.write(svg.replace(/</g, '&lt;')); //show raw xml in browser
-document.write('</code><hr/>');
+    evalLastPre();
 </script>
 
 <p>
