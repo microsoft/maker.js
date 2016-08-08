@@ -21,6 +21,8 @@ title: Rotating
 <p>Rotate path example:</p>
 
 {% highlight javascript %}
+//render a rotated line
+
 var makerjs = require('makerjs');
 
 var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
@@ -33,8 +35,6 @@ var svg = makerjs.exporter.toSVG(paths);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/vj7uewyk/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -42,6 +42,8 @@ document.write(svg);
 <p>Rotate model example:</p>
 
 {% highlight javascript %}
+//render a rotated rectangle
+
 var makerjs = require('makerjs');
 
 var rect1 = new makerjs.models.Rectangle(40, 80);
@@ -52,8 +54,6 @@ var svg = makerjs.exporter.toSVG(rect1);
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/8g6r3yjq/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();

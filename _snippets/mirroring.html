@@ -22,6 +22,8 @@ title: Mirroring
 <p>Mirror path example:</p>
 
 {% highlight javascript %}
+//render a line mirrored in the x dimension
+
 var makerjs = require('makerjs');
 
 var line1 = new makerjs.paths.Line([0, 0], [100, 100]);
@@ -34,8 +36,6 @@ var svg = makerjs.exporter.toSVG(paths);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/p6aj2ky6/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -43,6 +43,8 @@ document.write(svg);
 <p>Mirror model example:</p>
 
 {% highlight javascript %}
+//render a model mirrored in the y dimension
+
 var makerjs = require('makerjs');
 
 var ovalArc1 = new makerjs.models.OvalArc(45, 135, 50, 10);
@@ -58,8 +60,6 @@ var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/h9fysusv/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();

@@ -17,6 +17,8 @@ title: Scaling
 <p>Scale path example:</p>
 
 {% highlight javascript %}
+//render a scaled arc
+
 var makerjs = require('makerjs');
 
 var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
@@ -27,8 +29,6 @@ var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/nrboLkLs/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -36,6 +36,8 @@ document.write(svg);
 <p>Scale model example:</p>
 
 {% highlight javascript %}
+//render a scaled polygon
+
 var makerjs = require('makerjs');
 
 var model = {
@@ -49,8 +51,6 @@ var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/fyqpqyho/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
