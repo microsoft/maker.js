@@ -267,14 +267,14 @@ namespace MakerJsRequireIframe {
                 }
 
                 if (logs.length > 0) {
-                    htmls.push('<hr/><b>console:</b>');
+                    htmls.push('<div class="section"><div class="separator">console:</div>');
 
                     logs.forEach(function (log) {
-                        var logDiv = new parent.makerjs.exporter.XmlTag('div');
+                        var logDiv = new makerjs.exporter.XmlTag('div');
                         logDiv.innerText = log;
                         htmls.push(logDiv.toString());
                     });
-
+                    htmls.push('</div>');
                 }
 
                 //send results back to parent window

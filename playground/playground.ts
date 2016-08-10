@@ -641,14 +641,15 @@
             processed.measurement = makerjs.measure.modelExtents(processed.model);
 
             if (!processed.measurement) {
+                processed.error = 'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n' + JSON.stringify(processed.model);
                 processed.model = null;
-                return;
-            }
+            } else {
 
-            if (!viewScale || checkFitToScreen.checked) {
-                fitOnScreen();
-            } else if (renderUnits != processed.model.units) {
-                fitNatural();
+                if (!viewScale || checkFitToScreen.checked) {
+                    fitOnScreen();
+                } else if (renderUnits != processed.model.units) {
+                    fitNatural();
+                }
             }
         }
 
@@ -713,6 +714,7 @@
                 errorHandler();
             } else {
                 renderInWorker.hasKit = true;
+                processed.html = response.html;
                 successHandler(response.model);
             }
         };
@@ -745,6 +747,7 @@
                 if (response.error) {
                     errorHandler();
                 } else if (response.model) {
+                    processed.html = response.html;
                     successHandler(response.model);
                 }
             }

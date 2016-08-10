@@ -10,6 +10,7 @@
     export interface IRenderResponse {
         requestId: number;
         model?: MakerJs.IModel;
+        html?: string;
         error?: string;
     }
 }

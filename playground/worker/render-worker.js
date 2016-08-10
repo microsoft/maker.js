@@ -1,12 +1,10 @@
+var devNull = function () { };
 /*
     Some libraries are not web-worker aware, they are either browser or Node.
     A web worker should use the browser flavor.
     So trick libs into thinking this is a browser, by existence of a 'window' in the global space.
 */
-var window = {
-    alert: function () {
-    }
-};
+var window = {};
 /* module system */
 var module = {};
 var requireError = '';
@@ -27,8 +25,8 @@ var makerjs = require('makerjs');
 module['makerjs'] = makerjs;
 module['./../target/js/node.maker.js'] = makerjs;
 function runCodeIsolated(javaScript) {
-    var Fn = new Function('require', 'module', 'playgroundRender', 'alert', 'opentype', javaScript);
-    var result = new Fn(module.require, module, playgroundRender, window.alert, window['opentype']); //call function with the "new" keyword so the "this" keyword is an instance
+    var Fn = new Function('require', 'module', 'document', 'console', 'alert', 'playgroundRender', 'opentype', javaScript);
+    var result = new Fn(module.require, module, mockDocument, mockConsole, devNull, playgroundRender, window['opentype']); //call function with the "new" keyword so the "this" keyword is an instance
     return module.exports || result;
 }
 function playgroundRender(model) {
@@ -45,6 +43,29 @@ function postError(requestId, error) {
     };
     postMessage(response);
 }
+var mockDocument = {
+    write: function (html) {
+        htmls.push(html);
+    }
+};
+var mockConsole = {
+    log: function (entry) {
+        switch (typeof entry) {
+            case 'number':
+                logs.push('' + entry);
+                break;
+            case 'string':
+                logs.push(entry);
+                break;
+            default:
+                logs.push(JSON.stringify(entry));
+        }
+    }
+};
+var baseHtmlLength;
+var baseLogLength;
+var htmls;
+var logs;
 var kit;
 var activeRequestId;
 onmessage = function (ev) {
@@ -59,7 +80,11 @@ onmessage = function (ev) {
         return;
     }
     if (request.javaScript) {
+        htmls = [];
+        logs = [];
         kit = runCodeIsolated(request.javaScript);
+        baseHtmlLength = htmls.length;
+        baseLogLength = logs.length;
     }
     if (requireError) {
         postError(request.requestId, requireError);
@@ -70,11 +95,23 @@ onmessage = function (ev) {
     }
     else {
         activeRequestId = request.requestId;
+        htmls.length = baseHtmlLength;
+        logs.length = baseLogLength;
         try {
             var model = makerjs.kit.construct(kit, request.paramValues);
+            if (logs.length > 0) {
+                htmls.push('<div class="section"><div class="separator">console:</div>');
+                logs.forEach(function (log) {
+                    var logDiv = new makerjs.exporter.XmlTag('div');
+                    logDiv.innerText = log;
+                    htmls.push(logDiv.toString());
+                });
+                htmls.push('</div>');
+            }
             var response = {
                 requestId: request.requestId,
-                model: model
+                model: model,
+                html: htmls.join('')
             };
             postMessage(response);
         }
