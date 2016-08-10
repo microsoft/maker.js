@@ -5326,7 +5326,7 @@ var MakerJs;
             if (useSvgUnit && opts.viewBox) {
                 opts.scale *= useSvgUnit.scaleConversion;
             }
-            if (!opts.origin) {
+            if (size && !opts.origin) {
                 var left = -size.low[0] * opts.scale;
                 opts.origin = [left, size.high[1] * opts.scale];
             }
@@ -5334,7 +5334,7 @@ var MakerJs;
             MakerJs.extendObject(options, opts);
             //begin svg output
             var svgAttrs;
-            if (opts.viewBox) {
+            if (size && opts.viewBox) {
                 var width = MakerJs.round(size.high[0] - size.low[0]) * opts.scale;
                 var height = MakerJs.round(size.high[1] - size.low[1]) * opts.scale;
                 var viewBox = [0, 0, width, height];

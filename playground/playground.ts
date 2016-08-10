@@ -54,6 +54,7 @@
     var progress: HTMLDivElement;
     var preview: HTMLTextAreaElement;
     var checkFitToScreen: HTMLInputElement;
+    var checkNotes: HTMLInputElement;
     var margin: MakerJs.IPoint;
     var processed: IProcessedResult = {
         error: '',
@@ -671,7 +672,7 @@
             setNotes(processed.error);
 
             //sync notes and checkbox
-            (<HTMLInputElement>document.getElementById('check-notes')).checked = true;
+            if (checkNotes) checkNotes.checked = true;
             document.body.classList.remove('collapse-notes');
 
         } else if (!updateLockedPathNotes()) {
@@ -1367,6 +1368,7 @@
         progress = document.getElementById('download-progress') as HTMLDivElement;
         preview = document.getElementById('download-preview') as HTMLTextAreaElement;
         checkFitToScreen = document.getElementById('check-fit-on-screen') as HTMLInputElement;
+        checkNotes = document.getElementById('check-notes') as HTMLInputElement;
 
         viewSvgContainer = document.getElementById('view-svg-container') as HTMLDivElement;
 
