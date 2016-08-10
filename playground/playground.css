@@ -329,12 +329,14 @@ svg#pointers line {
 }
 
 #notes .separator {
-    font-weight: 500;
-    display: block;
     letter-spacing: 0.2ex;
     background-color: rgba(0,0,111,0.2);
     margin: 0 -1em .5em -1em;
     padding: .5em;
+}
+
+#notes .console {
+    font-family: monospace;
 }
 
 .collapse-notes #notes, .no-notes #notes, .no-notes #notes-toggle {

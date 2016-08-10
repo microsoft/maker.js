@@ -138,10 +138,10 @@ onmessage = (ev: MessageEvent) => {
             var model = makerjs.kit.construct(kit, request.paramValues);
 
             if (logs.length > 0) {
-                htmls.push('<div class="section"><div class="separator">console:</div>');
+                htmls.push('<div class="section"><div class="separator"><span class="console">console:</span></div>');
 
                 logs.forEach(function (log) {
-                    var logDiv = new makerjs.exporter.XmlTag('div');
+                    var logDiv = new makerjs.exporter.XmlTag('div', { "class": "console" });
                     logDiv.innerText = log;
                     htmls.push(logDiv.toString());
                 });
