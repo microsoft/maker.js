@@ -25,6 +25,7 @@ var MakerJsPlayground;
     var progress;
     var preview;
     var checkFitToScreen;
+    var checkNotes;
     var margin;
     var processed = {
         error: '',
@@ -501,7 +502,8 @@ var MakerJsPlayground;
         if (processed.error) {
             setNotes(processed.error);
             //sync notes and checkbox
-            document.getElementById('check-notes').checked = true;
+            if (checkNotes)
+                checkNotes.checked = true;
             document.body.classList.remove('collapse-notes');
         }
         else if (!updateLockedPathNotes()) {
@@ -1057,6 +1059,7 @@ var MakerJsPlayground;
         progress = document.getElementById('download-progress');
         preview = document.getElementById('download-preview');
         checkFitToScreen = document.getElementById('check-fit-on-screen');
+        checkNotes = document.getElementById('check-notes');
         viewSvgContainer = document.getElementById('view-svg-container');
         margin = [viewSvgContainer.offsetLeft, viewSvgContainer.offsetTop];
         var pre = document.getElementById('init-javascript-code');
