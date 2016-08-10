@@ -194,12 +194,13 @@ var MakerJsRequireIframe;
                     }
                 }
                 if (logs.length > 0) {
-                    htmls.push('<hr/><b>console:</b>');
+                    htmls.push('<div class="section"><div class="separator"><span class="console">console:</span></div>');
                     logs.forEach(function (log) {
-                        var logDiv = new parent.makerjs.exporter.XmlTag('div');
+                        var logDiv = new makerjs.exporter.XmlTag('div', { "class": "console" });
                         logDiv.innerText = log;
                         htmls.push(logDiv.toString());
                     });
+                    htmls.push('</div>');
                 }
                 //send results back to parent window
                 parent.MakerJsPlayground.processResult(htmls.join(''), window.module.exports || model || captureExportedModel, orderedDependencies);

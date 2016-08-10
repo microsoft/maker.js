@@ -324,6 +324,21 @@ svg#pointers line {
     color: #0ff;
 }
 
+#notes .section {
+    margin-bottom: 1em;
+}
+
+#notes .separator {
+    letter-spacing: 0.2ex;
+    background-color: rgba(0,0,111,0.2);
+    margin: 0 -1em .5em -1em;
+    padding: .5em;
+}
+
+#notes .console {
+    font-family: monospace;
+}
+
 .collapse-notes #notes, .no-notes #notes, .no-notes #notes-toggle {
     display: none;
 }
@@ -447,6 +462,10 @@ svg#pointers line {
 .code-header > span:first-child {
     position: absolute;
     left: 1em;
+}
+
+.code-header label {
+    font-size: inherit;
 }
 
 .code-header button {

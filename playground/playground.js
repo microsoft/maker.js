@@ -212,6 +212,17 @@ var MakerJsPlayground;
         }
         return Frown;
     }());
+    var StraightFace = (function () {
+        function StraightFace() {
+            this.paths = {
+                head: new makerjs.paths.Circle([0, 0], 85),
+                eye1: new makerjs.paths.Circle([-25, 25], 10),
+                eye2: new makerjs.paths.Circle([25, 25], 10),
+                mouth: new makerjs.paths.Line([-30, -30], [30, -30])
+            };
+        }
+        return StraightFace;
+    }());
     var Wait = (function () {
         function Wait() {
             var wireFrame = {
@@ -476,7 +487,7 @@ var MakerJsPlayground;
         if (processed.model) {
             processed.measurement = makerjs.measure.modelExtents(processed.model);
             if (!processed.measurement) {
-                processed.model = null;
+                setProcessedModel(new StraightFace(), 'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n```' + JSON.stringify(processed.model) + '```');
                 return;
             }
             if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
@@ -537,6 +548,7 @@ var MakerJsPlayground;
             }
             else {
                 renderInWorker.hasKit = true;
+                processed.html = response.html;
                 successHandler(response.model);
             }
         };
@@ -564,6 +576,7 @@ var MakerJsPlayground;
                     errorHandler();
                 }
                 else if (response.model) {
+                    processed.html = response.html;
                     successHandler(response.model);
                 }
             }
