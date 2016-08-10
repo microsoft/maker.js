@@ -24,7 +24,9 @@ var makerjs = require('makerjs');
 var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
 var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
 
-var svg = makerjs.exporter.toSVG([arc1, makerjs.path.scale(arc2, 2)]);
+arc2 = makerjs.path.scale(arc2, 2);
+
+var svg = makerjs.exporter.toSVG({ paths: { arc1: arc1, arc2: arc2 }});
 
 document.write(svg);
 {% endhighlight %}
