@@ -13,6 +13,8 @@ title: Modifying models
 </p>
 
 {% highlight javascript %}
+//render two ovals which overlap
+
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -28,8 +30,6 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
@@ -47,7 +47,7 @@ document.write(svg);
     </li>
     <li>Use the browser's console, or JavaScript debugger to set a breakpoint in your model.</li>
     <li>Use the browser's DOM inspector to traverse the rendered SVG.</li>
-    <li>Output the raw <a href="https://jsfiddle.net/danmarshall/rz8ngf7L/" target="_blank">JSON</a> or <a href="https://jsfiddle.net/danmarshall/5u7Lr02n/" target="_blank">SVG</a> on screen.</li>
+    <li>Output the raw JSON or SVG on screen.</li>
 </ul>
 
 <p>
@@ -60,6 +60,8 @@ document.write(svg);
 </p>
 
 {% highlight javascript %}
+//render two ovals which overlap
+
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -83,8 +85,6 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/1/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -98,6 +98,8 @@ document.write(svg);
 </p>
 
 {% highlight javascript %}
+//render an L shape, modifying points by their x and y
+
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -124,8 +126,6 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/2/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -135,6 +135,8 @@ document.write(svg);
 </p>
 
 {% highlight javascript %}
+//render an L shape, sharing a point
+
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -160,8 +162,6 @@ var svg = makerjs.exporter.toSVG(new ovalL(100, 100, 37));
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/3/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -174,6 +174,8 @@ document.write(svg);
 </p>
 
 {% highlight javascript %}
+//render an L with an oval over it
+
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -206,8 +208,6 @@ var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/5/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -217,6 +217,8 @@ document.write(svg);
 </p>
 
 {% highlight javascript %}
+//render an L and form a C
+
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -252,8 +254,6 @@ var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/6/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -263,10 +263,12 @@ document.write(svg);
     So, we must <b>originate</b> for all of the ovals to share the same coordinate space. Afterwards, we can assign the common point to both lines. 
 </p>
 <p>
-    In the JSFiddle, try removing the call to originate to see the results without it.
+    In the Play editor, try removing the call to originate to see the results without it.
 </p>
 
 {% highlight javascript %}
+//render a C shape
+
 var makerjs = require('makerjs');
 
 function ovalL(width, height, thickness) {
@@ -305,8 +307,6 @@ var svg = makerjs.exporter.toSVG(new ovalC(100, 100, 37));
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="http://jsfiddle.net/danmarshall/qf4x1gqx/7/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
