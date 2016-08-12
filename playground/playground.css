@@ -650,6 +650,10 @@ body.full-screen {
     stroke: #000;
 }
 
+.full-screen.wait svg#drawing line, .full-screen.wait svg#drawing circle, .full-screen.wait svg#drawing path {
+    stroke: #999;
+}
+
 .full-screen #view svg#drawing text {
     fill: #777;
 }
