@@ -50,6 +50,7 @@ var MakerJsPlayground;
         hasKit: false
     };
     var setParamTimeoutId;
+    var setProcessedModelTimer;
     var animationTimeoutId;
     var dockModes = {
         None: '',
@@ -439,6 +440,8 @@ var MakerJsPlayground;
         };
     }
     function setZoom(panZoom) {
+        if (document.body.classList.contains('wait'))
+            return;
         var svgElement = viewSvgContainer.children[0];
         if (!svgElement)
             return;
@@ -463,7 +466,8 @@ var MakerJsPlayground;
             render();
         }
     }
-    function setProcessedModel(model, error, doInit) {
+    function setProcessedModel(model, error) {
+        clearTimeout(setProcessedModelTimer);
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
@@ -473,31 +477,28 @@ var MakerJsPlayground;
                 errorMarker = null;
             }
         }
-        if (model) {
-            onProcessed(doInit);
-        }
-    }
-    function onProcessed(doInit) {
-        if (doInit === void 0) { doInit = true; }
+        if (!processed.model)
+            return;
         //now safe to render, so register a resize listener
-        if (init && doInit) {
+        if (init && model) {
             init = false;
             initialize();
         }
         //todo: find minimum viewScale
-        if (processed.model) {
-            processed.measurement = makerjs.measure.modelExtents(processed.model);
-            if (!processed.measurement) {
+        processed.measurement = makerjs.measure.modelExtents(processed.model);
+        if (!processed.measurement) {
+            setProcessedModelTimer = setTimeout(function () {
                 setProcessedModel(new StraightFace(), 'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n```' + JSON.stringify(processed.model) + '```');
-                return;
-            }
-            if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
-                fitOnScreen();
-            }
-            else if (MakerJsPlayground.renderUnits != processed.model.units) {
-                fitNatural();
-            }
+            }, 12000);
+            return;
         }
+        if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
+            fitOnScreen();
+        }
+        else if (MakerJsPlayground.renderUnits != processed.model.units) {
+            fitNatural();
+        }
+        document.body.classList.remove('wait');
         render();
         if (processed.error) {
             setNotes(processed.error);
@@ -640,7 +641,7 @@ var MakerJsPlayground;
     MakerJsPlayground.svgFontSize = 14;
     MakerJsPlayground.renderOnWorkerThread = true;
     function runCodeFromEditor() {
-        setProcessedModel(new Wait());
+        document.body.classList.add('wait');
         processed.kit = null;
         populateParams(null);
         if (iframe) {
@@ -866,6 +867,8 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.browserIsMicrosoft = browserIsMicrosoft;
     function cleanHtml(html) {
+        if (!html)
+            return '';
         var div = document.createElement('div');
         div.innerHTML = html;
         var svg = div.querySelector('svg');
@@ -1073,7 +1076,7 @@ var MakerJsPlayground;
         else if (document.body.offsetWidth >= minDockSideBySide) {
             dockEditor(dockModes.SideBySide);
         }
-        setProcessedModel(new Wait(), '', false);
+        document.body.classList.add('wait');
         MakerJsPlayground.querystringParams = new QueryStringParams();
         var parentLoad = MakerJsPlayground.querystringParams['parentload'];
         if (parentLoad) {
