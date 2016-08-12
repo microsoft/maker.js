@@ -656,7 +656,7 @@
         if (!processed.measurement) {
             setProcessedModelTimer = setTimeout(function () {
                 setProcessedModel(new StraightFace(), 'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n```' + JSON.stringify(processed.model) + '```');
-            }, 12000);
+            }, 2500);
             return;
         }
 
