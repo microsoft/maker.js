@@ -211,10 +211,6 @@ svg#drawing line, svg#drawing circle, svg#drawing path {
     fill: none;
 }
 
-.wait svg#drawing line, .wait svg#drawing circle, .wait svg#drawing path {
-    stroke: #5B9DE3;
-}
-
 svg#drawing .locked {
     stroke: #0000FF;
 }
@@ -650,8 +646,8 @@ body.full-screen {
     stroke: #000;
 }
 
-.full-screen.wait svg#drawing line, .full-screen.wait svg#drawing circle, .full-screen.wait svg#drawing path {
-    stroke: #999;
+.wait svg#drawing line, .wait svg#drawing circle, .wait svg#drawing path {
+    opacity: .5;
 }
 
 .full-screen #view svg#drawing text {
