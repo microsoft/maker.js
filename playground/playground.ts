@@ -79,6 +79,7 @@
         hasKit: false
     };
     var setParamTimeoutId: NodeJS.Timer;
+    var setProcessedModelTimer: NodeJS.Timer;
     var animationTimeoutId: NodeJS.Timer;
     var dockModes = {
         None: '',
@@ -591,6 +592,8 @@
 
     function setZoom(panZoom: Pointer.IPanZoom) {
 
+        if (document.body.classList.contains('wait')) return;
+
         var svgElement = viewSvgContainer.children[0] as HTMLElement;
         if (!svgElement) return;
 
@@ -623,7 +626,9 @@
         }
     }
 
-    function setProcessedModel(model: MakerJs.IModel, error?: string, doInit?: boolean) {
+    function setProcessedModel(model: MakerJs.IModel, error?: string) {
+        clearTimeout(setProcessedModelTimer);
+
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
@@ -635,15 +640,10 @@
             }
         }
 
-        if (model) {
-            onProcessed(doInit);
-        }
-    }
-
-    function onProcessed(doInit = true) {
+        if (!processed.model) return;
 
         //now safe to render, so register a resize listener
-        if (init && doInit) {
+        if (init && model) {
             init = false;
 
             initialize();
@@ -651,20 +651,22 @@
 
         //todo: find minimum viewScale
 
-        if (processed.model) {
-            processed.measurement = makerjs.measure.modelExtents(processed.model);
+        processed.measurement = makerjs.measure.modelExtents(processed.model);
 
-            if (!processed.measurement) {
+        if (!processed.measurement) {
+            setProcessedModelTimer = setTimeout(function () {
                 setProcessedModel(new StraightFace(), 'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n```' + JSON.stringify(processed.model) + '```');
-                return;
-            }
-
-            if (!viewScale || checkFitToScreen.checked) {
-                fitOnScreen();
-            } else if (renderUnits != processed.model.units) {
-                fitNatural();
-            }
+            }, 12000);
+            return;
         }
+
+        if (!viewScale || checkFitToScreen.checked) {
+            fitOnScreen();
+        } else if (renderUnits != processed.model.units) {
+            fitNatural();
+        }
+
+        document.body.classList.remove('wait');
 
         render();
 
@@ -682,6 +684,7 @@
         if (onViewportChange) {
             onViewportChange();
         }
+
     }
 
     function constructOnMainThread() {
@@ -850,7 +853,7 @@
 
     export function runCodeFromEditor() {
 
-        setProcessedModel(new Wait());
+        document.body.classList.add('wait');
 
         processed.kit = null;
         populateParams(null);
@@ -1134,6 +1137,8 @@
     }
 
     function cleanHtml(html: string) {
+        if (!html) return '';
+
         var div = document.createElement('div');
         div.innerHTML = html;
 
@@ -1389,7 +1394,7 @@
             dockEditor(dockModes.SideBySide);
         }
 
-        setProcessedModel(new Wait(), '', false);
+        document.body.classList.add('wait');
 
         querystringParams = new QueryStringParams();
         var parentLoad = querystringParams['parentload'] as string;

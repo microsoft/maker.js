@@ -211,6 +211,10 @@ svg#drawing line, svg#drawing circle, svg#drawing path {
     fill: none;
 }
 
+.wait svg#drawing line, .wait svg#drawing circle, .wait svg#drawing path {
+    stroke: #5B9DE3;
+}
+
 svg#drawing .locked {
     stroke: #0000FF;
 }
