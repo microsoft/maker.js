@@ -32,7 +32,8 @@ function runCodeIsolated(javaScript) {
 function playgroundRender(model) {
     var response = {
         requestId: activeRequestId,
-        model: model
+        model: model,
+        html: getHtml()
     };
     postMessage(response);
 }
@@ -42,6 +43,22 @@ function postError(requestId, error) {
         error: error
     };
     postMessage(response);
+}
+function getLogsHtmls() {
+    var logHtmls = [];
+    if (logs.length > 0) {
+        logHtmls.push('<div class="section"><div class="separator"><span class="console">console:</span></div>');
+        logs.forEach(function (log) {
+            var logDiv = new makerjs.exporter.XmlTag('div', { "class": "console" });
+            logDiv.innerText = log;
+            logHtmls.push(logDiv.toString());
+        });
+        logHtmls.push('</div>');
+    }
+    return logHtmls;
+}
+function getHtml() {
+    return htmls.concat(getLogsHtmls()).join('');
 }
 var mockDocument = {
     write: function (html) {
@@ -99,19 +116,10 @@ onmessage = function (ev) {
         logs.length = baseLogLength;
         try {
             var model = makerjs.kit.construct(kit, request.paramValues);
-            if (logs.length > 0) {
-                htmls.push('<div class="section"><div class="separator"><span class="console">console:</span></div>');
-                logs.forEach(function (log) {
-                    var logDiv = new makerjs.exporter.XmlTag('div', { "class": "console" });
-                    logDiv.innerText = log;
-                    htmls.push(logDiv.toString());
-                });
-                htmls.push('</div>');
-            }
             var response = {
                 requestId: request.requestId,
                 model: model,
-                html: htmls.join('')
+                html: getHtml()
             };
             postMessage(response);
         }
