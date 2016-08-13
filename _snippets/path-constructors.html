@@ -16,6 +16,8 @@ and convert it to a constructor function.
 </p>
 
 {% highlight javascript %}
+//render a line
+
 var makerjs = require('makerjs');
 
 var line = { 
@@ -29,9 +31,9 @@ var svg = makerjs.exporter.toSVG(line);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/bbh0y3tm/" target="_blank">try it in JsFiddle &#8663;</a>
-
 {% highlight javascript %}
+//render a line created by a function
+
 var makerjs = require('makerjs');
 
 function line() { 
@@ -45,8 +47,6 @@ var svg = makerjs.exporter.toSVG(new line());
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/4m5f25rn/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <p>Of course this example is not very useful because it only produces a line with the same origin and end every time. 
 Instead, these should be passed as parameters.</p>
 
@@ -59,6 +59,8 @@ Instead, these should be passed as parameters.</p>
 </ul>
 
 {% highlight javascript %}
+//render the basic paths
+
 var makerjs = require('makerjs');
 
 var line = new makerjs.paths.Line([0, 0], [50, 50]);
@@ -69,8 +71,6 @@ var svg = makerjs.exporter.toSVG([line, circle, arc]);
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/mc4pLsa3/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
