@@ -640,9 +640,12 @@ body.full-screen {
 .full-screen .code-header {
     margin-top: 0;
 }
+
 .full-screen #blueprint-canvas {
     background-image: none;
     background-color: inherit;
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
 }
 
 .full-screen svg#drawing line, .full-screen svg#drawing circle, .full-screen svg#drawing path {
