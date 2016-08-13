@@ -249,9 +249,20 @@ namespace MakerJsRequireIframe {
             var originalFn = parent.makerjs.exporter.toSVG;
             var captureExportedModel: MakerJs.IModel;
 
-            parent.makerjs.exporter.toSVG = function (model: MakerJs.IModel, options?: MakerJs.exporter.ISVGRenderOptions): string {
-                captureExportedModel = model;
-                return originalFn(model, options);
+            parent.makerjs.exporter.toSVG = function (itemToExport: any, options?: MakerJs.exporter.ISVGRenderOptions): string {
+
+                if (parent.makerjs.isModel(itemToExport)) {
+                    captureExportedModel = itemToExport as MakerJs.IModel;
+
+                } else if (Array.isArray(itemToExport)) {
+                    //issue: this won't handle an array of models
+                    captureExportedModel = { paths: <MakerJs.IPathMap>itemToExport };
+
+                } else if (parent.makerjs.isPath(itemToExport)) {
+                    captureExportedModel = { paths: { "0": <MakerJs.IPath>itemToExport } };
+                }
+
+                return originalFn(itemToExport, options);
             };
 
             //when all requirements are collected, run the code again, using its requirements
