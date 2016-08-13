@@ -114,6 +114,28 @@ namespace MakerJsRequireIframe {
         head.appendChild(script);
     }
 
+    function getLogsHtmls() {
+
+        var logHtmls: string[] = [];
+
+        if (logs.length > 0) {
+            logHtmls.push('<div class="section"><div class="separator"><span class="console">console:</span></div>');
+
+            logs.forEach(function (log) {
+                var logDiv = new makerjs.exporter.XmlTag('div', { "class": "console" });
+                logDiv.innerText = log;
+                logHtmls.push(logDiv.toString());
+            });
+            logHtmls.push('</div>');
+        }
+
+        return logHtmls;
+    }
+
+    function getHtml() {
+        return htmls.concat(getLogsHtmls()).join('');
+    }
+
     var head: HTMLHeadElement;
     var loads: IStringMap = {};
     var reloads: string[] = [];
@@ -266,19 +288,8 @@ namespace MakerJsRequireIframe {
                     }
                 }
 
-                if (logs.length > 0) {
-                    htmls.push('<div class="section"><div class="separator"><span class="console">console:</span></div>');
-
-                    logs.forEach(function (log) {
-                        var logDiv = new makerjs.exporter.XmlTag('div', { "class": "console" });
-                        logDiv.innerText = log;
-                        htmls.push(logDiv.toString());
-                    });
-                    htmls.push('</div>');
-                }
-
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(htmls.join(''), window.module.exports || model || captureExportedModel, orderedDependencies);
+                parent.MakerJsPlayground.processResult(getHtml(), window.module.exports || model || captureExportedModel, orderedDependencies);
 
             }, 0);
 
@@ -321,7 +332,7 @@ namespace MakerJsRequireIframe {
     }
 
     window.playgroundRender = function (result) {
-        parent.MakerJsPlayground.processResult('', result);
+        parent.MakerJsPlayground.processResult(getHtml(), result);
     }
 
     function devNull() { }
