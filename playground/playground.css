@@ -448,15 +448,18 @@ svg#pointers line {
     padding-bottom: 0;
 }
 
-.code-header {
+.code-header, .code-footer {
     font-family: monospace;
     background-color: #d0d0d0;
-    margin-top: 2em;
     padding: .5em 1em;
     border: 1px solid #aaa;
-    text-align: right;
     position: relative;
     line-height: 22px;
+}
+
+.code-header {
+    margin-top: 2em;
+    text-align: right;
 }
 
 .code-header > span:first-child {
@@ -637,9 +640,12 @@ body.full-screen {
 .full-screen .code-header {
     margin-top: 0;
 }
+
 .full-screen #blueprint-canvas {
     background-image: none;
     background-color: inherit;
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
 }
 
 .full-screen svg#drawing line, .full-screen svg#drawing circle, .full-screen svg#drawing path {
@@ -665,4 +671,3 @@ body.full-screen {
 .full-screen #notes h1, .full-screen #notes h2, .full-screen #notes h3, .full-screen #notes h4, .full-screen #notes h5, .full-screen #notes h6, .full-screen #notes th, .full-screen #notes td:first-child {
     color: #333;
 }
-

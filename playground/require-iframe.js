@@ -177,9 +177,18 @@ var MakerJsRequireIframe;
             window.alert = originalAlert;
             var originalFn = parent.makerjs.exporter.toSVG;
             var captureExportedModel;
-            parent.makerjs.exporter.toSVG = function (model, options) {
-                captureExportedModel = model;
-                return originalFn(model, options);
+            parent.makerjs.exporter.toSVG = function (itemToExport, options) {
+                if (parent.makerjs.isModel(itemToExport)) {
+                    captureExportedModel = itemToExport;
+                }
+                else if (Array.isArray(itemToExport)) {
+                    //issue: this won't handle an array of models
+                    captureExportedModel = { paths: itemToExport };
+                }
+                else if (parent.makerjs.isPath(itemToExport)) {
+                    captureExportedModel = { paths: { "0": itemToExport } };
+                }
+                return originalFn(itemToExport, options);
             };
             //when all requirements are collected, run the code again, using its requirements
             runCodeGlobal(javaScript);

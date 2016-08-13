@@ -102,9 +102,6 @@
             <span>
                 SVG viewer
             </span>
-            <label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label>
-            <label><input id="check-show-origin" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show origin</label>
-            <label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label>
             <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
         </div>
 
@@ -123,6 +120,12 @@
             <div id="notes"></div>
 
         </section>
+
+        <div class="code-footer">
+            <label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label>
+            <label><input id="check-show-origin" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show origin</label>
+            <label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label>
+        </div>
 
     </main>
 
