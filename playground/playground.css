@@ -448,7 +448,7 @@ svg#pointers line {
     padding-bottom: 0;
 }
 
-.code-header, code-footer {
+.code-header, .code-footer {
     font-family: monospace;
     background-color: #d0d0d0;
     padding: .5em 1em;
