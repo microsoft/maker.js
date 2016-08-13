@@ -1,17 +1,13 @@
 ---
-title: Path independence
+title: Open vs Closed Geometry
 ---
 
 <p>
-In Maker.js, path objects are not continuous to one another. Of course your paths will typically connect point-to-point both visually
-and mathematically, but Maker.js does not have a notion of their connection. This gives the programmer great freedom,
-especially when modifying paths in external models.
+Maker.js works with both open and closed geometries. Let's start with an example of an open geometry:
 </p>
 
-<p>Example: these paths "connect"</p>
-
 {% highlight javascript %}
-//render a model with paths that form a closed geometry
+//render a model with paths that form an open geometry
 
 var makerjs = require('makerjs');
 
