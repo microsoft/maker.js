@@ -5,6 +5,8 @@ title: Basic Rendering in SVG
 <p>Call the <b>makerjs.exporter.toSVG</b> function and pass your path as a parameter:</p>
 
 {% highlight javascript %}
+//renders a line
+
 var makerjs = require('makerjs');
 
 var line = { 
@@ -18,8 +20,6 @@ var svg = makerjs.exporter.toSVG(line);
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/bbh0y3tm/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -27,6 +27,8 @@ document.write(svg);
 <p>You may also call <b>makerjs.exporter.toSVG</b> with an array of paths as a parameter:</p>
 
 {% highlight javascript %}
+//renders a line and a circle
+
 var makerjs = require('makerjs');
 
 var line = { 
@@ -47,8 +49,6 @@ var svg = makerjs.exporter.toSVG(pathArray);
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/ajgnpxfk/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
