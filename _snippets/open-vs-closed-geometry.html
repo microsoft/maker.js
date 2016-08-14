@@ -3,23 +3,42 @@ title: Open vs Closed Geometry
 ---
 
 <p>
-Maker.js works with both open and closed geometries. Let's start with an example of an open geometry:
+    Maker.js works with both open and closed geometries. However as we will soon see, with closed geometries there is additional functionality.
 </p>
 
+<p>
+    We briefly discussed <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#Path%20independence%20and%20Chains">chains and endless chains</a>,
+    now we will see how they relate to open and closed geometries.
+</p>
+
+Examples of Open Geometry:
+<ul>
+    <li>A solitary line path.</li>
+    <li>A solitary arc path.</li>
+    <li>A chain of paths (with dead ends).</li>
+</ul>
+
 {% highlight javascript %}
-//render a model with paths that form an open geometry
+//an asterisk shape that is not a closed geometry
 
 var makerjs = require('makerjs');
 
-var model = { 
-  paths: {
-    "v": new makerjs.paths.Line([0, 0], [0, 100]),
-    "h": new makerjs.paths.Line([0, 0], [100, 0]),
-    "arc":new makerjs.paths.Arc([0, 0], 100, 0, 90)
-  }
-};
+function asterisk() {
 
-var svg = makerjs.exporter.toSVG(model);
+  function plus() {
+    this.paths = {
+      h: new makerjs.paths.Line([-5, 0], [5, 0]),
+      v: new makerjs.paths.Line([0, -5], [0, 5])
+    }
+  }
+
+  this.models = {
+    plus: new plus(),
+    plus1: makerjs.model.rotate(new plus(), 45)
+  };
+}
+
+var svg = makerjs.exporter.toSVG(new asterisk());
 
 document.write(svg);
 {% endhighlight %}
@@ -28,6 +47,15 @@ document.write(svg);
     LiveDoc.evalLastCode();
 </script>
 
+Examples of Closed Geometry:
+<ul>
+    <li>A circle path.</li>
+    <li>An endless chain of paths.</li>
+    <li>Any of the above, nested within another and not overlapping.</li>
+</ul>
+
 <p>
-When a maker machine uses your drawing, the machine's print driver will usually sort the paths prior to printing so that lines are cut continuously when they are connected point to point. 
+    The <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#Basic%20models">house, tablet mount, circular adapter plate, and skateboard deck</a> are good examples of a closed geometry.
+    They have nested endless chains (such as circles, squares, or rounded rectangles).
+    If you were to print them on a laser cutter, you would have a complete shape.
 </p>
