@@ -464,7 +464,7 @@ svg {
     padding: 2px;
 }
 
-svg path {
+svg path, svg line, svg circle {
     stroke-width: 2px;    
 }
 
