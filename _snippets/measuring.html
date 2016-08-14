@@ -20,6 +20,8 @@ To get the bounding rectangle of a path or a model, use:
 <p>Measure path example:</p>
 
 {% highlight javascript %}
+//render an arc, and a measurement reactangle around it
+
 var makerjs = require('makerjs');
 
 var arc = new makerjs.paths.Arc([0, 0], 100, 45, 135);
@@ -45,8 +47,6 @@ var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
 document.write(svg);
 {% endhighlight %}
 
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/1yvfzmgn/" target="_blank">try it in JsFiddle &#8663;</a>
-
 <script>
     LiveDoc.evalLastCode();
 </script>
@@ -54,6 +54,8 @@ document.write(svg);
 <p>Measure model example:</p>
 
 {% highlight javascript %}
+//render an oval, and a measurement reactangle around it
+
 var makerjs = require('makerjs');
 
 var oval = new makerjs.models.Oval(100, 20);
@@ -77,8 +79,6 @@ var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
 
 document.write(svg);
 {% endhighlight %}
-
-<a class="fiddle" href="https://jsfiddle.net/danmarshall/9hyo87d8/" target="_blank">try it in JsFiddle &#8663;</a>
 
 <script>
     LiveDoc.evalLastCode();
