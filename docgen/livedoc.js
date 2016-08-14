@@ -50,8 +50,8 @@ var LiveDoc;
             //add a button
             var code = allCodes.item(i);
             var codeText = code.innerText;
-            var keywordPos = codeText.toLowerCase().indexOf('render');
-            if (!(keywordPos === 2 || keywordPos === 3))
+            var keywordPos = codeText.toLowerCase().indexOf('//'); //if code block begins with a comment, then show a Play button
+            if (!(keywordPos === 0))
                 continue;
             var pre = code.parentElement;
             var button = '<button class="livedoc-play" onclick="LiveDoc.tryIt(' + i + ')">&nbsp;&#x25BA; Play&nbsp;</button>';

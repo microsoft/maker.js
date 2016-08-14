@@ -66,8 +66,8 @@ namespace LiveDoc {
 
             var code = allCodes.item(i) as HTMLElement;
             var codeText = code.innerText;
-            var keywordPos = codeText.toLowerCase().indexOf('render');
-            if (!(keywordPos === 2 || keywordPos === 3)) continue;
+            var keywordPos = codeText.toLowerCase().indexOf('//');  //if code block begins with a comment, then show a Play button
+            if (!(keywordPos === 0)) continue;
 
             var pre = code.parentElement;
 
