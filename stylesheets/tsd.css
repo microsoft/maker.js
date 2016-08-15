@@ -590,6 +590,13 @@ button.livedoc-play {
     right: 0;
 }
 
+a.edit-source {
+    position: absolute;
+    bottom: .4em;
+    right: 1em;
+    font-size: small;
+}
+
 iframe.play {
     width: 100%;
     margin-bottom: 20px;
