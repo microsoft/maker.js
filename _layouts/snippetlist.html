@@ -8,13 +8,7 @@ layout: posts
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
 				<ul class="tsd-index-list">
-{% for snippet_title in page.snippet_titles %}
-  {% for snippet in site.snippets %}
-    {% if snippet.title == snippet_title %}
-          <li class="tsd-kind-variable tsd-parent-kind-module"><a href="#{{ snippet.title }}" class="tsd-kind-icon">{{ snippet.title }}</a></li>
-    {% endif %}
-  {% endfor %}
-{% endfor %}				
+{% for snippet_title in page.snippet_titles %}{% for snippet in site.snippets %}{% if snippet.title == snippet_title %}<li class="tsd-kind-variable tsd-parent-kind-module"><a href="#{{ snippet.title }}" class="tsd-kind-icon">{{ snippet.title }}</a></li>{% endif %}{% endfor %}{% endfor %}
 				</ul>
 			</section>
 		</div>
@@ -23,21 +17,12 @@ layout: posts
 
 <section class="tsd-panel-group tsd-member-group ">
 
-{% for snippet_title in page.snippet_titles %}
-  {% for snippet in site.snippets %}
-    {% if snippet.title == snippet_title %}
-    
-<section class="tsd-panel tsd-member">
-   <a name="{{ snippet.title }}" ></a>
-   <h3>{{ snippet.title }}</h3>
-   <div class="tsd-comment tsd-typography">
-{{ snippet.content }}
-   </div>
-</section>
-
-    {% endif %}
-  {% endfor %}
-{% endfor %}
+{% for snippet_title in page.snippet_titles %}{% for snippet in site.snippets %}{% if snippet.title == snippet_title %}<section class="tsd-panel tsd-member">
+    <a name="{{ snippet.title }}" ></a>
+    <h3>{{ snippet.title }}</h3>
+    <div class="tsd-comment tsd-typography">{{ snippet.content }}</div>
+    <!-- path: {{ snippet.path }} -->
+</section>{% endif %}{% endfor %}{% endfor %}
 
 </section>
 
