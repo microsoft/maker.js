@@ -16,9 +16,11 @@ var makerjs = require('makerjs');
 function box(origin) {
     this.models = {
         outer: new makerjs.models.RoundRectangle(100, 100, 1),
-        inner: new makerjs.models.RoundRectangle(50, 50, 1)
     };
-    this.models.inner.origin = [25, 25];
+    this.paths = {
+      inner: new makerjs.paths.Circle([50, 50], 25)
+    };
+
     this.origin = origin;
 }
 
@@ -36,8 +38,8 @@ var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 
-console.log(box1.models.inner.paths.Left.origin);
-console.log(box2.models.inner.paths.Left.origin);
+console.log(box1.paths.inner.origin);
+console.log(box2.paths.inner.origin);
 
 {% endhighlight %}
 
@@ -46,7 +48,7 @@ console.log(box2.models.inner.paths.Left.origin);
 </script>
 
 <p>
-    In this example, both <code>box1.models.inner.paths.Left.origin</code> and <code>box2.models.inner.paths.Left.origin</code> have an origin of <code>[0, 49]</code>
+    In this example, both <code>box1.paths.inner.origin</code> and <code>box2.paths.inner.origin</code> have an origin of <code>[50, 50]</code>
     even though they are not in the same place, because they are located relative to the model that contains them. To make all models and paths occupy a singular coordinate space,
     we can use <a href="../api/modules/makerjs.model.html#originate">makerjs.model.originate</a>:
 </p>
@@ -59,28 +61,32 @@ var makerjs = require('makerjs');
 function box(origin) {
     this.models = {
         outer: new makerjs.models.RoundRectangle(100, 100, 1),
-        inner: new makerjs.models.RoundRectangle(50, 50, 1)
     };
-    this.models.inner.origin = [25, 25];
+    this.paths = {
+      inner: new makerjs.paths.Circle([50, 50], 25)
+    };
+
     this.origin = origin;
 }
 
 var box1 = new box([0, 0]);
 var box2 = new box([150, 0]);
 
-var model = makerjs.model.originate({
+var model = {
     models: {
         box1: box1,
         box2: box2
     }
-});
+};
+
+makerjs.model.originate(model);
 
 var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 
-console.log(box1.models.inner.paths.Left.origin);
-console.log(box2.models.inner.paths.Left.origin);
+console.log(box1.paths.inner.origin);
+console.log(box2.paths.inner.origin);
 
 {% endhighlight %}
 
@@ -89,5 +95,5 @@ console.log(box2.models.inner.paths.Left.origin);
 </script>
 
 <p>
-    Now <code>box1.models.inner.paths.Left.origin</code> and <code>box2.models.inner.paths.Left.origin</code> have the origins <code>[25, 74]</code> and <code>[175, 74]</code>.
+    Now <code>box1.paths.inner.origin</code> and <code>box2.paths.inner.origin</code> have the origins <code>[50, 50]</code> and <code>[200, 50]</code>.
 </p>
