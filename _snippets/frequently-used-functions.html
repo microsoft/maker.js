@@ -3,7 +3,7 @@ title: Frequently used functions
 ---
 
 <p>
-    It's good to be aware of these functions which apply to many drawing scenarios.
+    It's good to be aware of these functions which apply to many drawing scenarios. Also, browse the APIs of each module for lesser used specialized functions.
 </p>
 
 <h4>
@@ -19,7 +19,7 @@ title: Frequently used functions
     </li>
     <li>
         <a href="/maker.js/docs/api/modules/makerjs.angle.html#ofarcspan">angle.ofArcSpan</a>
-        <p>Given an arc, returns total angle of an arc between its start and end angles.</p>
+        <p>Given an arc, returns total angle span between its start and end angles.</p>
     </li>
     <li>
         <a href="/maker.js/docs/api/modules/makerjs.angle.html#oflineindegrees">angle.ofLineInDegrees</a>
@@ -33,27 +33,53 @@ title: Frequently used functions
         <a href="/maker.js/docs/api/modules/makerjs.angle.html#ofpointinradians">angle.ofPointInRadians</a>
         <p>Given two points, returns the angle of the line through them, in radians.</p>
     </li>
+    <li>
+        <a href="/maker.js/docs/api/modules/makerjs.angle.html#todegrees">angle.toDegrees</a>
+        <p>Convert an angle from radians to degrees.</p>
+    </li>
+    <li>
+        <a href="/maker.js/docs/api/modules/makerjs.angle.html#toradians">angle.toRadians</a>
+        <p>Convert an angle from degrees to radians.</p>
+    </li>
 </ul>
 
-<!--
+<h4>
+    Functions for working with measurements in the <a href="/maker.js/docs/api/modules/makerjs.measure.html#content">makerjs.measure</a> module:
+</h4>
 
-    angle.toDegrees
-    angle.toRadians
+<ul>
+    <li>
+        <a href="/maker.js/docs/api/modules/makerjs.measure.html#isangleequal">measure.isAngleEqual</a>
+        <p>Given two angles, determine if they are equal within a margin of accuracy.</p>
+    </li>
+    <li>
+        <a href="/maker.js/docs/api/modules/makerjs.measure.html#ismeasurementoverlapping">measure.isMeasurementOverlapping</a>
+        <p>Given two measurements, determine if they are overlapping. Also known as "bounding box overlap".</p>
+    </li>
+    <li>
+        <a href="/maker.js/docs/api/modules/makerjs.measure.html#ispointequal">measure.isPointEqual</a>
+        <p>Given two points, determine if they are equal within a distance of accuracy.</p>
+    </li>
+    <li>
+        <a href="/maker.js/docs/api/modules/makerjs.measure.html#pathlength">measure.pathLength</a>
+        <p>Measures the length of a path.</p>
+    </li>
+    <li>
+        <a href="/maker.js/docs/api/modules/makerjs.measure.html#pointdistance">measure.pointDistance</a>
+        <p>Calculates the distance between two points using the Pythagorean theorem.</p>
+    </li>
+</ul>
 
-    measure.isMeasurementOverlapping
-    measure.isAngleEqual
-    measure.isPointEqual
-    measure.pathLength
-    measure.pointDistance
+    <!--
 
-    point.add
-    point.average
-    point.closest
-    point.distort
-    point.fromPathEnds
-    point.fromPolar
-    point.rotate
-    point.scale
-    point.subtract
+        point.add
+        point.average
+        point.closest
+        point.distort
+        point.fromPathEnds
+        point.fromPolar
+        point.rotate
+        point.scale
+        point.subtract
 
--->
+    -->
