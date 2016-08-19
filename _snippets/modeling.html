@@ -1,31 +1,11 @@
 ---
-title: Basic models
+title: Basic modeling
 ---
 
-<p>Maker.js provides these basic models:</p>
-
-<ul>
-    <li><a href="/maker.js/playground/?script=BezierCurve">Bezier Curve</a></li>
-    <li><a href="/maker.js/playground/?script=BoltCircle">Bolt Circle</a></li>
-    <li><a href="/maker.js/playground/?script=BoltRectangle">Bolt Rectangle</a></li>
-    <li><a href="/maker.js/playground/?script=ConnectTheDots">Connect the dots</a></li>
-    <li><a href="/maker.js/playground/?script=Dome">Dome</a></li>
-    <li><a href="/maker.js/playground/?script=Ellipse">Ellipse</a></li>
-    <li><a href="/maker.js/playground/?script=EllipticArc">Elliptic Arc</a></li>
-    <li><a href="/maker.js/playground/?script=Oval">Oval</a></li>
-    <li><a href="/maker.js/playground/?script=OvalArc">OvalArc</a></li>
-    <li><a href="/maker.js/playground/?script=Polygon">Polygon</a></li>
-    <li><a href="/maker.js/docs/api/classes/makerjs.models.rectangle.html#constructor">Rectangle</a></li>
-    <li><a href="/maker.js/playground/?script=Ring">Ring</a></li>
-    <li><a href="/maker.js/playground/?script=RoundRectangle">RoundRectangle</a></li>
-    <li><a href="/maker.js/playground/?script=SCurve">S curve</a></li>
-    <li><a href="/maker.js/playground/?script=Slot">Slot</a></li>
-    <li><a href="/maker.js/playground/?script=Square">Square</a></li>
-    <li><a href="/maker.js/playground/?script=Star">Star</a></li>
-    <li><a href="/maker.js/playground/?script=Text">Text</a></li>
-</ul>
-
-<p>Here are a few examples to illustrate how you might use these:</p>
+<p>
+    Given the fundamental models and ability to move instances of them, we can now start modeling. 
+    Here are a few examples to illustrate how you might use these:
+</p>
 
 <p>House:</p>
 
@@ -35,7 +15,7 @@ title: Basic models
 var makerjs = require('makerjs');
 
 var points = [
-  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0], 
+  [100, 0], [100, 100], [0, 175], [-100, 100], [-100, 0],
   [-20, 0], [-20, 80], [20, 80], [20, 0]
 ];
 
@@ -69,7 +49,7 @@ var makerjs = require('makerjs');
 
 var outer = new makerjs.models.RoundRectangle(200, 280, 8);
 
-var inner = new makerjs.models.RoundRectangle(160, 230, 8);   
+var inner = new makerjs.models.RoundRectangle(160, 230, 8);
 inner.origin = [20, 30];
 
 var buttonhole = new makerjs.paths.Circle([100, 15], 8);
@@ -77,7 +57,7 @@ var buttonhole = new makerjs.paths.Circle([100, 15], 8);
 var bolts = new makerjs.models.BoltRectangle(180, 260, 2);
 bolts.origin = [10, 10];
 
-var tabletFaceMount = { 
+var tabletFaceMount = {
   paths: { buttonhole: buttonhole },
   models: { inner: inner, outer: outer, bolts: bolts }
 };
@@ -98,7 +78,7 @@ document.write(svg);
 
 var makerjs = require('makerjs');
 
-var model = { 
+var model = {
   models: {
     ring1: new makerjs.models.Ring(40, 100),
     bc1: new makerjs.models.BoltCircle(90, 4, 10),
@@ -132,13 +112,13 @@ function truckBolts() {
 }
 
 function deck(width, length, truckOffset) {
-    
+
   var board = new makerjs.models.Oval(length, width);
   board.origin = [0, width / -2];
-    
+
   var truck1 = new truckBolts();
   truck1.origin = [truckOffset, 0];
-    
+
   var truck2 = new truckBolts();
   truck2.origin = [length - truckOffset, 0];
 
