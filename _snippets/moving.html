@@ -8,7 +8,7 @@ title: Moving
 </p>
 
 <p>
-    To illustrate this, let's create a model that has a couple of squares:
+    To illustrate this, let's create a model that has a few squares:
 </p>
 
 {% highlight javascript %}
@@ -89,18 +89,26 @@ document.write(svg);
 {% highlight javascript %}
 //move some paths within the squares
 
+function Squares() {
+    this.models = {
+        s1: new makerjs.models.Square(100),
+        s2: makerjs.model.move(new makerjs.models.Square(100), [120, 0]),
+        s3: new makerjs.models.Square(100)
+    };
+    this.models.s3.origin = [240, 0];
+}
+
 var makerjs = require('makerjs');
-var square = new makerjs.models.Square(100);
-
-square.origin = [100, 100];
-
-//move a path to an absolute point
-makerjs.path.move(square.paths.ShapeLine1, [50, 20]);
+var squares = new Squares();
 
 //move a path by a relative distance
-makerjs.path.moveRelative(square.paths.ShapeLine3, [0, 20]);
+makerjs.path.moveRelative(squares.models.s3.paths.ShapeLine3, [0, 20]);
 
-var svg = makerjs.exporter.toSVG(square);
+//move a path to an absolute point
+makerjs.path.move(squares.models.s2.paths.ShapeLine1, [30, 20]);
+
+var svg = makerjs.exporter.toSVG(squares);
+
 
 document.write(svg);
 {% endhighlight %}
@@ -110,6 +118,6 @@ document.write(svg);
 </script>
 
 <p>
-    Notice that the square had an origin of [100, 100] but we moved a line within the square to an absolute point [50, 20]. Since the line is contained within the square model, its
-    coordinates are in terms of the square, which is why it appears to be at [150, 120].
+    Notice that the 2nd square had an origin of [120, 0] but we moved a line within the square to an absolute point [30, 20]. Since the line is contained within the square model, its
+    coordinates are in terms of the square, which is why it appears to be at [150, 20].
 </p>
