@@ -349,16 +349,33 @@ namespace MakerJs.path {
 
         if (p) {
 
-            function setPoint(line: IPathLine, useOrigin: boolean) {
-                if (useOrigin) {
-                    line.origin = p;
-                } else {
-                    line.end = p;
-                }
+            var lines = [lineA, lineB];
+            var useOrigin = [useOriginA, useOriginB];
+
+            if (arguments.length === 2) {
+                //converge to closest
+
+                lines.forEach(function (line, i) {
+                    useOrigin[i] = (point.closest(p, [line.origin, line.end]) === line.origin);
+                });
             }
 
-            setPoint(lineA, useOriginA);
-            setPoint(lineB, useOriginB);
+            function setPoint(line: IPathLine, useOrigin: boolean) {
+                var setP: IPoint;
+
+                if (useOrigin) {
+                    setP = line.origin;
+                } else {
+                    setP = line.end;
+                }
+
+                setP[0] = p[0];
+                setP[1] = p[1];
+            }
+
+            lines.forEach(function (line, i) {
+                setPoint(line, useOrigin[i]);
+            });
         }
 
         return p;
