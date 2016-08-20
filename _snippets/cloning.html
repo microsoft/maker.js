@@ -3,7 +3,6 @@ title: Cloning
 ---
 
 <p>
-<<<<<<< Updated upstream
     Models and paths are simple JavaScript objects, so they are easy to clone is a way that is standard to JavaScript. Maker.js provides a few functions for cloning:
 </p>
 
@@ -56,23 +55,3 @@ document.write(svg);
 <script>
     LiveDoc.evalLastCode();
 </script>
-=======
-    The beauty of having our models as simple JavaScript objects means that we can use
-</p>
-
-//create some squares side by side
-var makerjs = require('makerjs');
-
-var squares = { models: {} };
-
-var template = new makerjs.models.Rectangle(50, 100);
-
-for (var a = 0; a < 360; a+= 15) {
-  var clone = makerjs.cloneObject(template);
-  squares.models[a] = makerjs.model.rotate(clone, a);
-}
-
-var svg = makerjs.exporter.toSVG(squares);
-
-document.write(svg);
->>>>>>> Stashed changes
