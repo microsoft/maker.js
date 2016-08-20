@@ -9,6 +9,11 @@
  */
 namespace MakerJs {
 
+    /**
+     * Version info
+     */
+    export var version = 'debug';
+
     //units
 
     /**

@@ -41,6 +41,10 @@ and limitations under the License.
  */
 var MakerJs;
 (function (MakerJs) {
+    /**
+     * Version info
+     */
+    MakerJs.version = 'debug';
     //units
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise.
@@ -6661,4 +6665,5 @@ var MakerJs;
         models.Text = Text;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
+MakerJs.version = "0.9.9";
 ﻿var Bezier = require('bezier-js');
