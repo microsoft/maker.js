@@ -3,38 +3,100 @@ title: Intersection
 ---
 
 <p>
-
+    You can find the point(s) of intersection between two paths using <a href="/maker.js/docs/api/modules/makerjs.path.html#intersection">makerjs.path.intersection</a>.
+    If the paths do not intersect, this function will return null. Otherwise, it will return an <a href="/maker.js/docs/api/interfaces/makerjs.ipathintersection.html#content">object with a property named intersectionPoints</a> which is an array of points.
+    Additionally, if either path was an arc or circle, this object will contain the angles at which an intersection occurred.
 </p>
 
-<p>Scale path example:</p>
+<p>
+    Intersection examples:
+</p>
 
 {% highlight javascript %}
-//converge lines
+//line-line intersection
 
 var makerjs = require('makerjs');
 
 var model = {
-  origin: [0, 0],
-  paths: {
-    line1: new makerjs.paths.Line([0, 0], [10, 5]),
-    line2: new makerjs.paths.Line([0, 10], [10, 4]),
-    line3: new makerjs.paths.Line([1, 0], [5, -2])
-  }
+    paths: {
+        line1: new makerjs.paths.Line([0, 0], [20, 10]),
+        line2: new makerjs.paths.Line([2, 10], [50, 2])
+    }
 }
 
-var clone1 = makerjs.cloneObject(model);
-clone1.origin = [10, 0];
+var int = makerjs.path.intersection(model.paths.line1, model.paths.line2);
 
-var clone2 = makerjs.cloneObject(model);
-clone2.origin = [20, 0];
+if (int) {
+    var p = int.intersectionPoints[0];
+    var id = JSON.stringify(makerjs.point.rounded(p, .01));
+    model.paths[id] = new makerjs.paths.Circle(p, 1);
+}
 
-makerjs.path.converge(clone1.paths.line1, clone1.paths.line2);
-makerjs.path.converge(clone1.paths.line1, clone1.paths.line3, true, true);
+var svg = makerjs.exporter.toSVG(model);
 
-makerjs.path.converge(clone2.paths.line1, clone2.paths.line2, false, true);
-makerjs.path.converge(clone2.paths.line1, clone2.paths.line3, true, false);
+document.write(svg);
+{% endhighlight %}
 
-var svg = makerjs.exporter.toSVG({ models: { before: clone1, after: model, x: clone2 } });
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+{% highlight javascript %}
+//circle-circle intersection
+
+var makerjs = require('makerjs');
+
+var model = {
+    paths: {
+        circle1: new makerjs.paths.Circle([0, 10], 20),
+        circle2: new makerjs.paths.Circle([20, 0], 20)
+    }
+}
+
+var int = makerjs.path.intersection(model.paths.circle1, model.paths.circle2);
+
+if (int) {
+    int.intersectionPoints.forEach(
+        function(p, i) {
+            var id = JSON.stringify(makerjs.point.rounded(p, .01)) + ' intersects circle1 at ' + makerjs.round(int.path1Angles[i], .01) + ' circle2 at ' + makerjs.round(int.path2Angles[i], .01);
+            model.paths[id] = new makerjs.paths.Circle(p, 1);
+        }
+    );
+}
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+{% highlight javascript %}
+//line-arc intersection
+
+var makerjs = require('makerjs');
+
+var model = {
+    paths: {
+        line1: new makerjs.paths.Line([0, 0], [20, 10]),
+        arc1: new makerjs.paths.Arc([12, 0], 10, 45,215)
+    }
+}
+
+var int = makerjs.path.intersection(model.paths.line1, model.paths.arc1);
+
+if (int) {
+    int.intersectionPoints.forEach(
+        function(p, i) {
+            var id = JSON.stringify(makerjs.point.rounded(p, .01)) + ' arc1 at ' + makerjs.round(int.path2Angles[i], .01);
+            model.paths[id] = new makerjs.paths.Circle(p, 1);
+        }
+    );
+}
+
+var svg = makerjs.exporter.toSVG(model);
 
 document.write(svg);
 {% endhighlight %}
