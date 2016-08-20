@@ -12,6 +12,18 @@ title: For the browser
 <script src="http://microsoft.github.io/maker.js/target/js/browser.maker.js" type="text/javascript"></script>
 {% endhighlight %}
 
+To work with Bezier Curves, you will also need a copy of <a href="http://pomax.github.io/bezierjs/">Bezier.js by Pomax</a>:
+
+{% highlight html %}
+<script src="https://pomax.github.io/bezierjs/bezier.js" type="text/javascript"></script>
+{% endhighlight %}
+
+To work with fonts, you will need both Bezier.js (above) and a copy of <a href="https://github.com/nodebox/opentype.js">Opentype.js by Frederik De Bleser</a>
+
+{% highlight html %}
+<script src="http://opentype.js.org/dist/opentype.js" type="text/javascript"></script>
+{% endhighlight %}
+
 <hr>
 
 <p>Then, in your JavaScript, use the require function to get a reference:</p>
@@ -19,11 +31,3 @@ title: For the browser
 {% highlight javascript %}
 var makerjs = require('makerjs');
 {% endhighlight %}
-
-<!--
-
-    TODO:
-
-    Add Bezier.js, Opentype.js
-
--->
