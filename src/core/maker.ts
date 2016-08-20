@@ -1,3 +1,4 @@
+/// <reference path="../../typings/tsd.d.ts" />
 /**
  * Root module for Maker.js.
  * 

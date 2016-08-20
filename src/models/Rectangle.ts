@@ -9,7 +9,11 @@ namespace MakerJs.models {
          * 
          * Example:
          * ```
-         * var r = new makerjs.models.Rectangle(100, 50);
+         * //Create a rectangle from width and height
+         * var makerjs = require('makerjs');
+         * var model = new makerjs.models.Rectangle(50, 100);
+         * var svg = makerjs.exporter.toSVG(model);
+         * document.write(svg);
          * ```
          * 
          * @param width Width of the rectangle.
@@ -22,8 +26,12 @@ namespace MakerJs.models {
          * 
          * Example:
          * ```
+         * //Create a rectangle which will surround a model
+         * var makerjs = require('makerjs');
          * var e = new makerjs.models.Ellipse(17, 10); // draw an ellipse so we have something to surround.
          * var r = new makerjs.models.Rectangle(e, 3); // draws a rectangle surrounding the ellipse by 3 units.
+         * var svg = makerjs.exporter.toSVG({ models: { e: e, r: r }});
+         * document.write(svg);
          * ```
          * 
          * @param modelToSurround IModel object.
@@ -36,9 +44,13 @@ namespace MakerJs.models {
          * 
          * Example:
          * ```
+         * //Create a rectangle from a measurement.
+         * var makerjs = require('makerjs');
          * var e = new makerjs.models.Ellipse(17, 10); // draw an ellipse so we have something to measure.
          * var m = makerjs.measure.modelExtents(e);    // measure the ellipse.
          * var r = new makerjs.models.Rectangle(m);    // draws a rectangle surrounding the ellipse.
+         * var svg = makerjs.exporter.toSVG({ models: { e: e, r: r }});
+         * document.write(svg);
          * ```
          * 
          * @param measurement IMeasure object. See http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#pathextents and http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents to get measurements of paths and models.
