@@ -1437,7 +1437,7 @@ declare namespace MakerJs.measure {
      * @param arcA The arc to test.
      * @param arcB The arc to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if arc1 is overlapped with arcB.
+     * @returns Boolean true if arcA is overlapped with arcB.
      */
     function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean;
     /**
@@ -1481,7 +1481,7 @@ declare namespace MakerJs.measure {
      * @param lineA The line to test.
      * @param lineB The line to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if line1 is overlapped with lineB.
+     * @returns Boolean true if lineA is overlapped with lineB.
      */
     function isLineOverlapping(lineA: IPathLine, lineB: IPathLine, excludeTangents: boolean): boolean;
     /**
@@ -1489,7 +1489,7 @@ declare namespace MakerJs.measure {
      *
      * @param measureA The measurement to test.
      * @param measureB The measurement to check for overlap.
-     * @returns Boolean true if measure1 is overlapped with measureB.
+     * @returns Boolean true if measureA is overlapped with measureB.
      */
     function isMeasurementOverlapping(measureA: IMeasure, measureB: IMeasure): boolean;
     /**
@@ -2116,7 +2116,11 @@ declare namespace MakerJs.models {
          *
          * Example:
          * ```
-         * var r = new makerjs.models.Rectangle(100, 50);
+         * //Create a rectangle from width and height
+         * var makerjs = require('makerjs');
+         * var model = new makerjs.models.Rectangle(50, 100);
+         * var svg = makerjs.exporter.toSVG(model);
+         * document.write(svg);
          * ```
          *
          * @param width Width of the rectangle.
@@ -2128,8 +2132,12 @@ declare namespace MakerJs.models {
          *
          * Example:
          * ```
+         * //Create a rectangle which will surround a model
+         * var makerjs = require('makerjs');
          * var e = new makerjs.models.Ellipse(17, 10); // draw an ellipse so we have something to surround.
          * var r = new makerjs.models.Rectangle(e, 3); // draws a rectangle surrounding the ellipse by 3 units.
+         * var svg = makerjs.exporter.toSVG({ models: { e: e, r: r }});
+         * document.write(svg);
          * ```
          *
          * @param modelToSurround IModel object.
@@ -2141,9 +2149,13 @@ declare namespace MakerJs.models {
          *
          * Example:
          * ```
+         * //Create a rectangle from a measurement.
+         * var makerjs = require('makerjs');
          * var e = new makerjs.models.Ellipse(17, 10); // draw an ellipse so we have something to measure.
          * var m = makerjs.measure.modelExtents(e);    // measure the ellipse.
          * var r = new makerjs.models.Rectangle(m);    // draws a rectangle surrounding the ellipse.
+         * var svg = makerjs.exporter.toSVG({ models: { e: e, r: r }});
+         * document.write(svg);
          * ```
          *
          * @param measurement IMeasure object. See http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#pathextents and http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents to get measurements of paths and models.

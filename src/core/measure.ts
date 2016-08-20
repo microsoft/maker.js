@@ -73,7 +73,7 @@ namespace MakerJs.measure {
      * @param arcA The arc to test.
      * @param arcB The arc to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if arc1 is overlapped with arcB.
+     * @returns Boolean true if arcA is overlapped with arcB.
      */
     export function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
@@ -173,7 +173,7 @@ namespace MakerJs.measure {
      * @param lineA The line to test.
      * @param lineB The line to check for overlap.
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-     * @returns Boolean true if line1 is overlapped with lineB.
+     * @returns Boolean true if lineA is overlapped with lineB.
      */
     export function isLineOverlapping(lineA: IPathLine, lineB: IPathLine, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
@@ -195,7 +195,7 @@ namespace MakerJs.measure {
      * 
      * @param measureA The measurement to test.
      * @param measureB The measurement to check for overlap.
-     * @returns Boolean true if measure1 is overlapped with measureB.
+     * @returns Boolean true if measureA is overlapped with measureB.
      */
     export function isMeasurementOverlapping(measureA: IMeasure, measureB: IMeasure): boolean {
         for (var i = 2; i--;) {
