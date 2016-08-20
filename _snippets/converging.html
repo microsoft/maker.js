@@ -1,11 +1,20 @@
 ---
-title: Converging
+title: Converging lines
 ---
 
 <p>
+    To make lines meet at their slope intersection point, use <a href="/maker.js/docs/api/modules/makerjs.path.html#converge">makerjs.path.converge</a>.
+    This function will only work with lines, it will not work with arcs.
 </p>
 
-<p>Scale path example:</p>
+<p>
+    The converge function will try to use the end of the line that is closest to the convergence point. If you need to specify which ends of your lines should be converged,
+    pass two additional boolean values. The boolean value is true to use the line's origin, false to use the end.
+</p>
+
+<p>
+    Converge example:
+</p>
 
 {% highlight javascript %}
 //converge lines
@@ -28,7 +37,7 @@ var clone2 = makerjs.cloneObject(model);
 clone2.origin = [20, 0];
 
 makerjs.path.converge(clone1.paths.line1, clone1.paths.line2);
-makerjs.path.converge(clone1.paths.line1, clone1.paths.line3, true, true);
+makerjs.path.converge(clone1.paths.line1, clone1.paths.line3);
 
 makerjs.path.converge(clone2.paths.line1, clone2.paths.line2, false, true);
 makerjs.path.converge(clone2.paths.line1, clone2.paths.line3, true, false);
