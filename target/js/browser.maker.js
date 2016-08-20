@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.9
+ *   version: 0.9.10
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -6860,6 +6860,6 @@ var MakerJs;
         models.Text = Text;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.9";
+MakerJs.version = "0.9.10";
 
 },{"clone":2}]},{},[]);

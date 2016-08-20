@@ -7,6 +7,7 @@ docgen/*
 docs/*
 examples/*
 external/*
+fonts/*
 playground/*
 src/*
 target/*
