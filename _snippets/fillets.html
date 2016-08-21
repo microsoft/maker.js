@@ -2,3 +2,132 @@
 title: Fillets
 ---
 
+<p>
+    Fillets are round corners where two paths meet. Rounding a corner can add strength to your part, as well as make it faster to print. Maker.js provides two types of fillets:
+    <a href="/maker.js/docs/api/modules/makerjs.path.html#fillet">traditional fillets</a> and <a href="/maker.js/docs/api/modules/makerjs.path.html#dogbone">dogbone fillets</a>.
+</p>
+
+<h4>Traditional fillet</h4>
+
+<p>
+    Using <a href="/maker.js/docs/api/modules/makerjs.path.html#fillet">makerjs.path.fillet</a> you can round a corner at the junction between two lines, two arcs, or a line and an arc.
+    This function will clip the two paths that you pass it, and will return a new arc path which fits between the clipped ends. The paths must meet at one point,
+    this is how it determines which ends of the paths to clip. You also provide a radius of the fillet. If the fillet cannot be created this function will return null.
+</p>
+
+{% highlight javascript %}
+//fillet between lines
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    line1: new makerjs.paths.Line([0, 20], [30, 10]),
+    line2: new makerjs.paths.Line([10, 0], [30, 10])
+  }
+}
+
+//create a fillet
+var arc = makerjs.path.fillet(model.paths.line1, model.paths.line2, 2);
+
+//add the fillet to the model
+model.paths.arc = arc;
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+{% highlight javascript %}
+//fillet between arcs
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    arc1: new makerjs.paths.Arc([0, 50], 50, 270, 0),
+    arc2: new makerjs.paths.Arc([100, 50], 50, 180, 270)
+  }
+}
+
+//create a fillet
+var arc = makerjs.path.fillet(model.paths.arc1, model.paths.arc2, 2);
+
+//add the fillet to the model
+model.paths.arc = arc;
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+{% highlight javascript %}
+//fillet between line and arc (or arc and line!)
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    arc: new makerjs.paths.Arc([0, 50], 50, 270, 0),
+    line: new makerjs.paths.Line([50, 50], [50, 0])
+  }
+}
+
+//create a fillet
+var arc2 = makerjs.path.fillet(model.paths.arc, model.paths.line, 2);
+
+//add the fillet to the model
+model.paths.arc2 = arc2;
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Dogbone fillet</h4>
+
+<p>
+    Many CNC tools are not able to cut a sharp interior corner. The way to clear the apex of interior corner is by encompassing the corner with a circular cut known as a dogbone fillet.
+    Use <a href="/maker.js/docs/api/modules/makerjs.path.html#dogbone">makerjs.path.dogbone</a> to round a corner at the junction between two lines.
+    This function will only work for two lines which must meet at one point. It will clip the two lines that you pass it, and will return a new arc path which clears the corner where the lines meet.
+    It will return null if a dogbone fillet cannot be created at the radius you specify.
+</p>
+
+{% highlight javascript %}
+//dogbone fillet between lines.
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    line1: new makerjs.paths.Line([0, 10], [10, 10]),
+    line2: new makerjs.paths.Line([10, 0], [10, 10])
+  }
+}
+
+//create a dogbone fillet
+var arc = makerjs.path.dogbone(model.paths.line1, model.paths.line2, 1);
+
+//add the fillet to the model
+model.paths.arc = arc;
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
