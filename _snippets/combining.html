@@ -32,19 +32,19 @@ function example(origin) {
 
 var examples = {
     models: {
-        none: new example([0, 100]),
-        union: new example([0, 0]),
-        subtract: new example([200, 100]),
-        intersect: new example([200, 0])
+        x1: new example([0, 0]),
+        x2: new example([200, 0]),
+        x3: new example([400, 0]),
+        x4: new example([500, 0])
     }
 };
 
 //save us some typing :)
 var x = examples.models;
 
-makerjs.model.combine(x.union.models.rect, x.union.models.oval, false, true, false, true);
-makerjs.model.combine(x.subtract.models.rect, x.subtract.models.oval, false, true, true, false);
-makerjs.model.combine(x.intersect.models.rect, x.intersect.models.oval, true, false, true, false);
+makerjs.model.combine(x.x2.models.rect, x.x2.models.oval, false, true, false, true);
+makerjs.model.combine(x.x3.models.rect, x.x3.models.oval, false, true, true, false);
+makerjs.model.combine(x.x4.models.rect, x.x4.models.oval, true, false, true, false);
 
 var svg = makerjs.exporter.toSVG(examples);
 
@@ -55,3 +55,49 @@ document.write(svg);
     LiveDoc.evalLastCode();
 </script>
 
+<p>
+    Instead of remembering the boolean flag combinations, shortcuts are provided for:
+    <ul>
+        <li><a href="/maker.js/docs/api/modules/makerjs.model.html#combineintersection">makerjs.model.combineIntersection</a></li>
+        <li><a href="/maker.js/docs/api/modules/makerjs.model.html#combinesubtraction">makerjs.model.combineSubtraction</a></li>
+        <li><a href="/maker.js/docs/api/modules/makerjs.model.html#combineunion">makerjs.model.combineUnion</a></li>
+    </ul>
+</p>
+
+{% highlight javascript %}
+//combine a rectangle and an oval, several ways
+
+var makerjs = require('makerjs');
+
+function example(origin) {
+    this.models = {
+        rect: new makerjs.models.Rectangle(100, 50),
+        oval: makerjs.model.move(new makerjs.models.Oval(100, 50), [50, 25])
+    };
+    this.origin = origin;
+}
+
+var examples = {
+    models: {
+        x1: new example([0, 0]),
+        x2: new example([200, 0]),
+        x3: new example([400, 0]),
+        x4: new example([500, 0])
+    }
+};
+
+//save us some typing :)
+var x = examples.models;
+
+makerjs.model.combineUnion(x.x2.models.rect, x.x2.models.oval);
+makerjs.model.combineSubtraction(x.x3.models.rect, x.x3.models.oval);
+makerjs.model.combineIntersection(x.x4.models.rect, x.x4.models.oval);
+
+var svg = makerjs.exporter.toSVG(examples);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
