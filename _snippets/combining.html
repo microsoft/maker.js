@@ -17,41 +17,39 @@ title: Combining with Boolean operations
     Each model must be a closed geometry. The effect of the 4 boolean parameters is shown in these examples:
 </p>
 
-<script>
-    //{% highlight javascript %}
-    //combine a rectangle and an oval, several ways
+{% highlight javascript %}
+//combine a rectangle and an oval, several ways
 
-    var makerjs = require('makerjs');
+var makerjs = require('makerjs');
     
-    function example(origin) {
-        this.models = {
-            rect: new makerjs.models.Rectangle(100, 50),
-            oval: makerjs.model.move(new makerjs.models.Oval(100, 50), [50, 25])
-        };
-        this.origin = origin;
-    }
-
-    var examples = {
-        models: {
-            none: new example([0, 100]),
-            union: new example([0, 0]),
-            subtract: new example([200, 100]),
-            intersect: new example([200, 0])
-        }
+function example(origin) {
+    this.models = {
+        rect: new makerjs.models.Rectangle(100, 50),
+        oval: makerjs.model.move(new makerjs.models.Oval(100, 50), [50, 25])
     };
+    this.origin = origin;
+}
 
-    //save us some typing :)
-    var x = examples.models;
+var examples = {
+    models: {
+        none: new example([0, 100]),
+        union: new example([0, 0]),
+        subtract: new example([200, 100]),
+        intersect: new example([200, 0])
+    }
+};
 
-    makerjs.model.combine(x.union.models.rect, x.union.models.oval, false, true, false, true);
-    makerjs.model.combine(x.subtract.models.rect, x.subtract.models.oval, false, true, true, false);
-    makerjs.model.combine(x.intersect.models.rect, x.intersect.models.oval, true, false, true, false);
+//save us some typing :)
+var x = examples.models;
 
-    var svg = makerjs.exporter.toSVG(examples);
+makerjs.model.combine(x.union.models.rect, x.union.models.oval, false, true, false, true);
+makerjs.model.combine(x.subtract.models.rect, x.subtract.models.oval, false, true, true, false);
+makerjs.model.combine(x.intersect.models.rect, x.intersect.models.oval, true, false, true, false);
 
-    document.write(svg);
-    //{% endhighlight %}
-</script>
+var svg = makerjs.exporter.toSVG(examples);
+
+document.write(svg);
+{% endhighlight %}
 
 <script>
     LiveDoc.evalLastCode();
