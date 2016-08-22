@@ -3,59 +3,87 @@ title: Open vs Closed Geometry
 ---
 
 <p>
-    Maker.js works with both open and closed geometries. However as we will soon see, with closed geometries there is additional functionality.
-</p>
-
-<p>
-    We briefly discussed <a href="/maker.js/docs/basic-drawing/#Path%20independence%20and%20Chains">chains and endless chains</a>,
-    now we will see how they relate to open and closed geometries.
+    An open geometry is when any path in a drawing is a dead end. A closed geometry is when all path ends meet and there are no dead end paths. A closed geometry forms an enclosed shape.
 </p>
 
 Examples of Open Geometry:
-<ul>
-    <li>A solitary line path.</li>
-    <li>A solitary arc path.</li>
-    <li>A chain of paths (with dead ends).</li>
-</ul>
-
-{% highlight javascript %}
-//an asterisk shape that is not a closed geometry
-
-var makerjs = require('makerjs');
-
-function asterisk() {
-
-  function plus() {
-    this.paths = {
-      h: new makerjs.paths.Line([-5, 0], [5, 0]),
-      v: new makerjs.paths.Line([0, -5], [0, 5])
-    }
-  }
-
-  this.models = {
-    plus: new plus(),
-    plus1: makerjs.model.rotate(new plus(), 45)
-  };
-}
-
-var svg = makerjs.exporter.toSVG(new asterisk());
-
-document.write(svg);
-{% endhighlight %}
 
 <script>
-    LiveDoc.evalLastCode();
+    (function () {
+        //open geometries
+
+        var makerjs = require('makerjs');
+        function asterisk() {
+
+            function plus() {
+                this.paths = {
+                    h: new makerjs.paths.Line([-5, 0], [5, 0]),
+                    v: new makerjs.paths.Line([0, -5], [0, 5])
+                }
+            }
+
+            this.models = {
+                plus: new plus(),
+                plus1: makerjs.model.rotate(new plus(), 45)
+            };
+        }
+
+        var model = {
+            models: {
+                a: new asterisk(),
+                b: new makerjs.models.ConnectTheDots(false, [[10, -5], [20, -5], [20, 5], [10, 5], [10, 0]])
+            }
+        };
+
+        var svg = makerjs.exporter.toSVG(model);
+
+        document.write(svg);
+
+    })();
 </script>
 
 Examples of Closed Geometry:
-<ul>
-    <li>A circle path.</li>
-    <li>An endless chain of paths.</li>
-    <li>Any of the above, nested within another and not overlapping.</li>
-</ul>
+
+<script>
+    (function () {
+        //closed geometries
+
+        var makerjs = require('makerjs');
+
+        var model = {
+            models: {
+
+                nut: {
+                    models: {
+                        polygon: new makerjs.models.Polygon(6, 20)
+                    },
+                    paths: {
+                        inner: new makerjs.paths.Circle(10)
+                    }
+                },
+
+                plate: makerjs.model.moveRelative({
+                    models: {
+                        outer: makerjs.model.center(new makerjs.models.Rectangle(60, 30)),
+                        inner: makerjs.model.center(new makerjs.models.Oval(45, 15)),
+                        bolts: makerjs.model.center(new makerjs.models.BoltRectangle(50, 20, 2)),
+                    },
+                }, [60, 0]),
+
+                triangle: makerjs.model.moveRelative(
+                  new makerjs.models.ConnectTheDots(true, [[-20, -17], [20, -17], [0, 17]])
+                , [120, 0])
+
+            }
+        };
+
+        var svg = makerjs.exporter.toSVG(model);
+
+        document.write(svg);
+
+    })();
+</script>
 
 <p>
-    The <a href="/maker.js/docs/basic-drawing/#Basic%20models">house, tablet mount, circular adapter plate, and skateboard deck</a> are good examples of a closed geometry.
-    They have nested endless chains (such as circles, squares, or rounded rectangles).
-    If you were to print them on a laser cutter, you would have a complete shape.
+    Maker.js works with both open and closed geometries. When your desire is to create three dimensional object, you will probably be using a closed geometry.
 </p>
