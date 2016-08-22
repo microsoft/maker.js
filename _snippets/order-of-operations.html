@@ -53,8 +53,14 @@ title: Order of Boolean operations
 
 </script>
 
+<hr/>
+
+<p>
+    We can start with all of the building blocks of our design: a star, a plus, and a frame:
+</p>
+
 {% highlight javascript %}
-//start with the basic skeleton of our project
+//the basic skeleton of our project
 
 var makerjs = require('makerjs');
 
@@ -66,6 +72,97 @@ var plus = makerjs.model.rotate({
         h: makerjs.model.center(new makerjs.models.Rectangle(110, 3))
     }
 }, -12.5);
+
+var frame = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.RoundRectangle(100, 80, 4)),
+        inner: makerjs.model.center(new makerjs.models.Rectangle(90, 70)),
+    }
+};
+
+var model = {
+    models: {
+        star: star,
+        plus: plus,
+        frame: frame
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    The first step is to combine the vertical and horizontal bars of the plus:
+</p>
+
+{% highlight javascript %}
+//combine the plus
+
+var makerjs = require('makerjs');
+
+var star = new makerjs.models.Star(28, 25, 20);
+
+var plus = makerjs.model.rotate({
+    models: {
+        v: makerjs.model.center(new makerjs.models.Rectangle(3, 90)),
+        h: makerjs.model.center(new makerjs.models.Rectangle(110, 3))
+    }
+}, -12.5);
+
+//make a union from the vertical and horizontal
+makerjs.model.combineUnion(plus.models.v, plus.models.h);
+
+var frame = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.RoundRectangle(100, 80, 4)),
+        inner: makerjs.model.center(new makerjs.models.Rectangle(90, 70)),
+    }
+};
+
+var model = {
+    models: {
+        star: star,
+        plus: plus,
+        frame: frame
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    Next we will combine the star and the plus:
+</p>
+{% highlight javascript %}
+//combine the plus
+
+var makerjs = require('makerjs');
+
+var star = new makerjs.models.Star(28, 25, 20);
+
+var plus = makerjs.model.rotate({
+    models: {
+        v: makerjs.model.center(new makerjs.models.Rectangle(3, 90)),
+        h: makerjs.model.center(new makerjs.models.Rectangle(110, 3))
+    }
+}, -12.5);
+
+makerjs.model.combineUnion(plus.models.v, plus.models.h);
+
+//make a union from the star and the plus:
+makerjs.model.combineUnion(star, plus);
 
 var frame = {
     models: {
