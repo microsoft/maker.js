@@ -53,7 +53,7 @@ title: Order of Boolean operations
 
 </script>
 
-<hr/>
+<hr />
 
 <p>
     We can start with all of the building blocks of our design: a star, a plus, and a frame:
@@ -96,6 +96,8 @@ document.write(svg);
 <script>
     LiveDoc.evalLastCode();
 </script>
+
+<hr />
 
 <p>
     The first step is to combine the vertical and horizontal bars of the plus:
@@ -142,9 +144,12 @@ document.write(svg);
     LiveDoc.evalLastCode();
 </script>
 
+<hr />
+
 <p>
     Next we will combine the star and the plus:
 </p>
+
 {% highlight javascript %}
 //combine the plus
 
@@ -188,3 +193,115 @@ document.write(svg);
     LiveDoc.evalLastCode();
 </script>
 
+<hr />
+
+<p>
+    Let's pause and consider what the plus looks like by itself, after our union operation:
+</p>
+
+<script>
+    //show the plus
+
+    var makerjs = require('makerjs');
+
+    var star = new makerjs.models.Star(28, 25, 20);
+
+    var plus = makerjs.model.rotate({
+        models: {
+            v: makerjs.model.center(new makerjs.models.Rectangle(3, 90)),
+            h: makerjs.model.center(new makerjs.models.Rectangle(110, 3))
+        }
+    }, -12.5);
+
+    makerjs.model.combineUnion(plus.models.v, plus.models.h);
+
+    //make a union from the star and the plus:
+    makerjs.model.combineUnion(star, plus);
+
+    var svg = makerjs.exporter.toSVG(plus);
+
+    document.write(svg);
+</script>
+
+<p>
+    And the star by itself:
+</p>
+
+<script>
+    //show the star
+
+    var makerjs = require('makerjs');
+
+    var star = new makerjs.models.Star(28, 25, 20);
+
+    var plus = makerjs.model.rotate({
+        models: {
+            v: makerjs.model.center(new makerjs.models.Rectangle(3, 90)),
+            h: makerjs.model.center(new makerjs.models.Rectangle(110, 3))
+        }
+    }, -12.5);
+
+    makerjs.model.combineUnion(plus.models.v, plus.models.h);
+
+    //make a union from the star and the plus:
+    makerjs.model.combineUnion(star, plus);
+
+    var svg = makerjs.exporter.toSVG(star);
+
+    document.write(svg);
+</script>
+
+<p>
+    They have become open geometries. We cannot call the combine function with an open geometry. But since we combined them, they are a closed geometry when they are together.
+    So, we should create a new model for them together:
+</p>
+
+{% highlight javascript %}
+//combine the plus
+
+var makerjs = require('makerjs');
+
+var star = new makerjs.models.Star(28, 25, 20);
+
+var plus = makerjs.model.rotate({
+    models: {
+        v: makerjs.model.center(new makerjs.models.Rectangle(3, 90)),
+        h: makerjs.model.center(new makerjs.models.Rectangle(110, 3))
+    }
+}, -12.5);
+
+makerjs.model.combineUnion(plus.models.v, plus.models.h);
+
+makerjs.model.combineUnion(star, plus);
+
+//make a new model with the star and plus together
+var starplus = {
+    models: {
+        star: star,
+        plus: plus
+    }
+};
+
+var frame = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.RoundRectangle(100, 80, 4)),
+        inner: makerjs.model.center(new makerjs.models.Rectangle(90, 70)),
+    }
+};
+
+var model = {
+    models: {
+        //reference the starplus instead of star and plus separately
+        starplus: starplus,
+        frame: frame
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
