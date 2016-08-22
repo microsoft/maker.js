@@ -3,9 +3,91 @@ title: Order of Boolean operations
 ---
 
 <p>
-    Coming soon!
+    Combining models with boolean operations is a powerful feature but it can be challenging in some scenarios. Re-modeling your drawing may be necessary to acheive certain results.
+    We will explore the order of operations concept with an sample project. Let's first take a look at our desired end goal:
 </p>
 
-<p>
-    If you content you can contribute here, click 'edit on GitHub' below :)
-</p>
+<script>
+
+    var makerjs = require('makerjs');
+
+    var star = new makerjs.models.Star(28, 25, 20);
+
+    var plus = makerjs.model.rotate({
+        models: {
+            v: makerjs.model.center(new makerjs.models.Rectangle(3, 120)),
+            h: makerjs.model.center(new makerjs.models.Rectangle(160, 3))
+        }
+    }, -12.5);
+
+    makerjs.model.combineUnion(plus.models.v, plus.models.h);
+
+    makerjs.model.combineUnion(plus, star);
+
+    var starplus = {
+        models: {
+            star: star,
+            plus: plus
+        }
+    };
+
+    var frame = {
+        models: {
+            outer: makerjs.model.center(new makerjs.models.RoundRectangle(100, 80, 4)),
+            inner: makerjs.model.center(new makerjs.models.Rectangle(90, 70)),
+        }
+    };
+
+    makerjs.model.combineSubtraction(frame.models.inner, starplus);
+
+    var model = {
+        models: {
+            starplus: starplus,
+            frame: frame
+        }
+    };
+
+    var svg = makerjs.exporter.toSVG(model);
+
+    document.write(svg);
+
+</script>
+
+{% highlight javascript %}
+//start with the basic skeleton of our project
+
+var makerjs = require('makerjs');
+
+var star = new makerjs.models.Star(28, 25, 20);
+
+var plus = makerjs.model.rotate({
+    models: {
+        v: makerjs.model.center(new makerjs.models.Rectangle(3, 120)),
+        h: makerjs.model.center(new makerjs.models.Rectangle(160, 3))
+    }
+}, -12.5);
+
+var frame = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.RoundRectangle(100, 80, 4)),
+        inner: makerjs.model.center(new makerjs.models.Rectangle(90, 70)),
+    }
+};
+
+var model = {
+    models: {
+        star: star,
+        plus: plus,
+        frame: frame
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
