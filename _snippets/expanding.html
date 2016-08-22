@@ -3,9 +3,86 @@ title: Expanding paths
 ---
 
 <p>
-    Coming soon!
+    Paths can be expanded using <a href="/maker.js/docs/api/modules/makerjs.path.html#expand">makerjs.path.expand</a> to produce a closed geometry model which surrounds them perfectly:
 </p>
 
-<p>
-    If you can contribute here, click 'edit on GitHub' below :)
-</p>
+{% highlight javascript %}
+//show each path type
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    p1: new makerjs.paths.Line([0, 2], [10, 2]),
+    p2: new makerjs.paths.Arc([20, 0], 5, 0, 180),
+    p3: new makerjs.paths.Circle([35, 2], 5)
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+{% highlight javascript %}
+//expand around each path type
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    p1: new makerjs.paths.Line([0, 2], [10, 2]),
+    p2: new makerjs.paths.Arc([20, 0], 5, 0, 180),
+    p3: new makerjs.paths.Circle([35, 2], 5)
+  }
+};
+
+model.models = {
+    x1: makerjs.path.expand(model.paths.p1, 2),
+    x2: makerjs.path.expand(model.paths.p2, 2),
+    x3: makerjs.path.expand(model.paths.p3, 2)
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+
+{% highlight javascript %}
+//show only expansions
+
+var makerjs = require('makerjs');
+
+var temp = {
+  paths: {
+    p1: new makerjs.paths.Line([0, 2], [10, 2]),
+    p2: new makerjs.paths.Arc([20, 0], 5, 0, 180),
+    p3: new makerjs.paths.Circle([35, 2], 5)
+  }
+};
+
+var model = {
+    models: {
+        x1: makerjs.path.expand(temp.paths.p1, 2),
+        x2: makerjs.path.expand(temp.paths.p2, 2),
+        x3: makerjs.path.expand(temp.paths.p3, 2)
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
