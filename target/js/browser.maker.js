@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.11
+ *   version: 0.9.12
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2520,7 +2520,7 @@ var MakerJs;
          * @param prefix Optional prefix to apply to path ids.
          * @returns Model of straight lines with same endpoints as the arc.
          */
-        function straighten(arc, bevel, prefix) {
+        function straighten(arc, bevel, prefix, close) {
             var arcSpan = MakerJs.angle.ofArcSpan(arc);
             var joints = 1;
             if (arcSpan >= 270) {
@@ -2542,7 +2542,7 @@ var MakerJs;
                 a += jointAngleInRadians;
             }
             points.push(MakerJs.point.subtract(ends[1], arc.origin));
-            var result = new MakerJs.models.ConnectTheDots(false, points);
+            var result = new MakerJs.models.ConnectTheDots(close, points);
             result.origin = arc.origin;
             if (typeof prefix === 'string' && prefix.length) {
                 MakerJs.model.prefixPathIds(result, prefix);
@@ -2604,35 +2604,31 @@ var MakerJs;
             model.walk(modelToExpand, walkOptions);
             if (joints) {
                 var roundCaps = result.models['caps'];
+                var straightCaps = { models: {} };
+                result.models['straightcaps'] = straightCaps;
                 model.simplify(roundCaps);
                 //straighten each cap, optionally beveling
                 for (var id in roundCaps.models) {
-                    //add a model container to the caps
-                    roundCaps.models[id].models = {};
+                    //add a model container to the straight caps
+                    straightCaps.models[id] = { models: {} };
                     model.walk(roundCaps.models[id], {
-                        beforeChildWalk: function () {
-                            //don't crawl the model we just added
-                            return false;
-                        },
                         onPath: function (walkedPath) {
                             var arc = walkedPath.pathContext;
-                            //make a small closed shape using the arc itself and the straightened arc
-                            var straightened = MakerJs.path.straighten(arc, joints == 2, walkedPath.pathId + '_');
-                            var arcClone = MakerJs.path.clone(arc);
-                            arcClone.origin = [0, 0];
-                            straightened.paths['arc'] = arcClone;
+                            //make a small closed shape using the straightened arc
+                            var straightened = MakerJs.path.straighten(arc, joints == 2, walkedPath.pathId + '_', true);
                             //union this little pointy shape with the rest of the result
                             model.combine(result, straightened, false, true, false, true, combineOptions);
                             combineOptions.measureA.modelsMeasured = false;
                             delete combineOptions.measureB;
                             //replace the rounded path with the straightened model
-                            roundCaps.models[id].models[walkedPath.pathId] = straightened;
-                            delete roundCaps.models[id].paths[walkedPath.pathId];
+                            straightCaps.models[id].models[walkedPath.pathId] = straightened;
+                            //delete all the paths in the model containing this path
+                            delete walkedPath.modelContext.paths;
                         }
                     });
-                    //delete the paths in the caps
-                    delete roundCaps.models[id].paths;
                 }
+                //delete the round caps
+                delete result.models['caps'];
             }
             return result;
         }
@@ -3827,7 +3823,7 @@ var MakerJs;
             //remember how to undo the rotation we just did
             function unRotate(resultAngle) {
                 var unrotated = resultAngle + lineAngle;
-                return MakerJs.angle.noRevolutions(unrotated);
+                return MakerJs.round(MakerJs.angle.noRevolutions(unrotated));
             }
             //line is horizontal, get the y value from any point
             var lineY = MakerJs.round(clonedLine.origin[1]);
@@ -6525,6 +6521,11 @@ var MakerJs;
                 if (selfIntersect === void 0) { selfIntersect = false; }
                 if (isolateCaps === void 0) { isolateCaps = false; }
                 this.paths = {};
+                var capRoot;
+                if (isolateCaps) {
+                    capRoot = { models: {} };
+                    this.models = { 'Caps': capRoot };
+                }
                 if (slotRadius <= 0 || sweepRadius <= 0)
                     return;
                 startAngle = MakerJs.angle.noRevolutions(startAngle);
@@ -6533,12 +6534,15 @@ var MakerJs;
                     return;
                 if (endAngle < startAngle)
                     endAngle += 360;
-                var capModel = this;
-                if (isolateCaps) {
-                    this.models = { "Caps": { paths: {} } };
-                    capModel = this.models["Caps"];
-                }
                 var addCap = function (id, tiltAngle, offsetStartAngle, offsetEndAngle) {
+                    var capModel;
+                    if (isolateCaps) {
+                        capModel = { paths: {} };
+                        capRoot.models[id] = capModel;
+                    }
+                    else {
+                        capModel = _this;
+                    }
                     return capModel.paths[id] = new MakerJs.paths.Arc(MakerJs.point.fromPolar(MakerJs.angle.toRadians(tiltAngle), sweepRadius), slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle);
                 };
                 var addSweep = function (id, offsetRadius) {
@@ -6697,19 +6701,31 @@ var MakerJs;
     (function (models) {
         var Slot = (function () {
             function Slot(origin, endPoint, radius, isolateCaps) {
+                var _this = this;
                 if (isolateCaps === void 0) { isolateCaps = false; }
                 this.paths = {};
-                var capModel = this;
+                var capRoot;
                 if (isolateCaps) {
-                    this.models = { "Caps": { paths: {} } };
-                    capModel = this.models["Caps"];
+                    capRoot = { models: {} };
+                    this.models = { 'Caps': capRoot };
                 }
+                var addCap = function (id, capPath) {
+                    var capModel;
+                    if (isolateCaps) {
+                        capModel = { paths: {} };
+                        capRoot.models[id] = capModel;
+                    }
+                    else {
+                        capModel = _this;
+                    }
+                    capModel.paths[id] = capPath;
+                };
                 var a = MakerJs.angle.ofPointInDegrees(origin, endPoint);
                 var len = MakerJs.measure.pointDistance(origin, endPoint);
                 this.paths['Top'] = new MakerJs.paths.Line([0, radius], [len, radius]);
                 this.paths['Bottom'] = new MakerJs.paths.Line([0, -radius], [len, -radius]);
-                capModel.paths['StartCap'] = new MakerJs.paths.Arc([0, 0], radius, 90, 270);
-                capModel.paths['EndCap'] = new MakerJs.paths.Arc([len, 0], radius, 270, 90);
+                addCap('StartCap', new MakerJs.paths.Arc([0, 0], radius, 90, 270));
+                addCap('EndCap', new MakerJs.paths.Arc([len, 0], radius, 270, 90));
                 MakerJs.model.rotate(this, a, [0, 0]);
                 this.origin = origin;
             }
@@ -6872,6 +6888,6 @@ var MakerJs;
         models.Text = Text;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.11";
+MakerJs.version = "0.9.12";
 
 },{"clone":2}]},{},[]);

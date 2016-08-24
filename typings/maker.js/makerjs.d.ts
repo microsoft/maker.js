@@ -1338,7 +1338,7 @@ declare namespace MakerJs.path {
      * @param prefix Optional prefix to apply to path ids.
      * @returns Model of straight lines with same endpoints as the arc.
      */
-    function straighten(arc: IPathArc, bevel?: boolean, prefix?: string): IModel;
+    function straighten(arc: IPathArc, bevel?: boolean, prefix?: string, close?: boolean): IModel;
 }
 declare namespace MakerJs.model {
     /**
