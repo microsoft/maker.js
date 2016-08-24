@@ -310,7 +310,7 @@ namespace MakerJs.path {
         //remember how to undo the rotation we just did
         function unRotate(resultAngle: number): number {
             var unrotated = resultAngle + lineAngle;
-            return angle.noRevolutions(unrotated);
+            return round(angle.noRevolutions(unrotated));
         }
 
         //line is horizontal, get the y value from any point
