@@ -48,7 +48,7 @@
      * @param prefix Optional prefix to apply to path ids.
      * @returns Model of straight lines with same endpoints as the arc.
      */
-    export function straighten(arc: IPathArc, bevel?: boolean, prefix?: string): IModel {
+    export function straighten(arc: IPathArc, bevel?: boolean, prefix?: string, close?: boolean): IModel {
 
         var arcSpan = angle.ofArcSpan(arc);
         var joints = 1;
@@ -74,7 +74,7 @@
 
         points.push(point.subtract(ends[1], arc.origin));
 
-        var result = new models.ConnectTheDots(false, points);
+        var result = new models.ConnectTheDots(close, points);
         (<IModel>result).origin = arc.origin;
 
         if (typeof prefix === 'string' && prefix.length) {
@@ -149,31 +149,25 @@ namespace MakerJs.model {
         if (joints) {
 
             var roundCaps = result.models['caps'];
+            var straightCaps: IModel = { models: {} };
+            result.models['straightcaps'] = straightCaps;
 
             simplify(roundCaps);
 
             //straighten each cap, optionally beveling
             for (var id in roundCaps.models) {
 
-                //add a model container to the caps
-                roundCaps.models[id].models = {};
+                //add a model container to the straight caps
+                straightCaps.models[id] = { models: {} };
 
                 walk(roundCaps.models[id], {
-
-                    beforeChildWalk: function () {
-                        //don't crawl the model we just added
-                        return false;
-                    },
 
                     onPath: function (walkedPath: IWalkPath) {
 
                         var arc = <IPathArc>walkedPath.pathContext;
 
-                        //make a small closed shape using the arc itself and the straightened arc
-                        var straightened = path.straighten(arc, joints == 2, walkedPath.pathId + '_');
-                        var arcClone = path.clone(arc);
-                        arcClone.origin = [0, 0];
-                        straightened.paths['arc'] = arcClone;
+                        //make a small closed shape using the straightened arc
+                        var straightened = path.straighten(arc, joints == 2, walkedPath.pathId + '_', true);
 
                         //union this little pointy shape with the rest of the result
                         combine(result, straightened, false, true, false, true, combineOptions);
@@ -181,15 +175,16 @@ namespace MakerJs.model {
                         delete combineOptions.measureB;
 
                         //replace the rounded path with the straightened model
-                        roundCaps.models[id].models[walkedPath.pathId] = straightened;
-                        delete roundCaps.models[id].paths[walkedPath.pathId];
+                        straightCaps.models[id].models[walkedPath.pathId] = straightened;
+
+                        //delete all the paths in the model containing this path
+                        delete walkedPath.modelContext.paths;
                     }
                 });
-
-                //delete the paths in the caps
-                delete roundCaps.models[id].paths;
             }
 
+            //delete the round caps
+            delete result.models['caps'];
         }
 
         return result;

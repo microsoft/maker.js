@@ -7,6 +7,13 @@ namespace MakerJs.models {
 
         constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number, selfIntersect = false, isolateCaps = false) {
 
+            var capRoot: IModel;
+
+            if (isolateCaps) {
+                capRoot = { models: {} };
+                this.models = { 'Caps': capRoot };
+            }
+
             if (slotRadius <= 0 || sweepRadius <= 0) return;
 
             startAngle = angle.noRevolutions(startAngle);
@@ -16,13 +23,16 @@ namespace MakerJs.models {
 
             if (endAngle < startAngle) endAngle += 360;
 
-            var capModel: IModel = this;
-            if (isolateCaps) {
-                this.models = { "Caps": { paths: {} } };
-                capModel = this.models["Caps"];
-            }
-
             var addCap = (id: string, tiltAngle: number, offsetStartAngle: number, offsetEndAngle: number): IPathArc => {
+                var capModel: IModel;
+
+                if (isolateCaps) {
+                    capModel = { paths: {} };
+                    capRoot.models[id] = capModel;
+                } else {
+                    capModel = this;
+                }
+
                 return capModel.paths[id] = new paths.Arc(
                     point.fromPolar(angle.toRadians(tiltAngle), sweepRadius),
                     slotRadius,
