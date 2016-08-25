@@ -68,7 +68,7 @@ function trussWireframe(w, h) {
 }
 
 var truss = new trussWireframe(200, 50);
-var expansion = m.model.expandPaths(truss, 3, 2);
+var expansion = m.model.expandPaths(truss, 3, 1);
 
 var svg = m.exporter.toSVG(expansion);
 
