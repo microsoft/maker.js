@@ -96,5 +96,29 @@ document.write(svg);
     You can also expand all the paths in a model by calling <a href="/maker.js/docs/api/modules/makerjs.model.html#expandpaths">makerjs.model.expandPaths</a>:
 </p>
 
+{% highlight javascript %}
+//expand a star model
+
+var m = require('makerjs');
+
+var star = m.model.rotate(new m.models.Star(5, 100), 18);
+var expanded = m.model.expandPaths(star, 10);
+
+var model = {
+    models: {
+        star: star,
+        outline: expanded
+    }
+};
+
+var svg = m.exporter.toSVG(model);
+
+document.write(svg);
+
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
 
 
