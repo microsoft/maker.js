@@ -28,7 +28,7 @@ title: Bezier curves
 <hr />
 
 <p>
-    Create a quadratic Bezier curve in by passing three points - an origin point, a control point, and an end point.
+    Create a quadratic Bezier curve in by passing an array of three points - an origin point, a control point, and an end point:
 </p>
 
 {% highlight javascript %}
@@ -36,11 +36,13 @@ title: Bezier curves
 
 var m = require('makerjs');
 
-var curve1 = new m.models.BezierCurve([0, 100], [0, 0], [100, 0]);
+var points = [[0, 100], [0, 0], [100, 0]];
+
+var curve1 = new m.models.BezierCurve(points);
 curve1.origin = [20, 20];
 
 //more accurate
-var curve2 = new m.models.BezierCurve([0, 100], [0, 0], [100, 0], .001);
+var curve2 = new m.models.BezierCurve(points, .001);
 
 var model = {
   models: {
@@ -60,7 +62,7 @@ document.write(svg);
 <hr />
 
 <p>
-    Create a cubic Bezier curve in by passing four points - an origin point, a first control point (relating to the origin point), a second control point (relating to the end point), and an end point:
+    Create a cubic Bezier curve in by passing an array of four points - an origin point, a first control point (relating to the origin point), a second control point (relating to the end point), and an end point:
 </p>
 
 {% highlight javascript %}
@@ -68,11 +70,13 @@ document.write(svg);
 
 var m = require('makerjs');
 
-var curve1 = new m.models.BezierCurve([0, 0], [50, 50], [50, -50], [100, 0]);
+var points = [[0, 0], [50, 50], [50, -50], [100, 0]];
+
+var curve1 = new m.models.BezierCurve(points);
 curve1.origin = [0, 20];
 
 //more accurate
-var curve2 = new m.models.BezierCurve([0, 0], [50, 50], [50, -50], [100, 0], .001);
+var curve2 = new m.models.BezierCurve(points, .001);
 
 var model = {
   models: {
