@@ -22,30 +22,44 @@ title: Fonts and text
     Here on this page we will insert our SVG into a <code>div</code> in this document:
 </p>
 
-<div id="render-text"></div>
-
 {% highlight javascript %}
-var m = require('makerjs');
+    var m = require('makerjs');
 
-//load a font asynchronously
-opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
+    //load a font asynchronously
+    opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
 
-  if (err) {
-    document.getElementById('render-text').innerText = 'the font could not be loaded :(';
-  } else {
+        if (err) {
+            document.getElementById('render-text').innerText = 'the font could not be loaded :(';
+        } else {
 
-    var textModel = new makerjs.models.Text(font, 'Hello', 100);
+            var textModel = new makerjs.models.Text(font, 'Hello', 100);
 
-    var svg = makerjs.exporter.toSVG(model);
+            var svg = makerjs.exporter.toSVG(model);
 
-    document.getElementById('render-text').innerHTML = svg;
-  }
-
-});
+            document.getElementById('render-text').innerHTML = svg;
+        }
+    });
 {% endhighlight %}
 
+<div id="render-text"></div>
+
 <script>
-    LiveDoc.evalLastCode();
+    var m = require('makerjs');
+
+    //load a font asynchronously
+    opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
+
+        if (err) {
+            document.getElementById('render-text').innerText = 'the font could not be loaded :(';
+        } else {
+
+            var textModel = new makerjs.models.Text(font, 'Hello', 100);
+
+            var svg = makerjs.exporter.toSVG(model);
+
+            document.getElementById('render-text').innerHTML = svg;
+        }
+    });
 </script>
 
 <h4>Loading fonts in Node.js</h4>
