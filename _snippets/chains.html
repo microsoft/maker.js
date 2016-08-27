@@ -150,13 +150,35 @@ m.model.findChains(x, function(chains, loose, layer) {
 
 {% endhighlight %}
 
-<i>
-    <script>
-        LiveDoc.evalLastCode();
-    </script>
-</i>
+<script>
+    LiveDoc.evalLastCode();
+</script>
 
 <hr />
+
+<p>
+    As expected, we found 3 chains. But what is a chain? A chain is an object with these two properties:
+    <ul>
+        <li>endless: boolean.</li>
+        <li>links: array of <a href="/maker.js/docs/api/interfaces/makerjs.ichainlink.html">chain link</a> objects.</li>
+    </ul>
+
+    A chain link has these properties:
+    <ul>
+        <li>reversed: boolean, explained below.</li>
+        <li>walkedPath: a <a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object, which contains one path.</li>
+    </ul>
+
+    For any chain, it is quite arbitrary which is the first link and which is the last link. It is still the same chain if it were to begin at the last link and end at the first
+    - but if it did, then the links would also be reversed. So this is what it means for a link to be reversed, but this also means that the path would "flow" in reverse.
+    Here is how paths flow:
+
+    <ul>
+        <li>line - a line flows from its origin to its end.</li>
+        <li>arc - an arc flows from its startAngle to its endAngle, in the polar (counter-clockwise) direction.</li>
+    </ul>
+
+</p>
 
 
 
