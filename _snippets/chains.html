@@ -157,6 +157,8 @@ m.model.findChains(x, function(chains, loose, layer) {
 <hr />
 
 <p>
+    <h5>chains array</h5>
+
     As expected, we found 3 chains. But what is a chain? A chain is an object with these two properties:
     <ul>
         <li>endless: boolean.</li>
@@ -166,17 +168,23 @@ m.model.findChains(x, function(chains, loose, layer) {
     A chain link has these properties:
     <ul>
         <li>reversed: boolean, explained below.</li>
-        <li>walkedPath: a <a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object, which contains one path.</li>
+        <li>walkedPath: a <a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object, which contains one path. We will explain this type of object in the next section.</li>
     </ul>
 
     For any chain, it is quite arbitrary which is the first link and which is the last link. It is still the same chain if it were to begin at the last link and end at the first
     - but if it did, then the links would also be reversed. So this is what it means for a link to be reversed, but this also means that the path would "flow" in reverse.
-    Here is how paths flow:
+    Here is how paths flow normally:
 
     <ul>
         <li>line - a line flows from its origin to its end.</li>
         <li>arc - an arc flows from its startAngle to its endAngle, in the polar (counter-clockwise) direction.</li>
     </ul>
+
+    Therefore, if the <code>reversed</code> flag is true, then the path in the chain link was found to flow opposite of the norm.
+
+    <h5>loose paths array</h5>
+
+    This is an array of <a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> objects, explained in the next section.
 
 </p>
 
