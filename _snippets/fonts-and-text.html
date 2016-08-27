@@ -13,6 +13,8 @@ title: Fonts and text
     You will need to know how to load font files before you can use them in Maker.js.
 </p>
 
+<hr />
+
 <h4>Loading fonts in the browser</h4>
 
 <p>
@@ -69,6 +71,8 @@ opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function
     });
 </script>
 
+<hr />
+
 <h4>Loading fonts in Node.js</h4>
 
 <p>
@@ -86,8 +90,7 @@ var textModel = new makerjs.models.Text('Hello', font);
 console.log(makerjs.exporter.toSVG(textModel));
 {% endhighlight %}
 
-<hr />
-
 <p>
-    A phenomenon to be aware of is that fonts aren't perfect. You may see cases where paths within a character are self intersecting or otherwise not forming closed geometries.
+    Finally, a phenomenon to be aware of is that fonts aren't always perfect. You may encounter cases where paths within a character are self-intersecting or otherwise not forming closed geometries.
+    This is not common, but it is something to be aware of, especially during combine operations.
 </p>
