@@ -24,17 +24,17 @@ NEW: Paths can be [distorted](http://microsoft.github.io/maker.js/docs/api/modul
 
 Models can be [rotated](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Rotating) or [mirrored](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Mirroring).
 
-Find [intersection points or intersection angles](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#intersection) of paths.
+Find [intersection points or intersection angles](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Intersection) of paths.
 
-Easily add a curvature at the joint between any 2 paths, using a [traditional fillet](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#fillet) or a [dogbone fillet](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#dogbone).
+Easily add a curvature at the joint between any 2 paths, using a [traditional or a dogbone fillet](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Fillets).
 
-[Combine models](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#combine) with boolean operations to get unions, intersections, or punches.
+[Combine models](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Combining with Boolean operations) with boolean operations to get unions, intersections, or punches.
 
 Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains) or [loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
 
-[Expand paths](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#expandpaths) to simulate a stroke thickness, with the option to bevel joints.
+[Expand paths](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Expanding paths) to simulate a stroke thickness, with the option to bevel joints.
 
-[Outline model](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#outline) to create a surrounding outline, with the option to bevel joints.
+[Outline model](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Outlining a model) to create a surrounding outline, with the option to bevel joints.
 
 ### Output formats
 
