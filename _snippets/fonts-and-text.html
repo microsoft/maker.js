@@ -3,9 +3,14 @@ title: Fonts and text
 ---
 
 <p>
+    To create models based on fonts, use <a href="/maker.js/docs/api/classes/makerjs.models.text.html#constructor">makerjs.models.Text</a> with the <b>new</b> operator.
+    Pass a font object, your text, and a font size. Each character of your text string will become a child model containing the paths for that character.
+</p>
+
+<p>
     Maker.js uses <a href="http://opentype.js.org/">Opentype.js</a> by Frederik De Bleser to read TrueType and OpenType fonts.
     Please visit the <a href="https://github.com/nodebox/opentype.js">Opentype.js GitHub</a> website for details on its API.
-    You will need to know how to load font files before you can use them in Maker.js
+    You will need to know how to load font files before you can use them in Maker.js.
 </p>
 
 <h4>Loading fonts in the browser</h4>
@@ -23,7 +28,7 @@ title: Fonts and text
 </p>
 
 {% highlight javascript %}
-var m = require('makerjs');
+var makerjs = require('makerjs');
 
 //load a font asynchronously
 opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
@@ -46,7 +51,7 @@ opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function
 </div>
 
 <script>
-    var m = require('makerjs');
+    var makerjs = require('makerjs');
 
     //load a font asynchronously
     opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
@@ -80,3 +85,9 @@ var textModel = new makerjs.models.Text('Hello', font);
 
 console.log(makerjs.exporter.toSVG(textModel));
 {% endhighlight %}
+
+<hr />
+
+<p>
+    A phenomenon to be aware of is that fonts aren't perfect. You may see cases where paths within a character are self intersecting or otherwise not forming closed geometries.
+</p>
