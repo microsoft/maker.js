@@ -3,9 +3,64 @@ title: Fonts and text
 ---
 
 <p>
-    Coming soon!
+    Maker.js uses <a href="http://opentype.js.org/">Opentype.js</a> by Frederik De Bleser to read TrueType and OpenType fonts.
+    Please visit the <a href="https://github.com/nodebox/opentype.js">Opentype.js GitHub</a> website for details on its API.
+    You will need to know how to load font files before you can use them in Maker.js
+</p>
+
+<h4>Loading fonts in the browser</h4>
+
+<p>
+    Use <code>opentype.load(url, callback)</code> to load a font from a URL. Since this method goes out the network, it is asynchronous.
+    The callback gets <code>(err, font)</code> where <code>font</code> is a <code>Font</code> object. Check if the <code>err</code> is null before using the font.
 </p>
 
 <p>
-    If you can contribute here, click 'edit on GitHub' below :)
+    Previously, all of our examples ran synchronously and we could use <code>document.write</code> to output a result.
+    But now we will need to wait for a font file to download. You will have to take this in consideration in your application.
+    <a href="/maker.js/playground/?script=Text">In the Maker.js Playground we can call playgroundRender()</a>.
+    Here on this page we will insert our SVG into a <code>div</code> in this document:
 </p>
+
+<div id="render-text"></div>
+
+{% highlight javascript %}
+var m = require('makerjs');
+
+//load a font asynchronously
+opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
+
+  if (err) {
+    document.getElementById('render-text').innerText = 'the font could not be loaded :(';
+  } else {
+
+    var textModel = new makerjs.models.Text(font, 'Hello', 100);
+
+    var svg = makerjs.exporter.toSVG(model);
+
+    document.getElementById('render-text').innerHTML = svg;
+  }
+
+});
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Loading fonts in Node.js</h4>
+
+<p>
+    Use opentype.loadSync(url) to load a font from a file and return a Font object. Throws an error if the font could not be parsed. This only works in Node.js.
+</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+var opentype = require('opentype.js');
+
+var font = opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf');
+
+var textModel = new makerjs.models.Text('Hello', font);
+
+console.log(makerjs.exporter.toSVG(textModel));
+{% endhighlight %}
