@@ -23,22 +23,22 @@ title: Fonts and text
 </p>
 
 {% highlight javascript %}
-    var m = require('makerjs');
+var m = require('makerjs');
 
-    //load a font asynchronously
-    opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
+//load a font asynchronously
+opentype.load('/maker.js/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, font) {
 
-        if (err) {
-            document.getElementById('render-text').innerText = 'the font could not be loaded :(';
-        } else {
+    if (err) {
+        document.getElementById('render-text').innerText = 'the font could not be loaded :(';
+    } else {
 
-            var textModel = new makerjs.models.Text(font, 'Hello', 100);
+        var textModel = new makerjs.models.Text(font, 'Hello', 100);
 
-            var svg = makerjs.exporter.toSVG(textModel);
+        var svg = makerjs.exporter.toSVG(textModel);
 
-            document.getElementById('render-text').innerHTML = svg;
-        }
-    });
+        document.getElementById('render-text').innerHTML = svg;
+    }
+});
 {% endhighlight %}
 
 <div id="render-text">
