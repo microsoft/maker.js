@@ -4,14 +4,14 @@ title: Walking a model tree
 
 <p>
     A model is a tree structure which may contain paths, and it may also contain other models in a heirachy.
-    You can traverse the entire tree by calling <a href="/maker.js/docs/api/modules/makerjs.model.html#walk">makerjs.model.walk</a> with your model and an options object with these properties:
+    You can traverse the entire tree by calling <a href="/maker.js/docs/api/modules/makerjs.model.html#walk">makerjs.model.walk</a> with your model and an object with these optional properties:
 
     <ul>
         <li>onPath: function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object) - called for every path (in every model) in your tree.</li>
         <li>beforeChildWalk: function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>) - called for every model in your tree, prior to diving deeper down the tree. <b>Return false if you wish to not dive deeper.</b></li>
         <li>afterChildWalk: function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>) - called for every model in your tree, after returning from a deep dive down the tree.</li>
     </ul>
-
+    
 </p>
 
 <h4>walkPath object</h4>
