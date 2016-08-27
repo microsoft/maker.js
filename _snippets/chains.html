@@ -3,7 +3,107 @@ title: Chains
 ---
 
 <p>
-    Chains are an ordered collection of paths that connect end-to-end. A chain may be <b>endless</b> which means that every path end point is connected.
-    The paths in a chain might be contained in more than one model.
+    Chains are an ordered collection of paths that connect end-to-end. A chain may be <b>endless</b> which means the chain ends at its beginning (and is most likely forming a closed geometry).
+    The paths in a chain might be contained in more than one model. To illustrate this, we will look at the example from the combine operations above:
 </p>
+
+{% highlight javascript %}
+//a rectangle and an oval
+
+var m = require('makerjs');
+
+function example(origin) {
+    this.models = {
+        rect: new m.models.Rectangle(100, 50),
+        oval: m.model.move(new m.models.Oval(100, 50), [50, 25])
+    };
+    this.origin = origin;
+}
+
+var x = new example();
+
+var svg = m.exporter.toSVG(x);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    Above we see two chains: all of the lines in the rectangle form an endless chain, as well as all of the paths of the oval.
+</p>
+
+<p>
+    Now, let's combine these in a union:
+</p>
+
+{% highlight javascript %}
+//combine a rectangle and an oval
+
+var m = require('makerjs');
+
+function example(origin) {
+    this.models = {
+        rect: new m.models.Rectangle(100, 50),
+        oval: m.model.move(new m.models.Oval(100, 50), [50, 25])
+    };
+    this.origin = origin;
+}
+
+var x = new example();
+
+m.model.combineUnion(x.models.rect, x.models.oval);
+
+var svg = m.exporter.toSVG(x);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    We have combined the rectangle and the oval, and they now form one chain. Yet they are still two models. Next we will add a few more paths to the example:
+</p>
+
+{% highlight javascript %}
+//combine a rectangle and an oval, add some other paths
+
+var m = require('makerjs');
+
+function example(origin) {
+    this.models = {
+        rect: new m.models.Rectangle(100, 50),
+        oval: m.model.move(new m.models.Oval(100, 50), [50, 25])
+    };
+    this.origin = origin;
+}
+
+var x = new example();
+
+m.model.combineUnion(x.models.rect, x.models.oval);
+
+//add a couple more paths into the scene
+x.paths = {
+    line1: new m.paths.Line([150, 10], [220, 10]),
+    line2: new m.paths.Line([220, 50], [220, 10]),
+    line3: new m.paths.Line([220, 75], [260, 35]),
+    circle: new m.paths.Circle([185, 50], 15)
+};
+
+var svg = m.exporter.toSVG(x);
+
+document.write(svg);
+{% endhighlight %}
+
+<p>
+    A circle is a closed geometry. In Maker.js, a circle is also an endless chain. Line1 and line2 form a chain. Line3 is not part of a chain.
+</p>
+
+
+
+
 
