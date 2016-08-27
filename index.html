@@ -18,14 +18,14 @@ title: Create parametric CNC drawings using JavaScript
 <p>Behind the scenes, drawings are a <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#It%27s%20Just%20JSON">simple Javascript object</a> which can be serialized / deserialized conventionally with JSON.</p>
 <p>Other people&#39;s Models can be required the Node.js way, <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Modifying%20models">modified</a>, and re-exported.</p>
 <p>Models can be <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Scaling">scaled</a>, <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents">measured</a>, and <a href="http://microsoft.github.io/maker.js/docs/basic-drawing/#Units">converted to different unit systems</a>.</p>
-<p>NEW: Models can be <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort">distorted</a>.</p>
+<p>NEW: Paths can be <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort">distorted</a>.</p>
 <p>Models can be <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Rotating">rotated</a> or <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Mirroring">mirrored</a>.</p>
-<p>Find <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#intersection">intersection points or intersection angles</a> of paths.</p>
-<p>Easily add a curvature at the joint between any 2 paths, using a <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#fillet">traditional fillet</a> or a <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#dogbone">dogbone fillet</a>.</p>
-<p><a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#combine">Combine models</a> with boolean operations to get unions, intersections, or punches.</p>
+<p>Find <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Intersection">intersection points or intersection angles</a> of paths.</p>
+<p>Easily add a curvature at the joint between any 2 paths, using a <a href="http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Fillets">traditional or a dogbone fillet</a>.</p>
+<p><a href="http://microsoft.github.io/maker.js/docs/advanced-drawing/#Combining with Boolean operations">Combine models</a> with boolean operations to get unions, intersections, or punches.</p>
 <p>Detect <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains">chains</a> or <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops">loops</a> formed by paths connecting end to end.</p>
-<p><a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#expandpaths">Expand paths</a> to simulate a stroke thickness, with the option to bevel joints.</p>
-<p><a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#outline">Outline model</a> to create a surrounding outline, with the option to bevel joints.</p>
+<p><a href="http://microsoft.github.io/maker.js/docs/advanced-drawing/#Expanding paths">Expand paths</a> to simulate a stroke thickness, with the option to bevel joints.</p>
+<p><a href="http://microsoft.github.io/maker.js/docs/advanced-drawing/#Outlining a model">Outline model</a> to create a surrounding outline, with the option to bevel joints.</p>
 <h3 id="output-formats">Output formats</h3>
 <p>2D: 
 <a href="http://microsoft.github.io/maker.js/docs/api/modules/makerjs.exporter.html#todxf">DXF</a>, 
