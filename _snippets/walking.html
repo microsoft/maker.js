@@ -3,10 +3,43 @@ title: Walking a model tree
 ---
 
 <p>
-    A model is a tree structure which may contain paths, and it may also contain other models in a recursive fashion.
-    You can traverse the entire tree by calling <a href="/maker.js/docs/api/modules/makerjs.model.html#walk">makerjs.model.walk</a> with your model and an options object which specifies callbacks:
+    A model is a tree structure which may contain paths, and it may also contain other models in a heirachy.
+    You can traverse the entire tree by calling <a href="/maker.js/docs/api/modules/makerjs.model.html#walk">makerjs.model.walk</a> with your model and an options object with these properties:
+
+    <ul>
+        <li>onPath: function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object) - called for every path (in every model) in your tree.</li>
+        <li>beforeChildWalk: function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>) - called for every model in your tree, prior to diving deeper down the tree. <b>Return false if you wish to not dive deeper.</b></li>
+        <li>afterChildWalk: function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>) - called for every model in your tree, after returning from a deep dive down the tree.</li>
+    </ul>
+
 </p>
 
-<ul>
-    <li></li>
-</ul>
+<h4>walkPath object</h4>
+
+<p>
+    A walkPath object has these properties: 
+    <ul>
+        <li>layer: the layer name (if any) containing this path.</li>
+        <li>modelContext: the model containing this path.</li>
+        <li>offset: the absolute coordinates from [0, 0] where this path is located.</li>
+        <li>pathContext: the path itself.</li>
+        <li>pathId: the id of this path in its parent model.paths container.</li>
+        <li>route: array of property names to locate this path from the root of the tree.</li>
+        <li>routeKey: a string representation of the route which may safely be used as a unique key identifier for this path.</li>
+    </ul>
+</p>
+
+<h4>walkModel object</h4>
+
+<p>
+    A walkModel object has these properties:
+    <ul>
+        <li>childId: the id of this model in its parent model.models container.</li>
+        <li>childModel: the model itself</li>
+        <li>layer: the layer name (if any) containing this path.</li>
+        <li>offset: the absolute coordinates from [0, 0] where this model is located.</li>
+        <li>parentModel: the model containing this model.</li>
+        <li>route: array of property names to locate this model from the root of the tree.</li>
+        <li>routeKey: a string representation of the route which may safely be used as a unique key identifier for this model.</li>
+    </ul>
+</p>
