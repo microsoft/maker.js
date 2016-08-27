@@ -13,8 +13,8 @@ title: Layers
 var makerjs = require('makerjs');
 
 var roundRect = new makerjs.models.RoundRectangle(100, 50, 10);
+roundRect.layer = "layer1";
 
-//set layer values
 roundRect.paths["BottomLeft"].layer = "layer2";
 roundRect.paths["BottomRight"].layer = "layer2";
 roundRect.paths["TopRight"].layer = "layer2";
