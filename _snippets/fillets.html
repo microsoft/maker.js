@@ -114,16 +114,20 @@ var makerjs = require('makerjs');
 
 var model = {
   paths: {
-    line1: new makerjs.paths.Line([0, 10], [10, 10]),
-    line2: new makerjs.paths.Line([10, 0], [10, 10])
+    line1: new makerjs.paths.Line([0, 0], [0, 10]),
+    line2: new makerjs.paths.Line([0, 10], [10, 10]),
+    line3: new makerjs.paths.Line([10, 0], [10, 10])
   }
 }
 
-//create a dogbone fillet
-var arc = makerjs.path.dogbone(model.paths.line1, model.paths.line2, 1);
+//create dogbone fillets
+var arc1 = makerjs.path.dogbone(model.paths.line1, model.paths.line2, 1);
 
-//add the fillet to the model
-model.paths.arc = arc;
+var arc2 = makerjs.path.dogbone(model.paths.line2, model.paths.line3, 1);
+
+//add the fillets to the model
+model.paths.arc1 = arc1;
+model.paths.arc2 = arc2;
 
 var svg = makerjs.exporter.toSVG(model);
 
