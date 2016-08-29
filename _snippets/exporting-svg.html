@@ -3,4 +3,52 @@ title: SVG
 ---
 
 <p>
+    There are two main modes of SVG export: Path-only mode and Separate mode. Path-only mode is the default.
+</p>
+
+<p>
+    In Path-only mode, the SVG structure will have only one SVG &lt;path&gt; element per layer. (If you do not specify layers then you have one "null" layer).
+    This SVG &lt;path&gt; element will contain all of your model's path data. If your drawing contained any closed geometries from endless chains, you will be able to use SVG fill on these shapes.
+</p>
+
+<p>
+    In Separate mode, every model in your heirarchy is exported as an SVG &lt;g&gt; element containing that model's paths, each exported as an individual SVG element.
+    Lines will export as an SVG &lt;line&gt; element, circles will export as an SVG &lt;circle&gt; element, and arcs will export as an SVG &lt;path&gt; element.
+    Child models will become nested &lt;g&gt; elements. You will not be able to use SVG fill in any satisfactory way.
+</p>
+
+<p>
+    You will be able to add text identifiers in Separate mode, but not in Path-only mode.
+</p>
+
+<p>
+    Call <code><a href="">makerjs.exporter.toSVG</a>(model)</code> passing your model. This function returns a string of SVG. You may override the default export behavior by calling <code><a href="">makerjs.exporter.toSVG</a>(model, options)</code> and passing an options object.
+    The options object has these properties:
+
+    <table>
+        <tr>
+            <th>property</th>
+            <th>value types / export action</th>
+            <th>notes</th>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#usesvgpathonly">useSvgPathOnly</a></td>
+            <td>
+                <ul>
+                    <li>true (default) - Path-only mode</li>
+                    <li>false - Separate mode</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#annotate">annotate</a></td>
+            <td>
+                <ul>
+                    <li>true - Adds SVG &lt;text&gt; elements with the path id</li>
+                    <li>false (default)</li>
+                </ul>
+            </td>
+            <td>available only in Separate mode</td>
+        </tr>
+    </table>
 </p>
