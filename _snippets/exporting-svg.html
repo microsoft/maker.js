@@ -2,6 +2,15 @@
 title: SVG
 ---
 
+<h4>Simple export</h4>
+
+<p>
+    Call <code><a href="">makerjs.exporter.toSVG</a>(model)</code> passing your model. This function returns a string of SVG.
+    The SVG can be styled with CSS.
+</p>
+
+<h4>Advanced options</h4>
+
 <p>
     There are two main modes of SVG export: Path-only mode and Separate mode. Path-only mode is the default.
 </p>
@@ -18,11 +27,7 @@ title: SVG
 </p>
 
 <p>
-    You will be able to add text identifiers in Separate mode, but not in Path-only mode.
-</p>
-
-<p>
-    Call <code><a href="">makerjs.exporter.toSVG</a>(model)</code> passing your model. This function returns a string of SVG. You may override the default export behavior by calling <code><a href="">makerjs.exporter.toSVG</a>(model, options)</code> and passing an options object.
+    You may override the default export behavior by calling <code><a href="">makerjs.exporter.toSVG</a>(model, options)</code> and passing an options object.
     The options object has these properties:
 
     <table>
@@ -42,6 +47,13 @@ title: SVG
             <td></td>
         </tr>
         <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fill">fill</a></td>
+            <td>
+                string - CSS color (default: none)
+            </td>
+            <td>Path-only</td>
+        </tr>
+        <tr>
             <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#annotate">annotate</a></td>
             <td>
                 <ul>
@@ -50,13 +62,6 @@ title: SVG
                 </ul>
             </td>
             <td>Separate</td>
-        </tr>
-        <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fill">fill</a></td>
-            <td>
-                string - CSS color (default: none)
-            </td>
-            <td>Path-only</td>
         </tr>
         <tr>
             <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fontsize">fontSize</a></td>
