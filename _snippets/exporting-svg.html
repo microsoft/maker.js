@@ -51,5 +51,71 @@ title: SVG
             </td>
             <td>Separate</td>
         </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fill">fill</a></td>
+            <td>
+                string - CSS color (default: none)
+            </td>
+            <td>Path-only</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fontsize">fontSize</a></td>
+            <td>
+                string - CSS font size + units (default: 9pt)
+            </td>
+            <td>Separate + annotate</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#origin">origin</a></td>
+            <td>
+                point - offset your drawing in the SVG coordinate space (default: null)
+            </td>
+            <td>Separate</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#scale">scale</a></td>
+            <td>
+                number - scale your drawing (default: 1)
+            </td>
+            <td>Separate</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#stroke">stroke</a></td>
+            <td>
+                string - CSS color (default: black)
+            </td>
+            <td>Both</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#strokewidth">strokeWidth</a></td>
+            <td>
+                string - SVG width + units (default: 0.25mm)
+            </td>
+            <td>Both</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#svgattrs">svgattrs</a></td>
+            <td>
+                object map - attributes to add to the root svg tag
+            </td>
+            <td>Both</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#units">units</a></td>
+            <td>
+                <a href="/maker.js/docs/api/index.html#unittype">Maker.js unit type</a> (default - extracted from drawing. If unit system is not in drawing or not passed, it will use SVG default of pixels)
+            </td>
+            <td>Both</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#viewbox">viewbox</a></td>
+            <td>
+                <ul>
+                    <li>true (default) - use SVG viewbox, stretch drawing to fill the SVG element.</li>
+                    <li>false - do not stretch drawing</li>
+                </ul>
+            </td>
+            <td>Both</td>
+        </tr>
     </table>
 </p>
