@@ -2,6 +2,21 @@
 title: DXF
 ---
 
+<h4>Simple export</h4>
+
 <p>
     Call <code><a href="/maker.js/docs/api/modules/makerjs.exporter.html#todxf">makerjs.exporter.toDXF</a>(model)</code> passing your model. This function returns a string of DXF.
+</p>
+
+<h4>Advanced options</h4>
+
+<p>
+    Call <code><a href="/maker.js/docs/api/modules/makerjs.exporter.html#todxf">makerjs.exporter.toDXF</a>(model, options)</code> passing your model and an options object.
+    The options object has this property:
+
+    <ul>
+        <li>
+            <a href="/maker.js/docs/api/interfaces/makerjs.exporter.idxfrenderoptions.html#units">units</a> - <a href="/maker.js/docs/api/index.html#unittype">Maker.js unit type</a> (default - extracted from drawing. If unit system is not in drawing or not passed, it will use DXF default of inches)
+        </li>
+    </ul>
 </p>
