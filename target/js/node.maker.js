@@ -45,6 +45,34 @@ var MakerJs;
      * Version info
      */
     MakerJs.version = 'debug';
+    /**
+     * Enumeration of environment types.
+     */
+    MakerJs.environmentTypes = {
+        BrowserUI: 'browser',
+        NodeJs: 'node',
+        WebWorker: 'worker',
+        Unknown: 'unknown'
+    };
+    /**
+     * @private
+     */
+    function detectEnvironment() {
+        if (('global' in this) && ('process' in this)) {
+            return MakerJs.environmentTypes.NodeJs;
+        }
+        if (('window' in this) && ('document' in this)) {
+            return MakerJs.environmentTypes.BrowserUI;
+        }
+        if (('WorkerGlobalScope' in this) && ('self' in this)) {
+            return MakerJs.environmentTypes.WebWorker;
+        }
+        return MakerJs.environmentTypes.Unknown;
+    }
+    /**
+     * Current execution environment type, should be one of environmentTypes.
+     */
+    MakerJs.environment = detectEnvironment();
     //units
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise.
@@ -4819,10 +4847,29 @@ var MakerJs;
             if (options === void 0) { options = {}; }
             if (!modelToExport)
                 return '';
+            var container;
+            switch (MakerJs.environment) {
+                case MakerJs.environmentTypes.BrowserUI:
+                    if (!('CAG' in window) || !('CSG' in window)) {
+                        throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add script tags.";
+                    }
+                    container = window;
+                    break;
+                case MakerJs.environmentTypes.NodeJs:
+                    //this can throw if not found
+                    container = require('openjscad-csg');
+                    break;
+                case MakerJs.environmentTypes.WebWorker:
+                    if (!('CAG' in self) || !('CSG' in self)) {
+                        throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
+                    }
+                    container = self;
+                    break;
+            }
             var script = toOpenJsCad(modelToExport, options);
             script += 'return ' + options.functionName + '();';
-            var f = new Function(script);
-            var csg = f();
+            var f = new Function('CAG', 'CSG', script);
+            var csg = f(container.CAG, container.CSG);
             return csg.toStlString();
         }
         exporter.toSTL = toSTL;
@@ -6695,5 +6742,5 @@ var MakerJs;
         models.Text = Text;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.13";
+MakerJs.version = "0.9.14";
 ﻿var Bezier = require('bezier-js');
