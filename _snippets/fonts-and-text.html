@@ -85,7 +85,7 @@ var opentype = require('opentype.js');
 
 var font = opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf');
 
-var textModel = new makerjs.models.Text('Hello', font);
+var textModel = new makerjs.models.Text(font, 'Hello', 100);
 
 console.log(makerjs.exporter.toSVG(textModel));
 {% endhighlight %}
