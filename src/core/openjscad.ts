@@ -234,11 +234,36 @@
     export function toSTL(modelToExport: IModel, options: IOpenJsCadOptions = {}): string {
         if (!modelToExport) return '';
 
+        var container: any;
+
+        switch (environment) {
+
+            case environmentTypes.BrowserUI:
+                if (!('CAG' in window) || !('CSG' in window)) {
+                    throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add script tags.";
+                }
+                container = window;
+                break;
+
+            case environmentTypes.NodeJs:
+                //this can throw if not found
+                container = require('openjscad-csg');
+                break;
+
+            case environmentTypes.WebWorker:
+                if (!('CAG' in self) || !('CSG' in self)) {
+                    throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
+                }
+                container = self;
+                break;
+        }
+
         var script = toOpenJsCad(modelToExport, options);
         script += 'return ' + options.functionName + '();';
 
-        var f = new Function(script);
-        var csg = <CSG>f();
+        var f = new Function('CAG', 'CSG', script);
+
+        var csg = <CSG>f(container.CAG, container.CSG);
 
         return csg.toStlString();
     }

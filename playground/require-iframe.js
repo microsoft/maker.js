@@ -197,19 +197,25 @@ var MakerJsRequireIframe;
                 return;
             //yield thread for the script tag to execute
             setTimeout(function () {
-                //restore properties from the "this" keyword
-                var model = {};
-                var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
-                var hasProps = false;
-                for (var i = 0; i < props.length; i++) {
-                    var prop = props[i];
-                    if (prop in window) {
-                        model[prop] = window[prop];
-                        hasProps = true;
-                    }
+                var model;
+                if (captureExportedModel) {
+                    model = captureExportedModel;
                 }
-                if (!hasProps) {
-                    model = null;
+                else {
+                    //restore properties from the "this" keyword
+                    model = {};
+                    var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
+                    var hasProps = false;
+                    for (var i = 0; i < props.length; i++) {
+                        var prop = props[i];
+                        if (prop in window) {
+                            model[prop] = window[prop];
+                            hasProps = true;
+                        }
+                    }
+                    if (!hasProps) {
+                        model = null;
+                    }
                 }
                 var orderedDependencies = [];
                 var scripts = head.getElementsByTagName('script');
@@ -219,7 +225,7 @@ var MakerJsRequireIframe;
                     }
                 }
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(getHtml(), window.module.exports || model || captureExportedModel, orderedDependencies);
+                parent.MakerJsPlayground.processResult(getHtml(), window.module.exports || model, orderedDependencies);
             }, 0);
         }
         ;
