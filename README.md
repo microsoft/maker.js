@@ -28,13 +28,13 @@ Find [intersection points or intersection angles](http://microsoft.github.io/mak
 
 Easily add a curvature at the joint between any 2 paths, using a [traditional or a dogbone fillet](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Fillets).
 
-[Combine models](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Combining with Boolean operations) with boolean operations to get unions, intersections, or punches.
+[Combine models](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Combining%20with%20Boolean%20operations) with boolean operations to get unions, intersections, or punches.
 
 Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains) or [loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
 
-[Expand paths](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Expanding paths) to simulate a stroke thickness, with the option to bevel joints.
+[Expand paths](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Expanding%20paths) to simulate a stroke thickness, with the option to bevel joints.
 
-[Outline model](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Outlining a model) to create a surrounding outline, with the option to bevel joints.
+[Outline model](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Outlining%20a%20model) to create a surrounding outline, with the option to bevel joints.
 
 ### Output formats
 

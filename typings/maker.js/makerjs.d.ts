@@ -20,6 +20,19 @@ declare namespace MakerJs {
      */
     var version: string;
     /**
+     * Enumeration of environment types.
+     */
+    var environmentTypes: {
+        BrowserUI: string;
+        NodeJs: string;
+        WebWorker: string;
+        Unknown: string;
+    };
+    /**
+     * Current execution environment type, should be one of environmentTypes.
+     */
+    var environment: string;
+    /**
      * String-based enumeration of unit types: imperial, metric or otherwise.
      * A model may specify the unit system it is using, if any. When importing a model, it may have different units.
      * Unit conversion function is makerjs.units.conversionScale().
