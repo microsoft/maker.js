@@ -14,6 +14,40 @@ namespace MakerJs {
      */
     export var version = 'debug';
 
+    /**
+     * Enumeration of environment types.
+     */
+    export var environmentTypes = {
+        BrowserUI: 'browser',
+        NodeJs: 'node',
+        WebWorker: 'worker',
+        Unknown: 'unknown'
+    };
+
+    /**
+     * @private
+     */
+    function detectEnvironment() {
+        if (('global' in this) && ('process' in this)) {
+            return environmentTypes.NodeJs;
+        }
+
+        if (('window' in this) && ('document' in this)) {
+            return environmentTypes.BrowserUI;
+        }
+
+        if (('WorkerGlobalScope' in this) && ('self' in this)) {
+            return environmentTypes.WebWorker;
+        }
+
+        return environmentTypes.Unknown;
+    }
+
+    /**
+     * Current execution environment type, should be one of environmentTypes.
+     */
+    export var environment = detectEnvironment();
+
     //units
 
     /**
