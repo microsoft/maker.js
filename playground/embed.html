@@ -107,6 +107,24 @@
 
         <section id="blueprint-canvas">
 
+            <svg id="grid">
+                <defs>
+                    <pattern id="pattern1" x="0" y="0" width=".1" height=".1">
+                        <line x1="0" y1="0" x2="0" y2="100%" class="grid-line-1"></line>
+                        <line x1="0" y1="0" x2="100%" y2="0" class="grid-line-1"></line>
+                    </pattern>
+                    <pattern id="pattern10" x="0" y="0" width="1" height="1">
+                        <line x1="0" y1="0" x2="0" y2="100%" class="grid-line-10"></line>
+                        <line x1="0" y1="0" x2="100%" y2="0" class="grid-line-10"></line>
+                    </pattern>
+                    <pattern id="gridPattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse" patternTransform="translate(0,0)">
+                        <rect id="gridPatternFill" fill="url(#pattern1)" width="100" height="100" x="0" y="0"></rect>
+                        <rect fill="url(#pattern10)" width="100%" height="100%" x="0" y="0"></rect>
+                    </pattern>
+                </defs>
+                <rect fill="url(#gridPattern)" width="100%" height="100%" x="0" y="0"></rect>
+            </svg>
+
             <div id="view-params">
                 <div id="view" touch-action="none" class="noselect">
                     <div id="view-svg-container"></div>
@@ -123,7 +141,7 @@
 
         <div class="code-footer">
             <label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label>
-            <label><input id="check-show-origin" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show origin</label>
+            <label><input id="check-show-origin" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show grid</label>
             <label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label>
         </div>
 
