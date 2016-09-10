@@ -50,6 +50,8 @@
     var customizeMenu: HTMLDivElement;
     var view: HTMLDivElement;
     var viewSvgContainer: HTMLDivElement;
+    var gridPattern: Element;
+    var gridPatternFill: Element;
     var paramsDiv: HTMLDivElement;
     var progress: HTMLDivElement;
     var preview: HTMLTextAreaElement;
@@ -608,6 +610,8 @@
             svgElement.style.marginLeft = viewPanOffset[0] + 'px';
             svgElement.style.marginTop = viewPanOffset[1] + 'px';
 
+            panGrid();
+
         } else {
             //zoom and pan
 
@@ -624,6 +628,31 @@
 
             render();
         }
+    }
+
+    function zoomGrid() {
+        var v = 100 * viewScale;
+
+        while (v < 60) {
+            v *= 10;
+        }
+
+        while (v > 600) {
+            v /= 10;
+        }
+
+        var vs = v.toString();
+
+        gridPattern.setAttribute('width', vs);
+        gridPattern.setAttribute('height', vs);
+
+        gridPatternFill.setAttribute('width', vs);
+        gridPatternFill.setAttribute('height', vs);
+    }
+
+    function panGrid() {
+        var p = makerjs.point.add(viewPanOffset, viewOrigin);
+        gridPattern.setAttribute('patternTransform', 'translate(' + p[0] + ',' + p[1] + ')');
     }
 
     function setProcessedModel(model: MakerJs.IModel, error?: string) {
@@ -907,7 +936,7 @@
 
     export function updateZoomScale() {
         var z = document.getElementById('zoom-display');
-        z.innerText = '(' + (viewScale * (renderUnits ? 100 : 1)).toFixed(0) + '%)';
+        z.innerText = '(' + (viewScale * (renderUnits ? 1 : 100)).toFixed(0) + '%)';
     }
 
     export function processResult(html: string, result: any, orderedDependencies?: string[]) {
@@ -1191,6 +1220,9 @@
             var size = getModelNaturalSize();
             var multiplier = 10;
 
+            panGrid();
+            zoomGrid();
+
             renderModel.paths = {
                 'crosshairs-vertical': new makerjs.paths.Line([0, size[1] * multiplier], [0, -size[1] * multiplier]),
                 'crosshairs-horizontal': new makerjs.paths.Line([size[0] * multiplier, 0], [- size[0] * multiplier, 0])
@@ -1374,10 +1406,14 @@
         preview = document.getElementById('download-preview') as HTMLTextAreaElement;
         checkFitToScreen = document.getElementById('check-fit-on-screen') as HTMLInputElement;
         checkNotes = document.getElementById('check-notes') as HTMLInputElement;
-
         viewSvgContainer = document.getElementById('view-svg-container') as HTMLDivElement;
+        gridPattern = document.getElementById('gridPattern');
+        gridPatternFill = document.getElementById('gridPatternFill');
 
         margin = [viewSvgContainer.offsetLeft, viewSvgContainer.offsetTop];
+
+        gridPattern.setAttribute('x', margin[0].toString());
+        gridPattern.setAttribute('y', margin[1].toString());
 
         var pre = document.getElementById('init-javascript-code') as HTMLPreElement;
         codeMirrorOptions.value = pre.innerText;

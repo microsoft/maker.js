@@ -53,7 +53,6 @@ header h1 {
 
 #blueprint-canvas {
     background-color: #3177C6;
-    background-image: url('blueprint.png');
     margin-bottom: 1em;
     overflow: hidden;
 }
@@ -236,12 +235,29 @@ svg#drawing .locked {
     stroke: #5B9DE3;
 }
 
-.collapse-origin #view #crosshairs-vertical, .collapse-origin #view #crosshairs-horizontal {
+.collapse-origin #view #crosshairs-vertical, .collapse-origin #view #crosshairs-horizontal, .collapse-origin #grid {
     display: none;
 }
 
 #crosshairs-horizontal_text, #crosshairs-vertical_text {
     display: none;
+}
+
+#grid {
+    height: 100%; 
+    overflow: visible;
+    position:absolute;
+    width: 100%; 
+}
+
+.grid-line-1 {
+    stroke: #5B9DE3;
+    opacity: 0.6;
+}
+
+.grid-line-10 {
+    stroke: #5B9DE3;
+    opacity: 0.8;
 }
 
 svg#pointers, #touch-shield {
@@ -278,7 +294,8 @@ svg#pointers line {
     color: #fdfdff;
     padding: 0 1em;
     margin: 0 1em .7em 1em;
-    background-color: rgba(0, 0, 0, .1);
+    background-color: rgba(37, 95, 168, .6);
+    position: relative;
 }
 
 #notes h1, #notes h2, #notes h3, #notes h4, #notes h5, #notes h6, #notes th {
@@ -642,7 +659,6 @@ body.full-screen {
 }
 
 .full-screen #blueprint-canvas {
-    background-image: none;
     background-color: inherit;
     border-left: 1px solid #aaa;
     border-right: 1px solid #aaa;
@@ -670,4 +686,12 @@ body.full-screen {
 
 .full-screen #notes h1, .full-screen #notes h2, .full-screen #notes h3, .full-screen #notes h4, .full-screen #notes h5, .full-screen #notes h6, .full-screen #notes th, .full-screen #notes td:first-child {
     color: #333;
+}
+
+.full-screen .grid-line-1 {
+    stroke: #ccc;
+}
+
+.full-screen .grid-line-10 {
+    stroke: #ccc;
 }
