@@ -578,15 +578,8 @@
 
     function getZoom(): Pointer.IPanZoom {
 
-        //expects pixels
-        var scale = 1;
-
-        if (renderUnits) {
-            scale = makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch;
-        }
-
         return {
-            origin: makerjs.point.scale(viewOrigin, scale),
+            origin: viewOrigin,
             pan: viewPanOffset,
             zoom: viewScale
         };
@@ -655,12 +648,23 @@
         gridPattern.setAttribute('patternTransform', 'translate(' + p[0] + ',' + p[1] + ')');
     }
 
+    function getUnits() {
+        if (processed.model && processed.model.units) {
+            return processed.model.units;
+        }
+        return null;
+    }
+
     function setProcessedModel(model: MakerJs.IModel, error?: string) {
         clearTimeout(setProcessedModelTimer);
+
+        var oldUnits = getUnits();
 
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
+
+        var newUnits = getUnits();
 
         if (!error) {
             if (errorMarker) {
@@ -689,10 +693,8 @@
             return;
         }
 
-        if (!viewScale || checkFitToScreen.checked) {
+        if (!viewScale || oldUnits != newUnits) {
             fitOnScreen();
-        } else if (renderUnits != processed.model.units) {
-            fitNatural();
         }
 
         document.body.classList.remove('wait');
@@ -875,7 +877,6 @@
     export var svgStrokeWidth = 2;
     export var svgFontSize = 14;
     export var viewScale: number;
-    export var renderUnits: string;
     export var querystringParams: QueryStringParams;
     export var pointers: Pointer.Manager;
     export var renderOnWorkerThread = true;
@@ -935,8 +936,18 @@
     }
 
     export function updateZoomScale() {
+        var unitScale = viewScale;
+
+        if (processed.model.units) {
+            //pixels to inch
+            unitScale /= pixelsPerInch;
+
+            //inch to units
+            unitScale *= makerjs.units.conversionScale(makerjs.unitType.Inch, processed.model.units);
+        }
+
         var z = document.getElementById('zoom-display');
-        z.innerText = '(' + (viewScale * (renderUnits ? 1 : 100)).toFixed(0) + '%)';
+        z.innerText = (unitScale * 100).toFixed(0) + '%';
     }
 
     export function processResult(html: string, result: any, orderedDependencies?: string[]) {
@@ -1088,7 +1099,7 @@
 
     export function fitNatural() {
 
-        pointers.reset();
+        if (pointers) pointers.reset();
 
         if (!processed.measurement) return;
 
@@ -1101,19 +1112,17 @@
 
         checkFitToScreen.checked = false;
 
-        renderUnits = processed.model.units || null;
-
         if (processed.model.units) {
-            //from pixels, to inch, then to units
-            var widthToInch = size[0] / pixelsPerInch;
-            var toUnits = makerjs.units.conversionScale(makerjs.unitType.Inch, processed.model.units) * widthToInch;
+            //convert from units to Inch
+            viewScale = makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch);
 
-            halfWidth = toUnits / 2;
+            //from inch to pixel
+            viewScale *= pixelsPerInch;
         }
 
-        halfWidth -= modelNaturalSize[0] / 2 + processed.measurement.low[0];
+        halfWidth -= (modelNaturalSize[0] / 2 + processed.measurement.low[0]) * viewScale;
 
-        viewOrigin = [halfWidth, processed.measurement.high[1]];
+        viewOrigin = [halfWidth, processed.measurement.high[1] * viewScale];
 
         updateZoomScale();
     }
@@ -1133,17 +1142,8 @@
 
         checkFitToScreen.checked = true;
 
-        renderUnits = null;
-
-        if (processed.model.units) {
-            //cast into inches, then to pixels
-            viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
-        }
-
-        var modelPixelSize = makerjs.point.rounded(makerjs.point.scale(modelNaturalSize, viewScale), .1);
-
-        var scaleHeight = size[1] / modelPixelSize[1];
-        var scaleWidth = size[0] / modelPixelSize[0];
+        var scaleHeight = size[1] / modelNaturalSize[1];
+        var scaleWidth = size[0] / modelNaturalSize[0];
 
         viewScale *= Math.min(scaleWidth, scaleHeight);
 
@@ -1186,13 +1186,11 @@
 
         var html = '';
 
-        var unitScale = renderUnits ? makerjs.units.conversionScale(renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
-
-        var strokeWidth = svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
+        var strokeWidth = svgStrokeWidth;
 
         if (processed.model) {
 
-            var fontSize = svgFontSize / unitScale;
+            var fontSize = svgFontSize;
 
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
                 origin: viewOrigin,
@@ -1212,10 +1210,6 @@
                     ROOT: processed.model
                 }
             };
-
-            if (renderUnits) {
-                renderModel.units = renderUnits;
-            }
 
             var size = getModelNaturalSize();
             var multiplier = 10;

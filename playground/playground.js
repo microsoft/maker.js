@@ -430,13 +430,8 @@ var MakerJsPlayground;
         keepEventElement = null;
     }
     function getZoom() {
-        //expects pixels
-        var scale = 1;
-        if (MakerJsPlayground.renderUnits) {
-            scale = makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch;
-        }
         return {
-            origin: makerjs.point.scale(viewOrigin, scale),
+            origin: viewOrigin,
             pan: viewPanOffset,
             zoom: MakerJsPlayground.viewScale
         };
@@ -487,11 +482,19 @@ var MakerJsPlayground;
         var p = makerjs.point.add(viewPanOffset, viewOrigin);
         gridPattern.setAttribute('patternTransform', 'translate(' + p[0] + ',' + p[1] + ')');
     }
+    function getUnits() {
+        if (processed.model && processed.model.units) {
+            return processed.model.units;
+        }
+        return null;
+    }
     function setProcessedModel(model, error) {
         clearTimeout(setProcessedModelTimer);
+        var oldUnits = getUnits();
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
+        var newUnits = getUnits();
         if (!error) {
             if (errorMarker) {
                 errorMarker.clear();
@@ -513,11 +516,8 @@ var MakerJsPlayground;
             }, 2500);
             return;
         }
-        if (!MakerJsPlayground.viewScale || checkFitToScreen.checked) {
+        if (!MakerJsPlayground.viewScale || oldUnits != newUnits) {
             fitOnScreen();
-        }
-        else if (MakerJsPlayground.renderUnits != processed.model.units) {
-            fitNatural();
         }
         document.body.classList.remove('wait');
         render();
@@ -704,8 +704,15 @@ var MakerJsPlayground;
         document.getElementById('notes').innerHTML = html;
     }
     function updateZoomScale() {
+        var unitScale = MakerJsPlayground.viewScale;
+        if (processed.model.units) {
+            //pixels to inch
+            unitScale /= pixelsPerInch;
+            //inch to units
+            unitScale *= makerjs.units.conversionScale(makerjs.unitType.Inch, processed.model.units);
+        }
         var z = document.getElementById('zoom-display');
-        z.innerText = '(' + (MakerJsPlayground.viewScale * (MakerJsPlayground.renderUnits ? 1 : 100)).toFixed(0) + '%)';
+        z.innerText = (unitScale * 100).toFixed(0) + '%';
     }
     MakerJsPlayground.updateZoomScale = updateZoomScale;
     function processResult(html, result, orderedDependencies) {
@@ -831,7 +838,8 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.deActivateParam = deActivateParam;
     function fitNatural() {
-        MakerJsPlayground.pointers.reset();
+        if (MakerJsPlayground.pointers)
+            MakerJsPlayground.pointers.reset();
         if (!processed.measurement)
             return;
         var size = getViewSize();
@@ -840,15 +848,14 @@ var MakerJsPlayground;
         MakerJsPlayground.viewScale = 1;
         viewPanOffset = [0, 0];
         checkFitToScreen.checked = false;
-        MakerJsPlayground.renderUnits = processed.model.units || null;
         if (processed.model.units) {
-            //from pixels, to inch, then to units
-            var widthToInch = size[0] / pixelsPerInch;
-            var toUnits = makerjs.units.conversionScale(makerjs.unitType.Inch, processed.model.units) * widthToInch;
-            halfWidth = toUnits / 2;
+            //convert from units to Inch
+            MakerJsPlayground.viewScale = makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch);
+            //from inch to pixel
+            MakerJsPlayground.viewScale *= pixelsPerInch;
         }
-        halfWidth -= modelNaturalSize[0] / 2 + processed.measurement.low[0];
-        viewOrigin = [halfWidth, processed.measurement.high[1]];
+        halfWidth -= (modelNaturalSize[0] / 2 + processed.measurement.low[0]) * MakerJsPlayground.viewScale;
+        viewOrigin = [halfWidth, processed.measurement.high[1] * MakerJsPlayground.viewScale];
         updateZoomScale();
     }
     MakerJsPlayground.fitNatural = fitNatural;
@@ -863,14 +870,8 @@ var MakerJsPlayground;
         MakerJsPlayground.viewScale = 1;
         viewPanOffset = [0, 0];
         checkFitToScreen.checked = true;
-        MakerJsPlayground.renderUnits = null;
-        if (processed.model.units) {
-            //cast into inches, then to pixels
-            MakerJsPlayground.viewScale *= makerjs.units.conversionScale(processed.model.units, makerjs.unitType.Inch) * pixelsPerInch;
-        }
-        var modelPixelSize = makerjs.point.rounded(makerjs.point.scale(modelNaturalSize, MakerJsPlayground.viewScale), .1);
-        var scaleHeight = size[1] / modelPixelSize[1];
-        var scaleWidth = size[0] / modelPixelSize[0];
+        var scaleHeight = size[1] / modelNaturalSize[1];
+        var scaleWidth = size[0] / modelNaturalSize[0];
         MakerJsPlayground.viewScale *= Math.min(scaleWidth, scaleHeight);
         halfWidth -= (modelNaturalSize[0] / 2 + processed.measurement.low[0]) * MakerJsPlayground.viewScale;
         viewOrigin = [halfWidth, processed.measurement.high[1] * MakerJsPlayground.viewScale];
@@ -902,10 +903,9 @@ var MakerJsPlayground;
     function render() {
         viewSvgContainer.innerHTML = '';
         var html = '';
-        var unitScale = MakerJsPlayground.renderUnits ? makerjs.units.conversionScale(MakerJsPlayground.renderUnits, makerjs.unitType.Inch) * pixelsPerInch : 1;
-        var strokeWidth = MakerJsPlayground.svgStrokeWidth / (browserIsMicrosoft() ? unitScale : 1);
+        var strokeWidth = MakerJsPlayground.svgStrokeWidth;
         if (processed.model) {
-            var fontSize = MakerJsPlayground.svgFontSize / unitScale;
+            var fontSize = MakerJsPlayground.svgFontSize;
             var renderOptions = {
                 origin: viewOrigin,
                 annotate: true,
@@ -923,9 +923,6 @@ var MakerJsPlayground;
                     ROOT: processed.model
                 }
             };
-            if (MakerJsPlayground.renderUnits) {
-                renderModel.units = MakerJsPlayground.renderUnits;
-            }
             var size = getModelNaturalSize();
             var multiplier = 10;
             panGrid();
