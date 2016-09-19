@@ -235,7 +235,7 @@ namespace MakerJs.path {
      * @param rotationOrigin The center point of rotation.
      * @returns The original path (for chaining).
      */
-    export function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint): IPath {
+    export function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint = [0, 0]): IPath {
         if (!pathToRotate || angleInDegrees == 0) return pathToRotate;
 
         pathToRotate.origin = point.rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);

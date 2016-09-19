@@ -276,7 +276,7 @@ namespace MakerJs.point {
      * @param rotationOrigin The center point of rotation.
      * @returns A new point.
      */
-    export function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin: IPoint): IPoint {
+    export function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin: IPoint = [0, 0]): IPoint {
         var pointAngleInRadians = angle.ofPointInRadians(rotationOrigin, pointToRotate);
         var d = measure.pointDistance(rotationOrigin, pointToRotate);
         var rotatedPoint = fromPolar(pointAngleInRadians + angle.toRadians(angleInDegrees), d);

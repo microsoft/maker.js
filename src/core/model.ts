@@ -227,7 +227,7 @@ namespace MakerJs.model {
      * @param rotationOrigin The center point of rotation.
      * @returns The original model (for chaining).
      */
-    export function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint): IModel {
+    export function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint = [0, 0]): IModel {
         if (modelToRotate) {
 
             var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
