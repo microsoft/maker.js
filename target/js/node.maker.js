@@ -686,6 +686,7 @@ var MakerJs;
          * @returns A new point.
          */
         function rotate(pointToRotate, angleInDegrees, rotationOrigin) {
+            if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
             var pointAngleInRadians = MakerJs.angle.ofPointInRadians(rotationOrigin, pointToRotate);
             var d = MakerJs.measure.pointDistance(rotationOrigin, pointToRotate);
             var rotatedPoint = fromPolar(pointAngleInRadians + MakerJs.angle.toRadians(angleInDegrees), d);
@@ -927,6 +928,7 @@ var MakerJs;
          * @returns The original path (for chaining).
          */
         function rotate(pathToRotate, angleInDegrees, rotationOrigin) {
+            if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
             if (!pathToRotate || angleInDegrees == 0)
                 return pathToRotate;
             pathToRotate.origin = MakerJs.point.rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
@@ -1566,6 +1568,7 @@ var MakerJs;
          * @returns The original model (for chaining).
          */
         function rotate(modelToRotate, angleInDegrees, rotationOrigin) {
+            if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
             if (modelToRotate) {
                 var offsetOrigin = MakerJs.point.subtract(rotationOrigin, modelToRotate.origin);
                 if (modelToRotate.type === MakerJs.models.BezierCurve.typeName) {
@@ -6742,5 +6745,5 @@ var MakerJs;
         models.Text = Text;
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.14";
+MakerJs.version = "0.9.15";
 ﻿var Bezier = require('bezier-js');
