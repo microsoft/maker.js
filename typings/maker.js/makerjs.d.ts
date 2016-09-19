@@ -854,7 +854,7 @@ declare namespace MakerJs.point {
      * @param rotationOrigin The center point of rotation.
      * @returns A new point.
      */
-    function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin: IPoint): IPoint;
+    function rotate(pointToRotate: IPoint, angleInDegrees: number, rotationOrigin?: IPoint): IPoint;
     /**
      * Scale a point's coordinates.
      *
@@ -938,7 +938,7 @@ declare namespace MakerJs.path {
      * @param rotationOrigin The center point of rotation.
      * @returns The original path (for chaining).
      */
-    function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint): IPath;
+    function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin?: IPoint): IPath;
     /**
      * Scale a path.
      *
@@ -1202,7 +1202,7 @@ declare namespace MakerJs.model {
      * @param rotationOrigin The center point of rotation.
      * @returns The original model (for chaining).
      */
-    function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint): IModel;
+    function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin?: IPoint): IModel;
     /**
      * Scale a model.
      *
