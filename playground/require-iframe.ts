@@ -5,6 +5,7 @@
     MakerJsPlayground: typeof MakerJsPlayground;    //this is not in this window but it is in the parent
     makerjs: typeof MakerJs;
     playgroundRender: Function;
+    paramValues: any[];
 }
 
 namespace MakerJsRequireIframe {
@@ -93,7 +94,7 @@ namespace MakerJsRequireIframe {
             };
 
             //send error results back to parent window
-            parent.MakerJsPlayground.processResult('', errorDetails);
+            parent.MakerJsPlayground.processResult({ result: errorDetails });
 
         }, 5000);
 
@@ -188,7 +189,7 @@ namespace MakerJsRequireIframe {
         };
 
         //send error results back to parent window
-        parent.MakerJsPlayground.processResult('', errorDetails);
+        parent.MakerJsPlayground.processResult({ result: errorDetails });
         errorReported = true;
     };
 
@@ -307,7 +308,7 @@ namespace MakerJsRequireIframe {
                 }
 
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(getHtml(), window.module.exports || model, orderedDependencies);
+                parent.MakerJsPlayground.processResult({ html: getHtml(), result: window.module.exports || model, orderedDependencies: orderedDependencies, paramValues: window.paramValues });
 
             }, 0);
 
@@ -350,7 +351,7 @@ namespace MakerJsRequireIframe {
     }
 
     window.playgroundRender = function (result) {
-        parent.MakerJsPlayground.processResult(getHtml(), result);
+        parent.MakerJsPlayground.processResult({ html: getHtml(), result: result, paramValues: window.paramValues });
     }
 
     function devNull() { }

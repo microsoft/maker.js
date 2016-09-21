@@ -249,11 +249,20 @@
 
         processed.paramValues = paramValues;
 
+        if (paramHtml.length) {
+            document.body.classList.add('show-params-link');
+        } else {
+            document.body.classList.remove('show-params-link');
+        }
+
         paramsDiv.innerHTML = paramHtml.join('');
+
+        saveParamsLink();
+
         paramsDiv.setAttribute('disabled', 'true');
     }
 
-    function generateCodeFromKit(id: string, kit: MakerJs.IKit): string {
+    function generateCodeFromKit(id: string, kit: MakerJs.IKit, paramValues: any[]): string {
         var values: string[] = [];
         var comment: string[] = [];
         var code: string[] = [];
@@ -274,6 +283,10 @@
                 values.push(JSON.stringify(value));
             } else {
                 values.push(value);
+            }
+
+            if (paramValues && paramValues.length >= values.length) {
+                values[values.length - 1] = paramValues[values.length - 1];
             }
         }
 
@@ -740,7 +753,7 @@
                 errorDetails.colno = parseInt(matches[2]);
             }
 
-            processResult('', errorDetails);
+            processResult({ result: errorDetails });
         }
     }
 
@@ -824,7 +837,52 @@
         };
     }
 
-    function throttledSetParam(index: number, value: any) {
+    function saveParamsLink() {
+        var a = document.querySelector('#params-link') as HTMLAnchorElement;
+        if (!a) return;
+
+        a.hash = 'params=' + JSON.stringify(processed.paramValues);
+    }
+
+    function getHashParams() {
+        var paramValues: any[];
+
+        if (document.location.hash) {
+            var hashParams = new QueryStringParams(document.location.hash.substring(1));
+            var paramString = hashParams['params'];
+            if (paramString) {
+                paramValues = JSON.parse(paramString);
+            }
+        }
+
+        return paramValues;
+    }
+
+    window.onhashchange = function () {
+        var paramValues: any[];
+
+        if (document.location.hash && document.location.hash.length > 1) {
+            paramValues = getHashParams();
+        } else if (processed.kit) {
+            paramValues = makerjs.kit.getParameterValues(processed.kit);
+        }
+
+        setParamValues(paramValues, true);
+    }
+
+    function setParamValues(paramValues: any[], fit: boolean) {
+
+        if (paramValues && paramValues.length) {
+
+            for (var i = 0; i < paramValues.length; i++) {
+                setParamIndex(i, paramValues[i], false);
+            }
+
+            finalizeSetParam(fit);
+        }
+    }
+
+    function setParamIndex(index: number, value: any, fromUI: boolean) {
 
         //sync slider / numberbox
         var div = selectParamSlider(index);
@@ -832,18 +890,38 @@
         var numberBox = div.numberBox;
 
         if (slider && numberBox) {
-            if (div.classList.contains('toggle-number')) {
-                //numberbox is master
-                slider.value = numberBox.value;
+            if (fromUI) {
+                if (div.classList.contains('toggle-number')) {
+                    //numberbox is master
+                    slider.value = numberBox.value;
+                } else {
+                    //slider is master
+                    numberBox.value = slider.value;
+                }
             } else {
-                //slider is master
-                numberBox.value = slider.value;
+                //value is master
+                numberBox.value = value;
+                slider.value = value;
             }
         }
 
-        resetDownload();
-
         processed.paramValues[index] = value;
+    }
+
+    function throttledSetParam(index: number, value: any) {
+
+        setParamIndex(index, value, true);
+        finalizeSetParam(false);
+    }
+
+    function finalizeSetParam(fit: boolean) {
+
+        resetDownload();
+        saveParamsLink();
+
+        if (fit) {
+            viewScale = null;
+        }
 
         if (renderOnWorkerThread && Worker) {
 
@@ -881,7 +959,7 @@
     export var pointers: Pointer.Manager;
     export var renderOnWorkerThread = true;
 
-    export function runCodeFromEditor() {
+    export function runCodeFromEditor(paramValues?: any[]) {
 
         document.body.classList.add('wait');
 
@@ -900,7 +978,7 @@
         var scripts = ['require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
 
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '</head><body></body></html>');
+        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '<script>var paramValues=' + JSON.stringify(paramValues) + ';</script></head><body></body></html>');
         iframe.contentWindow.document.close();
     }
 
@@ -950,11 +1028,20 @@
         z.innerText = (unitScale * 100).toFixed(0) + '%';
     }
 
-    export function processResult(html: string, result: any, orderedDependencies?: string[]) {
+    export interface IProcessResult {
+        html?: string;
+        result: any;
+        orderedDependencies?: string[];
+        paramValues?: any[];
+    }
+
+    export function processResult(value: IProcessResult) {
+
+        var result = value.result;
 
         resetDownload();
 
-        processed.html = html;
+        processed.html = value.html || '';
 
         setProcessedModel(null);
 
@@ -963,6 +1050,10 @@
 
             processed.kit = result;
             populateParams(processed.kit.metaParameters);
+
+            if (value.paramValues) {
+                setParamValues(value.paramValues, false);
+            }
 
             function enableKit() {
                 paramsDiv.removeAttribute('disabled');
@@ -977,7 +1068,7 @@
 
                 constructInWorker(
                     codeMirrorEditor.getDoc().getValue(),
-                    orderedDependencies,
+                    value.orderedDependencies,
                     function (model: MakerJs.IModel) {
                         enableKit();
                         setProcessedModel(model);
@@ -1257,7 +1348,7 @@
                 name: 'Load module failure'
             };
 
-            processResult('', errorDetails);
+            processResult({ result: errorDetails });
 
         }, 5000);
 
@@ -1440,16 +1531,18 @@
 
             if (scriptname && !isHttp(scriptname)) {
 
+                var paramValues = getHashParams();
+
                 if ((scriptname in makerjs.models) && scriptname !== 'Text') {
 
-                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
                     codeMirrorEditor.getDoc().setValue(code);
-                    runCodeFromEditor();
+                    runCodeFromEditor(paramValues);
 
                 } else {
                     downloadScript(filenameFromRequireId(scriptname), function (download: string) {
                         codeMirrorEditor.getDoc().setValue(download);
-                        runCodeFromEditor();
+                        runCodeFromEditor(paramValues);
                     });
                 }
             } else {
