@@ -128,6 +128,21 @@ header h1 {
     border-right-width: 0;
 }
 
+#rendering-options-menu .view-controls, #params-link {
+    border-top: 1px solid #ddd;
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+#params-link {
+    border-top-style: dashed;
+    display: none;
+}
+
+body.show-params-link #params-link {
+    display: block;
+}
+
 #rendering-options-menu .view-controls label {
     letter-spacing: 1px;
     font-variant: small-caps;
