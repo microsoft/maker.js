@@ -65,7 +65,7 @@ var MakerJsRequireIframe;
                 name: 'Load module failure'
             };
             //send error results back to parent window
-            parent.MakerJsPlayground.processResult('', errorDetails);
+            parent.MakerJsPlayground.processResult({ result: errorDetails });
         }, 5000);
         script.onload = function () {
             clearTimeout(timeout);
@@ -137,7 +137,7 @@ var MakerJsRequireIframe;
             name: errorName
         };
         //send error results back to parent window
-        parent.MakerJsPlayground.processResult('', errorDetails);
+        parent.MakerJsPlayground.processResult({ result: errorDetails });
         errorReported = true;
     };
     window.collectRequire = function (id) {
@@ -225,7 +225,7 @@ var MakerJsRequireIframe;
                     }
                 }
                 //send results back to parent window
-                parent.MakerJsPlayground.processResult(getHtml(), window.module.exports || model, orderedDependencies);
+                parent.MakerJsPlayground.processResult({ html: getHtml(), result: window.module.exports || model, orderedDependencies: orderedDependencies, paramValues: window.paramValues });
             }, 0);
         }
         ;
@@ -256,7 +256,7 @@ var MakerJsRequireIframe;
         }
     };
     window.playgroundRender = function (result) {
-        parent.MakerJsPlayground.processResult(getHtml(), result);
+        parent.MakerJsPlayground.processResult({ html: getHtml(), result: result, paramValues: window.paramValues });
     };
     function devNull() { }
     var mockMakerJs = {};

@@ -169,10 +169,17 @@ var MakerJsPlayground;
             }
         }
         processed.paramValues = paramValues;
+        if (paramHtml.length) {
+            document.body.classList.add('show-params-link');
+        }
+        else {
+            document.body.classList.remove('show-params-link');
+        }
         paramsDiv.innerHTML = paramHtml.join('');
+        saveParamsLink();
         paramsDiv.setAttribute('disabled', 'true');
     }
-    function generateCodeFromKit(id, kit) {
+    function generateCodeFromKit(id, kit, paramValues) {
         var values = [];
         var comment = [];
         var code = [];
@@ -189,6 +196,9 @@ var MakerJsPlayground;
             }
             else {
                 values.push(value);
+            }
+            if (paramValues && paramValues.length >= values.length) {
+                values[values.length - 1] = paramValues[values.length - 1];
             }
         }
         code.push("var makerjs = require('makerjs');");
@@ -555,7 +565,7 @@ var MakerJsPlayground;
                 errorDetails.lineno = parseInt(matches[1]);
                 errorDetails.colno = parseInt(matches[2]);
             }
-            processResult('', errorDetails);
+            processResult({ result: errorDetails });
         }
     }
     function constructInWorker(javaScript, orderedDependencies, successHandler, errorHandler) {
@@ -625,23 +635,75 @@ var MakerJsPlayground;
             numberBox: numberBox
         };
     }
-    function throttledSetParam(index, value) {
+    function saveParamsLink() {
+        var a = document.querySelector('#params-link');
+        if (!a)
+            return;
+        a.hash = 'params=' + JSON.stringify(processed.paramValues);
+    }
+    function getHashParams() {
+        var paramValues;
+        if (document.location.hash) {
+            var hashParams = new QueryStringParams(document.location.hash.substring(1));
+            var paramString = hashParams['params'];
+            if (paramString) {
+                paramValues = JSON.parse(paramString);
+            }
+        }
+        return paramValues;
+    }
+    window.onhashchange = function () {
+        var paramValues;
+        if (document.location.hash && document.location.hash.length > 1) {
+            paramValues = getHashParams();
+        }
+        else if (processed.kit) {
+            paramValues = makerjs.kit.getParameterValues(processed.kit);
+        }
+        setParamValues(paramValues, true);
+    };
+    function setParamValues(paramValues, fit) {
+        if (paramValues && paramValues.length) {
+            for (var i = 0; i < paramValues.length; i++) {
+                setParamIndex(i, paramValues[i], false);
+            }
+            finalizeSetParam(fit);
+        }
+    }
+    function setParamIndex(index, value, fromUI) {
         //sync slider / numberbox
         var div = selectParamSlider(index);
         var slider = div.slider;
         var numberBox = div.numberBox;
         if (slider && numberBox) {
-            if (div.classList.contains('toggle-number')) {
-                //numberbox is master
-                slider.value = numberBox.value;
+            if (fromUI) {
+                if (div.classList.contains('toggle-number')) {
+                    //numberbox is master
+                    slider.value = numberBox.value;
+                }
+                else {
+                    //slider is master
+                    numberBox.value = slider.value;
+                }
             }
             else {
-                //slider is master
-                numberBox.value = slider.value;
+                //value is master
+                numberBox.value = value;
+                slider.value = value;
             }
         }
-        resetDownload();
         processed.paramValues[index] = value;
+    }
+    function throttledSetParam(index, value) {
+        setParamIndex(index, value, true);
+        finalizeSetParam(false);
+    }
+    function finalizeSetParam(fit) {
+        resetDownload();
+        saveParamsLink();
+        if (fit) {
+            MakerJsPlayground.viewScale = null;
+        }
         if (MakerJsPlayground.renderOnWorkerThread && Worker) {
             reConstructInWorker(setProcessedModel, constructOnMainThread);
         }
@@ -661,7 +723,7 @@ var MakerJsPlayground;
     MakerJsPlayground.svgStrokeWidth = 2;
     MakerJsPlayground.svgFontSize = 14;
     MakerJsPlayground.renderOnWorkerThread = true;
-    function runCodeFromEditor() {
+    function runCodeFromEditor(paramValues) {
         document.body.classList.add('wait');
         processed.kit = null;
         populateParams(null);
@@ -673,7 +735,7 @@ var MakerJsPlayground;
         document.body.appendChild(iframe);
         var scripts = ['require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '</head><body></body></html>');
+        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '<script>var paramValues=' + JSON.stringify(paramValues) + ';</script></head><body></body></html>');
         iframe.contentWindow.document.close();
     }
     MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
@@ -715,14 +777,18 @@ var MakerJsPlayground;
         z.innerText = (unitScale * 100).toFixed(0) + '%';
     }
     MakerJsPlayground.updateZoomScale = updateZoomScale;
-    function processResult(html, result, orderedDependencies) {
+    function processResult(value) {
+        var result = value.result;
         resetDownload();
-        processed.html = html;
+        processed.html = value.html || '';
         setProcessedModel(null);
         //see if output is either a Node module, or a MakerJs.IModel
         if (typeof result === 'function') {
             processed.kit = result;
             populateParams(processed.kit.metaParameters);
+            if (value.paramValues) {
+                setParamValues(value.paramValues, false);
+            }
             function enableKit() {
                 paramsDiv.removeAttribute('disabled');
             }
@@ -731,7 +797,7 @@ var MakerJsPlayground;
                 enableKit();
             }
             if (MakerJsPlayground.renderOnWorkerThread && Worker) {
-                constructInWorker(MakerJsPlayground.codeMirrorEditor.getDoc().getValue(), orderedDependencies, function (model) {
+                constructInWorker(MakerJsPlayground.codeMirrorEditor.getDoc().getValue(), value.orderedDependencies, function (model) {
                     enableKit();
                     setProcessedModel(model);
                 }, setKitOnMainThread);
@@ -960,7 +1026,7 @@ var MakerJsPlayground;
                 message: 'Could not load script "' + url + '". Possibly a network error, or the file does not exist.',
                 name: 'Load module failure'
             };
-            processResult('', errorDetails);
+            processResult({ result: errorDetails });
         }, 5000);
         var x = new XMLHttpRequest();
         x.open('GET', url, true);
@@ -1112,15 +1178,16 @@ var MakerJsPlayground;
         else {
             var scriptname = MakerJsPlayground.querystringParams['script'];
             if (scriptname && !isHttp(scriptname)) {
+                var paramValues = getHashParams();
                 if ((scriptname in makerjs.models) && scriptname !== 'Text') {
-                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
                     MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
-                    runCodeFromEditor();
+                    runCodeFromEditor(paramValues);
                 }
                 else {
                     downloadScript(filenameFromRequireId(scriptname), function (download) {
                         MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
-                        runCodeFromEditor();
+                        runCodeFromEditor(paramValues);
                     });
                 }
             }
