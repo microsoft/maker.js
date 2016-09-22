@@ -7,11 +7,13 @@ function Nameplate(fontPath, text, fontSize, fontMargin, boltMargin, boltRadius,
 
     if (makerjs.environment == makerjs.environmentTypes.NodeJs) {
 
-        var opentype = require('opentype.js');
-        var font = opentype.loadSync('./fonts/' + fontPath);
+        (function () {
+            var opentype = require('opentype.js');
+            var font = opentype.loadSync('./fonts/' + fontPath);
 
-        //use the models from makerjs-nameplate
-        _this.models = new _nameplate(font, text, fontSize, fontMargin, boltMargin, boltRadius, rounded).models;
+            //use the models from makerjs-nameplate
+            _this.models = new _nameplate(font, text, fontSize, fontMargin, boltMargin, boltRadius, rounded).models;
+        })();
 
     } else {
 
