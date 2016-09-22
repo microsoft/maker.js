@@ -20,7 +20,7 @@ function thumbnail(key, constructor, baseUrl) {
     var parameters = makerjs.kit.getParameterValues(constructor);
     if (key === 'Text') {
         parameters = [
-            opentype.loadSync('./playground/fonts/donegalone/DonegalOne-Regular.ttf'),
+            opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
     }

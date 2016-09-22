@@ -13,7 +13,12 @@
     "demo": "npm link && cd demos/js && npm link makerjs && cd ../.. && node ./docgen/demoify.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "maintainers": [ { "name": "Dan Marshall", "email": "danmar@microsoft.com" } ],
+  "maintainers": [
+    {
+      "name": "Dan Marshall",
+      "email": "danmar@microsoft.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Microsoft/maker.js.git"
@@ -73,6 +78,7 @@
     "detective": "^4.3.1",
     "highlight.js": "^9.0.0",
     "marked": "^0.3.5",
+    "opentype.js": "^0.6.5",
     "tsd": "^0.6.1",
     "typedoc": "^0.3.12",
     "typescript": "^1.8.2"
@@ -84,6 +90,7 @@
     "makerjs-heart": "^1.0.0",
     "makerjs-logo": "^2.0.0",
     "makerjs-monotext": "^1.2.5",
+    "makerjs-nameplate": "^1.0.0",
     "makerjs-polygon-rimbox": "^1.0.2",
     "makerjs-rimbox": "^1.1.3",
     "makerjs-smile": "^1.2.1",
@@ -95,12 +102,13 @@
     "opentype.js": "^0.6.4"
   },
   "ordered_demo_list": [
+    "nameplate",
     "makerjs-logo",
     "makerjs-band-clamp",
     "polybox3d",
     "rimbox3d",
-    "makerjs-spokes-flared",
     "makerjs-spokes-straight",
+    "makerjs-spokes-flared",
     "makerjs-polygon-rimbox",
     "makerjs-rimbox",
     "makerjs-ventgridcircle",

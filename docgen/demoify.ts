@@ -24,7 +24,7 @@ function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
 
     if (key === 'Text') {
         parameters = [
-            opentype.loadSync('./playground/fonts/donegalone/DonegalOne-Regular.ttf'),
+            opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
     }
