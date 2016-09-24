@@ -194,6 +194,34 @@
 
                         break;
 
+                    case 'font':
+
+                        //TODO: handle non-wildcard
+
+                        var selectFontAttrs = {
+                            onchange: 'MakerJsPlayground.setParam(' + i + ', this.options[this.selectedIndex].value)'
+                        };
+
+                        input = new makerjs.exporter.XmlTag('select', selectFontAttrs);
+                        var fontOptions = '';
+
+                        var added = false;
+
+                        for (var id in fonts) {
+                            if (!added) {
+                                paramValues.push(id);
+                                added = true;
+                            }
+                            var option = new makerjs.exporter.XmlTag('option', {value: id});
+                            option.innerText = fonts[id].displayName;
+                            options += option.toString();
+                        }
+
+                        input.innerText = options;
+                        input.innerTextEscaped = true;
+
+                        break;
+
                     case 'select':
 
                         var selectAttrs = {
@@ -731,10 +759,37 @@
 
     }
 
-    function constructOnMainThread() {
+    function constructOnMainThread(successCb?: Function) {
+        var fontLoader = new FontLoader(opentype, processed.kit.metaParameters, processed.paramValues);
+
+        fontLoader.successCb = function (realValues: any[]) {
+            constructOnMainThreadReal(realValues, successCb);
+        };
+
+        fontLoader.failureCb = function (id) {
+            var errorDetails: MakerJsPlayground.IJavaScriptErrorDetails = {
+                colno: 0,
+                lineno: 0,
+                message: 'error loading font' + fonts[id].path,
+                name: 'Network error'
+            };
+
+            processResult({ result: errorDetails });
+        }
+
+        fontLoader.load();
+    }
+
+    function constructOnMainThreadReal(realValues: any[], successCb?: Function) {
+
         try {
-            var model = makerjs.kit.construct(processed.kit, processed.paramValues);
+            var model = makerjs.kit.construct(processed.kit, realValues);
             setProcessedModel(model);
+
+            if (successCb) {
+                successCb();
+            }
+
         } catch (e) {
             var error = e as RuntimeError;
 
@@ -1060,8 +1115,7 @@
             }
 
             function setKitOnMainThread() {
-                constructOnMainThread();
-                enableKit();
+                constructOnMainThread(enableKit);
             }
 
             if (renderOnWorkerThread && Worker) {

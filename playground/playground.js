@@ -136,6 +136,26 @@ var MakerJsPlayground;
                         input = new makerjs.exporter.XmlTag('input', checkboxAttrs);
                         paramValues.push(attrs.value);
                         break;
+                    case 'font':
+                        //TODO: handle non-wildcard
+                        var selectFontAttrs = {
+                            onchange: 'MakerJsPlayground.setParam(' + i + ', this.options[this.selectedIndex].value)'
+                        };
+                        input = new makerjs.exporter.XmlTag('select', selectFontAttrs);
+                        var fontOptions = '';
+                        var added = false;
+                        for (var id in fonts) {
+                            if (!added) {
+                                paramValues.push(id);
+                                added = true;
+                            }
+                            var option = new makerjs.exporter.XmlTag('option', { value: id });
+                            option.innerText = fonts[id].displayName;
+                            options += option.toString();
+                        }
+                        input.innerText = options;
+                        input.innerTextEscaped = true;
+                        break;
                     case 'select':
                         var selectAttrs = {
                             onchange: 'MakerJsPlayground.setParam(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
@@ -545,10 +565,29 @@ var MakerJsPlayground;
             MakerJsPlayground.onViewportChange();
         }
     }
-    function constructOnMainThread() {
+    function constructOnMainThread(successCb) {
+        var fontLoader = new MakerJsPlayground.FontLoader(opentype, processed.kit.metaParameters, processed.paramValues);
+        fontLoader.successCb = function (realValues) {
+            constructOnMainThreadReal(realValues, successCb);
+        };
+        fontLoader.failureCb = function (id) {
+            var errorDetails = {
+                colno: 0,
+                lineno: 0,
+                message: 'error loading font' + fonts[id].path,
+                name: 'Network error'
+            };
+            processResult({ result: errorDetails });
+        };
+        fontLoader.load();
+    }
+    function constructOnMainThreadReal(realValues, successCb) {
         try {
-            var model = makerjs.kit.construct(processed.kit, processed.paramValues);
+            var model = makerjs.kit.construct(processed.kit, realValues);
             setProcessedModel(model);
+            if (successCb) {
+                successCb();
+            }
         }
         catch (e) {
             var error = e;
@@ -793,8 +832,7 @@ var MakerJsPlayground;
                 paramsDiv.removeAttribute('disabled');
             }
             function setKitOnMainThread() {
-                constructOnMainThread();
-                enableKit();
+                constructOnMainThread(enableKit);
             }
             if (MakerJsPlayground.renderOnWorkerThread && Worker) {
                 constructInWorker(MakerJsPlayground.codeMirrorEditor.getDoc().getValue(), value.orderedDependencies, function (model) {

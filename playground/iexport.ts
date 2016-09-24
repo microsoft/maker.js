@@ -63,3 +63,5 @@
     };
 
 }
+
+declare var fonts: { [id: string]: { displayName: string, path: string } };

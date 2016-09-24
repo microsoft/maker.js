@@ -12,6 +12,7 @@
     "../../typings/lib.webworker.d.ts",
     "../iexport.ts",
     "../irender.ts",
+    "../fontloader.ts",
     "export-worker.ts",
     "render-worker.ts",
     "string-reader.ts"
