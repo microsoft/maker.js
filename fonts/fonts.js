@@ -2,56 +2,78 @@ var fonts = {
   "allertastencil-regular": {
     "displayName": "Allerta Stencil",
     "path": "allertastencil/AllertaStencil-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "blackopsone-regular": {
     "displayName": "Black Ops One",
     "path": "blackopsone/BlackOpsOne-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "emblemaone-regular": {
     "displayName": "Emblema One",
     "path": "emblemaone/EmblemaOne-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "keaniaone-regular": {
     "displayName": "Keania One",
     "path": "keaniaone/KeaniaOne-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "montserratsubrayada-regular": {
     "displayName": "Montserrat Subrayada",
     "path": "montserratsubrayada/MontserratSubrayada-Regular.ttf",
-    "bin": null
+    "tags": [
+      "connected"
+    ]
   },
   "montserratsubrayada-bold": {
     "displayName": "Montserrat Subrayada Bold",
     "path": "montserratsubrayada/MontserratSubrayada-Bold.ttf",
-    "bin": null
+    "tags": [
+      "connected"
+    ]
   },
   "plaster-regular": {
     "displayName": "Plaster",
     "path": "plaster/Plaster-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "sirinstencil-regular": {
     "displayName": "Sirin Stencil",
     "path": "sirinstencil/SirinStencil-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "stardosstencil-regular": {
     "displayName": "Stardos Stencil",
     "path": "stardosstencil/StardosStencil-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "stardosstencil-bold": {
     "displayName": "Stardos Stencil Bold",
     "path": "stardosstencil/StardosStencil-Bold.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "wallpoet-regular": {
     "displayName": "Wallpoet",
     "path": "wallpoet/Wallpoet-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   }
 };
