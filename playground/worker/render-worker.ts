@@ -30,6 +30,8 @@ function load(id, src) {
 
 //add the makerjs module
 importScripts(
+    '../../fonts/fonts.js',
+    '../fontloader.js',
     '../../target/js/browser.maker.js',
     '../../external/bezier-js/bezier.js',
     '../../external/opentype/opentype.js'
@@ -156,20 +158,30 @@ onmessage = (ev: MessageEvent) => {
         htmls.length = baseHtmlLength;
         logs.length = baseLogLength;
 
-        try {
-            var model = makerjs.kit.construct(kit, request.paramValues);
+        var fontLoader = new MakerJsPlayground.FontLoader(window['opentype'], kit.metaParameters, request.paramValues);
 
-            var response: MakerJsPlaygroundRender.IRenderResponse = {
-                requestId: request.requestId,
-                model: model,
-                html: getHtml()
-            };
+        fontLoader.successCb = function (realValues: any[]) {
+            try {
+                var model = makerjs.kit.construct(kit, realValues);
 
-            postMessage(response);
+                var response: MakerJsPlaygroundRender.IRenderResponse = {
+                    requestId: request.requestId,
+                    model: model,
+                    html: getHtml()
+                };
 
-        } catch (e) {
-            postError(request.requestId, 'runtime error');
+                postMessage(response);
+
+            } catch (e) {
+                postError(request.requestId, 'runtime error');
+            }
+        };
+
+        fontLoader.failureCb = function (id) {
+            postError(request.requestId, 'error loading font' + fonts[id].path);
         }
-    }
 
+        fontLoader.load();
+
+    }
 };
