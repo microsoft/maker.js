@@ -1,7 +1,7 @@
 var makerjs = require('makerjs');
 
 function Nameplate(font, text, fontSize, fontMargin, boltMargin, boltRadius, rounded) {
-
+    
     //generate the text using a font
     var textModel = new makerjs.models.Text(font, text, fontSize);
     
@@ -31,6 +31,8 @@ function Nameplate(font, text, fontSize, fontMargin, boltMargin, boltRadius, rou
 
     //move everything to [0, 0]
     makerjs.model.zero(this);
+    
+    this.units = makerjs.unitType.Millimeter;
 }
 
 Nameplate.metaParameters = [
