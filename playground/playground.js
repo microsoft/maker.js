@@ -531,9 +531,21 @@ var MakerJsPlayground;
         }
         return null;
     }
+    function isMeasurementEqual(m1, m2) {
+        if (!m1 && !m2)
+            return true;
+        if (!m1 || !m2)
+            return false;
+        if (!makerjs.measure.isPointEqual(m1.low, m2.low))
+            return false;
+        if (!makerjs.measure.isPointEqual(m1.high, m2.high))
+            return false;
+        return true;
+    }
     function setProcessedModel(model, error) {
         clearTimeout(setProcessedModelTimer);
         var oldUnits = getUnits();
+        var oldMeasurement = processed.measurement;
         processed.model = model;
         processed.measurement = null;
         processed.error = error;
@@ -552,14 +564,15 @@ var MakerJsPlayground;
             initialize();
         }
         //todo: find minimum viewScale
-        processed.measurement = makerjs.measure.modelExtents(processed.model);
+        var newMeasurement = makerjs.measure.modelExtents(processed.model);
+        processed.measurement = newMeasurement;
         if (!processed.measurement) {
             setProcessedModelTimer = setTimeout(function () {
                 setProcessedModel(new StraightFace(), 'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n```' + JSON.stringify(processed.model) + '```');
             }, 2500);
             return;
         }
-        if (!MakerJsPlayground.viewScale || oldUnits != newUnits) {
+        if ((!MakerJsPlayground.viewScale || oldUnits != newUnits) || (!isMeasurementEqual(oldMeasurement, newMeasurement) && checkFitToScreen.checked)) {
             fitOnScreen();
         }
         document.body.classList.remove('wait');
