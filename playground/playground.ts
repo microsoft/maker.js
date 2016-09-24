@@ -227,7 +227,7 @@
                                 paramValues.push(id);
                                 added = true;
                             }
-                            var option = new makerjs.exporter.XmlTag('option', {value: id});
+                            var option = new makerjs.exporter.XmlTag('option', { value: id });
                             option.innerText = font.displayName;
                             options += option.toString();
                         }
@@ -711,10 +711,19 @@
         return null;
     }
 
+    function isMeasurementEqual(m1: MakerJs.IMeasure, m2: MakerJs.IMeasure): boolean {
+        if (!m1 && !m2) return true;
+        if (!m1 || !m2) return false;
+        if (!makerjs.measure.isPointEqual(m1.low, m2.low)) return false;
+        if (!makerjs.measure.isPointEqual(m1.high, m2.high)) return false;
+        return true;
+    }
+
     function setProcessedModel(model: MakerJs.IModel, error?: string) {
         clearTimeout(setProcessedModelTimer);
 
         var oldUnits = getUnits();
+        var oldMeasurement = processed.measurement;
 
         processed.model = model;
         processed.measurement = null;
@@ -740,7 +749,8 @@
 
         //todo: find minimum viewScale
 
-        processed.measurement = makerjs.measure.modelExtents(processed.model);
+        var newMeasurement = makerjs.measure.modelExtents(processed.model);
+        processed.measurement = newMeasurement;
 
         if (!processed.measurement) {
             setProcessedModelTimer = setTimeout(function () {
@@ -749,7 +759,7 @@
             return;
         }
 
-        if (!viewScale || oldUnits != newUnits) {
+        if ((!viewScale || oldUnits != newUnits) || (!isMeasurementEqual(oldMeasurement, newMeasurement) && checkFitToScreen.checked)) {
             fitOnScreen();
         }
 
