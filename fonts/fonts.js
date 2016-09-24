@@ -1,57 +1,79 @@
 var fonts = {
   "allertastencil-regular": {
-    "displayName": "AllertaStencil",
+    "displayName": "Allerta Stencil",
     "path": "allertastencil/AllertaStencil-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "blackopsone-regular": {
-    "displayName": "BlackOpsOne",
+    "displayName": "Black Ops One",
     "path": "blackopsone/BlackOpsOne-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "emblemaone-regular": {
-    "displayName": "EmblemaOne",
+    "displayName": "Emblema One",
     "path": "emblemaone/EmblemaOne-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "keaniaone-regular": {
-    "displayName": "KeaniaOne",
+    "displayName": "Keania One",
     "path": "keaniaone/KeaniaOne-Regular.ttf",
-    "bin": null
-  },
-  "montserratsubrayada-bold": {
-    "displayName": "MontserratSubrayada-Bold",
-    "path": "montserratsubrayada/MontserratSubrayada-Bold.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "montserratsubrayada-regular": {
-    "displayName": "MontserratSubrayada",
+    "displayName": "Montserrat Subrayada",
     "path": "montserratsubrayada/MontserratSubrayada-Regular.ttf",
-    "bin": null
+    "tags": [
+      "connected"
+    ]
+  },
+  "montserratsubrayada-bold": {
+    "displayName": "Montserrat Subrayada Bold",
+    "path": "montserratsubrayada/MontserratSubrayada-Bold.ttf",
+    "tags": [
+      "connected"
+    ]
   },
   "plaster-regular": {
     "displayName": "Plaster",
     "path": "plaster/Plaster-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "sirinstencil-regular": {
-    "displayName": "SirinStencil",
+    "displayName": "Sirin Stencil",
     "path": "sirinstencil/SirinStencil-Regular.ttf",
-    "bin": null
-  },
-  "stardosstencil-bold": {
-    "displayName": "StardosStencil-Bold",
-    "path": "stardosstencil/StardosStencil-Bold.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   },
   "stardosstencil-regular": {
-    "displayName": "StardosStencil",
+    "displayName": "Stardos Stencil",
     "path": "stardosstencil/StardosStencil-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
+  },
+  "stardosstencil-bold": {
+    "displayName": "Stardos Stencil Bold",
+    "path": "stardosstencil/StardosStencil-Bold.ttf",
+    "tags": [
+      "stencil"
+    ]
   },
   "wallpoet-regular": {
     "displayName": "Wallpoet",
     "path": "wallpoet/Wallpoet-Regular.ttf",
-    "bin": null
+    "tags": [
+      "stencil"
+    ]
   }
 };

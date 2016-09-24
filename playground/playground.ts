@@ -116,6 +116,19 @@
         return true;
     }
 
+    function fontMatches(font: IFont, spec: string): boolean {
+        if (!spec || spec === '*') return true;
+
+        var specHashtags = spec.trim().split('#').map(s => s.trim());
+
+        for (var i = 0; i < specHashtags.length; i++) {
+            var specHashtag = specHashtags[i];
+            if (font.tags.indexOf(specHashtag) >= 0) return true;
+        }
+
+        return false;
+    }
+
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
 
         var paramValues = [];
@@ -196,8 +209,6 @@
 
                     case 'font':
 
-                        //TODO: handle non-wildcard
-
                         var selectFontAttrs = {
                             onchange: 'MakerJsPlayground.setParam(' + i + ', this.options[this.selectedIndex].value)'
                         };
@@ -208,12 +219,16 @@
                         var added = false;
 
                         for (var id in fonts) {
+                            var font = fonts[id];
+
+                            if (!fontMatches(font, attrs.value)) continue;
+
                             if (!added) {
                                 paramValues.push(id);
                                 added = true;
                             }
                             var option = new makerjs.exporter.XmlTag('option', {value: id});
-                            option.innerText = fonts[id].displayName;
+                            option.innerText = font.displayName;
                             options += option.toString();
                         }
 

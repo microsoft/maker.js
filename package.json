@@ -18,7 +18,12 @@
     "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "maintainers": [ { "name": "Dan Marshall", "email": "danmar@microsoft.com" } ],
+  "maintainers": [
+    {
+      "name": "Dan Marshall",
+      "email": "danmar@microsoft.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Microsoft/maker.js.git"
@@ -77,6 +82,8 @@
     "browserify": "^13.0.0",
     "licensify": "^3.1.2",
     "mkdirp": "^0.5.1",
+    "pretty-camel": "0.0.8",
+    "sort-keys": "^1.1.2",
     "tsd": "^0.6.1",
     "typescript": "^1.8.2"
   },
