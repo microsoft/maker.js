@@ -32,7 +32,7 @@ function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
     if (constructor.metaParameters) {
         constructor.metaParameters.forEach((metaParameter, i) => {
             if (metaParameter.type === 'font') {
-                parameters[i] = opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf')
+                parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf')
             }
         });
     }

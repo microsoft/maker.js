@@ -27,7 +27,7 @@ function thumbnail(key, constructor, baseUrl) {
     if (constructor.metaParameters) {
         constructor.metaParameters.forEach(function (metaParameter, i) {
             if (metaParameter.type === 'font') {
-                parameters[i] = opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf');
+                parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf');
             }
         });
     }
