@@ -33,4 +33,14 @@ function Nameplate(font, text, fontSize, fontMargin, boltMargin, boltRadius, rou
     makerjs.model.zero(this);
 }
 
+Nameplate.metaParameters = [
+    { title: "font", type: "font", value: '*' },
+    { title: "text", type: "text", value: 'Hello' },
+    { title: "font size", type: "range", min: 10, max: 200, value: 72 },
+    { title: "font margin", type: "range", min: 1, max: 50, value: 10 },
+    { title: "bolt margin", type: "range", min: 1, max: 50, value: 10 },
+    { title: "bolt radius", type: "range", min: .1, max: 10, value: 3, step: .1 },
+    { title: "rounded", type: "bool", value: true }
+];
+
 module.exports = Nameplate;
