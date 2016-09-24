@@ -64,4 +64,10 @@
 
 }
 
-declare var fonts: { [id: string]: { displayName: string, path: string } };
+interface IFont {
+    displayName: string;
+    path: string;
+    tags: string[];
+}
+
+declare var fonts: { [id: string]: IFont };
