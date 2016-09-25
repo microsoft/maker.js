@@ -853,11 +853,11 @@ var MakerJsPlayground;
             unitScale *= makerjs.units.conversionScale(makerjs.unitType.Inch, processed.model.units);
         }
         var z = document.getElementById('zoom-display');
-        z.innerText = (unitScale * 100).toFixed(0) + '%';
+        z.innerText = '[' + (unitScale * 100).toFixed(0) + '%]';
         var g = document.getElementById('grid-unit');
         if (checkShowGrid.checked) {
-            var gridScale = getGridScale();
-            g.innerText = '(' + gridScale + ' ' + (processed.model.units || ('unit' + (gridScale < 10 ? '' : 's'))) + ')';
+            var gridScale = makerjs.round(getGridScale());
+            g.innerText = '[' + gridScale + ' ' + (processed.model.units || ('unit' + (gridScale < 10 ? '' : 's'))) + ']';
         }
         else {
             g.innerText = '';
