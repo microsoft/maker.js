@@ -131,7 +131,7 @@ header h1 {
 #rendering-options-menu .view-controls, #params-link {
     border-top: 1px solid #ddd;
     margin-top: 1em;
-    padding-top: 1em;
+    padding-top: .5em;
 }
 
 #params-link {
@@ -143,10 +143,15 @@ body.show-params-link #params-link {
     display: block;
 }
 
-#rendering-options-menu .view-controls label {
+#rendering-options-menu .view-controls {
     letter-spacing: 1px;
     font-variant: small-caps;
     color: #777
+}
+
+.view-controls #measurement {
+    padding-bottom: .5em;
+    color: #333;
 }
 
 .collapse-rendering-options #rendering-options-menu {

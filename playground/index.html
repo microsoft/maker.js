@@ -149,8 +149,9 @@
                     <div id="params"></div>
                     <a id="params-link" href="#">save these customizations</a>
                     <div class="view-controls">
+                        <div id="measurement">measurement</div>
                         <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display"></span></label></div>
-                        <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-origin')" /> show grid</label></div>
+                        <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-origin'); MakerJsPlayground.updateZoomScale();" /> show grid <span id="grid-unit"></span></label></div>
                         <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label></div>
                         <div id="notes-toggle"><label><input id="check-notes" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-notes')" /> show notes</label></div>
                     </div>
@@ -238,6 +239,8 @@ this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScrip
             <h4>Credits:</h4>
 
             <ul>
+                <li>Bezier curve calculation by <a href="https://pomax.github.io/bezierjs/" target="_blank">Bezier.js</a></li>
+                <li>Font file parsing by <a href="http://opentype.js.org/" target="_blank">Opentype.js</a></li>
                 <li>JavaScript editor by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></li>
                 <li>Markdown rendering by <a href="https://github.com/chjj/marked" target="_blank">Marked</a></li>
                 <li>3D generation by <a href="https://joostn.github.io/OpenJsCad/" target="_blank">OpenJSCAD</a></li>
