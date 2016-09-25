@@ -149,9 +149,17 @@ body.show-params-link #params-link {
     color: #777
 }
 
-.view-controls #measurement {
+#rendering-options-menu .view-controls #measurement {
     padding-bottom: .5em;
     color: #333;
+}
+
+#rendering-options-menu .view-controls .zoom-unit {
+    float: right;
+}
+
+#rendering-options-menu .view-controls div {
+    clear: right;
 }
 
 .collapse-rendering-options #rendering-options-menu {
