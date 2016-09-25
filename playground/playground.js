@@ -211,28 +211,32 @@ var MakerJsPlayground;
         for (var i in kit.metaParameters) {
             comment.push(firstComment + kit.metaParameters[i].title);
             firstComment = "";
-            var value = kit.metaParameters[i].value;
-            if (kit.metaParameters[i].type === 'select') {
-                value = value[0];
-            }
-            if (makerjs.isObject(value)) {
-                values.push(JSON.stringify(value));
+            var value;
+            if (kit.metaParameters[i].type === 'font') {
+                value = 'font';
             }
             else {
-                values.push(value);
+                value = kit.metaParameters[i].value;
+                if (kit.metaParameters[i].type === 'select') {
+                    value = value[0];
+                }
+                value = JSON.stringify(value);
             }
+            values.push(value);
             if (paramValues && paramValues.length >= values.length) {
                 values[values.length - 1] = paramValues[values.length - 1];
             }
         }
         code.push("var makerjs = require('makerjs');");
         code.push("");
+        code.push("/* Example:");
+        code.push("");
         code.push(comment.join(", "));
+        code.push("var my" + id + " = new makerjs.models." + id + "(" + values.join(', ') + ");");
         code.push("");
-        code.push("this.models = {");
-        code.push("  my" + id + ": new makerjs.models." + id + "(" + values.join(', ') + ")");
-        code.push("};");
+        code.push("*/");
         code.push("");
+        code.push("module.exports = makerjs.models." + id + ";");
         return code.join('\n');
     }
     function resetDownload() {
@@ -1278,7 +1282,7 @@ var MakerJsPlayground;
             var scriptname = MakerJsPlayground.querystringParams['script'];
             if (scriptname && !isHttp(scriptname)) {
                 var paramValues = getHashParams();
-                if ((scriptname in makerjs.models) && scriptname !== 'Text') {
+                if (scriptname in makerjs.models) {
                     var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
                     MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
                     runCodeFromEditor(paramValues);

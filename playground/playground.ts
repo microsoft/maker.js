@@ -305,17 +305,22 @@
             comment.push(firstComment + kit.metaParameters[i].title);
             firstComment = "";
 
-            var value = kit.metaParameters[i].value;
+            var value: any;
 
-            if (kit.metaParameters[i].type === 'select') {
-                value = value[0];
-            }
+            if (kit.metaParameters[i].type === 'font') {
+                value = 'font';
 
-            if (makerjs.isObject(value)) {
-                values.push(JSON.stringify(value));
             } else {
-                values.push(value);
+                value = kit.metaParameters[i].value;
+
+                if (kit.metaParameters[i].type === 'select') {
+                    value = value[0];
+                }
+
+                value = JSON.stringify(value);
             }
+
+            values.push(value);
 
             if (paramValues && paramValues.length >= values.length) {
                 values[values.length - 1] = paramValues[values.length - 1];
@@ -324,12 +329,14 @@
 
         code.push("var makerjs = require('makerjs');");
         code.push("");
+        code.push("/* Example:");
+        code.push("");
         code.push(comment.join(", "));
+        code.push("var my" + id + " = new makerjs.models." + id + "(" + values.join(', ') + ");");
         code.push("");
-        code.push("this.models = {");
-        code.push("  my" + id + ": new makerjs.models." + id + "(" + values.join(', ') + ")");
-        code.push("};");
+        code.push("*/");
         code.push("");
+        code.push("module.exports = makerjs.models." + id + ";");
 
         return code.join('\n');
     }
@@ -1655,7 +1662,7 @@
 
                 var paramValues = getHashParams();
 
-                if ((scriptname in makerjs.models) && scriptname !== 'Text') {
+                if (scriptname in makerjs.models) {
 
                     var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
                     codeMirrorEditor.getDoc().setValue(code);
