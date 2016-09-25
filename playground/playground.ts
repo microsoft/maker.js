@@ -118,19 +118,6 @@
         return true;
     }
 
-    function fontMatches(font: IFont, spec: string): boolean {
-        if (!spec || spec === '*') return true;
-
-        var specHashtags = spec.trim().split('#').map(s => s.trim());
-
-        for (var i = 0; i < specHashtags.length; i++) {
-            var specHashtag = specHashtags[i];
-            if (font.tags.indexOf(specHashtag) >= 0) return true;
-        }
-
-        return false;
-    }
-
     function populateParams(metaParameters: MakerJs.IMetaParameter[]) {
 
         var paramValues = [];
@@ -223,7 +210,7 @@
                         for (var id in fonts) {
                             var font = fonts[id];
 
-                            if (!fontMatches(font, attrs.value)) continue;
+                            if (!FontLoader.fontMatches(font, attrs.value)) continue;
 
                             if (!added) {
                                 paramValues.push(id);
@@ -318,17 +305,22 @@
             comment.push(firstComment + kit.metaParameters[i].title);
             firstComment = "";
 
-            var value = kit.metaParameters[i].value;
+            var value: any;
 
-            if (kit.metaParameters[i].type === 'select') {
-                value = value[0];
-            }
+            if (kit.metaParameters[i].type === 'font') {
+                value = 'font';
 
-            if (makerjs.isObject(value)) {
-                values.push(JSON.stringify(value));
             } else {
-                values.push(value);
+                value = kit.metaParameters[i].value;
+
+                if (kit.metaParameters[i].type === 'select') {
+                    value = value[0];
+                }
+
+                value = JSON.stringify(value);
             }
+
+            values.push(value);
 
             if (paramValues && paramValues.length >= values.length) {
                 values[values.length - 1] = paramValues[values.length - 1];
@@ -337,12 +329,14 @@
 
         code.push("var makerjs = require('makerjs');");
         code.push("");
+        code.push("/* Example:");
+        code.push("");
         code.push(comment.join(", "));
+        code.push("var my" + id + " = new makerjs.models." + id + "(" + values.join(', ') + ");");
         code.push("");
-        code.push("this.models = {");
-        code.push("  my" + id + ": new makerjs.models." + id + "(" + values.join(', ') + ")");
-        code.push("};");
+        code.push("*/");
         code.push("");
+        code.push("module.exports = makerjs.models." + id + ";");
 
         return code.join('\n');
     }
@@ -923,16 +917,23 @@
         renderInWorker.worker.postMessage(options);
     }
 
-    function selectParamSlider(index: number) {
+    function getParamUIControl(index: number) {
         var div = document.querySelectorAll('#params > div')[index];
         if (!div) return;
 
+        var checkbox = div.querySelector('input[type=checkbox]') as HTMLInputElement;
+        var textbox = div.querySelector('input[type=text]') as HTMLInputElement;
+        var select = div.querySelector('select') as HTMLSelectElement;
         var slider = div.querySelector('input[type=range]') as HTMLInputElement;
         var numberBox = div.querySelector('input[type=number]') as HTMLInputElement;
+
         return {
             classList: div.classList,
-            slider: slider,
-            numberBox: numberBox
+            range: slider,
+            rangeText: numberBox,
+            select: select,
+            text: textbox,
+            bool: checkbox
         };
     }
 
@@ -963,7 +964,9 @@
         if (document.location.hash && document.location.hash.length > 1) {
             paramValues = getHashParams();
         } else if (processed.kit) {
-            paramValues = makerjs.kit.getParameterValues(processed.kit);
+
+            var fontLoader = new FontLoader(null, processed.kit.metaParameters, makerjs.kit.getParameterValues(processed.kit));
+            paramValues = fontLoader.getParamValuesWithFontSpec();
         }
 
         setParamValues(paramValues, true);
@@ -984,23 +987,41 @@
     function setParamIndex(index: number, value: any, fromUI: boolean) {
 
         //sync slider / numberbox
-        var div = selectParamSlider(index);
-        var slider = div.slider;
-        var numberBox = div.numberBox;
+        var div = getParamUIControl(index);
 
-        if (slider && numberBox) {
-            if (fromUI) {
+        if (fromUI) {
+
+            if (div.range && div.rangeText) {
                 if (div.classList.contains('toggle-number')) {
                     //numberbox is master
-                    slider.value = numberBox.value;
+                    div.range.value = div.rangeText.value;
                 } else {
                     //slider is master
-                    numberBox.value = slider.value;
+                    div.rangeText.value = div.range.value;
                 }
-            } else {
-                //value is master
-                numberBox.value = value;
-                slider.value = value;
+            }
+
+        } else {
+
+            if (div.range && div.rangeText) {
+                div.rangeText.value = value;
+                div.range.value = value;
+
+            } else if (div.bool) {
+                div.bool.checked = !!value;
+
+            } else if (div.text) {
+                div.text.value = value;
+
+            } else if (div.select) {
+                var select = div.select;
+                for (var i = 0; i < select.options.length; i++) {
+                    var optionValue = select.options[i].getAttribute('value');
+                    if (optionValue == value) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
             }
         }
 
@@ -1129,7 +1150,7 @@
         var g = document.getElementById('grid-unit');
         if (checkShowGrid.checked) {
             var gridScale = makerjs.round(getGridScale());
-            g.innerText = '[' + gridScale + ' ' + (processed.model.units || ('unit' +(gridScale < 10 ? '' : 's'))) + ']';
+            g.innerText = '[' + gridScale + ' ' + (processed.model.units || ('unit' + (gridScale < 10 ? '' : 's'))) + ']';
         } else {
             g.innerText = '';
         }
@@ -1221,30 +1242,30 @@
     export function animate(paramIndex: number = 0, milliSeconds: number = 150, steps = 20) {
         clearInterval(animationTimeoutId);
 
-        var div = selectParamSlider(paramIndex);
+        var div = getParamUIControl(paramIndex);
         if (!div) return;
-        if (!div.slider) {
+        if (!div.range) {
             animate(paramIndex + 1);
             return;
         }
 
-        var max = parseFloat(div.slider.max);
-        var min = parseFloat(div.slider.min);
+        var max = parseFloat(div.range.max);
+        var min = parseFloat(div.range.min);
 
         do {
             var step = Math.floor((max - min) / steps);
             steps /= 2;
         } while (step === 0)
 
-        div.slider.value = min.toString();
+        div.range.value = min.toString();
 
         animationTimeoutId = setInterval(function () {
 
-            var currValue = parseFloat(div.slider.value);
+            var currValue = parseFloat(div.range.value);
 
             if (currValue < max) {
                 var newValue = currValue + step;
-                div.slider.value = newValue.toString();
+                div.range.value = newValue.toString();
                 throttledSetParam(paramIndex, newValue);
             } else {
                 animate(paramIndex + 1);
@@ -1641,7 +1662,7 @@
 
                 var paramValues = getHashParams();
 
-                if ((scriptname in makerjs.models) && scriptname !== 'Text') {
+                if (scriptname in makerjs.models) {
 
                     var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
                     codeMirrorEditor.getDoc().setValue(code);

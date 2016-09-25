@@ -26,14 +26,48 @@ var MakerJsPlayground;
                 });
             }
         }
+        FontLoader.fontMatches = function (font, spec) {
+            if (!spec || spec === '*')
+                return true;
+            var specHashtags = spec.trim().split('#').map(function (s) { return s.trim(); });
+            for (var i = 0; i < specHashtags.length; i++) {
+                var specHashtag = specHashtags[i];
+                if (font.tags.indexOf(specHashtag) >= 0)
+                    return true;
+            }
+            return false;
+        };
+        FontLoader.prototype.findFirstFontIdMatching = function (spec) {
+            for (var fontId in fonts) {
+                var font = fonts[fontId];
+                if (FontLoader.fontMatches(font, spec))
+                    return fontId;
+            }
+            return null;
+        };
+        FontLoader.prototype.getParamValuesWithFontSpec = function () {
+            var _this = this;
+            if (this.fontRefs === 0) {
+                return this.paramValues;
+            }
+            else {
+                this.paramValuesCopy = this.paramValues.slice(0);
+                for (var spec in this.fontParameters) {
+                    var firstFont = this.findFirstFontIdMatching(spec);
+                    //substitute font ids with fonts
+                    this.fontParameters[spec].paramIndexes.forEach(function (index) { return _this.paramValuesCopy[index] = firstFont; });
+                }
+                return this.paramValuesCopy;
+            }
+        };
         FontLoader.prototype.load = function () {
             if (this.fontRefs === 0) {
                 this.successCb(this.paramValues);
             }
             else {
                 this.paramValuesCopy = this.paramValues.slice(0);
-                for (var id in this.fontParameters) {
-                    this.loadFont(id);
+                for (var fontId in this.fontParameters) {
+                    this.loadFont(fontId);
                 }
             }
         };
