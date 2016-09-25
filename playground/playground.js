@@ -24,9 +24,11 @@ var MakerJsPlayground;
     var gridPattern;
     var gridPatternFill;
     var paramsDiv;
+    var measurementDiv;
     var progress;
     var preview;
     var checkFitToScreen;
+    var checkShowGrid;
     var checkNotes;
     var margin;
     var processed = {
@@ -507,19 +509,22 @@ var MakerJsPlayground;
             render();
         }
     }
+    function getGridScale() {
+        var gridScale = 1;
+        while (MakerJsPlayground.viewScale * gridScale < 6) {
+            gridScale *= 10;
+        }
+        while (MakerJsPlayground.viewScale * gridScale > 60) {
+            gridScale /= 10;
+        }
+        return gridScale;
+    }
     function zoomGrid() {
-        var v = 100 * MakerJsPlayground.viewScale;
-        while (v < 60) {
-            v *= 10;
-        }
-        while (v > 600) {
-            v /= 10;
-        }
-        var vs = v.toString();
-        gridPattern.setAttribute('width', vs);
-        gridPattern.setAttribute('height', vs);
-        gridPatternFill.setAttribute('width', vs);
-        gridPatternFill.setAttribute('height', vs);
+        var gridScale = (getGridScale() * 10 * MakerJsPlayground.viewScale).toString();
+        gridPattern.setAttribute('width', gridScale);
+        gridPattern.setAttribute('height', gridScale);
+        gridPatternFill.setAttribute('width', gridScale);
+        gridPatternFill.setAttribute('height', gridScale);
     }
     function panGrid() {
         var p = makerjs.point.add(viewPanOffset, viewOrigin);
@@ -577,15 +582,24 @@ var MakerJsPlayground;
         }
         document.body.classList.remove('wait');
         render();
+        var measureText;
         if (processed.error) {
             setNotes(processed.error);
             //sync notes and checkbox
             if (checkNotes)
                 checkNotes.checked = true;
             document.body.classList.remove('collapse-notes');
+            measureText = '';
         }
-        else if (!updateLockedPathNotes()) {
-            setNotesFromModelOrKit();
+        else {
+            var size = getModelNaturalSize();
+            measureText = size[0].toFixed(2) + ' x ' + size[1].toFixed(2) + ' ' + (newUnits || 'units');
+            if (!updateLockedPathNotes()) {
+                setNotesFromModelOrKit();
+            }
+        }
+        if (measurementDiv) {
+            measurementDiv.innerText = measureText;
         }
         if (MakerJsPlayground.onViewportChange) {
             MakerJsPlayground.onViewportChange();
@@ -840,6 +854,14 @@ var MakerJsPlayground;
         }
         var z = document.getElementById('zoom-display');
         z.innerText = (unitScale * 100).toFixed(0) + '%';
+        var g = document.getElementById('grid-unit');
+        if (checkShowGrid.checked) {
+            var gridScale = getGridScale();
+            g.innerText = '(' + gridScale + ' ' + (processed.model.units || ('unit' + (gridScale < 10 ? '' : 's'))) + ')';
+        }
+        else {
+            g.innerText = '';
+        }
     }
     MakerJsPlayground.updateZoomScale = updateZoomScale;
     function processResult(value) {
@@ -1209,9 +1231,11 @@ var MakerJsPlayground;
         customizeMenu = document.getElementById('rendering-options-menu');
         view = document.getElementById('view');
         paramsDiv = document.getElementById('params');
+        measurementDiv = document.getElementById('measurement');
         progress = document.getElementById('download-progress');
         preview = document.getElementById('download-preview');
         checkFitToScreen = document.getElementById('check-fit-on-screen');
+        checkShowGrid = document.getElementById('check-show-origin');
         checkNotes = document.getElementById('check-notes');
         viewSvgContainer = document.getElementById('view-svg-container');
         gridPattern = document.getElementById('gridPattern');
