@@ -83,17 +83,6 @@ var MakerJsPlayground;
         }
         return true;
     }
-    function fontMatches(font, spec) {
-        if (!spec || spec === '*')
-            return true;
-        var specHashtags = spec.trim().split('#').map(function (s) { return s.trim(); });
-        for (var i = 0; i < specHashtags.length; i++) {
-            var specHashtag = specHashtags[i];
-            if (font.tags.indexOf(specHashtag) >= 0)
-                return true;
-        }
-        return false;
-    }
     function populateParams(metaParameters) {
         var paramValues = [];
         var paramHtml = [];
@@ -158,7 +147,7 @@ var MakerJsPlayground;
                         var added = false;
                         for (var id in fonts) {
                             var font = fonts[id];
-                            if (!fontMatches(font, attrs.value))
+                            if (!MakerJsPlayground.FontLoader.fontMatches(font, attrs.value))
                                 continue;
                             if (!added) {
                                 paramValues.push(id);
@@ -222,28 +211,32 @@ var MakerJsPlayground;
         for (var i in kit.metaParameters) {
             comment.push(firstComment + kit.metaParameters[i].title);
             firstComment = "";
-            var value = kit.metaParameters[i].value;
-            if (kit.metaParameters[i].type === 'select') {
-                value = value[0];
-            }
-            if (makerjs.isObject(value)) {
-                values.push(JSON.stringify(value));
+            var value;
+            if (kit.metaParameters[i].type === 'font') {
+                value = 'font';
             }
             else {
-                values.push(value);
+                value = kit.metaParameters[i].value;
+                if (kit.metaParameters[i].type === 'select') {
+                    value = value[0];
+                }
+                value = JSON.stringify(value);
             }
+            values.push(value);
             if (paramValues && paramValues.length >= values.length) {
                 values[values.length - 1] = paramValues[values.length - 1];
             }
         }
         code.push("var makerjs = require('makerjs');");
         code.push("");
+        code.push("/* Example:");
+        code.push("");
         code.push(comment.join(", "));
+        code.push("var my" + id + " = new makerjs.models." + id + "(" + values.join(', ') + ");");
         code.push("");
-        code.push("this.models = {");
-        code.push("  my" + id + ": new makerjs.models." + id + "(" + values.join(', ') + ")");
-        code.push("};");
+        code.push("*/");
         code.push("");
+        code.push("module.exports = makerjs.models." + id + ";");
         return code.join('\n');
     }
     function resetDownload() {
@@ -702,16 +695,22 @@ var MakerJsPlayground;
         //tell the worker to process the job
         renderInWorker.worker.postMessage(options);
     }
-    function selectParamSlider(index) {
+    function getParamUIControl(index) {
         var div = document.querySelectorAll('#params > div')[index];
         if (!div)
             return;
+        var checkbox = div.querySelector('input[type=checkbox]');
+        var textbox = div.querySelector('input[type=text]');
+        var select = div.querySelector('select');
         var slider = div.querySelector('input[type=range]');
         var numberBox = div.querySelector('input[type=number]');
         return {
             classList: div.classList,
-            slider: slider,
-            numberBox: numberBox
+            range: slider,
+            rangeText: numberBox,
+            select: select,
+            text: textbox,
+            bool: checkbox
         };
     }
     function saveParamsLink() {
@@ -737,7 +736,8 @@ var MakerJsPlayground;
             paramValues = getHashParams();
         }
         else if (processed.kit) {
-            paramValues = makerjs.kit.getParameterValues(processed.kit);
+            var fontLoader = new MakerJsPlayground.FontLoader(null, processed.kit.metaParameters, makerjs.kit.getParameterValues(processed.kit));
+            paramValues = fontLoader.getParamValuesWithFontSpec();
         }
         setParamValues(paramValues, true);
     };
@@ -751,24 +751,39 @@ var MakerJsPlayground;
     }
     function setParamIndex(index, value, fromUI) {
         //sync slider / numberbox
-        var div = selectParamSlider(index);
-        var slider = div.slider;
-        var numberBox = div.numberBox;
-        if (slider && numberBox) {
-            if (fromUI) {
+        var div = getParamUIControl(index);
+        if (fromUI) {
+            if (div.range && div.rangeText) {
                 if (div.classList.contains('toggle-number')) {
                     //numberbox is master
-                    slider.value = numberBox.value;
+                    div.range.value = div.rangeText.value;
                 }
                 else {
                     //slider is master
-                    numberBox.value = slider.value;
+                    div.rangeText.value = div.range.value;
                 }
             }
-            else {
-                //value is master
-                numberBox.value = value;
-                slider.value = value;
+        }
+        else {
+            if (div.range && div.rangeText) {
+                div.rangeText.value = value;
+                div.range.value = value;
+            }
+            else if (div.bool) {
+                div.bool.checked = !!value;
+            }
+            else if (div.text) {
+                div.text.value = value;
+            }
+            else if (div.select) {
+                var select = div.select;
+                for (var i = 0; i < select.options.length; i++) {
+                    var optionValue = select.options[i].getAttribute('value');
+                    if (optionValue == value) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
             }
         }
         processed.paramValues[index] = value;
@@ -924,25 +939,25 @@ var MakerJsPlayground;
         if (milliSeconds === void 0) { milliSeconds = 150; }
         if (steps === void 0) { steps = 20; }
         clearInterval(animationTimeoutId);
-        var div = selectParamSlider(paramIndex);
+        var div = getParamUIControl(paramIndex);
         if (!div)
             return;
-        if (!div.slider) {
+        if (!div.range) {
             animate(paramIndex + 1);
             return;
         }
-        var max = parseFloat(div.slider.max);
-        var min = parseFloat(div.slider.min);
+        var max = parseFloat(div.range.max);
+        var min = parseFloat(div.range.min);
         do {
             var step = Math.floor((max - min) / steps);
             steps /= 2;
         } while (step === 0);
-        div.slider.value = min.toString();
+        div.range.value = min.toString();
         animationTimeoutId = setInterval(function () {
-            var currValue = parseFloat(div.slider.value);
+            var currValue = parseFloat(div.range.value);
             if (currValue < max) {
                 var newValue = currValue + step;
-                div.slider.value = newValue.toString();
+                div.range.value = newValue.toString();
                 throttledSetParam(paramIndex, newValue);
             }
             else {
@@ -1267,7 +1282,7 @@ var MakerJsPlayground;
             var scriptname = MakerJsPlayground.querystringParams['script'];
             if (scriptname && !isHttp(scriptname)) {
                 var paramValues = getHashParams();
-                if ((scriptname in makerjs.models) && scriptname !== 'Text') {
+                if (scriptname in makerjs.models) {
                     var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
                     MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
                     runCodeFromEditor(paramValues);

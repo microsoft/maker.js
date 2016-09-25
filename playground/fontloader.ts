@@ -42,6 +42,46 @@
 
         }
 
+        public static fontMatches(font: IFont, spec: string): boolean {
+            if (!spec || spec === '*') return true;
+
+            var specHashtags = spec.trim().split('#').map(s => s.trim());
+
+            for (var i = 0; i < specHashtags.length; i++) {
+                var specHashtag = specHashtags[i];
+                if (font.tags.indexOf(specHashtag) >= 0) return true;
+            }
+
+            return false;
+        }
+
+        private findFirstFontIdMatching(spec: string) {
+            for (var fontId in fonts) {
+                var font = fonts[fontId];
+                if (FontLoader.fontMatches(font, spec)) return fontId;
+            }
+            return null;
+        }
+
+        public getParamValuesWithFontSpec() {
+
+            if (this.fontRefs === 0) {
+                return this.paramValues;
+            } else {
+
+                this.paramValuesCopy = this.paramValues.slice(0);
+
+                for (var spec in this.fontParameters) {
+                    var firstFont = this.findFirstFontIdMatching(spec);
+
+                    //substitute font ids with fonts
+                    this.fontParameters[spec].paramIndexes.forEach(index => this.paramValuesCopy[index] = firstFont);
+                }
+
+                return this.paramValuesCopy;
+            }
+        }
+
         public load() {
 
             if (this.fontRefs === 0) {
@@ -50,8 +90,8 @@
 
                 this.paramValuesCopy = this.paramValues.slice(0);
 
-                for (var id in this.fontParameters) {
-                    this.loadFont(id);
+                for (var fontId in this.fontParameters) {
+                    this.loadFont(fontId);
                 }
             }
         }
