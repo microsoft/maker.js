@@ -13796,10 +13796,12 @@ var MakerJs;
                         currPoint = points[0];
                     });
                     charModel.origin = [x, 0];
-                    if (centerCharacterOrigin) {
+                    if (centerCharacterOrigin && charModel.paths) {
                         var m = MakerJs.measure.modelExtents(charModel);
-                        var w = m.high[0] - m.low[0];
-                        MakerJs.model.originate(charModel, [m.low[0] + w / 2, 0]);
+                        if (m) {
+                            var w = m.high[0] - m.low[0];
+                            MakerJs.model.originate(charModel, [m.low[0] + w / 2, 0]);
+                        }
                     }
                     if (combine && charIndex > 0) {
                         MakerJs.model.combine(_this, charModel, false, true, false, true, combineOptions);
