@@ -72,10 +72,12 @@
 
                 charModel.origin = [x, 0];
 
-                if (centerCharacterOrigin) {
+                if (centerCharacterOrigin && charModel.paths) {
                     var m = measure.modelExtents(charModel);
-                    var w = m.high[0] - m.low[0];
-                    model.originate(charModel, [m.low[0] + w / 2, 0]);
+                    if (m) {
+                        var w = m.high[0] - m.low[0];
+                        model.originate(charModel, [m.low[0] + w / 2, 0]);
+                    }
                 }
 
                 if (combine && charIndex > 0) {
