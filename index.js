@@ -6724,7 +6724,7 @@ var MakerJs;
                         currPoint = points[0];
                     });
                     charModel.origin = [x, 0];
-                    if (centerCharacterOrigin && charModel.paths) {
+                    if (centerCharacterOrigin && (charModel.paths || charModel.models)) {
                         var m = MakerJs.measure.modelExtents(charModel);
                         if (m) {
                             var w = m.high[0] - m.low[0];
