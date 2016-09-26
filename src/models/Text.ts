@@ -75,7 +75,7 @@
                 if (centerCharacterOrigin) {
                     var m = measure.modelExtents(charModel);
                     var w = m.high[0] - m.low[0];
-                    model.originate(charModel, [x + w / 2, 0]);
+                    model.originate(charModel, [m.low[0] + w / 2, 0]);
                 }
 
                 if (combine && charIndex > 0) {
