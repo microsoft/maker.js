@@ -27,14 +27,14 @@ function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
             opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
-    }
-
-    if (constructor.metaParameters) {
-        constructor.metaParameters.forEach((metaParameter, i) => {
-            if (metaParameter.type === 'font') {
-                parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf')
-            }
-        });
+    } else {
+        if (constructor.metaParameters) {
+            constructor.metaParameters.forEach((metaParameter, i) => {
+                if (metaParameter.type === 'font') {
+                    parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf')
+                }
+            });
+        }
     }
 
     var model = makerjs.kit.construct(constructor, parameters);

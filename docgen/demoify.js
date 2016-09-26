@@ -24,12 +24,14 @@ function thumbnail(key, constructor, baseUrl) {
             'A'
         ];
     }
-    if (constructor.metaParameters) {
-        constructor.metaParameters.forEach(function (metaParameter, i) {
-            if (metaParameter.type === 'font') {
-                parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf');
-            }
-        });
+    else {
+        if (constructor.metaParameters) {
+            constructor.metaParameters.forEach(function (metaParameter, i) {
+                if (metaParameter.type === 'font') {
+                    parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf');
+                }
+            });
+        }
     }
     var model = makerjs.kit.construct(constructor, parameters);
     var measurement = makerjs.measure.modelExtents(model);
