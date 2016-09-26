@@ -6727,7 +6727,7 @@ var MakerJs;
                     if (centerCharacterOrigin) {
                         var m = MakerJs.measure.modelExtents(charModel);
                         var w = m.high[0] - m.low[0];
-                        MakerJs.model.originate(charModel, [x + w / 2, 0]);
+                        MakerJs.model.originate(charModel, [m.low[0] + w / 2, 0]);
                     }
                     if (combine && charIndex > 0) {
                         MakerJs.model.combine(_this, charModel, false, true, false, true, combineOptions);
@@ -6752,5 +6752,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.16";
+MakerJs.version = "0.9.17";
 ﻿var Bezier = require('bezier-js');
