@@ -1184,11 +1184,18 @@ var MakerJsPlayground;
         }
     }
     function downloadClick(a, format) {
+        //TODO: show options
+        //TODO: get options
         var request = {
             format: format,
             formatTitle: a.innerText,
-            model: processed.model
+            model: processed.model,
+            options: {}
         };
+        _downloadClick(request);
+    }
+    MakerJsPlayground.downloadClick = downloadClick;
+    function _downloadClick(request) {
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
             exportWorker = new Worker('worker/export-worker.js?' + new Date().valueOf());
@@ -1200,7 +1207,6 @@ var MakerJsPlayground;
         //tell the worker to process the job
         exportWorker.postMessage(request);
     }
-    MakerJsPlayground.downloadClick = downloadClick;
     function copyToClipboard() {
         preview.select();
         document.execCommand('copy');

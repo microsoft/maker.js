@@ -413,21 +413,6 @@ svg#pointers line {
     font-size: smaller;
 }
 
-#download button.text-tool {
-    float: right;
-    margin-bottom: 2em;
-    width: auto;
-    margin-right: 0;
-    margin-top: 0;
-    padding-left: 2em;
-    padding-right: 2em;
-    font-size: .65em;
-    background: transparent;
-    border-bottom-left-radius: 1em;
-    border-bottom-right-radius: 1em;
-    color: #aaa;
-}
-
 #download-progress {
     height: .25em;
     width: 0;

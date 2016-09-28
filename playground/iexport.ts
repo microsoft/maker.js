@@ -13,6 +13,7 @@
         format: ExportFormat;
         formatTitle: string;
         model: MakerJs.IModel;
+        options: MakerJs.exporter.IExportOptions;
     }
 
     interface IFileExport {

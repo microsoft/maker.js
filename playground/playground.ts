@@ -1545,11 +1545,20 @@
 
     export function downloadClick(a: HTMLAnchorElement, format: MakerJsPlaygroundExport.ExportFormat) {
 
+        //TODO: show options
+        //TODO: get options
+
         var request: MakerJsPlaygroundExport.IExportRequest = {
             format: format,
             formatTitle: a.innerText,
-            model: processed.model
+            model: processed.model,
+            options: {}
         };
+
+        _downloadClick(request);
+    }
+
+    function _downloadClick(request: MakerJsPlaygroundExport.IExportRequest) {
 
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
