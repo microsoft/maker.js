@@ -852,7 +852,7 @@
 
     function constructInWorker(javaScript: string, orderedDependencies: string[], successHandler: (model: MakerJs.IModel) => void, errorHandler: () => void) {
 
-        var orderedSrc: { [id: string]: string };
+        var idToUrlMap: { [id: string]: string };
 
         renderInWorker.hasKit = false;
 
@@ -872,16 +872,17 @@
             }
         };
 
-        orderedSrc = {};
+        idToUrlMap = {};
         for (var i = 0; i < orderedDependencies.length; i++) {
             //add extra path traversal for worker subfolder
-            orderedSrc[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
+            idToUrlMap[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
         }
 
         var options: MakerJsPlaygroundRender.IRenderRequest = {
             requestId: 0,
             javaScript: javaScript,
-            orderedDependencies: orderedSrc,
+            orderedDependencies: orderedDependencies,
+            dependencyUrls: idToUrlMap,
             paramValues: processed.paramValues
         }
 

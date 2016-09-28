@@ -641,7 +641,7 @@ var MakerJsPlayground;
         }
     }
     function constructInWorker(javaScript, orderedDependencies, successHandler, errorHandler) {
-        var orderedSrc;
+        var idToUrlMap;
         renderInWorker.hasKit = false;
         if (renderInWorker.worker) {
             renderInWorker.worker.terminate();
@@ -658,15 +658,16 @@ var MakerJsPlayground;
                 successHandler(response.model);
             }
         };
-        orderedSrc = {};
+        idToUrlMap = {};
         for (var i = 0; i < orderedDependencies.length; i++) {
             //add extra path traversal for worker subfolder
-            orderedSrc[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
+            idToUrlMap[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
         }
         var options = {
             requestId: 0,
             javaScript: javaScript,
-            orderedDependencies: orderedSrc,
+            orderedDependencies: orderedDependencies,
+            dependencyUrls: idToUrlMap,
             paramValues: processed.paramValues
         };
         //tell the worker to process the job

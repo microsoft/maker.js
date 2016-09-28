@@ -2,7 +2,8 @@
 
     export interface IRenderRequest {
         requestId: number;
-        orderedDependencies?: { [id: string]: string };
+        orderedDependencies?: string[];
+        dependencyUrls?: { [id: string]: string };
         javaScript?: string;
         paramValues: any[]
     }
