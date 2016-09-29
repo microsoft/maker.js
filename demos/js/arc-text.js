@@ -19,7 +19,7 @@ function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngl
 
     if (showCircle) {
     	this.paths = { 
-          circleM: new makerjs.paths.Circle(arcRadius),
+          arc: arc,
           circleT: new makerjs.paths.Circle(arcRadius + h2),
           circleB: new makerjs.paths.Circle(arcRadius - h2)
         };
