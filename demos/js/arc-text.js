@@ -4,10 +4,6 @@ function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngl
 
     var arc = new makerjs.paths.Arc([0, 0], arcRadius, startAngle, endAngle);
 
-    if (showCircle) {
-    	this.paths = { circle: new makerjs.paths.Circle(arcRadius) };
-    }
-
     //generate the text using a font
     var textModel = new makerjs.models.Text(font, text, fontSize, false, true);
 
@@ -19,6 +15,15 @@ function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngl
   	//measure height of the text from the baseline
   	var measure = makerjs.measure.modelExtents(textModel);
   	var height = measure.high[1];
+    var h2 = height / 2;
+
+    if (showCircle) {
+    	this.paths = { 
+          circleM: new makerjs.paths.Circle(arcRadius),
+          circleT: new makerjs.paths.Circle(arcRadius + h2),
+          circleB: new makerjs.paths.Circle(arcRadius - h2)
+        };
+    }
   
     //get the x distance of each character as a percentage
     var first = textModel.models[0].origin[0];
@@ -38,7 +43,7 @@ function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngl
         var char = textModel.models[i];
       
         //set a new origin at the center of the text
-        var o = makerjs.point.add(char.origin, [0, height / 2]);
+        var o = makerjs.point.add(char.origin, [0, h2]);
         makerjs.model.originate(char, o);
         makerjs.model.scale(char, fontScale);
       
