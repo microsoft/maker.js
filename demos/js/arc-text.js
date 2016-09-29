@@ -16,9 +16,9 @@ function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngl
         text: textModel,
     };
 
-  	//measure height of the text
+  	//measure height of the text from the baseline
   	var measure = makerjs.measure.modelExtents(textModel);
-  	var height = measure.high[1] - measure.low[1];
+  	var height = measure.high[1];
   
     //get the x distance of each character as a percentage
     var first = textModel.models[0].origin[0];
