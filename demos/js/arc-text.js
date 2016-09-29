@@ -61,7 +61,7 @@ ArcText.metaParameters = [
     { title: "font", type: "font", value: '#stencil' },
     { title: "text", type: "text", value: 'Hello world' },
     { title: "font size", type: "range", min: 10, max: 200, value: 72 },
-    { title: "font scale", type: "range", min: .1, max: 1, step: .1, value: .7 },
+    { title: "font scale", type: "range", min: .1, max: 1, step: .1, value: 1 },
     { title: "arc radius", type: "range", min: 1, max: 1000, value: 200 },
     { title: "start angle", type: "range", min: -90, max: 270, value: 45 },
     { title: "end angle", type: "range", min: -90, max: 270, value: 135 },
