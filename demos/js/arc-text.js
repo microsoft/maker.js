@@ -1,6 +1,6 @@
 var makerjs = require('makerjs');
 
-function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngle, onTop, showCircle) {
+function ArcText(font, text, fontSize, arcRadius, startAngle, endAngle, onTop, showCircle) {
 
     var arc = new makerjs.paths.Arc([0, 0], arcRadius, startAngle, endAngle);
 
@@ -40,7 +40,6 @@ function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngl
         //set a new origin at the center of the text
         var o = makerjs.point.add(char.origin, [0, h2]);
         makerjs.model.originate(char, o);
-        makerjs.model.scale(char, fontScale);
 
         //project the character x position into an angle
         var angle = center * span;
@@ -57,7 +56,6 @@ ArcText.metaParameters = [
     { title: "font", type: "font", value: '#stencil' },
     { title: "text", type: "text", value: 'Hello world' },
     { title: "font size", type: "range", min: 10, max: 200, value: 72 },
-    { title: "font scale", type: "range", min: .1, max: 1, step: .1, value: 1 },
     { title: "arc radius", type: "range", min: 1, max: 1000, value: 200 },
     { title: "start angle", type: "range", min: -90, max: 270, value: 45 },
     { title: "end angle", type: "range", min: -90, max: 270, value: 135 },
