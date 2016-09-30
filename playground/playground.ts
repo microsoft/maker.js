@@ -776,6 +776,12 @@
 
         document.body.classList.remove('wait');
 
+        if (newUnits)
+            document.body.classList.add('has-units');
+        else {
+            document.body.classList.remove('has-units');
+        }
+
         render();
 
         var measureText: string;

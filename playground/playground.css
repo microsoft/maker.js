@@ -384,6 +384,10 @@ svg#pointers line {
     display: none;
 }
 
+.has-units .unitless {
+    display: none;
+}
+
 #download h2 {
     font-weight: normal;
     font-size: smaller;

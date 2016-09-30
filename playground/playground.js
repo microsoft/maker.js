@@ -122,8 +122,6 @@ var MakerJsPlayground;
                         numberBox.innerText = new makerjs.exporter.XmlTag('input', numberBoxAttrs).toString();
                         numberBox.innerTextEscaped = true;
                         paramValues.push(attrs.value);
-                        //label.attrs['title'] = 'click to edit value for ' + label.attrs['title'];
-                        //label.attrs['onclick'] = 'MakerJsPlayground.toggleActivateParam(' + i + ')';
                         break;
                     case 'bool':
                         var checkboxAttrs = {
@@ -588,6 +586,11 @@ var MakerJsPlayground;
             fitOnScreen();
         }
         document.body.classList.remove('wait');
+        if (newUnits)
+            document.body.classList.add('has-units');
+        else {
+            document.body.classList.remove('has-units');
+        }
         render();
         var measureText;
         if (processed.error) {
@@ -769,11 +772,7 @@ var MakerJsPlayground;
         var div = getParamUIControl(index);
         if (fromUI) {
             if (div.range && div.rangeText) {
-                //                if (div.classList.contains('toggle-number')) {
-                //numberbox is master
                 div.range.value = value;
-                //              } else {
-                //slider is master
                 div.rangeText.value = value;
             }
         }
@@ -1003,16 +1002,6 @@ var MakerJsPlayground;
         }, delay);
     }
     MakerJsPlayground.deActivateParam = deActivateParam;
-    //export function toggleActivateParam(index: number) {
-    //    var div = getParamUIControl(index);
-    //    if (div && div.range) {
-    //        if (div.range.parentElement.classList.contains('active')) {
-    //            deActivateParam(div.range, 0);
-    //        } else {
-    //            activateParam(div.range, false);
-    //        }
-    //    }
-    //}
     function fitNatural() {
         if (MakerJsPlayground.pointers)
             MakerJsPlayground.pointers.reset();
