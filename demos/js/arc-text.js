@@ -12,42 +12,38 @@ function ArcText(font, text, fontSize, fontScale, arcRadius, startAngle, endAngl
         text: textModel,
     };
 
-  	//measure height of the text from the baseline
-  	var measure = makerjs.measure.modelExtents(textModel);
-  	var height = measure.high[1];
+    //measure height of the text from the baseline
+    var measure = makerjs.measure.modelExtents(textModel);
+    var height = measure.high[1];
     var h2 = height / 2;
+    var left = measure.low[0];
+    var right = measure.high[0];
+    var textWidth = right - left;
 
     if (showCircle) {
-    	this.paths = { 
-          arc: arc,
-          circleT: new makerjs.paths.Circle(arcRadius + h2),
-          circleB: new makerjs.paths.Circle(arcRadius - h2)
+        this.paths = { 
+            arc: arc,
+            circleT: new makerjs.paths.Circle(arcRadius + h2),
+            circleB: new makerjs.paths.Circle(arcRadius - h2)
         };
     }
-  
-    //get the x distance of each character as a percentage
-    var first = textModel.models[0].origin[0];
-    var last = textModel.models[text.length - 1].origin[0];
-    var textWidth = last - first;
-    var centers = [0];
-    for (var i = 1; i < text.length - 1; i++) {
-        var char = textModel.models[i];
-        var distFromFirst = char.origin[0] - first;
-        centers.push(distFromFirst / textWidth);
-    }
-    centers.push(1);
 
     //move each character to a percentage of the total arc
     var span = makerjs.angle.ofArcSpan(arc);
     for (var i = 0; i < text.length; i++) {
         var char = textModel.models[i];
-      
+
+        //get the x distance of each character as a percentage
+        var distFromFirst = char.origin[0] - left;
+        var center = distFromFirst / textWidth;
+
         //set a new origin at the center of the text
         var o = makerjs.point.add(char.origin, [0, h2]);
         makerjs.model.originate(char, o);
         makerjs.model.scale(char, fontScale);
-      
-        var angle = centers[i] * span;
+
+        //project the character x position into an angle
+        var angle = center * span;
         var angleFromEnd = onTop ? endAngle - angle : startAngle + angle;
         var p = makerjs.point.fromAngleOnCircle(angleFromEnd, arc);
         char.origin = p;
