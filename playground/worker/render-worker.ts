@@ -1,4 +1,8 @@
-﻿var devNull = function () { };
+﻿interface WorkerGlobalScope {
+    require: NodeRequireFunction;
+}
+
+var devNull = function () { };
 
 /*
     Some libraries are not web-worker aware, they are either browser or Node.
@@ -36,7 +40,7 @@ importScripts(
     '../../external/bezier-js/bezier.js',
     '../../external/opentype/opentype.js'
 );
-var makerjs: typeof MakerJs = require('makerjs');
+var makerjs: typeof MakerJs = self.require('makerjs');
 module['makerjs'] = makerjs;
 module['./../target/js/node.maker.js'] = makerjs;
 
@@ -126,9 +130,12 @@ onmessage = (ev: MessageEvent) => {
     var request = ev.data as MakerJsPlaygroundRender.IRenderRequest;
 
     if (request.orderedDependencies) {
-        for (var id in request.orderedDependencies) {
-            load(id, request.orderedDependencies[id]);
-        }
+
+        self.require = module.require;
+
+        request.orderedDependencies.forEach(function (id) {
+            load(id, request.dependencyUrls[id]);
+        });
     }
 
     if (requireError) {

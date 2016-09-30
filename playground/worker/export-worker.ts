@@ -101,10 +101,10 @@ deps[MakerJsPlaygroundExport.ExportFormat.Pdf] = {
 };
 
 interface IExporter {
-    (modelToExport: MakerJs.IModel, ...params: any[]);
+    (modelToExport: MakerJs.IModel, options: MakerJs.exporter.IExportOptions): any;
 }
 
-function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: MakerJsPlaygroundExport.IExportResponse): Function {
+function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: MakerJsPlaygroundExport.IExportResponse): IExporter {
 
     var f = MakerJsPlaygroundExport.ExportFormat;
 
@@ -118,7 +118,13 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return JSON.stringify;
 
         case f.Dxf:
-            return makerjs.exporter.toDXF;
+            function toDXF(model: MakerJs.IModel, options: MakerJs.exporter.IDXFRenderOptions) {
+                if (!options.units) {
+                    options.units = model.units || makerjs.unitType.Millimeter;
+                }
+                return makerjs.exporter.toDXF(model, options);
+            }
+            return toDXF;
 
         case f.Svg:
             return makerjs.exporter.toSVG;
@@ -127,9 +133,8 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return makerjs.exporter.toOpenJsCad;
 
         case f.Stl:
-            function toStl(model: MakerJs.IModel) {
+            function toStl(model: MakerJs.IModel, options: MakerJs.exporter.IOpenJsCadOptions) {
 
-                var options: MakerJs.exporter.IOpenJsCadOptions = {};
                 var script = makerjs.exporter.toOpenJsCad(model, options);
                 script += 'return ' + options.functionName + '();';
 
@@ -146,7 +151,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return toStl;
 
         case f.Pdf:
-            function toPdf(model: MakerJs.IModel) {
+            function toPdf(model: MakerJs.IModel, options: MakerJs.exporter.IExportOptions) {
 
                 function complete(pdfDataString: string) {
                     result.text = pdfDataString;
@@ -154,7 +159,8 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
                     postMessage(result);
                 }
 
-                //TODO: title, author from options
+                //TODO: watermark
+                //TODO: title, author, grid from options
                 var pdfOptions: PDFKit.PDFDocumentOptions = {
                     compress: false,
                     info: {
@@ -207,7 +213,7 @@ onmessage = (ev: MessageEvent) => {
         }
 
         //call the exporter function.
-        result.text = exporter(request.model);
+        result.text = exporter(request.model, request.options);
         result.percentComplete = 100;
         postMessage(result);
 

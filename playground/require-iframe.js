@@ -28,7 +28,7 @@ var MakerJsRequireIframe;
             write: devNull
         };
         var Fn = new Function('require', 'module', 'document', 'console', 'alert', 'playgroundRender', javaScript);
-        var result = new Fn(window.collectRequire, window.module, mockDocument, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
+        var result = new Fn(window.require, window.module, mockDocument, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
         return window.module.exports || result;
     }
     function runCodeGlobal(javaScript) {
@@ -98,6 +98,7 @@ var MakerJsRequireIframe;
     var loads = {};
     var reloads = [];
     var previousId = null;
+    var collection = true;
     var counter = new Counter();
     var htmls = [];
     var logs = [];
@@ -140,8 +141,8 @@ var MakerJsRequireIframe;
         parent.MakerJsPlayground.processResult({ result: errorDetails });
         errorReported = true;
     };
-    window.collectRequire = function (id) {
-        if (id === 'makerjs') {
+    window.require = function (id) {
+        if (collection && id === 'makerjs') {
             return mockMakerJs;
         }
         if (id in required) {
@@ -156,10 +157,6 @@ var MakerJsRequireIframe;
         previousId = id;
         //return an object that may be treated like a class
         return Temp;
-    };
-    window.require = function (id) {
-        //return cached required file
-        return required[id];
     };
     window.module = { exports: null };
     window.onload = function () {
@@ -250,6 +247,7 @@ var MakerJsRequireIframe;
             //save the error
             error = e;
         }
+        collection = false;
         //if there were no requirements, fire the complete function manually
         if (counter.required == 0) {
             counter.complete();

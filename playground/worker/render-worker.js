@@ -21,7 +21,7 @@ function load(id, src) {
 }
 //add the makerjs module
 importScripts('../../fonts/fonts.js', '../fontloader.js', '../../target/js/browser.maker.js', '../../external/bezier-js/bezier.js', '../../external/opentype/opentype.js');
-var makerjs = require('makerjs');
+var makerjs = self.require('makerjs');
 module['makerjs'] = makerjs;
 module['./../target/js/node.maker.js'] = makerjs;
 function runCodeIsolated(javaScript) {
@@ -88,9 +88,10 @@ var activeRequestId;
 onmessage = function (ev) {
     var request = ev.data;
     if (request.orderedDependencies) {
-        for (var id in request.orderedDependencies) {
-            load(id, request.orderedDependencies[id]);
-        }
+        self.require = module.require;
+        request.orderedDependencies.forEach(function (id) {
+            load(id, request.dependencyUrls[id]);
+        });
     }
     if (requireError) {
         postError(request.requestId, requireError);
