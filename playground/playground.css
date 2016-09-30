@@ -3,7 +3,7 @@
     margin: 0;
 }
 
-html, body, button, select {
+html, body, button, input, select {
     font-family: 'Segoe UI', sans-serif;
 }
 
@@ -128,15 +128,15 @@ header h1 {
     border-right-width: 0;
 }
 
-#rendering-options-menu .view-controls, #params-link {
+#rendering-options-menu #measurement {
     border-top: 1px solid #ddd;
-    margin-top: 1em;
     padding-top: .5em;
 }
 
 #params-link {
-    border-top-style: dashed;
     display: none;
+    font-weight: 300;
+    margin-bottom: 1em;
 }
 
 body.show-params-link #params-link {
@@ -149,7 +149,7 @@ body.show-params-link #params-link {
     color: #777
 }
 
-#rendering-options-menu .view-controls #measurement {
+#rendering-options-menu #measurement {
     padding-bottom: .5em;
     color: #333;
 }
@@ -170,18 +170,18 @@ body.show-params-link #params-link {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.param-active #rendering-options-menu > div > div {
+.param-active #rendering-options-menu > div > div, .param-active #params-link {
     visibility: hidden;
 }
 
-.param-active #rendering-options-menu > div > div.active {
+.param-active #rendering-options-menu > div > div.active, .param-active #rendering-options-menu #measurement {
     visibility: visible;
     color: #0ff;
     text-shadow: 0 0 1em rgba(0,0,0,.5);
 }
 
 #params div {
-    margin-bottom: .5em;
+    margin-bottom: .6em;
 }
 
 #params select, input[type=text] {
@@ -189,31 +189,27 @@ body.show-params-link #params-link {
 }
 
 #params input[type=range] {
-    width: 8em;
+    height: 10px;
     margin: 0;
     padding: 0;
     position: relative;
-    top: 6px;
+    width: 8em;
 }
 
 #params input[type=number] {
-    width: 8em;
-    top: 0;
-    display: inline-block;
-    margin-top: 6px;
-    margin-bottom: -2px;
+    border: none;
+    width: 5em;
+    margin-left: 1em;
 }
 
 #params form {
-    display: none;
-}
-
-#params .toggle-number form {
     display: inline;
 }
 
-#params .toggle-number input[type=range] {
-    display: none;
+#params label {
+    cursor: pointer;
+    display: block;
+    font-weight: 300;
 }
 
 #view {

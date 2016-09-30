@@ -90,17 +90,15 @@ var MakerJsPlayground;
             var sliders = 0;
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
-                var id = 'slider_' + i;
-                var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
-                label.innerText = attrs.title + ': ';
+                var id = 'input_param_' + i;
+                var prepend = false;
                 var input = null;
                 var numberBox = null;
                 switch (attrs.type) {
                     case 'range':
                         sliders++;
-                        attrs.title = attrs.value;
                         attrs['id'] = id;
-                        attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
                         attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
                         attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1000)';
                         attrs['onmousedown'] = 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); }';
@@ -124,8 +122,8 @@ var MakerJsPlayground;
                         numberBox.innerText = new makerjs.exporter.XmlTag('input', numberBoxAttrs).toString();
                         numberBox.innerTextEscaped = true;
                         paramValues.push(attrs.value);
-                        label.attrs['title'] = 'click to toggle slider / textbox for ' + label.attrs['title'];
-                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderNumberBox(this, ' + i + ')';
+                        //label.attrs['title'] = 'click to edit value for ' + label.attrs['title'];
+                        //label.attrs['onclick'] = 'MakerJsPlayground.toggleActivateParam(' + i + ')';
                         break;
                     case 'bool':
                         var checkboxAttrs = {
@@ -137,23 +135,25 @@ var MakerJsPlayground;
                         }
                         input = new makerjs.exporter.XmlTag('input', checkboxAttrs);
                         paramValues.push(attrs.value);
+                        prepend = true;
                         break;
                     case 'font':
                         var selectFontAttrs = {
+                            id: id,
                             onchange: 'MakerJsPlayground.setParam(' + i + ', this.options[this.selectedIndex].value)'
                         };
                         input = new makerjs.exporter.XmlTag('select', selectFontAttrs);
                         var fontOptions = '';
                         var added = false;
-                        for (var id in fonts) {
-                            var font = fonts[id];
+                        for (var fontId in fonts) {
+                            var font = fonts[fontId];
                             if (!MakerJsPlayground.FontLoader.fontMatches(font, attrs.value))
                                 continue;
                             if (!added) {
-                                paramValues.push(id);
+                                paramValues.push(fontId);
                                 added = true;
                             }
-                            var option = new makerjs.exporter.XmlTag('option', { value: id });
+                            var option = new makerjs.exporter.XmlTag('option', { value: fontId });
                             option.innerText = font.displayName;
                             options += option.toString();
                         }
@@ -162,6 +162,7 @@ var MakerJsPlayground;
                         break;
                     case 'select':
                         var selectAttrs = {
+                            id: id,
                             onchange: 'MakerJsPlayground.setParam(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
                         };
                         input = new makerjs.exporter.XmlTag('select', selectAttrs);
@@ -176,6 +177,7 @@ var MakerJsPlayground;
                         paramValues.push(attrs.value[0]);
                         break;
                     case 'text':
+                        attrs['id'] = id;
                         attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.value)';
                         input = new makerjs.exporter.XmlTag('input', attrs);
                         paramValues.push(attrs.value);
@@ -184,7 +186,19 @@ var MakerJsPlayground;
                 if (!input)
                     continue;
                 var div = new makerjs.exporter.XmlTag('div');
-                div.innerText = label.toString() + input.toString();
+                var label = new makerjs.exporter.XmlTag('label');
+                label.innerText = attrs.title;
+                if (prepend) {
+                    var innerText = input.toString() + ' ' + label.getInnerText();
+                    label.innerText = innerText;
+                    label.innerTextEscaped = true;
+                    div.innerText = label.toString();
+                }
+                else {
+                    label.attrs = { "for": id };
+                    label.innerText += ': ';
+                    div.innerText = label.toString() + input.toString();
+                }
                 if (numberBox) {
                     div.innerText += numberBox.toString();
                 }
@@ -755,14 +769,12 @@ var MakerJsPlayground;
         var div = getParamUIControl(index);
         if (fromUI) {
             if (div.range && div.rangeText) {
-                if (div.classList.contains('toggle-number')) {
-                    //numberbox is master
-                    div.range.value = div.rangeText.value;
-                }
-                else {
-                    //slider is master
-                    div.rangeText.value = div.range.value;
-                }
+                //                if (div.classList.contains('toggle-number')) {
+                //numberbox is master
+                div.range.value = value;
+                //              } else {
+                //slider is master
+                div.rangeText.value = value;
             }
         }
         else {
@@ -967,20 +979,6 @@ var MakerJsPlayground;
         }, milliSeconds);
     }
     MakerJsPlayground.animate = animate;
-    function toggleSliderNumberBox(label, index) {
-        var id;
-        if (toggleClass('toggle-number', label.parentElement)) {
-            id = 'slider_' + index;
-            //re-render according to slider value since numberbox may be out of limits
-            var slider = document.getElementById(id);
-            slider.onchange(null);
-        }
-        else {
-            id = 'numberbox_' + index;
-        }
-        label.htmlFor = id;
-    }
-    MakerJsPlayground.toggleSliderNumberBox = toggleSliderNumberBox;
     function activateParam(input, onLongHold) {
         if (onLongHold === void 0) { onLongHold = false; }
         function activate() {
@@ -1005,6 +1003,16 @@ var MakerJsPlayground;
         }, delay);
     }
     MakerJsPlayground.deActivateParam = deActivateParam;
+    //export function toggleActivateParam(index: number) {
+    //    var div = getParamUIControl(index);
+    //    if (div && div.range) {
+    //        if (div.range.parentElement.classList.contains('active')) {
+    //            deActivateParam(div.range, 0);
+    //        } else {
+    //            activateParam(div.range, false);
+    //        }
+    //    }
+    //}
     function fitNatural() {
         if (MakerJsPlayground.pointers)
             MakerJsPlayground.pointers.reset();

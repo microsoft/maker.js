@@ -130,10 +130,8 @@
             for (var i = 0; i < metaParameters.length; i++) {
                 var attrs = makerjs.cloneObject(metaParameters[i]);
 
-                var id = 'slider_' + i;
-                var label = new makerjs.exporter.XmlTag('label', { "for": id, title: attrs.title });
-                label.innerText = attrs.title + ': ';
-
+                var id = 'input_param_' + i;
+                var prepend = false;
                 var input: MakerJs.exporter.XmlTag = null;
                 var numberBox: MakerJs.exporter.XmlTag = null;
 
@@ -142,9 +140,8 @@
                     case 'range':
                         sliders++;
 
-                        attrs.title = attrs.value;
                         attrs['id'] = id;
-                        attrs['onchange'] = 'this.title=this.value;MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
+                        attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001)); if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); MakerJsPlayground.deActivateParam(this, 1000); }';
                         attrs['ontouchstart'] = 'MakerJsPlayground.activateParam(this)';
                         attrs['ontouchend'] = 'MakerJsPlayground.deActivateParam(this, 1000)';
                         attrs['onmousedown'] = 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this); }';
@@ -174,9 +171,6 @@
 
                         paramValues.push(attrs.value);
 
-                        label.attrs['title'] = 'click to toggle slider / textbox for ' + label.attrs['title'];
-                        label.attrs['onclick'] = 'MakerJsPlayground.toggleSliderNumberBox(this, ' + i + ')';
-
                         break;
 
                     case 'bool':
@@ -194,11 +188,14 @@
 
                         paramValues.push(attrs.value);
 
+                        prepend = true;
+
                         break;
 
                     case 'font':
 
                         var selectFontAttrs = {
+                            id: id,
                             onchange: 'MakerJsPlayground.setParam(' + i + ', this.options[this.selectedIndex].value)'
                         };
 
@@ -207,16 +204,16 @@
 
                         var added = false;
 
-                        for (var id in fonts) {
-                            var font = fonts[id];
+                        for (var fontId in fonts) {
+                            var font = fonts[fontId];
 
                             if (!FontLoader.fontMatches(font, attrs.value)) continue;
 
                             if (!added) {
-                                paramValues.push(id);
+                                paramValues.push(fontId);
                                 added = true;
                             }
-                            var option = new makerjs.exporter.XmlTag('option', { value: id });
+                            var option = new makerjs.exporter.XmlTag('option', { value: fontId });
                             option.innerText = font.displayName;
                             options += option.toString();
                         }
@@ -229,6 +226,7 @@
                     case 'select':
 
                         var selectAttrs = {
+                            id: id,
                             onchange: 'MakerJsPlayground.setParam(' + i + ', JSON.parse(this.options[this.selectedIndex].innerText))'
                         };
 
@@ -251,6 +249,7 @@
 
                     case 'text':
 
+                        attrs['id'] = id;
                         attrs['onchange'] = 'MakerJsPlayground.setParam(' + i + ', this.value)';
 
                         input = new makerjs.exporter.XmlTag('input', attrs);
@@ -263,7 +262,19 @@
                 if (!input) continue;
 
                 var div = new makerjs.exporter.XmlTag('div');
-                div.innerText = label.toString() + input.toString();
+                var label = new makerjs.exporter.XmlTag('label');
+                label.innerText = attrs.title;
+
+                if (prepend) {
+                    var innerText = input.toString() + ' ' + label.getInnerText();
+                    label.innerText = innerText;
+                    label.innerTextEscaped = true;
+                    div.innerText = label.toString();
+                } else {
+                    label.attrs = { "for": id };
+                    label.innerText += ': ';
+                    div.innerText = label.toString() + input.toString();
+                }
 
                 if (numberBox) {
                     div.innerText += numberBox.toString();
@@ -993,13 +1004,8 @@
         if (fromUI) {
 
             if (div.range && div.rangeText) {
-                if (div.classList.contains('toggle-number')) {
-                    //numberbox is master
-                    div.range.value = div.rangeText.value;
-                } else {
-                    //slider is master
-                    div.rangeText.value = div.range.value;
-                }
+                    div.range.value = value;
+                    div.rangeText.value = value;
             }
 
         } else {
@@ -1273,21 +1279,6 @@
             }
 
         }, milliSeconds);
-    }
-
-    export function toggleSliderNumberBox(label: HTMLLabelElement, index: number) {
-        var id: string;
-        if (toggleClass('toggle-number', label.parentElement)) {
-            id = 'slider_' + index;
-
-            //re-render according to slider value since numberbox may be out of limits
-            var slider = document.getElementById(id) as HTMLInputElement;
-            slider.onchange(null);
-
-        } else {
-            id = 'numberbox_' + index;
-        }
-        label.htmlFor = id;
     }
 
     export function activateParam(input: HTMLInputElement, onLongHold: boolean = false) {
