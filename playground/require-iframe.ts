@@ -45,7 +45,7 @@ namespace MakerJsRequireIframe {
             write: devNull
         };
         var Fn: any = new Function('require', 'module', 'document', 'console', 'alert', 'playgroundRender', javaScript);
-        var result: any = new Fn(window.collectRequire, window.module, mockDocument, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
+        var result: any = new Fn(window.require, window.module, mockDocument, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
 
         return window.module.exports || result;
     }
@@ -141,6 +141,7 @@ namespace MakerJsRequireIframe {
     var loads: IStringMap = {};
     var reloads: string[] = [];
     var previousId: string = null;
+    var collection = true;
     var counter = new Counter();
     var htmls: string[] = [];
     var logs: string[] = [];
@@ -193,9 +194,9 @@ namespace MakerJsRequireIframe {
         errorReported = true;
     };
 
-    window.collectRequire = function (id: string) {
+    window.require = function (id: string) {
 
-        if (id === 'makerjs') {
+        if (collection && id === 'makerjs') {
             return mockMakerJs;
         }
 
@@ -216,13 +217,6 @@ namespace MakerJsRequireIframe {
 
         //return an object that may be treated like a class
         return Temp;
-    };
-
-    window.require = function (id: string) {
-
-        //return cached required file
-        return required[id];
-
     };
 
     window.module = { exports: null } as NodeModule;
@@ -343,6 +337,8 @@ namespace MakerJsRequireIframe {
             error = e;
 
         }
+
+        collection = false;
 
         //if there were no requirements, fire the complete function manually
         if (counter.required == 0) {

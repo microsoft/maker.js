@@ -72,14 +72,19 @@ function getExporter(format, result) {
         case f.Json:
             return JSON.stringify;
         case f.Dxf:
-            return makerjs.exporter.toDXF;
+            function toDXF(model, options) {
+                if (!options.units) {
+                    options.units = model.units || makerjs.unitType.Millimeter;
+                }
+                return makerjs.exporter.toDXF(model, options);
+            }
+            return toDXF;
         case f.Svg:
             return makerjs.exporter.toSVG;
         case f.OpenJsCad:
             return makerjs.exporter.toOpenJsCad;
         case f.Stl:
-            function toStl(model) {
-                var options = {};
+            function toStl(model, options) {
                 var script = makerjs.exporter.toOpenJsCad(model, options);
                 script += 'return ' + options.functionName + '();';
                 unionCount = (script.match(/union/g) || []).length
@@ -92,13 +97,14 @@ function getExporter(format, result) {
             }
             return toStl;
         case f.Pdf:
-            function toPdf(model) {
+            function toPdf(model, options) {
                 function complete(pdfDataString) {
                     result.text = pdfDataString;
                     result.percentComplete = 100;
                     postMessage(result);
                 }
-                //TODO: title, author from options
+                //TODO: watermark
+                //TODO: title, author, grid from options
                 var pdfOptions = {
                     compress: false,
                     info: {
@@ -139,7 +145,7 @@ onmessage = function (ev) {
             postMessage(result);
         };
         //call the exporter function.
-        result.text = exporter(request.model);
+        result.text = exporter(request.model, request.options);
         result.percentComplete = 100;
         postMessage(result);
     }

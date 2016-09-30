@@ -148,8 +148,8 @@
                 <div id="rendering-options-menu" class="noselect">
                     <div id="params"></div>
                     <a id="params-link" href="#">save these customizations</a>
+                    <div id="measurement">measurement</div>
                     <div class="view-controls">
-                        <div id="measurement">measurement</div>
                         <div><label><input id="check-fit-on-screen" type="checkbox" checked onclick="if (this.checked) { MakerJsPlayground.fitOnScreen(); } else { MakerJsPlayground.fitNatural(); } MakerJsPlayground.render();" /> fit on screen <span id="zoom-display" class="zoom-unit"></span></label></div>
                         <div><label><input id="check-show-origin" type="checkbox" checked onclick="MakerJsPlayground.toggleClass('collapse-origin'); MakerJsPlayground.updateZoomScale();" /> show grid <span id="grid-unit" class="zoom-unit"></span></label></div>
                         <div><label><input id="check-annotate" type="checkbox" onclick="MakerJsPlayground.toggleClass('collapse-annotation')" /> show path names</label></div>
@@ -163,7 +163,7 @@
         <section id="download">
 
             <div id="download-select">
-                <h2>Choose a file format to download your customized drawing</h2>
+                <h2>Choose a file format to download your customized drawing <span class="unitless">(units will be millimeters)</span></h2>
 
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
