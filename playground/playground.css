@@ -193,7 +193,7 @@ body.show-params-link #params-link {
     margin: 0;
     padding: 0;
     position: relative;
-    width: 60%;
+    width: 59%;
 }
 
 #params input[type=number] {
