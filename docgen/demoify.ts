@@ -9,6 +9,19 @@ var marked = <MarkedStatic>require('marked');
 var detective = require('detective');
 var opentype = require('opentype.js') as typeof opentypejs;
 
+class QueryStringParams {
+
+    constructor(querystring: string = document.location.search.substring(1)) {
+        if (querystring) {
+            var pairs = querystring.split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                this[pair[0]] = decodeURIComponent(pair[1]);
+            }
+        }
+    }
+}
+
 // Synchronous highlighting with highlight.js
 marked.setOptions({
     highlight: function (code) {
@@ -19,8 +32,8 @@ marked.setOptions({
 var thumbSize = { width: 140, height: 100 };
 var allRequires = { 'makerjs': 1 };
 
-function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
-    var parameters = makerjs.kit.getParameterValues(constructor);
+function thumbnail(key: string, kit: Kit, baseUrl: string) {
+    var parameters = kit.params || makerjs.kit.getParameterValues(kit.ctor);
 
     if (key === 'Text') {
         parameters = [
@@ -28,8 +41,8 @@ function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
             'A'
         ];
     } else {
-        if (constructor.metaParameters) {
-            constructor.metaParameters.forEach((metaParameter, i) => {
+        if (kit.ctor.metaParameters) {
+            kit.ctor.metaParameters.forEach((metaParameter, i) => {
                 if (metaParameter.type === 'font') {
                     parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf')
                 }
@@ -37,7 +50,7 @@ function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
         }
     }
 
-    var model = makerjs.kit.construct(constructor, parameters);
+    var model = makerjs.kit.construct(kit.ctor, parameters);
 
     var measurement = makerjs.measure.modelExtents(model);
     var scaleX = measurement.high[0] - measurement.low[0];
@@ -58,7 +71,7 @@ function thumbnail(key: string, constructor: MakerJs.IKit, baseUrl: string) {
 function jekyll(layout: string, title: string) {
     //Jekyll liquid layout
     var dashes = '---';
-    return [dashes, 'layout: ' + layout, 'title: ' + title, dashes, ''].join('\n');    
+    return [dashes, 'layout: ' + layout, 'title: ' + title, dashes, ''].join('\n');
 }
 
 function anchor(text: string, href: string, title?: string, isEscaped?: boolean, cssClass?: string) {
@@ -82,12 +95,42 @@ function section(innerHtml: string) {
     return s.toString();
 }
 
-function getRequireKit(key: string): MakerJs.IKit {
+interface Kit {
+    ctor: MakerJs.IKit;
+    params?: any[];
+}
+
+function getRequireKit(spec: string): Kit {
+
+    var split = spec.split('#');
+    var key = split[0];
+    var kvp = split[1];
+
+    var result: Kit;
+
     if (key in packageJson.dependencies) {
-        return require(key);
+        result = {
+            ctor: require(key)
+        };
+    } else if (key in makerjs.models) {
+        result = {
+            ctor: makerjs.models[key]
+        };
     } else {
-        return require('../demos/js/' + key);
+        result = {
+            ctor: require('../demos/js/' + key)
+        };
     }
+
+    if (kvp) {
+        var qp = new QueryStringParams(kvp);
+        var params = qp['params'];
+        if (params) {
+            result.params = JSON.parse(params);
+        }
+    }
+
+    return result;
 }
 
 function demoIndexPage() {
@@ -103,9 +146,9 @@ function demoIndexPage() {
             stream.write('\n\n');
         }
 
-        function writeThumbnail(key: string, constructor, baseUrl: string) {
+        function writeThumbnail(key: string, kit: Kit, baseUrl: string) {
             console.log('writing thumbnail ' + key);
-            stream.write(thumbnail(key, constructor, baseUrl));
+            stream.write(thumbnail(key, kit, baseUrl));
             stream.write('\n\n');
         }
 
@@ -125,9 +168,9 @@ function demoIndexPage() {
 
         for (var i = 0; i < packageJson.ordered_demo_list.length; i++) {
             var key = packageJson.ordered_demo_list[i];
-            var ctor = getRequireKit(key);
+            var kit = getRequireKit(key);
 
-            writeThumbnail(key, ctor, '../');
+            writeThumbnail(key, kit, '../');
         }
 
         stream.write(st.getClosingTag());
@@ -142,7 +185,7 @@ function demoIndexPage() {
 
         for (var i = 0; i < sorted.length; i++) {
             var modelType2 = sorted[i];
-            writeThumbnail(modelType2, makerjs.models[modelType2], '../');
+            writeThumbnail(modelType2, { ctor: makerjs.models[modelType2] }, '../');
         }
 
         stream.write(st.getClosingTag());
@@ -159,7 +202,7 @@ function homePage() {
 
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
 
-        var anim = new makerjs.exporter.XmlTag('img', {src: '/maker.js/images/anim-wheel.gif'});
+        var anim = new makerjs.exporter.XmlTag('img', { src: '/maker.js/images/anim-wheel.gif' });
 
         var h2 = new makerjs.exporter.XmlTag('h2');
         h2.innerText = 'Latest demos';
@@ -170,9 +213,9 @@ function homePage() {
 
         for (var i = 0; i < packageJson.ordered_demo_list.length && i < max; i++) {
             var key = packageJson.ordered_demo_list[i];
-            var ctor = getRequireKit(key);
+            var kit = getRequireKit(key);
 
-            demos.push(thumbnail(key, ctor, ''));
+            demos.push(thumbnail(key, kit, ''));
         }
 
         var allDemosP = new makerjs.exporter.XmlTag('p');

@@ -8,6 +8,19 @@ var makerjs = require('../target/js/node.maker.js');
 var marked = require('marked');
 var detective = require('detective');
 var opentype = require('opentype.js');
+var QueryStringParams = (function () {
+    function QueryStringParams(querystring) {
+        if (querystring === void 0) { querystring = document.location.search.substring(1); }
+        if (querystring) {
+            var pairs = querystring.split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                this[pair[0]] = decodeURIComponent(pair[1]);
+            }
+        }
+    }
+    return QueryStringParams;
+}());
 // Synchronous highlighting with highlight.js
 marked.setOptions({
     highlight: function (code) {
@@ -16,8 +29,8 @@ marked.setOptions({
 });
 var thumbSize = { width: 140, height: 100 };
 var allRequires = { 'makerjs': 1 };
-function thumbnail(key, constructor, baseUrl) {
-    var parameters = makerjs.kit.getParameterValues(constructor);
+function thumbnail(key, kit, baseUrl) {
+    var parameters = kit.params || makerjs.kit.getParameterValues(kit.ctor);
     if (key === 'Text') {
         parameters = [
             opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
@@ -25,15 +38,15 @@ function thumbnail(key, constructor, baseUrl) {
         ];
     }
     else {
-        if (constructor.metaParameters) {
-            constructor.metaParameters.forEach(function (metaParameter, i) {
+        if (kit.ctor.metaParameters) {
+            kit.ctor.metaParameters.forEach(function (metaParameter, i) {
                 if (metaParameter.type === 'font') {
                     parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf');
                 }
             });
         }
     }
-    var model = makerjs.kit.construct(constructor, parameters);
+    var model = makerjs.kit.construct(kit.ctor, parameters);
     var measurement = makerjs.measure.modelExtents(model);
     var scaleX = measurement.high[0] - measurement.low[0];
     var scaleY = measurement.high[1] - measurement.low[1];
@@ -67,13 +80,34 @@ function section(innerHtml) {
     s.innerTextEscaped = true;
     return s.toString();
 }
-function getRequireKit(key) {
+function getRequireKit(spec) {
+    var split = spec.split('#');
+    var key = split[0];
+    var kvp = split[1];
+    var result;
     if (key in packageJson.dependencies) {
-        return require(key);
+        result = {
+            ctor: require(key)
+        };
+    }
+    else if (key in makerjs.models) {
+        result = {
+            ctor: makerjs.models[key]
+        };
     }
     else {
-        return require('../demos/js/' + key);
+        result = {
+            ctor: require('../demos/js/' + key)
+        };
     }
+    if (kvp) {
+        var qp = new QueryStringParams(kvp);
+        var params = qp['params'];
+        if (params) {
+            result.params = JSON.parse(params);
+        }
+    }
+    return result;
 }
 function demoIndexPage() {
     var stream = fs.createWriteStream('./demos/index.html');
@@ -85,9 +119,9 @@ function demoIndexPage() {
             stream.write(h.toString());
             stream.write('\n\n');
         }
-        function writeThumbnail(key, constructor, baseUrl) {
+        function writeThumbnail(key, kit, baseUrl) {
             console.log('writing thumbnail ' + key);
-            stream.write(thumbnail(key, constructor, baseUrl));
+            stream.write(thumbnail(key, kit, baseUrl));
             stream.write('\n\n');
         }
         var st = sectionTag();
@@ -99,8 +133,8 @@ function demoIndexPage() {
         writeHeading(2, 'Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
         for (var i = 0; i < packageJson.ordered_demo_list.length; i++) {
             var key = packageJson.ordered_demo_list[i];
-            var ctor = getRequireKit(key);
-            writeThumbnail(key, ctor, '../');
+            var kit = getRequireKit(key);
+            writeThumbnail(key, kit, '../');
         }
         stream.write(st.getClosingTag());
         stream.write(st.getOpeningTag(false));
@@ -111,7 +145,7 @@ function demoIndexPage() {
         sorted.sort();
         for (var i = 0; i < sorted.length; i++) {
             var modelType2 = sorted[i];
-            writeThumbnail(modelType2, makerjs.models[modelType2], '../');
+            writeThumbnail(modelType2, { ctor: makerjs.models[modelType2] }, '../');
         }
         stream.write(st.getClosingTag());
         stream.end();
@@ -129,8 +163,8 @@ function homePage() {
         var max = 6;
         for (var i = 0; i < packageJson.ordered_demo_list.length && i < max; i++) {
             var key = packageJson.ordered_demo_list[i];
-            var ctor = getRequireKit(key);
-            demos.push(thumbnail(key, ctor, ''));
+            var kit = getRequireKit(key);
+            demos.push(thumbnail(key, kit, ''));
         }
         var allDemosP = new makerjs.exporter.XmlTag('p');
         allDemosP.innerText = anchor('see all demos', "/maker.js/demos/#content");
