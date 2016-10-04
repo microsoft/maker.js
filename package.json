@@ -103,6 +103,7 @@
     "opentype.js": "^0.6.4"
   },
   "ordered_demo_list": [
+    "archbridge",
     "BoltCircle#params=[25,50,20,0]",
     "makerjs-double-band-clamp",
     "makerjs-nameplate",
