@@ -37,6 +37,7 @@
     "src/models/Polygon.ts",
     "src/models/BoltCircle.ts",
     "src/models/BoltRectangle.ts",
+    "src/models/Dogbone.ts",
     "src/models/Dome.ts",
     "src/models/RoundRectangle.ts",
     "src/models/Oval.ts",
