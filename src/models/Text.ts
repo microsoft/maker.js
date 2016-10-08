@@ -4,7 +4,7 @@
 
         public models: IModelMap = {};
 
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false) {
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy: number) {
 
             var charIndex = 0;
             var combineOptions: ICombineOptions = {};
@@ -57,11 +57,11 @@
                             break;
 
                         case 'C':
-                            addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0]));
+                            addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0], bezierAccuracy));
                             break;
 
                         case 'Q':
-                            addModel(new models.BezierCurve(currPoint, points[1], points[0]));
+                            addModel(new models.BezierCurve(currPoint, points[1], points[0], bezierAccuracy));
                             break;
 
                     }
