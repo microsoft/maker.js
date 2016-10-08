@@ -411,6 +411,11 @@
             return seeds;
         }
 
+        public static computeLength(seed: IPathBezierSeed): number {
+            var b = seedToBezier(seed);
+            return b.length();
+        }
+
         public static computePoint(seed: IPathBezierSeed, t: number): IPoint {
             var s = getScratch(seed);
 

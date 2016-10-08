@@ -340,6 +340,10 @@ namespace MakerJs.measure {
         return value;
     }
 
+    pathLengthMap[pathType.BezierSeed] = function (seed: IPathBezierSeed) {
+        return models.BezierCurve.computeLength(seed);
+    }
+
     /**
      * Measures the length of a path.
      * 
