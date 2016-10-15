@@ -1,32 +1,20 @@
 ---
 layout: posts
-title: Api - Atlas Class
+title: Api - Dogbone Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
-<section class="tsd-panel tsd-comment">
-	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>A list of maps of measurements.</p>
-		</div>
-		<dl class="tsd-comment-tags">
-			<dt>param</dt>
-			<dd><p>The model to measure.</p>
-			</dd>
-			<dt>param</dt>
-			<dd><p>Optional atlas to save measurements.</p>
-			</dd>
-			<dt>returns</dt>
-			<dd><p>object with low and high points.</p>
-			</dd>
-		</dl>
-	</div>
-</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">Atlas</span>
+			<span class="target">Dogbone</span>
 		</li>
+	</ul>
+</section>
+<section class="tsd-panel">
+	<h3>Implements</h3>
+	<ul class="tsd-hierarchy">
+		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -36,22 +24,13 @@ title: Api - Atlas Class
 			<section class="tsd-index-section ">
 				<h3>Constructors</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#constructor" class="tsd-kind-icon">constructor</a></li>
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.dogbone.html#constructor" class="tsd-kind-icon">constructor</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#modelcontext" class="tsd-kind-icon">model<wbr>Context</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#modelmap" class="tsd-kind-icon">model<wbr>Map</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#modelsmeasured" class="tsd-kind-icon">models<wbr>Measured</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#pathmap" class="tsd-kind-icon">path<wbr>Map</a></li>
-				</ul>
-			</section>
-			<section class="tsd-index-section ">
-				<h3>Methods</h3>
-				<ul class="tsd-index-list">
-					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.measure.atlas.html#measuremodels" class="tsd-kind-icon">measure<wbr>Models</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.dogbone.html#paths" class="tsd-kind-icon">paths</a></li>
 				</ul>
 			</section>
 		</div>
@@ -63,32 +42,67 @@ title: Api - Atlas Class
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Atlas<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Dogbone<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, style<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, bottomless<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.dogbone.html" class="tsd-signature-type">Dogbone</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L444">core/measure.ts:444</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Dogbone.ts#L4">models/Dogbone.ts:4</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Constructor.</p>
+						<p>Create a dogbone from width, height, corner radius, style, and bottomless flag.</p>
 					</div>
+					<p>Example:</p>
+					<pre><code>var d = <span class="hljs-keyword">new</span> makerjs.models.Dogbone(<span class="hljs-number">50</span>, <span class="hljs-number">100</span>, <span class="hljs-number">5</span>);
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<h5>width: <span class="tsd-signature-type">number</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>The model to measure.</p>
+								<p>Width of the rectangle.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>height: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Height of the rectangle.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>radius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Corner radius.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> style: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Optional corner style: 0 (default) for dogbone, 1 for vertical, -1 for horizontal.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> bottomless: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Optional flag to omit the bottom line and bottom corners (default false).</p>
 							</div>
 						</div>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></h4>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.dogbone.html" class="tsd-signature-type">Dogbone</a></h4>
 			</li>
 		</ul>
 	</section>
@@ -96,84 +110,14 @@ title: Api - Atlas Class
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="modelcontext" class="tsd-anchor"></a>
-		<h3>model<wbr>Context</h3>
-		<div class="tsd-signature tsd-kind-icon">model<wbr>Context<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></div>
+		<a name="paths" class="tsd-anchor"></a>
+		<h3>paths</h3>
+		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L450">core/measure.ts:450</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/Dogbone.ts#L4">models/Dogbone.ts:4</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>The model to measure.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="modelmap" class="tsd-anchor"></a>
-		<h3>model<wbr>Map</h3>
-		<div class="tsd-signature tsd-kind-icon">model<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imeasuremap.html" class="tsd-signature-type">IMeasureMap</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L439">core/measure.ts:439</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Map of model measurements, mapped by routeKey.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="modelsmeasured" class="tsd-anchor"></a>
-		<h3>models<wbr>Measured</h3>
-		<div class="tsd-signature tsd-kind-icon">models<wbr>Measured<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L434">core/measure.ts:434</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Flag that models have been measured.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="pathmap" class="tsd-anchor"></a>
-		<h3>path<wbr>Map</h3>
-		<div class="tsd-signature tsd-kind-icon">path<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imeasuremap.html" class="tsd-signature-type">IMeasureMap</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L444">core/measure.ts:444</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Map of path measurements, mapped by routeKey.</p>
-			</div>
-		</div>
-	</section>
-</section>
-<section class="tsd-panel-group tsd-member-group ">
-	<h2>Methods</h2>
-	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-		<a name="measuremodels" class="tsd-anchor"></a>
-		<h3>measure<wbr>Models</h3>
-		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">measure<wbr>Models<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/measure.ts#L453">core/measure.ts:453</a></li>
-					</ul>
-				</aside>
-				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-			</li>
-		</ul>
 	</section>
 </section>
 </div>
