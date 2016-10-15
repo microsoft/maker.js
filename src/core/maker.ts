@@ -750,6 +750,11 @@ namespace MakerJs {
          * The endpoints of the path, in absolute coords.
          */
         endPoints: IPoint[];
+
+        /**
+         * Length of the path.
+         */
+        pathLength: number;
     }
 
     /**
@@ -766,6 +771,11 @@ namespace MakerJs {
          * Flag if this chain forms a loop end to end.
          */
         endless?: boolean
+
+        /**
+         * Total length of all paths in the chain.
+         */
+        pathLength: number;
     }
 
     /**

@@ -48,6 +48,7 @@
             while (currLink) {
 
                 chain.links.push(currLink);
+                chain.pathLength += currLink.pathLength;
 
                 var next = currLink.reversed ? 0 : 1;
                 var nextPoint = currLink.endPoints[next];
@@ -83,7 +84,8 @@
             if (linkedPaths && linkedPaths.length > 0) {
 
                 var chain: IChain = {
-                    links: []
+                    links: [],
+                    pathLength: 0
                 };
 
                 followLink(linkedPaths[0], chain, linkedPaths[0]);
@@ -99,6 +101,7 @@
                     chain.links.map(function (link: IChainLink) { link.reversed = !link.reversed; });
 
                     //remove the last link, it will be added in the call
+                    chain.pathLength -= chain.links[chain.links.length - 1].pathLength;
                     var currLink = chain.links.pop();
 
                     followLink(currLink, chain, firstLink);
@@ -148,6 +151,7 @@
                 }
 
                 var connections = connectionMap[layer];
+                var pathLength = measure.pathLength(walkedPath.pathContext);
 
                 //circles are loops by nature
                 if (
@@ -160,9 +164,11 @@
                         links: [{
                             walkedPath: walkedPath,
                             reversed: null,
-                            endPoints: null
+                            endPoints: null,
+                            pathLength: pathLength
                         }],
-                        endless: true
+                        endless: true,
+                        pathLength: pathLength
                     };
 
                     //store circles so that layers fire grouped
@@ -177,18 +183,16 @@
                     var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
 
                     //don't add lines which are shorter than the tolerance
-                    if (walkedPath.pathContext.type == pathType.Line) {
-                        var distance = measure.pointDistance(endPoints[0], endPoints[1]);
-                        if (distance < opts.pointMatchingDistance) {
-                            return;
-                        }
+                    if (pathLength < opts.pointMatchingDistance) {
+                        return;
                     }
 
                     for (var i = 0; i < 2; i++) {
                         var link: IChainLink = {
                             walkedPath: walkedPath,
                             endPoints: endPoints,
-                            reversed: i != 0
+                            reversed: i != 0,
+                            pathLength: pathLength
                         };
 
                         connections.addItemToCollection(endPoints[i], link);
