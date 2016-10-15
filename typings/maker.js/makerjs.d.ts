@@ -558,6 +558,10 @@ declare namespace MakerJs {
          * The endpoints of the path, in absolute coords.
          */
         endPoints: IPoint[];
+        /**
+         * Length of the path.
+         */
+        pathLength: number;
     }
     /**
      * A chain of paths which connect end to end.
@@ -571,6 +575,10 @@ declare namespace MakerJs {
          * Flag if this chain forms a loop end to end.
          */
         endless?: boolean;
+        /**
+         * Total length of all paths in the chain.
+         */
+        pathLength: number;
     }
     /**
      * Callback to model.findChains() with resulting array of chains and unchained paths.
@@ -1952,6 +1960,7 @@ declare namespace MakerJs.models {
         constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint, accuracy?: number);
         static typeName: string;
         static getBezierSeeds(curve: BezierCurve, options?: IFindChainsOptions): IPathBezierSeed[];
+        static computeLength(seed: IPathBezierSeed): number;
         static computePoint(seed: IPathBezierSeed, t: number): IPoint;
     }
 }
@@ -2067,6 +2076,26 @@ declare namespace MakerJs.models {
     class BoltRectangle implements IModel {
         paths: IPathMap;
         constructor(width: number, height: number, holeRadius: number);
+    }
+}
+declare namespace MakerJs.models {
+    class Dogbone implements IModel {
+        paths: IPathMap;
+        /**
+         * Create a dogbone from width, height, corner radius, style, and bottomless flag.
+         *
+         * Example:
+         * ```
+         * var d = new makerjs.models.Dogbone(50, 100, 5);
+         * ```
+         *
+         * @param width Width of the rectangle.
+         * @param height Height of the rectangle.
+         * @param radius Corner radius.
+         * @param style Optional corner style: 0 (default) for dogbone, 1 for vertical, -1 for horizontal.
+         * @param bottomless Optional flag to omit the bottom line and bottom corners (default false).
+         */
+        constructor(width: number, height: number, radius: number, style?: number, bottomless?: boolean);
     }
 }
 declare namespace MakerJs.models {
@@ -2212,6 +2241,6 @@ declare namespace MakerJs.models {
 declare namespace MakerJs.models {
     class Text implements IModel {
         models: IModelMap;
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine?: boolean, centerCharacterOrigin?: boolean);
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine: boolean, centerCharacterOrigin: boolean, bezierAccuracy: number);
     }
 }
