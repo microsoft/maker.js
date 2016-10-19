@@ -3,9 +3,15 @@ title: Units
 ---
 
 <p>
-Paths and points are unitless. It is only when they are added to a model which has units that their values relate to units.
-Many models can remain abstract and unitless. However, when it comes time to make them on a laser cutter, you will 
-probably want to specify units. To do so, you can use <b>makerjs.unitType</b> which has these properties:
+Paths and points are unitless. Models may also be unitless, or they may specify a unit system. When it comes time to make your model 
+on a laser cutter or waterjet etc., you will probably want to specify units. You can do this two different ways:
+  <ol>
+    <li>Specify units during export. [<a href="http://microsoft.github.io/maker.js/docs/exporting/#content">See exporting for details per format.</a>]</li>
+    <li>Specify units on your model.</li>
+  </ol>
+</p>
+<p>
+  To specify units on your model, add a <code>units</code> property to it with a value from the <b>makerjs.unitType</b> object:
 </p>
 
 <ul>
