@@ -215,7 +215,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPoint(item: any) {
-        return (Array.isArray(item) && (<[]>item).length == 2 && !isNaN(item[0]) && !isNaN(item[1]));
+        return (Array.isArray(item) && (item as Array<number>).length == 2 && !isNaN(item[0]) && !isNaN(item[1]));
     }
 
     /**

@@ -1679,7 +1679,7 @@ var MakerJs;
                 return;
             function walkRecursive(modelContext, layer, offset, route, routeKey) {
                 var newOffset = MakerJs.point.add(modelContext.origin, offset);
-                layer = modelContext.layer || '';
+                layer = layer || '';
                 if (modelContext.paths) {
                     for (var pathId in modelContext.paths) {
                         var pathContext = modelContext.paths[pathId];
@@ -1716,7 +1716,7 @@ var MakerJs;
                             if (!options.beforeChildWalk(walkedModel))
                                 continue;
                         }
-                        walkRecursive(walkedModel.childModel, layer, newOffset, walkedModel.route, walkedModel.routeKey);
+                        walkRecursive(walkedModel.childModel, walkedModel.layer, newOffset, walkedModel.route, walkedModel.routeKey);
                         if (options.afterChildWalk) {
                             options.afterChildWalk(walkedModel);
                         }
@@ -6855,5 +6855,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.18";
+MakerJs.version = "0.9.19";
 ﻿var Bezier = require('bezier-js');
