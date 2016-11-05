@@ -1,5 +1,8 @@
 .npmignore
 node_modules/
+.vscode/*
+_layouts/*
+_snippets/*
 archive/*
 debug/*
 demos/*
@@ -8,8 +11,10 @@ docs/*
 examples/*
 external/*
 fonts/*
+images/*
 playground/*
 src/*
+stylesheets/*
 target/*
 test/*
 typings/*

@@ -1,6 +1,13 @@
 namespace MakerJs.exporter {
 
     /**
+     * Map of SVG Path Data by layer name.
+     */
+    export interface IPathDataByLayerMap {
+        [layer: string]: string;
+    }
+
+    /**
      * @private
      */
     interface IPathDataMap {
@@ -263,6 +270,32 @@ namespace MakerJs.exporter {
         });
 
         return pathDataByLayer;
+    }
+
+    /**
+     * Convert a model to SVG path data.
+     *
+     * @param modelToExport Model to export.
+     * @param byLayers Boolean flag (default true) to return a map of path data by layer.
+     * @param origin Optional reference origin.
+     * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
+     */
+    export function toSVGPathData(modelToExport: IModel, byLayers = true, origin?: IPoint): IPathDataByLayerMap | string {
+
+        var size = measure.modelExtents(modelToExport);
+
+        if (!origin) {
+            origin = [-size.low[0], size.high[1]];
+        }
+
+        var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, { byLayers: byLayers });
+        var pathDataStringByLayer: IPathDataByLayerMap = {};
+
+        for (var layer in pathDataArrayByLayer) {
+            pathDataStringByLayer[layer] = pathDataArrayByLayer[layer].join(' ');
+        }
+
+        return byLayers ? pathDataStringByLayer : pathDataStringByLayer[''];
     }
 
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
