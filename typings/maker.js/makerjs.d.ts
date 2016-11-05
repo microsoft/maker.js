@@ -1872,6 +1872,12 @@ declare namespace MakerJs.exporter {
 }
 declare namespace MakerJs.exporter {
     /**
+     * Map of SVG Path Data by layer name.
+     */
+    interface IPathDataByLayerMap {
+        [layer: string]: string;
+    }
+    /**
      * Convert a chain to SVG path data.
      */
     function chainToSVGPathData(chain: IChain, offset: IPoint): string;
@@ -1879,6 +1885,15 @@ declare namespace MakerJs.exporter {
      * Convert a path to SVG path data.
      */
     function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint): string;
+    /**
+     * Convert a model to SVG path data.
+     *
+     * @param modelToExport Model to export.
+     * @param byLayers Boolean flag (default true) to return a map of path data by layer.
+     * @param origin Optional reference origin.
+     * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
+     */
+    function toSVGPathData(modelToExport: IModel, byLayers?: boolean, origin?: IPoint): IPathDataByLayerMap | string;
     function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;

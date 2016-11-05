@@ -5137,6 +5137,28 @@ var MakerJs;
             return pathDataByLayer;
         }
         /**
+         * Convert a model to SVG path data.
+         *
+         * @param modelToExport Model to export.
+         * @param byLayers Boolean flag (default true) to return a map of path data by layer.
+         * @param origin Optional reference origin.
+         * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
+         */
+        function toSVGPathData(modelToExport, byLayers, origin) {
+            if (byLayers === void 0) { byLayers = true; }
+            var size = MakerJs.measure.modelExtents(modelToExport);
+            if (!origin) {
+                origin = [-size.low[0], size.high[1]];
+            }
+            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, { byLayers: byLayers });
+            var pathDataStringByLayer = {};
+            for (var layer in pathDataArrayByLayer) {
+                pathDataStringByLayer[layer] = pathDataArrayByLayer[layer].join(' ');
+            }
+            return byLayers ? pathDataStringByLayer : pathDataStringByLayer[''];
+        }
+        exporter.toSVGPathData = toSVGPathData;
+        /**
          * Renders an item in SVG markup.
          *
          * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
@@ -6855,5 +6877,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.19";
+MakerJs.version = "0.9.20";
 ﻿var Bezier = require('bezier-js');
