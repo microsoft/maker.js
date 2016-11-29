@@ -7,3 +7,6 @@ src/tools/*.js
 src/tools/*.js.map
 web.config
 CONTRIBUTING.md
+/docs/api/assets
+/.vs
+*.sln
