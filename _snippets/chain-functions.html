@@ -128,7 +128,7 @@ document.write(svg);
     LiveDoc.evalLastCode();
 </script>
 
-We know that there are 4 chains in this drawing. When we find chains, the array of found chains will be sorted by pathLength (the total length of all paths in each chain),
+We know that there are 5 chains in this drawing. When we find chains, the array of found chains will be sorted by pathLength (the total length of all paths in each chain),
 so we know that the first chain represents the outermost perimeter of the drawing. Therefore we will ignore <code>chains[0]</code> and create a for...loop beginning at <code>chains[1]</code>:
 
 {% highlight javascript %}
