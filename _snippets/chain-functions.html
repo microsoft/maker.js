@@ -167,7 +167,7 @@ m.model.findChains(expansion, function(chains, loose, layer) {
   for (var i = 1; i < chains.length; i++) {
 
     //save the fillets in the model tree 
-    expansion.models['fillets' + i] = fillet(chains[i], 2);
+    expansion.models['fillets' + i] = m.chain.fillet(chains[i], 2);
   }
 });
 
