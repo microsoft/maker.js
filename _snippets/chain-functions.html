@@ -1,0 +1,90 @@
+---
+title: Chain Functions
+---
+
+<h4>Fillet</h4>
+
+A <a href="/maker.js/docs/intermediate-drawing/#Fillets">fillet</a> can be added between all paths in a chain by calling 
+<a href="/maker.js/docs/api/modules/makerjs.chain.html#fillet"></a> with these parameters:
+<ul>
+    <li>chainToFillet: the chain containing paths which will be modified to have fillets at their joints.</li>
+    <li>filletRadius: radius of the fillets.</li>
+</ul>
+
+This will modify all of the chain's paths to accomodate an arc between each other, and it will return a new model containing all of the fillets which fit. 
+This new model should be added into your tree.
+
+<h5>Basic example</h5>
+
+Let's draw a few lines that we know will form a chain:
+
+{% highlight javascript %}
+//render a model with paths that form a chain
+
+var makerjs = require('makerjs');
+
+var model = {
+
+  paths: {
+    "0": new makerjs.paths.Line([0, 0], [100, 0]),
+    "1": new makerjs.paths.Line([100, 0], [100, 100]),
+    "2": new makerjs.paths.Line([100, 100], [200, 100]),
+  }
+
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+Next we will find all of the chains in our model. We are expecting that there will only be one chain, so we will just take <code>chains[0]</code>.
+Then we will add fillets to that chain:
+
+{% highlight javascript %}
+//render a model with paths that form a chain
+
+var makerjs = require('makerjs');
+
+var model = {
+
+  paths: {
+    "0": new makerjs.paths.Line([0, 0], [100, 0]),
+    "1": new makerjs.paths.Line([100, 0], [100, 100]),
+    "2": new makerjs.paths.Line([100, 100], [200, 100]),
+  },
+
+  //create a placeholder in the tree for more models
+  models: {}
+
+};
+
+//find all chains
+makerjs.model.findChains(model, function(chains, loose, layer) {
+
+    //just use the first chain
+    var chain = chains[0];
+
+    //add fillets to the chain
+    var filletsModel = makerjs.chain.fillet(chain, 10);
+
+    //put the fillets in the tree
+    model.models.fillets = filletsModel;
+});
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+
+
+
