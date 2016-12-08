@@ -1700,9 +1700,21 @@ declare namespace MakerJs.path {
      *
      * @param pathA First path to fillet, which will be modified to fit the fillet.
      * @param pathB Second path to fillet, which will be modified to fit the fillet.
+     * @param filletRadius Radius of the fillet.
+     * @param options Optional IPointMatchOptions object to specify pointMatchingDistance.
      * @returns Arc path object of the new fillet.
      */
     function fillet(pathA: IPath, pathB: IPath, filletRadius: number, options?: IPointMatchOptions): IPathArc;
+}
+declare namespace MakerJs.chain {
+    /**
+     * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
+     *
+     * @param chainToFillet The chain to add fillets to.
+     * @param filletRadius Radius of the fillet.
+     * @returns Model object containing paths which fillet the joints in the chain.
+     */
+    function fillet(chainToFillet: IChain, filletRadius: number): IModel;
 }
 declare namespace MakerJs.kit {
     /**
