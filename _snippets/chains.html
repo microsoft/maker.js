@@ -3,7 +3,7 @@ title: Chains
 ---
 
 <p>
-    Chains are an ordered collection of paths that connect end-to-end. A chain may be <b>endless</b> which means the chain ends at its beginning (and is most likely forming a closed geometry).
+    A chain is an ordered collection of paths that connect end-to-end. A chain may be <b>endless</b> which means the chain ends at its beginning (and is most likely forming a closed geometry).
     The paths in a chain might be contained in more than one model. To illustrate this, we will look at the example from the combine operations above:
 </p>
 
@@ -107,6 +107,8 @@ document.write(svg);
     A circle is a closed geometry. In Maker.js, a circle is also an endless chain. Line1 and line2 form a chain. The diagonal line3 is not part of a chain.
 </p>
 
+<h4>Finding Chains</h4>
+
 <p>
     Now that we have these concepts illustrated, let's call <a href="/maker.js/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains</a>, passing our model,
     and a function to collect what we found. This function will be passed these three parameters:
@@ -157,17 +159,20 @@ m.model.findChains(x, function(chains, loose, layer) {
 <hr />
 
 <p>
-    <h5>chains array</h5>
+    <h5>chains array, sorted descending by pathLength of the chain</h5>
 
-    As expected, we found 3 chains. But what is a chain? A chain is an object with these two properties:
+    As expected, we found 3 chains. But what is a chain? A chain is an object with these three properties:
     <ul>
         <li>endless: boolean.</li>
         <li>links: array of <a href="/maker.js/docs/api/interfaces/makerjs.ichainlink.html">chain link</a> objects.</li>
+        <li>pathLength: total length of all paths within the chain.</li>
     </ul>
 
-    A chain link has these properties:
+    A chain link is an object containing data about the path which is a link in the chain. It has these properties:
     <ul>
+        <li>endPoints: array of the 2 endpoints of the path forming the link, in absolute coordinates.</li>
         <li>reversed: boolean, explained below.</li>
+        <li>pathLength: length of the path forming the link.</li>
         <li>walkedPath: a <a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object, which contains one path. We will explain this type of object in the next section.</li>
     </ul>
 
