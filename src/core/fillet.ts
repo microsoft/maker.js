@@ -458,7 +458,7 @@ namespace MakerJs.chain {
      *
      * @param chainToFillet The chain to add fillets to.
      * @param filletRadius Radius of the fillet.
-     * @returns Model object conaining paths which fillet the joints in the chain.
+     * @returns Model object containing paths which fillet the joints in the chain.
      */
     export function fillet(chainToFillet: IChain, filletRadius: number) : IModel {
         var result: IModel = { paths: {} };
