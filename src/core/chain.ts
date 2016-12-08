@@ -226,6 +226,9 @@
                 }
             );
 
+            //sort to return largest chains first
+            chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
+
             callback(chainsByLayer[layer], loose, layer);
         }
 

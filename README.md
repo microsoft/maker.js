@@ -10,7 +10,7 @@ Maker.js, a Microsoft Garage project, is a JavaScript library for creating line 
 
 ### Drawing with JavaScript code
 
-Draw using [Line, Circle, and Arc paths](http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths) and NEW [Bezier Curves](http://microsoft.github.io/maker.js/playground/?script=BezierCurve).
+Draw using [Line, Circle, and Arc paths](http://microsoft.github.io/maker.js/docs/basic-drawing/#Paths) and [Bezier Curves](http://microsoft.github.io/maker.js/playground/?script=BezierCurve).
 
 Paths can be [grouped into Models](http://microsoft.github.io/maker.js/docs/basic-drawing/#Models) to form more complex drawings.
 
@@ -20,7 +20,7 @@ Other people's Models can be required the Node.js way, [modified](http://microso
 
 Models can be [scaled](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Scaling), [measured](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](http://microsoft.github.io/maker.js/docs/basic-drawing/#Units).
 
-NEW: Paths can be [distorted](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort).
+Paths can be [distorted](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#distort).
 
 Models can be [rotated](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Rotating) or [mirrored](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Mirroring).
 
@@ -49,13 +49,13 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 
 ### Built-in models
 
-* NEW: [Bezier Curve](http://microsoft.github.io/maker.js/playground/?script=BezierCurve)
+* [Bezier Curve](http://microsoft.github.io/maker.js/playground/?script=BezierCurve)
 * [Bolt Circle](http://microsoft.github.io/maker.js/playground/?script=BoltCircle)
 * [Bolt Rectangle](http://microsoft.github.io/maker.js/playground/?script=BoltRectangle)
 * [Connect the dots](http://microsoft.github.io/maker.js/playground/?script=ConnectTheDots)
 * [Dome](http://microsoft.github.io/maker.js/playground/?script=Dome)
-* NEW: [Ellipse](http://microsoft.github.io/maker.js/playground/?script=Ellipse)
-* NEW: [Elliptic Arc](http://microsoft.github.io/maker.js/playground/?script=EllipticArc)
+* [Ellipse](http://microsoft.github.io/maker.js/playground/?script=Ellipse)
+* [Elliptic Arc](http://microsoft.github.io/maker.js/playground/?script=EllipticArc)
 * [Oval](http://microsoft.github.io/maker.js/playground/?script=Oval)
 * [OvalArc](http://microsoft.github.io/maker.js/playground/?script=OvalArc)
 * [Polygon](http://microsoft.github.io/maker.js/playground/?script=Polygon)
@@ -66,13 +66,13 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 * [Slot](http://microsoft.github.io/maker.js/playground/?script=Slot)
 * [Square](http://microsoft.github.io/maker.js/playground/?script=Square)
 * [Star](http://microsoft.github.io/maker.js/playground/?script=Star)
-* NEW: [Text](http://microsoft.github.io/maker.js/playground/?script=Text)
+* [Text](http://microsoft.github.io/maker.js/playground/?script=Text)
 
 ### Import formats
 
-NEW: [Fonts](http://microsoft.github.io/maker.js/playground/?script=Text) (Requires [opentype.js](http://opentype.js.org/))
+[Fonts](http://microsoft.github.io/maker.js/playground/?script=Text) (Requires [opentype.js](http://opentype.js.org/))
 
-NEW: [SVG Path Data](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.importer.html#fromsvgpathdata)
+[SVG Path Data](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.importer.html#fromsvgpathdata)
 
 ## Getting Started
 

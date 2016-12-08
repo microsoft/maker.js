@@ -4036,6 +4036,8 @@ var MakerJs;
          *
          * @param pathA First path to fillet, which will be modified to fit the fillet.
          * @param pathB Second path to fillet, which will be modified to fit the fillet.
+         * @param filletRadius Radius of the fillet.
+         * @param options Optional IPointMatchOptions object to specify pointMatchingDistance.
          * @returns Arc path object of the new fillet.
          */
         function fillet(pathA, pathB, filletRadius, options) {
@@ -4107,6 +4109,41 @@ var MakerJs;
         }
         path.fillet = fillet;
     })(path = MakerJs.path || (MakerJs.path = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var chain;
+    (function (chain) {
+        /**
+         * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
+         *
+         * @param chainToFillet The chain to add fillets to.
+         * @param filletRadius Radius of the fillet.
+         * @returns Model object containing paths which fillet the joints in the chain.
+         */
+        function fillet(chainToFillet, filletRadius) {
+            var result = { paths: {} };
+            var added = 0;
+            var links = chainToFillet.links;
+            function add(i1, i2) {
+                var f = MakerJs.path.fillet(links[i1].walkedPath.pathContext, links[i2].walkedPath.pathContext, filletRadius);
+                if (f) {
+                    result.paths['fillet' + added] = f;
+                    added++;
+                }
+            }
+            for (var i = 1; i < links.length; i++) {
+                add(i - 1, i);
+            }
+            if (chainToFillet.endless) {
+                add(i - 1, 0);
+            }
+            if (!added)
+                return null;
+            return result;
+        }
+        chain.fillet = fillet;
+    })(chain = MakerJs.chain || (MakerJs.chain = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
@@ -4305,6 +4342,8 @@ var MakerJs;
                 }, function (walkedPath) {
                     loose.push(walkedPath);
                 });
+                //sort to return largest chains first
+                chainsByLayer[layer].sort(function (a, b) { return b.pathLength - a.pathLength; });
                 callback(chainsByLayer[layer], loose, layer);
             }
         }
@@ -6877,5 +6916,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.20";
+MakerJs.version = "0.9.21";
 ﻿var Bezier = require('bezier-js');
