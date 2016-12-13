@@ -292,6 +292,18 @@ var MakerJsPlayground;
         }
         return Wait;
     }());
+    var Warning = (function () {
+        function Warning() {
+            this.models = {
+                triangle: new makerjs.models.ConnectTheDots(true, [[-200, 0], [200, 0], [0, 346]]),
+                exclamation: new makerjs.models.ConnectTheDots(true, [[-10, 110], [10, 110], [16, 210], [-16, 210]])
+            };
+            this.paths = {
+                point: new makerjs.paths.Circle([0, 75], 16)
+            };
+        }
+        return Warning;
+    }());
     function highlightCodeError(error) {
         var notes = '';
         if (error.lineno || error.colno) {
@@ -1109,7 +1121,7 @@ var MakerJsPlayground;
     }
     MakerJsPlayground.render = render;
     function filenameFromRequireId(id, bustCache) {
-        var filename = MakerJsPlayground.relativePath + id + '.js';
+        var filename = isHttp(id) ? id : (MakerJsPlayground.relativePath + id + '.js');
         if (bustCache) {
             filename += '?' + new Date().valueOf();
         }
@@ -1284,18 +1296,26 @@ var MakerJsPlayground;
         }
         else {
             var scriptname = MakerJsPlayground.querystringParams['script'];
-            if (scriptname && !isHttp(scriptname)) {
-                var paramValues = getHashParams();
-                if (scriptname in makerjs.models) {
-                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
-                    MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
-                    runCodeFromEditor(paramValues);
-                }
-                else {
+            if (scriptname) {
+                if (isHttp(scriptname)) {
                     downloadScript(filenameFromRequireId(scriptname), function (download) {
                         MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
-                        runCodeFromEditor(paramValues);
+                        setProcessedModel(new Warning(), 'WARNING: The script has been loaded from an external site. \n\n Please inspect the code and proceed at your own risk.');
                     });
+                }
+                else {
+                    var paramValues = getHashParams();
+                    if (scriptname in makerjs.models) {
+                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
+                        MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
+                        runCodeFromEditor(paramValues);
+                    }
+                    else {
+                        downloadScript(filenameFromRequireId(scriptname), function (download) {
+                            MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+                            runCodeFromEditor(paramValues);
+                        });
+                    }
                 }
             }
             else {

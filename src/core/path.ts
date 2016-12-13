@@ -381,4 +381,28 @@ namespace MakerJs.path {
         return p;
     }
 
+    /**
+     * Center a path at [0, 0].
+     * 
+     * @param pathToCenter The path to center.
+     */
+    export function center(pathToCenter: IPath) {
+        var m = measure.pathExtents(pathToCenter);
+        var c = point.average(m.high, m.low);
+        var o = point.subtract(pathToCenter.origin || [0, 0], c);
+        move(pathToCenter, o);
+        return pathToCenter;
+    }
+
+    /**
+     * Move a path so its bounding box begins at [0, 0].
+     * 
+     * @param pathToZero The path to zero.
+     */
+    export function zero(pathToZero: IPath) {
+        var m = measure.pathExtents(pathToZero);
+        var z = point.subtract(pathToZero.origin || [0, 0], m.low);
+        move(pathToZero, z);
+        return pathToZero;
+    }
 }

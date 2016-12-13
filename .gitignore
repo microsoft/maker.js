@@ -9,3 +9,4 @@ web.config
 CONTRIBUTING.md
 *.sln
 /.vs
+/docs/api/assets
