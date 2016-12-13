@@ -1051,6 +1051,31 @@ var MakerJs;
             return p;
         }
         path.converge = converge;
+        /**
+         * Center a path at [0, 0].
+         *
+         * @param pathToCenter The path to center.
+         */
+        function center(pathToCenter) {
+            var m = MakerJs.measure.pathExtents(pathToCenter);
+            var c = MakerJs.point.average(m.high, m.low);
+            var o = MakerJs.point.subtract(pathToCenter.origin || [0, 0], c);
+            move(pathToCenter, o);
+            return pathToCenter;
+        }
+        path.center = center;
+        /**
+         * Move a path so its bounding box begins at [0, 0].
+         *
+         * @param pathToZero The path to zero.
+         */
+        function zero(pathToZero) {
+            var m = MakerJs.measure.pathExtents(pathToZero);
+            var z = MakerJs.point.subtract(pathToZero.origin || [0, 0], m.low);
+            move(pathToZero, z);
+            return pathToZero;
+        }
+        path.zero = zero;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -6916,5 +6941,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.21";
+MakerJs.version = "0.9.22";
 ﻿var Bezier = require('bezier-js');

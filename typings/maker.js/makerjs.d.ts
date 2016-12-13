@@ -973,6 +973,18 @@ declare namespace MakerJs.path {
      * @param useOriginB Optional flag to converge the origin point of lineB instead of the end point.
      */
     function converge(lineA: IPathLine, lineB: IPathLine, useOriginA?: boolean, useOriginB?: boolean): IPoint;
+    /**
+     * Center a path at [0, 0].
+     *
+     * @param pathToCenter The path to center.
+     */
+    function center(pathToCenter: IPath): IPath;
+    /**
+     * Move a path so its bounding box begins at [0, 0].
+     *
+     * @param pathToZero The path to zero.
+     */
+    function zero(pathToZero: IPath): IPath;
 }
 declare namespace MakerJs.path {
     /**

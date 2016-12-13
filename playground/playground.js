@@ -1297,19 +1297,18 @@ var MakerJsPlayground;
         else {
             var scriptname = MakerJsPlayground.querystringParams['script'];
             if (scriptname) {
-                var paramValues = getHashParams();
-                if (scriptname in makerjs.models) {
-                    var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
-                    MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
-                    runCodeFromEditor(paramValues);
+                if (isHttp(scriptname)) {
+                    downloadScript(filenameFromRequireId(scriptname), function (download) {
+                        MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
+                        setProcessedModel(new Warning(), 'WARNING: The script has been loaded from an external site. \n\n Please inspect the code and proceed at your own risk.');
+                    });
                 }
                 else {
-                    if (isHttp(scriptname)) {
-                        downloadScript(filenameFromRequireId(scriptname), function (download) {
-                            MakerJsPlayground.codeMirrorEditor.getDoc().setValue(download);
-                            //runCodeFromEditor(paramValues);
-                            setProcessedModel(new Warning(), 'WARNING: The script has been loaded from an external site. \n\n Please inspect the code and proceed at your own risk.');
-                        });
+                    var paramValues = getHashParams();
+                    if (scriptname in makerjs.models) {
+                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
+                        MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
+                        runCodeFromEditor(paramValues);
                     }
                     else {
                         downloadScript(filenameFromRequireId(scriptname), function (download) {
