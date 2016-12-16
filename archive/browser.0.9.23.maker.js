@@ -39,14 +39,14 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.10
+ *   version: 0.9.23
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
  *   author: James Halliday <mail@substack.net>
  *   maintainers: domenic <d@domenic.me>, dominictarr <dominic.tarr@gmail.com>, feross <feross@feross.org>, jmm <npm-public@jessemccarthy.net>, mafintosh <mathiasbuus@gmail.com>, maxogden <max@maxogden.com>, mellowmelon <palmermebane@gmail.com>, substack <substack@gmail.com>, terinjokes <terinjokes@gmail.com>, thlorenz <thlorenz@gmx.de>, zertosh <zertosh@gmail.com>
  *   homepage: https://github.com/substack/node-browserify#readme
- *   version: 13.0.1
+ *   version: 13.1.1
  *
  * clone:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -240,6 +240,34 @@ var MakerJs;
      * Version info
      */
     MakerJs.version = 'debug';
+    /**
+     * Enumeration of environment types.
+     */
+    MakerJs.environmentTypes = {
+        BrowserUI: 'browser',
+        NodeJs: 'node',
+        WebWorker: 'worker',
+        Unknown: 'unknown'
+    };
+    /**
+     * @private
+     */
+    function detectEnvironment() {
+        if (('global' in this) && ('process' in this)) {
+            return MakerJs.environmentTypes.NodeJs;
+        }
+        if (('window' in this) && ('document' in this)) {
+            return MakerJs.environmentTypes.BrowserUI;
+        }
+        if (('WorkerGlobalScope' in this) && ('self' in this)) {
+            return MakerJs.environmentTypes.WebWorker;
+        }
+        return MakerJs.environmentTypes.Unknown;
+    }
+    /**
+     * Current execution environment type, should be one of environmentTypes.
+     */
+    MakerJs.environment = detectEnvironment();
     //units
     /**
      * String-based enumeration of unit types: imperial, metric or otherwise.
@@ -853,6 +881,7 @@ var MakerJs;
          * @returns A new point.
          */
         function rotate(pointToRotate, angleInDegrees, rotationOrigin) {
+            if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
             var pointAngleInRadians = MakerJs.angle.ofPointInRadians(rotationOrigin, pointToRotate);
             var d = MakerJs.measure.pointDistance(rotationOrigin, pointToRotate);
             var rotatedPoint = fromPolar(pointAngleInRadians + MakerJs.angle.toRadians(angleInDegrees), d);
@@ -1094,6 +1123,7 @@ var MakerJs;
          * @returns The original path (for chaining).
          */
         function rotate(pathToRotate, angleInDegrees, rotationOrigin) {
+            if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
             if (!pathToRotate || angleInDegrees == 0)
                 return pathToRotate;
             pathToRotate.origin = MakerJs.point.rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
@@ -1190,20 +1220,57 @@ var MakerJs;
         function converge(lineA, lineB, useOriginA, useOriginB) {
             var p = MakerJs.point.fromSlopeIntersection(lineA, lineB);
             if (p) {
+                var lines = [lineA, lineB];
+                var useOrigin = [useOriginA, useOriginB];
+                if (arguments.length === 2) {
+                    //converge to closest
+                    lines.forEach(function (line, i) {
+                        useOrigin[i] = (MakerJs.point.closest(p, [line.origin, line.end]) === line.origin);
+                    });
+                }
                 function setPoint(line, useOrigin) {
+                    var setP;
                     if (useOrigin) {
-                        line.origin = p;
+                        setP = line.origin;
                     }
                     else {
-                        line.end = p;
+                        setP = line.end;
                     }
+                    setP[0] = p[0];
+                    setP[1] = p[1];
                 }
-                setPoint(lineA, useOriginA);
-                setPoint(lineB, useOriginB);
+                lines.forEach(function (line, i) {
+                    setPoint(line, useOrigin[i]);
+                });
             }
             return p;
         }
         path.converge = converge;
+        /**
+         * Center a path at [0, 0].
+         *
+         * @param pathToCenter The path to center.
+         */
+        function center(pathToCenter) {
+            var m = MakerJs.measure.pathExtents(pathToCenter);
+            var c = MakerJs.point.average(m.high, m.low);
+            var o = MakerJs.point.subtract(pathToCenter.origin || [0, 0], c);
+            move(pathToCenter, o);
+            return pathToCenter;
+        }
+        path.center = center;
+        /**
+         * Move a path so its bounding box begins at [0, 0].
+         *
+         * @param pathToZero The path to zero.
+         */
+        function zero(pathToZero) {
+            var m = MakerJs.measure.pathExtents(pathToZero);
+            var z = MakerJs.point.subtract(pathToZero.origin || [0, 0], m.low);
+            move(pathToZero, z);
+            return pathToZero;
+        }
+        path.zero = zero;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -1721,6 +1788,7 @@ var MakerJs;
          * @returns The original model (for chaining).
          */
         function rotate(modelToRotate, angleInDegrees, rotationOrigin) {
+            if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
             if (modelToRotate) {
                 var offsetOrigin = MakerJs.point.subtract(rotationOrigin, modelToRotate.origin);
                 if (modelToRotate.type === MakerJs.models.BezierCurve.typeName) {
@@ -1831,7 +1899,7 @@ var MakerJs;
                 return;
             function walkRecursive(modelContext, layer, offset, route, routeKey) {
                 var newOffset = MakerJs.point.add(modelContext.origin, offset);
-                layer = modelContext.layer || '';
+                layer = layer || '';
                 if (modelContext.paths) {
                     for (var pathId in modelContext.paths) {
                         var pathContext = modelContext.paths[pathId];
@@ -1868,7 +1936,7 @@ var MakerJs;
                             if (!options.beforeChildWalk(walkedModel))
                                 continue;
                         }
-                        walkRecursive(walkedModel.childModel, layer, newOffset, walkedModel.route, walkedModel.routeKey);
+                        walkRecursive(walkedModel.childModel, walkedModel.layer, newOffset, walkedModel.route, walkedModel.routeKey);
                         if (options.afterChildWalk) {
                             options.afterChildWalk(walkedModel);
                         }
@@ -2508,7 +2576,7 @@ var MakerJs;
          * @param prefix Optional prefix to apply to path ids.
          * @returns Model of straight lines with same endpoints as the arc.
          */
-        function straighten(arc, bevel, prefix) {
+        function straighten(arc, bevel, prefix, close) {
             var arcSpan = MakerJs.angle.ofArcSpan(arc);
             var joints = 1;
             if (arcSpan >= 270) {
@@ -2530,7 +2598,7 @@ var MakerJs;
                 a += jointAngleInRadians;
             }
             points.push(MakerJs.point.subtract(ends[1], arc.origin));
-            var result = new MakerJs.models.ConnectTheDots(false, points);
+            var result = new MakerJs.models.ConnectTheDots(close, points);
             result.origin = arc.origin;
             if (typeof prefix === 'string' && prefix.length) {
                 MakerJs.model.prefixPathIds(result, prefix);
@@ -2592,35 +2660,31 @@ var MakerJs;
             model.walk(modelToExpand, walkOptions);
             if (joints) {
                 var roundCaps = result.models['caps'];
+                var straightCaps = { models: {} };
+                result.models['straightcaps'] = straightCaps;
                 model.simplify(roundCaps);
                 //straighten each cap, optionally beveling
                 for (var id in roundCaps.models) {
-                    //add a model container to the caps
-                    roundCaps.models[id].models = {};
+                    //add a model container to the straight caps
+                    straightCaps.models[id] = { models: {} };
                     model.walk(roundCaps.models[id], {
-                        beforeChildWalk: function () {
-                            //don't crawl the model we just added
-                            return false;
-                        },
                         onPath: function (walkedPath) {
                             var arc = walkedPath.pathContext;
-                            //make a small closed shape using the arc itself and the straightened arc
-                            var straightened = MakerJs.path.straighten(arc, joints == 2, walkedPath.pathId + '_');
-                            var arcClone = MakerJs.path.clone(arc);
-                            arcClone.origin = [0, 0];
-                            straightened.paths['arc'] = arcClone;
+                            //make a small closed shape using the straightened arc
+                            var straightened = MakerJs.path.straighten(arc, joints == 2, walkedPath.pathId + '_', true);
                             //union this little pointy shape with the rest of the result
                             model.combine(result, straightened, false, true, false, true, combineOptions);
                             combineOptions.measureA.modelsMeasured = false;
                             delete combineOptions.measureB;
                             //replace the rounded path with the straightened model
-                            roundCaps.models[id].models[walkedPath.pathId] = straightened;
-                            delete roundCaps.models[id].paths[walkedPath.pathId];
+                            straightCaps.models[id].models[walkedPath.pathId] = straightened;
+                            //delete all the paths in the model containing this path
+                            delete walkedPath.modelContext.paths;
                         }
                     });
-                    //delete the paths in the caps
-                    delete roundCaps.models[id].paths;
                 }
+                //delete the round caps
+                delete result.models['caps'];
             }
             return result;
         }
@@ -2928,7 +2992,7 @@ var MakerJs;
          * @param arcA The arc to test.
          * @param arcB The arc to check for overlap.
          * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-         * @returns Boolean true if arc1 is overlapped with arcB.
+         * @returns Boolean true if arcA is overlapped with arcB.
          */
         function isArcOverlapping(arcA, arcB, excludeTangents) {
             var pointsOfIntersection = [];
@@ -3020,7 +3084,7 @@ var MakerJs;
          * @param lineA The line to test.
          * @param lineB The line to check for overlap.
          * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
-         * @returns Boolean true if line1 is overlapped with lineB.
+         * @returns Boolean true if lineA is overlapped with lineB.
          */
         function isLineOverlapping(lineA, lineB, excludeTangents) {
             var pointsOfIntersection = [];
@@ -3038,7 +3102,7 @@ var MakerJs;
          *
          * @param measureA The measurement to test.
          * @param measureB The measurement to check for overlap.
-         * @returns Boolean true if measure1 is overlapped with measureB.
+         * @returns Boolean true if measureA is overlapped with measureB.
          */
         function isMeasurementOverlapping(measureA, measureB) {
             for (var i = 2; i--;) {
@@ -3162,6 +3226,9 @@ var MakerJs;
             var pct = MakerJs.angle.ofArcSpan(arc) / 360;
             value *= pct;
             return value;
+        };
+        pathLengthMap[MakerJs.pathType.BezierSeed] = function (seed) {
+            return MakerJs.models.BezierCurve.computeLength(seed);
         };
         /**
          * Measures the length of a path.
@@ -3815,7 +3882,7 @@ var MakerJs;
             //remember how to undo the rotation we just did
             function unRotate(resultAngle) {
                 var unrotated = resultAngle + lineAngle;
-                return MakerJs.angle.noRevolutions(unrotated);
+                return MakerJs.round(MakerJs.angle.noRevolutions(unrotated));
             }
             //line is horizontal, get the y value from any point
             var lineY = MakerJs.round(clonedLine.origin[1]);
@@ -4189,6 +4256,8 @@ var MakerJs;
          *
          * @param pathA First path to fillet, which will be modified to fit the fillet.
          * @param pathB Second path to fillet, which will be modified to fit the fillet.
+         * @param filletRadius Radius of the fillet.
+         * @param options Optional IPointMatchOptions object to specify pointMatchingDistance.
          * @returns Arc path object of the new fillet.
          */
         function fillet(pathA, pathB, filletRadius, options) {
@@ -4263,6 +4332,41 @@ var MakerJs;
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
+    var chain;
+    (function (chain) {
+        /**
+         * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
+         *
+         * @param chainToFillet The chain to add fillets to.
+         * @param filletRadius Radius of the fillet.
+         * @returns Model object containing paths which fillet the joints in the chain.
+         */
+        function fillet(chainToFillet, filletRadius) {
+            var result = { paths: {} };
+            var added = 0;
+            var links = chainToFillet.links;
+            function add(i1, i2) {
+                var f = MakerJs.path.fillet(links[i1].walkedPath.pathContext, links[i2].walkedPath.pathContext, filletRadius);
+                if (f) {
+                    result.paths['fillet' + added] = f;
+                    added++;
+                }
+            }
+            for (var i = 1; i < links.length; i++) {
+                add(i - 1, i);
+            }
+            if (chainToFillet.endless) {
+                add(i - 1, 0);
+            }
+            if (!added)
+                return null;
+            return result;
+        }
+        chain.fillet = fillet;
+    })(chain = MakerJs.chain || (MakerJs.chain = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
     var kit;
     (function (kit) {
         //construct a model
@@ -4324,6 +4428,7 @@ var MakerJs;
             function followLink(currLink, chain, firstLink) {
                 while (currLink) {
                     chain.links.push(currLink);
+                    chain.pathLength += currLink.pathLength;
                     var next = currLink.reversed ? 0 : 1;
                     var nextPoint = currLink.endPoints[next];
                     var items = connections.findCollection(nextPoint);
@@ -4347,7 +4452,8 @@ var MakerJs;
                 var linkedPaths = connections.collections[i].items;
                 if (linkedPaths && linkedPaths.length > 0) {
                     var chain = {
-                        links: []
+                        links: [],
+                        pathLength: 0
                     };
                     followLink(linkedPaths[0], chain, linkedPaths[0]);
                     if (chain.endless) {
@@ -4359,6 +4465,7 @@ var MakerJs;
                         var firstLink = chain.links[0];
                         chain.links.map(function (link) { link.reversed = !link.reversed; });
                         //remove the last link, it will be added in the call
+                        chain.pathLength -= chain.links[chain.links.length - 1].pathLength;
                         var currLink = chain.links.pop();
                         followLink(currLink, chain, firstLink);
                         if (chain.links.length > 1) {
@@ -4399,6 +4506,7 @@ var MakerJs;
                         connectionMap[layer] = new MakerJs.Collector(comparePoint);
                     }
                     var connections = connectionMap[layer];
+                    var pathLength = MakerJs.measure.pathLength(walkedPath.pathContext);
                     //circles are loops by nature
                     if (walkedPath.pathContext.type === MakerJs.pathType.Circle ||
                         (walkedPath.pathContext.type === MakerJs.pathType.Arc && MakerJs.round(MakerJs.angle.ofArcSpan(walkedPath.pathContext) - 360) === 0) ||
@@ -4407,9 +4515,11 @@ var MakerJs;
                             links: [{
                                     walkedPath: walkedPath,
                                     reversed: null,
-                                    endPoints: null
+                                    endPoints: null,
+                                    pathLength: pathLength
                                 }],
-                            endless: true
+                            endless: true,
+                            pathLength: pathLength
                         };
                         //store circles so that layers fire grouped
                         if (!chainsByLayer[layer]) {
@@ -4421,17 +4531,15 @@ var MakerJs;
                         //gather both endpoints from all non-circle segments
                         var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
                         //don't add lines which are shorter than the tolerance
-                        if (walkedPath.pathContext.type == MakerJs.pathType.Line) {
-                            var distance = MakerJs.measure.pointDistance(endPoints[0], endPoints[1]);
-                            if (distance < opts.pointMatchingDistance) {
-                                return;
-                            }
+                        if (pathLength < opts.pointMatchingDistance) {
+                            return;
                         }
                         for (var i = 0; i < 2; i++) {
                             var link = {
                                 walkedPath: walkedPath,
                                 endPoints: endPoints,
-                                reversed: i != 0
+                                reversed: i != 0,
+                                pathLength: pathLength
                             };
                             connections.addItemToCollection(endPoints[i], link);
                         }
@@ -4454,6 +4562,8 @@ var MakerJs;
                 }, function (walkedPath) {
                     loose.push(walkedPath);
                 });
+                //sort to return largest chains first
+                chainsByLayer[layer].sort(function (a, b) { return b.pathLength - a.pathLength; });
                 callback(chainsByLayer[layer], loose, layer);
             }
         }
@@ -5006,10 +5116,29 @@ var MakerJs;
             if (options === void 0) { options = {}; }
             if (!modelToExport)
                 return '';
+            var container;
+            switch (MakerJs.environment) {
+                case MakerJs.environmentTypes.BrowserUI:
+                    if (!('CAG' in window) || !('CSG' in window)) {
+                        throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add script tags.";
+                    }
+                    container = window;
+                    break;
+                case MakerJs.environmentTypes.NodeJs:
+                    //this can throw if not found
+                    container = require('openjscad-csg');
+                    break;
+                case MakerJs.environmentTypes.WebWorker:
+                    if (!('CAG' in self) || !('CSG' in self)) {
+                        throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
+                    }
+                    container = self;
+                    break;
+            }
             var script = toOpenJsCad(modelToExport, options);
             script += 'return ' + options.functionName + '();';
-            var f = new Function(script);
-            var csg = f();
+            var f = new Function('CAG', 'CSG', script);
+            var csg = f(container.CAG, container.CSG);
             return csg.toStlString();
         }
         exporter.toSTL = toSTL;
@@ -5267,6 +5396,28 @@ var MakerJs;
             return pathDataByLayer;
         }
         /**
+         * Convert a model to SVG path data.
+         *
+         * @param modelToExport Model to export.
+         * @param byLayers Boolean flag (default true) to return a map of path data by layer.
+         * @param origin Optional reference origin.
+         * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
+         */
+        function toSVGPathData(modelToExport, byLayers, origin) {
+            if (byLayers === void 0) { byLayers = true; }
+            var size = MakerJs.measure.modelExtents(modelToExport);
+            if (!origin) {
+                origin = [-size.low[0], size.high[1]];
+            }
+            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, { byLayers: byLayers });
+            var pathDataStringByLayer = {};
+            for (var layer in pathDataArrayByLayer) {
+                pathDataStringByLayer[layer] = pathDataArrayByLayer[layer].join(' ');
+            }
+            return byLayers ? pathDataStringByLayer : pathDataStringByLayer[''];
+        }
+        exporter.toSVGPathData = toSVGPathData;
+        /**
          * Renders an item in SVG markup.
          *
          * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
@@ -5281,8 +5432,9 @@ var MakerJs;
          * @returns String of XML / SVG content.
          */
         function toSVG(itemToExport, options) {
-            function append(value, layer) {
-                if (typeof layer == "string" && layer.length > 0) {
+            function append(value, layer, forcePush) {
+                if (forcePush === void 0) { forcePush = false; }
+                if (!forcePush && typeof layer == "string" && layer.length > 0) {
                     if (!(layer in layers)) {
                         layers[layer] = [];
                     }
@@ -5292,14 +5444,15 @@ var MakerJs;
                     elements.push(value);
                 }
             }
-            function createElement(tagname, attrs, layer, innerText) {
+            function createElement(tagname, attrs, layer, innerText, forcePush) {
                 if (innerText === void 0) { innerText = null; }
+                if (forcePush === void 0) { forcePush = false; }
                 attrs['vector-effect'] = 'non-scaling-stroke';
                 var tag = new exporter.XmlTag(tagname, attrs);
                 if (innerText) {
                     tag.innerText = innerText;
                 }
-                append(tag.toString(), layer);
+                append(tag.toString(), layer, forcePush);
             }
             function fixPoint(pointToFix) {
                 //in DXF Y increases upward. in SVG, Y increases downward
@@ -5393,7 +5546,7 @@ var MakerJs;
                 var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true });
                 for (var layer in pathDataByLayer) {
                     var pathData = pathDataByLayer[layer].join(' ');
-                    createElement("path", { "d": pathData }, layer);
+                    createElement("path", { "d": pathData }, layer, null, true);
                 }
             }
             else {
@@ -6030,6 +6183,10 @@ var MakerJs;
                 }, options);
                 return seeds;
             };
+            BezierCurve.computeLength = function (seed) {
+                var b = seedToBezier(seed);
+                return b.length();
+            };
             BezierCurve.computePoint = function (seed, t) {
                 var s = getScratch(seed);
                 var computedPoint = s.compute(t);
@@ -6391,6 +6548,96 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
+        var Dogbone = (function () {
+            /**
+             * Create a dogbone from width, height, corner radius, style, and bottomless flag.
+             *
+             * Example:
+             * ```
+             * var d = new makerjs.models.Dogbone(50, 100, 5);
+             * ```
+             *
+             * @param width Width of the rectangle.
+             * @param height Height of the rectangle.
+             * @param radius Corner radius.
+             * @param style Optional corner style: 0 (default) for dogbone, 1 for vertical, -1 for horizontal.
+             * @param bottomless Optional flag to omit the bottom line and bottom corners (default false).
+             */
+            function Dogbone(width, height, radius, style, bottomless) {
+                if (style === void 0) { style = 0; }
+                if (bottomless === void 0) { bottomless = false; }
+                this.paths = {};
+                var maxSide = Math.min(height, width) / 2;
+                var maxRadius;
+                switch (style) {
+                    case -1: //horizontal
+                    case 1:
+                        maxRadius = maxSide / 2;
+                        break;
+                    case 0: //equal
+                    default:
+                        maxRadius = maxSide * Math.SQRT2 / 2;
+                        break;
+                }
+                radius = Math.min(radius, maxRadius);
+                var ax;
+                var ay;
+                var lx;
+                var ly;
+                var apexes;
+                switch (style) {
+                    case -1:
+                        ax = 0;
+                        ay = radius;
+                        lx = 0;
+                        ly = radius * 2;
+                        apexes = [180, 0, 0, 180];
+                        break;
+                    case 1:
+                        ax = radius;
+                        ay = 0;
+                        lx = radius * 2;
+                        ly = 0;
+                        apexes = [270, 270, 90, 90];
+                        break;
+                    case 0:
+                    default:
+                        ax = ay = radius / Math.SQRT2;
+                        lx = ly = ax * 2;
+                        apexes = [225, 315, 45, 135];
+                        break;
+                }
+                if (bottomless) {
+                    this.paths['Left'] = new MakerJs.paths.Line([0, 0], [0, height - ly]);
+                    this.paths['Right'] = new MakerJs.paths.Line([width, 0], [width, height - ly]);
+                }
+                else {
+                    this.paths['Left'] = new MakerJs.paths.Line([0, ly], [0, height - ly]);
+                    this.paths['Right'] = new MakerJs.paths.Line([width, ly], [width, height - ly]);
+                    this.paths['Bottom'] = new MakerJs.paths.Line([lx, 0], [width - lx, 0]);
+                    this.paths["BottomLeft"] = new MakerJs.paths.Arc([ax, ay], radius, apexes[0] - 90, apexes[0] + 90);
+                    this.paths["BottomRight"] = new MakerJs.paths.Arc([width - ax, ay], radius, apexes[1] - 90, apexes[1] + 90);
+                }
+                this.paths["TopRight"] = new MakerJs.paths.Arc([width - ax, height - ay], radius, apexes[2] - 90, apexes[2] + 90);
+                this.paths["TopLeft"] = new MakerJs.paths.Arc([ax, height - ay], radius, apexes[3] - 90, apexes[3] + 90);
+                this.paths['Top'] = new MakerJs.paths.Line([lx, height], [width - lx, height]);
+            }
+            return Dogbone;
+        }());
+        models.Dogbone = Dogbone;
+        Dogbone.metaParameters = [
+            { title: "width", type: "range", min: 1, max: 100, value: 50 },
+            { title: "height", type: "range", min: 1, max: 100, value: 100 },
+            { title: "radius", type: "range", min: 0, max: 50, value: 5 },
+            { title: "style", type: "select", value: [0, 1, -1] },
+            { title: "bottomless", type: "bool", value: false }
+        ];
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
         var Dome = (function () {
             function Dome(width, height, radius) {
                 this.paths = {};
@@ -6513,6 +6760,11 @@ var MakerJs;
                 if (selfIntersect === void 0) { selfIntersect = false; }
                 if (isolateCaps === void 0) { isolateCaps = false; }
                 this.paths = {};
+                var capRoot;
+                if (isolateCaps) {
+                    capRoot = { models: {} };
+                    this.models = { 'Caps': capRoot };
+                }
                 if (slotRadius <= 0 || sweepRadius <= 0)
                     return;
                 startAngle = MakerJs.angle.noRevolutions(startAngle);
@@ -6521,12 +6773,15 @@ var MakerJs;
                     return;
                 if (endAngle < startAngle)
                     endAngle += 360;
-                var capModel = this;
-                if (isolateCaps) {
-                    this.models = { "Caps": { paths: {} } };
-                    capModel = this.models["Caps"];
-                }
                 var addCap = function (id, tiltAngle, offsetStartAngle, offsetEndAngle) {
+                    var capModel;
+                    if (isolateCaps) {
+                        capModel = { paths: {} };
+                        capRoot.models[id] = capModel;
+                    }
+                    else {
+                        capModel = _this;
+                    }
                     return capModel.paths[id] = new MakerJs.paths.Arc(MakerJs.point.fromPolar(MakerJs.angle.toRadians(tiltAngle), sweepRadius), slotRadius, tiltAngle + offsetStartAngle, tiltAngle + offsetEndAngle);
                 };
                 var addSweep = function (id, offsetRadius) {
@@ -6685,19 +6940,31 @@ var MakerJs;
     (function (models) {
         var Slot = (function () {
             function Slot(origin, endPoint, radius, isolateCaps) {
+                var _this = this;
                 if (isolateCaps === void 0) { isolateCaps = false; }
                 this.paths = {};
-                var capModel = this;
+                var capRoot;
                 if (isolateCaps) {
-                    this.models = { "Caps": { paths: {} } };
-                    capModel = this.models["Caps"];
+                    capRoot = { models: {} };
+                    this.models = { 'Caps': capRoot };
                 }
+                var addCap = function (id, capPath) {
+                    var capModel;
+                    if (isolateCaps) {
+                        capModel = { paths: {} };
+                        capRoot.models[id] = capModel;
+                    }
+                    else {
+                        capModel = _this;
+                    }
+                    capModel.paths[id] = capPath;
+                };
                 var a = MakerJs.angle.ofPointInDegrees(origin, endPoint);
                 var len = MakerJs.measure.pointDistance(origin, endPoint);
                 this.paths['Top'] = new MakerJs.paths.Line([0, radius], [len, radius]);
                 this.paths['Bottom'] = new MakerJs.paths.Line([0, -radius], [len, -radius]);
-                capModel.paths['StartCap'] = new MakerJs.paths.Arc([0, 0], radius, 90, 270);
-                capModel.paths['EndCap'] = new MakerJs.paths.Arc([len, 0], radius, 270, 90);
+                addCap('StartCap', new MakerJs.paths.Arc([0, 0], radius, 90, 270));
+                addCap('EndCap', new MakerJs.paths.Arc([len, 0], radius, 270, 90));
                 MakerJs.model.rotate(this, a, [0, 0]);
                 this.origin = origin;
             }
@@ -6786,7 +7053,7 @@ var MakerJs;
     var models;
     (function (models) {
         var Text = (function () {
-            function Text(font, text, fontSize, combine, centerCharacterOrigin) {
+            function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy) {
                 var _this = this;
                 if (combine === void 0) { combine = false; }
                 if (centerCharacterOrigin === void 0) { centerCharacterOrigin = false; }
@@ -6830,19 +7097,21 @@ var MakerJs;
                                 }
                                 break;
                             case 'C':
-                                addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0]));
+                                addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0], bezierAccuracy));
                                 break;
                             case 'Q':
-                                addModel(new models.BezierCurve(currPoint, points[1], points[0]));
+                                addModel(new models.BezierCurve(currPoint, points[1], points[0], bezierAccuracy));
                                 break;
                         }
                         currPoint = points[0];
                     });
                     charModel.origin = [x, 0];
-                    if (centerCharacterOrigin) {
+                    if (centerCharacterOrigin && (charModel.paths || charModel.models)) {
                         var m = MakerJs.measure.modelExtents(charModel);
-                        var w = m.high[0] - m.low[0];
-                        MakerJs.model.originate(charModel, [x + w / 2, 0]);
+                        if (m) {
+                            var w = m.high[0] - m.low[0];
+                            MakerJs.model.originate(charModel, [m.low[0] + w / 2, 0]);
+                        }
                     }
                     if (combine && charIndex > 0) {
                         MakerJs.model.combine(_this, charModel, false, true, false, true, combineOptions);
@@ -6858,8 +7127,15 @@ var MakerJs;
             return Text;
         }());
         models.Text = Text;
+        Text.metaParameters = [
+            { title: "font", type: "font", value: '*' },
+            { title: "text", type: "text", value: 'Hello' },
+            { title: "font size", type: "range", min: 10, max: 200, value: 72 },
+            { title: "combine", type: "bool", value: false },
+            { title: "center character origin", type: "bool", value: false }
+        ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.10";
+MakerJs.version = "0.9.23";
 
-},{"clone":2}]},{},[]);
+},{"clone":2,"openjscad-csg":1}]},{},[]);

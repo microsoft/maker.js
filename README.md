@@ -53,6 +53,7 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 * [Bolt Circle](http://microsoft.github.io/maker.js/playground/?script=BoltCircle)
 * [Bolt Rectangle](http://microsoft.github.io/maker.js/playground/?script=BoltRectangle)
 * [Connect the dots](http://microsoft.github.io/maker.js/playground/?script=ConnectTheDots)
+* [Dogbone](http://microsoft.github.io/maker.js/playground/?script=Dogbone)
 * [Dome](http://microsoft.github.io/maker.js/playground/?script=Dome)
 * [Ellipse](http://microsoft.github.io/maker.js/playground/?script=Ellipse)
 * [Elliptic Arc](http://microsoft.github.io/maker.js/playground/?script=EllipticArc)
