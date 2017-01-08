@@ -122,6 +122,25 @@
     }
 
     /**
+     * Find a single chain within a model, across all layers. Shorthand of findChains; useful when you know there is only one chain to find in your model.
+     * 
+     * @param modelContext The model to search for a chain.
+     * @returns A chain object or null if chains were not found.
+     */
+    export function findSingleChain(modelContext: IModel) {
+        var singleChain: IChain = null;
+
+        findChains(modelContext,
+            (chains: IChain[], loose: IWalkPath[], layer: string) => {
+                singleChain = chains[0];
+            },
+            { byLayers: false }
+        );
+
+        return singleChain;
+    }
+
+    /**
      * Find paths that have common endpoints and form chains.
      * 
      * @param modelContext The model to search for chains.
@@ -233,5 +252,86 @@
         }
 
     }
+}
 
+namespace MakerJs.chain {
+
+    /**
+     * @private
+     */
+    function removeDuplicateEnds(endless: boolean, points: IPoint[]) {
+        if (!endless || points.length < 2) return;
+        if (measure.isPointEqual(points[0], points[points.length - 1], .00001)) {
+            points.pop();
+        }
+    }
+
+    /**
+     * Get points along a chain of paths.
+     * 
+     * @param chainContext Chain of paths to get points from.
+     * @param distance Distance along the chain between points.
+     * @param maxPoints Maximum number of points to retrieve.
+     * @returns Array of points which are on the chain spread at a uniform interval.
+     */
+    export function toPoints(chainContext: IChain, distance: number, maxPoints?: number): IPoint[] {
+        var result: IPoint[] = [];
+
+        var t = 0;
+
+        for (var i = 0; i < chainContext.links.length; i++) {
+            var link = chainContext.links[i];
+            var wp = link.walkedPath;
+            var len = link.pathLength;
+
+            while (round(len - t) > 0) {
+                var r = t / len;
+                if (link.reversed) {
+                    r = 1 - r;
+                }
+
+                result.push(point.add(point.middle(wp.pathContext, r), wp.offset));
+
+                if (maxPoints && result.length >= maxPoints) return result;
+
+                t += distance;
+            }
+
+            t -= len;
+        }
+
+        removeDuplicateEnds(chainContext.endless, result);
+        return result;
+    }
+
+    /**
+     * Get key points (a minimal a number of points) along a chain of paths.
+     * 
+     * @param chainContext Chain of paths to get points from.
+     * @param maxArcFacet The maximum length between points on an arc or circle.
+     * @returns Array of points which are on the chain.
+     */
+    export function toKeyPoints(chainContext: IChain, maxArcFacet?: number): IPoint[] {
+        var result: IPoint[] = [];
+
+        for (var i = 0; i < chainContext.links.length; i++) {
+            var link = chainContext.links[i];
+            var wp = link.walkedPath;
+            var keyPoints = path.toKeyPoints(wp.pathContext, maxArcFacet);
+            if (keyPoints.length > 0) {
+                if (link.reversed) {
+                    keyPoints.reverse();
+                }
+                if (i > 0) {
+                    keyPoints.shift();
+                }
+
+                var offsetPathPoints = keyPoints.map(p => point.add(p, wp.offset));
+                result.push.apply(result, offsetPathPoints);
+            }
+        }
+
+        removeDuplicateEnds(chainContext.endless, result);
+        return result;
+    }
 }
