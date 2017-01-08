@@ -190,15 +190,22 @@ namespace MakerJs.point {
     /**
      * @private
      */
+    function midCircle(circle: IPathCircle, midAngle: number) {
+        return point.add(circle.origin, point.fromPolar(angle.toRadians(midAngle), circle.radius));
+    }
+
+    /**
+     * @private
+     */
     var middleMap: { [type: string]: (pathValue: IPath, ratio: number) => IPoint } = {};
 
     middleMap[pathType.Arc] = function (arc: IPathArc, ratio: number) {
         var midAngle = angle.ofArcMiddle(arc, ratio);
-        return point.add(arc.origin, point.fromPolar(angle.toRadians(midAngle), arc.radius));
+        return midCircle(arc, midAngle);
     };
 
     middleMap[pathType.Circle] = function (circle: IPathCircle, ratio: number) {
-        return point.add(circle.origin, [-circle.radius, 0]);
+        return midCircle(circle, 360 * ratio);
     };
 
     middleMap[pathType.Line] = function (line: IPathLine, ratio: number) {
