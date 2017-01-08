@@ -35,6 +35,7 @@
     "src/models/Ellipse.ts",
     "src/models/ConnectTheDots.ts",
     "src/models/Polygon.ts",
+    "src/models/Holes.ts",
     "src/models/BoltCircle.ts",
     "src/models/BoltRectangle.ts",
     "src/models/Dogbone.ts",
