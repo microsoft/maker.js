@@ -6,16 +6,10 @@ namespace MakerJs.models {
 
         constructor(width: number, height: number, holeRadius: number) {
 
-            var holes: { [id2: string]: IPoint } = {
-                "BottomLeft": [0, 0],
-                "BottomRight": [width, 0],
-                "TopRight": [width, height],
-                "TopLeft": [0, height]
-            };
+            var points = [[0, 0], [width, 0], [width, height], [0, height]];
+            var ids = ["BottomLeft_bolt", "BottomRight_bolt", "TopRight_bolt", "TopLeft_bolt"];
 
-            for (var id2 in holes) {
-                this.paths[id2 + "_bolt"] = new paths.Circle(holes[id2], holeRadius);
-            }
+            this.paths = new Holes(holeRadius, points, ids).paths;
         }
     }
 

@@ -8,10 +8,9 @@ namespace MakerJs.models {
 
             var points = Polygon.getPoints(boltCount, boltRadius, firstBoltAngleInDegrees);
 
-            for (var i = 0; i < boltCount; i++) {
-                this.paths["bolt " + i] = new paths.Circle(points[i], holeRadius);
-            }
+            var ids = points.map((p, i) => "bolt " + i);
 
+            this.paths = new Holes(holeRadius, points, ids).paths;
         }
     }
 
