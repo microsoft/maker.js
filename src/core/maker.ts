@@ -779,6 +779,16 @@ namespace MakerJs {
     }
 
     /**
+     * Test to see if an object implements the required properties of a chain.
+     * 
+     * @param item The item to test.
+     */
+    export function isChain(item: any): boolean {
+        var x = item as IChain;
+        return x && x.links && Array.isArray(x.links) && !isNaN(x.pathLength);
+    }
+
+    /**
      * Callback to model.findChains() with resulting array of chains and unchained paths.
      */
     export interface IChainCallback {
