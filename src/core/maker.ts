@@ -156,7 +156,7 @@ namespace MakerJs {
      * @returns True if the object is a number type.
      */
     export function isNumber(value: any): boolean {
-        return typeof value === 'number';
+        return !isNaN(value);
     }
 
     /**
@@ -785,7 +785,7 @@ namespace MakerJs {
      */
     export function isChain(item: any): boolean {
         var x = item as IChain;
-        return x && x.links && Array.isArray(x.links) && !isNaN(x.pathLength);
+        return x && x.links && Array.isArray(x.links) && isNumber(x.pathLength);
     }
 
     /**
