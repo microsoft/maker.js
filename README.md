@@ -32,6 +32,8 @@ Easily add a curvature at the joint between any 2 paths, using a [traditional or
 
 Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains) or [loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
 
+NEW: Get the points along a path or a chain of paths.
+
 [Expand paths](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Expanding%20paths) to simulate a stroke thickness, with the option to bevel joints.
 
 [Outline model](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Outlining%20a%20model) to create a surrounding outline, with the option to bevel joints.
@@ -57,6 +59,7 @@ Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.mod
 * [Dome](http://microsoft.github.io/maker.js/playground/?script=Dome)
 * [Ellipse](http://microsoft.github.io/maker.js/playground/?script=Ellipse)
 * [Elliptic Arc](http://microsoft.github.io/maker.js/playground/?script=EllipticArc)
+* NEW [Holes](http://microsoft.github.io/maker.js/playground/?script=Holes)
 * [Oval](http://microsoft.github.io/maker.js/playground/?script=Oval)
 * [OvalArc](http://microsoft.github.io/maker.js/playground/?script=OvalArc)
 * [Polygon](http://microsoft.github.io/maker.js/playground/?script=Polygon)
