@@ -11,6 +11,9 @@ title: Api - chain Module
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#fillet" class="tsd-kind-icon">fillet</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.chain.html#removeduplicateends" class="tsd-kind-icon">remove<wbr>Duplicate<wbr>Ends</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#tokeypoints" class="tsd-kind-icon">to<wbr>Key<wbr>Points</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#topoints" class="tsd-kind-icon">to<wbr>Points</a></li>
 				</ul>
 			</section>
 		</div>
@@ -28,7 +31,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e2919b/src/core/fillet.ts#L463">core/fillet.ts:463</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/fillet.ts#L463">core/fillet.ts:463</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -53,6 +56,116 @@ title: Api - chain Module
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
 				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="removeduplicateends" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> remove<wbr>Duplicate<wbr>Ends</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">remove<wbr>Duplicate<wbr>Ends<span class="tsd-signature-symbol">(</span>endless<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/chain.ts#L262">core/chain.ts:262</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>endless: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5>points: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="tokeypoints" class="tsd-anchor"></a>
+		<h3>to<wbr>Key<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">to<wbr>Key<wbr>Points<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, maxArcFacet<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/chain.ts#L314">core/chain.ts:314</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get key points (a minimal a number of points) along a chain of paths.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain of paths to get points from.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> maxArcFacet: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The maximum length between points on an arc or circle.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array of points which are on the chain.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="topoints" class="tsd-anchor"></a>
+		<h3>to<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">to<wbr>Points<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, maxPoints<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/chain.ts#L277">core/chain.ts:277</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get points along a chain of paths.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain of paths to get points from.</p>
+						</div>
+					</li>
+					<li>
+						<h5>distance: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Distance along the chain between points.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> maxPoints: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Maximum number of points to retrieve.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array of points which are on the chain spread at a uniform interval.</p>
 			</li>
 		</ul>
 	</section>

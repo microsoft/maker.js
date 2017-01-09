@@ -1,21 +1,20 @@
 ---
 layout: posts
-title: Api - IFindChainsOptions Interface
+title: Api - Holes Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
-<section class="tsd-panel tsd-comment">
-	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>Options to pass to model.findLoops.</p>
-		</div>
-	</div>
-</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipointmatchoptions.html" class="tsd-signature-type">IPointMatchOptions</a>
+			<span class="target">Holes</span>
 		</li>
+	</ul>
+</section>
+<section class="tsd-panel">
+	<h3>Implements</h3>
+	<ul class="tsd-hierarchy">
+		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -23,63 +22,90 @@ title: Api - IFindChainsOptions Interface
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
+				<h3>Constructors</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.holes.html#constructor" class="tsd-kind-icon">constructor</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindchainsoptions.html#bylayers" class="tsd-kind-icon">by<wbr>Layers</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ifindchainsoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindchainsoptions.html#shallow" class="tsd-kind-icon">shallow</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.holes.html#paths" class="tsd-kind-icon">paths</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
+	<h2>Constructors</h2>
+	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+		<a name="constructor" class="tsd-anchor"></a>
+		<h3>constructor</h3>
+		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Holes<span class="tsd-signature-symbol">(</span>holeRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, ids<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.holes.html" class="tsd-signature-type">Holes</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/models/Holes.ts#L4">models/Holes.ts:4</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create an array of circles of the same radius from an array of center points.</p>
+					</div>
+					<p>Example:</p>
+					<pre><code>//Create some holes from an<span class="hljs-built_in"> array </span>of points
+var makerjs = require('makerjs');
+var model =<span class="hljs-built_in"> new </span>makerjs.models.Holes(10, [[0, 0],[50, 0],[25, 40]]);
+var svg = makerjs.exporter.toSVG(model);
+document.write(svg);
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>holeRadius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Hole radius.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>points: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Array of points for origin of each hole.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> ids: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Optional array of corresponding path ids for the holes.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.holes.html" class="tsd-signature-type">Holes</a></h4>
+			</li>
+		</ul>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="bylayers" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> by<wbr>Layers</h3>
-		<div class="tsd-signature tsd-kind-icon">by<wbr>Layers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="paths" class="tsd-anchor"></a>
+		<h3>paths</h3>
+		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/maker.ts#L807">core/maker.ts:807</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/models/Holes.ts#L4">models/Holes.ts:4</a></li>
 			</ul>
 		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Flag to separate chains by layers.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="pointmatchingdistance" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
-		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/maker.ts#L537">core/maker.ts:537</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Max distance to consider two points as the same.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="shallow" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> shallow</h3>
-		<div class="tsd-signature tsd-kind-icon">shallow<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/maker.ts#L812">core/maker.ts:812</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Flag to not recurse models, look only within current model&#39;s immediate paths.</p>
-			</div>
-		</div>
 	</section>
 </section>
 </div>
