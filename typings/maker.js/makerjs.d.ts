@@ -581,6 +581,12 @@ declare namespace MakerJs {
         pathLength: number;
     }
     /**
+     * Test to see if an object implements the required properties of a chain.
+     *
+     * @param item The item to test.
+     */
+    function isChain(item: any): boolean;
+    /**
      * Callback to model.findChains() with resulting array of chains and unchained paths.
      */
     interface IChainCallback {
@@ -973,6 +979,22 @@ declare namespace MakerJs.path {
      * @param useOriginB Optional flag to converge the origin point of lineB instead of the end point.
      */
     function converge(lineA: IPathLine, lineB: IPathLine, useOriginA?: boolean, useOriginB?: boolean): IPoint;
+    /**
+     * Get points along a path.
+     *
+     * @param pathContext Path to get points from.
+     * @param numberOfPoints Number of points to divide the path.
+     * @returns Array of points which are on the path spread at a uniform interval.
+     */
+    function toPoints(pathContext: IPath, numberOfPoints: number): IPoint[];
+    /**
+     * Get key points (a minimal a number of points) along a path.
+     *
+     * @param pathContext Path to get points from.
+     * @param maxArcFacet Optional maximum length between points on an arc or circle.
+     * @returns Array of points which are on the path.
+     */
+    function toKeyPoints(pathContext: IPath, maxArcFacet?: number): IPoint[];
     /**
      * Center a path at [0, 0].
      *
@@ -1747,12 +1769,38 @@ declare namespace MakerJs.kit {
 }
 declare namespace MakerJs.model {
     /**
+     * Find a single chain within a model, across all layers. Shorthand of findChains; useful when you know there is only one chain to find in your model.
+     *
+     * @param modelContext The model to search for a chain.
+     * @returns A chain object or null if chains were not found.
+     */
+    function findSingleChain(modelContext: IModel): IChain;
+    /**
      * Find paths that have common endpoints and form chains.
      *
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
      */
     function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): void;
+}
+declare namespace MakerJs.chain {
+    /**
+     * Get points along a chain of paths.
+     *
+     * @param chainContext Chain of paths to get points from.
+     * @param distance Distance along the chain between points.
+     * @param maxPoints Maximum number of points to retrieve.
+     * @returns Array of points which are on the chain spread at a uniform interval.
+     */
+    function toPoints(chainContext: IChain, distance: number, maxPoints?: number): IPoint[];
+    /**
+     * Get key points (a minimal a number of points) along a chain of paths.
+     *
+     * @param chainContext Chain of paths to get points from.
+     * @param maxArcFacet The maximum length between points on an arc or circle.
+     * @returns Array of points which are on the chain.
+     */
+    function toKeyPoints(chainContext: IChain, maxArcFacet?: number): IPoint[];
 }
 declare namespace MakerJs.model {
     /**
@@ -2103,6 +2151,28 @@ declare namespace MakerJs.models {
         constructor(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number, circumscribed?: boolean);
         static circumscribedRadius(radius: number, angleInRadians: number): number;
         static getPoints(numberOfSides: number, radius: number, firstCornerAngleInDegrees?: number, circumscribed?: boolean): IPoint[];
+    }
+}
+declare namespace MakerJs.models {
+    class Holes implements IModel {
+        paths: IPathMap;
+        /**
+         * Create an array of circles of the same radius from an array of center points.
+         *
+         * Example:
+         * ```
+         * //Create some holes from an array of points
+         * var makerjs = require('makerjs');
+         * var model = new makerjs.models.Holes(10, [[0, 0],[50, 0],[25, 40]]);
+         * var svg = makerjs.exporter.toSVG(model);
+         * document.write(svg);
+         * ```
+         *
+         * @param holeRadius Hole radius.
+         * @param points Array of points for origin of each hole.
+         * @param ids Optional array of corresponding path ids for the holes.
+         */
+        constructor(holeRadius: number, points: IPoint[], ids?: string[]);
     }
 }
 declare namespace MakerJs.models {
