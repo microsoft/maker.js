@@ -382,6 +382,74 @@ namespace MakerJs.path {
     }
 
     /**
+     * Get points along a path.
+     * 
+     * @param pathContext Path to get points from.
+     * @param numberOfPoints Number of points to divide the path.
+     * @returns Array of points which are on the path spread at a uniform interval.
+     */
+    export function toPoints(pathContext: IPath, numberOfPoints: number): IPoint[] {
+
+        //avoid division by zero when there is only one point
+        if (numberOfPoints == 1) {
+            return [point.middle(pathContext)];
+        }
+
+        var points: IPoint[] = [];
+
+        var base = numberOfPoints;
+
+        if (pathContext.type != pathType.Circle) base--;
+        
+        for (var i = 0; i < numberOfPoints; i++) {
+            points.push(point.middle(pathContext, i / base));
+        }
+
+        return points;
+    }
+
+    /**
+     * @private
+     */
+    var numberOfKeyPointsMap: { [type: string]: (pathContext: IPath, maxPointDistance?: number) => number } = {};
+
+    numberOfKeyPointsMap[pathType.Line] = function (line: IPathLine) {
+        return 2;
+    };
+
+    numberOfKeyPointsMap[pathType.Circle] = function (circle: IPathCircle, maxPointDistance?: number) {
+        var len = measure.pathLength(circle);
+        if (!len) return 0;
+        maxPointDistance = maxPointDistance || len;
+        return Math.max(8, Math.ceil(len / (maxPointDistance || len)));
+    };
+
+    numberOfKeyPointsMap[pathType.Arc] = function (arc: IPathArc, maxPointDistance?: number) {
+        var len = measure.pathLength(arc);
+        if (!len) return 0;
+        var minPoints = Math.ceil(angle.ofArcSpan(arc) / 45) + 1;
+        return Math.max(minPoints, Math.ceil(len / (maxPointDistance || len)));
+    };
+
+    /**
+     * Get key points (a minimal a number of points) along a path.
+     * 
+     * @param pathContext Path to get points from.
+     * @param maxArcFacet Optional maximum length between points on an arc or circle.
+     * @returns Array of points which are on the path.
+     */
+    export function toKeyPoints(pathContext: IPath, maxArcFacet?: number): IPoint[] {
+        var fn = numberOfKeyPointsMap[pathContext.type];
+        if (fn) {
+            var numberOfKeyPoints = fn(pathContext, maxArcFacet);
+            if (numberOfKeyPoints) {
+                return toPoints(pathContext, numberOfKeyPoints);
+            }
+        }
+        return [];
+    }
+
+    /**
      * Center a path at [0, 0].
      * 
      * @param pathToCenter The path to center.

@@ -180,7 +180,7 @@ var MakerJs;
      * @returns True if the object is a number type.
      */
     function isNumber(value) {
-        return typeof value === 'number';
+        return !isNaN(value);
     }
     MakerJs.isNumber = isNumber;
     /**
@@ -289,6 +289,16 @@ var MakerJs;
         return item && (item.paths || item.models);
     }
     MakerJs.isModel = isModel;
+    /**
+     * Test to see if an object implements the required properties of a chain.
+     *
+     * @param item The item to test.
+     */
+    function isChain(item) {
+        var x = item;
+        return x && x.links && Array.isArray(x.links) && isNumber(x.pathLength);
+    }
+    MakerJs.isChain = isChain;
 })(MakerJs || (MakerJs = {}));
 //CommonJs
 module.exports = MakerJs;
@@ -609,13 +619,19 @@ var MakerJs;
         /**
          * @private
          */
+        function midCircle(circle, midAngle) {
+            return point.add(circle.origin, point.fromPolar(MakerJs.angle.toRadians(midAngle), circle.radius));
+        }
+        /**
+         * @private
+         */
         var middleMap = {};
         middleMap[MakerJs.pathType.Arc] = function (arc, ratio) {
             var midAngle = MakerJs.angle.ofArcMiddle(arc, ratio);
-            return point.add(arc.origin, point.fromPolar(MakerJs.angle.toRadians(midAngle), arc.radius));
+            return midCircle(arc, midAngle);
         };
         middleMap[MakerJs.pathType.Circle] = function (circle, ratio) {
-            return point.add(circle.origin, [-circle.radius, 0]);
+            return midCircle(circle, 360 * ratio);
         };
         middleMap[MakerJs.pathType.Line] = function (line, ratio) {
             function ration(a, b) {
@@ -1051,6 +1067,67 @@ var MakerJs;
             return p;
         }
         path.converge = converge;
+        /**
+         * Get points along a path.
+         *
+         * @param pathContext Path to get points from.
+         * @param numberOfPoints Number of points to divide the path.
+         * @returns Array of points which are on the path spread at a uniform interval.
+         */
+        function toPoints(pathContext, numberOfPoints) {
+            //avoid division by zero when there is only one point
+            if (numberOfPoints == 1) {
+                return [MakerJs.point.middle(pathContext)];
+            }
+            var points = [];
+            var base = numberOfPoints;
+            if (pathContext.type != MakerJs.pathType.Circle)
+                base--;
+            for (var i = 0; i < numberOfPoints; i++) {
+                points.push(MakerJs.point.middle(pathContext, i / base));
+            }
+            return points;
+        }
+        path.toPoints = toPoints;
+        /**
+         * @private
+         */
+        var numberOfKeyPointsMap = {};
+        numberOfKeyPointsMap[MakerJs.pathType.Line] = function (line) {
+            return 2;
+        };
+        numberOfKeyPointsMap[MakerJs.pathType.Circle] = function (circle, maxPointDistance) {
+            var len = MakerJs.measure.pathLength(circle);
+            if (!len)
+                return 0;
+            maxPointDistance = maxPointDistance || len;
+            return Math.max(8, Math.ceil(len / (maxPointDistance || len)));
+        };
+        numberOfKeyPointsMap[MakerJs.pathType.Arc] = function (arc, maxPointDistance) {
+            var len = MakerJs.measure.pathLength(arc);
+            if (!len)
+                return 0;
+            var minPoints = Math.ceil(MakerJs.angle.ofArcSpan(arc) / 45) + 1;
+            return Math.max(minPoints, Math.ceil(len / (maxPointDistance || len)));
+        };
+        /**
+         * Get key points (a minimal a number of points) along a path.
+         *
+         * @param pathContext Path to get points from.
+         * @param maxArcFacet Optional maximum length between points on an arc or circle.
+         * @returns Array of points which are on the path.
+         */
+        function toKeyPoints(pathContext, maxArcFacet) {
+            var fn = numberOfKeyPointsMap[pathContext.type];
+            if (fn) {
+                var numberOfKeyPoints = fn(pathContext, maxArcFacet);
+                if (numberOfKeyPoints) {
+                    return toPoints(pathContext, numberOfKeyPoints);
+                }
+            }
+            return [];
+        }
+        path.toKeyPoints = toKeyPoints;
         /**
          * Center a path at [0, 0].
          *
@@ -4288,6 +4365,20 @@ var MakerJs;
             }
         }
         /**
+         * Find a single chain within a model, across all layers. Shorthand of findChains; useful when you know there is only one chain to find in your model.
+         *
+         * @param modelContext The model to search for a chain.
+         * @returns A chain object or null if chains were not found.
+         */
+        function findSingleChain(modelContext) {
+            var singleChain = null;
+            findChains(modelContext, function (chains, loose, layer) {
+                singleChain = chains[0];
+            }, { byLayers: false });
+            return singleChain;
+        }
+        model.findSingleChain = findSingleChain;
+        /**
          * Find paths that have common endpoints and form chains.
          *
          * @param modelContext The model to search for chains.
@@ -4374,6 +4465,81 @@ var MakerJs;
         }
         model.findChains = findChains;
     })(model = MakerJs.model || (MakerJs.model = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var chain;
+    (function (chain) {
+        /**
+         * @private
+         */
+        function removeDuplicateEnds(endless, points) {
+            if (!endless || points.length < 2)
+                return;
+            if (MakerJs.measure.isPointEqual(points[0], points[points.length - 1], .00001)) {
+                points.pop();
+            }
+        }
+        /**
+         * Get points along a chain of paths.
+         *
+         * @param chainContext Chain of paths to get points from.
+         * @param distance Distance along the chain between points.
+         * @param maxPoints Maximum number of points to retrieve.
+         * @returns Array of points which are on the chain spread at a uniform interval.
+         */
+        function toPoints(chainContext, distance, maxPoints) {
+            var result = [];
+            var t = 0;
+            for (var i = 0; i < chainContext.links.length; i++) {
+                var link = chainContext.links[i];
+                var wp = link.walkedPath;
+                var len = link.pathLength;
+                while (MakerJs.round(len - t) > 0) {
+                    var r = t / len;
+                    if (link.reversed) {
+                        r = 1 - r;
+                    }
+                    result.push(MakerJs.point.add(MakerJs.point.middle(wp.pathContext, r), wp.offset));
+                    if (maxPoints && result.length >= maxPoints)
+                        return result;
+                    t += distance;
+                }
+                t -= len;
+            }
+            removeDuplicateEnds(chainContext.endless, result);
+            return result;
+        }
+        chain.toPoints = toPoints;
+        /**
+         * Get key points (a minimal a number of points) along a chain of paths.
+         *
+         * @param chainContext Chain of paths to get points from.
+         * @param maxArcFacet The maximum length between points on an arc or circle.
+         * @returns Array of points which are on the chain.
+         */
+        function toKeyPoints(chainContext, maxArcFacet) {
+            var result = [];
+            for (var i = 0; i < chainContext.links.length; i++) {
+                var link = chainContext.links[i];
+                var wp = link.walkedPath;
+                var keyPoints = MakerJs.path.toKeyPoints(wp.pathContext, maxArcFacet);
+                if (keyPoints.length > 0) {
+                    if (link.reversed) {
+                        keyPoints.reverse();
+                    }
+                    if (i > 0) {
+                        keyPoints.shift();
+                    }
+                    var offsetPathPoints = keyPoints.map(function (p) { return MakerJs.point.add(p, wp.offset); });
+                    result.push.apply(result, offsetPathPoints);
+                }
+            }
+            removeDuplicateEnds(chainContext.endless, result);
+            return result;
+        }
+        chain.toKeyPoints = toKeyPoints;
+    })(chain = MakerJs.chain || (MakerJs.chain = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
@@ -6302,14 +6468,54 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
+        var Holes = (function () {
+            /**
+             * Create an array of circles of the same radius from an array of center points.
+             *
+             * Example:
+             * ```
+             * //Create some holes from an array of points
+             * var makerjs = require('makerjs');
+             * var model = new makerjs.models.Holes(10, [[0, 0],[50, 0],[25, 40]]);
+             * var svg = makerjs.exporter.toSVG(model);
+             * document.write(svg);
+             * ```
+             *
+             * @param holeRadius Hole radius.
+             * @param points Array of points for origin of each hole.
+             * @param ids Optional array of corresponding path ids for the holes.
+             */
+            function Holes(holeRadius, points, ids) {
+                this.paths = {};
+                for (var i = 0; i < points.length; i++) {
+                    var id = ids ? ids[i] : i.toString();
+                    this.paths[id] = new MakerJs.paths.Circle(points[i], holeRadius);
+                }
+            }
+            return Holes;
+        }());
+        models.Holes = Holes;
+        Holes.metaParameters = [
+            { title: "holeRadius", type: "range", min: .1, max: 10, step: .1, value: 1 },
+            {
+                title: "points", type: "select", value: [
+                    [[0, 0], [10, 10], [20, 20], [30, 30], [40, 40], [50, 50], [60, 60], [70, 70], [80, 80]],
+                    [[0, 0], [0, 25], [0, 50], [0, 75], [0, 100], [25, 50], [50, 50], [75, 50], [100, 100], [100, 75], [100, 50], [100, 25], [100, 0]]]
+            }
+        ];
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
         var BoltCircle = (function () {
             function BoltCircle(boltRadius, holeRadius, boltCount, firstBoltAngleInDegrees) {
                 if (firstBoltAngleInDegrees === void 0) { firstBoltAngleInDegrees = 0; }
                 this.paths = {};
                 var points = models.Polygon.getPoints(boltCount, boltRadius, firstBoltAngleInDegrees);
-                for (var i = 0; i < boltCount; i++) {
-                    this.paths["bolt " + i] = new MakerJs.paths.Circle(points[i], holeRadius);
-                }
+                var ids = points.map(function (p, i) { return "bolt " + i; });
+                this.paths = new models.Holes(holeRadius, points, ids).paths;
             }
             return BoltCircle;
         }());
@@ -6329,15 +6535,9 @@ var MakerJs;
         var BoltRectangle = (function () {
             function BoltRectangle(width, height, holeRadius) {
                 this.paths = {};
-                var holes = {
-                    "BottomLeft": [0, 0],
-                    "BottomRight": [width, 0],
-                    "TopRight": [width, height],
-                    "TopLeft": [0, height]
-                };
-                for (var id2 in holes) {
-                    this.paths[id2 + "_bolt"] = new MakerJs.paths.Circle(holes[id2], holeRadius);
-                }
+                var points = [[0, 0], [width, 0], [width, height], [0, height]];
+                var ids = ["BottomLeft_bolt", "BottomRight_bolt", "TopRight_bolt", "TopLeft_bolt"];
+                this.paths = new models.Holes(holeRadius, points, ids).paths;
             }
             return BoltRectangle;
         }());
@@ -6941,5 +7141,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.24";
+MakerJs.version = "0.9.31";
 ﻿var Bezier = require('bezier-js');

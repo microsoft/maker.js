@@ -10,4 +10,5 @@ web.config
 CONTRIBUTING.md
 *.sln
 /.vs
+/.vscode
 /docs/api/assets
