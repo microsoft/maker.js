@@ -1,5 +1,6 @@
 .npmignore
 node_modules/
+.vs/*
 .vscode/*
 _layouts/*
 _snippets/*
