@@ -4,7 +4,7 @@
 
         public models: IModelMap = {};
 
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy: number) {
+        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number) {
 
             var charIndex = 0;
             var combineOptions: ICombineOptions = {};
