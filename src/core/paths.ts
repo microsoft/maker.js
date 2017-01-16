@@ -61,6 +61,22 @@ namespace MakerJs.paths {
 
         constructor(...args: any[]) {
 
+            function getSpan(origin: IPoint): IArcSpan {
+                var startAngle = angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
+                var endAngle = angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
+
+                if (endAngle < startAngle) {
+                    endAngle += 360;
+                }
+
+                return {
+                    origin: origin,
+                    startAngle: startAngle,
+                    endAngle: endAngle,
+                    size: endAngle - startAngle
+                };
+            }
+
             switch (args.length) {
 
                 case 5:
@@ -72,22 +88,6 @@ namespace MakerJs.paths {
                     var largeArc = args[3] as boolean;
                     var clockwise = args[4] as boolean;
                     var span: IArcSpan;
-
-                    function getSpan(origin: IPoint): IArcSpan {
-                        var startAngle = angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
-                        var endAngle = angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
-
-                        if (endAngle < startAngle) {
-                            endAngle += 360;
-                        }
-
-                        return {
-                            origin: origin,
-                            startAngle: startAngle,
-                            endAngle: endAngle,
-                            size: endAngle - startAngle
-                        };
-                    }
 
                     //make sure arc can reach. if not, scale up.
                     var smallestRadius = measure.pointDistance(pointA, pointB) / 2;

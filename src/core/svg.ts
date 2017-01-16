@@ -392,7 +392,9 @@ namespace MakerJs.exporter {
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            modelToExport = { paths: <IPathMap>itemToExport };
+            var paths: IPathMap = {};
+            (itemToExport as IPath[]).forEach((p, i) => { paths[i] = p });
+            modelToExport = { paths: paths };
 
         } else if (isPath(itemToExport)) {
             modelToExport = { paths: { modelToMeasure: <IPath>itemToExport } };
