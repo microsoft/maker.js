@@ -329,7 +329,7 @@
      * 
      * @param modelContext The model to search for dead ends.
      * @param options Optional options object.
-     * @returns The input model (for chaining).
+     * @returns The input model (for cascading).
      */
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?, keep?: IWalkPathBooleanCallback) {
         var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep);

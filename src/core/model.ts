@@ -164,11 +164,11 @@ namespace MakerJs.model {
     }
 
     /**
-     * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for chaining.
+     * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for cascading.
      * 
      * @param modelToMove The model to move.
      * @param origin The new position of the model.
-     * @returns The original model (for chaining).
+     * @returns The original model (for cascading).
      */
     export function move(modelToMove: IModel, origin: IPoint): IModel {
         modelToMove.origin = point.clone(origin);
@@ -180,7 +180,7 @@ namespace MakerJs.model {
      * 
      * @param modelToMove The model to move.
      * @param delta The x & y adjustments as a point object.
-     * @returns The original model (for chaining).
+     * @returns The original model (for cascading).
      */
     export function moveRelative(modelToMove: IModel, delta: IPoint): IModel {
 
@@ -196,7 +196,7 @@ namespace MakerJs.model {
      * 
      * @param modelToPrefix The model to prefix.
      * @param prefix The prefix to prepend on paths ids.
-     * @returns The original model (for chaining).
+     * @returns The original model (for cascading).
      */
     export function prefixPathIds(modelToPrefix: IModel, prefix: string) {
 
@@ -225,7 +225,7 @@ namespace MakerJs.model {
      * @param modelToRotate The model to rotate.
      * @param angleInDegrees The amount of rotation, in degrees.
      * @param rotationOrigin The center point of rotation.
-     * @returns The original model (for chaining).
+     * @returns The original model (for cascading).
      */
     export function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint = [0, 0]): IModel {
         if (modelToRotate) {
@@ -257,7 +257,7 @@ namespace MakerJs.model {
      * @param modelToScale The model to scale.
      * @param scaleValue The amount of scaling.
      * @param scaleOrigin Optional boolean to scale the origin point. Typically false for the root model.
-     * @returns The original model (for chaining).
+     * @returns The original model (for cascading).
      */
     export function scale(modelToScale: IModel, scaleValue: number, scaleOrigin = false): IModel {
 
@@ -289,7 +289,7 @@ namespace MakerJs.model {
      * 
      * @param modeltoConvert The model to convert.
      * @param destUnitType The unit system.
-     * @returns The scaled model (for chaining).
+     * @returns The scaled model (for cascading).
      */
     export function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel {
 

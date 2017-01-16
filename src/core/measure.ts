@@ -15,7 +15,7 @@ namespace MakerJs.measure {
      * @param baseMeasure The measurement to increase.
      * @param addMeasure The additional measurement.
      * @param addOffset Optional offset point of the additional measurement.
-     * @returns The increased original measurement (for chaining).
+     * @returns The increased original measurement (for cascading).
      */
     export function increase(baseMeasure: IMeasure, addMeasure: IMeasure): IMeasure {
 

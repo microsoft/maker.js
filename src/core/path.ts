@@ -132,7 +132,7 @@ namespace MakerJs.path {
      * 
      * @param pathToMove The path to move.
      * @param origin The new origin for the path.
-     * @returns The original path (for chaining).
+     * @returns The original path (for cascading).
      */
     export function move(pathToMove: IPath, origin: IPoint): IPath {
 
@@ -168,7 +168,7 @@ namespace MakerJs.path {
      * @param pathToMove The path to move.
      * @param delta The x & y adjustments as a point object.
      * @param subtract Optional boolean to subtract instead of add.
-     * @returns The original path (for chaining).
+     * @returns The original path (for cascading).
      */
     export function moveRelative(pathToMove: IPath, delta: IPoint, subtract?: boolean): IPath {
 
@@ -233,7 +233,7 @@ namespace MakerJs.path {
      * @param pathToRotate The path to rotate.
      * @param angleInDegrees The amount of rotation, in degrees.
      * @param rotationOrigin The center point of rotation.
-     * @returns The original path (for chaining).
+     * @returns The original path (for cascading).
      */
     export function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint = [0, 0]): IPath {
         if (!pathToRotate || angleInDegrees == 0) return pathToRotate;
@@ -273,7 +273,7 @@ namespace MakerJs.path {
      * 
      * @param pathToScale The path to scale.
      * @param scaleValue The amount of scaling.
-     * @returns The original path (for chaining).
+     * @returns The original path (for cascading).
      */
     export function scale(pathToScale: IPath, scaleValue: number): IPath {
         if (!pathToScale || scaleValue == 1) return pathToScale;
