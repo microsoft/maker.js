@@ -4,7 +4,7 @@
      * @private
      */
     function getNonZeroSegments(pathToSegment: IPath, breakPoint: IPoint): IPath[] {
-        var segment1 = path.clone(pathToSegment);
+        var segment1 = cloneObject(pathToSegment);
 
         if (!segment1) return null;
 
@@ -262,7 +262,7 @@
 
                 //clone this path and make it the first segment
                 var segment: ICrossedPathSegment = {
-                    path: path.clone(outerWalkedPath.pathContext),
+                    path: cloneObject(outerWalkedPath.pathContext),
                     pathId: outerWalkedPath.pathId,
                     overlapped: false,
                     uniqueForeignIntersectionPoints: [],
