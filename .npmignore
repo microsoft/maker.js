@@ -2,6 +2,7 @@
 node_modules/
 .vs/*
 .vscode/*
+*.sln
 _layouts/*
 _snippets/*
 archive/*
