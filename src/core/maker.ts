@@ -273,6 +273,17 @@ namespace MakerJs {
     }
 
     /**
+     * A measurement of extents, with a center point.
+     */
+    export interface IMeasureWithCenter extends IMeasure {
+
+        /**
+         * The center point of the rectangle containing the item being measured.
+         */
+        center: IPoint;
+    }
+
+    /**
      * A map of measurements.
      */
     export interface IMeasureMap {
