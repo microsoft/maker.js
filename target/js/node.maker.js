@@ -127,6 +127,41 @@ var MakerJs;
     }
     MakerJs.createRouteKey = createRouteKey;
     /**
+     * Travel along a route inside of a model to extract a specific node in its tree.
+     *
+     * @param modelContext Model to travel within.
+     * @param routeKeyOrRoute String of a flattened route, or a string array of route segments.
+     * @returns Model or Path object within the modelContext tree.
+     */
+    function travel(modelContext, routeKeyOrRoute) {
+        if (!modelContext || !routeKeyOrRoute)
+            return null;
+        var route;
+        if (Array.isArray(routeKeyOrRoute)) {
+            route = routeKeyOrRoute;
+        }
+        else {
+            route = JSON.parse(routeKeyOrRoute);
+        }
+        var props = route.slice();
+        var ref = modelContext;
+        var origin = modelContext.origin || [0, 0];
+        while (props.length) {
+            var prop = props.shift();
+            ref = ref[prop];
+            if (!ref)
+                return null;
+            if (ref.origin && props.length) {
+                origin = MakerJs.point.add(origin, ref.origin);
+            }
+        }
+        return {
+            path: ref,
+            offset: origin
+        };
+    }
+    MakerJs.travel = travel;
+    /**
      * @private
      */
     var clone = require('clone');
@@ -857,7 +892,7 @@ var MakerJs;
          *
          * @param pathToMove The path to move.
          * @param origin The new origin for the path.
-         * @returns The original path (for chaining).
+         * @returns The original path (for cascading).
          */
         function move(pathToMove, origin) {
             if (pathToMove) {
@@ -887,7 +922,7 @@ var MakerJs;
          * @param pathToMove The path to move.
          * @param delta The x & y adjustments as a point object.
          * @param subtract Optional boolean to subtract instead of add.
-         * @returns The original path (for chaining).
+         * @returns The original path (for cascading).
          */
         function moveRelative(pathToMove, delta, subtract) {
             if (pathToMove && delta) {
@@ -941,7 +976,7 @@ var MakerJs;
          * @param pathToRotate The path to rotate.
          * @param angleInDegrees The amount of rotation, in degrees.
          * @param rotationOrigin The center point of rotation.
-         * @returns The original path (for chaining).
+         * @returns The original path (for cascading).
          */
         function rotate(pathToRotate, angleInDegrees, rotationOrigin) {
             if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
@@ -975,7 +1010,7 @@ var MakerJs;
          *
          * @param pathToScale The path to scale.
          * @param scaleValue The amount of scaling.
-         * @returns The original path (for chaining).
+         * @returns The original path (for cascading).
          */
         function scale(pathToScale, scaleValue) {
             if (!pathToScale || scaleValue == 1)
@@ -1187,7 +1222,7 @@ var MakerJs;
             var savedEndAngle = arc.endAngle;
             arc.endAngle = angleAtBreakPointBetween;
             //clone the original to carry other properties
-            var copy = path_1.clone(arc);
+            var copy = MakerJs.cloneObject(arc);
             copy.startAngle = angleAtBreakPointBetween;
             copy.endAngle = savedEndAngle;
             return copy;
@@ -1208,7 +1243,7 @@ var MakerJs;
             var savedEndPoint = line.end;
             line.end = pointOfBreak;
             //clone the original to carry other properties
-            var copy = path_1.clone(line);
+            var copy = MakerJs.cloneObject(line);
             copy.origin = pointOfBreak;
             copy.end = savedEndPoint;
             return copy;
@@ -1251,6 +1286,19 @@ var MakerJs;
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i - 0] = arguments[_i];
                 }
+                function getSpan(origin) {
+                    var startAngle = MakerJs.angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
+                    var endAngle = MakerJs.angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
+                    if (endAngle < startAngle) {
+                        endAngle += 360;
+                    }
+                    return {
+                        origin: origin,
+                        startAngle: startAngle,
+                        endAngle: endAngle,
+                        size: endAngle - startAngle
+                    };
+                }
                 switch (args.length) {
                     case 5:
                         //SVG style arc designation
@@ -1260,19 +1308,6 @@ var MakerJs;
                         var largeArc = args[3];
                         var clockwise = args[4];
                         var span;
-                        function getSpan(origin) {
-                            var startAngle = MakerJs.angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
-                            var endAngle = MakerJs.angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
-                            if (endAngle < startAngle) {
-                                endAngle += 360;
-                            }
-                            return {
-                                origin: origin,
-                                startAngle: startAngle,
-                                endAngle: endAngle,
-                                size: endAngle - startAngle
-                            };
-                        }
                         //make sure arc can reach. if not, scale up.
                         var smallestRadius = MakerJs.measure.pointDistance(pointA, pointB) / 2;
                         if (MakerJs.round(this.radius - smallestRadius) <= 0) {
@@ -1612,11 +1647,11 @@ var MakerJs;
         }
         model.mirror = mirror;
         /**
-         * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for chaining.
+         * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for cascading.
          *
          * @param modelToMove The model to move.
          * @param origin The new position of the model.
-         * @returns The original model (for chaining).
+         * @returns The original model (for cascading).
          */
         function move(modelToMove, origin) {
             modelToMove.origin = MakerJs.point.clone(origin);
@@ -1628,7 +1663,7 @@ var MakerJs;
          *
          * @param modelToMove The model to move.
          * @param delta The x & y adjustments as a point object.
-         * @returns The original model (for chaining).
+         * @returns The original model (for cascading).
          */
         function moveRelative(modelToMove, delta) {
             if (modelToMove) {
@@ -1642,7 +1677,7 @@ var MakerJs;
          *
          * @param modelToPrefix The model to prefix.
          * @param prefix The prefix to prepend on paths ids.
-         * @returns The original model (for chaining).
+         * @returns The original model (for cascading).
          */
         function prefixPathIds(modelToPrefix, prefix) {
             var walkedPaths = [];
@@ -1667,7 +1702,7 @@ var MakerJs;
          * @param modelToRotate The model to rotate.
          * @param angleInDegrees The amount of rotation, in degrees.
          * @param rotationOrigin The center point of rotation.
-         * @returns The original model (for chaining).
+         * @returns The original model (for cascading).
          */
         function rotate(modelToRotate, angleInDegrees, rotationOrigin) {
             if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
@@ -1696,7 +1731,7 @@ var MakerJs;
          * @param modelToScale The model to scale.
          * @param scaleValue The amount of scaling.
          * @param scaleOrigin Optional boolean to scale the origin point. Typically false for the root model.
-         * @returns The original model (for chaining).
+         * @returns The original model (for cascading).
          */
         function scale(modelToScale, scaleValue, scaleOrigin) {
             if (scaleOrigin === void 0) { scaleOrigin = false; }
@@ -1724,7 +1759,7 @@ var MakerJs;
          *
          * @param modeltoConvert The model to convert.
          * @param destUnitType The unit system.
-         * @returns The scaled model (for chaining).
+         * @returns The scaled model (for cascading).
          */
         function convertUnits(modeltoConvert, destUnitType) {
             var validUnitType = false;
@@ -1850,7 +1885,7 @@ var MakerJs;
          * @private
          */
         function getNonZeroSegments(pathToSegment, breakPoint) {
-            var segment1 = MakerJs.path.clone(pathToSegment);
+            var segment1 = MakerJs.cloneObject(pathToSegment);
             if (!segment1)
                 return null;
             var segment2 = MakerJs.path.breakAtPoint(segment1, breakPoint);
@@ -2031,7 +2066,7 @@ var MakerJs;
                 onPath: function (outerWalkedPath) {
                     //clone this path and make it the first segment
                     var segment = {
-                        path: MakerJs.path.clone(outerWalkedPath.pathContext),
+                        path: MakerJs.cloneObject(outerWalkedPath.pathContext),
                         pathId: outerWalkedPath.pathId,
                         overlapped: false,
                         uniqueForeignIntersectionPoints: [],
@@ -2312,7 +2347,7 @@ var MakerJs;
          *
          * @param modelContext The originated model to search for similar paths.
          * @param options Optional options object.
-         * @returns The simplified model (for chaining).
+         * @returns The simplified model (for cascading).
          */
         function simplify(modelToSimplify, options) {
             function compareCircles(circleA, circleB) {
@@ -2455,7 +2490,8 @@ var MakerJs;
          *
          * @param arc Arc to straighten.
          * @param bevel Optional flag to bevel the angle to prevent it from being too sharp.
-         * @param prefix Optional prefix to apply to path ids.
+         * @param prefix Optional string prefix to apply to path ids.
+         * @param close Optional flag to make a closed geometry by connecting the endpoints.
          * @returns Model of straight lines with same endpoints as the arc.
          */
         function straighten(arc, bevel, prefix, close) {
@@ -2824,7 +2860,7 @@ var MakerJs;
          * @param baseMeasure The measurement to increase.
          * @param addMeasure The additional measurement.
          * @param addOffset Optional offset point of the additional measurement.
-         * @returns The increased original measurement (for chaining).
+         * @returns The increased original measurement (for cascading).
          */
         function increase(baseMeasure, addMeasure) {
             function getExtreme(basePoint, newPoint, fn) {
@@ -3173,7 +3209,12 @@ var MakerJs;
             };
             MakerJs.model.walk(modelToMeasure, walkOptions);
             atlas.modelsMeasured = true;
-            return atlas.modelMap[''];
+            var m = atlas.modelMap[''];
+            function avg(dim) {
+                return (m.low[dim] + m.high[dim]) / 2;
+            }
+            m.center = [avg(0), avg(1)];
+            return m;
         }
         measure.modelExtents = modelExtents;
         /**
@@ -3211,6 +3252,197 @@ var MakerJs;
             return Atlas;
         }());
         measure.Atlas = Atlas;
+        /**
+         * @private
+         */
+        var equilateral = Math.sqrt(3) / 2;
+        /**
+         * @private
+         */
+        function sideToAltitude(sideLength) {
+            return sideLength * equilateral;
+        }
+        /**
+         * @private
+         */
+        function altitudeToSide(altitude) {
+            return altitude / equilateral;
+        }
+        /**
+         * @private
+         */
+        function loopIndex(base, i) {
+            if (i >= base)
+                return i - base;
+            if (i < 0)
+                return i + base;
+            return i;
+        }
+        /**
+         * @private
+         */
+        function yAtX(slope, x) {
+            return slope.slope * x + slope.yIntercept;
+        }
+        /**
+         * @private
+         */
+        function pointOnSlopeAtX(line, x) {
+            var slope = lineSlope(line);
+            return [x, yAtX(slope, x)];
+        }
+        /**
+         * @private
+         */
+        function isCircular(bounds) {
+            for (var i = 1; i < 3; i++) {
+                if (!measure.isPointEqual(bounds[0].center, bounds[i].center, .000001) || !(MakerJs.round(bounds[0].width - bounds[i].width) === 0)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        /**
+         * @private
+         */
+        function getAngledBounds(index, modelToMeasure, rotateModel, rotatePaths) {
+            MakerJs.model.rotate(modelToMeasure, rotateModel);
+            var m = modelExtents(modelToMeasure);
+            var yDistance = m.high[1] - m.low[1];
+            var xDistance = m.high[0] - m.low[0];
+            var result = {
+                index: index,
+                rotation: rotatePaths,
+                center: MakerJs.point.rotate(m.center, rotatePaths),
+                //model is sideways, so width is based on Y, height is based on X
+                width: yDistance,
+                height: xDistance,
+                bottom: new MakerJs.paths.Line(m.low, [m.high[0], m.low[1]]),
+                middle: new MakerJs.paths.Line([m.low[0], m.center[1]], [m.high[0], m.center[1]]),
+                top: new MakerJs.paths.Line(m.high, [m.low[0], m.high[1]])
+            };
+            [result.top, result.middle, result.bottom].forEach(function (line) { return MakerJs.path.rotate(line, rotatePaths); });
+            return result;
+        }
+        /**
+         * @private
+         */
+        function hexSolution(lines, bounds) {
+            var tip = lines[1].origin;
+            var tipX = tip[0];
+            var left = lines[3].origin[0];
+            var right = lines[0].origin[0];
+            //see if left edge is in bounds if right edge is on the hex boundary
+            var altRight = tipX - right;
+            if ((right - left) > 2 * altRight)
+                return null;
+            //see if right edge is in bounds if left edge is on the hex boundary
+            var altLeft = (tipX - left) / 3;
+            if (altRight < altLeft)
+                return null;
+            var altitudeViaSide = Math.min(altLeft, altRight);
+            var radiusViaSide = altitudeToSide(altitudeViaSide);
+            //find peaks, then find highest peak
+            var peakPoints = [MakerJs.point.fromSlopeIntersection(lines[1], lines[2]), MakerJs.point.fromSlopeIntersection(lines[4], lines[5])];
+            var peakRadii = peakPoints.map(function (p) { return Math.abs(p[1] - tip[1]); });
+            var peakNum = (peakRadii[0] > peakRadii[1]) ? 0 : 1; //top = 0, bottom = 1
+            var radiusViaPeak = peakRadii[peakNum];
+            if (radiusViaPeak > radiusViaSide) {
+                var altitudeViaPeak = sideToAltitude(radiusViaPeak);
+                var peakX = tipX - 2 * altitudeViaPeak;
+                //see if it will contain right side
+                if (right > peakX + altitudeViaPeak)
+                    return null;
+                //see if it will contain left side
+                if (left < peakX - altitudeViaPeak)
+                    return null;
+                //at this point, [tipX - 2 * altitudeViaPeak, tip[1]] is a solution for origin.
+                //but we want to best center the result by sliding along the boundary middle, balancing the smallest gap
+                var leftGap = left - peakX + altitudeViaPeak;
+                var peakGap = 2 * altitudeViaPeak - bounds[peakNum + 1].width;
+                var minHalfGap = Math.min(leftGap, peakGap) / 2;
+                return {
+                    origin: pointOnSlopeAtX(bounds[2 - peakNum].middle, peakX + minHalfGap),
+                    radius: radiusViaPeak,
+                    type: 'peak ' + peakNum
+                };
+            }
+            else {
+                return {
+                    origin: [tipX - 2 * altitudeViaSide, tip[1]],
+                    radius: radiusViaSide,
+                    type: 'side'
+                };
+            }
+        }
+        /**
+         * Measures the minimum bounding hexagon surrounding a model. The hexagon is oriented such that the right and left sides are vertical, and the top and bottom are pointed.
+         *
+         * @param modelToMeasure The model to measure.
+         * @returns IBoundingHex object which is a hexagon model, with an additional radius property.
+         */
+        function boundingHexagon(modelToMeasure) {
+            var originalMeasure = modelExtents(modelToMeasure);
+            var clone = MakerJs.cloneObject(modelToMeasure);
+            var bounds = [];
+            var scratch = { paths: {} };
+            MakerJs.model.center(clone);
+            function result(radius, origin1, notes) {
+                return {
+                    radius: radius,
+                    paths: new MakerJs.models.Polygon(6, radius, 30).paths,
+                    origin: MakerJs.point.add(origin1, MakerJs.point.subtract(originalMeasure.center, modelToMeasure.origin)),
+                    //models: { scratch: scratch },
+                    notes: notes
+                };
+            }
+            var boundRotations = [[90, -90], [-60, -30], [-60, 30]];
+            while (boundRotations.length) {
+                var rotation = boundRotations.shift();
+                var bound = getAngledBounds(bounds.length, clone, rotation[0], rotation[1]);
+                var side = altitudeToSide(bound.width / 2);
+                if (side >= bound.height) {
+                    return result(side, bound.center, 'solved by bound ' + bounds.length);
+                }
+                bounds.push(bound);
+            }
+            //model.rotate(clone, 30);
+            //scratch.models = { clone: clone };
+            //check for a circular solution
+            if (isCircular(bounds)) {
+                return result(altitudeToSide(bounds[0].width / 2), bounds[0].center, 'solved as circular');
+            }
+            var perimeters = bounds.map(function (b) { return b.top; }).concat(bounds.map(function (b) { return b.bottom; }));
+            perimeters.forEach(function (p, i) {
+                scratch.paths[i] = p;
+                //converge alternate lines to form two triangles
+                MakerJs.path.converge(perimeters[loopIndex(6, i + 2)], p, true);
+            });
+            bounds.forEach(function (b, i) {
+                scratch.paths['m' + i] = b.middle;
+            });
+            var boundCopy = bounds.slice();
+            var solution;
+            //solve a hexagon for every tip, keeping the smallest one
+            for (var i = 0; i < 6; i++) {
+                //rotate the scratch area so that we always reference the tip at polar 0
+                if (i > 0) {
+                    perimeters.push(perimeters.shift());
+                    boundCopy.push(boundCopy.shift());
+                    MakerJs.model.rotate(scratch, -60);
+                }
+                var s = hexSolution(perimeters, boundCopy);
+                if (s) {
+                    if (!solution || s.radius < solution.radius) {
+                        solution = s;
+                        solution.index = i;
+                    }
+                }
+            }
+            var p = MakerJs.point.rotate(solution.origin, solution.index * 60);
+            return result(solution.radius, p, 'solved by ' + solution.index + ' as ' + solution.type);
+        }
+        measure.boundingHexagon = boundingHexagon;
     })(measure = MakerJs.measure || (MakerJs.measure = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -4471,6 +4703,66 @@ var MakerJs;
     var chain;
     (function (chain) {
         /**
+         * Shift the links of an endless chain.
+         *
+         * @param chainContext Chain to cycle through. Must be endless.
+         * @param amount Optional number of links to shift. May be negative to cycle backwards.
+         * @returns The chainContext for cascading.
+         */
+        function cycle(chainContext, amount) {
+            if (amount === void 0) { amount = 1; }
+            if (!chainContext.endless)
+                return;
+            var n = Math.abs(amount);
+            for (var i = 0; i < n; i++) {
+                if (amount < 0) {
+                    //remove from beginning, add to end
+                    chainContext.links.push(chainContext.links.shift());
+                }
+                else {
+                    //remove from end, add to beginning
+                    chainContext.links.unshift(chainContext.links.pop());
+                }
+            }
+            return chainContext;
+        }
+        chain.cycle = cycle;
+        /**
+         * Reverse the links of a chain.
+         *
+         * @param chainContext Chain to reverse.
+         * @returns The chainContext for cascading.
+         */
+        function reverse(chainContext) {
+            chainContext.links.reverse();
+            chainContext.links.forEach(function (link) { return link.reversed = !link.reversed; });
+            return chainContext;
+        }
+        chain.reverse = reverse;
+        /**
+         * Set the beginning of an endless chain to a known routeKey of a path.
+         *
+         * @param chainContext Chain to cycle through. Must be endless.
+         * @param routeKey RouteKey of the desired path to start the chain with.
+         * @returns The chainContext for cascading.
+         */
+        function startAt(chainContext, routeKey) {
+            if (!chainContext.endless)
+                return;
+            var index = -1;
+            for (var i = 0; i < chainContext.links.length; i++) {
+                if (chainContext.links[i].walkedPath.routeKey == routeKey) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index > 0) {
+                cycle(chainContext, index);
+            }
+            return chainContext;
+        }
+        chain.startAt = startAt;
+        /**
          * @private
          */
         function removeDuplicateEnds(endless, points) {
@@ -4784,7 +5076,7 @@ var MakerJs;
          *
          * @param modelContext The model to search for dead ends.
          * @param options Optional options object.
-         * @returns The input model (for chaining).
+         * @returns The input model (for cascading).
          */
         function removeDeadEnds(modelContext, pointMatchingDistance, keep) {
             var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep);
@@ -5464,7 +5756,9 @@ var MakerJs;
             }
             else if (Array.isArray(itemToExport)) {
                 //issue: this won't handle an array of models
-                modelToExport = { paths: itemToExport };
+                var paths = {};
+                itemToExport.forEach(function (p, i) { paths[i] = p; });
+                modelToExport = { paths: paths };
             }
             else if (MakerJs.isPath(itemToExport)) {
                 modelToExport = { paths: { modelToMeasure: itemToExport } };
@@ -7141,5 +7435,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.31";
+MakerJs.version = "0.9.32";
 ﻿var Bezier = require('bezier-js');
