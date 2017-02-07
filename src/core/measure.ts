@@ -15,7 +15,7 @@ namespace MakerJs.measure {
      * @param baseMeasure The measurement to increase.
      * @param addMeasure The additional measurement.
      * @param addOffset Optional offset point of the additional measurement.
-     * @returns The increased original measurement (for chaining).
+     * @returns The increased original measurement (for cascading).
      */
     export function increase(baseMeasure: IMeasure, addMeasure: IMeasure): IMeasure {
 
@@ -376,7 +376,7 @@ namespace MakerJs.measure {
      * @param atlas Optional atlas to save measurements.
      * @returns object with low and high points.
      */
-    export function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasure {
+    export function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasureWithCenter {
 
         function increaseParentModel(childRoute: string[], childMeasurement: IMeasure) {
 
@@ -416,7 +416,15 @@ namespace MakerJs.measure {
 
         atlas.modelsMeasured = true;
 
-        return atlas.modelMap[''];
+        var m = atlas.modelMap[''] as IMeasureWithCenter;
+
+        function avg(dim: number) {
+            return (m.low[dim] + m.high[dim]) / 2;
+        }
+
+        m.center = [avg(0), avg(1)];
+
+        return m;
     }
 
     /**
@@ -455,5 +463,265 @@ namespace MakerJs.measure {
                 modelExtents(this.modelContext, this);
             }
         }
+    }
+
+    /**
+     * @private
+     */
+    var equilateral = Math.sqrt(3) / 2;
+
+    /**
+     * @private
+     */
+    function sideToAltitude(sideLength: number) {
+        return sideLength * equilateral;
+    }
+
+    /**
+     * @private
+     */
+    function altitudeToSide(altitude: number) {
+        return altitude / equilateral;
+    }
+
+    /**
+     * @private
+     */
+    function loopIndex(base: number, i: number) {
+        if (i >= base) return i - base;
+        if (i < 0) return i + base;
+        return i;
+    }
+
+    /**
+     * @private
+     */
+    function yAtX(slope: ISlope, x: number) {
+        return slope.slope * x + slope.yIntercept;
+    }
+
+    /**
+     * @private
+     */
+    function pointOnSlopeAtX(line: IPathLine, x: number): IPoint {
+        var slope = lineSlope(line);
+        return [x, yAtX(slope, x)];
+    }
+
+    /**
+     * @private
+     */
+    interface IAngledBoundary {
+        index: number;
+        rotation: number;
+        center: IPoint;
+        width: number;
+        height: number;
+        top: IPathLine;
+        middle: IPathLine;
+        bottom: IPathLine;
+    }
+
+    /**
+     * @private
+     */
+    function isCircular(bounds: IAngledBoundary[]) {
+        for (var i = 1; i < 3; i++) {
+            if (!isPointEqual(bounds[0].center, bounds[i].center, .000001) || !(round(bounds[0].width - bounds[i].width) === 0)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @private
+     */
+    function getAngledBounds(index: number, modelToMeasure: IModel, rotateModel: number, rotatePaths: number) {
+        model.rotate(modelToMeasure, rotateModel);
+        var m = modelExtents(modelToMeasure);
+        var yDistance = m.high[1] - m.low[1];
+        var xDistance = m.high[0] - m.low[0];
+        var result: IAngledBoundary = {
+            index: index,
+            rotation: rotatePaths,
+            center: point.rotate(m.center, rotatePaths),
+
+            //model is sideways, so width is based on Y, height is based on X
+            width: yDistance,
+            height: xDistance,
+
+            bottom: new paths.Line(m.low, [m.high[0], m.low[1]]),
+            middle: new paths.Line([m.low[0], m.center[1]], [m.high[0], m.center[1]]),
+            top: new paths.Line(m.high, [m.low[0], m.high[1]]),
+        };
+        [result.top, result.middle, result.bottom].forEach(line => path.rotate(line, rotatePaths));
+        return result;
+    }
+
+    /**
+     * @private
+     */
+    interface IHexSolution {
+        radius: number,
+        origin: IPoint,
+        type: string,
+        index?: number,
+    }
+
+    /**
+     * @private
+     */
+    function hexSolution(lines: IPathLine[], bounds: IAngledBoundary[]): IHexSolution {
+        var tip = lines[1].origin;
+        var tipX = tip[0];
+        var left = lines[3].origin[0];
+        var right = lines[0].origin[0];
+
+        //see if left edge is in bounds if right edge is on the hex boundary
+        var altRight = tipX - right;
+        if ((right - left) > 2 * altRight) return null;
+
+        //see if right edge is in bounds if left edge is on the hex boundary
+        var altLeft = (tipX - left) / 3;
+        if (altRight < altLeft) return null;
+
+        var altitudeViaSide = Math.min(altLeft, altRight);
+        var radiusViaSide = altitudeToSide(altitudeViaSide);
+
+        //find peaks, then find highest peak
+        var peakPoints = [point.fromSlopeIntersection(lines[1], lines[2]), point.fromSlopeIntersection(lines[4], lines[5])];
+        var peakRadii = peakPoints.map(p => Math.abs(p[1] - tip[1]));
+        var peakNum = (peakRadii[0] > peakRadii[1]) ? 0 : 1;    //top = 0, bottom = 1
+        var radiusViaPeak = peakRadii[peakNum];
+
+        if (radiusViaPeak > radiusViaSide) {
+            var altitudeViaPeak = sideToAltitude(radiusViaPeak);
+            var peakX = tipX - 2 * altitudeViaPeak;
+
+            //see if it will contain right side
+            if (right > peakX + altitudeViaPeak) return null;
+
+            //see if it will contain left side
+            if (left < peakX - altitudeViaPeak) return null;
+
+            //at this point, [tipX - 2 * altitudeViaPeak, tip[1]] is a solution for origin.
+            //but we want to best center the result by sliding along the boundary middle, balancing the smallest gap
+            var leftGap = left - peakX + altitudeViaPeak;
+            var peakGap = 2 * altitudeViaPeak - bounds[peakNum + 1].width;
+            var minHalfGap = Math.min(leftGap, peakGap) / 2;
+
+            return {
+                origin: pointOnSlopeAtX(bounds[2 - peakNum].middle, peakX + minHalfGap),
+                radius: radiusViaPeak,
+                type: 'peak ' + peakNum
+            };
+
+        } else {
+
+            return {
+                origin: [tipX - 2 * altitudeViaSide, tip[1]],
+                radius: radiusViaSide,
+                type: 'side'
+            };
+        }
+
+    }
+
+    /**
+     * A hexagon which surrounds a model.
+     */
+    export interface IBoundingHex extends IModel {
+
+        /**
+         * Radius of the hexagon, which is also the length of a side.
+         */
+        radius: number;
+    }
+
+    /**
+     * Measures the minimum bounding hexagon surrounding a model. The hexagon is oriented such that the right and left sides are vertical, and the top and bottom are pointed.
+     * 
+     * @param modelToMeasure The model to measure.
+     * @returns IBoundingHex object which is a hexagon model, with an additional radius property.
+     */
+    export function boundingHexagon(modelToMeasure: IModel): IBoundingHex {
+        var originalMeasure = modelExtents(modelToMeasure);
+        var clone = cloneObject(modelToMeasure) as IModel;
+        var bounds: IAngledBoundary[] = [];
+        var scratch: IModel = { paths: {} };
+
+        model.center(clone);
+
+        function result(radius: number, origin1: IPoint, notes: string): IBoundingHex {
+            return {
+                radius: radius,
+                paths: new models.Polygon(6, radius, 30).paths,
+                origin: point.add(origin1, point.subtract(originalMeasure.center, modelToMeasure.origin)),
+                //models: { scratch: scratch },
+                notes: notes
+            };
+        }
+
+        var boundRotations = [[90, -90], [-60, -30], [-60, 30]];
+
+        while (boundRotations.length) {
+            var rotation = boundRotations.shift();
+            var bound = getAngledBounds(bounds.length, clone, rotation[0], rotation[1]);
+
+            var side = altitudeToSide(bound.width / 2);
+            if (side >= bound.height) {
+                return result(side, bound.center, 'solved by bound ' + bounds.length);
+            }
+
+            bounds.push(bound);
+        }
+
+        //model.rotate(clone, 30);
+        //scratch.models = { clone: clone };
+
+        //check for a circular solution
+        if (isCircular(bounds)) {
+            return result(altitudeToSide(bounds[0].width / 2), bounds[0].center, 'solved as circular');
+        }
+
+        var perimeters = bounds.map(b => b.top).concat(bounds.map(b => b.bottom));
+
+        perimeters.forEach((p, i) => {
+            scratch.paths[i] = p;
+
+            //converge alternate lines to form two triangles
+            path.converge(perimeters[loopIndex(6, i + 2)], p, true);
+        });
+
+        bounds.forEach((b, i) => {
+            scratch.paths['m' + i] = b.middle;
+        });
+
+        var boundCopy = bounds.slice();
+        var solution: IHexSolution;
+
+        //solve a hexagon for every tip, keeping the smallest one
+        for (var i = 0; i < 6; i++) {
+
+            //rotate the scratch area so that we always reference the tip at polar 0
+            if (i > 0) {
+                perimeters.push(perimeters.shift());
+                boundCopy.push(boundCopy.shift());
+                model.rotate(scratch, -60);
+            }
+
+            var s = hexSolution(perimeters, boundCopy);
+            if (s) {
+                if (!solution || s.radius < solution.radius) {
+                    solution = s;
+                    solution.index = i;
+                }
+            }
+        }
+
+        var p = point.rotate(solution.origin, solution.index * 60);
+
+        return result(solution.radius, p, 'solved by ' + solution.index + ' as ' + solution.type);
     }
 }

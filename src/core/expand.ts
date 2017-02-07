@@ -45,7 +45,8 @@
      *
      * @param arc Arc to straighten.
      * @param bevel Optional flag to bevel the angle to prevent it from being too sharp.
-     * @param prefix Optional prefix to apply to path ids.
+     * @param prefix Optional string prefix to apply to path ids.
+     * @param close Optional flag to make a closed geometry by connecting the endpoints.
      * @returns Model of straight lines with same endpoints as the arc.
      */
     export function straighten(arc: IPathArc, bevel?: boolean, prefix?: string, close?: boolean): IModel {

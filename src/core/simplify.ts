@@ -51,7 +51,7 @@
      * 
      * @param modelContext The originated model to search for similar paths.
      * @param options Optional options object.
-     * @returns The simplified model (for chaining).
+     * @returns The simplified model (for cascading).
      */
     export function simplify(modelToSimplify: IModel, options?: ISimplifyOptions) {
 

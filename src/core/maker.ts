@@ -103,6 +103,45 @@ namespace MakerJs {
     }
 
     /**
+     * Travel along a route inside of a model to extract a specific node in its tree.
+     * 
+     * @param modelContext Model to travel within.
+     * @param routeKeyOrRoute String of a flattened route, or a string array of route segments.
+     * @returns Model or Path object within the modelContext tree.
+     */
+    export function travel(modelContext: IModel, routeKeyOrRoute: string | string[]) {
+        if (!modelContext || !routeKeyOrRoute) return null;
+
+        var route: string[];
+        if (Array.isArray(routeKeyOrRoute)) {
+            route = routeKeyOrRoute;
+        } else {
+            route = JSON.parse(routeKeyOrRoute);
+        }
+
+        var props = route.slice();
+        var ref: any = modelContext;
+        var origin = modelContext.origin || [0, 0];
+
+        while (props.length) {
+            var prop = props.shift();
+            ref = ref[prop];
+
+            if (!ref) return null;
+
+            if (ref.origin && props.length) {
+                origin = point.add(origin, ref.origin);
+            }
+        }
+
+        return {
+            path: <IPath | IModel>ref,
+            offset: origin
+        };
+
+    }
+
+    /**
      * @private
      */
     var clone = require('clone');
@@ -232,6 +271,17 @@ namespace MakerJs {
          * The point containing both the highest x and y values of the rectangle containing the item being measured.
          */
         high: IPoint;
+    }
+
+    /**
+     * A measurement of extents, with a center point.
+     */
+    export interface IMeasureWithCenter extends IMeasure {
+
+        /**
+         * The center point of the rectangle containing the item being measured.
+         */
+        center: IPoint;
     }
 
     /**

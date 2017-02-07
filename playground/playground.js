@@ -636,7 +636,7 @@ var MakerJsPlayground;
             var errorDetails = {
                 colno: 0,
                 lineno: 0,
-                message: 'error loading font' + fonts[id].path,
+                message: 'error loading font ' + fontLoader.baseUrl + fonts[id].path,
                 name: 'Network error'
             };
             processResult({ result: errorDetails });

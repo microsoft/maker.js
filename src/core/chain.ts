@@ -257,6 +257,64 @@
 namespace MakerJs.chain {
 
     /**
+     * Shift the links of an endless chain.
+     * 
+     * @param chainContext Chain to cycle through. Must be endless.
+     * @param amount Optional number of links to shift. May be negative to cycle backwards.
+     * @returns The chainContext for cascading.
+     */
+    export function cycle(chainContext: IChain, amount = 1) {
+        if (!chainContext.endless) return;
+        var n = Math.abs(amount);
+        for (var i = 0; i < n; i++) {
+            if (amount < 0) {
+                //remove from beginning, add to end
+                chainContext.links.push(chainContext.links.shift());
+            } else {
+                //remove from end, add to beginning
+                chainContext.links.unshift(chainContext.links.pop());
+            }
+        }
+
+        return chainContext;
+    }
+
+    /**
+     * Reverse the links of a chain.
+     * 
+     * @param chainContext Chain to reverse.
+     * @returns The chainContext for cascading.
+     */
+    export function reverse(chainContext: IChain) {
+        chainContext.links.reverse();
+        chainContext.links.forEach(link => link.reversed = !link.reversed);
+        return chainContext;
+    }
+
+    /**
+     * Set the beginning of an endless chain to a known routeKey of a path.
+     * 
+     * @param chainContext Chain to cycle through. Must be endless.
+     * @param routeKey RouteKey of the desired path to start the chain with.
+     * @returns The chainContext for cascading.
+     */
+    export function startAt(chainContext: IChain, routeKey: string) {
+        if (!chainContext.endless) return;
+        var index = -1;
+        for (var i = 0; i < chainContext.links.length; i++) {
+            if (chainContext.links[i].walkedPath.routeKey == routeKey) {
+                index = i;
+                break;
+            }
+        }
+        if (index > 0) {
+            cycle(chainContext, index);
+        }
+
+        return chainContext;
+    }
+
+    /**
      * @private
      */
     function removeDuplicateEnds(endless: boolean, points: IPoint[]) {

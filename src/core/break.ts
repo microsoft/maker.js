@@ -44,7 +44,7 @@
         arc.endAngle = angleAtBreakPointBetween;
 
         //clone the original to carry other properties
-        var copy = clone(arc) as IPathArc;
+        var copy = cloneObject(arc) as IPathArc;
         copy.startAngle = angleAtBreakPointBetween;
         copy.endAngle = savedEndAngle;
 
@@ -77,7 +77,7 @@
         line.end = pointOfBreak;
 
         //clone the original to carry other properties
-        var copy = clone(line) as IPathLine;
+        var copy = cloneObject(line) as IPathLine;
         copy.origin = pointOfBreak;
         copy.end = savedEndPoint;
 
