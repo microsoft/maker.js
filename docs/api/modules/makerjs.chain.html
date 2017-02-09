@@ -10,8 +10,11 @@ title: Api - chain Module
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#cycle" class="tsd-kind-icon">cycle</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#fillet" class="tsd-kind-icon">fillet</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.chain.html#removeduplicateends" class="tsd-kind-icon">remove<wbr>Duplicate<wbr>Ends</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#reverse" class="tsd-kind-icon">reverse</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#startat" class="tsd-kind-icon">start<wbr>At</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#tokeypoints" class="tsd-kind-icon">to<wbr>Key<wbr>Points</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#topoints" class="tsd-kind-icon">to<wbr>Points</a></li>
 				</ul>
@@ -22,6 +25,44 @@ title: Api - chain Module
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="cycle" class="tsd-anchor"></a>
+		<h3>cycle</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">cycle<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, amount<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/chain.ts#L266">core/chain.ts:266</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Shift the links of an endless chain.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain to cycle through. Must be endless.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional number of links to shift. May be negative to cycle backwards.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h4>
+				<p>The chainContext for cascading.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="fillet" class="tsd-anchor"></a>
 		<h3>fillet</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -31,7 +72,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/fillet.ts#L463">core/fillet.ts:463</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/fillet.ts#L463">core/fillet.ts:463</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -69,7 +110,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/chain.ts#L262">core/chain.ts:262</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/chain.ts#L320">core/chain.ts:320</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -88,6 +129,76 @@ title: Api - chain Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="reverse" class="tsd-anchor"></a>
+		<h3>reverse</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">reverse<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/chain.ts#L288">core/chain.ts:288</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Reverse the links of a chain.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain to reverse.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h4>
+				<p>The chainContext for cascading.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="startat" class="tsd-anchor"></a>
+		<h3>start<wbr>At</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">start<wbr>At<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, routeKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/chain.ts#L301">core/chain.ts:301</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Set the beginning of an endless chain to a known routeKey of a path.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain to cycle through. Must be endless.</p>
+						</div>
+					</li>
+					<li>
+						<h5>routeKey: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>RouteKey of the desired path to start the chain with.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h4>
+				<p>The chainContext for cascading.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="tokeypoints" class="tsd-anchor"></a>
 		<h3>to<wbr>Key<wbr>Points</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -97,7 +208,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/chain.ts#L314">core/chain.ts:314</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/chain.ts#L372">core/chain.ts:372</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -135,7 +246,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/95d5f1a/src/core/chain.ts#L277">core/chain.ts:277</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/chain.ts#L335">core/chain.ts:335</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

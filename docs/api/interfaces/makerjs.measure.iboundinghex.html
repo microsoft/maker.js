@@ -1,31 +1,21 @@
 ---
 layout: posts
-title: Api - IPathArc Interface
+title: Api - IBoundingHex Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>An arc path.</p>
+			<p>A hexagon which surrounds a model.</p>
 		</div>
-		<p>Examples:</p>
-		<pre><code>var <span class="hljs-string">arc:</span> IPathArc = { <span class="hljs-string">type:</span> <span class="hljs-string">'arc'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span>, <span class="hljs-string">startAngle:</span> <span class="hljs-number">0</span>, <span class="hljs-string">endAngle:</span> <span class="hljs-number">45</span> };   <span class="hljs-comment">//typescript</span>
-var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'arc'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span>, <span class="hljs-string">startAngle:</span> <span class="hljs-number">0</span>, <span class="hljs-string">endAngle:</span> <span class="hljs-number">45</span> };   <span class="hljs-comment">//javascript</span>
-</code></pre>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipathcircle.html" class="tsd-signature-type">IPathCircle</a>
+			<a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a>
 		</li>
-	</ul>
-</section>
-<section class="tsd-panel">
-	<h3>Implemented by</h3>
-	<ul class="tsd-hierarchy">
-		<li><a href="../classes/makerjs.paths.arc.html" class="tsd-signature-type">Arc</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -35,12 +25,15 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipatharc.html#endangle" class="tsd-kind-icon">end<wbr>Angle</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#layer" class="tsd-kind-icon">layer</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#radius" class="tsd-kind-icon">radius</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipatharc.html#startangle" class="tsd-kind-icon">start<wbr>Angle</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipatharc.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#exporteroptions" class="tsd-kind-icon">exporter<wbr>Options</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#layer" class="tsd-kind-icon">layer</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#models" class="tsd-kind-icon">models</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#notes" class="tsd-kind-icon">notes</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#paths" class="tsd-kind-icon">paths</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.measure.iboundinghex.html#radius" class="tsd-kind-icon">radius</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.measure.iboundinghex.html#units" class="tsd-kind-icon">units</a></li>
 				</ul>
 			</section>
 		</div>
@@ -48,19 +41,28 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="endangle" class="tsd-anchor"></a>
-		<h3>end<wbr>Angle</h3>
-		<div class="tsd-signature tsd-kind-icon">end<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="exporteroptions" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> exporter<wbr>Options</h3>
+		<div class="tsd-signature tsd-kind-icon">exporter<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#exporteroptions">exporterOptions</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L397">core/maker.ts:397</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L729">core/maker.ts:729</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The angle (in degrees) to end drawing the arc, in polar (counter-clockwise) direction. May be less than start angle if it past 360.</p>
+				<p>Optional exporter options for this model.</p>
 			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>exporterName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
+				</li>
+			</ul>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -68,77 +70,125 @@ var arc = { <span class="hljs-string">type:</span> <span class="hljs-string">'ar
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> layer</h3>
 		<div class="tsd-signature tsd-kind-icon">layer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#layer">layer</a></p>
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#layer">layer</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L314">core/maker.ts:314</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L724">core/maker.ts:724</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional layer of this path.</p>
+				<p>Optional layer of this model.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="models" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> models</h3>
+		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#models">models</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L709">core/maker.ts:709</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional array of models within this model.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="notes" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> notes</h3>
+		<div class="tsd-signature tsd-kind-icon">notes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#notes">notes</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L719">core/maker.ts:719</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>An author may wish to add notes to this model instance.</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="origin" class="tsd-anchor"></a>
-		<h3>origin</h3>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> origin</h3>
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#origin">origin</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L309">core/maker.ts:309</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L694">core/maker.ts:694</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The main point of reference for this path.</p>
+				<p>Optional origin location of this model.</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="radius" class="tsd-anchor"></a>
-		<h3>radius</h3>
-		<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<a name="paths" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> paths</h3>
+		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipathcircle.html">IPathCircle</a>.<a href="makerjs.ipathcircle.html#radius">radius</a></p>
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#paths">paths</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L366">core/maker.ts:366</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L704">core/maker.ts:704</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The radius of the circle.</p>
+				<p>Optional array of path objects in this model.</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="startangle" class="tsd-anchor"></a>
-		<h3>start<wbr>Angle</h3>
-		<div class="tsd-signature tsd-kind-icon">start<wbr>Angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<a name="radius" class="tsd-anchor"></a>
+		<h3>radius</h3>
+		<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L392">core/maker.ts:392</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/measure.ts#L639">core/measure.ts:639</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.</p>
+				<p>Radius of the hexagon, which is also the length of a side.</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="type" class="tsd-anchor"></a>
-		<h3>type</h3>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> type</h3>
 		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#type">type</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L304">core/maker.ts:304</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L699">core/maker.ts:699</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The type of the path, e.g. &quot;line&quot;, &quot;circle&quot;, or &quot;arc&quot;. These strings are enumerated in pathType.</p>
+				<p>A model may want to specify its type, but this value is not employed yet.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="units" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
+		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.imodel.html">IModel</a>.<a href="makerjs.imodel.html#units">units</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L714">core/maker.ts:714</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional unit system of this model. See UnitType for possible values.</p>
 			</div>
 		</div>
 	</section>

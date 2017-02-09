@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IChainCallback Interface
+title: Api - IMeasureWithCenter Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Callback to model.findChains() with resulting array of chains and unchained paths.</p>
+			<p>A measurement of extents, with a center point.</p>
 		</div>
 	</div>
 </section>
@@ -14,42 +14,74 @@ title: Api - IChainCallback Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IChainCallback</span>
+			<a href="makerjs.imeasure.html" class="tsd-signature-type">IMeasure</a>
 		</li>
 	</ul>
 </section>
-<section class="tsd-panel">
-	<h3 class="tsd-before-signature">Callable</h3>
-	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module">
-		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>chains<span class="tsd-signature-symbol">: </span><a href="makerjs.ichain.html" class="tsd-signature-type">IChain</a><span class="tsd-signature-symbol">[]</span>, loose<span class="tsd-signature-symbol">: </span><a href="makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a><span class="tsd-signature-symbol">[]</span>, layer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-	</ul>
-	<ul class="tsd-descriptions">
-		<li class="tsd-description">
-			<aside class="tsd-sources">
-				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L845">core/maker.ts:845</a></li>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Properties</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imeasurewithcenter.html#center" class="tsd-kind-icon">center</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.imeasurewithcenter.html#high" class="tsd-kind-icon">high</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.imeasurewithcenter.html#low" class="tsd-kind-icon">low</a></li>
 				</ul>
-			</aside>
-			<div class="tsd-comment tsd-typography">
-				<div class="lead">
-					<p>Callback to model.findChains() with resulting array of chains and unchained paths.</p>
-				</div>
-			</div>
-			<h4 class="tsd-parameters-title">Parameters</h4>
-			<ul class="tsd-parameters">
-				<li>
-					<h5>chains: <a href="makerjs.ichain.html" class="tsd-signature-type">IChain</a><span class="tsd-signature-symbol">[]</span></h5>
-				</li>
-				<li>
-					<h5>loose: <a href="makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a><span class="tsd-signature-symbol">[]</span></h5>
-				</li>
-				<li>
-					<h5>layer: <span class="tsd-signature-type">string</span></h5>
-				</li>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="center" class="tsd-anchor"></a>
+		<h3>center</h3>
+		<div class="tsd-signature tsd-kind-icon">center<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L284">core/maker.ts:284</a></li>
 			</ul>
-			<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-		</li>
-	</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The center point of the rectangle containing the item being measured.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="high" class="tsd-anchor"></a>
+		<h3>high</h3>
+		<div class="tsd-signature tsd-kind-icon">high<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.imeasure.html">IMeasure</a>.<a href="makerjs.imeasure.html#high">high</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L273">core/maker.ts:273</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The point containing both the highest x and y values of the rectangle containing the item being measured.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="low" class="tsd-anchor"></a>
+		<h3>low</h3>
+		<div class="tsd-signature tsd-kind-icon">low<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.imeasure.html">IMeasure</a>.<a href="makerjs.imeasure.html#low">low</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/core/maker.ts#L268">core/maker.ts:268</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The point containing both the lowest x and y values of the rectangle containing the item being measured.</p>
+			</div>
+		</div>
+	</section>
 </section>
 </div>
 <footer class="tsd-panel with-border-bottom">
