@@ -6668,6 +6668,23 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
+        function getPoints(arg) {
+            var coords;
+            if (Array.isArray(arg)) {
+                if (MakerJs.isPoint(arg[0])) {
+                    return arg;
+                }
+                coords = arg;
+            }
+            else {
+                coords = MakerJs.importer.parseNumericList(arg);
+            }
+            var points = [];
+            for (var i = 0; i < coords.length; i += 2) {
+                points.push([coords[i], coords[i + 1]]);
+            }
+            return points;
+        }
         var ConnectTheDots = (function () {
             function ConnectTheDots() {
                 var _this = this;
@@ -6681,21 +6698,11 @@ var MakerJs;
                 switch (args.length) {
                     case 1:
                         isClosed = true;
-                        var coords;
-                        if (Array.isArray(args[0])) {
-                            coords = args[0];
-                        }
-                        else {
-                            coords = MakerJs.importer.parseNumericList(args[0]);
-                        }
-                        points = [];
-                        for (var i = 0; i < coords.length; i += 2) {
-                            points.push([coords[i], coords[i + 1]]);
-                        }
+                        points = getPoints(args[0]);
                         break;
                     case 2:
                         isClosed = args[0];
-                        points = args[1];
+                        points = getPoints(args[1]);
                         break;
                 }
                 var connect = function (a, b) {
@@ -6716,7 +6723,9 @@ var MakerJs;
             {
                 title: "points", type: "select", value: [
                     [[0, 0], [40, 40], [60, 20], [100, 100], [60, 60], [40, 80]],
-                    [[0, 0], [100, 0], [50, 87]]
+                    [[0, 0], [100, 0], [50, 87]],
+                    [-10, 0, 10, 0, 0, 20],
+                    '-10 0 10 0 0 20',
                 ]
             }
         ];
@@ -7435,5 +7444,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.32";
+MakerJs.version = "0.9.33";
 ﻿var Bezier = require('bezier-js');
