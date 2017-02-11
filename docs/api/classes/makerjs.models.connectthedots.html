@@ -43,14 +43,16 @@ title: Api - ConnectTheDots Class
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Connect<wbr>The<wbr>Dots<span class="tsd-signature-symbol">(</span>numericList<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.connectthedots.html" class="tsd-signature-type">ConnectTheDots</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Connect<wbr>The<wbr>Dots<span class="tsd-signature-symbol">(</span>isClosed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, numericList<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.connectthedots.html" class="tsd-signature-type">ConnectTheDots</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Connect<wbr>The<wbr>Dots<span class="tsd-signature-symbol">(</span>coords<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.connectthedots.html" class="tsd-signature-type">ConnectTheDots</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Connect<wbr>The<wbr>Dots<span class="tsd-signature-symbol">(</span>isClosed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, coords<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.connectthedots.html" class="tsd-signature-type">ConnectTheDots</a></li>
 			<li class="tsd-signature tsd-kind-icon">new <wbr>Connect<wbr>The<wbr>Dots<span class="tsd-signature-symbol">(</span>isClosed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.connectthedots.html" class="tsd-signature-type">ConnectTheDots</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/models/ConnectTheDots.ts#L5">models/ConnectTheDots.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/ConnectTheDots.ts#L27">models/ConnectTheDots.ts:27</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -58,7 +60,7 @@ title: Api - ConnectTheDots Class
 						<p>Create a model by connecting points designated in a string. The model will be &#39;closed&#39; - i.e. the last point will connect to the first point.</p>
 					</div>
 					<p>Example:</p>
-					<pre><code>var c = new makerjs.models.ConnectTheDots('<span class="hljs-number">-10</span> <span class="hljs-number">0</span> <span class="hljs-number">10</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">20</span>'); <span class="hljs-comment">// 3 coordinates to form a triangle</span>
+					<pre><code><span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> makerjs.models.ConnectTheDots(<span class="hljs-string">'-10 0 10 0 0 20'</span>); <span class="hljs-comment">// 3 coordinates to form a triangle</span>
 </code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -77,7 +79,42 @@ title: Api - ConnectTheDots Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/models/ConnectTheDots.ts#L17">models/ConnectTheDots.ts:17</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/ConnectTheDots.ts#L39">models/ConnectTheDots.ts:39</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a model by connecting points designated in a string. The model will be &#39;closed&#39; - i.e. the last point will connect to the first point.</p>
+					</div>
+					<p>Example:</p>
+					<pre><code><span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> makerjs.models.ConnectTheDots(<span class="hljs-literal">false</span>, <span class="hljs-string">'-10 0 10 0 0 20'</span>); <span class="hljs-comment">// 3 coordinates to form a polyline</span>
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>isClosed: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Flag to specify if last point should connect to the first point.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>numericList: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>String containing a list of numbers which can be delimited by spaces, commas, or anything non-numeric (Note: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential">exponential notation</a> is allowed).</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.connectthedots.html" class="tsd-signature-type">ConnectTheDots</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/ConnectTheDots.ts#L52">models/ConnectTheDots.ts:52</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -85,7 +122,7 @@ title: Api - ConnectTheDots Class
 						<p>Create a model by connecting points designated in a numeric array. The model will be &#39;closed&#39; - i.e. the last point will connect to the first point.</p>
 					</div>
 					<p>Example:</p>
-					<pre><code>var c = new makerjs.models.ConnectTheDots([<span class="hljs-number">-10</span>, <span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>]); <span class="hljs-comment">// 3 coordinates to form a triangle</span>
+					<pre><code>var c = <span class="hljs-keyword">new</span> makerjs.models.ConnectTheDots([-<span class="hljs-number">10</span>, <span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>]); <span class="hljs-comment">// 3 coordinates to form a triangle</span>
 </code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -104,7 +141,42 @@ title: Api - ConnectTheDots Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/models/ConnectTheDots.ts#L29">models/ConnectTheDots.ts:29</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/ConnectTheDots.ts#L64">models/ConnectTheDots.ts:64</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a model by connecting points designated in a numeric array. The model will be &#39;closed&#39; - i.e. the last point will connect to the first point.</p>
+					</div>
+					<p>Example:</p>
+					<pre><code>var c = <span class="hljs-keyword">new</span> makerjs.models.ConnectTheDots(<span class="hljs-literal">false</span>, [-<span class="hljs-number">10</span>, <span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>]); <span class="hljs-comment">// 3 coordinates to form a polyline</span>
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>isClosed: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Flag to specify if last point should connect to the first point.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h5>coords: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Array of coordinates.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.connectthedots.html" class="tsd-signature-type">ConnectTheDots</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/ConnectTheDots.ts#L77">models/ConnectTheDots.ts:77</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -112,7 +184,7 @@ title: Api - ConnectTheDots Class
 						<p>Create a model by connecting points designated in an array of points. The model may be closed, or left open.</p>
 					</div>
 					<p>Example:</p>
-					<pre><code>var c = new makerjs.models.ConnectTheDots(false, [[<span class="hljs-number">-10</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">10</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">20</span>]]); <span class="hljs-comment">// 3 coordinates left open</span>
+					<pre><code>var c = <span class="hljs-keyword">new</span> makerjs.models.ConnectTheDots(<span class="hljs-literal">false</span>, [[-<span class="hljs-number">10</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">10</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">20</span>]]); <span class="hljs-comment">// 3 coordinates left open</span>
 </code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -147,7 +219,7 @@ title: Api - ConnectTheDots Class
 		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1f99798/src/models/ConnectTheDots.ts#L5">models/ConnectTheDots.ts:5</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/models/ConnectTheDots.ts#L27">models/ConnectTheDots.ts:27</a></li>
 			</ul>
 		</aside>
 	</section>
