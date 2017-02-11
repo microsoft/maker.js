@@ -18,6 +18,7 @@
     "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "typings": "typings/maker.js/makerjs.d.ts",
   "maintainers": [
     {
       "name": "Dan Marshall",
