@@ -39,7 +39,7 @@ namespace MakerJs.models {
         constructor(numericList: string);
 
         /**
-         * Create a model by connecting points designated in a string. The model will be 'closed' - i.e. the last point will connect to the first point.
+         * Create a model by connecting points designated in a string. The model may be closed, or left open.
          * 
          * Example:
          * ```
@@ -64,7 +64,7 @@ namespace MakerJs.models {
         constructor(coords: number[]);
 
         /**
-         * Create a model by connecting points designated in a numeric array. The model will be 'closed' - i.e. the last point will connect to the first point.
+         * Create a model by connecting points designated in a numeric array. The model may be closed, or left open.
          * 
          * Example:
          * ```
