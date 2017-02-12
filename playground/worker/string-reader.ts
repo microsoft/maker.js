@@ -17,6 +17,18 @@
         return this;
     }
 
+    public eventNames() {
+        return [];
+    }
+
+    public prependListener() {
+        return this;
+    }
+
+    public prependOnceListener() {
+        return this;
+    }
+
     public removeListener(event: string, listener: Function): this {
         return this;
     }
