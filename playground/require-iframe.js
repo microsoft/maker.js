@@ -179,8 +179,17 @@ var MakerJsRequireIframe;
                     captureExportedModel = itemToExport;
                 }
                 else if (Array.isArray(itemToExport)) {
-                    //issue: this won't handle an array of models
-                    captureExportedModel = { paths: itemToExport };
+                    captureExportedModel = {};
+                    itemToExport.forEach(function (x, i) {
+                        if (makerjs.isModel(x)) {
+                            captureExportedModel.models = captureExportedModel.models || {};
+                            captureExportedModel.models[i] = x;
+                        }
+                        if (makerjs.isPath(x)) {
+                            captureExportedModel.paths = captureExportedModel.paths || {};
+                            captureExportedModel.paths[i] = x;
+                        }
+                    });
                 }
                 else if (parent.makerjs.isPath(itemToExport)) {
                     captureExportedModel = { paths: { "0": itemToExport } };
