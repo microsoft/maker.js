@@ -1,9 +1,9 @@
 ﻿{
   "compilerOptions": {
+    "lib": ["dom", "es2015"],
     "sourceMap": true
   },
   "files": [
-    "typings/tsd.d.ts",
     "src/core/maker.ts",
     "src/core/angle.ts",
     "src/core/point.ts",

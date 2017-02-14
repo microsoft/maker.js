@@ -96,13 +96,19 @@
   "devDependencies": {
     "browserify": "^13.0.0",
     "licensify": "^3.1.2",
-    "mkdirp": "^0.5.1",
     "pretty-camel": "0.0.8",
     "sort-keys": "^1.1.2",
-    "tsd": "^0.6.1",
     "typescript": "^2.1.6"
   },
   "dependencies": {
+    "@types/bezier-js": "0.0.6",
+    "@types/codemirror": "0.0.38",
+    "@types/marked": "0.0.28",
+    "@types/node": "^7.0.5",
+    "@types/openjscad": "0.0.27",
+    "@types/opentype.js": "0.0.0",
+    "@types/pdfkit": "^0.7.34",
+    "@types/text-encoding": "0.0.30",
     "bezier-js": "^2.1.0",
     "clone": "^1.0.2",
     "openjscad-csg": "^1.0.3"

@@ -2,10 +2,10 @@
   "compilerOptions": {
     "declaration": true,
     "outFile": "maker.js",
+    "lib": ["dom", "es2015"],
     "sourceMap": false
   },
   "files": [
-    "../typings/tsd.d.ts",
     "../src/core/maker.ts",
     "../src/core/angle.ts",
     "../src/core/point.ts",
