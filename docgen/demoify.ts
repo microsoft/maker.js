@@ -1,5 +1,4 @@
-﻿/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../typings/maker.js/makerjs.d.ts" />
+﻿/// <reference path="../index.d.ts" />
 
 import fs = require('fs');
 var browserify = require('browserify');
@@ -7,7 +6,7 @@ var packageJson = require('../package.json');
 var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
 var marked = <MarkedStatic>require('marked');
 var detective = require('detective');
-var opentype = require('opentype.js') as typeof opentypejs;
+import * as opentypeLib from 'opentype.js';
 
 class QueryStringParams {
 
@@ -37,14 +36,14 @@ function thumbnail(key: string, kit: Kit, baseUrl: string) {
 
     if (key === 'Text') {
         parameters = [
-            opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
+            opentypeLib.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
     } else {
         if (kit.ctor.metaParameters) {
             kit.ctor.metaParameters.forEach((metaParameter, i) => {
                 if (metaParameter.type === 'font') {
-                    parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf')
+                    parameters[i] = opentypeLib.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf')
                 }
             });
         }

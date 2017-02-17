@@ -1,13 +1,12 @@
-/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../typings/maker.js/makerjs.d.ts" />
+/// <reference path="../index.d.ts" />
 "use strict";
-var fs = require('fs');
+var fs = require("fs");
 var browserify = require('browserify');
 var packageJson = require('../package.json');
 var makerjs = require('../target/js/node.maker.js');
 var marked = require('marked');
 var detective = require('detective');
-var opentype = require('opentype.js');
+var opentypeLib = require("opentype.js");
 var QueryStringParams = (function () {
     function QueryStringParams(querystring) {
         if (querystring === void 0) { querystring = document.location.search.substring(1); }
@@ -33,7 +32,7 @@ function thumbnail(key, kit, baseUrl) {
     var parameters = kit.params || makerjs.kit.getParameterValues(kit.ctor);
     if (key === 'Text') {
         parameters = [
-            opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
+            opentypeLib.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
     }
@@ -41,7 +40,7 @@ function thumbnail(key, kit, baseUrl) {
         if (kit.ctor.metaParameters) {
             kit.ctor.metaParameters.forEach(function (metaParameter, i) {
                 if (metaParameter.type === 'font') {
-                    parameters[i] = opentype.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf');
+                    parameters[i] = opentypeLib.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf');
                 }
             });
         }

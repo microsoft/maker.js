@@ -4,8 +4,8 @@
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
   "main": "index.js",
   "scripts": {
-    "compile-node-demo": "tsc docgen/demoify.ts --module commonjs",
-    "compile-browser-livedoc": "tsc docgen/livedoc.ts",
+    "compile-node-demo": "tsc docgen/demoify.ts --module commonjs --lib es2015,dom",
+    "compile-browser-livedoc": "tsc docgen/livedoc.ts --lib es2015,dom",
     "compile-typescript": "npm run compile-node-demo && npm run compile-browser-livedoc",
     "build": "npm run compile-typescript",
     "predocs": "rm -r -f ./docs/api",
