@@ -1,5 +1,8 @@
 namespace MakerJs.models {
 
+    /**
+     * @private
+     */
     function getPoints(arg: IPoint[] | number[] | string) {
         var coords: number[];
 
@@ -106,7 +109,8 @@ namespace MakerJs.models {
                     break;
             }
 
-            var connect = (a: number, b: number) => {
+            var connect = (a: number, b: number, skipZeroDistance = false) => {
+                if (skipZeroDistance && measure.pointDistance(points[a], points[b]) == 0) return;
                 this.paths["ShapeLine" + i] = new paths.Line(points[a], points[b]);
             }
 
@@ -115,7 +119,7 @@ namespace MakerJs.models {
             }
 
             if (isClosed && points.length > 2) {
-                connect(points.length - 1, 0);
+                connect(points.length - 1, 0, true);
             }
         }
     }

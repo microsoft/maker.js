@@ -12,6 +12,15 @@ var StringReader = (function () {
     StringReader.prototype.once = function (event, listener) {
         return this;
     };
+    StringReader.prototype.eventNames = function () {
+        return [];
+    };
+    StringReader.prototype.prependListener = function () {
+        return this;
+    };
+    StringReader.prototype.prependOnceListener = function () {
+        return this;
+    };
     StringReader.prototype.removeListener = function (event, listener) {
         return this;
     };
@@ -40,7 +49,7 @@ var StringReader = (function () {
     StringReader.prototype.write = function () {
         var any = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            any[_i - 0] = arguments[_i];
+            any[_i] = arguments[_i];
         }
         var string = new TextDecoder("utf-8").decode(arguments[0]);
         this.data.push(string);

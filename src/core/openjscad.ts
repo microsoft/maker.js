@@ -184,7 +184,7 @@
                 depth++;
             }
 
-            var extrudeOptions: CAG.CAG_extrude_options = { offset: [0, 0, opts.extrusion] };
+            var extrudeOptions: CAG_extrude_options = { offset: [0, 0, opts.extrusion] };
             result.push(wrap('.extrude', JSON.stringify(extrudeOptions), true));
 
             all = 'return ' + result.join('');

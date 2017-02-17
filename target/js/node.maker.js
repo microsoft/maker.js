@@ -1284,7 +1284,7 @@ var MakerJs;
             function Arc() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
                 function getSpan(origin) {
                     var startAngle = MakerJs.angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
@@ -1381,7 +1381,7 @@ var MakerJs;
             function Circle() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
                 this.type = MakerJs.pathType.Circle;
                 switch (args.length) {
@@ -1430,7 +1430,7 @@ var MakerJs;
             function Line() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
                 this.type = MakerJs.pathType.Line;
                 switch (args.length) {
@@ -2526,7 +2526,6 @@ var MakerJs;
         path.straighten = straighten;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
-var MakerJs;
 (function (MakerJs) {
     var model;
     (function (model) {
@@ -4444,7 +4443,6 @@ var MakerJs;
         path.fillet = fillet;
     })(path = MakerJs.path || (MakerJs.path = {}));
 })(MakerJs || (MakerJs = {}));
-var MakerJs;
 (function (MakerJs) {
     var chain;
     (function (chain) {
@@ -4698,7 +4696,6 @@ var MakerJs;
         model.findChains = findChains;
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
-var MakerJs;
 (function (MakerJs) {
     var chain;
     (function (chain) {
@@ -5959,7 +5956,6 @@ var MakerJs;
         exporter.svgUnit[MakerJs.unitType.Meter] = { svgUnitType: "cm", scaleConversion: 100 };
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
-var MakerJs;
 (function (MakerJs) {
     var importer;
     (function (importer) {
@@ -6236,7 +6232,7 @@ var MakerJs;
             function BezierSeed() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
                 this.type = MakerJs.pathType.BezierSeed;
                 switch (args.length) {
@@ -6274,11 +6270,11 @@ var MakerJs;
         }());
         var BezierCurve = (function () {
             function BezierCurve() {
-                var _this = this;
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
+                var _this = this;
                 this.type = BezierCurve.typeName;
                 var isLeaf = false;
                 var isArrayArg0 = Array.isArray(args[0]);
@@ -6457,9 +6453,9 @@ var MakerJs;
                 var computedPoint = s.compute(t);
                 return [computedPoint.x, computedPoint.y];
             };
-            BezierCurve.typeName = 'BezierCurve';
             return BezierCurve;
         }());
+        BezierCurve.typeName = 'BezierCurve';
         models.BezierCurve = BezierCurve;
         BezierCurve.metaParameters = [
             {
@@ -6521,11 +6517,11 @@ var MakerJs;
         }
         var Ellipse = (function () {
             function Ellipse() {
-                var _this = this;
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
+                var _this = this;
                 this.models = {};
                 var n = 360 / maxBezierArcspan;
                 var accuracy;
@@ -6621,7 +6617,7 @@ var MakerJs;
             function EllipticArc() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
                 this.models = {};
                 var arc;
@@ -6668,6 +6664,9 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
+        /**
+         * @private
+         */
         function getPoints(arg) {
             var coords;
             if (Array.isArray(arg)) {
@@ -6687,11 +6686,11 @@ var MakerJs;
         }
         var ConnectTheDots = (function () {
             function ConnectTheDots() {
-                var _this = this;
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
+                var _this = this;
                 this.paths = {};
                 var isClosed;
                 var points;
@@ -6705,14 +6704,17 @@ var MakerJs;
                         points = getPoints(args[1]);
                         break;
                 }
-                var connect = function (a, b) {
+                var connect = function (a, b, skipZeroDistance) {
+                    if (skipZeroDistance === void 0) { skipZeroDistance = false; }
+                    if (skipZeroDistance && MakerJs.measure.pointDistance(points[a], points[b]) == 0)
+                        return;
                     _this.paths["ShapeLine" + i] = new MakerJs.paths.Line(points[a], points[b]);
                 };
                 for (var i = 1; i < points.length; i++) {
                     connect(i - 1, i);
                 }
                 if (isClosed && points.length > 2) {
-                    connect(points.length - 1, 0);
+                    connect(points.length - 1, 0, true);
                 }
             }
             return ConnectTheDots;
@@ -6803,7 +6805,8 @@ var MakerJs;
             {
                 title: "points", type: "select", value: [
                     [[0, 0], [10, 10], [20, 20], [30, 30], [40, 40], [50, 50], [60, 60], [70, 70], [80, 80]],
-                    [[0, 0], [0, 25], [0, 50], [0, 75], [0, 100], [25, 50], [50, 50], [75, 50], [100, 100], [100, 75], [100, 50], [100, 25], [100, 0]]]
+                    [[0, 0], [0, 25], [0, 50], [0, 75], [0, 100], [25, 50], [50, 50], [75, 50], [100, 100], [100, 75], [100, 50], [100, 25], [100, 0]]
+                ]
             }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
@@ -6989,7 +6992,7 @@ var MakerJs;
             function RoundRectangle() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
                 this.paths = {};
                 var width;
@@ -7064,9 +7067,9 @@ var MakerJs;
     (function (models) {
         var OvalArc = (function () {
             function OvalArc(startAngle, endAngle, sweepRadius, slotRadius, selfIntersect, isolateCaps) {
-                var _this = this;
                 if (selfIntersect === void 0) { selfIntersect = false; }
                 if (isolateCaps === void 0) { isolateCaps = false; }
+                var _this = this;
                 this.paths = {};
                 var capRoot;
                 if (isolateCaps) {
@@ -7140,7 +7143,7 @@ var MakerJs;
             function Rectangle() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
+                    args[_i] = arguments[_i];
                 }
                 this.paths = {};
                 var width;
@@ -7248,8 +7251,8 @@ var MakerJs;
     (function (models) {
         var Slot = (function () {
             function Slot(origin, endPoint, radius, isolateCaps) {
-                var _this = this;
                 if (isolateCaps === void 0) { isolateCaps = false; }
+                var _this = this;
                 this.paths = {};
                 var capRoot;
                 if (isolateCaps) {
@@ -7362,9 +7365,9 @@ var MakerJs;
     (function (models) {
         var Text = (function () {
             function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy) {
-                var _this = this;
                 if (combine === void 0) { combine = false; }
                 if (centerCharacterOrigin === void 0) { centerCharacterOrigin = false; }
+                var _this = this;
                 this.models = {};
                 var charIndex = 0;
                 var combineOptions = {};
@@ -7444,5 +7447,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.33";
+MakerJs.version = "0.9.36";
 ﻿var Bezier = require('bezier-js');

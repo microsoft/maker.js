@@ -1,10 +1,9 @@
-// Type definitions for Maker.js
+// Type definitions for Maker.js 0.9.36
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-/// <reference path="../bezier-js/bezier-js.d.ts" />
-/// <reference path="../opentype/opentype.d.ts" />
-/// <reference path="../pdfkit/pdfkit.d.ts" />
+/// <reference types="pdfkit" />
+/// <reference types="bezier-js" />
 /**
  * Root module for Maker.js.
  *
@@ -72,7 +71,7 @@ declare namespace MakerJs {
      * @returns Model or Path object within the modelContext tree.
      */
     function travel(modelContext: IModel, routeKeyOrRoute: string | string[]): {
-        path: IPath | IModel;
+        path: IModel | IPath;
         offset: IPoint;
     };
     /**
@@ -706,6 +705,9 @@ declare namespace MakerJs {
          */
         notes?: string;
     }
+}
+declare module "makerjs" {
+    export = MakerJs;
 }
 declare namespace MakerJs.angle {
     /**
@@ -2181,7 +2183,7 @@ declare namespace MakerJs.models {
          */
         constructor(numericList: string);
         /**
-         * Create a model by connecting points designated in a string. The model will be 'closed' - i.e. the last point will connect to the first point.
+         * Create a model by connecting points designated in a string. The model may be closed, or left open.
          *
          * Example:
          * ```
@@ -2204,7 +2206,7 @@ declare namespace MakerJs.models {
          */
         constructor(coords: number[]);
         /**
-         * Create a model by connecting points designated in a numeric array. The model will be 'closed' - i.e. the last point will connect to the first point.
+         * Create a model by connecting points designated in a numeric array. The model may be closed, or left open.
          *
          * Example:
          * ```
@@ -2434,6 +2436,6 @@ declare namespace MakerJs.models {
 declare namespace MakerJs.models {
     class Text implements IModel {
         models: IModelMap;
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine?: boolean, centerCharacterOrigin?: boolean, bezierAccuracy?: number);
+        constructor(font: opentype.Font, text: string, fontSize: number, combine?: boolean, centerCharacterOrigin?: boolean, bezierAccuracy?: number);
     }
 }

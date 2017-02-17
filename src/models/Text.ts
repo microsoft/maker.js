@@ -4,12 +4,12 @@
 
         public models: IModelMap = {};
 
-        constructor(font: opentypejs.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number) {
+        constructor(font: opentype.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number) {
 
             var charIndex = 0;
             var combineOptions: ICombineOptions = {};
 
-            var cb = (glyph: opentypejs.Glyph, x: number, y: number, _fontSize: number, options: opentypejs.RenderOptions) => {
+            var cb = (glyph: opentype.Glyph, x: number, y: number, _fontSize: number, options: opentype.RenderOptions) => {
                 var charModel: IModel = {};
                 var firstPoint: IPoint;
                 var currPoint: IPoint;
