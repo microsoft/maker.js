@@ -1,9 +1,9 @@
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
     var FontLoader = (function () {
-        function FontLoader(opentype, metaParameters, paramValues) {
+        function FontLoader(opentypeLib, metaParameters, paramValues) {
             var _this = this;
-            this.opentype = opentype;
+            this.opentypeLib = opentypeLib;
             this.metaParameters = metaParameters;
             this.paramValues = paramValues;
             this.fontParameters = {};
@@ -80,7 +80,7 @@ var MakerJsPlayground;
         FontLoader.prototype.loadFont = function (fontId) {
             var _this = this;
             //load a font asynchronously
-            this.opentype.load(this.baseUrl + fonts[fontId].path, function (err, font) {
+            this.opentypeLib.load(this.baseUrl + fonts[fontId].path, function (err, font) {
                 if (err) {
                     _this.failureCb(fontId);
                 }
