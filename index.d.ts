@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.34
+// Type definitions for Maker.js 0.9.35
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -706,6 +706,9 @@ declare namespace MakerJs {
          */
         notes?: string;
     }
+}
+declare module "makerjs" {
+    export = MakerJs;
 }
 declare namespace MakerJs.angle {
     /**

@@ -1,5 +1,6 @@
 var MakerJsPlaygroundExport;
 (function (MakerJsPlaygroundExport) {
+    var ExportFormat;
     (function (ExportFormat) {
         ExportFormat[ExportFormat["Json"] = 0] = "Json";
         ExportFormat[ExportFormat["Dxf"] = 1] = "Dxf";
@@ -7,8 +8,7 @@ var MakerJsPlaygroundExport;
         ExportFormat[ExportFormat["OpenJsCad"] = 3] = "OpenJsCad";
         ExportFormat[ExportFormat["Stl"] = 4] = "Stl";
         ExportFormat[ExportFormat["Pdf"] = 5] = "Pdf";
-    })(MakerJsPlaygroundExport.ExportFormat || (MakerJsPlaygroundExport.ExportFormat = {}));
-    var ExportFormat = MakerJsPlaygroundExport.ExportFormat;
+    })(ExportFormat = MakerJsPlaygroundExport.ExportFormat || (MakerJsPlaygroundExport.ExportFormat = {}));
     ;
     MakerJsPlaygroundExport.formatMap = {};
     MakerJsPlaygroundExport.formatMap[ExportFormat.Json] = {
