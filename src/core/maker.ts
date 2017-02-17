@@ -962,3 +962,7 @@ namespace MakerJs {
 
 //CommonJs
 module.exports = MakerJs;
+
+declare module "makerjs" {
+    export = MakerJs;
+}
