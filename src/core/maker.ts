@@ -626,12 +626,7 @@ namespace MakerJs {
     /**
      * Options to pass to model.simplify()
      */
-    export interface ISimplifyOptions {
-
-        /**
-         * Optional 
-         */
-        pointMatchingDistance?: number;
+    export interface ISimplifyOptions extends IPointMatchOptions {
 
         /**
          * Optional 
