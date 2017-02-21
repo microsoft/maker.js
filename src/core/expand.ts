@@ -205,10 +205,11 @@ namespace MakerJs.model {
      * @param distance Distance to outline.
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
      * @param inside Optional boolean to draw lines inside the model instead of outside.
+     * @param options Options to send to combine() function.
      * @returns Model which surrounds the paths outside of the original model.
      */
-    export function outline(modelToOutline: IModel, distance: number, joints = 0, inside = false): IModel {
-        var expanded = expandPaths(modelToOutline, distance, joints);
+    export function outline(modelToOutline: IModel, distance: number, joints = 0, inside = false, options: ICombineOptions = {}): IModel {
+        var expanded = expandPaths(modelToOutline, distance, joints, options);
 
         if (!expanded) return null;
 
