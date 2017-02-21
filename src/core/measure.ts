@@ -363,6 +363,24 @@ namespace MakerJs.measure {
     }
 
     /**
+     * Measures the length of all paths in a model.
+     * 
+     * @param modelToMeasure The model containing paths to measure.
+     * @returns Length of all paths in the model.
+     */
+    export function modelPathLength(modelToMeasure: IModel): number {
+        var total = 0;
+
+        model.walk(modelToMeasure, {
+            onPath: function (walkedPath: IWalkPath) {
+                total += pathLength(walkedPath.pathContext);
+            }
+        });
+
+        return total;
+    }
+
+    /**
      * @private
      */
     function cloneMeasure(measureToclone: IMeasure): IMeasure {
