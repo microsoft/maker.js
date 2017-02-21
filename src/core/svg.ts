@@ -740,6 +740,9 @@ namespace MakerJs.exporter {
 
 namespace MakerJs.importer {
 
+    /**
+     * @private
+     */
     interface ISVGPathCommand {
         command: string;
         absolute?: boolean;
@@ -748,7 +751,14 @@ namespace MakerJs.importer {
         prev: ISVGPathCommand;
     }
 
+    /**
+     * SVG importing options.
+     */
     export interface ISVGImportOptions {
+
+        /**
+         * Optional accuracy of Bezier curves and elliptic paths.
+         */
         bezierAccuracy?: number;
     }
 
