@@ -628,7 +628,7 @@ var MakerJsPlayground;
         }
     }
     function constructOnMainThread(successCb) {
-        var fontLoader = new MakerJsPlayground.FontLoader(opentype, processed.kit.metaParameters, processed.paramValues);
+        var fontLoader = new MakerJsPlayground.FontLoader(MakerJsPlayground.fontDir, opentype, processed.kit.metaParameters, processed.paramValues);
         fontLoader.successCb = function (realValues) {
             constructOnMainThreadReal(realValues, successCb);
         };
@@ -693,6 +693,7 @@ var MakerJsPlayground;
             idToUrlMap[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
         }
         var options = {
+            fontDir: '../' + MakerJsPlayground.fontDir,
             requestId: 0,
             javaScript: javaScript,
             orderedDependencies: orderedDependencies,
@@ -719,6 +720,7 @@ var MakerJsPlayground;
         };
         renderInWorker.requestId = new Date().valueOf();
         var options = {
+            fontDir: '../' + MakerJsPlayground.fontDir,
             requestId: renderInWorker.requestId,
             paramValues: processed.paramValues
         };
@@ -766,7 +768,7 @@ var MakerJsPlayground;
             paramValues = getHashParams();
         }
         else if (processed.kit) {
-            var fontLoader = new MakerJsPlayground.FontLoader(null, processed.kit.metaParameters, makerjs.kit.getParameterValues(processed.kit));
+            var fontLoader = new MakerJsPlayground.FontLoader(MakerJsPlayground.fontDir, null, processed.kit.metaParameters, makerjs.kit.getParameterValues(processed.kit));
             paramValues = fontLoader.getParamValuesWithFontSpec();
         }
         setParamValues(paramValues, true);

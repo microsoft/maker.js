@@ -627,12 +627,7 @@ namespace MakerJs {
     /**
      * Options to pass to model.simplify()
      */
-    export interface ISimplifyOptions {
-
-        /**
-         * Optional 
-         */
-        pointMatchingDistance?: number;
+    export interface ISimplifyOptions extends IPointMatchOptions {
 
         /**
          * Optional 
@@ -843,7 +838,7 @@ namespace MakerJs {
      * Callback to model.findChains() with resulting array of chains and unchained paths.
      */
     export interface IChainCallback {
-        (chains: IChain[], loose: IWalkPath[], layer: string): void;
+        (chains: IChain[], loose: IWalkPath[], layer: string, ignored?: IWalkPath[]): void;
     }
 
     /**

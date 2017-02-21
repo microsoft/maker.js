@@ -740,6 +740,9 @@ namespace MakerJs.exporter {
 
 namespace MakerJs.importer {
 
+    /**
+     * @private
+     */
     interface ISVGPathCommand {
         command: string;
         absolute?: boolean;
@@ -748,7 +751,18 @@ namespace MakerJs.importer {
         prev: ISVGPathCommand;
     }
 
-    export function fromSVGPathData(pathData: string): IModel {
+    /**
+     * SVG importing options.
+     */
+    export interface ISVGImportOptions {
+
+        /**
+         * Optional accuracy of Bezier curves and elliptic paths.
+         */
+        bezierAccuracy?: number;
+    }
+
+    export function fromSVGPathData(pathData: string, options: ISVGImportOptions = {}): IModel {
         var result: IModel = {};
 
         function addPath(p: IPath) {
@@ -853,7 +867,7 @@ namespace MakerJs.importer {
                 }
 
                 //create an elliptical arc, this will re-distort
-                var e = new models.EllipticArc(arc, 1, ry / rx);
+                var e = new models.EllipticArc(arc, 1, ry / rx, options.bezierAccuracy);
 
                 //un-rotate back to where it should be.
                 model.rotate(e, -rotation, cmd.from);
@@ -876,7 +890,7 @@ namespace MakerJs.importer {
             var control1 = getPoint(cmd, 0);
             var control2 = getPoint(cmd, 2);
             var end = getPoint(cmd, 4);
-            addModel(new models.BezierCurve(cmd.from, control1, control2, end));
+            addModel(new models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
             return end;
         };
 
@@ -896,14 +910,14 @@ namespace MakerJs.importer {
 
             var control2 = getPoint(cmd, 0);
             var end = getPoint(cmd, 2);
-            addModel(new models.BezierCurve(cmd.from, control1, control2, end));
+            addModel(new models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
             return end;
         };
 
         map['Q'] = function (cmd: ISVGPathCommand) {
             var control = getPoint(cmd, 0);
             var end = getPoint(cmd, 2);
-            addModel(new models.BezierCurve(cmd.from, control, end));
+            addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
             return end;
         };
 
@@ -927,7 +941,7 @@ namespace MakerJs.importer {
 
             var end = getPoint(cmd, 0);
 
-            addModel(new models.BezierCurve(cmd.from, control, end));
+            addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
             return end;
         };
 

@@ -833,7 +833,7 @@
     }
 
     function constructOnMainThread(successCb?: Function) {
-        var fontLoader = new FontLoader(opentype, processed.kit.metaParameters, processed.paramValues);
+        var fontLoader = new FontLoader(fontDir, opentype, processed.kit.metaParameters, processed.paramValues);
 
         fontLoader.successCb = function (realValues: any[]) {
             constructOnMainThreadReal(realValues, successCb);
@@ -914,6 +914,7 @@
         }
 
         var options: MakerJsPlaygroundRender.IRenderRequest = {
+            fontDir: '../' + fontDir,
             requestId: 0,
             javaScript: javaScript,
             orderedDependencies: orderedDependencies,
@@ -945,6 +946,7 @@
         renderInWorker.requestId = new Date().valueOf();
 
         var options: MakerJsPlaygroundRender.IRenderRequest = {
+            fontDir: '../' + fontDir,
             requestId: renderInWorker.requestId,
             paramValues: processed.paramValues
         }
@@ -1001,7 +1003,7 @@
             paramValues = getHashParams();
         } else if (processed.kit) {
 
-            var fontLoader = new FontLoader(null, processed.kit.metaParameters, makerjs.kit.getParameterValues(processed.kit));
+            var fontLoader = new FontLoader(fontDir, null, processed.kit.metaParameters, makerjs.kit.getParameterValues(processed.kit));
             paramValues = fontLoader.getParamValuesWithFontSpec();
         }
 
@@ -1109,6 +1111,7 @@
     export var querystringParams: QueryStringParams;
     export var pointers: Pointer.Manager;
     export var renderOnWorkerThread = true;
+    export var fontDir: string;
 
     export function runCodeFromEditor(paramValues?: any[]) {
 

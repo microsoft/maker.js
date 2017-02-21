@@ -17,6 +17,13 @@
     /**
      * @private
      */
+    interface IWalkPathByLayerMap {
+        [layer: string]: IWalkPath[];
+    }
+
+    /**
+     * @private
+     */
     interface IChainFound {
         (chain: IChain): void;
     }
@@ -160,6 +167,7 @@
 
         var connectionMap: IConnectionsMap = {};
         var chainsByLayer: IChainsMap = {};
+        var ignored: IWalkPathByLayerMap = {};
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
@@ -198,13 +206,19 @@
 
                 } else {
 
-                    //gather both endpoints from all non-circle segments
-                    var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
-
                     //don't add lines which are shorter than the tolerance
                     if (pathLength < opts.pointMatchingDistance) {
+
+                        if (!ignored[layer]) {
+                            ignored[layer] = [];
+                        }
+                        ignored[layer].push(walkedPath);
+
                         return;
                     }
+
+                    //gather both endpoints from all non-circle segments
+                    var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
 
                     for (var i = 0; i < 2; i++) {
                         var link: IChainLink = {
@@ -248,7 +262,7 @@
             //sort to return largest chains first
             chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
 
-            callback(chainsByLayer[layer], loose, layer);
+            callback(chainsByLayer[layer], loose, layer, ignored[layer]);
         }
 
     }

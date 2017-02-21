@@ -1,4 +1,4 @@
-/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../node_modules/@types/node/index.d.ts" />
 "use strict";
 var fs = require("fs");
 var path = require("path");

@@ -115,7 +115,7 @@ onmessage = function (ev) {
         activeRequestId = request.requestId;
         htmls.length = baseHtmlLength;
         logs.length = baseLogLength;
-        var fontLoader = new MakerJsPlayground.FontLoader(window['opentype'], kit.metaParameters, request.paramValues);
+        var fontLoader = new MakerJsPlayground.FontLoader(request.fontDir, window['opentype'], kit.metaParameters, request.paramValues);
         fontLoader.successCb = function (realValues) {
             try {
                 var model = makerjs.kit.construct(kit, realValues);

@@ -16,11 +16,10 @@
         private fontsLoaded = 0;
         private paramValuesCopy: any[];
 
-        public baseUrl = '/maker.js/fonts/';
         public successCb: (values: any[]) => void;
         public failureCb: (failedFontId: string) => void;
 
-        constructor(private opentypeLib: typeof opentype, private metaParameters: MakerJs.IMetaParameter[], private paramValues: any[]) {
+        constructor(public baseUrl: string, private opentypeLib: typeof opentype, private metaParameters: MakerJs.IMetaParameter[], private paramValues: any[]) {
 
             if (metaParameters) {
                 metaParameters.forEach((metaParameter, i) => {
