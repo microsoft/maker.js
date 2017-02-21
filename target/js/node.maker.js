@@ -2613,12 +2613,14 @@ var MakerJs;
          * @param distance Distance to outline.
          * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
          * @param inside Optional boolean to draw lines inside the model instead of outside.
+         * @param options Options to send to combine() function.
          * @returns Model which surrounds the paths outside of the original model.
          */
-        function outline(modelToOutline, distance, joints, inside) {
+        function outline(modelToOutline, distance, joints, inside, options) {
             if (joints === void 0) { joints = 0; }
             if (inside === void 0) { inside = false; }
-            var expanded = expandPaths(modelToOutline, distance, joints);
+            if (options === void 0) { options = {}; }
+            var expanded = expandPaths(modelToOutline, distance, joints, options);
             if (!expanded)
                 return null;
             var loops = model.findLoops(expanded);
@@ -3164,6 +3166,22 @@ var MakerJs;
         }
         measure.pathLength = pathLength;
         /**
+         * Measures the length of all paths in a model.
+         *
+         * @param modelToMeasure The model containing paths to measure.
+         * @returns Length of all paths in the model.
+         */
+        function modelPathLength(modelToMeasure) {
+            var total = 0;
+            MakerJs.model.walk(modelToMeasure, {
+                onPath: function (walkedPath) {
+                    total += pathLength(walkedPath.pathContext);
+                }
+            });
+            return total;
+        }
+        measure.modelPathLength = modelPathLength;
+        /**
          * @private
          */
         function cloneMeasure(measureToclone) {
@@ -3212,7 +3230,9 @@ var MakerJs;
             function avg(dim) {
                 return (m.low[dim] + m.high[dim]) / 2;
             }
-            m.center = [avg(0), avg(1)];
+            if (m) {
+                m.center = [avg(0), avg(1)];
+            }
             return m;
         }
         measure.modelExtents = modelExtents;
@@ -4625,6 +4645,7 @@ var MakerJs;
             }
             var connectionMap = {};
             var chainsByLayer = {};
+            var ignored = {};
             var walkOptions = {
                 onPath: function (walkedPath) {
                     var layer = opts.byLayers ? walkedPath.layer : '';
@@ -4654,12 +4675,16 @@ var MakerJs;
                         chainsByLayer[layer].push(chain);
                     }
                     else {
-                        //gather both endpoints from all non-circle segments
-                        var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
                         //don't add lines which are shorter than the tolerance
                         if (pathLength < opts.pointMatchingDistance) {
+                            if (!ignored[layer]) {
+                                ignored[layer] = [];
+                            }
+                            ignored[layer].push(walkedPath);
                             return;
                         }
+                        //gather both endpoints from all non-circle segments
+                        var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
                         for (var i = 0; i < 2; i++) {
                             var link = {
                                 walkedPath: walkedPath,
@@ -4690,7 +4715,7 @@ var MakerJs;
                 });
                 //sort to return largest chains first
                 chainsByLayer[layer].sort(function (a, b) { return b.pathLength - a.pathLength; });
-                callback(chainsByLayer[layer], loose, layer);
+                callback(chainsByLayer[layer], loose, layer, ignored[layer]);
             }
         }
         model.findChains = findChains;
@@ -5959,7 +5984,8 @@ var MakerJs;
 (function (MakerJs) {
     var importer;
     (function (importer) {
-        function fromSVGPathData(pathData) {
+        function fromSVGPathData(pathData, options) {
+            if (options === void 0) { options = {}; }
             var result = {};
             function addPath(p) {
                 if (!result.paths) {
@@ -6046,7 +6072,7 @@ var MakerJs;
                         ry *= scaleUp;
                     }
                     //create an elliptical arc, this will re-distort
-                    var e = new MakerJs.models.EllipticArc(arc, 1, ry / rx);
+                    var e = new MakerJs.models.EllipticArc(arc, 1, ry / rx, options.bezierAccuracy);
                     //un-rotate back to where it should be.
                     MakerJs.model.rotate(e, -rotation, cmd.from);
                     addModel(e);
@@ -6063,7 +6089,7 @@ var MakerJs;
                 var control1 = getPoint(cmd, 0);
                 var control2 = getPoint(cmd, 2);
                 var end = getPoint(cmd, 4);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control1, control2, end));
+                addModel(new MakerJs.models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
                 return end;
             };
             map['S'] = function (cmd) {
@@ -6082,13 +6108,13 @@ var MakerJs;
                 }
                 var control2 = getPoint(cmd, 0);
                 var end = getPoint(cmd, 2);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control1, control2, end));
+                addModel(new MakerJs.models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
                 return end;
             };
             map['Q'] = function (cmd) {
                 var control = getPoint(cmd, 0);
                 var end = getPoint(cmd, 2);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control, end));
+                addModel(new MakerJs.models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
                 return end;
             };
             map['T'] = function (cmd) {
@@ -6109,7 +6135,7 @@ var MakerJs;
                 var p = MakerJs.point.mirror(control, false, true);
                 cmd.data.push.apply(cmd.data, p);
                 var end = getPoint(cmd, 0);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control, end));
+                addModel(new MakerJs.models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
                 return end;
             };
             var firstPoint = [0, 0];
@@ -7447,5 +7473,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.36";
+MakerJs.version = "0.9.37";
 ﻿var Bezier = require('bezier-js');

@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.36
+// Type definitions for Maker.js 0.9.37
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -433,11 +433,7 @@ declare namespace MakerJs {
     /**
      * Options to pass to model.simplify()
      */
-    interface ISimplifyOptions {
-        /**
-         * Optional
-         */
-        pointMatchingDistance?: number;
+    interface ISimplifyOptions extends IPointMatchOptions {
         /**
          * Optional
          */
@@ -609,7 +605,7 @@ declare namespace MakerJs {
      * Callback to model.findChains() with resulting array of chains and unchained paths.
      */
     interface IChainCallback {
-        (chains: IChain[], loose: IWalkPath[], layer: string): void;
+        (chains: IChain[], loose: IWalkPath[], layer: string, ignored?: IWalkPath[]): void;
     }
     /**
      * Options to pass to model.findLoops.
@@ -1435,9 +1431,10 @@ declare namespace MakerJs.model {
      * @param distance Distance to outline.
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
      * @param inside Optional boolean to draw lines inside the model instead of outside.
+     * @param options Options to send to combine() function.
      * @returns Model which surrounds the paths outside of the original model.
      */
-    function outline(modelToOutline: IModel, distance: number, joints?: number, inside?: boolean): IModel;
+    function outline(modelToOutline: IModel, distance: number, joints?: number, inside?: boolean, options?: ICombineOptions): IModel;
 }
 declare namespace MakerJs.units {
     /**
@@ -1596,6 +1593,13 @@ declare namespace MakerJs.measure {
      * @returns Length of the path.
      */
     function pathLength(pathToMeasure: IPath): number;
+    /**
+     * Measures the length of all paths in a model.
+     *
+     * @param modelToMeasure The model containing paths to measure.
+     * @returns Length of all paths in the model.
+     */
+    function modelPathLength(modelToMeasure: IModel): number;
     /**
      * Measures the smallest rectangle which contains a model.
      *
@@ -2091,7 +2095,16 @@ declare namespace MakerJs.exporter {
     }
 }
 declare namespace MakerJs.importer {
-    function fromSVGPathData(pathData: string): IModel;
+    /**
+     * SVG importing options.
+     */
+    interface ISVGImportOptions {
+        /**
+         * Optional accuracy of Bezier curves and elliptic paths.
+         */
+        bezierAccuracy?: number;
+    }
+    function fromSVGPathData(pathData: string, options?: ISVGImportOptions): IModel;
 }
 declare namespace MakerJs.models {
     class BezierCurve implements IModel {
