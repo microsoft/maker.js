@@ -422,7 +422,9 @@ namespace MakerJs.measure {
             return (m.low[dim] + m.high[dim]) / 2;
         }
 
-        m.center = [avg(0), avg(1)];
+        if (m) {
+            m.center = [avg(0), avg(1)];
+        }
 
         return m;
     }
