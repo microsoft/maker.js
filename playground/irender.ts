@@ -1,6 +1,7 @@
 ﻿namespace MakerJsPlaygroundRender {
 
     export interface IRenderRequest {
+        fontDir: string;
         requestId: number;
         orderedDependencies?: string[];
         dependencyUrls?: { [id: string]: string };
