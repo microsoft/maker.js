@@ -2551,6 +2551,9 @@ var MakerJs;
             var first = true;
             var walkOptions = {
                 onPath: function (walkedPath) {
+                    //don't expand paths shorter than the tolerance for combine operations
+                    if (combineOptions.pointMatchingDistance && MakerJs.measure.pathLength(walkedPath.pathContext) < combineOptions.pointMatchingDistance)
+                        return;
                     var expandedPathModel = MakerJs.path.expand(walkedPath.pathContext, distance, true);
                     if (expandedPathModel) {
                         model.moveRelative(expandedPathModel, walkedPath.offset);
@@ -6339,6 +6342,7 @@ var MakerJs;
                                 }
                                 else {
                                     this.accuracy = args[3];
+                                    //fall through
                                 }
                             case 3:
                                 if (isArrayArg0) {
@@ -6466,6 +6470,7 @@ var MakerJs;
                         }
                     }
                     else {
+                        //TODO: find bezier seeds from a split chain
                     }
                 }, options);
                 return seeds;
@@ -7473,5 +7478,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.37";
+MakerJs.version = "0.9.38";
 ﻿var Bezier = require('bezier-js');
