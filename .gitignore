@@ -11,3 +11,4 @@ CONTRIBUTING.md
 /.vs
 /.vscode
 /docs/api/assets
+debug.log
