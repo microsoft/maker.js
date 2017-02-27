@@ -24,3 +24,4 @@ tsconfig.json
 tsd.json
 CONTRIBUTING.md
 Web.config
+debug.log
