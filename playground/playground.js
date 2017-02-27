@@ -203,6 +203,10 @@ var MakerJsPlayground;
                 div.innerTextEscaped = true;
                 paramHtml.push(div.toString());
             }
+            //if (sliders) {
+            //var button = new makerjs.exporter.XmlTag('input', { type: 'button', onclick:'MakerJsPlayground.animate()', value: 'animate'});
+            //paramHtml.push(button.toString());
+            //}
         }
         processed.paramValues = paramValues;
         if (paramHtml.length) {

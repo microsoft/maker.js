@@ -61,6 +61,7 @@ deps[MakerJsPlaygroundExport.ExportFormat.Pdf] = {
     load: function () {
         importScripts('../../external/text-encoding/encoding-indexes.js', '../../external/text-encoding/encoding.js', '../../external/PDFKit/pdfkit.js', 'string-reader.js');
     }
+    //TODO: instrument stringreader for PDF percentage ouput
 };
 function getExporter(format, result) {
     var f = MakerJsPlaygroundExport.ExportFormat;

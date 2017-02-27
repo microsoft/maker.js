@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.37
+ *   version: 0.9.38
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2746,6 +2746,9 @@ var MakerJs;
             var first = true;
             var walkOptions = {
                 onPath: function (walkedPath) {
+                    //don't expand paths shorter than the tolerance for combine operations
+                    if (combineOptions.pointMatchingDistance && MakerJs.measure.pathLength(walkedPath.pathContext) < combineOptions.pointMatchingDistance)
+                        return;
                     var expandedPathModel = MakerJs.path.expand(walkedPath.pathContext, distance, true);
                     if (expandedPathModel) {
                         model.moveRelative(expandedPathModel, walkedPath.offset);
@@ -6534,6 +6537,7 @@ var MakerJs;
                                 }
                                 else {
                                     this.accuracy = args[3];
+                                    //fall through
                                 }
                             case 3:
                                 if (isArrayArg0) {
@@ -6661,6 +6665,7 @@ var MakerJs;
                         }
                     }
                     else {
+                        //TODO: find bezier seeds from a split chain
                     }
                 }, options);
                 return seeds;
@@ -7668,6 +7673,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.37";
+MakerJs.version = "0.9.38";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);
