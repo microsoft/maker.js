@@ -112,6 +112,10 @@ namespace MakerJs.model {
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
+
+                //don't expand paths shorter than the tolerance for combine operations
+                if (combineOptions.pointMatchingDistance && measure.pathLength(walkedPath.pathContext) < combineOptions.pointMatchingDistance) return;
+
                 var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
 
                 if (expandedPathModel) {
