@@ -1,6 +1,6 @@
 {
   "name": "makerjs",
-  "version": "0.9.38",
+  "version": "0.9.39",
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,7 @@
     "target-browser-platform": "browserify -p licensify --ignore buffer --ignore openjscad-csg -r ./target/js/node.js:makerjs -o ./target/js/browser.js",
     "version-inside": "node ./target/version-inside.js",
     "build-debug": "tsc",
-    "build": "tsc -p target && npm run version-tsd && npm run version-inside && npm run target-node-platform && npm run target-browser-platform && npm run cat-browser && npm run cat-node && cp target/js/node.maker.js ./index.js && npm run compile-playground && npm run versionize",
-    "versionize": "node ./target/versionize.js",
+    "build": "tsc -p target && npm run version-tsd && npm run version-inside && npm run target-node-platform && npm run target-browser-platform && npm run cat-browser && npm run cat-node && cp target/js/node.maker.js ./index.js && npm run compile-playground",
     "predocs": "rm -r -f ./docs/api",
     "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -94,6 +93,9 @@
   },
   "homepage": "https://github.com/Microsoft/maker.js",
   "devDependencies": {
+    "@types/codemirror": "0.0.38",
+    "@types/marked": "0.0.28",
+    "@types/text-encoding": "0.0.30",
     "browserify": "^13.0.0",
     "licensify": "^3.1.2",
     "pretty-camel": "0.0.8",
@@ -102,13 +104,10 @@
   },
   "dependencies": {
     "@types/bezier-js": "0.0.6",
-    "@types/codemirror": "0.0.38",
-    "@types/marked": "0.0.28",
     "@types/node": "^7.0.5",
     "@types/openjscad": "0.0.27",
     "@types/opentype.js": "0.0.0",
     "@types/pdfkit": "^0.7.34",
-    "@types/text-encoding": "0.0.30",
     "bezier-js": "^2.1.0",
     "clone": "^1.0.2",
     "openjscad-csg": "^1.0.3"

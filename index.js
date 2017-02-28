@@ -6145,7 +6145,7 @@ var MakerJs;
             var currPoint = [0, 0];
             var pathCount = 0;
             var prevCommand;
-            var regexpCommands = /([achlmqstvz])(.?[^achlmqstvz]*)/ig;
+            var regexpCommands = /([achlmqstvz])([0-9e\.\+-\s]*)/ig;
             var commandMatches;
             while ((commandMatches = regexpCommands.exec(pathData)) !== null) {
                 if (commandMatches.index === regexpCommands.lastIndex) {
@@ -7478,5 +7478,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.38";
+MakerJs.version = "0.9.39";
 ﻿var Bezier = require('bezier-js');
