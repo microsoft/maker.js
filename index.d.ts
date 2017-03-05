@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.39
+// Type definitions for Maker.js 0.9.40
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2309,7 +2309,7 @@ declare namespace MakerJs.models {
 declare namespace MakerJs.models {
     class Dome implements IModel {
         paths: IPathMap;
-        constructor(width: number, height: number, radius?: number);
+        constructor(width: number, height: number, radius?: number, bottomless?: boolean);
     }
 }
 declare namespace MakerJs.models {

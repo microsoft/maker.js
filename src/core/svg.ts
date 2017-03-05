@@ -949,7 +949,7 @@ namespace MakerJs.importer {
         var currPoint: IPoint = [0, 0];
         var pathCount = 0;
         var prevCommand: ISVGPathCommand;
-        var regexpCommands = /([achlmqstvz])([0-9e\.\+-\s]*)/ig;
+        var regexpCommands = /([achlmqstvz])([0-9e\.,\+-\s]*)/ig;
         var commandMatches: RegExpExecArray;
 
         while ((commandMatches = regexpCommands.exec(pathData)) !== null) {
