@@ -1,10 +1,6 @@
 node_modules/
-src/core/*.js
-src/core/*.js.map
-src/models/*.js
-src/models/*.js.map
-src/tools/*.js
-src/tools/*.js.map
+debug/core/
+debug/models/
 web.config
 CONTRIBUTING.md
 *.sln

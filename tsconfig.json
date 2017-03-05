@@ -1,9 +1,10 @@
 ﻿{
   "compilerOptions": {
     "lib": ["dom", "es2015"],
+    "outDir": "debug/",
     "sourceMap": true
   },
-  "files": [
+"files": [
     "src/core/maker.ts",
     "src/core/angle.ts",
     "src/core/point.ts",
