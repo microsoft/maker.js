@@ -5,7 +5,7 @@
     "lib": ["dom", "es2015"],
     "sourceMap": false
   },
-  "files": [
+"files": [
     "../src/core/maker.ts",
     "../src/core/angle.ts",
     "../src/core/point.ts",

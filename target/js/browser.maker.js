@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.39
+ *   version: 0.9.40
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -4415,6 +4415,8 @@ var MakerJs;
                 else {
                     guideRadius += filletRadius;
                 }
+                if (MakerJs.round(guideRadius) <= 0)
+                    return null;
                 return new MakerJs.paths.Arc(arc.origin, guideRadius, arc.startAngle, arc.endAngle);
             }
             return null;
@@ -6340,7 +6342,7 @@ var MakerJs;
             var currPoint = [0, 0];
             var pathCount = 0;
             var prevCommand;
-            var regexpCommands = /([achlmqstvz])([0-9e\.\+-\s]*)/ig;
+            var regexpCommands = /([achlmqstvz])([0-9e\.,\+-\s]*)/ig;
             var commandMatches;
             while ((commandMatches = regexpCommands.exec(pathData)) !== null) {
                 if (commandMatches.index === regexpCommands.lastIndex) {
@@ -6991,7 +6993,8 @@ var MakerJs;
         Polygon.metaParameters = [
             { title: "number of sides", type: "range", min: 3, max: 24, value: 6 },
             { title: "radius", type: "range", min: 1, max: 100, value: 50 },
-            { title: "offset angle", type: "range", min: 0, max: 180, value: 0 }
+            { title: "offset angle", type: "range", min: 0, max: 180, value: 0 },
+            { title: "radius on flats (vs radius on vertexes)", type: "bool", value: false }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -7176,7 +7179,7 @@ var MakerJs;
     var models;
     (function (models) {
         var Dome = (function () {
-            function Dome(width, height, radius) {
+            function Dome(width, height, radius, bottomless) {
                 this.paths = {};
                 var w2 = width / 2;
                 if (radius < 0)
@@ -7187,7 +7190,9 @@ var MakerJs;
                 radius = Math.min(radius, height);
                 var wt = Math.max(w2 - radius, 0);
                 var hr = Math.max(height - radius, 0);
-                this.paths["Bottom"] = new MakerJs.paths.Line([-w2, 0], [w2, 0]);
+                if (!bottomless) {
+                    this.paths["Bottom"] = new MakerJs.paths.Line([-w2, 0], [w2, 0]);
+                }
                 if (hr) {
                     this.paths["Left"] = new MakerJs.paths.Line([-w2, 0], [-w2, hr]);
                     this.paths["Right"] = new MakerJs.paths.Line([w2, 0], [w2, hr]);
@@ -7206,7 +7211,8 @@ var MakerJs;
         Dome.metaParameters = [
             { title: "width", type: "range", min: 1, max: 100, value: 50 },
             { title: "height", type: "range", min: 1, max: 100, value: 100 },
-            { title: "radius", type: "range", min: 0, max: 50, value: 25 }
+            { title: "radius", type: "range", min: 0, max: 50, value: 25 },
+            { title: "bottomless", type: "bool", value: false }
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
@@ -7673,6 +7679,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.39";
+MakerJs.version = "0.9.40";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);

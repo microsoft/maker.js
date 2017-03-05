@@ -150,6 +150,8 @@ namespace MakerJs.path {
                 guideRadius += filletRadius;
             }
 
+            if (round(guideRadius) <= 0) return null;
+
             return new paths.Arc(arc.origin, guideRadius, arc.startAngle, arc.endAngle);
         }
 
