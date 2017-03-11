@@ -1,0 +1,48 @@
+---
+title: SVG points
+---
+
+<p>
+    You may wish to import the points from an SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Basic_Shapes#Polyline">Polyline</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Basic_Shapes#Polygon">Polygon</a> element.
+    It is important to note the difference of coordinates between SVG and <a href="/maker.js/docs/basic-drawing/#Points">Maker.js points</a>: The Y component is opposite.
+    The remedy for this is simple - use the Y-axis <b>mirror</b> functions of <a href="/maker.js/docs/api/modules/makerjs.point.html#mirror">makerjs.point.mirror</a> on every point, 
+    or simply call <a href="/makerjs/docs/api/modules/makerjs.model.html#mirror">makerjs.model.mirror</a> on your entire model.
+</p>
+
+<p>
+    SVG points can be extracted from the value of the <b>points</b> attribute of either <b>polyline</b> or <b>polygon</b> elements:
+</p>
+
+{% highlight html %}
+<svg>
+  <polyline points="60 110, 65 120, 70 115, 75 130, 80 125, 85 140, 90 135, 95 150, 100 145"/>
+</svg>
+{% endhighlight %}
+
+{% highlight html %}
+<svg>
+  <polygon points="50 160, 55 180, 70 180, 60 190, 65 205, 50 195, 35 205, 40 190, 30 180, 45 180"/>
+</svg>
+{% endhighlight %}
+
+<p>
+    Either of these SVG elements map nicely to the <a href="http://microsoft.github.io/maker.js/docs/api/classes/makerjs.models.connectthedots.html#constructor">makerjs.models.ConnectTheDots</a> model.
+    ConnectTheDots accepts an <b>isClosed</b> parameter - set this to <b>false</b> for SVG polylines and <b>true</b> for SVG polygons.
+</p>
+
+<p>
+    Example:
+</p>
+
+{% highlight javascript %}
+//import SVG points
+
+var makerjs = require('makerjs');
+
+var points = "50 160, 55 180, 70 180, 60 190, 65 205, 50 195, 35 205, 40 190, 30 180, 45 180";
+
+var closed = true; //true for SVG polygon, false for SVG polyline
+
+var model = makerjs.model.mirror(new makerjs.models.ConnectTheDots(closed, svgData), false, true);
+
+{% endhighlight %}
