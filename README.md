@@ -76,7 +76,9 @@ NEW: Get the points along a path or a chain of paths.
 
 [Fonts](http://microsoft.github.io/maker.js/playground/?script=Text) (Requires [opentype.js](http://opentype.js.org/))
 
-[SVG Path Data](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.importer.html#fromsvgpathdata)
+[SVG Path Data](http://microsoft.github.io/maker.js/docs/importing/#SVG path data)
+
+[SVG Points](http://microsoft.github.io/maker.js/docs/importing/#SVG points)
 
 ## Getting Started
 
