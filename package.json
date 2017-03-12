@@ -9,7 +9,7 @@
     "compile-typescript": "npm run compile-node-demo && npm run compile-browser-livedoc",
     "build": "npm run compile-typescript",
     "predocs": "rm -r -f ./docs/api",
-    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
+    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api --ignoreCompilerErrors",
     "demo": "npm link && cd demos/js && npm link makerjs && cd ../.. && node ./docgen/demoify.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -89,17 +89,22 @@
   },
   "homepage": "https://github.com/Microsoft/maker.js",
   "devDependencies": {
+    "@types/bezier-js": "0.0.6",
     "@types/codemirror": "0.0.38",
     "@types/marked": "0.0.28",
+    "@types/node": "^7.0.8",
+    "@types/openjscad": "0.0.27",
+    "@types/opentype.js": "0.0.0",
+    "@types/pdfkit": "^0.7.35",
     "@types/text-encoding": "0.0.30",
     "browserify": "^13.0.0",
     "detective": "^4.3.1",
     "highlight.js": "^9.0.0",
     "marked": "^0.3.5",
     "opentype.js": "^0.6.5",
-    "typedoc": "^0.3.12",
     "pretty-camel": "0.0.8",
     "sort-keys": "^1.1.2",
+    "typedoc": "^0.5.7",
     "typescript": "^2.1.6"
   },
   "dependencies": {
