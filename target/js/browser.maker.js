@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.40
+ *   version: 0.9.41
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -3956,6 +3956,43 @@ var MakerJs;
             return (lengthOfSideBetweenAngles * Math.sin(MakerJs.angle.toRadians(oppositeAngleInDegrees))) / Math.sin(MakerJs.angle.toRadians(angleOppositeSide));
         }
         solvers.solveTriangleASA = solveTriangleASA;
+        /**
+         * Solves for the angles of the tangent lines between 2 circles.
+         *
+         * @param a First circle.
+         * @param b Second circle.
+         * @param inner Boolean to use inner tangents instead of outer tangents.
+         * @returns Array of angles in degrees where 2 lines between the circles will be tangent to both circles.
+         */
+        function circleTangentAngles(a, b, inner) {
+            if (inner === void 0) { inner = false; }
+            var connect = new MakerJs.paths.Line(a.origin, b.origin);
+            var distance = MakerJs.measure.pointDistance(a.origin, b.origin);
+            //no tangents if either circle encompasses the other
+            if (a.radius >= distance + b.radius || b.radius >= distance + a.radius)
+                return null;
+            //no inner tangents when circles touch or overlap
+            if (inner && (a.radius + b.radius >= distance))
+                return null;
+            var tangentAngles;
+            if (!inner && MakerJs.round(a.radius - b.radius) == 0) {
+                tangentAngles = [90, 270];
+            }
+            else {
+                //solve for circles on the x axis at the distance
+                var d2 = distance / 2;
+                var between = new MakerJs.paths.Circle([d2, 0], d2);
+                var diff = new MakerJs.paths.Circle(((a.radius > b.radius) ? a : b).origin, inner ? (a.radius + b.radius) : Math.abs(a.radius - b.radius));
+                var int = MakerJs.path.intersection(diff, between);
+                if (!int || !int.path1Angles)
+                    return null;
+                tangentAngles = int.path1Angles;
+            }
+            var connectAngle = MakerJs.angle.ofLineInDegrees(connect);
+            //add the line's angle to the result
+            return tangentAngles.map(function (a) { return MakerJs.angle.noRevolutions(a + connectAngle); });
+        }
+        solvers.circleTangentAngles = circleTangentAngles;
     })(solvers = MakerJs.solvers || (MakerJs.solvers = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -7440,6 +7477,41 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
+        var Belt = (function () {
+            function Belt(leftRadius, distance, rightRadius) {
+                this.paths = {};
+                var left = new MakerJs.paths.Arc([0, 0], leftRadius, 0, 360);
+                var right = new MakerJs.paths.Arc([distance, 0], rightRadius, 0, 360);
+                var angles = MakerJs.solvers.circleTangentAngles(left, right);
+                if (!angles) {
+                    this.paths["Belt"] = new MakerJs.paths.Circle(Math.max(leftRadius, rightRadius));
+                }
+                else {
+                    angles = angles.sort(function (a, b) { return a - b; });
+                    left.startAngle = angles[0];
+                    left.endAngle = angles[1];
+                    right.startAngle = angles[1];
+                    right.endAngle = angles[0];
+                    this.paths["Left"] = left;
+                    this.paths["Right"] = right;
+                    this.paths["Top"] = new MakerJs.paths.Line(MakerJs.point.fromAngleOnCircle(angles[0], left), MakerJs.point.fromAngleOnCircle(angles[0], right));
+                    this.paths["Bottom"] = new MakerJs.paths.Line(MakerJs.point.fromAngleOnCircle(angles[1], left), MakerJs.point.fromAngleOnCircle(angles[1], right));
+                }
+            }
+            return Belt;
+        }());
+        models.Belt = Belt;
+        Belt.metaParameters = [
+            { title: "left radius", type: "range", min: 0, max: 100, value: 30 },
+            { title: "distance between centers", type: "range", min: 0, max: 100, value: 50 },
+            { title: "right radius", type: "range", min: 0, max: 100, value: 15 }
+        ];
+    })(models = MakerJs.models || (MakerJs.models = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
+    var models;
+    (function (models) {
         var SCurve = (function () {
             function SCurve(width, height) {
                 this.paths = {};
@@ -7679,6 +7751,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.40";
+MakerJs.version = "0.9.41";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);

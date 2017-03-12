@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.40
+// Type definitions for Maker.js 0.9.41
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -1751,6 +1751,15 @@ declare namespace MakerJs.solvers {
      * @returns Length of the side of the triangle which is opposite of the first angle parameter.
      */
     function solveTriangleASA(oppositeAngleInDegrees: number, lengthOfSideBetweenAngles: number, otherAngleInDegrees: number): number;
+    /**
+     * Solves for the angles of the tangent lines between 2 circles.
+     *
+     * @param a First circle.
+     * @param b Second circle.
+     * @param inner Boolean to use inner tangents instead of outer tangents.
+     * @returns Array of angles in degrees where 2 lines between the circles will be tangent to both circles.
+     */
+    function circleTangentAngles(a: IPathCircle, b: IPathCircle, inner?: boolean): number[];
 }
 declare namespace MakerJs.path {
     /**
@@ -2417,6 +2426,12 @@ declare namespace MakerJs.models {
     class Ring implements IModel {
         paths: IPathMap;
         constructor(outerRadius: number, innerRadius: number);
+    }
+}
+declare namespace MakerJs.models {
+    class Belt implements IModel {
+        paths: IPathMap;
+        constructor(leftRadius: number, distance: number, rightRadius: number);
     }
 }
 declare namespace MakerJs.models {
