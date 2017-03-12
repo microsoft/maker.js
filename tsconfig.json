@@ -46,6 +46,7 @@
     "src/models/OvalArc.ts",
     "src/models/Rectangle.ts",
     "src/models/Ring.ts",
+    "src/models/Belt.ts",
     "src/models/SCurve.ts",
     "src/models/Slot.ts",
     "src/models/Square.ts",
