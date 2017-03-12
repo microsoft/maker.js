@@ -7,10 +7,11 @@ title: Api - importer Module
 	<h2>Index</h2>
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
-			<section class="tsd-index-section tsd-is-not-exported">
+			<section class="tsd-index-section ">
 				<h3>Interfaces</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/makerjs.importer.isvgpathcommand.html" class="tsd-kind-icon">ISVGPath<wbr>Command</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/makerjs.importer.isvgimportoptions.html" class="tsd-kind-icon">ISVGImport<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="../interfaces/makerjs.importer.isvgpathcommand.html" class="tsd-kind-icon">ISVGPath<wbr>Command</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
@@ -29,19 +30,22 @@ title: Api - importer Module
 		<a name="fromsvgpathdata" class="tsd-anchor"></a>
 		<h3>fromSVGPath<wbr>Data</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">fromSVGPath<wbr>Data<span class="tsd-signature-symbol">(</span>pathData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">fromSVGPath<wbr>Data<span class="tsd-signature-symbol">(</span>pathData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.importer.isvgimportoptions.html" class="tsd-signature-type">ISVGImportOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/svg.ts#L751">core/svg.ts:751</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/svg.ts#L765">core/svg.ts:765</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
 						<h5>pathData: <span class="tsd-signature-type">string</span></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/makerjs.importer.isvgimportoptions.html" class="tsd-signature-type">ISVGImportOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
@@ -58,7 +62,7 @@ title: Api - importer Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/src/core/importer.ts#L14">core/importer.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/importer.ts#L14">core/importer.ts:14</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -66,7 +70,7 @@ title: Api - importer Module
 						<p>Create a numeric array from a string of numbers. The numbers may be delimited by anything non-numeric.</p>
 					</div>
 					<p>Example:</p>
-					<pre><code><span class="hljs-keyword">var</span> n = makerjs.importer.parseNumericList(<span class="hljs-string">'5, 10, 15.20 25-30-35 4e1 .5'</span>);
+					<pre><code>var n = makerjs.importer.parseNumericList('<span class="hljs-number">5</span>, <span class="hljs-number">10</span>, <span class="hljs-number">15.20</span> <span class="hljs-number">25</span><span class="hljs-number">-30</span><span class="hljs-number">-35</span> <span class="hljs-number">4e1</span> <span class="hljs-number">.5</span>');
 </code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>

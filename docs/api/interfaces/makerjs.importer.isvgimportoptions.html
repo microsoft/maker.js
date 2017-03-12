@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - ICombineOptions Interface
+title: Api - ISVGImportOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Options to pass to model.combine.</p>
+			<p>SVG importing options.</p>
 		</div>
 	</div>
 </section>
@@ -14,12 +14,7 @@ title: Api - ICombineOptions Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipointmatchoptions.html" class="tsd-signature-type">IPointMatchOptions</a>
-			<ul class="tsd-hierarchy">
-				<li>
-					<span class="target">ICombineOptions</span>
-				</li>
-			</ul>
+			<span class="target">ISVGImportOptions</span>
 		</li>
 	</ul>
 </section>
@@ -30,11 +25,7 @@ title: Api - ICombineOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#farpoint" class="tsd-kind-icon">far<wbr>Point</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#measurea" class="tsd-kind-icon">measureA</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#measureb" class="tsd-kind-icon">measureB</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.icombineoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#trimdeadends" class="tsd-kind-icon">trim<wbr>Dead<wbr>Ends</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.importer.isvgimportoptions.html#bezieraccuracy" class="tsd-kind-icon">bezier<wbr>Accuracy</a></li>
 				</ul>
 			</section>
 		</div>
@@ -43,78 +34,17 @@ title: Api - ICombineOptions Interface
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="farpoint" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> far<wbr>Point</h3>
-		<div class="tsd-signature tsd-kind-icon">far<wbr>Point<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<a name="bezieraccuracy" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> bezier<wbr>Accuracy</h3>
+		<div class="tsd-signature tsd-kind-icon">bezier<wbr>Accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/maker.ts#L602">core/maker.ts:602</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/svg.ts#L762">core/svg.ts:762</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Point which is known to be outside of the model.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="measurea" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> measureA</h3>
-		<div class="tsd-signature tsd-kind-icon">measureA<span class="tsd-signature-symbol">:</span> <a href="../classes/makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/maker.ts#L607">core/maker.ts:607</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Cached measurements for model A.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="measureb" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> measureB</h3>
-		<div class="tsd-signature tsd-kind-icon">measureB<span class="tsd-signature-symbol">:</span> <a href="../classes/makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/maker.ts#L612">core/maker.ts:612</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Cached measurements for model B.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="pointmatchingdistance" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
-		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/maker.ts#L586">core/maker.ts:586</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Max distance to consider two points as the same.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="trimdeadends" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> trim<wbr>Dead<wbr>Ends</h3>
-		<div class="tsd-signature tsd-kind-icon">trim<wbr>Dead<wbr>Ends<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/maker.ts#L597">core/maker.ts:597</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Flag to remove paths which are not part of a loop.</p>
+				<p>Optional accuracy of Bezier curves and elliptic paths.</p>
 			</div>
 		</div>
 	</section>
