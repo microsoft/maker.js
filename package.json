@@ -1,6 +1,6 @@
 {
   "name": "makerjs",
-  "version": "0.9.40",
+  "version": "0.9.41",
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "target-browser-platform": "browserify -p licensify --ignore buffer --ignore openjscad-csg -r ./target/js/node.js:makerjs -o ./target/js/browser.js",
     "version-inside": "node ./target/version-inside.js",
     "build-debug": "tsc",
-    "build": "tsc -p target && npm run version-tsd && npm run version-inside && npm run target-node-platform && npm run target-browser-platform && npm run cat-browser && npm run cat-node && cp target/js/node.maker.js ./index.js && npm run compile-playground",
+    "build": "tsc -p target && npm run version-tsd && npm run version-inside && npm run target-node-platform && npm run target-browser-platform && npm run cat-browser && npm run cat-node && mv target/js/node.maker.js ./index.js && npm run compile-playground",
     "predocs": "rm -r -f ./docs/api",
     "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
     "test": "echo \"Error: no test specified\" && exit 1"
