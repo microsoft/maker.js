@@ -3,7 +3,7 @@
 import fs = require('fs');
 var browserify = require('browserify');
 var packageJson = require('../package.json');
-var makerjs = <typeof MakerJs>require('../target/js/node.maker.js');
+var makerjs = <typeof MakerJs>require('../index.js');
 var marked = <MarkedStatic>require('marked');
 var detective = require('detective');
 import * as opentypeLib from 'opentype.js';

@@ -1,9 +1,10 @@
 /// <reference path="../index.d.ts" />
 "use strict";
+exports.__esModule = true;
 var fs = require("fs");
 var browserify = require('browserify');
 var packageJson = require('../package.json');
-var makerjs = require('../target/js/node.maker.js');
+var makerjs = require('../index.js');
 var marked = require('marked');
 var detective = require('detective');
 var opentypeLib = require("opentype.js");
