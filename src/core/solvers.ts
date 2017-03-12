@@ -27,4 +27,45 @@ namespace MakerJs.solvers {
         return (lengthOfSideBetweenAngles * Math.sin(angle.toRadians(oppositeAngleInDegrees))) / Math.sin(angle.toRadians(angleOppositeSide));
     }
 
+    /**
+     * Solves for the angles of the tangent lines between 2 circles.
+     * 
+     * @param a First circle.
+     * @param b Second circle.
+     * @param inner Boolean to use inner tangents instead of outer tangents.
+     * @returns Array of angles in degrees where 2 lines between the circles will be tangent to both circles.
+     */
+    export function circleTangentAngles(a: IPathCircle, b: IPathCircle, inner = false): number[] {
+        var connect = new paths.Line(a.origin, b.origin);
+        var distance = measure.pointDistance(a.origin, b.origin);        
+
+        //no tangents if either circle encompasses the other
+        if (a.radius >= distance + b.radius || b.radius >= distance + a.radius) return null;
+
+        //no inner tangents when circles touch or overlap
+        if (inner && (a.radius + b.radius >= distance )) return null;
+
+        var tangentAngles: number[];
+
+        if (!inner && round(a.radius - b.radius) == 0) {
+            tangentAngles = [90, 270];
+        } else {
+
+            //solve for circles on the x axis at the distance
+            var d2 = distance / 2;
+            var between = new paths.Circle([d2, 0], d2);
+            var diff = new paths.Circle(((a.radius > b.radius) ? a : b).origin, inner ? (a.radius + b.radius) : Math.abs(a.radius - b.radius));
+            var int = path.intersection(diff, between);
+
+            if (!int || !int.path1Angles) return null;
+            
+            tangentAngles = int.path1Angles;
+        }
+
+        var connectAngle = angle.ofLineInDegrees(connect);
+    
+        //add the line's angle to the result
+        return tangentAngles.map(a => angle.noRevolutions(a + connectAngle));
+    }
+    
 }

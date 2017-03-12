@@ -51,6 +51,7 @@ NEW: Get the points along a path or a chain of paths.
 
 ### Built-in models
 
+* NEW [Belt](http://microsoft.github.io/maker.js/playground/?script=Belt)
 * [Bezier Curve](http://microsoft.github.io/maker.js/playground/?script=BezierCurve)
 * [Bolt Circle](http://microsoft.github.io/maker.js/playground/?script=BoltCircle)
 * [Bolt Rectangle](http://microsoft.github.io/maker.js/playground/?script=BoltRectangle)
@@ -59,7 +60,7 @@ NEW: Get the points along a path or a chain of paths.
 * [Dome](http://microsoft.github.io/maker.js/playground/?script=Dome)
 * [Ellipse](http://microsoft.github.io/maker.js/playground/?script=Ellipse)
 * [Elliptic Arc](http://microsoft.github.io/maker.js/playground/?script=EllipticArc)
-* NEW [Holes](http://microsoft.github.io/maker.js/playground/?script=Holes)
+* [Holes](http://microsoft.github.io/maker.js/playground/?script=Holes)
 * [Oval](http://microsoft.github.io/maker.js/playground/?script=Oval)
 * [OvalArc](http://microsoft.github.io/maker.js/playground/?script=OvalArc)
 * [Polygon](http://microsoft.github.io/maker.js/playground/?script=Polygon)
