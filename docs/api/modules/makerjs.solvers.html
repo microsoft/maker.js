@@ -10,6 +10,7 @@ title: Api - solvers Module
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.solvers.html#circletangentangles" class="tsd-kind-icon">circle<wbr>Tangent<wbr>Angles</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.solvers.html#solvetriangleasa" class="tsd-kind-icon">solve<wbr>TriangleASA</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.solvers.html#solvetrianglesss" class="tsd-kind-icon">solve<wbr>TriangleSSS</a></li>
 				</ul>
@@ -20,6 +21,50 @@ title: Api - solvers Module
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="circletangentangles" class="tsd-anchor"></a>
+		<h3>circle<wbr>Tangent<wbr>Angles</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">circle<wbr>Tangent<wbr>Angles<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathcircle.html" class="tsd-signature-type">IPathCircle</a>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathcircle.html" class="tsd-signature-type">IPathCircle</a>, inner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/solvers.ts#L38">core/solvers.ts:38</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Solves for the angles of the tangent lines between 2 circles.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>a: <a href="../interfaces/makerjs.ipathcircle.html" class="tsd-signature-type">IPathCircle</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>First circle.</p>
+						</div>
+					</li>
+					<li>
+						<h5>b: <a href="../interfaces/makerjs.ipathcircle.html" class="tsd-signature-type">IPathCircle</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Second circle.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> inner: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Boolean to use inner tangents instead of outer tangents.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array of angles in degrees where 2 lines between the circles will be tangent to both circles.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="solvetriangleasa" class="tsd-anchor"></a>
 		<h3>solve<wbr>TriangleASA</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -29,7 +74,7 @@ title: Api - solvers Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/solvers.ts#L23">core/solvers.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/solvers.ts#L23">core/solvers.ts:23</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -73,7 +118,7 @@ title: Api - solvers Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/406e817/src/core/solvers.ts#L11">core/solvers.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/solvers.ts#L11">core/solvers.ts:11</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

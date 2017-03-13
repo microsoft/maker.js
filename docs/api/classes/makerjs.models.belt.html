@@ -1,27 +1,20 @@
 ---
 layout: posts
-title: Api - Line Class
+title: Api - Belt Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
-<section class="tsd-panel tsd-comment">
-	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>Class for line path.</p>
-		</div>
-	</div>
-</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">Line</span>
+			<span class="target">Belt</span>
 		</li>
 	</ul>
 </section>
 <section class="tsd-panel">
 	<h3>Implements</h3>
 	<ul class="tsd-hierarchy">
-		<li><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></li>
+		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -31,15 +24,13 @@ title: Api - Line Class
 			<section class="tsd-index-section ">
 				<h3>Constructors</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.paths.line.html#constructor" class="tsd-kind-icon">constructor</a></li>
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.belt.html#constructor" class="tsd-kind-icon">constructor</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.paths.line.html#end" class="tsd-kind-icon">end</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.paths.line.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.paths.line.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.belt.html#paths" class="tsd-kind-icon">paths</a></li>
 				</ul>
 			</section>
 		</div>
@@ -51,65 +42,28 @@ title: Api - Line Class
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Line<span class="tsd-signature-symbol">(</span>points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.line.html" class="tsd-signature-type">Line</a></li>
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Line<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.line.html" class="tsd-signature-type">Line</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Belt<span class="tsd-signature-symbol">(</span>leftRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, rightRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.belt.html" class="tsd-signature-type">Belt</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/paths.ts#L295">core/paths.ts:295</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/models/Belt.ts#L5">models/Belt.ts:5</a></li>
 					</ul>
 				</aside>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Class for line path, constructed from array of 2 points.</p>
-					</div>
-				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>points: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Array of 2 points.</p>
-							</div>
-						</div>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.line.html" class="tsd-signature-type">Line</a></h4>
-			</li>
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/paths.ts#L302">core/paths.ts:302</a></li>
-					</ul>
-				</aside>
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Class for line path, constructed from 2 points.</p>
-					</div>
-				</div>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>The origin point of the line.</p>
-							</div>
-						</div>
+						<h5>leftRadius: <span class="tsd-signature-type">number</span></h5>
 					</li>
 					<li>
-						<h5>end: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>The end point of the line.</p>
-							</div>
-						</div>
+						<h5>distance: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>rightRadius: <span class="tsd-signature-type">number</span></h5>
 					</li>
 				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.line.html" class="tsd-signature-type">Line</a></h4>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.belt.html" class="tsd-signature-type">Belt</a></h4>
 			</li>
 		</ul>
 	</section>
@@ -117,32 +71,12 @@ title: Api - Line Class
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="end" class="tsd-anchor"></a>
-		<h3>end</h3>
-		<div class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<a name="paths" class="tsd-anchor"></a>
+		<h3>paths</h3>
+		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/paths.ts#L295">core/paths.ts:295</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="origin" class="tsd-anchor"></a>
-		<h3>origin</h3>
-		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/paths.ts#L294">core/paths.ts:294</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="type" class="tsd-anchor"></a>
-		<h3>type</h3>
-		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/core/paths.ts#L293">core/paths.ts:293</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7df3742/src/models/Belt.ts#L5">models/Belt.ts:5</a></li>
 			</ul>
 		</aside>
 	</section>
