@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.41
+ *   version: 0.9.42
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -7751,6 +7751,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.41";
+MakerJs.version = "0.9.42";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);
