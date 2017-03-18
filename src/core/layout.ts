@@ -36,4 +36,8 @@ namespace MakerJs.layout {
         return cloneTo(0, itemToClone, count, margin);
     }
 
+    export function cloneToGrid(itemToClone: IModel | IPath, xCount: number, yCount: number, margin?: number): IModel {        
+        return cloneToColumn(cloneToRow(itemToClone, xCount, margin), yCount, margin);
+    }
+
 }
