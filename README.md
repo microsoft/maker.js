@@ -32,11 +32,13 @@ Easily add a curvature at the joint between any 2 paths, using a [traditional or
 
 Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains) or [loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
 
-NEW: Get the points along a path or a chain of paths.
+Get the points along a path or a chain of paths.
 
 [Expand paths](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Expanding%20paths) to simulate a stroke thickness, with the option to bevel joints.
 
 [Outline model](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Outlining%20a%20model) to create a surrounding outline, with the option to bevel joints.
+
+NEW: Layout clones into [rows](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.layout.html#clonetorow), [columns](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.layout.html#clonetocolumn), [grids](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.layout.html#clonetogrid), [bricks](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.layout.html#clonetobrick), or [honeycombs](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.layout.html#clonetohoneycomb)
 
 ### Output formats
 
@@ -98,6 +100,8 @@ Add a script tag in your HTML:
 ```html
 <script src="http://microsoft.github.io/maker.js/target/js/browser.maker.js" type="text/javascript"></script>
 ```
+
+*Note: You may also need [additional libraries](http://microsoft.github.io/maker.js/docs/getting-started/#For+the+browser)*
 
 In your JavaScript, use the require function to get a reference:
  
