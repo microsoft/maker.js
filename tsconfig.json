@@ -32,6 +32,7 @@
     "src/core/openjscad.ts",
     "src/core/pdf.ts",
     "src/core/svg.ts",
+    "src/core/layout.ts",
     "src/models/BezierCurve.ts",
     "src/models/Ellipse.ts",
     "src/models/ConnectTheDots.ts",

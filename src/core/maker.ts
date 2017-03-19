@@ -281,6 +281,16 @@ namespace MakerJs {
          * The center point of the rectangle containing the item being measured.
          */
         center: IPoint;
+
+        /**
+         * The width of the rectangle containing the item being measured.
+         */
+        width: number;
+
+        /**
+         * The height of the rectangle containing the item being measured.
+         */
+        height: number;
     }
 
     /**

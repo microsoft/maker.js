@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.41
+// Type definitions for Maker.js 0.9.43
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -155,6 +155,14 @@ declare namespace MakerJs {
          * The center point of the rectangle containing the item being measured.
          */
         center: IPoint;
+        /**
+         * The width of the rectangle containing the item being measured.
+         */
+        width: number;
+        /**
+         * The height of the rectangle containing the item being measured.
+         */
+        height: number;
     }
     /**
      * A map of measurements.
@@ -1734,6 +1742,20 @@ declare namespace MakerJs.exporter {
 }
 declare namespace MakerJs.solvers {
     /**
+     * Solves for the altitude of an equilateral triangle when you know its side length.
+     *
+     * @param sideLength Length of a side of the equilateral triangle (all 3 sides are equal).
+     * @returns Altitude of the equilateral triangle.
+     */
+    function equilateralAltitude(sideLength: number): number;
+    /**
+     * Solves for the side length of an equilateral triangle when you know its altitude.
+     *
+     * @param altitude Altitude of the equilateral triangle.
+     * @returns Length of the side of the equilateral triangle (all 3 sides are equal).
+     */
+    function equilateralSide(altitude: number): number;
+    /**
      * Solves for the angle of a triangle when you know lengths of 3 sides.
      *
      * @param lengthA Length of side of triangle, opposite of the angle you are trying to find.
@@ -2114,6 +2136,120 @@ declare namespace MakerJs.importer {
         bezierAccuracy?: number;
     }
     function fromSVGPathData(pathData: string, options?: ISVGImportOptions): IModel;
+}
+declare namespace MakerJs.layout {
+    /**
+     * Layout clones in a column format.
+     *
+     * Example:
+     * ```
+     * //Grooves for a finger joint
+     * var m = require('makerjs');
+     *
+     * var dogbone = new m.models.Dogbone(50, 20, 2, -1, false);
+     *
+     * var grooves = m.layout.cloneToColumn(dogbone, 5, 20);
+     *
+     * document.write(m.exporter.toSVG(grooves));
+     * ```
+     *
+     * @param itemToClone: Either a model or a path object.
+     * @param count Number of clones in the column.
+     * @param margin Optional distance between each clone.
+     * @returns A new model with clones in a column.
+     */
+    function cloneToColumn(itemToClone: IModel | IPath, count: number, margin?: number): IModel;
+    /**
+     * Layout clones in a row format.
+     *
+     * Example:
+     * ```
+     * //Tongue and grooves for a box joint
+     * var m = require('makerjs');
+     * var tongueWidth = 60;
+     * var grooveWidth = 50;
+     * var grooveDepth = 30;
+     * var groove = new m.models.Dogbone(grooveWidth, grooveDepth, 5, 0, true);
+     *
+     * groove.paths['leftTongue'] = new m.paths.Line([-tongueWidth / 2, 0], [0, 0]);
+     * groove.paths['rightTongue'] = new m.paths.Line([grooveWidth, 0], [grooveWidth + tongueWidth / 2, 0]);
+     *
+     * var tongueAndGrooves = m.layout.cloneToRow(groove, 3);
+     *
+     * document.write(m.exporter.toSVG(tongueAndGrooves));
+     * ```
+     *
+     * @param itemToClone: Either a model or a path object.
+     * @param count Number of clones in the row.
+     * @param margin Optional distance between each clone.
+     * @returns A new model with clones in a row.
+     */
+    function cloneToRow(itemToClone: IModel | IPath, count: number, margin?: number): IModel;
+    /**
+     * Layout clones in a grid format.
+     *
+     * Example:
+     * ```
+     * //Grid of squares
+     * var m = require('makerjs');
+     * var square = new m.models.Square(43);
+     * var grid = m.layout.cloneToGrid(square, 5, 5, 7);
+     * document.write(m.exporter.toSVG(grid));
+     * ```
+     *
+     * @param itemToClone: Either a model or a path object.
+     * @param xCount Number of columns in the grid.
+     * @param yCount Number of rows in the grid.
+     * @param margin Optional numeric distance between each clone. Can also be a 2 dimensional array of numbers, to specify distances in x and y dimensions.
+     * @returns A new model with clones in a grid layout.
+     */
+    function cloneToGrid(itemToClone: IModel | IPath, xCount: number, yCount: number, margin?: number | IPoint): IModel;
+    /**
+     * Layout clones in a brick format. Alternating rows will have an additional item in each row.
+     *
+     * Examples:
+     * ```
+     * //Brick wall
+     * var m = require('makerjs');
+     * var brick = new m.models.RoundRectangle(50, 30, 4);
+     * var wall = m.layout.cloneToBrick(brick, 8, 6, 3);
+     * document.write(m.exporter.toSVG(wall));
+     * ```
+     *
+     * ```
+     * //Fish scales
+     * var m = require('makerjs');
+     * var arc = new m.paths.Arc([0, 0], 50, 20, 160);
+     * var scales = m.layout.cloneToBrick(arc, 8, 20);
+     * document.write(m.exporter.toSVG(scales));
+     * ```
+     *
+     * @param itemToClone: Either a model or a path object.
+     * @param xCount Number of columns in the brick grid.
+     * @param yCount Number of rows in the brick grid.
+     * @param margin Optional numeric distance between each clone. Can also be a 2 dimensional array of numbers, to specify distances in x and y dimensions.
+     * @returns A new model with clones in a brick layout.
+     */
+    function cloneToBrick(itemToClone: IModel | IPath, xCount: number, yCount: number, margin?: number | IPoint): IModel;
+    /**
+     * Layout clones in a honeycomb format. Alternating rows will have an additional item in each row.
+     *
+     * Examples:
+     * ```
+     * //Honeycomb
+     * var m = require('makerjs');
+     * var hex = new m.models.Polygon(6, 50, 30);
+     * var pattern = m.layout.cloneToHoneycomb(hex, 8, 9, 10);
+     * document.write(m.exporter.toSVG(pattern));
+     * ```
+     *
+     * @param itemToClone: Either a model or a path object.
+     * @param xCount Number of columns in the honeycomb grid.
+     * @param yCount Number of rows in the honeycomb grid.
+     * @param margin Optional distance between each clone.
+     * @returns A new model with clones in a honeycomb layout.
+     */
+    function cloneToHoneycomb(itemToClone: IModel | IPath, xCount: number, yCount: number, margin?: number): IModel;
 }
 declare namespace MakerJs.models {
     class BezierCurve implements IModel {
