@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.42
+ *   version: 0.9.43
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -3383,7 +3383,10 @@ var MakerJs;
          * @private
          */
         function cloneMeasure(measureToclone) {
-            return { high: [measureToclone.high[0], measureToclone.high[1]], low: [measureToclone.low[0], measureToclone.low[1]] };
+            return {
+                high: MakerJs.point.clone(measureToclone.high),
+                low: MakerJs.point.clone(measureToclone.low)
+            };
         }
         /**
          * Measures the smallest rectangle which contains a model.
@@ -3430,6 +3433,8 @@ var MakerJs;
             }
             if (m) {
                 m.center = [avg(0), avg(1)];
+                m.width = m.high[0] - m.low[0];
+                m.height = m.high[1] - m.low[1];
             }
             return m;
         }
@@ -3472,22 +3477,6 @@ var MakerJs;
         /**
          * @private
          */
-        var equilateral = Math.sqrt(3) / 2;
-        /**
-         * @private
-         */
-        function sideToAltitude(sideLength) {
-            return sideLength * equilateral;
-        }
-        /**
-         * @private
-         */
-        function altitudeToSide(altitude) {
-            return altitude / equilateral;
-        }
-        /**
-         * @private
-         */
         function loopIndex(base, i) {
             if (i >= base)
                 return i - base;
@@ -3525,15 +3514,13 @@ var MakerJs;
         function getAngledBounds(index, modelToMeasure, rotateModel, rotatePaths) {
             MakerJs.model.rotate(modelToMeasure, rotateModel);
             var m = modelExtents(modelToMeasure);
-            var yDistance = m.high[1] - m.low[1];
-            var xDistance = m.high[0] - m.low[0];
             var result = {
                 index: index,
                 rotation: rotatePaths,
                 center: MakerJs.point.rotate(m.center, rotatePaths),
                 //model is sideways, so width is based on Y, height is based on X
-                width: yDistance,
-                height: xDistance,
+                width: m.height,
+                height: m.width,
                 bottom: new MakerJs.paths.Line(m.low, [m.high[0], m.low[1]]),
                 middle: new MakerJs.paths.Line([m.low[0], m.center[1]], [m.high[0], m.center[1]]),
                 top: new MakerJs.paths.Line(m.high, [m.low[0], m.high[1]])
@@ -3558,14 +3545,14 @@ var MakerJs;
             if (altRight < altLeft)
                 return null;
             var altitudeViaSide = Math.min(altLeft, altRight);
-            var radiusViaSide = altitudeToSide(altitudeViaSide);
+            var radiusViaSide = MakerJs.solvers.equilateralSide(altitudeViaSide);
             //find peaks, then find highest peak
             var peakPoints = [MakerJs.point.fromSlopeIntersection(lines[1], lines[2]), MakerJs.point.fromSlopeIntersection(lines[4], lines[5])];
             var peakRadii = peakPoints.map(function (p) { return Math.abs(p[1] - tip[1]); });
             var peakNum = (peakRadii[0] > peakRadii[1]) ? 0 : 1; //top = 0, bottom = 1
             var radiusViaPeak = peakRadii[peakNum];
             if (radiusViaPeak > radiusViaSide) {
-                var altitudeViaPeak = sideToAltitude(radiusViaPeak);
+                var altitudeViaPeak = MakerJs.solvers.equilateralAltitude(radiusViaPeak);
                 var peakX = tipX - 2 * altitudeViaPeak;
                 //see if it will contain right side
                 if (right > peakX + altitudeViaPeak)
@@ -3617,7 +3604,7 @@ var MakerJs;
             while (boundRotations.length) {
                 var rotation = boundRotations.shift();
                 var bound = getAngledBounds(bounds.length, clone, rotation[0], rotation[1]);
-                var side = altitudeToSide(bound.width / 2);
+                var side = MakerJs.solvers.equilateralSide(bound.width / 2);
                 if (side >= bound.height) {
                     return result(side, bound.center, 'solved by bound ' + bounds.length);
                 }
@@ -3627,7 +3614,7 @@ var MakerJs;
             //scratch.models = { clone: clone };
             //check for a circular solution
             if (isCircular(bounds)) {
-                return result(altitudeToSide(bounds[0].width / 2), bounds[0].center, 'solved as circular');
+                return result(MakerJs.solvers.equilateralSide(bounds[0].width / 2), bounds[0].center, 'solved as circular');
             }
             var perimeters = bounds.map(function (b) { return b.top; }).concat(bounds.map(function (b) { return b.bottom; }));
             perimeters.forEach(function (p, i) {
@@ -3931,6 +3918,30 @@ var MakerJs;
 (function (MakerJs) {
     var solvers;
     (function (solvers) {
+        /**
+         * @private
+         */
+        var equilateral = Math.sqrt(3) / 2;
+        /**
+         * Solves for the altitude of an equilateral triangle when you know its side length.
+         *
+         * @param sideLength Length of a side of the equilateral triangle (all 3 sides are equal).
+         * @returns Altitude of the equilateral triangle.
+         */
+        function equilateralAltitude(sideLength) {
+            return sideLength * equilateral;
+        }
+        solvers.equilateralAltitude = equilateralAltitude;
+        /**
+         * Solves for the side length of an equilateral triangle when you know its altitude.
+         *
+         * @param altitude Altitude of the equilateral triangle.
+         * @returns Length of the side of the equilateral triangle (all 3 sides are equal).
+         */
+        function equilateralSide(altitude) {
+            return altitude / equilateral;
+        }
+        solvers.equilateralSide = equilateralSide;
         /**
          * Solves for the angle of a triangle when you know lengths of 3 sides.
          *
@@ -6410,6 +6421,213 @@ var MakerJs;
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
+    var layout;
+    (function (layout) {
+        /**
+         * @private
+         */
+        function cloneTo(dimension, itemToClone, count, margin) {
+            var result = {};
+            var add;
+            var measureFn;
+            var moveFn;
+            if (MakerJs.isModel(itemToClone)) {
+                measureFn = MakerJs.measure.modelExtents;
+                add = result.models = {};
+                moveFn = MakerJs.model.move;
+            }
+            else {
+                measureFn = MakerJs.measure.pathExtents;
+                add = result.paths = {};
+                moveFn = MakerJs.path.move;
+            }
+            var m = measureFn(itemToClone);
+            var size = m.high[dimension] - m.low[dimension];
+            for (var i = 0; i < count; i++) {
+                var origin = [0, 0];
+                origin[dimension] = i * (size + margin);
+                add[i] = moveFn(MakerJs.cloneObject(itemToClone), origin);
+            }
+            return result;
+        }
+        /**
+         * Layout clones in a column format.
+         *
+         * Example:
+         * ```
+         * //Grooves for a finger joint
+         * var m = require('makerjs');
+         *
+         * var dogbone = new m.models.Dogbone(50, 20, 2, -1, false);
+         *
+         * var grooves = m.layout.cloneToColumn(dogbone, 5, 20);
+         *
+         * document.write(m.exporter.toSVG(grooves));
+         * ```
+         *
+         * @param itemToClone: Either a model or a path object.
+         * @param count Number of clones in the column.
+         * @param margin Optional distance between each clone.
+         * @returns A new model with clones in a column.
+         */
+        function cloneToColumn(itemToClone, count, margin) {
+            if (margin === void 0) { margin = 0; }
+            return cloneTo(1, itemToClone, count, margin);
+        }
+        layout.cloneToColumn = cloneToColumn;
+        /**
+         * Layout clones in a row format.
+         *
+         * Example:
+         * ```
+         * //Tongue and grooves for a box joint
+         * var m = require('makerjs');
+         * var tongueWidth = 60;
+         * var grooveWidth = 50;
+         * var grooveDepth = 30;
+         * var groove = new m.models.Dogbone(grooveWidth, grooveDepth, 5, 0, true);
+         *
+         * groove.paths['leftTongue'] = new m.paths.Line([-tongueWidth / 2, 0], [0, 0]);
+         * groove.paths['rightTongue'] = new m.paths.Line([grooveWidth, 0], [grooveWidth + tongueWidth / 2, 0]);
+         *
+         * var tongueAndGrooves = m.layout.cloneToRow(groove, 3);
+         *
+         * document.write(m.exporter.toSVG(tongueAndGrooves));
+         * ```
+         *
+         * @param itemToClone: Either a model or a path object.
+         * @param count Number of clones in the row.
+         * @param margin Optional distance between each clone.
+         * @returns A new model with clones in a row.
+         */
+        function cloneToRow(itemToClone, count, margin) {
+            if (margin === void 0) { margin = 0; }
+            return cloneTo(0, itemToClone, count, margin);
+        }
+        layout.cloneToRow = cloneToRow;
+        /**
+         * Layout clones in a grid format.
+         *
+         * Example:
+         * ```
+         * //Grid of squares
+         * var m = require('makerjs');
+         * var square = new m.models.Square(43);
+         * var grid = m.layout.cloneToGrid(square, 5, 5, 7);
+         * document.write(m.exporter.toSVG(grid));
+         * ```
+         *
+         * @param itemToClone: Either a model or a path object.
+         * @param xCount Number of columns in the grid.
+         * @param yCount Number of rows in the grid.
+         * @param margin Optional numeric distance between each clone. Can also be a 2 dimensional array of numbers, to specify distances in x and y dimensions.
+         * @returns A new model with clones in a grid layout.
+         */
+        function cloneToGrid(itemToClone, xCount, yCount, margin) {
+            var margins = getMargins(margin);
+            return cloneToColumn(cloneToRow(itemToClone, xCount, margins[0]), yCount, margins[1]);
+        }
+        layout.cloneToGrid = cloneToGrid;
+        /**
+         * @private
+         */
+        function getMargins(margin) {
+            if (Array.isArray(margin)) {
+                return margin;
+            }
+            else {
+                return [margin, margin];
+            }
+        }
+        /**
+         * @private
+         */
+        function cloneToAlternatingRows(itemToClone, xCount, yCount, spacingFn) {
+            var modelToMeasure;
+            if (MakerJs.isModel(itemToClone)) {
+                modelToMeasure = itemToClone;
+            }
+            else {
+                modelToMeasure = { paths: { "0": itemToClone } };
+            }
+            var spacing = spacingFn(modelToMeasure);
+            var result = { models: {} };
+            for (var i = 0; i < yCount; i++) {
+                var i2 = i % 2;
+                result.models[i] = MakerJs.model.move(cloneToRow(itemToClone, xCount + i2, spacing.xMargin), [i2 * spacing.x, i * spacing.y]);
+            }
+            return result;
+        }
+        /**
+         * Layout clones in a brick format. Alternating rows will have an additional item in each row.
+         *
+         * Examples:
+         * ```
+         * //Brick wall
+         * var m = require('makerjs');
+         * var brick = new m.models.RoundRectangle(50, 30, 4);
+         * var wall = m.layout.cloneToBrick(brick, 8, 6, 3);
+         * document.write(m.exporter.toSVG(wall));
+         * ```
+         *
+         * ```
+         * //Fish scales
+         * var m = require('makerjs');
+         * var arc = new m.paths.Arc([0, 0], 50, 20, 160);
+         * var scales = m.layout.cloneToBrick(arc, 8, 20);
+         * document.write(m.exporter.toSVG(scales));
+         * ```
+         *
+         * @param itemToClone: Either a model or a path object.
+         * @param xCount Number of columns in the brick grid.
+         * @param yCount Number of rows in the brick grid.
+         * @param margin Optional numeric distance between each clone. Can also be a 2 dimensional array of numbers, to specify distances in x and y dimensions.
+         * @returns A new model with clones in a brick layout.
+         */
+        function cloneToBrick(itemToClone, xCount, yCount, margin) {
+            var margins = getMargins(margin);
+            function spacing(modelToMeasure) {
+                var m = MakerJs.measure.modelExtents(modelToMeasure);
+                var xMargin = margins[0] || 0;
+                var yMargin = margins[1] || 0;
+                return { x: (m.width + xMargin) / -2, y: m.height + yMargin, xMargin: xMargin };
+            }
+            return cloneToAlternatingRows(itemToClone, xCount, yCount, spacing);
+        }
+        layout.cloneToBrick = cloneToBrick;
+        /**
+         * Layout clones in a honeycomb format. Alternating rows will have an additional item in each row.
+         *
+         * Examples:
+         * ```
+         * //Honeycomb
+         * var m = require('makerjs');
+         * var hex = new m.models.Polygon(6, 50, 30);
+         * var pattern = m.layout.cloneToHoneycomb(hex, 8, 9, 10);
+         * document.write(m.exporter.toSVG(pattern));
+         * ```
+         *
+         * @param itemToClone: Either a model or a path object.
+         * @param xCount Number of columns in the honeycomb grid.
+         * @param yCount Number of rows in the honeycomb grid.
+         * @param margin Optional distance between each clone.
+         * @returns A new model with clones in a honeycomb layout.
+         */
+        function cloneToHoneycomb(itemToClone, xCount, yCount, margin) {
+            if (margin === void 0) { margin = 0; }
+            function spacing(modelToMeasure) {
+                var hex = MakerJs.measure.boundingHexagon(modelToMeasure);
+                var width = 2 * MakerJs.solvers.equilateralAltitude(hex.radius);
+                var s = width + margin;
+                return { x: s / -2, y: MakerJs.solvers.equilateralAltitude(s), xMargin: margin };
+            }
+            return cloneToAlternatingRows(itemToClone, xCount, yCount, spacing);
+        }
+        layout.cloneToHoneycomb = cloneToHoneycomb;
+    })(layout = MakerJs.layout || (MakerJs.layout = {}));
+})(MakerJs || (MakerJs = {}));
+var MakerJs;
+(function (MakerJs) {
     var models;
     (function (models) {
         var hasLib = false;
@@ -7751,6 +7969,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.42";
+MakerJs.version = "0.9.43";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);
