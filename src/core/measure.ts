@@ -384,7 +384,10 @@ namespace MakerJs.measure {
      * @private
      */
     function cloneMeasure(measureToclone: IMeasure): IMeasure {
-        return { high: [measureToclone.high[0], measureToclone.high[1]], low: [measureToclone.low[0], measureToclone.low[1]] };
+        return { 
+            high: point.clone(measureToclone.high), 
+            low: point.clone(measureToclone.low) 
+        };
     }
 
     /**
@@ -442,6 +445,8 @@ namespace MakerJs.measure {
 
         if (m) {
             m.center = [avg(0), avg(1)];
+            m.width = m.high[0] - m.low[0];
+            m.height = m.high[1] - m.low[1];
         }
 
         return m;
@@ -483,25 +488,6 @@ namespace MakerJs.measure {
                 modelExtents(this.modelContext, this);
             }
         }
-    }
-
-    /**
-     * @private
-     */
-    var equilateral = Math.sqrt(3) / 2;
-
-    /**
-     * @private
-     */
-    function sideToAltitude(sideLength: number) {
-        return sideLength * equilateral;
-    }
-
-    /**
-     * @private
-     */
-    function altitudeToSide(altitude: number) {
-        return altitude / equilateral;
     }
 
     /**
@@ -560,16 +546,14 @@ namespace MakerJs.measure {
     function getAngledBounds(index: number, modelToMeasure: IModel, rotateModel: number, rotatePaths: number) {
         model.rotate(modelToMeasure, rotateModel);
         var m = modelExtents(modelToMeasure);
-        var yDistance = m.high[1] - m.low[1];
-        var xDistance = m.high[0] - m.low[0];
         var result: IAngledBoundary = {
             index: index,
             rotation: rotatePaths,
             center: point.rotate(m.center, rotatePaths),
 
             //model is sideways, so width is based on Y, height is based on X
-            width: yDistance,
-            height: xDistance,
+            width: m.height,
+            height: m.width,
 
             bottom: new paths.Line(m.low, [m.high[0], m.low[1]]),
             middle: new paths.Line([m.low[0], m.center[1]], [m.high[0], m.center[1]]),
@@ -607,7 +591,7 @@ namespace MakerJs.measure {
         if (altRight < altLeft) return null;
 
         var altitudeViaSide = Math.min(altLeft, altRight);
-        var radiusViaSide = altitudeToSide(altitudeViaSide);
+        var radiusViaSide = solvers.equilateralSide(altitudeViaSide);
 
         //find peaks, then find highest peak
         var peakPoints = [point.fromSlopeIntersection(lines[1], lines[2]), point.fromSlopeIntersection(lines[4], lines[5])];
@@ -616,7 +600,7 @@ namespace MakerJs.measure {
         var radiusViaPeak = peakRadii[peakNum];
 
         if (radiusViaPeak > radiusViaSide) {
-            var altitudeViaPeak = sideToAltitude(radiusViaPeak);
+            var altitudeViaPeak = solvers.equilateralAltitude(radiusViaPeak);
             var peakX = tipX - 2 * altitudeViaPeak;
 
             //see if it will contain right side
@@ -689,7 +673,7 @@ namespace MakerJs.measure {
             var rotation = boundRotations.shift();
             var bound = getAngledBounds(bounds.length, clone, rotation[0], rotation[1]);
 
-            var side = altitudeToSide(bound.width / 2);
+            var side = solvers.equilateralSide(bound.width / 2);
             if (side >= bound.height) {
                 return result(side, bound.center, 'solved by bound ' + bounds.length);
             }
@@ -702,7 +686,7 @@ namespace MakerJs.measure {
 
         //check for a circular solution
         if (isCircular(bounds)) {
-            return result(altitudeToSide(bounds[0].width / 2), bounds[0].center, 'solved as circular');
+            return result(solvers.equilateralSide(bounds[0].width / 2), bounds[0].center, 'solved as circular');
         }
 
         var perimeters = bounds.map(b => b.top).concat(bounds.map(b => b.bottom));

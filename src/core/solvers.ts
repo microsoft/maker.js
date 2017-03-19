@@ -1,6 +1,31 @@
 namespace MakerJs.solvers {
 
     /**
+     * @private
+     */
+    var equilateral = Math.sqrt(3) / 2;
+
+    /**
+     * Solves for the altitude of an equilateral triangle when you know its side length.
+     * 
+     * @param sideLength Length of a side of the equilateral triangle (all 3 sides are equal).
+     * @returns Altitude of the equilateral triangle.
+     */
+    export function equilateralAltitude(sideLength: number) {
+        return sideLength * equilateral;
+    }
+
+    /**
+     * Solves for the side length of an equilateral triangle when you know its altitude.
+     * 
+     * @param altitude Altitude of the equilateral triangle.
+     * @returns Length of the side of the equilateral triangle (all 3 sides are equal).
+     */
+    export function equilateralSide(altitude: number) {
+        return altitude / equilateral;
+    }
+
+    /**
      * Solves for the angle of a triangle when you know lengths of 3 sides.
      * 
      * @param lengthA Length of side of triangle, opposite of the angle you are trying to find.

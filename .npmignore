@@ -18,6 +18,7 @@ playground/*
 src/*
 stylesheets/*
 target/*
+!target/js/browser.maker.js
 test/*
 typings/*
 tsconfig.json
