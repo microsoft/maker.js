@@ -34,6 +34,18 @@ namespace MakerJs.layout {
     /**
      * Layout clones in a column format.
      * 
+     * Example:
+     * ```
+     * //Grooves for a finger joint
+     * var m = require('makerjs');
+     * 
+     * var dogbone = new m.models.Dogbone(50, 20, 2, -1, false);
+     * 
+     * var grooves = m.layout.cloneToColumn(dogbone, 5, 20);
+     * 
+     * document.write(m.exporter.toSVG(grooves));
+     * ```
+     * 
      * @param itemToClone: Either a model or a path object.
      * @param count Number of clones in the column.
      * @param margin Optional distance between each clone.
@@ -46,6 +58,23 @@ namespace MakerJs.layout {
     /**
      * Layout clones in a row format.
      * 
+     * Example:
+     * ```
+     * //Tongue and grooves for a box joint
+     * var m = require('makerjs');
+     * var tongueWidth = 60;
+     * var grooveWidth = 50;
+     * var grooveDepth = 30;
+     * var groove = new m.models.Dogbone(grooveWidth, grooveDepth, 5, 0, true);
+     * 
+     * groove.paths['leftTongue'] = new m.paths.Line([-tongueWidth / 2, 0], [0, 0]);
+     * groove.paths['rightTongue'] = new m.paths.Line([grooveWidth, 0], [grooveWidth + tongueWidth / 2, 0]);
+     * 
+     * var tongueAndGrooves = m.layout.cloneToRow(groove, 3);
+     * 
+     * document.write(m.exporter.toSVG(tongueAndGrooves));
+     * ```
+     * 
      * @param itemToClone: Either a model or a path object.
      * @param count Number of clones in the row.
      * @param margin Optional distance between each clone.
@@ -57,6 +86,15 @@ namespace MakerJs.layout {
 
     /**
      * Layout clones in a grid format.
+     * 
+     * Example:
+     * ```
+     * //Grid of squares
+     * var m = require('makerjs');
+     * var square = new m.models.Square(43);
+     * var grid = m.layout.cloneToGrid(square, 5, 5, 7);
+     * document.write(m.exporter.toSVG(grid));
+     * ```
      * 
      * @param itemToClone: Either a model or a path object.
      * @param xCount Number of columns in the grid.
@@ -72,7 +110,7 @@ namespace MakerJs.layout {
     /**
      * @private
      */
-    function getMargins(margin?: number | IPoint) : IPoint {
+    function getMargins(margin?: number | IPoint): IPoint {
         if (Array.isArray(margin)) {
             return margin;
         } else {
@@ -92,7 +130,7 @@ namespace MakerJs.layout {
     /**
      * @private
      */
-    function cloneToAlternate(itemToClone: IModel | IPath, xCount: number, yCount: number, spacingFn: (modelToMeasure: IModel) => IGridSpacing): IModel {
+    function cloneToAlternatingRows(itemToClone: IModel | IPath, xCount: number, yCount: number, spacingFn: (modelToMeasure: IModel) => IGridSpacing): IModel {
         var modelToMeasure: IModel;
         if (isModel(itemToClone)) {
             modelToMeasure = itemToClone;
@@ -114,6 +152,23 @@ namespace MakerJs.layout {
     /**
      * Layout clones in a brick format. Alternating rows will have an additional item in each row.
      * 
+     * Examples:
+     * ```
+     * //Brick wall
+     * var m = require('makerjs');
+     * var brick = new m.models.RoundRectangle(50, 30, 4);
+     * var wall = m.layout.cloneToBrick(brick, 8, 6, 3);
+     * document.write(m.exporter.toSVG(wall));
+     * ```
+     * 
+     * ```
+     * //Fish scales
+     * var m = require('makerjs');
+     * var arc = new m.paths.Arc([0, 0], 50, 20, 160);
+     * var scales = m.layout.cloneToBrick(arc, 8, 20);
+     * document.write(m.exporter.toSVG(scales));
+     * ```
+     * 
      * @param itemToClone: Either a model or a path object.
      * @param xCount Number of columns in the brick grid.
      * @param yCount Number of rows in the brick grid.
@@ -126,14 +181,25 @@ namespace MakerJs.layout {
 
         function spacing(modelToMeasure: IModel): IGridSpacing {
             var m = measure.modelExtents(modelToMeasure);
-            return { x: (m.width + margins[0]) / -2, y: m.height + margins[1], xMargin: margins[0] };
+            var xMargin = margins[0] || 0;
+            var yMargin = margins[1] || 0;
+            return { x: (m.width + xMargin) / -2, y: m.height + yMargin, xMargin: xMargin };
         }
 
-        return cloneToAlternate(itemToClone, xCount, yCount, spacing);
+        return cloneToAlternatingRows(itemToClone, xCount, yCount, spacing);
     }
 
     /**
      * Layout clones in a honeycomb format. Alternating rows will have an additional item in each row.
+     * 
+     * Examples:
+     * ```
+     * //Honeycomb
+     * var m = require('makerjs');
+     * var hex = new m.models.Polygon(6, 50, 30);
+     * var pattern = m.layout.cloneToHoneycomb(hex, 8, 9, 10);
+     * document.write(m.exporter.toSVG(pattern));
+     * ```
      * 
      * @param itemToClone: Either a model or a path object.
      * @param xCount Number of columns in the honeycomb grid.
@@ -142,15 +208,15 @@ namespace MakerJs.layout {
      * @returns A new model with clones in a honeycomb layout.
      */
     export function cloneToHoneycomb(itemToClone: IModel | IPath, xCount: number, yCount: number, margin = 0): IModel {
-        
+
         function spacing(modelToMeasure: IModel): IGridSpacing {
             var hex = measure.boundingHexagon(modelToMeasure);
             var width = 2 * solvers.equilateralAltitude(hex.radius);
             var s = width + margin;
             return { x: s / -2, y: solvers.equilateralAltitude(s), xMargin: margin };
         }
-    
-        return cloneToAlternate(itemToClone, xCount, yCount, spacing);
+
+        return cloneToAlternatingRows(itemToClone, xCount, yCount, spacing);
     }
 
 }
