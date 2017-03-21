@@ -382,6 +382,61 @@ namespace MakerJs.path {
     }
 
     /**
+     * @private
+     */
+    var alterMap: { [pathType: string]: (pathValue: IPath, pathLength: number, distance: number, useOrigin: boolean) => void } = {};
+
+    alterMap[pathType.Arc] = function (arc: IPathArc, pathLength: number, distance: number, useOrigin: boolean) {
+        var span = angle.ofArcSpan(arc);
+        var delta = ((pathLength + distance) * span / pathLength) - span;
+
+        if (useOrigin) {
+            arc.startAngle -= delta;
+        } else {
+            arc.endAngle += delta;
+        }
+    }
+
+    alterMap[pathType.Circle] = function (circle: IPathCircle, pathLength: number, distance: number, useOrigin: boolean) {
+        circle.radius *= (pathLength + distance) / pathLength;
+    }
+
+    alterMap[pathType.Line] = function (line: IPathLine, pathLength: number, distance: number, useOrigin: boolean) {
+        var delta = point.scale(point.subtract(line.end, line.origin), distance / pathLength);
+
+        if (useOrigin) {
+            line.origin = point.subtract(line.origin, delta);
+        } else {
+            line.end = point.add(line.end, delta);
+        }
+    }
+
+    /**
+     * Alter a path by lengthening or shortening it.
+     * 
+     * @param pathToAlter Path to alter.
+     * @param distance Numeric amount of length to add or remove from the path. Use a positive number to lengthen, negative to shorten. When shortening: this function will not alter the path and will return null if the resulting path length is less than or equal to zero.
+     * @param useOriginB Optional flag to alter from the origin instead of the end of the path.
+     * @returns The original path, or null if the path could not be altered.
+     */
+    export function alterLength(pathToAlter: IPath, distance: number, useOrigin = false): IPath {
+        if (!pathToAlter || !distance) return null;
+
+        var fn = alterMap[pathToAlter.type];
+        if (fn) {
+            var pathLength = measure.pathLength(pathToAlter);
+
+            if (!pathLength || -distance >= pathLength) return null;
+
+            fn(pathToAlter, pathLength, distance, useOrigin);
+
+            return pathToAlter;
+        }
+
+        return null;
+    }
+
+    /**
      * Get points along a path.
      * 
      * @param pathContext Path to get points from.
@@ -400,7 +455,7 @@ namespace MakerJs.path {
         var base = numberOfPoints;
 
         if (pathContext.type != pathType.Circle) base--;
-        
+
         for (var i = 0; i < numberOfPoints; i++) {
             points.push(point.middle(pathContext, i / base));
         }
