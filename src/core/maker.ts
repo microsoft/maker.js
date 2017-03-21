@@ -899,8 +899,20 @@ namespace MakerJs {
      * Options to pass to model.walk().
      */
     export interface IWalkOptions {
+
+        /**
+         * Callback for every path in every model.
+         */
         onPath?: IWalkPathCallback;
+
+        /**
+         * Callback for every child model in every model. Return false to stop walking down further models.
+         */
         beforeChildWalk?: IWalkModelCancellableCallback;
+
+        /**
+         * Callback for every child model in every model, after all of its children have been walked.
+         */
         afterChildWalk?: IWalkModelCallback;
     }
 
