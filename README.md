@@ -79,9 +79,9 @@ NEW: Layout clones into [rows](http://microsoft.github.io/maker.js/docs/api/modu
 
 [Fonts](http://microsoft.github.io/maker.js/playground/?script=Text) (Requires [opentype.js](http://opentype.js.org/))
 
-[SVG Path Data](http://microsoft.github.io/maker.js/docs/importing/#SVG path data)
+[SVG Path Data](http://microsoft.github.io/maker.js/docs/importing/#SVG+path+data)
 
-[SVG Points](http://microsoft.github.io/maker.js/docs/importing/#SVG points)
+[SVG Points](http://microsoft.github.io/maker.js/docs/importing/#SVG+points)
 
 ## Getting Started
 
