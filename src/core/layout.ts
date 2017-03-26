@@ -1,5 +1,187 @@
 namespace MakerJs.layout {
 
+    interface IChildPlacement {
+        childId: string;
+        xRatio: number;
+        origin?: IPoint;
+        angle?: number;
+    }
+
+    function getChildPlacement(parentModel: IModel, baseline: number) {
+
+        //measure everything and cache the results
+        var atlas = new measure.Atlas(parentModel);
+        var measureParent = measure.modelExtents(parentModel, atlas);
+
+        //measure height of the model from the baseline 0
+        var parentTop = measureParent.high[1];
+
+        var cpa: IChildPlacement[] = [];
+        var xMap: { [childId: string]: number } = {};
+
+        var walkOptions: IWalkOptions = {
+            beforeChildWalk: function (context: IWalkModel) {
+                var child = context.childModel;
+
+                //get cached measurement of the child
+                var childMeasure = measure.augment(atlas.modelMap[context.routeKey]);
+
+                //set a new origin at the x-center and y-baseline of the child
+                model.originate(child, [childMeasure.center[0], parentTop * baseline]);
+
+                //get the x-center of the child
+                var x = child.origin[0] - measureParent.low[0];
+                xMap[context.childId] = x;
+
+                //get the x-center of the child as a percentage
+                var xRatio = x / measureParent.width;
+
+                cpa.push({ childId: context.childId, xRatio });
+
+                //do not walk the grandchildren. This is only for immediate children of the parentModel.
+                return false;
+            }
+        };
+
+        model.walk(parentModel, walkOptions);
+
+        cpa.sort((a, b) => a.xRatio - b.xRatio);
+
+        var first = cpa[0];
+        var last = cpa[cpa.length - 1];
+        var min = first.xRatio;
+        var max = last.xRatio;
+        var span = max - min;
+
+        cpa.forEach(cp => cp.xRatio = (cp.xRatio - min) / span);
+
+        return {
+            cpa,
+            firstX: xMap[first.childId],
+            lastX: measureParent.width - xMap[last.childId]
+        };
+    }
+
+    function moveAndRotate(parentModel: IModel, cpa: IChildPlacement[]) {
+
+        cpa.forEach(cp => {
+            var child = parentModel.models[cp.childId];
+
+            //move the child to the new location
+            child.origin = cp.origin;
+
+            //rotate the child
+            model.rotate(child, cp.angle, cp.origin);
+        });
+    }
+
+    var onPathMap: { [pathType: string]: (onPath: IPath, reversed: boolean, cpa: IChildPlacement[]) => void } = {};
+
+    onPathMap[pathType.Arc] = function (arc: IPathArc, reversed: boolean, cpa: IChildPlacement[]) {
+        var arcSpan = angle.ofArcSpan(arc);
+        cpa.forEach(p => p.angle = reversed ? arc.endAngle - p.xRatio * arcSpan - 90 : arc.startAngle + p.xRatio * arcSpan + 90);
+    };
+
+    onPathMap[pathType.Line] = function (line: IPathLine, reversed: boolean, cpa: IChildPlacement[]) {
+        var lineAngle = angle.ofLineInDegrees(line as IPathLine);
+        cpa.forEach(p => p.angle = lineAngle);
+    };
+
+    export function childrenOnPath(parentModel: IModel, onPath: IPath, baseline = 0, reversed = false, contain = false) {
+
+        var result = getChildPlacement(parentModel, baseline);
+        var cpa = result.cpa;
+        var chosenPath = onPath;
+
+        if (contain) {
+            //see if we need to clip
+            var onPathLength = measure.pathLength(onPath);
+
+            if (result.firstX + result.lastX < onPathLength) {
+                chosenPath = path.clone(onPath);
+                path.alterLength(chosenPath, -result.firstX, true);
+                path.alterLength(chosenPath, -result.lastX);
+            }
+        }
+
+        cpa.forEach(p => p.origin = point.middle(chosenPath, reversed ? 1 - p.xRatio : p.xRatio));
+
+        var fn = onPathMap[chosenPath.type];
+        if (fn) {
+            fn(chosenPath, reversed, cpa);
+        }
+
+        moveAndRotate(parentModel, cpa);
+    }
+
+    function vertexAngles(points: IPoint[], offsetAngle: number): number[] {
+        var arc = new paths.Arc([0, 0], 0, 0, 0);
+        return points.map((p, i) => {
+            var a: number;
+            if (i === 0) {
+                a = angle.ofPointInDegrees(p, points[i + 1]) + 90;
+            } else if (i === points.length - 1) {
+                a = angle.ofPointInDegrees(points[i - 1], p) + 90;
+            } else {
+                arc.origin = p;
+                arc.startAngle = angle.ofPointInDegrees(p, points[i + 1]);
+                arc.endAngle = angle.ofPointInDegrees(p, points[i - 1]);
+                a = angle.ofArcMiddle(arc);
+            }
+            return a + offsetAngle;
+        });
+    }
+
+    export function childrenOnChain(parentModel: IModel, onChain: IChain, baseline = 0, reversed = false, contain = false) {
+        var result = getChildPlacement(parentModel, baseline);
+        var cpa = result.cpa;
+
+        var chainLength = onChain.pathLength;
+        if (contain) chainLength -= result.firstX + result.lastX;
+
+        var absolutes = cpa.map(cp => (reversed ? 1 - cp.xRatio : cp.xRatio) * chainLength);
+        var relatives: number[];
+
+        if (reversed) {
+            absolutes.reverse();
+        }
+        relatives = absolutes.map((ab, i) => Math.abs(ab - (i == 0 ? 0 : absolutes[i - 1])));
+
+        if (contain) {
+            relatives[0] += reversed ? result.lastX : result.firstX;
+        } else {
+            relatives.shift();
+        }
+
+        var points = chain.toPoints(onChain, relatives);
+
+        if (points.length < cpa.length) {
+            var endLink = onChain.links[reversed ? 0: onChain.links.length - 1];
+            //TODO: add last point of chain for good measure
+            points.push(endLink.endPoints[endLink.reversed ? 0 : 1]);
+        }
+
+        if (contain) {
+            //delete the first point which is the beginning of the chain
+            points.shift();
+        }
+
+        if (reversed) {
+            points.reverse();
+        }
+
+        var angles = vertexAngles(points, -90);
+
+        cpa.forEach(
+            (cp, i) => {
+                cp.angle = angles[i];
+                cp.origin = points[i];
+            }
+        );
+
+        moveAndRotate(parentModel, cpa);
+    }
+
     /**
      * @private
      */
