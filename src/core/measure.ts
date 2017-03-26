@@ -439,17 +439,33 @@ namespace MakerJs.measure {
 
         var m = atlas.modelMap[''] as IMeasureWithCenter;
 
+        if (m) {
+            return augment(m);
+        }
+
+        return m;
+    }
+
+
+    /**
+     * Augment a measurement - add more properties such as center point, height and width.
+     * 
+     * @param measureToAugment The measurement to augment.
+     * @returns Measurement object with augmented properties.
+     */
+    export function augment(measureToAugment: IMeasure): IMeasureWithCenter {
+
+        var m = measureToAugment as IMeasureWithCenter;
+
         function avg(dim: number) {
             return (m.low[dim] + m.high[dim]) / 2;
         }
 
-        if (m) {
-            m.center = [avg(0), avg(1)];
-            m.width = m.high[0] - m.low[0];
-            m.height = m.high[1] - m.low[1];
-        }
+        m.center = [avg(0), avg(1)];
+        m.width = m.high[0] - m.low[0];
+        m.height = m.high[1] - m.low[1];
 
-        return m;
+        return m;        
     }
 
     /**
