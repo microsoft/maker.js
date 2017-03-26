@@ -236,7 +236,7 @@ namespace MakerJs.path {
      * @returns The original path (for cascading).
      */
     export function rotate(pathToRotate: IPath, angleInDegrees: number, rotationOrigin: IPoint = [0, 0]): IPath {
-        if (!pathToRotate || angleInDegrees == 0) return pathToRotate;
+        if (!pathToRotate || !angleInDegrees) return pathToRotate;
 
         pathToRotate.origin = point.rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
 
