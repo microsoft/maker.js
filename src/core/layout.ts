@@ -1,5 +1,8 @@
 namespace MakerJs.layout {
 
+    /**
+     * @private
+     */
     interface IChildPlacement {
         childId: string;
         xRatio: number;
@@ -7,6 +10,9 @@ namespace MakerJs.layout {
         angle?: number;
     }
 
+    /**
+     * @private
+     */
     function getChildPlacement(parentModel: IModel, baseline: number) {
 
         //measure everything and cache the results
@@ -24,7 +30,11 @@ namespace MakerJs.layout {
                 var child = context.childModel;
 
                 //get cached measurement of the child
-                var childMeasure = measure.augment(atlas.modelMap[context.routeKey]);
+                var m = atlas.modelMap[context.routeKey];
+
+                if (!m) return;
+
+                var childMeasure = measure.augment(m);
 
                 //set a new origin at the x-center and y-baseline of the child
                 model.originate(child, [childMeasure.center[0], parentTop * baseline]);
@@ -62,7 +72,10 @@ namespace MakerJs.layout {
         };
     }
 
-    function moveAndRotate(parentModel: IModel, cpa: IChildPlacement[]) {
+    /**
+     * @private
+     */
+    function moveAndRotate(parentModel: IModel, cpa: IChildPlacement[], rotate: boolean) {
 
         cpa.forEach(cp => {
             var child = parentModel.models[cp.childId];
@@ -71,10 +84,13 @@ namespace MakerJs.layout {
             child.origin = cp.origin;
 
             //rotate the child
-            model.rotate(child, cp.angle, cp.origin);
+            if (rotate) model.rotate(child, cp.angle, cp.origin);
         });
     }
 
+    /**
+     * @private
+     */
     var onPathMap: { [pathType: string]: (onPath: IPath, reversed: boolean, cpa: IChildPlacement[]) => void } = {};
 
     onPathMap[pathType.Arc] = function (arc: IPathArc, reversed: boolean, cpa: IChildPlacement[]) {
@@ -87,7 +103,20 @@ namespace MakerJs.layout {
         cpa.forEach(p => p.angle = lineAngle);
     };
 
-    export function childrenOnPath(parentModel: IModel, onPath: IPath, baseline = 0, reversed = false, contain = false) {
+    /**
+     * Layout the children of a model along a path. 
+     * The x-position of each child will be projected onto the path so that the proportion between children is maintained.
+     * Each child will be rotated such that it will be perpendicular to the path at the child's x-center.
+     * 
+     * @param parentModel The model containing children to lay out.
+     * @param onPath The path on which to lay out.
+     * @param baseline Numeric percentage value of vertical displacement from the path. Default is zero.
+     * @param reversed Flag to travel along the path in reverse. Default is false.
+     * @param contain Flag to contain the children layout within the length of the path. Default is false.
+     * @param rotate Flag to rotate the child to perpendicular. Default is true.
+     * @returns The parentModel, for cascading.
+     */
+    export function childrenOnPath(parentModel: IModel, onPath: IPath, baseline = 0, reversed = false, contain = false, rotate = true) {
 
         var result = getChildPlacement(parentModel, baseline);
         var cpa = result.cpa;
@@ -111,10 +140,15 @@ namespace MakerJs.layout {
             fn(chosenPath, reversed, cpa);
         }
 
-        moveAndRotate(parentModel, cpa);
+        moveAndRotate(parentModel, cpa, rotate);
+
+        return parentModel;
     }
 
-    function vertexAngles(points: IPoint[], offsetAngle: number): number[] {
+    /**
+     * @private
+     */
+    function miterAngles(points: IPoint[], offsetAngle: number): number[] {
         var arc = new paths.Arc([0, 0], 0, 0, 0);
         return points.map((p, i) => {
             var a: number;
@@ -132,7 +166,21 @@ namespace MakerJs.layout {
         });
     }
 
-    export function childrenOnChain(parentModel: IModel, onChain: IChain, baseline = 0, reversed = false, contain = false) {
+    /**
+     * Layout the children of a model along a chain. 
+     * The x-position of each child will be projected onto the chain so that the proportion between children is maintained.
+     * The projected positions of the children will become an array of points that approximate the chain.
+     * Each child will be rotated such that it will be mitered according to the vertex angles formed by this series of points.
+     * 
+     * @param parentModel The model containing children to lay out.
+     * @param onChain The chain on which to lay out.
+     * @param baseline Numeric percentage value of vertical displacement from the chain. Default is zero.
+     * @param reversed Flag to travel along the chain in reverse. Default is false.
+     * @param contain Flag to contain the children layout within the length of the chain. Default is false.
+     * @param rotate Flag to rotate the child to mitered angle. Default is true.
+     * @returns The parentModel, for cascading.
+     */
+    export function childrenOnChain(parentModel: IModel, onChain: IChain, baseline = 0, reversed = false, contain = false, rotated = true) {
         var result = getChildPlacement(parentModel, baseline);
         var cpa = result.cpa;
 
@@ -142,9 +190,8 @@ namespace MakerJs.layout {
         var absolutes = cpa.map(cp => (reversed ? 1 - cp.xRatio : cp.xRatio) * chainLength);
         var relatives: number[];
 
-        if (reversed) {
-            absolutes.reverse();
-        }
+        if (reversed) absolutes.reverse();
+
         relatives = absolutes.map((ab, i) => Math.abs(ab - (i == 0 ? 0 : absolutes[i - 1])));
 
         if (contain) {
@@ -153,33 +200,29 @@ namespace MakerJs.layout {
             relatives.shift();
         }
 
+        //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
         var points = chain.toPoints(onChain, relatives);
 
         if (points.length < cpa.length) {
-            var endLink = onChain.links[reversed ? 0: onChain.links.length - 1];
-            //TODO: add last point of chain for good measure
+            //add last point of chain, since our distances exceeded the chain
+            var endLink = onChain.links[onChain.links.length - 1];
             points.push(endLink.endPoints[endLink.reversed ? 0 : 1]);
         }
 
-        if (contain) {
-            //delete the first point which is the beginning of the chain
-            points.shift();
-        }
+        if (contain) points.shift(); //delete the first point which is the beginning of the chain
 
-        if (reversed) {
-            points.reverse();
-        }
+        if (reversed) points.reverse();
 
-        var angles = vertexAngles(points, -90);
+        var angles = miterAngles(points, -90);
 
-        cpa.forEach(
-            (cp, i) => {
-                cp.angle = angles[i];
-                cp.origin = points[i];
-            }
-        );
+        cpa.forEach((cp, i) => {
+            cp.angle = angles[i];
+            cp.origin = points[i];
+        });
 
-        moveAndRotate(parentModel, cpa);
+        moveAndRotate(parentModel, cpa, rotated);
+
+        return parentModel;
     }
 
     /**
