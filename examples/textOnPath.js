@@ -1,34 +1,40 @@
 ﻿var makerjs = require('makerjs');
 
-function TextOnPath(font, text, fontSize, baseline, reversed, contain, rotate, svgPathData, showPath) {
+function TextOnPath(font, fontSize, topText, topSpan, bottomText, bottomSpan, baseline, contain, rotate, showPath) {
 
-    var textModel = new makerjs.models.Text(font, text, fontSize);
+    var topTextModel = new makerjs.models.Text(font, topText, fontSize);
+    var bottomTextModel = new makerjs.models.Text(font, bottomText, fontSize);
 
-    var svgPath = makerjs.importer.fromSVGPathData(svgPathData);
-    
-    var chain = makerjs.model.findSingleChain(svgPath);
+    var topArc = new makerjs.paths.Arc([0, 0], 100, 90 - topSpan / 2, 90 + topSpan / 2);
+    var bottomArc = new makerjs.paths.Arc([0, 0], 100, 270 - bottomSpan / 2, 270 + bottomSpan / 2);
 
-    makerjs.layout.childrenOnChain(textModel, chain, baseline, reversed, contain, rotate);
+    makerjs.layout.childrenOnPath(topTextModel, topArc, baseline, true, contain, rotate);
+    makerjs.layout.childrenOnPath(bottomTextModel, bottomArc, baseline, false, contain, rotate);
 
     this.models = {
-        text: textModel
+        topText: topTextModel,
+        bottomText: bottomTextModel
     };
 
     if (showPath) {
-        this.models.svgPath = svgPath;
+        this.paths = {
+            topArc: topArc,
+            bottomArc: bottomArc
+        };
     }
 }
 
 TextOnPath.metaParameters = [
     { title: "font", type: "font", value: '*' },
-    { title: "text", type: "text", value: 'We go up, then we go down, then up again' },
-    { title: "font size", type: "range", min: 1, max: 200, value: 42.5 },
+    { title: "font size", type: "range", min: 1, max: 200, value: 24 },
+    { title: "top text", type: "text", value: 'This is on top' },
+    { title: "top span", type: "range", min: 10, max: 270, value: 150 },
+    { title: "bottom text", type: "text", value: 'This is on bottom' },
+    { title: "bottom span", type: "range", min: 10, max: 270, value: 150 },
     { title: "baseline", type: "range", min: -1, max: 2, step: 0.1, value: 0.5 },
-    { title: "reversed", type: "bool", value: true },
-    { title: "contain", type: "bool", value: false },
-    { title: "rotate", type: "bool", value: true },
-    { title: "svg path data", type: "text", value: 'M 100 200 C 200 100 300 0 400 100 C 500 200 600 300 700 200 C 800 100 900 100 900 100' },
-    { title: "show path", type: "bool", value: true },
+    { title: "contain", type: "bool", value: true },
+    { title: "rotate text", type: "bool", value: true },
+    { title: "show path", type: "bool", value: true }
 ];
 
 module.exports = TextOnPath;
