@@ -228,26 +228,26 @@ namespace MakerJs.model {
      * @returns The original model (for cascading).
      */
     export function rotate(modelToRotate: IModel, angleInDegrees: number, rotationOrigin: IPoint = [0, 0]): IModel {
-        if (modelToRotate) {
+        if (!modelToRotate || !angleInDegrees) return modelToRotate;
 
-            var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
+        var offsetOrigin = point.subtract(rotationOrigin, modelToRotate.origin);
 
-            if (modelToRotate.type === models.BezierCurve.typeName) {
-                path.rotate((modelToRotate as models.BezierCurve).seed, angleInDegrees, offsetOrigin);
-            }
+        if (modelToRotate.type === models.BezierCurve.typeName) {
+            path.rotate((modelToRotate as models.BezierCurve).seed, angleInDegrees, offsetOrigin);
+        }
 
-            if (modelToRotate.paths) {
-                for (var id in modelToRotate.paths) {
-                    path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
-                }
-            }
-
-            if (modelToRotate.models) {
-                for (var id in modelToRotate.models) {
-                    rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
-                }
+        if (modelToRotate.paths) {
+            for (var id in modelToRotate.paths) {
+                path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
             }
         }
+
+        if (modelToRotate.models) {
+            for (var id in modelToRotate.models) {
+                rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
+            }
+        }
+
         return modelToRotate;
     }
 
