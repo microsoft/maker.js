@@ -457,11 +457,7 @@ namespace MakerJs.measure {
 
         var m = measureToAugment as IMeasureWithCenter;
 
-        function avg(dim: number) {
-            return (m.low[dim] + m.high[dim]) / 2;
-        }
-
-        m.center = [avg(0), avg(1)];
+        m.center = point.average(m.high, m.low);
         m.width = m.high[0] - m.low[0];
         m.height = m.high[1] - m.low[1];
 
