@@ -416,7 +416,7 @@ namespace MakerJs.path {
      * 
      * @param pathToAlter Path to alter.
      * @param distance Numeric amount of length to add or remove from the path. Use a positive number to lengthen, negative to shorten. When shortening: this function will not alter the path and will return null if the resulting path length is less than or equal to zero.
-     * @param useOriginB Optional flag to alter from the origin instead of the end of the path.
+     * @param useOrigin Optional flag to alter from the origin instead of the end of the path.
      * @returns The original path, or null if the path could not be altered.
      */
     export function alterLength(pathToAlter: IPath, distance: number, useOrigin = false): IPath {
