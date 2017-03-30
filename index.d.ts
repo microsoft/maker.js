@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.43
+// Type definitions for Maker.js 0.9.5
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -54,6 +54,7 @@ declare namespace MakerJs {
      *
      * @param n The number to round off.
      * @param accuracy Optional exemplar of number of decimal places.
+     * @returns Rounded number.
      */
     function round(n: number, accuracy?: number): number;
     /**
@@ -657,8 +658,17 @@ declare namespace MakerJs {
      * Options to pass to model.walk().
      */
     interface IWalkOptions {
+        /**
+         * Callback for every path in every model.
+         */
         onPath?: IWalkPathCallback;
+        /**
+         * Callback for every child model in every model. Return false to stop walking down further models.
+         */
         beforeChildWalk?: IWalkModelCancellableCallback;
+        /**
+         * Callback for every child model in every model, after all of its children have been walked.
+         */
         afterChildWalk?: IWalkModelCallback;
     }
     /**
@@ -1006,6 +1016,15 @@ declare namespace MakerJs.path {
      */
     function converge(lineA: IPathLine, lineB: IPathLine, useOriginA?: boolean, useOriginB?: boolean): IPoint;
     /**
+     * Alter a path by lengthening or shortening it.
+     *
+     * @param pathToAlter Path to alter.
+     * @param distance Numeric amount of length to add or remove from the path. Use a positive number to lengthen, negative to shorten. When shortening: this function will not alter the path and will return null if the resulting path length is less than or equal to zero.
+     * @param useOrigin Optional flag to alter from the origin instead of the end of the path.
+     * @returns The original path, or null if the path could not be altered.
+     */
+    function alterLength(pathToAlter: IPath, distance: number, useOrigin?: boolean): IPath;
+    /**
      * Get points along a path.
      *
      * @param pathContext Path to get points from.
@@ -1227,8 +1246,11 @@ declare namespace MakerJs.model {
      * Center a model at [0, 0].
      *
      * @param modelToCenter The model to center.
+     * @param centerX Boolean to center on the x axis. Default is true.
+     * @param centerY Boolean to center on the y axis. Default is true.
+     * @returns The original model (for cascading).
      */
-    function center(modelToCenter: IModel): IModel;
+    function center(modelToCenter: IModel, centerX?: boolean, centerY?: boolean): IModel;
     /**
      * Create a clone of a model, mirrored on either or both x and y axes.
      *
@@ -1308,8 +1330,11 @@ declare namespace MakerJs.model {
      * Move a model so its bounding box begins at [0, 0].
      *
      * @param modelToZero The model to zero.
+     * @param zeroX Boolean to zero on the x axis. Default is true.
+     * @param zeroY Boolean to zero on the y axis. Default is true.
+     * @returns The original model (for cascading).
      */
-    function zero(modelToZero: IModel): IModel;
+    function zero(modelToZero: IModel, zeroX?: boolean, zeroY?: boolean): IModel;
 }
 declare namespace MakerJs.model {
     /**
@@ -1617,6 +1642,13 @@ declare namespace MakerJs.measure {
      */
     function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasureWithCenter;
     /**
+     * Augment a measurement - add more properties such as center point, height and width.
+     *
+     * @param measureToAugment The measurement to augment.
+     * @returns Measurement object with augmented properties.
+     */
+    function augment(measureToAugment: IMeasure): IMeasureWithCenter;
+    /**
      * A list of maps of measurements.
      *
      * @param modelToMeasure The model to measure.
@@ -1885,11 +1917,11 @@ declare namespace MakerJs.chain {
      * Get points along a chain of paths.
      *
      * @param chainContext Chain of paths to get points from.
-     * @param distance Distance along the chain between points.
+     * @param distance Numeric distance along the chain between points, or numeric array of distances along the chain between each point.
      * @param maxPoints Maximum number of points to retrieve.
      * @returns Array of points which are on the chain spread at a uniform interval.
      */
-    function toPoints(chainContext: IChain, distance: number, maxPoints?: number): IPoint[];
+    function toPoints(chainContext: IChain, distanceOrDistances: number | number[], maxPoints?: number): IPoint[];
     /**
      * Get key points (a minimal a number of points) along a chain of paths.
      *
@@ -2138,6 +2170,35 @@ declare namespace MakerJs.importer {
     function fromSVGPathData(pathData: string, options?: ISVGImportOptions): IModel;
 }
 declare namespace MakerJs.layout {
+    /**
+     * Layout the children of a model along a path.
+     * The x-position of each child will be projected onto the path so that the proportion between children is maintained.
+     * Each child will be rotated such that it will be perpendicular to the path at the child's x-center.
+     *
+     * @param parentModel The model containing children to lay out.
+     * @param onPath The path on which to lay out.
+     * @param baseline Numeric percentage value of vertical displacement from the path. Default is zero.
+     * @param reversed Flag to travel along the path in reverse. Default is false.
+     * @param contain Flag to contain the children layout within the length of the path. Default is false.
+     * @param rotate Flag to rotate the child to perpendicular. Default is true.
+     * @returns The parentModel, for cascading.
+     */
+    function childrenOnPath(parentModel: IModel, onPath: IPath, baseline?: number, reversed?: boolean, contain?: boolean, rotate?: boolean): IModel;
+    /**
+     * Layout the children of a model along a chain.
+     * The x-position of each child will be projected onto the chain so that the proportion between children is maintained.
+     * The projected positions of the children will become an array of points that approximate the chain.
+     * Each child will be rotated such that it will be mitered according to the vertex angles formed by this series of points.
+     *
+     * @param parentModel The model containing children to lay out.
+     * @param onChain The chain on which to lay out.
+     * @param baseline Numeric percentage value of vertical displacement from the chain. Default is zero.
+     * @param reversed Flag to travel along the chain in reverse. Default is false.
+     * @param contain Flag to contain the children layout within the length of the chain. Default is false.
+     * @param rotate Flag to rotate the child to mitered angle. Default is true.
+     * @returns The parentModel, for cascading.
+     */
+    function childrenOnChain(parentModel: IModel, onChain: IChain, baseline?: number, reversed?: boolean, contain?: boolean, rotated?: boolean): IModel;
     /**
      * Layout clones in a column format.
      *
