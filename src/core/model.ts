@@ -99,11 +99,15 @@ namespace MakerJs.model {
      * Center a model at [0, 0].
      * 
      * @param modelToCenter The model to center.
+     * @param centerX Boolean to center on the x axis. Default is true.
+     * @param centerY Boolean to center on the y axis. Default is true.
+     * @returns The original model (for cascading).
      */
-    export function center(modelToCenter: IModel) {
+    export function center(modelToCenter: IModel, centerX = true, centerY = true) {
         var m = measure.modelExtents(modelToCenter);
-        var c = point.average(m.high, m.low);
-        var o = point.subtract(modelToCenter.origin || [0, 0], c);
+        var o = modelToCenter.origin || [0, 0];
+        if (centerX) o[0] -= m.center[0];
+        if (centerY) o[1] -= m.center[1];
         modelToCenter.origin = o;
         return modelToCenter;
     }
@@ -413,10 +417,15 @@ namespace MakerJs.model {
      * Move a model so its bounding box begins at [0, 0].
      * 
      * @param modelToZero The model to zero.
+     * @param zeroX Boolean to zero on the x axis. Default is true.
+     * @param zeroY Boolean to zero on the y axis. Default is true.
+     * @returns The original model (for cascading).
      */
-    export function zero(modelToZero: IModel) {
+    export function zero(modelToZero: IModel, zeroX = true, zeroY = true) {
         var m = measure.modelExtents(modelToZero);
-        var z = point.subtract(modelToZero.origin || [0, 0], m.low);
+        var z = modelToZero.origin || [0, 0];
+        if (zeroX) z[0] -= m.low[0];
+        if (zeroY) z[1] -= m.low[1];
         modelToZero.origin = z;
         return modelToZero;
     }
