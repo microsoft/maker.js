@@ -128,6 +128,7 @@
   "ordered_demo_list": [
     "text-on-path",
     "text-on-chain",
+    "fish-scales",
     "makerjs-hex-flower",
     "archbridge",
     "BoltCircle#params=[25,50,20,0]",
