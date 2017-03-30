@@ -74,6 +74,7 @@ namespace MakerJs {
      * 
      * @param n The number to round off.
      * @param accuracy Optional exemplar of number of decimal places.
+     * @returns Rounded number.
      */
     export function round(n: number, accuracy = .0000001) {
         var places = 1 / accuracy;
@@ -899,8 +900,20 @@ namespace MakerJs {
      * Options to pass to model.walk().
      */
     export interface IWalkOptions {
+
+        /**
+         * Callback for every path in every model.
+         */
         onPath?: IWalkPathCallback;
+
+        /**
+         * Callback for every child model in every model. Return false to stop walking down further models.
+         */
         beforeChildWalk?: IWalkModelCancellableCallback;
+
+        /**
+         * Callback for every child model in every model, after all of its children have been walked.
+         */
         afterChildWalk?: IWalkModelCallback;
     }
 
