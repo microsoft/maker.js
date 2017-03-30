@@ -74,6 +74,7 @@ namespace MakerJs {
      * 
      * @param n The number to round off.
      * @param accuracy Optional exemplar of number of decimal places.
+     * @returns Rounded number.
      */
     export function round(n: number, accuracy = .0000001) {
         var places = 1 / accuracy;
