@@ -10,12 +10,21 @@ title: Api - layout Module
 			<section class="tsd-index-section tsd-is-private tsd-is-private-protected tsd-is-not-exported">
 				<h3>Interfaces</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="../interfaces/makerjs.layout.ichildplacement.html" class="tsd-kind-icon">IChild<wbr>Placement</a></li>
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="../interfaces/makerjs.layout.igridspacing.html" class="tsd-kind-icon">IGrid<wbr>Spacing</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section tsd-is-private tsd-is-private-protected tsd-is-not-exported">
+				<h3>Variables</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.layout.html#onpathmap" class="tsd-kind-icon">on<wbr>Path<wbr>Map</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.layout.html#childrenonchain" class="tsd-kind-icon">children<wbr>OnChain</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.layout.html#childrenonpath" class="tsd-kind-icon">children<wbr>OnPath</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.layout.html#cloneto" class="tsd-kind-icon">clone<wbr>To</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.layout.html#clonetoalternatingrows" class="tsd-kind-icon">clone<wbr>ToAlternating<wbr>Rows</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.layout.html#clonetobrick" class="tsd-kind-icon">clone<wbr>ToBrick</a></li>
@@ -23,14 +32,190 @@ title: Api - layout Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.layout.html#clonetogrid" class="tsd-kind-icon">clone<wbr>ToGrid</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.layout.html#clonetohoneycomb" class="tsd-kind-icon">clone<wbr>ToHoneycomb</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.layout.html#clonetorow" class="tsd-kind-icon">clone<wbr>ToRow</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.layout.html#getchildplacement" class="tsd-kind-icon">get<wbr>Child<wbr>Placement</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.layout.html#getmargins" class="tsd-kind-icon">get<wbr>Margins</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.layout.html#miterangles" class="tsd-kind-icon">miter<wbr>Angles</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.layout.html#moveandrotate" class="tsd-kind-icon">move<wbr>And<wbr>Rotate</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
+<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected tsd-is-not-exported">
+	<h2>Variables</h2>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="onpathmap" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> on<wbr>Path<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">on<wbr>Path<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L94">core/layout.ts:94</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pathType: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">function</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-siganture">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>onPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, reversed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, cpa<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.layout.ichildplacement.html" class="tsd-signature-type">IChildPlacement</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>onPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+										</li>
+										<li>
+											<h5>reversed: <span class="tsd-signature-type">boolean</span></h5>
+										</li>
+										<li>
+											<h5>cpa: <a href="../interfaces/makerjs.layout.ichildplacement.html" class="tsd-signature-type">IChildPlacement</a><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</section>
+</section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="childrenonchain" class="tsd-anchor"></a>
+		<h3>children<wbr>OnChain</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">children<wbr>OnChain<span class="tsd-signature-symbol">(</span>parentModel<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, onChain<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, baseline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, reversed<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, contain<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, rotated<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L183">core/layout.ts:183</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Layout the children of a model along a chain.
+							The x-position of each child will be projected onto the chain so that the proportion between children is maintained.
+							The projected positions of the children will become an array of points that approximate the chain.
+						Each child will be rotated such that it will be mitered according to the vertex angles formed by this series of points.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>parentModel: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model containing children to lay out.</p>
+						</div>
+					</li>
+					<li>
+						<h5>onChain: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain on which to lay out.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> baseline: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Numeric percentage value of vertical displacement from the chain. Default is zero.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> reversed: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to travel along the chain in reverse. Default is false.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> contain: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to contain the children layout within the length of the chain. Default is false.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> rotated: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>The parentModel, for cascading.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="childrenonpath" class="tsd-anchor"></a>
+		<h3>children<wbr>OnPath</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">children<wbr>OnPath<span class="tsd-signature-symbol">(</span>parentModel<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, onPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, baseline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, reversed<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, contain<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, rotate<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L119">core/layout.ts:119</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Layout the children of a model along a path.
+							The x-position of each child will be projected onto the path so that the proportion between children is maintained.
+						Each child will be rotated such that it will be perpendicular to the path at the child&#39;s x-center.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>parentModel: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model containing children to lay out.</p>
+						</div>
+					</li>
+					<li>
+						<h5>onPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The path on which to lay out.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> baseline: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Numeric percentage value of vertical displacement from the path. Default is zero.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> reversed: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to travel along the path in reverse. Default is false.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> contain: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to contain the children layout within the length of the path. Default is false.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> rotate: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to rotate the child to perpendicular. Default is true.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>The parentModel, for cascading.</p>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="cloneto" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> clone<wbr>To</h3>
@@ -41,7 +226,7 @@ title: Api - layout Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L6">core/layout.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L231">core/layout.ts:231</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -75,7 +260,7 @@ title: Api - layout Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L133">core/layout.ts:133</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L358">core/layout.ts:358</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -127,7 +312,7 @@ title: Api - layout Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L178">core/layout.ts:178</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L403">core/layout.ts:403</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -186,7 +371,7 @@ title: Api - layout Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L54">core/layout.ts:54</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L279">core/layout.ts:279</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -237,7 +422,7 @@ title: Api - layout Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L105">core/layout.ts:105</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L330">core/layout.ts:330</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -291,7 +476,7 @@ title: Api - layout Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L210">core/layout.ts:210</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L435">core/layout.ts:435</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -345,7 +530,7 @@ title: Api - layout Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L83">core/layout.ts:83</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L308">core/layout.ts:308</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -392,6 +577,45 @@ document.write(m.exporter.toSVG(tongueAndGrooves));
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="getchildplacement" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Child<wbr>Placement</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Child<wbr>Placement<span class="tsd-signature-symbol">(</span>parentModel<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, baseline<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L16">core/layout.ts:16</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>parentModel: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+					</li>
+					<li>
+						<h5>baseline: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
+				<ul class="tsd-parameters">
+					<li class="tsd-parameter">
+						<h5>cpa<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/makerjs.layout.ichildplacement.html" class="tsd-signature-type">IChildPlacement</a><span class="tsd-signature-symbol">&gt;</span></h5>
+					</li>
+					<li class="tsd-parameter">
+						<h5>firstX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li class="tsd-parameter">
+						<h5>lastX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="getmargins" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Margins</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
@@ -401,7 +625,7 @@ document.write(m.exporter.toSVG(tongueAndGrooves));
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/31dfd67/src/core/layout.ts#L113">core/layout.ts:113</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L338">core/layout.ts:338</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -413,6 +637,65 @@ document.write(m.exporter.toSVG(tongueAndGrooves));
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="miterangles" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> miter<wbr>Angles</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">miter<wbr>Angles<span class="tsd-signature-symbol">(</span>points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, offsetAngle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L151">core/layout.ts:151</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>points: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>offsetAngle: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="moveandrotate" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> move<wbr>And<wbr>Rotate</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">move<wbr>And<wbr>Rotate<span class="tsd-signature-symbol">(</span>parentModel<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, cpa<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.layout.ichildplacement.html" class="tsd-signature-type">IChildPlacement</a><span class="tsd-signature-symbol">[]</span>, rotate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3c36235/src/core/layout.ts#L78">core/layout.ts:78</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>parentModel: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+					</li>
+					<li>
+						<h5>cpa: <a href="../interfaces/makerjs.layout.ichildplacement.html" class="tsd-signature-type">IChildPlacement</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>rotate: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 			</li>
 		</ul>
 	</section>
