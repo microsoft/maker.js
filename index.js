@@ -97,6 +97,7 @@ var MakerJs;
      *
      * @param n The number to round off.
      * @param accuracy Optional exemplar of number of decimal places.
+     * @returns Rounded number.
      */
     function round(n, accuracy) {
         if (accuracy === void 0) { accuracy = .0000001; }
@@ -980,7 +981,7 @@ var MakerJs;
          */
         function rotate(pathToRotate, angleInDegrees, rotationOrigin) {
             if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
-            if (!pathToRotate || angleInDegrees == 0)
+            if (!pathToRotate || !angleInDegrees)
                 return pathToRotate;
             pathToRotate.origin = MakerJs.point.rotate(pathToRotate.origin, angleInDegrees, rotationOrigin);
             var fn = rotateMap[pathToRotate.type];
@@ -1102,6 +1103,55 @@ var MakerJs;
             return p;
         }
         path.converge = converge;
+        /**
+         * @private
+         */
+        var alterMap = {};
+        alterMap[MakerJs.pathType.Arc] = function (arc, pathLength, distance, useOrigin) {
+            var span = MakerJs.angle.ofArcSpan(arc);
+            var delta = ((pathLength + distance) * span / pathLength) - span;
+            if (useOrigin) {
+                arc.startAngle -= delta;
+            }
+            else {
+                arc.endAngle += delta;
+            }
+        };
+        alterMap[MakerJs.pathType.Circle] = function (circle, pathLength, distance, useOrigin) {
+            circle.radius *= (pathLength + distance) / pathLength;
+        };
+        alterMap[MakerJs.pathType.Line] = function (line, pathLength, distance, useOrigin) {
+            var delta = MakerJs.point.scale(MakerJs.point.subtract(line.end, line.origin), distance / pathLength);
+            if (useOrigin) {
+                line.origin = MakerJs.point.subtract(line.origin, delta);
+            }
+            else {
+                line.end = MakerJs.point.add(line.end, delta);
+            }
+        };
+        /**
+         * Alter a path by lengthening or shortening it.
+         *
+         * @param pathToAlter Path to alter.
+         * @param distance Numeric amount of length to add or remove from the path. Use a positive number to lengthen, negative to shorten. When shortening: this function will not alter the path and will return null if the resulting path length is less than or equal to zero.
+         * @param useOrigin Optional flag to alter from the origin instead of the end of the path.
+         * @returns The original path, or null if the path could not be altered.
+         */
+        function alterLength(pathToAlter, distance, useOrigin) {
+            if (useOrigin === void 0) { useOrigin = false; }
+            if (!pathToAlter || !distance)
+                return null;
+            var fn = alterMap[pathToAlter.type];
+            if (fn) {
+                var pathLength = MakerJs.measure.pathLength(pathToAlter);
+                if (!pathLength || -distance >= pathLength)
+                    return null;
+                fn(pathToAlter, pathLength, distance, useOrigin);
+                return pathToAlter;
+            }
+            return null;
+        }
+        path.alterLength = alterLength;
         /**
          * Get points along a path.
          *
@@ -1585,11 +1635,19 @@ var MakerJs;
          * Center a model at [0, 0].
          *
          * @param modelToCenter The model to center.
+         * @param centerX Boolean to center on the x axis. Default is true.
+         * @param centerY Boolean to center on the y axis. Default is true.
+         * @returns The original model (for cascading).
          */
-        function center(modelToCenter) {
+        function center(modelToCenter, centerX, centerY) {
+            if (centerX === void 0) { centerX = true; }
+            if (centerY === void 0) { centerY = true; }
             var m = MakerJs.measure.modelExtents(modelToCenter);
-            var c = MakerJs.point.average(m.high, m.low);
-            var o = MakerJs.point.subtract(modelToCenter.origin || [0, 0], c);
+            var o = modelToCenter.origin || [0, 0];
+            if (centerX)
+                o[0] -= m.center[0];
+            if (centerY)
+                o[1] -= m.center[1];
             modelToCenter.origin = o;
             return modelToCenter;
         }
@@ -1706,20 +1764,20 @@ var MakerJs;
          */
         function rotate(modelToRotate, angleInDegrees, rotationOrigin) {
             if (rotationOrigin === void 0) { rotationOrigin = [0, 0]; }
-            if (modelToRotate) {
-                var offsetOrigin = MakerJs.point.subtract(rotationOrigin, modelToRotate.origin);
-                if (modelToRotate.type === MakerJs.models.BezierCurve.typeName) {
-                    MakerJs.path.rotate(modelToRotate.seed, angleInDegrees, offsetOrigin);
+            if (!modelToRotate || !angleInDegrees)
+                return modelToRotate;
+            var offsetOrigin = MakerJs.point.subtract(rotationOrigin, modelToRotate.origin);
+            if (modelToRotate.type === MakerJs.models.BezierCurve.typeName) {
+                MakerJs.path.rotate(modelToRotate.seed, angleInDegrees, offsetOrigin);
+            }
+            if (modelToRotate.paths) {
+                for (var id in modelToRotate.paths) {
+                    MakerJs.path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
                 }
-                if (modelToRotate.paths) {
-                    for (var id in modelToRotate.paths) {
-                        MakerJs.path.rotate(modelToRotate.paths[id], angleInDegrees, offsetOrigin);
-                    }
-                }
-                if (modelToRotate.models) {
-                    for (var id in modelToRotate.models) {
-                        rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
-                    }
+            }
+            if (modelToRotate.models) {
+                for (var id in modelToRotate.models) {
+                    rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
                 }
             }
             return modelToRotate;
@@ -1867,10 +1925,19 @@ var MakerJs;
          * Move a model so its bounding box begins at [0, 0].
          *
          * @param modelToZero The model to zero.
+         * @param zeroX Boolean to zero on the x axis. Default is true.
+         * @param zeroY Boolean to zero on the y axis. Default is true.
+         * @returns The original model (for cascading).
          */
-        function zero(modelToZero) {
+        function zero(modelToZero, zeroX, zeroY) {
+            if (zeroX === void 0) { zeroX = true; }
+            if (zeroY === void 0) { zeroY = true; }
             var m = MakerJs.measure.modelExtents(modelToZero);
-            var z = MakerJs.point.subtract(modelToZero.origin || [0, 0], m.low);
+            var z = modelToZero.origin || [0, 0];
+            if (zeroX)
+                z[0] -= m.low[0];
+            if (zeroY)
+                z[1] -= m.low[1];
             modelToZero.origin = z;
             return modelToZero;
         }
@@ -3233,17 +3300,26 @@ var MakerJs;
             MakerJs.model.walk(modelToMeasure, walkOptions);
             atlas.modelsMeasured = true;
             var m = atlas.modelMap[''];
-            function avg(dim) {
-                return (m.low[dim] + m.high[dim]) / 2;
-            }
             if (m) {
-                m.center = [avg(0), avg(1)];
-                m.width = m.high[0] - m.low[0];
-                m.height = m.high[1] - m.low[1];
+                return augment(m);
             }
             return m;
         }
         measure.modelExtents = modelExtents;
+        /**
+         * Augment a measurement - add more properties such as center point, height and width.
+         *
+         * @param measureToAugment The measurement to augment.
+         * @returns Measurement object with augmented properties.
+         */
+        function augment(measureToAugment) {
+            var m = measureToAugment;
+            m.center = MakerJs.point.average(m.high, m.low);
+            m.width = m.high[0] - m.low[0];
+            m.height = m.high[1] - m.low[1];
+            return m;
+        }
+        measure.augment = augment;
         /**
          * A list of maps of measurements.
          *
@@ -4851,13 +4927,18 @@ var MakerJs;
          * Get points along a chain of paths.
          *
          * @param chainContext Chain of paths to get points from.
-         * @param distance Distance along the chain between points.
+         * @param distance Numeric distance along the chain between points, or numeric array of distances along the chain between each point.
          * @param maxPoints Maximum number of points to retrieve.
          * @returns Array of points which are on the chain spread at a uniform interval.
          */
-        function toPoints(chainContext, distance, maxPoints) {
+        function toPoints(chainContext, distanceOrDistances, maxPoints) {
             var result = [];
+            var di = 0;
             var t = 0;
+            var distanceArray;
+            if (Array.isArray(distanceOrDistances)) {
+                distanceArray = distanceOrDistances;
+            }
             for (var i = 0; i < chainContext.links.length; i++) {
                 var link = chainContext.links[i];
                 var wp = link.walkedPath;
@@ -4870,6 +4951,17 @@ var MakerJs;
                     result.push(MakerJs.point.add(MakerJs.point.middle(wp.pathContext, r), wp.offset));
                     if (maxPoints && result.length >= maxPoints)
                         return result;
+                    var distance;
+                    if (distanceArray) {
+                        distance = distanceArray[di];
+                        di++;
+                        if (di > distanceArray.length) {
+                            return result;
+                        }
+                    }
+                    else {
+                        distance = distanceOrDistances;
+                    }
                     t += distance;
                 }
                 t -= len;
@@ -6228,6 +6320,192 @@ var MakerJs;
 (function (MakerJs) {
     var layout;
     (function (layout) {
+        /**
+         * @private
+         */
+        function getChildPlacement(parentModel, baseline) {
+            //measure everything and cache the results
+            var atlas = new MakerJs.measure.Atlas(parentModel);
+            var measureParent = MakerJs.measure.modelExtents(parentModel, atlas);
+            //measure height of the model from the baseline 0
+            var parentTop = measureParent.high[1];
+            var cpa = [];
+            var xMap = {};
+            var walkOptions = {
+                beforeChildWalk: function (context) {
+                    var child = context.childModel;
+                    //get cached measurement of the child
+                    var m = atlas.modelMap[context.routeKey];
+                    if (!m)
+                        return;
+                    var childMeasure = MakerJs.measure.augment(m);
+                    //set a new origin at the x-center and y-baseline of the child
+                    MakerJs.model.originate(child, [childMeasure.center[0], parentTop * baseline]);
+                    //get the x-center of the child
+                    var x = child.origin[0] - measureParent.low[0];
+                    xMap[context.childId] = x;
+                    //get the x-center of the child as a percentage
+                    var xRatio = x / measureParent.width;
+                    cpa.push({ childId: context.childId, xRatio: xRatio });
+                    //do not walk the grandchildren. This is only for immediate children of the parentModel.
+                    return false;
+                }
+            };
+            MakerJs.model.walk(parentModel, walkOptions);
+            cpa.sort(function (a, b) { return a.xRatio - b.xRatio; });
+            var first = cpa[0];
+            var last = cpa[cpa.length - 1];
+            var min = first.xRatio;
+            var max = last.xRatio;
+            var span = max - min;
+            cpa.forEach(function (cp) { return cp.xRatio = (cp.xRatio - min) / span; });
+            return {
+                cpa: cpa,
+                firstX: xMap[first.childId],
+                lastX: measureParent.width - xMap[last.childId]
+            };
+        }
+        /**
+         * @private
+         */
+        function moveAndRotate(parentModel, cpa, rotate) {
+            cpa.forEach(function (cp) {
+                var child = parentModel.models[cp.childId];
+                //move the child to the new location
+                child.origin = cp.origin;
+                //rotate the child
+                if (rotate)
+                    MakerJs.model.rotate(child, cp.angle, cp.origin);
+            });
+        }
+        /**
+         * @private
+         */
+        var onPathMap = {};
+        onPathMap[MakerJs.pathType.Arc] = function (arc, reversed, cpa) {
+            var arcSpan = MakerJs.angle.ofArcSpan(arc);
+            cpa.forEach(function (p) { return p.angle = reversed ? arc.endAngle - p.xRatio * arcSpan - 90 : arc.startAngle + p.xRatio * arcSpan + 90; });
+        };
+        onPathMap[MakerJs.pathType.Line] = function (line, reversed, cpa) {
+            var lineAngle = MakerJs.angle.ofLineInDegrees(line);
+            cpa.forEach(function (p) { return p.angle = lineAngle; });
+        };
+        /**
+         * Layout the children of a model along a path.
+         * The x-position of each child will be projected onto the path so that the proportion between children is maintained.
+         * Each child will be rotated such that it will be perpendicular to the path at the child's x-center.
+         *
+         * @param parentModel The model containing children to lay out.
+         * @param onPath The path on which to lay out.
+         * @param baseline Numeric percentage value of vertical displacement from the path. Default is zero.
+         * @param reversed Flag to travel along the path in reverse. Default is false.
+         * @param contain Flag to contain the children layout within the length of the path. Default is false.
+         * @param rotate Flag to rotate the child to perpendicular. Default is true.
+         * @returns The parentModel, for cascading.
+         */
+        function childrenOnPath(parentModel, onPath, baseline, reversed, contain, rotate) {
+            if (baseline === void 0) { baseline = 0; }
+            if (reversed === void 0) { reversed = false; }
+            if (contain === void 0) { contain = false; }
+            if (rotate === void 0) { rotate = true; }
+            var result = getChildPlacement(parentModel, baseline);
+            var cpa = result.cpa;
+            var chosenPath = onPath;
+            if (contain) {
+                //see if we need to clip
+                var onPathLength = MakerJs.measure.pathLength(onPath);
+                if (result.firstX + result.lastX < onPathLength) {
+                    chosenPath = MakerJs.path.clone(onPath);
+                    MakerJs.path.alterLength(chosenPath, -result.firstX, true);
+                    MakerJs.path.alterLength(chosenPath, -result.lastX);
+                }
+            }
+            cpa.forEach(function (p) { return p.origin = MakerJs.point.middle(chosenPath, reversed ? 1 - p.xRatio : p.xRatio); });
+            var fn = onPathMap[chosenPath.type];
+            if (fn) {
+                fn(chosenPath, reversed, cpa);
+            }
+            moveAndRotate(parentModel, cpa, rotate);
+            return parentModel;
+        }
+        layout.childrenOnPath = childrenOnPath;
+        /**
+         * @private
+         */
+        function miterAngles(points, offsetAngle) {
+            var arc = new MakerJs.paths.Arc([0, 0], 0, 0, 0);
+            return points.map(function (p, i) {
+                var a;
+                if (i === 0) {
+                    a = MakerJs.angle.ofPointInDegrees(p, points[i + 1]) + 90;
+                }
+                else if (i === points.length - 1) {
+                    a = MakerJs.angle.ofPointInDegrees(points[i - 1], p) + 90;
+                }
+                else {
+                    arc.origin = p;
+                    arc.startAngle = MakerJs.angle.ofPointInDegrees(p, points[i + 1]);
+                    arc.endAngle = MakerJs.angle.ofPointInDegrees(p, points[i - 1]);
+                    a = MakerJs.angle.ofArcMiddle(arc);
+                }
+                return a + offsetAngle;
+            });
+        }
+        /**
+         * Layout the children of a model along a chain.
+         * The x-position of each child will be projected onto the chain so that the proportion between children is maintained.
+         * The projected positions of the children will become an array of points that approximate the chain.
+         * Each child will be rotated such that it will be mitered according to the vertex angles formed by this series of points.
+         *
+         * @param parentModel The model containing children to lay out.
+         * @param onChain The chain on which to lay out.
+         * @param baseline Numeric percentage value of vertical displacement from the chain. Default is zero.
+         * @param reversed Flag to travel along the chain in reverse. Default is false.
+         * @param contain Flag to contain the children layout within the length of the chain. Default is false.
+         * @param rotate Flag to rotate the child to mitered angle. Default is true.
+         * @returns The parentModel, for cascading.
+         */
+        function childrenOnChain(parentModel, onChain, baseline, reversed, contain, rotated) {
+            if (baseline === void 0) { baseline = 0; }
+            if (reversed === void 0) { reversed = false; }
+            if (contain === void 0) { contain = false; }
+            if (rotated === void 0) { rotated = true; }
+            var result = getChildPlacement(parentModel, baseline);
+            var cpa = result.cpa;
+            var chainLength = onChain.pathLength;
+            if (contain)
+                chainLength -= result.firstX + result.lastX;
+            var absolutes = cpa.map(function (cp) { return (reversed ? 1 - cp.xRatio : cp.xRatio) * chainLength; });
+            var relatives;
+            if (reversed)
+                absolutes.reverse();
+            relatives = absolutes.map(function (ab, i) { return Math.abs(ab - (i == 0 ? 0 : absolutes[i - 1])); });
+            if (contain) {
+                relatives[0] += reversed ? result.lastX : result.firstX;
+            }
+            else {
+                relatives.shift();
+            }
+            //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
+            var points = MakerJs.chain.toPoints(onChain, relatives);
+            if (points.length < cpa.length) {
+                //add last point of chain, since our distances exceeded the chain
+                var endLink = onChain.links[onChain.links.length - 1];
+                points.push(endLink.endPoints[endLink.reversed ? 0 : 1]);
+            }
+            if (contain)
+                points.shift(); //delete the first point which is the beginning of the chain
+            if (reversed)
+                points.reverse();
+            var angles = miterAngles(points, -90);
+            cpa.forEach(function (cp, i) {
+                cp.angle = angles[i];
+                cp.origin = points[i];
+            });
+            moveAndRotate(parentModel, cpa, rotated);
+            return parentModel;
+        }
+        layout.childrenOnChain = childrenOnChain;
         /**
          * @private
          */
@@ -7774,5 +8052,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.43";
+MakerJs.version = "0.9.5";
 ﻿var Bezier = require('bezier-js');
