@@ -342,14 +342,19 @@ namespace MakerJs.chain {
      * Get points along a chain of paths.
      * 
      * @param chainContext Chain of paths to get points from.
-     * @param distance Distance along the chain between points.
+     * @param distance Numeric distance along the chain between points, or numeric array of distances along the chain between each point.
      * @param maxPoints Maximum number of points to retrieve.
      * @returns Array of points which are on the chain spread at a uniform interval.
      */
-    export function toPoints(chainContext: IChain, distance: number, maxPoints?: number): IPoint[] {
+    export function toPoints(chainContext: IChain, distanceOrDistances: number | number[], maxPoints?: number): IPoint[] {
         var result: IPoint[] = [];
-
+        var di = 0;
         var t = 0;
+        var distanceArray: number[];
+
+        if (Array.isArray(distanceOrDistances)) {
+            distanceArray = distanceOrDistances as number[];
+        }
 
         for (var i = 0; i < chainContext.links.length; i++) {
             var link = chainContext.links[i];
@@ -365,6 +370,19 @@ namespace MakerJs.chain {
                 result.push(point.add(point.middle(wp.pathContext, r), wp.offset));
 
                 if (maxPoints && result.length >= maxPoints) return result;
+
+                var distance: number;
+                if (distanceArray) {
+                    distance = distanceArray[di];
+                    di++;
+
+                    if (di > distanceArray.length) {
+                        return result;
+                    }
+
+                } else {
+                    distance = distanceOrDistances as number;
+                }
 
                 t += distance;
             }
