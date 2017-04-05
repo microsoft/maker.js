@@ -203,6 +203,35 @@ namespace MakerJs.model {
     }
 
     /**
+     * @private
+     */
+    function getEndlessChains(modelContext: IModel) {
+        var endlessChains: IChain[] = [];
+        model.findChains(modelContext, function (chains, loose, layer) {
+            endlessChains = chains.filter(chain => chain.endless);
+        });
+        return endlessChains;
+    }
+
+    /**
+     * @private
+     */
+    function getClosedGeometries(modelContext: IModel) {
+
+        //get endless chains from the model
+        var endlessChains = getEndlessChains(modelContext);
+        if (endlessChains.length == 0) return null;
+
+        //make a new model with only closed geometries
+        var closed: IModel = { models: {} };
+        endlessChains.forEach((c, i) => {
+            closed.models[i] = chain.toNewModel(c);
+        });
+
+        return closed;
+    }
+
+    /**
      * Outline a model by a specified distance. Useful for accommodating for kerf.
      *
      * @param modelToOutline Model to outline.
@@ -217,51 +246,33 @@ namespace MakerJs.model {
 
         if (!expanded) return null;
 
-        var loops = findLoops(expanded);
-        if (loops && loops.models) {
+        //get closed geometries from the model
+        var closed = getClosedGeometries(modelToOutline);
+        if (closed) {
 
-            function clean(modelToClean: IModel) {
+            var childCount = 0;
+            var result: IModel = { models: {} };
 
-                if (!modelToClean) return;
+            //get closed geometries from the expansion
+            var chains = getEndlessChains(expanded);
 
-                var walkOptions: IWalkOptions = {
-                    onPath: function (walkedPath: IWalkPath) {
-                        var p = walkedPath.pathContext as IPathDirectionalWithPrimeContext;
-                        delete p.endPoints;
-                        delete p.modelContext;
-                        delete p.pathId;
-                        delete p.reversed;
-                    }
+            chains.forEach(c => {
+                //sample one link from the chain
+                var wp = c.links[0].walkedPath;
+
+                //see if it is inside the original model
+                var isInside = isPathInsideModel(wp.pathContext, closed, wp.offset);
+
+                //save the ones we want
+                if (inside && isInside || !inside && !isInside) {
+                    result.models[childCount++] = chain.toNewModel(c);
                 };
+            });
 
-                walk(modelToClean, walkOptions);
-            }
-
-            var i = 0;
-
-            while (loops.models[i]) {
-
-                var keep: IPoint;
-
-                if (inside) {
-                    delete loops.models[i];
-                    clean(loops.models[i + 1]);
-                    clean(loops.models[i + 2]);
-                    delete loops.models[i + 3];
-                } else {
-                    clean(loops.models[i]);
-                    delete loops.models[i + 1];
-                    delete loops.models[i + 2];
-                    clean(loops.models[i + 3]);
-                }
-
-                i += 4;
-            }
-
-            return loops;
+            return result;
+        } else {
+            return expanded;
         }
-
-        return null;
     }
 
 }

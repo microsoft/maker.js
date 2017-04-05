@@ -329,6 +329,34 @@ namespace MakerJs.chain {
     }
 
     /**
+     * Convert a chain to a new model, independent of any model from where the chain was found.
+     * 
+     * @param chainContext Chain to convert to a model.
+     * @param detachFromOldModel Flag to remove the chain's paths from their current parent model. If false, each path will be cloned. If true, the original path will be re-parented into the resulting new model. Default is false.
+     * @returns A new model containing paths from the chain.
+     */
+    export function toNewModel(chainContext: IChain, detachFromOldModel = false): IModel {
+        var result: IModel = { paths: {} };
+
+        for (var i = 0; i < chainContext.links.length; i++) {
+            var wp = chainContext.links[i].walkedPath;
+            var id = model.getSimilarPathId(result, wp.pathId);
+
+            var newPath: IPath;
+            if (detachFromOldModel) {
+                newPath = wp.pathContext;
+                delete wp.modelContext.paths[wp.pathId];
+            } else {
+                newPath = path.clone(wp.pathContext);
+            }
+
+            result.paths[id] = path.moveRelative(newPath, wp.offset);
+        }
+
+        return result;
+    }
+
+    /**
      * @private
      */
     function removeDuplicateEnds(endless: boolean, points: IPoint[]) {
