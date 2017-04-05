@@ -326,7 +326,7 @@ namespace MakerJs.path {
      * @returns A new IModel (for circles and arcs) or IPath (for lines and bezier seeds).
      */
     export function distort(pathToDistort: IPath, scaleX: number, scaleY: number): IModel | IPath {
-        if (!pathToDistort || (scaleX === 1 && scaleY === 1)) return null;
+        if (!pathToDistort) return null;
 
         var fn = distortMap[pathToDistort.type];
         if (fn) {
