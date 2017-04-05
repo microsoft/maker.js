@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.44
+ *   version: 0.9.45
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -1252,7 +1252,7 @@ var MakerJs;
          * @returns A new IModel (for circles and arcs) or IPath (for lines and bezier seeds).
          */
         function distort(pathToDistort, scaleX, scaleY) {
-            if (!pathToDistort || (scaleX === 1 && scaleY === 1))
+            if (!pathToDistort)
                 return null;
             var fn = distortMap[pathToDistort.type];
             if (fn) {
@@ -2872,6 +2872,31 @@ var MakerJs;
         }
         model.expandPaths = expandPaths;
         /**
+         * @private
+         */
+        function getEndlessChains(modelContext) {
+            var endlessChains = [];
+            model.findChains(modelContext, function (chains, loose, layer) {
+                endlessChains = chains.filter(function (chain) { return chain.endless; });
+            });
+            return endlessChains;
+        }
+        /**
+         * @private
+         */
+        function getClosedGeometries(modelContext) {
+            //get endless chains from the model
+            var endlessChains = getEndlessChains(modelContext);
+            if (endlessChains.length == 0)
+                return null;
+            //make a new model with only closed geometries
+            var closed = { models: {} };
+            endlessChains.forEach(function (c, i) {
+                closed.models[i] = MakerJs.chain.toNewModel(c);
+            });
+            return closed;
+        }
+        /**
          * Outline a model by a specified distance. Useful for accommodating for kerf.
          *
          * @param modelToOutline Model to outline.
@@ -2888,42 +2913,29 @@ var MakerJs;
             var expanded = expandPaths(modelToOutline, distance, joints, options);
             if (!expanded)
                 return null;
-            var loops = model.findLoops(expanded);
-            if (loops && loops.models) {
-                function clean(modelToClean) {
-                    if (!modelToClean)
-                        return;
-                    var walkOptions = {
-                        onPath: function (walkedPath) {
-                            var p = walkedPath.pathContext;
-                            delete p.endPoints;
-                            delete p.modelContext;
-                            delete p.pathId;
-                            delete p.reversed;
-                        }
-                    };
-                    model.walk(modelToClean, walkOptions);
-                }
-                var i = 0;
-                while (loops.models[i]) {
-                    var keep;
-                    if (inside) {
-                        delete loops.models[i];
-                        clean(loops.models[i + 1]);
-                        clean(loops.models[i + 2]);
-                        delete loops.models[i + 3];
+            //get closed geometries from the model
+            var closed = getClosedGeometries(modelToOutline);
+            if (closed) {
+                var childCount = 0;
+                var result = { models: {} };
+                //get closed geometries from the expansion
+                var chains = getEndlessChains(expanded);
+                chains.forEach(function (c) {
+                    //sample one link from the chain
+                    var wp = c.links[0].walkedPath;
+                    //see if it is inside the original model
+                    var isInside = model.isPathInsideModel(wp.pathContext, closed, wp.offset);
+                    //save the ones we want
+                    if (inside && isInside || !inside && !isInside) {
+                        result.models[childCount++] = MakerJs.chain.toNewModel(c);
                     }
-                    else {
-                        clean(loops.models[i]);
-                        delete loops.models[i + 1];
-                        delete loops.models[i + 2];
-                        clean(loops.models[i + 3]);
-                    }
-                    i += 4;
-                }
-                return loops;
+                    ;
+                });
+                return result;
             }
-            return null;
+            else {
+                return expanded;
+            }
         }
         model.outline = outline;
     })(model = MakerJs.model || (MakerJs.model = {}));
@@ -4326,6 +4338,10 @@ var MakerJs;
          */
         function lineToCircle(line, circle, options) {
             var radius = MakerJs.round(circle.radius);
+            //no-op for degenerate circle
+            if (circle.radius <= 0) {
+                return null;
+            }
             //clone the line
             var clonedLine = new MakerJs.paths.Line(MakerJs.point.subtract(line.origin, circle.origin), MakerJs.point.subtract(line.end, circle.origin));
             //get angle of line
@@ -4377,6 +4393,10 @@ var MakerJs;
          * @private
          */
         function circleToCircle(circle1, circle2, options) {
+            //no-op if either circle is degenerate
+            if (circle1.radius <= 0 || circle2.radius <= 0) {
+                return null;
+            }
             //see if circles are the same
             if (circle1.radius == circle2.radius && MakerJs.measure.isPointEqual(circle1.origin, circle2.origin, .0001)) {
                 options.out_AreOverlapped = true;
@@ -5108,6 +5128,32 @@ var MakerJs;
             return chainContext;
         }
         chain.startAt = startAt;
+        /**
+         * Convert a chain to a new model, independent of any model from where the chain was found.
+         *
+         * @param chainContext Chain to convert to a model.
+         * @param detachFromOldModel Flag to remove the chain's paths from their current parent model. If false, each path will be cloned. If true, the original path will be re-parented into the resulting new model. Default is false.
+         * @returns A new model containing paths from the chain.
+         */
+        function toNewModel(chainContext, detachFromOldModel) {
+            if (detachFromOldModel === void 0) { detachFromOldModel = false; }
+            var result = { paths: {} };
+            for (var i = 0; i < chainContext.links.length; i++) {
+                var wp = chainContext.links[i].walkedPath;
+                var id = MakerJs.model.getSimilarPathId(result, wp.pathId);
+                var newPath;
+                if (detachFromOldModel) {
+                    newPath = wp.pathContext;
+                    delete wp.modelContext.paths[wp.pathId];
+                }
+                else {
+                    newPath = MakerJs.path.clone(wp.pathContext);
+                }
+                result.paths[id] = MakerJs.path.moveRelative(newPath, wp.offset);
+            }
+            return result;
+        }
+        chain.toNewModel = toNewModel;
         /**
          * @private
          */
@@ -8247,6 +8293,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.44";
+MakerJs.version = "0.9.45";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);

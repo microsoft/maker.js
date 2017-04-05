@@ -295,6 +295,11 @@ namespace MakerJs.path {
 
         var radius = round(circle.radius);
 
+        //no-op for degenerate circle
+        if (circle.radius <= 0) {
+            return null;
+        }
+
         //clone the line
         var clonedLine = new paths.Line(point.subtract(line.origin, circle.origin), point.subtract(line.end, circle.origin));
 
@@ -362,6 +367,11 @@ namespace MakerJs.path {
      * @private
      */
     function circleToCircle(circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions): number[][] {
+        
+        //no-op if either circle is degenerate
+        if (circle1.radius <= 0 || circle2.radius <= 0) {
+            return null;
+        }
 
         //see if circles are the same
         if (circle1.radius == circle2.radius && measure.isPointEqual(circle1.origin, circle2.origin, .0001)) {
