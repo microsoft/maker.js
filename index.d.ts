@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.44
+// Type definitions for Maker.js 0.9.45
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -1913,6 +1913,14 @@ declare namespace MakerJs.chain {
      * @returns The chainContext for cascading.
      */
     function startAt(chainContext: IChain, routeKey: string): IChain;
+    /**
+     * Convert a chain to a new model, independent of any model from where the chain was found.
+     *
+     * @param chainContext Chain to convert to a model.
+     * @param detachFromOldModel Flag to remove the chain's paths from their current parent model. If false, each path will be cloned. If true, the original path will be re-parented into the resulting new model. Default is false.
+     * @returns A new model containing paths from the chain.
+     */
+    function toNewModel(chainContext: IChain, detachFromOldModel?: boolean): IModel;
     /**
      * Get points along a chain of paths.
      *
