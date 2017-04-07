@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.45
+// Type definitions for Maker.js 0.9.46
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2669,6 +2669,6 @@ declare namespace MakerJs.models {
 declare namespace MakerJs.models {
     class Text implements IModel {
         models: IModelMap;
-        constructor(font: opentype.Font, text: string, fontSize: number, combine?: boolean, centerCharacterOrigin?: boolean, bezierAccuracy?: number);
+        constructor(font: opentype.Font, text: string, fontSize: number, combine?: boolean, centerCharacterOrigin?: boolean, bezierAccuracy?: number, opentypeOptions?: opentype.RenderOptions);
     }
 }
