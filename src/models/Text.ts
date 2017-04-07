@@ -4,7 +4,7 @@
 
         public models: IModelMap = {};
 
-        constructor(font: opentype.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number) {
+        constructor(font: opentype.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number, opentypeOptions?: opentype.RenderOptions) {
 
             var charIndex = 0;
             var combineOptions: ICombineOptions = {};
@@ -92,7 +92,7 @@
                 charIndex++;
             };
 
-            font.forEachGlyph(text, 0, 0, fontSize, null, cb);
+            font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
 
         }
 
