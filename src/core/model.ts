@@ -409,7 +409,7 @@ namespace MakerJs.model {
             }
         }
 
-        walkRecursive(modelContext, '', [0, 0], [], '');
+        walkRecursive(modelContext, modelContext.layer, [0, 0], [], '');
 
     }
 
