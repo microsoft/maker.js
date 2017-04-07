@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.45
+ *   version: 0.9.46
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2113,7 +2113,7 @@ var MakerJs;
                     }
                 }
             }
-            walkRecursive(modelContext, '', [0, 0], [], '');
+            walkRecursive(modelContext, modelContext.layer, [0, 0], [], '');
         }
         model.walk = walk;
         /**
@@ -6219,7 +6219,11 @@ var MakerJs;
                 var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true });
                 for (var layer in pathDataByLayer) {
                     var pathData = pathDataByLayer[layer].join(' ');
-                    createElement("path", { "d": pathData }, layer, null, true);
+                    var attrs = { "d": pathData };
+                    if (layer.length > 0) {
+                        attrs["id"] = layer;
+                    }
+                    createElement("path", attrs, layer, null, true);
                 }
             }
             else {
@@ -8210,7 +8214,7 @@ var MakerJs;
     var models;
     (function (models) {
         var Text = (function () {
-            function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy) {
+            function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy, opentypeOptions) {
                 if (combine === void 0) { combine = false; }
                 if (centerCharacterOrigin === void 0) { centerCharacterOrigin = false; }
                 var _this = this;
@@ -8279,7 +8283,7 @@ var MakerJs;
                     _this.models[charIndex] = charModel;
                     charIndex++;
                 };
-                font.forEachGlyph(text, 0, 0, fontSize, null, cb);
+                font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
             }
             return Text;
         }());
@@ -8293,6 +8297,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.45";
+MakerJs.version = "0.9.46";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);

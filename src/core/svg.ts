@@ -463,7 +463,11 @@ namespace MakerJs.exporter {
 
             for (var layer in pathDataByLayer) {
                 var pathData = pathDataByLayer[layer].join(' ');
-                createElement("path", { "d": pathData }, layer, null, true);
+                var attrs = { "d": pathData };
+                if (layer.length > 0) {
+                    attrs["id"] = layer;
+                }
+                createElement("path", attrs, layer, null, true);
             }
 
         } else {
