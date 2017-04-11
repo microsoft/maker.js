@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Maker.js environment</title>
+    <script src="../target/js/browser.maker.js"></script>
+    <style>
+        div {
+            border-bottom-style: double;
+            padding: 1em 0;
+            margin: 1em 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div>
+        This page needs to be run from HTTP for the worker to be invoked.
+    </div>
+
+    <div id='browser-result'></div>
+    <div id='worker-result'></div>
+
+    <script>
+        function log(id, text) {
+            var div = document.getElementById(id);
+            div.innerText = text;
+        }
+
+        function onmessage(e) {
+            log('worker-result', 'Maker.js worker environment = ' + e.data);
+        }
+
+        var makerjs = require('makerjs');
+        log('browser-result', 'Maker.js browser environment = ' + makerjs.environment);
+
+        try {
+            var worker = new Worker('env_worker.js?' + new Date().valueOf());
+            worker.onmessage = onmessage;
+        }
+        catch (e) {
+            log('worker-result', JSON.stringify(e));
+        }
+    
+    </script>
+
+</body>
+
+</html>
