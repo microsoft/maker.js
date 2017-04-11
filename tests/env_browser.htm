@@ -27,11 +27,11 @@
         }
 
         function onmessage(e) {
-            log('worker-result', 'Worker environment = ' + e.data);
+            log('worker-result', 'Maker.js worker environment = ' + e.data);
         }
 
         var makerjs = require('makerjs');
-        log('browser-result', 'Maker.js environment = ' + makerjs.environment);
+        log('browser-result', 'Maker.js browser environment = ' + makerjs.environment);
 
         try {
             var worker = new Worker('env_worker.js?' + new Date().valueOf());
