@@ -57,15 +57,27 @@ var MakerJs;
     /**
      * @private
      */
-    function detectEnvironment() {
-        if (('global' in this) && ('process' in this)) {
-            return MakerJs.environmentTypes.NodeJs;
+    function tryEval(name) {
+        try {
+            var value = eval(name);
+            return value;
         }
-        if (('window' in this) && ('document' in this)) {
+        catch (e) { }
+        return;
+    }
+    /**
+     * @private
+     */
+    function detectEnvironment() {
+        if (tryEval('WorkerGlobalScope') && tryEval('self')) {
+            return MakerJs.environmentTypes.WebWorker;
+        }
+        if (tryEval('window') && tryEval('document')) {
             return MakerJs.environmentTypes.BrowserUI;
         }
-        if (('WorkerGlobalScope' in this) && ('self' in this)) {
-            return MakerJs.environmentTypes.WebWorker;
+        //put node last since packagers usually add shims for it
+        if (tryEval('global') && tryEval('process')) {
+            return MakerJs.environmentTypes.NodeJs;
         }
         return MakerJs.environmentTypes.Unknown;
     }
@@ -8102,5 +8114,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.46";
+MakerJs.version = "0.9.47";
 ﻿var Bezier = require('bezier-js');

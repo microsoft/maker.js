@@ -27,17 +27,31 @@ namespace MakerJs {
     /**
      * @private
      */
+    function tryEval(name: string) {
+        try {
+            var value = eval(name);
+            return value;
+        }
+        catch (e) {}
+        return;
+    }
+
+    /**
+     * @private
+     */
     function detectEnvironment() {
-        if (('global' in this) && ('process' in this)) {
-            return environmentTypes.NodeJs;
+
+        if (tryEval('WorkerGlobalScope') && tryEval('self')) {
+            return environmentTypes.WebWorker;
         }
 
-        if (('window' in this) && ('document' in this)) {
+        if (tryEval('window') && tryEval('document')) {
             return environmentTypes.BrowserUI;
         }
 
-        if (('WorkerGlobalScope' in this) && ('self' in this)) {
-            return environmentTypes.WebWorker;
+        //put node last since packagers usually add shims for it
+        if (tryEval('global') && tryEval('process')) {
+            return environmentTypes.NodeJs;
         }
 
         return environmentTypes.Unknown;
