@@ -332,7 +332,14 @@
     /**
      * @private
      */
-    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean, atlas: measure.Atlas) {
+    interface ITrackDeleted {
+        (pathToDelete: IPath, routeKey: string, offset: IPoint, reason: string): void;
+    }
+
+    /**
+     * @private
+     */
+    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean, atlas: measure.Atlas, trackDeleted: ITrackDeleted) {
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(modelContext, pathIdBase);
@@ -356,6 +363,7 @@
                 addSegment(modelContext, pathIdBase, segment);
             } else {
                 atlas.modelsMeasured = false;
+                trackDeleted(segment.path, crossedPath.routeKey, segment.offset, 'segment is ' + (segment.isInside ? 'inside' : 'outside'));
             }
         }
 
@@ -370,6 +378,8 @@
             if (crossedPath.segments[i].duplicate) {
                 if (keepDuplicates) {
                     addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
+                } else {
+                    trackDeleted(crossedPath.segments[i].path, crossedPath.routeKey, crossedPath.offset, 'segment is duplicate');
                 }
             } else {
                 checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
@@ -409,12 +419,23 @@
 
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
+        function trackDeleted(which: number, deletedPath: IPath, routeKey: string, offset: IPoint, reason: string) {
+            options.out_deleted[which].paths[counts[which]++] = deletedPath;
+            path.moveRelative(deletedPath, offset);
+            var p = deletedPath as IPathRemoved;
+            p.reason = reason;
+            p.routeKey = routeKey;
+        }
+
+        var counts = [0, 0];
+        options.out_deleted = [{ paths: {} }, { paths: {} }];
+
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA);
+            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, o, reason) => trackDeleted(0, p, id, o, reason));
         }
 
         for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB);
+            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, o, reason) => trackDeleted(1, p, id, o, reason));
         }
 
         if (opts.trimDeadEnds) {
@@ -438,7 +459,7 @@
                 }
             }
 
-            removeDeadEnds(<IModel>{ models: { modelA: modelA, modelB: modelB } }, null, shouldKeep);
+            removeDeadEnds(<IModel>{ models: { 0: modelA, 1: modelB } }, null, shouldKeep, (wp, reason) => { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason) });
         }
 
         //pass options back to caller
