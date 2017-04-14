@@ -136,8 +136,11 @@ namespace MakerJs.measure {
      * @returns Boolean true if point is between (or equal to) the line's origin and end points.
      */
     export function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, exclusive: boolean): boolean {
+        var oneDimension = false;
         for (var i = 2; i--;) {
             if (round(line.origin[i] - line.end[i], .000001) == 0) {
+                if (oneDimension) return false;
+                oneDimension = true;
                 continue;
             }
             var origin_value = round(line.origin[i]);
