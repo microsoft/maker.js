@@ -363,7 +363,7 @@
                 addSegment(modelContext, pathIdBase, segment);
             } else {
                 atlas.modelsMeasured = false;
-                trackDeleted(segment.path, crossedPath.routeKey, segment.offset, 'segment is ' + (segment.isInside ? 'inside' : 'outside'));
+                trackDeleted(segment.path, crossedPath.routeKey, segment.offset, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
             }
         }
 
