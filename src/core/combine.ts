@@ -403,7 +403,8 @@
 
         var opts: ICombineOptions = {
             trimDeadEnds: true,
-            pointMatchingDistance: .005
+            pointMatchingDistance: .005,
+            out_deleted:[{ paths: {} }, { paths: {} }]
         };
         extendObject(opts, options);
 
@@ -420,7 +421,7 @@
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
         function trackDeleted(which: number, deletedPath: IPath, routeKey: string, offset: IPoint, reason: string) {
-            options.out_deleted[which].paths[counts[which]++] = deletedPath;
+            opts.out_deleted[which].paths[counts[which]++] = deletedPath;
             path.moveRelative(deletedPath, offset);
             var p = deletedPath as IPathRemoved;
             p.reason = reason;
@@ -428,7 +429,6 @@
         }
 
         var counts = [0, 0];
-        options.out_deleted = [{ paths: {} }, { paths: {} }];
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
             addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, o, reason) => trackDeleted(0, p, id, o, reason));
