@@ -2201,7 +2201,7 @@ var MakerJs;
         /**
          * @private
          */
-        function addOrDeleteSegments(crossedPath, includeInside, includeOutside, keepDuplicates, atlas) {
+        function addOrDeleteSegments(crossedPath, includeInside, includeOutside, keepDuplicates, atlas, trackDeleted) {
             function addSegment(modelContext, pathIdBase, segment) {
                 var id = model.getSimilarPathId(modelContext, pathIdBase);
                 var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : MakerJs.createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
@@ -2223,6 +2223,7 @@ var MakerJs;
                 }
                 else {
                     atlas.modelsMeasured = false;
+                    trackDeleted(segment.path, crossedPath.routeKey, segment.offset, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
                 }
             }
             //save the original measurement
@@ -2234,6 +2235,9 @@ var MakerJs;
                 if (crossedPath.segments[i].duplicate) {
                     if (keepDuplicates) {
                         addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
+                    }
+                    else {
+                        trackDeleted(crossedPath.segments[i].path, crossedPath.routeKey, crossedPath.offset, 'segment is duplicate');
                     }
                 }
                 else {
@@ -2260,7 +2264,8 @@ var MakerJs;
             if (includeBOutsideA === void 0) { includeBOutsideA = true; }
             var opts = {
                 trimDeadEnds: true,
-                pointMatchingDistance: .005
+                pointMatchingDistance: .005,
+                out_deleted: [{ paths: {} }, { paths: {} }]
             };
             MakerJs.extendObject(opts, options);
             opts.measureA = opts.measureA || new MakerJs.measure.Atlas(modelA);
@@ -2271,11 +2276,19 @@ var MakerJs;
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
+            function trackDeleted(which, deletedPath, routeKey, offset, reason) {
+                opts.out_deleted[which].paths[counts[which]++] = deletedPath;
+                MakerJs.path.moveRelative(deletedPath, offset);
+                var p = deletedPath;
+                p.reason = reason;
+                p.routeKey = routeKey;
+            }
+            var counts = [0, 0];
             for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-                addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA);
+                addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, function (p, id, o, reason) { return trackDeleted(0, p, id, o, reason); });
             }
             for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-                addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB);
+                addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, function (p, id, o, reason) { return trackDeleted(1, p, id, o, reason); });
             }
             if (opts.trimDeadEnds) {
                 var shouldKeep;
@@ -2293,7 +2306,7 @@ var MakerJs;
                         return true;
                     };
                 }
-                model.removeDeadEnds({ models: { modelA: modelA, modelB: modelB } }, null, shouldKeep);
+                model.removeDeadEnds({ models: { 0: modelA, 1: modelB } }, null, shouldKeep, function (wp, reason) { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason); });
             }
             //pass options back to caller
             MakerJs.extendObject(options, opts);
@@ -3062,8 +3075,12 @@ var MakerJs;
          * @returns Boolean true if point is between (or equal to) the line's origin and end points.
          */
         function isBetweenPoints(pointInQuestion, line, exclusive) {
+            var oneDimension = false;
             for (var i = 2; i--;) {
                 if (MakerJs.round(line.origin[i] - line.end[i], .000001) == 0) {
+                    if (oneDimension)
+                        return false;
+                    oneDimension = true;
                     continue;
                 }
                 var origin_value = MakerJs.round(line.origin[i]);
@@ -5243,9 +5260,10 @@ var MakerJs;
          * @private
          */
         var DeadEndFinder = (function () {
-            function DeadEndFinder(pointMatchingDistance, keep) {
+            function DeadEndFinder(pointMatchingDistance, keep, trackDeleted) {
                 this.pointMatchingDistance = pointMatchingDistance;
                 this.keep = keep;
+                this.trackDeleted = trackDeleted;
                 pointMatchingDistance = pointMatchingDistance || .005;
                 function comparePoint(pointA, pointB) {
                     var distance = MakerJs.measure.pointDistance(pointA, pointB);
@@ -5253,7 +5271,7 @@ var MakerJs;
                 }
                 this.pointMap = new MakerJs.Collector(comparePoint);
             }
-            DeadEndFinder.prototype.removePathRef = function (pathRef) {
+            DeadEndFinder.prototype.removePathRef = function (pathRef, reason) {
                 var _this = this;
                 var removePath = function (p) {
                     var pathRefs = _this.pointMap.findCollection(p);
@@ -5267,27 +5285,28 @@ var MakerJs;
                 for (var i = 2; i--;) {
                     removePath(pathRef.endPoints[i]);
                 }
+                delete pathRef.modelContext.paths[pathRef.pathId];
+                if (this.trackDeleted) {
+                    this.trackDeleted(pathRef, reason);
+                }
             };
-            DeadEndFinder.prototype.removeDeadEnd = function () {
+            DeadEndFinder.prototype.removeDeadEnd = function (baseCount) {
                 var _this = this;
-                var found = false;
+                var found = 0;
                 for (var i = 0; i < this.pointMap.collections.length; i++) {
                     var pathRefs = this.pointMap.collections[i].items;
                     if (pathRefs.length % 2 == 0)
                         continue;
                     if (pathRefs.length == 1) {
-                        var pathRef = pathRefs[0];
-                        this.removePathRef(pathRef);
-                        delete pathRef.modelContext.paths[pathRef.pathId];
-                        found = true;
+                        this.removePathRef(pathRefs[0], "dead end " + (baseCount + found));
+                        found++;
                     }
                     else if (this.keep) {
                         //allow caller to decide to keep each path
-                        pathRefs.map(function (pathRef, i) {
+                        pathRefs.forEach(function (pathRef) {
                             if (!_this.keep(pathRef)) {
-                                _this.removePathRef(pathRef);
-                                delete pathRef.modelContext.paths[pathRef.pathId];
-                                found = true;
+                                _this.removePathRef(pathRef, "not keeping");
+                                found++;
                             }
                         });
                     }
@@ -5303,8 +5322,8 @@ var MakerJs;
          * @param options Optional options object.
          * @returns The input model (for cascading).
          */
-        function removeDeadEnds(modelContext, pointMatchingDistance, keep) {
-            var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep);
+        function removeDeadEnds(modelContext, pointMatchingDistance, keep, trackDeleted) {
+            var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep, trackDeleted);
             var walkOptions = {
                 onPath: function (walkedPath) {
                     var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
@@ -5318,8 +5337,11 @@ var MakerJs;
                 }
             };
             model.walk(modelContext, walkOptions);
-            while (deadEndFinder.removeDeadEnd())
-                ;
+            var total = 0;
+            var pass = 0;
+            while (pass = deadEndFinder.removeDeadEnd(total)) {
+                total += pass;
+            }
             return modelContext;
         }
         model.removeDeadEnds = removeDeadEnds;
@@ -8037,7 +8059,8 @@ var MakerJs;
                 var _this = this;
                 this.models = {};
                 var charIndex = 0;
-                var combineOptions = {};
+                var prevDeleted;
+                var prevChar;
                 var cb = function (glyph, x, y, _fontSize, options) {
                     var charModel = {};
                     var firstPoint;
@@ -8092,13 +8115,27 @@ var MakerJs;
                         }
                     }
                     if (combine && charIndex > 0) {
-                        MakerJs.model.combine(_this, charModel, false, true, false, true, combineOptions);
-                        delete combineOptions.measureB;
-                        //TODO - optimize for left to right 
-                        combineOptions.measureA.modelsMeasured = false;
+                        var combineOptions = {};
+                        var prev;
+                        if (prevDeleted) {
+                            //form a temporary complete geometry of the previous character using the previously deleted segments
+                            prev = {
+                                models: {
+                                    deleted: prevDeleted,
+                                    char: prevChar
+                                }
+                            };
+                        }
+                        else {
+                            prev = prevChar;
+                        }
+                        MakerJs.model.combine(prev, charModel, false, true, false, true, combineOptions);
+                        //save the deleted segments from this character for the next iteration
+                        prevDeleted = combineOptions.out_deleted[1];
                     }
                     _this.models[charIndex] = charModel;
                     charIndex++;
+                    prevChar = charModel;
                 };
                 font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
             }
@@ -8114,5 +8151,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.47";
+MakerJs.version = "0.9.48";
 ﻿var Bezier = require('bezier-js');
