@@ -33,6 +33,7 @@ title: Api - ICombineOptions Interface
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#farpoint" class="tsd-kind-icon">far<wbr>Point</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#measurea" class="tsd-kind-icon">measureA</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#measureb" class="tsd-kind-icon">measureB</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#out_deleted" class="tsd-kind-icon">out_<wbr>deleted</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.icombineoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icombineoptions.html#trimdeadends" class="tsd-kind-icon">trim<wbr>Dead<wbr>Ends</a></li>
 				</ul>
@@ -48,7 +49,7 @@ title: Api - ICombineOptions Interface
 		<div class="tsd-signature tsd-kind-icon">far<wbr>Point<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/maker.ts#L613">core/maker.ts:613</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L643">core/maker.ts:643</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -63,7 +64,7 @@ title: Api - ICombineOptions Interface
 		<div class="tsd-signature tsd-kind-icon">measureA<span class="tsd-signature-symbol">:</span> <a href="../classes/makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/maker.ts#L618">core/maker.ts:618</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L648">core/maker.ts:648</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -78,12 +79,28 @@ title: Api - ICombineOptions Interface
 		<div class="tsd-signature tsd-kind-icon">measureB<span class="tsd-signature-symbol">:</span> <a href="../classes/makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/maker.ts#L623">core/maker.ts:623</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L653">core/maker.ts:653</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
 				<p>Cached measurements for model B.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="out_deleted" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> out_<wbr>deleted</h3>
+		<div class="tsd-signature tsd-kind-icon">out_<wbr>deleted<span class="tsd-signature-symbol">:</span> <a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">[]</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L659">core/maker.ts:659</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Output array of 2 models (corresponding to the input models) containing paths that were deleted in the combination.
+				Each path will be of type IPathRemoved, which has a .reason property describing why it was removed.</p>
 			</div>
 		</div>
 	</section>
@@ -94,7 +111,7 @@ title: Api - ICombineOptions Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/maker.ts#L597">core/maker.ts:597</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L627">core/maker.ts:627</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -109,7 +126,7 @@ title: Api - ICombineOptions Interface
 		<div class="tsd-signature tsd-kind-icon">trim<wbr>Dead<wbr>Ends<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/maker.ts#L608">core/maker.ts:608</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L638">core/maker.ts:638</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">

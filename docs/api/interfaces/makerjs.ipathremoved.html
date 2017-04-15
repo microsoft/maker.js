@@ -1,20 +1,26 @@
 ---
 layout: posts
-title: Api - BoltRectangle Class
+title: Api - IPathRemoved Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-comment">
+	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>A path that was removed in a combine operation.</p>
+		</div>
+	</div>
+</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">BoltRectangle</span>
+			<a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">IPathRemoved</span>
+				</li>
+			</ul>
 		</li>
-	</ul>
-</section>
-<section class="tsd-panel">
-	<h3>Implements</h3>
-	<ul class="tsd-hierarchy">
-		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -22,63 +28,97 @@ title: Api - BoltRectangle Class
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
-				<h3>Constructors</h3>
-				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.boltrectangle.html#constructor" class="tsd-kind-icon">constructor</a></li>
-				</ul>
-			</section>
-			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.boltrectangle.html#paths" class="tsd-kind-icon">paths</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathremoved.html#layer" class="tsd-kind-icon">layer</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathremoved.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathremoved.html#reason" class="tsd-kind-icon">reason</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathremoved.html#routekey" class="tsd-kind-icon">route<wbr>Key</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathremoved.html#type" class="tsd-kind-icon">type</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
-	<h2>Constructors</h2>
-	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-		<a name="constructor" class="tsd-anchor"></a>
-		<h3>constructor</h3>
-		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Bolt<wbr>Rectangle<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, holeRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.boltrectangle.html" class="tsd-signature-type">BoltRectangle</a></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/models/BoltRectangle.ts#L5">models/BoltRectangle.ts:5</a></li>
-					</ul>
-				</aside>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>width: <span class="tsd-signature-type">number</span></h5>
-					</li>
-					<li>
-						<h5>height: <span class="tsd-signature-type">number</span></h5>
-					</li>
-					<li>
-						<h5>holeRadius: <span class="tsd-signature-type">number</span></h5>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.boltrectangle.html" class="tsd-signature-type">BoltRectangle</a></h4>
-			</li>
-		</ul>
-	</section>
-</section>
-<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="paths" class="tsd-anchor"></a>
-		<h3>paths</h3>
-		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="layer" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> layer</h3>
+		<div class="tsd-signature tsd-kind-icon">layer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#layer">layer</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/models/BoltRectangle.ts#L5">models/BoltRectangle.ts:5</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L338">core/maker.ts:338</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional layer of this path.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="origin" class="tsd-anchor"></a>
+		<h3>origin</h3>
+		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L333">core/maker.ts:333</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The main point of reference for this path.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="reason" class="tsd-anchor"></a>
+		<h3>reason</h3>
+		<div class="tsd-signature tsd-kind-icon">reason<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L349">core/maker.ts:349</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Reason the path was removed.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="routekey" class="tsd-anchor"></a>
+		<h3>route<wbr>Key</h3>
+		<div class="tsd-signature tsd-kind-icon">route<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L354">core/maker.ts:354</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Original routekey of the path, to identify where it came from.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="type" class="tsd-anchor"></a>
+		<h3>type</h3>
+		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/maker.ts#L328">core/maker.ts:328</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The type of the path, e.g. &quot;line&quot;, &quot;circle&quot;, or &quot;arc&quot;. These strings are enumerated in pathType.</p>
+			</div>
+		</div>
 	</section>
 </section>
 </div>

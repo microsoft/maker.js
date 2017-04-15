@@ -31,6 +31,7 @@ title: Api - DeadEndFinder Class
 					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#keep" class="tsd-kind-icon">keep</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#pointmap" class="tsd-kind-icon">point<wbr>Map</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.model.deadendfinder.html#trackdeleted" class="tsd-kind-icon">track<wbr>Deleted</a></li>
 				</ul>
 			</section>
 			<section class="tsd-index-section tsd-is-not-exported">
@@ -48,13 +49,13 @@ title: Api - DeadEndFinder Class
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Dead<wbr>End<wbr>Finder<span class="tsd-signature-symbol">(</span>pointMatchingDistance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, keep<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.iwalkpathbooleancallback.html" class="tsd-signature-type">IWalkPathBooleanCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.model.deadendfinder.html" class="tsd-signature-type">DeadEndFinder</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Dead<wbr>End<wbr>Finder<span class="tsd-signature-symbol">(</span>pointMatchingDistance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, keep<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.iwalkpathbooleancallback.html" class="tsd-signature-type">IWalkPathBooleanCallback</a>, trackDeleted<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.model.deadendfinder.html" class="tsd-signature-type">DeadEndFinder</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/loops.ts#L260">core/loops.ts:260</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/loops.ts#L260">core/loops.ts:260</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-parameters-title">Parameters</h4>
@@ -64,6 +65,30 @@ title: Api - DeadEndFinder Class
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> keep: <a href="../interfaces/makerjs.iwalkpathbooleancallback.html" class="tsd-signature-type">IWalkPathBooleanCallback</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> trackDeleted: <span class="tsd-signature-type">function</span></h5>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>wp<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a>, reason<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>wp: <a href="../interfaces/makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a></h5>
+											</li>
+											<li>
+												<h5>reason: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="makerjs.model.deadendfinder.html" class="tsd-signature-type">DeadEndFinder</a></h4>
@@ -79,7 +104,7 @@ title: Api - DeadEndFinder Class
 		<div class="tsd-signature tsd-kind-icon">keep<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.iwalkpathbooleancallback.html" class="tsd-signature-type">IWalkPathBooleanCallback</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/loops.ts#L262">core/loops.ts:262</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/loops.ts#L262">core/loops.ts:262</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -89,7 +114,7 @@ title: Api - DeadEndFinder Class
 		<div class="tsd-signature tsd-kind-icon">point<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="makerjs.collector.html" class="tsd-signature-type">Collector</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/makerjs.model.irefpathendpoints.html" class="tsd-signature-type">IRefPathEndpoints</a><span class="tsd-signature-symbol">&gt;</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/loops.ts#L260">core/loops.ts:260</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/loops.ts#L260">core/loops.ts:260</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -99,9 +124,43 @@ title: Api - DeadEndFinder Class
 		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/loops.ts#L262">core/loops.ts:262</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/loops.ts#L262">core/loops.ts:262</a></li>
 			</ul>
 		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+		<a name="trackdeleted" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> track<wbr>Deleted</h3>
+		<div class="tsd-signature tsd-kind-icon">track<wbr>Deleted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/loops.ts#L262">core/loops.ts:262</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-siganture">
+					<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>wp<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a>, reason<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>wp: <a href="../interfaces/makerjs.iwalkpath.html" class="tsd-signature-type">IWalkPath</a></h5>
+								</li>
+								<li>
+									<h5>reason: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
@@ -110,16 +169,22 @@ title: Api - DeadEndFinder Class
 		<a name="removedeadend" class="tsd-anchor"></a>
 		<h3>remove<wbr>Dead<wbr>End</h3>
 		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
-			<li class="tsd-signature tsd-kind-icon">remove<wbr>Dead<wbr>End<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<li class="tsd-signature tsd-kind-icon">remove<wbr>Dead<wbr>End<span class="tsd-signature-symbol">(</span>baseCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/5298f12/src/core/loops.ts#L292">core/loops.ts:292</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/01d912b/src/core/loops.ts#L297">core/loops.ts:297</a></li>
 					</ul>
 				</aside>
-				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>baseCount: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 			</li>
 		</ul>
 	</section>
