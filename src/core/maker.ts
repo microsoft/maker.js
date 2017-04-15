@@ -339,6 +339,22 @@ namespace MakerJs {
     }
 
     /**
+     * A path that was removed in a combine operation.
+     */
+    export interface IPathRemoved extends IPath {
+
+        /**
+         * Reason the path was removed.
+         */
+        reason: string;
+
+        /**
+         * Original routekey of the path, to identify where it came from.
+         */
+        routeKey: string;
+    }
+
+    /**
      * Test to see if an object implements the required properties of a path.
      * 
      * @param item The item to test.
@@ -635,6 +651,12 @@ namespace MakerJs {
          * Cached measurements for model B.
          */
         measureB?: measure.Atlas;
+
+        /**
+         * Output array of 2 models (corresponding to the input models) containing paths that were deleted in the combination.
+         * Each path will be of type IPathRemoved, which has a .reason property describing why it was removed.
+         */
+        out_deleted?: IModel[];
     }
 
     /**

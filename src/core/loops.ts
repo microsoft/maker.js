@@ -259,7 +259,7 @@
 
         public pointMap: Collector<IPoint, IRefPathEndpoints>;
 
-        constructor(public pointMatchingDistance, public keep?: IWalkPathBooleanCallback) {
+        constructor(public pointMatchingDistance, public keep?: IWalkPathBooleanCallback, public trackDeleted?: (wp: IWalkPath, reason: string) => void) {
 
             pointMatchingDistance = pointMatchingDistance || .005;
 
@@ -271,7 +271,7 @@
             this.pointMap = new Collector<IPoint, IRefPathEndpoints>(comparePoint);
         }
 
-        private removePathRef(pathRef: IRefPathEndpoints) {
+        private removePathRef(pathRef: IRefPathEndpoints, reason: string) {
 
             var removePath = (p: IPoint) => {
                 var pathRefs = this.pointMap.findCollection(p);
@@ -287,10 +287,15 @@
             for (var i = 2; i--;) {
                 removePath(pathRef.endPoints[i]);
             }
+
+            delete pathRef.modelContext.paths[pathRef.pathId];
+            if (this.trackDeleted) {
+                this.trackDeleted(pathRef, reason);
+            }
         }
 
-        public removeDeadEnd(): boolean {
-            var found = false;
+        public removeDeadEnd(baseCount: number) {
+            var found = 0;
 
             for (var i = 0; i < this.pointMap.collections.length; i++) {
 
@@ -299,22 +304,16 @@
                 if (pathRefs.length % 2 == 0) continue;
 
                 if (pathRefs.length == 1) {
-                    var pathRef = pathRefs[0];
-
-                    this.removePathRef(pathRef);
-                    delete pathRef.modelContext.paths[pathRef.pathId];
-                    found = true;
+                    this.removePathRef(pathRefs[0], "dead end " + (baseCount + found));
+                    found++;
 
                 } else if (this.keep) {
 
                     //allow caller to decide to keep each path
-                    pathRefs.map((pathRef: IRefPathEndpoints, i: number) => {
+                    pathRefs.forEach((pathRef: IRefPathEndpoints) => {
                         if (!this.keep(pathRef)) {
-
-                            this.removePathRef(pathRef);
-                            delete pathRef.modelContext.paths[pathRef.pathId];
-                            found = true;
-
+                            this.removePathRef(pathRef, "not keeping");
+                            found++;
                         }
                     });
 
@@ -331,8 +330,8 @@
      * @param options Optional options object.
      * @returns The input model (for cascading).
      */
-    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?, keep?: IWalkPathBooleanCallback) {
-        var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep);
+    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: (wp: IWalkPath, reason: string) => void) {
+        var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep, trackDeleted);
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
@@ -351,7 +350,11 @@
 
         walk(modelContext, walkOptions);
 
-        while (deadEndFinder.removeDeadEnd());
+        var total = 0;
+        var pass = 0;
+        while (pass = deadEndFinder.removeDeadEnd(total)) {
+            total += pass;
+        }
 
         return modelContext;
     }
