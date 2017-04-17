@@ -12,6 +12,7 @@ function TongueAndGroove(count, tongueWidth, grooveWidth, grooveDepth, dogbone) 
     tng: m.layout.cloneToRow(groove, count)
   };
   
+  this.origin = [tongueWidth / 2, 0];
 }
 
 TongueAndGroove.metaParameters = [
