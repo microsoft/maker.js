@@ -6,6 +6,7 @@
     "sourceMap": false
   },
 "files": [
+    "../src/core/schema.ts",
     "../src/core/maker.ts",
     "../src/core/angle.ts",
     "../src/core/point.ts",
