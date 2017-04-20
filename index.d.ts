@@ -1,9 +1,187 @@
-// Type definitions for Maker.js 0.9.48
+// Type definitions for Maker.js 0.9.49
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 /// <reference types="pdfkit" />
 /// <reference types="bezier-js" />
+/**
+ * Schema objects for Maker.js.
+ *
+ */
+declare namespace MakerJs {
+    /**
+     * An x-y point in a two-dimensional space.
+     * Implemented as an array with 2 elements. The first element is x, the second element is y.
+     *
+     * Examples:
+     * ```
+     * var p: IPoint = [0, 0];   //typescript
+     * var p = [0, 0];   //javascript
+     * ```
+     */
+    interface IPoint {
+        [index: number]: number;
+    }
+    /**
+     * A line, curved line or other simple two dimensional shape.
+     */
+    interface IPath {
+        /**
+         * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
+         */
+        "type": string;
+        /**
+         * The main point of reference for this path.
+         */
+        origin: IPoint;
+        /**
+         * Optional layer of this path.
+         */
+        layer?: string;
+    }
+    /**
+     * A line path.
+     *
+     * Examples:
+     * ```
+     * var line: IPathLine = { type: 'line', origin: [0, 0], end: [1, 1] };   //typescript
+     * var line = { type: 'line', origin: [0, 0], end: [1, 1] };   //javascript
+     * ```
+     */
+    interface IPathLine extends IPath {
+        /**
+         * The end point defining the line. The start point is the origin.
+         */
+        end: IPoint;
+    }
+    /**
+     * A circle path.
+     *
+     * Examples:
+     * ```
+     * var circle: IPathCircle = { type: 'circle', origin: [0, 0], radius: 7 };   //typescript
+     * var circle = { type: 'circle', origin: [0, 0], radius: 7 };   //javascript
+     * ```
+     */
+    interface IPathCircle extends IPath {
+        /**
+         * The radius of the circle.
+         */
+        radius: number;
+    }
+    /**
+     * An arc path.
+     *
+     * Examples:
+     * ```
+     * var arc: IPathArc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //typescript
+     * var arc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //javascript
+     * ```
+     */
+    interface IPathArc extends IPathCircle {
+        /**
+         * The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.
+         */
+        startAngle: number;
+        /**
+         * The angle (in degrees) to end drawing the arc, in polar (counter-clockwise) direction. May be less than start angle if it past 360.
+         */
+        endAngle: number;
+    }
+    /**
+     * A bezier seed defines the endpoints and control points of a bezier curve.
+     */
+    interface IPathBezierSeed extends IPathLine {
+        /**
+         * The bezier control points. One point for quadratic, 2 points for cubic.
+         */
+        controls: IPoint[];
+        /**
+         * T values of the parent if this is a child that represents a split.
+         */
+        parentRange?: IBezierRange;
+    }
+    /**
+     * Bezier t values for an arc path segment in a bezier curve.
+     */
+    interface IBezierRange {
+        /**
+         * The bezier t-value at the starting point.
+         */
+        startT: number;
+        /**
+         * The bezier t-value at the end point.
+         */
+        endT: number;
+    }
+    /**
+     * An arc path segment in a bezier curve.
+     */
+    interface IPathArcInBezierCurve extends IPathArc {
+        bezierData: IBezierRange;
+    }
+    /**
+     * Path objects by id.
+     */
+    interface IPathMap {
+        [id: string]: IPath | IPathArc | IPathCircle | IPathLine;
+    }
+    /**
+     * Model objects by id.
+     */
+    interface IModelMap {
+        [id: string]: IModel;
+    }
+    /**
+     * A model is a composite object which may contain an array of paths, or an array of models recursively.
+     *
+     * Example:
+     * ```
+     * var m = {
+     *   paths: {
+     *     "line1": { type: 'line', origin: [0, 0], end: [1, 1] },
+     *     "line2": { type: 'line', origin: [0, 0], end: [-1, -1] }
+     *   }
+     * };
+     * ```
+     */
+    interface IModel {
+        /**
+         * Optional origin location of this model.
+         */
+        origin?: IPoint;
+        /**
+         * A model may want to specify its type, but this value is not employed yet.
+         */
+        "type"?: string;
+        /**
+         * Optional array of path objects in this model.
+         */
+        paths?: IPathMap;
+        /**
+         * Optional array of models within this model.
+         */
+        models?: IModelMap;
+        /**
+         * Optional unit system of this model. See UnitType for possible values.
+         */
+        units?: string;
+        /**
+         * An author may wish to add notes to this model instance.
+         */
+        notes?: string;
+        /**
+         * Optional layer of this model.
+         */
+        layer?: string;
+        /**
+         * Optional exporter options for this model.
+         */
+        exporterOptions?: {
+            [exporterName: string]: any;
+        };
+    }
+}
 /**
  * Root module for Maker.js.
  *
@@ -72,7 +250,7 @@ declare namespace MakerJs {
      * @returns Model or Path object within the modelContext tree.
      */
     function travel(modelContext: IModel, routeKeyOrRoute: string | string[]): {
-        path: IModel | IPath;
+        path: IPath | IModel;
         offset: IPoint;
     };
     /**
@@ -117,19 +295,6 @@ declare namespace MakerJs {
      */
     function isObject(value: any): boolean;
     /**
-     * An x-y point in a two-dimensional space.
-     * Implemented as an array with 2 elements. The first element is x, the second element is y.
-     *
-     * Examples:
-     * ```
-     * var p: IPoint = [0, 0];   //typescript
-     * var p = [0, 0];   //javascript
-     * ```
-     */
-    interface IPoint {
-        [index: number]: number;
-    }
-    /**
      * Test to see if an object implements the required properties of a point.
      *
      * @param item The item to test.
@@ -172,23 +337,6 @@ declare namespace MakerJs {
         [key: string]: IMeasure;
     }
     /**
-     * A line, curved line or other simple two dimensional shape.
-     */
-    interface IPath {
-        /**
-         * The type of the path, e.g. "line", "circle", or "arc". These strings are enumerated in pathType.
-         */
-        "type": string;
-        /**
-         * The main point of reference for this path.
-         */
-        origin: IPoint;
-        /**
-         * Optional layer of this path.
-         */
-        layer?: string;
-    }
-    /**
      * A path that was removed in a combine operation.
      */
     interface IPathRemoved extends IPath {
@@ -208,41 +356,11 @@ declare namespace MakerJs {
      */
     function isPath(item: any): boolean;
     /**
-     * A line path.
-     *
-     * Examples:
-     * ```
-     * var line: IPathLine = { type: 'line', origin: [0, 0], end: [1, 1] };   //typescript
-     * var line = { type: 'line', origin: [0, 0], end: [1, 1] };   //javascript
-     * ```
-     */
-    interface IPathLine extends IPath {
-        /**
-         * The end point defining the line. The start point is the origin.
-         */
-        end: IPoint;
-    }
-    /**
      * Test to see if an object implements the required properties of a line.
      *
      * @param item The item to test.
      */
     function isPathLine(item: any): boolean;
-    /**
-     * A circle path.
-     *
-     * Examples:
-     * ```
-     * var circle: IPathCircle = { type: 'circle', origin: [0, 0], radius: 7 };   //typescript
-     * var circle = { type: 'circle', origin: [0, 0], radius: 7 };   //javascript
-     * ```
-     */
-    interface IPathCircle extends IPath {
-        /**
-         * The radius of the circle.
-         */
-        radius: number;
-    }
     /**
      * Test to see if an object implements the required properties of a circle.
      *
@@ -250,62 +368,11 @@ declare namespace MakerJs {
      */
     function isPathCircle(item: any): boolean;
     /**
-     * An arc path.
-     *
-     * Examples:
-     * ```
-     * var arc: IPathArc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //typescript
-     * var arc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //javascript
-     * ```
-     */
-    interface IPathArc extends IPathCircle {
-        /**
-         * The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.
-         */
-        startAngle: number;
-        /**
-         * The angle (in degrees) to end drawing the arc, in polar (counter-clockwise) direction. May be less than start angle if it past 360.
-         */
-        endAngle: number;
-    }
-    /**
      * Test to see if an object implements the required properties of an arc.
      *
      * @param item The item to test.
      */
     function isPathArc(item: any): boolean;
-    /**
-     * A bezier seed defines the endpoints and control points of a bezier curve.
-     */
-    interface IPathBezierSeed extends IPathLine {
-        /**
-         * The bezier control points. One point for quadratic, 2 points for cubic.
-         */
-        controls: IPoint[];
-        /**
-         * T values of the parent if this is a child that represents a split.
-         */
-        parentRange?: IBezierRange;
-    }
-    /**
-     * Bezier t values for an arc path segment in a bezier curve.
-     */
-    interface IBezierRange {
-        /**
-         * The bezier t-value at the starting point.
-         */
-        startT: number;
-        /**
-         * The bezier t-value at the end point.
-         */
-        endT: number;
-    }
-    /**
-     * An arc path segment in a bezier curve.
-     */
-    interface IPathArcInBezierCurve extends IPathArc {
-        bezierData: IBezierRange;
-    }
     /**
      * Test to see if an object implements the required properties of an arc in a bezier curve.
      *
@@ -478,67 +545,6 @@ declare namespace MakerJs {
          * Path flows forwards or reverse.
          */
         reversed?: boolean;
-    }
-    /**
-     * Path objects by id.
-     */
-    interface IPathMap {
-        [id: string]: IPath;
-    }
-    /**
-     * Model objects by id.
-     */
-    interface IModelMap {
-        [id: string]: IModel;
-    }
-    /**
-     * A model is a composite object which may contain an array of paths, or an array of models recursively.
-     *
-     * Example:
-     * ```
-     * var m = {
-     *   paths: {
-     *     "line1": { type: 'line', origin: [0, 0], end: [1, 1] },
-     *     "line2": { type: 'line', origin: [0, 0], end: [-1, -1] }
-     *   }
-     * };
-     * ```
-     */
-    interface IModel {
-        /**
-         * Optional origin location of this model.
-         */
-        origin?: IPoint;
-        /**
-         * A model may want to specify its type, but this value is not employed yet.
-         */
-        "type"?: string;
-        /**
-         * Optional array of path objects in this model.
-         */
-        paths?: IPathMap;
-        /**
-         * Optional array of models within this model.
-         */
-        models?: IModelMap;
-        /**
-         * Optional unit system of this model. See UnitType for possible values.
-         */
-        units?: string;
-        /**
-         * An author may wish to add notes to this model instance.
-         */
-        notes?: string;
-        /**
-         * Optional layer of this model.
-         */
-        layer?: string;
-        /**
-         * Optional exporter options for this model.
-         */
-        exporterOptions?: {
-            [exporterName: string]: any;
-        };
     }
     /**
      * Callback signature for model.walkPaths().
