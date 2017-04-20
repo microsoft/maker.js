@@ -275,7 +275,16 @@
 
                 //breaking the bezier into its extrema will make the models better correspond to rectangular measurements.
                 //however, the potential drawback is that these broken curves will not get reconciled to this overall curve.
-                var extrema = b.extrema().values;
+                var extrema = b.extrema().values
+                
+                    //round the numbers so we can compare them to each other
+                    .map(m => round(m))
+                    
+                    //remove duplicates
+                    .filter((value, index, self) => self.indexOf(value) === index)
+                    
+                    //and put them in order
+                    .sort();
 
                 //remove leading zero
                 if (extrema.length > 0 && extrema[0] === 0) {
