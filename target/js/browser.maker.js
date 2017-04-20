@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.48
+ *   version: 0.9.49
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -456,6 +456,7 @@ var MakerJs;
         var prop = reflectName();
         return (prop in p);
     }
+    //points
     /**
      * Test to see if an object implements the required properties of a point.
      *
@@ -7187,7 +7188,10 @@ var MakerJs;
                 if (!isLeaf) {
                     //breaking the bezier into its extrema will make the models better correspond to rectangular measurements.
                     //however, the potential drawback is that these broken curves will not get reconciled to this overall curve.
-                    var extrema = b.extrema().values;
+                    var extrema = b.extrema().values
+                        .map(function (m) { return MakerJs.round(m); })
+                        .filter(function (value, index, self) { return self.indexOf(value) === index; })
+                        .sort();
                     //remove leading zero
                     if (extrema.length > 0 && extrema[0] === 0) {
                         extrema.shift();
@@ -8346,6 +8350,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.48";
+MakerJs.version = "0.9.49";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);
