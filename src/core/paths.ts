@@ -277,10 +277,18 @@ namespace MakerJs.paths {
                     }
 
                     //find intersection of slopes of perpendiculars
-                    this.origin = point.fromSlopeIntersection(perpendiculars[0], perpendiculars[1]);
+                    var origin = point.fromSlopeIntersection(perpendiculars[0], perpendiculars[1]);
 
-                    //radius is distance to any of the 3 points
-                    this.radius = measure.pointDistance(this.origin, args[0]);
+                    if (origin) {
+                        this.origin = origin;
+
+                        //radius is distance to any of the 3 points
+                        this.radius = measure.pointDistance(this.origin, args[0]);
+
+                    } else {
+                        throw 'invalid parameters - attempted to construct a circle from 3 points on a line: ' + JSON.stringify(args);
+                    }
+
                     break;
             }
         }
