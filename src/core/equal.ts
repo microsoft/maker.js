@@ -78,7 +78,7 @@
      */
     export function isPointEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean {
         if (!withinDistance) {
-            return a[0] == b[0] && a[1] == b[1];
+            return round(a[0] - b[0]) == 0 && round(a[1] - b[1]) == 0;
         } else {
             if (!a || !b) return false;
             var distance = measure.pointDistance(a, b);
