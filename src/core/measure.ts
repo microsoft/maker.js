@@ -151,19 +151,21 @@ namespace MakerJs.measure {
     }
 
     /**
-     * Check if a given bezier seed is simply a line.
+     * Check if a given bezier seed has all points on the same slope.
      * 
      * @param seed The bezier seed to test.
+     * @param exclusive Optional boolean to test only within the boundary of the endpoints.
      * @returns Boolean true if bezier seed has control points on the line slope and between the line endpoints.
      */
-    export function isBezierSeedLinear(seed: IPathBezierSeed): boolean {
+    export function isBezierSeedLinear(seed: IPathBezierSeed, exclusive?: boolean): boolean {
 
         //create a slope from the endpoints
         var slope = lineSlope(seed);
 
         for (var i = 0; i < seed.controls.length; i++) {
-            if (!(isPointOnSlope(seed.controls[i], slope) && isBetweenPoints(seed.controls[i], seed, false))) {
-                return false;
+            if (!(isPointOnSlope(seed.controls[i], slope))) {
+                if (!exclusive) return false;
+                if (isBetweenPoints(seed.controls[i], seed, false)) return false;
             }
         }
 
@@ -387,9 +389,9 @@ namespace MakerJs.measure {
      * @private
      */
     function cloneMeasure(measureToclone: IMeasure): IMeasure {
-        return { 
-            high: point.clone(measureToclone.high), 
-            low: point.clone(measureToclone.low) 
+        return {
+            high: point.clone(measureToclone.high),
+            low: point.clone(measureToclone.low)
         };
     }
 
@@ -464,7 +466,7 @@ namespace MakerJs.measure {
         m.width = m.high[0] - m.low[0];
         m.height = m.high[1] - m.low[1];
 
-        return m;        
+        return m;
     }
 
     /**
