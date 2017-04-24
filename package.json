@@ -125,6 +125,7 @@
     "makerjs-ventgridcircle": "^1.1.3"
   },
   "ordered_demo_list": [
+    "pixel-heart",
     "tongue-and-groove",
     "text-on-path",
     "text-on-chain",
