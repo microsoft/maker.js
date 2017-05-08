@@ -1,6 +1,6 @@
 ---
 layout: posts
-title: Api - IChildPlacement Interface
+title: Api - TPoint Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
@@ -11,7 +11,7 @@ title: Api - IChildPlacement Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IChildPlacement</span>
+			<span class="target">TPoint</span>
 		</li>
 	</ul>
 </section>
@@ -20,56 +20,69 @@ title: Api - IChildPlacement Interface
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section tsd-is-not-exported">
+				<h3>Constructors</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.models.tpoint.html#constructor" class="tsd-kind-icon">constructor</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section tsd-is-not-exported">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.layout.ichildplacement.html#angle" class="tsd-kind-icon">angle</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.layout.ichildplacement.html#childid" class="tsd-kind-icon">child<wbr>Id</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.layout.ichildplacement.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.layout.ichildplacement.html#xratio" class="tsd-kind-icon">x<wbr>Ratio</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.models.tpoint.html#point" class="tsd-kind-icon">point</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.models.tpoint.html#t" class="tsd-kind-icon">t</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+	<h2>Constructors</h2>
+	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
+		<a name="constructor" class="tsd-anchor"></a>
+		<h3>constructor</h3>
+		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">new TPoint<span class="tsd-signature-symbol">(</span>b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Bezier</span>, t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.tpoint.html" class="tsd-signature-type">TPoint</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/models/BezierCurve.ts#L128">models/BezierCurve.ts:128</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>b: <span class="tsd-signature-type">Bezier</span></h5>
+					</li>
+					<li>
+						<h5>t: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.tpoint.html" class="tsd-signature-type">TPoint</a></h4>
+			</li>
+		</ul>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="angle" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> angle</h3>
-		<div class="tsd-signature tsd-kind-icon">angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+		<a name="point" class="tsd-anchor"></a>
+		<h3>point</h3>
+		<div class="tsd-signature tsd-kind-icon">point<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/layout.ts#L10">core/layout.ts:10</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/models/BezierCurve.ts#L128">models/BezierCurve.ts:128</a></li>
 			</ul>
 		</aside>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="childid" class="tsd-anchor"></a>
-		<h3>child<wbr>Id</h3>
-		<div class="tsd-signature tsd-kind-icon">child<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+		<a name="t" class="tsd-anchor"></a>
+		<h3>t</h3>
+		<div class="tsd-signature tsd-kind-icon">t<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/layout.ts#L7">core/layout.ts:7</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="origin" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> origin</h3>
-		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/layout.ts#L9">core/layout.ts:9</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="xratio" class="tsd-anchor"></a>
-		<h3>x<wbr>Ratio</h3>
-		<div class="tsd-signature tsd-kind-icon">x<wbr>Ratio<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/layout.ts#L8">core/layout.ts:8</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/models/BezierCurve.ts#L130">models/BezierCurve.ts:130</a></li>
 			</ul>
 		</aside>
 	</section>
