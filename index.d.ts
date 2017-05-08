@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.49
+// Type definitions for Maker.js 0.9.50
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -117,7 +117,7 @@ declare namespace MakerJs {
     /**
      * An arc path segment in a bezier curve.
      */
-    interface IPathArcInBezierCurve extends IPathArc {
+    interface IPathArcInBezierCurve extends IPath {
         bezierData: IBezierRange;
     }
     /**
@@ -1544,6 +1544,14 @@ declare namespace MakerJs.measure {
      * @returns Boolean true if slopes are equal.
      */
     function isSlopeEqual(slopeA: ISlope, slopeB: ISlope): boolean;
+    /**
+     * Check for parallel slopes.
+     *
+     * @param slopeA The ISlope to test.
+     * @param slopeB The ISlope to check for parallel.
+     * @returns Boolean true if slopes are parallel.
+     */
+    function isSlopeParallel(slopeA: ISlope, slopeB: ISlope): boolean;
 }
 declare namespace MakerJs.measure {
     /**
@@ -1601,12 +1609,13 @@ declare namespace MakerJs.measure {
      */
     function isBetweenPoints(pointInQuestion: IPoint, line: IPathLine, exclusive: boolean): boolean;
     /**
-     * Check if a given bezier seed is simply a line.
+     * Check if a given bezier seed has all points on the same slope.
      *
      * @param seed The bezier seed to test.
+     * @param exclusive Optional boolean to test only within the boundary of the endpoints.
      * @returns Boolean true if bezier seed has control points on the line slope and between the line endpoints.
      */
-    function isBezierSeedLinear(seed: IPathBezierSeed): boolean;
+    function isBezierSeedLinear(seed: IPathBezierSeed, exclusive?: boolean): boolean;
     /**
      * Check for line overlapping another line.
      *
@@ -2354,7 +2363,6 @@ declare namespace MakerJs.models {
         accuracy: number;
         constructor(points: IPoint[], accuracy?: number);
         constructor(seed: IPathBezierSeed, accuracy?: number);
-        constructor(seed: IPathBezierSeed, isChild: boolean, accuracy?: number);
         constructor(origin: IPoint, control: IPoint, end: IPoint, accuracy?: number);
         constructor(origin: IPoint, controls: IPoint[], end: IPoint, accuracy?: number);
         constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint, accuracy?: number);
