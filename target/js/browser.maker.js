@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.49
+ *   version: 0.9.50
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -839,9 +839,12 @@ var MakerJs;
             if (options === void 0) { options = {}; }
             var slopeA = MakerJs.measure.lineSlope(lineA);
             var slopeB = MakerJs.measure.lineSlope(lineB);
-            if (MakerJs.measure.isSlopeEqual(slopeA, slopeB)) {
-                //check for overlap
-                options.out_AreOverlapped = MakerJs.measure.isLineOverlapping(lineA, lineB, options.excludeTangents);
+            //see if slope are parallel 
+            if (MakerJs.measure.isSlopeParallel(slopeA, slopeB)) {
+                if (MakerJs.measure.isSlopeEqual(slopeA, slopeB)) {
+                    //check for overlap
+                    options.out_AreOverlapped = MakerJs.measure.isLineOverlapping(lineA, lineB, options.excludeTangents);
+                }
                 return null;
             }
             var pointOfIntersection;
@@ -1014,6 +1017,10 @@ var MakerJs;
             if (pathA && pathB && ('layer' in pathA)) {
                 pathB.layer = pathA.layer;
             }
+            //carry extra props if this is an IPathArcInBezierCurve
+            if (pathA && pathB && ('bezierData' in pathA)) {
+                pathB.bezierData = pathA.bezierData;
+            }
         }
         /**
          * Create a clone of a path. This is faster than cloneObject.
@@ -1027,10 +1034,6 @@ var MakerJs;
                 case MakerJs.pathType.Arc:
                     var arc = pathToClone;
                     result = new MakerJs.paths.Arc(MakerJs.point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
-                    //carry extra props if this is an IPathArcInBezierCurve
-                    if (MakerJs.isPathArcInBezierCurve(arc)) {
-                        result.bezierData = arc.bezierData;
-                    }
                     break;
                 case MakerJs.pathType.Circle:
                     var circle = pathToClone;
@@ -1672,9 +1675,15 @@ var MakerJs;
                             perpendiculars.push(MakerJs.path.rotate(lines[i], 90, midpoint));
                         }
                         //find intersection of slopes of perpendiculars
-                        this.origin = MakerJs.point.fromSlopeIntersection(perpendiculars[0], perpendiculars[1]);
-                        //radius is distance to any of the 3 points
-                        this.radius = MakerJs.measure.pointDistance(this.origin, args[0]);
+                        var origin = MakerJs.point.fromSlopeIntersection(perpendiculars[0], perpendiculars[1]);
+                        if (origin) {
+                            this.origin = origin;
+                            //radius is distance to any of the 3 points
+                            this.radius = MakerJs.measure.pointDistance(this.origin, args[0]);
+                        }
+                        else {
+                            throw 'invalid parameters - attempted to construct a circle from 3 points on a line: ' + JSON.stringify(args);
+                        }
                         break;
                 }
             }
@@ -3105,7 +3114,7 @@ var MakerJs;
          */
         function isPointEqual(a, b, withinDistance) {
             if (!withinDistance) {
-                return a[0] == b[0] && a[1] == b[1];
+                return MakerJs.round(a[0] - b[0]) == 0 && MakerJs.round(a[1] - b[1]) == 0;
             }
             else {
                 if (!a || !b)
@@ -3141,17 +3150,34 @@ var MakerJs;
          * @returns Boolean true if slopes are equal.
          */
         function isSlopeEqual(slopeA, slopeB) {
+            if (!isSlopeParallel(slopeA, slopeB))
+                return false;
             if (!slopeA.hasSlope && !slopeB.hasSlope) {
                 //lines are both vertical, see if x are the same
                 return MakerJs.round(slopeA.line.origin[0] - slopeB.line.origin[0]) == 0;
             }
+            //lines are parallel, but not vertical, see if y-intercept is the same
+            return MakerJs.round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+        }
+        measure.isSlopeEqual = isSlopeEqual;
+        /**
+         * Check for parallel slopes.
+         *
+         * @param slopeA The ISlope to test.
+         * @param slopeB The ISlope to check for parallel.
+         * @returns Boolean true if slopes are parallel.
+         */
+        function isSlopeParallel(slopeA, slopeB) {
+            if (!slopeA.hasSlope && !slopeB.hasSlope) {
+                return true;
+            }
             if (slopeA.hasSlope && slopeB.hasSlope && (MakerJs.round(slopeA.slope - slopeB.slope, .00001) == 0)) {
-                //lines are parallel, but not vertical, see if y-intercept is the same
-                return MakerJs.round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+                //lines are parallel
+                return true;
             }
             return false;
         }
-        measure.isSlopeEqual = isSlopeEqual;
+        measure.isSlopeParallel = isSlopeParallel;
     })(measure = MakerJs.measure || (MakerJs.measure = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3288,17 +3314,21 @@ var MakerJs;
         }
         measure.isBetweenPoints = isBetweenPoints;
         /**
-         * Check if a given bezier seed is simply a line.
+         * Check if a given bezier seed has all points on the same slope.
          *
          * @param seed The bezier seed to test.
+         * @param exclusive Optional boolean to test only within the boundary of the endpoints.
          * @returns Boolean true if bezier seed has control points on the line slope and between the line endpoints.
          */
-        function isBezierSeedLinear(seed) {
+        function isBezierSeedLinear(seed, exclusive) {
             //create a slope from the endpoints
             var slope = lineSlope(seed);
             for (var i = 0; i < seed.controls.length; i++) {
-                if (!(measure.isPointOnSlope(seed.controls[i], slope) && isBetweenPoints(seed.controls[i], seed, false))) {
-                    return false;
+                if (!(measure.isPointOnSlope(seed.controls[i], slope))) {
+                    if (!exclusive)
+                        return false;
+                    if (isBetweenPoints(seed.controls[i], seed, false))
+                        return false;
                 }
             }
             return true;
@@ -5081,8 +5111,9 @@ var MakerJs;
                 if (!chainsByLayer[layer]) {
                     chainsByLayer[layer] = [];
                 }
-                //follow paths to find loops
+                //follow paths to find endless chains
                 followLinks(connections, function (chain) {
+                    chain.endless = !!chain.endless;
                     chainsByLayer[layer].push(chain);
                 }, function (walkedPath) {
                     loose.push(walkedPath);
@@ -6993,7 +7024,13 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
+        /**
+         * @private
+         */
         var hasLib = false;
+        /**
+         * @private
+         */
         function ensureBezierLib() {
             if (hasLib)
                 return;
@@ -7036,7 +7073,7 @@ var MakerJs;
          * @private
          */
         function BezierToSeed(b, range) {
-            var points = b.points.map(function (p) { return [p.x, p.y]; });
+            var points = b.points.map(getIPoint);
             var seed = new BezierSeed(points);
             if (range) {
                 seed.parentRange = range;
@@ -7060,13 +7097,129 @@ var MakerJs;
         /**
          * @private
          */
-        function getArcs(b, accuracy) {
-            var arcs = b.arcs(accuracy);
-            return arcs.map(function (a) {
-                var arc = new MakerJs.paths.Arc([a.x, a.y], a.r, MakerJs.angle.toDegrees(a.s), MakerJs.angle.toDegrees(a.e));
-                arc.bezierData = { startT: a.interval.start, endT: a.interval.end };
-                return arc;
-            });
+        function getExtrema(b) {
+            var extrema = b.extrema().values
+                .map(function (m) { return MakerJs.round(m); })
+                .filter(function (value, index, self) { return self.indexOf(value) === index; })
+                .sort();
+            if (extrema.length === 0)
+                return [0, 1];
+            //ensure leading zero
+            if (extrema[0] !== 0) {
+                extrema.unshift(0);
+            }
+            //ensure ending 1
+            if (extrema[extrema.length - 1] !== 1) {
+                extrema.push(1);
+            }
+            return extrema;
+        }
+        /**
+         * @private
+         */
+        function getIPoint(p) {
+            return [p.x, p.y];
+        }
+        /**
+         * @private
+         */
+        var TPoint = (function () {
+            function TPoint(b, t) {
+                this.t = t;
+                this.point = getIPoint(b.get(t));
+            }
+            return TPoint;
+        }());
+        /**
+         * @private
+         */
+        function getError(b, startT, endT, arc, arcReversed) {
+            var tSpan = endT - startT;
+            function m(ratio) {
+                var t = startT + tSpan * ratio;
+                var bp = getIPoint(b.get(t));
+                var ap = MakerJs.point.middle(arc, arcReversed ? 1 - ratio : ratio);
+                return MakerJs.measure.pointDistance(ap, bp);
+            }
+            return m(0.25) + m(0.75);
+        }
+        /**
+         * @private
+         */
+        function getLargestArc(b, startT, endT, accuracy) {
+            var arc, lastGoodArc;
+            var start = new TPoint(b, startT);
+            var end = new TPoint(b, endT);
+            var upper = end;
+            var lower = start;
+            var count = 0;
+            var test = upper;
+            var reversed;
+            while (count < 100) {
+                var middle = getIPoint(b.get((start.t + test.t) / 2));
+                //if the 3 points are linear, this may throw
+                try {
+                    arc = new MakerJs.paths.Arc(start.point, middle, test.point);
+                }
+                catch (e) {
+                    if (lastGoodArc) {
+                        return lastGoodArc;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                //only need to test once to see if this arc is polar / clockwise
+                if (reversed === undefined) {
+                    reversed = MakerJs.measure.isPointEqual(start.point, MakerJs.point.fromAngleOnCircle(arc.endAngle, arc));
+                }
+                //now we have a valid arc, measure the error.
+                var error = getError(b, startT, test.t, arc, reversed);
+                //if error is within accuracy, this becomes the lower
+                if (error <= accuracy) {
+                    arc.bezierData = {
+                        startT: startT,
+                        endT: test.t
+                    };
+                    lower = test;
+                    lastGoodArc = arc;
+                }
+                else {
+                    upper = test;
+                }
+                //exit if lower is the end
+                if (lower.t === upper.t || (lastGoodArc && (lastGoodArc !== arc) && (MakerJs.angle.ofArcSpan(arc) - MakerJs.angle.ofArcSpan(lastGoodArc)) < .5)) {
+                    return lastGoodArc;
+                }
+                count++;
+                test = new TPoint(b, (lower.t + upper.t) / 2);
+            }
+            //arc failed, so return a line
+            var line = new MakerJs.paths.Line(start.point, test.point);
+            line.bezierData = {
+                startT: startT,
+                endT: test.t
+            };
+            return line;
+        }
+        /**
+         * @private
+         */
+        function getArcs(bc, b, accuracy, startT, endT, base) {
+            var added = 0;
+            var arc;
+            while (startT < endT) {
+                arc = getLargestArc(b, startT, endT, accuracy);
+                //add an arc
+                startT = arc.bezierData.endT;
+                var len = MakerJs.measure.pathLength(arc);
+                if (len < .0001) {
+                    continue;
+                }
+                bc.paths[arc.type + '_' + (base + added)] = arc;
+                added++;
+            }
+            return added;
         }
         /**
          * @private
@@ -7118,9 +7271,7 @@ var MakerJs;
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i] = arguments[_i];
                 }
-                var _this = this;
                 this.type = BezierCurve.typeName;
-                var isLeaf = false;
                 var isArrayArg0 = Array.isArray(args[0]);
                 switch (args.length) {
                     case 2:
@@ -7130,12 +7281,7 @@ var MakerJs;
                         else {
                             //seed
                             this.seed = args[0];
-                            if (typeof args[1] === "boolean") {
-                                isLeaf = args[1];
-                            }
-                            else {
-                                this.accuracy = args[1];
-                            }
+                            this.accuracy = args[1];
                             break;
                         }
                     //fall through to point array
@@ -7163,11 +7309,6 @@ var MakerJs;
                                 if (isArrayArg0) {
                                     this.seed = new BezierSeed(args.slice(0, 3));
                                 }
-                                else {
-                                    this.seed = args[0];
-                                    isLeaf = args[1];
-                                    this.accuracy = args[2];
-                                }
                                 break;
                             case 5:
                                 this.accuracy = args[4];
@@ -7180,70 +7321,24 @@ var MakerJs;
                 if (MakerJs.measure.isBezierSeedLinear(this.seed)) {
                     //use a line and exit
                     this.paths = {
-                        'Line': new MakerJs.paths.Line(MakerJs.point.clone(this.seed.origin), MakerJs.point.clone(this.seed.end))
+                        "0": new MakerJs.paths.Line(MakerJs.point.clone(this.seed.origin), MakerJs.point.clone(this.seed.end))
                     };
                     return;
                 }
                 var b = seedToBezier(this.seed);
-                if (!isLeaf) {
-                    //breaking the bezier into its extrema will make the models better correspond to rectangular measurements.
-                    //however, the potential drawback is that these broken curves will not get reconciled to this overall curve.
-                    var extrema = b.extrema().values
-                        .map(function (m) { return MakerJs.round(m); })
-                        .filter(function (value, index, self) { return self.indexOf(value) === index; })
-                        .sort();
-                    //remove leading zero
-                    if (extrema.length > 0 && extrema[0] === 0) {
-                        extrema.shift();
-                    }
-                    //remove ending 1
-                    if (extrema.length > 0 && extrema[extrema.length - 1] === 1) {
-                        extrema.pop();
-                    }
-                    if (extrema.length === 0) {
-                        isLeaf = true;
-                    }
-                    else {
-                        //need to create children
-                        //this will not contain paths, but will contain other curves
-                        this.models = {};
-                        var childSeeds = [];
-                        if (extrema.length === 1) {
-                            var split = b.split(extrema[0]);
-                            childSeeds.push(BezierToSeed(split.left, { startT: 0, endT: extrema[0] }), BezierToSeed(split.right, { startT: extrema[0], endT: 1 }));
-                        }
-                        else {
-                            //add 0 and 1 endings
-                            extrema.unshift(0);
-                            extrema.push(1);
-                            for (var i = 1; i < extrema.length; i++) {
-                                //get the bezier between 
-                                childSeeds.push(BezierToSeed(b.split(extrema[i - 1], extrema[i]), { startT: extrema[i - 1], endT: extrema[i] }));
-                            }
-                        }
-                        childSeeds.forEach(function (seed, i) {
-                            _this.models['Curve_' + (1 + i)] = new BezierCurve(seed, true, _this.accuracy);
-                        });
-                    }
+                var extrema = getExtrema(b);
+                this.paths = {};
+                //use arcs
+                if (!this.accuracy) {
+                    //get a default accuracy relative to the size of the bezier
+                    var len = b.length();
+                    //set the default to be a combination of fast rendering and good smoothing.
+                    this.accuracy = len / 100;
                 }
-                if (isLeaf) {
-                    this.paths = {};
-                    //use arcs
-                    if (!this.accuracy) {
-                        //get a default accuracy relative to the size of the bezier
-                        var len = b.length();
-                        //set the default to be a combination of fast rendering and good smoothing.
-                        this.accuracy = len / 1000;
-                    }
-                    var arcs = getArcs(b, this.accuracy);
-                    var i = 0;
-                    arcs.forEach(function (arc) {
-                        var span = MakerJs.angle.ofArcSpan(arc);
-                        if (span === 0 || span === 360)
-                            return;
-                        _this.paths['Arc_' + (1 + i)] = arc;
-                        i++;
-                    });
+                var count = 0;
+                for (var i = 1; i < extrema.length; i++) {
+                    var extremaSpan = extrema[i] - extrema[i - 1];
+                    count += getArcs(this, b, this.accuracy * extremaSpan, extrema[i - 1], extrema[i], count);
                 }
             }
             BezierCurve.getBezierSeeds = function (curve, options) {
@@ -7278,7 +7373,7 @@ var MakerJs;
                             var reversed = (chainReversed !== chainEnd.reversed);
                             var chainEndPoint = chainEnd.endPoints[reversed ? 1 - i : i];
                             var trueEndpoint = b.compute(i === 0 ? arc.bezierData.startT : arc.bezierData.endT);
-                            if (!MakerJs.measure.isPointEqual(chainEndPoint, [trueEndpoint.x, trueEndpoint.y], .00001)) {
+                            if (!MakerJs.measure.isPointEqual(chainEndPoint, getIPoint(trueEndpoint), .00001)) {
                                 intact = false;
                                 break;
                             }
@@ -7300,7 +7395,7 @@ var MakerJs;
             BezierCurve.computePoint = function (seed, t) {
                 var s = getScratch(seed);
                 var computedPoint = s.compute(t);
-                return [computedPoint.x, computedPoint.y];
+                return getIPoint(computedPoint);
             };
             return BezierCurve;
         }());
@@ -8350,6 +8445,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.49";
+MakerJs.version = "0.9.50";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);
