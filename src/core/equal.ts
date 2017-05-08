@@ -78,7 +78,7 @@
      */
     export function isPointEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean {
         if (!withinDistance) {
-            return a[0] == b[0] && a[1] == b[1];
+            return round(a[0] - b[0]) == 0 && round(a[1] - b[1]) == 0;
         } else {
             if (!a || !b) return false;
             var distance = measure.pointDistance(a, b);
@@ -114,19 +114,38 @@
      */
     export function isSlopeEqual(slopeA: ISlope, slopeB: ISlope): boolean {
 
+        if (!isSlopeParallel(slopeA, slopeB)) return false;
+
         if (!slopeA.hasSlope && !slopeB.hasSlope) {
 
             //lines are both vertical, see if x are the same
             return round(slopeA.line.origin[0] - slopeB.line.origin[0]) == 0;
         }
 
+        //lines are parallel, but not vertical, see if y-intercept is the same
+        return round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+    }
+
+    /**
+     * Check for parallel slopes.
+     * 
+     * @param slopeA The ISlope to test.
+     * @param slopeB The ISlope to check for parallel.
+     * @returns Boolean true if slopes are parallel.
+     */
+    export function isSlopeParallel(slopeA: ISlope, slopeB: ISlope): boolean {
+
+        if (!slopeA.hasSlope && !slopeB.hasSlope) {
+
+            return true;
+        }
+
         if (slopeA.hasSlope && slopeB.hasSlope && (round(slopeA.slope - slopeB.slope, .00001) == 0)) {
 
-            //lines are parallel, but not vertical, see if y-intercept is the same
-            return round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+            //lines are parallel
+            return true;
         }
 
         return false;
     }
-
 }

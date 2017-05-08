@@ -7,6 +7,11 @@ namespace MakerJs.path {
         if (pathA && pathB && ('layer' in pathA)) {
             pathB.layer = pathA.layer;
         }
+
+        //carry extra props if this is an IPathArcInBezierCurve
+        if (pathA && pathB && ('bezierData' in pathA)) {
+            (<IPathArcInBezierCurve>pathB).bezierData = (<IPathArcInBezierCurve>pathA).bezierData;
+        }
     }
 
     /**
@@ -22,12 +27,6 @@ namespace MakerJs.path {
             case pathType.Arc:
                 var arc = <IPathArc>pathToClone;
                 result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
-
-                //carry extra props if this is an IPathArcInBezierCurve
-                if (isPathArcInBezierCurve(arc)) {
-                    (<IPathArcInBezierCurve>result).bezierData = (<IPathArcInBezierCurve>arc).bezierData;
-                }
-
                 break;
 
             case pathType.Circle:

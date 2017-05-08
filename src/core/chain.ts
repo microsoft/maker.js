@@ -248,10 +248,11 @@
                 chainsByLayer[layer] = [];
             }
 
-            //follow paths to find loops
+            //follow paths to find endless chains
             followLinks(
                 connections,
                 function (chain: IChain) {
+                    chain.endless = !!chain.endless;
                     chainsByLayer[layer].push(chain);
                 },
                 function (walkedPath: IWalkPath) {

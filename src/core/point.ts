@@ -163,10 +163,13 @@ namespace MakerJs.point {
         var slopeA = measure.lineSlope(lineA);
         var slopeB = measure.lineSlope(lineB);
 
-        if (measure.isSlopeEqual(slopeA, slopeB)) {
+        //see if slope are parallel 
+        if (measure.isSlopeParallel(slopeA, slopeB)) {
 
-            //check for overlap
-            options.out_AreOverlapped = measure.isLineOverlapping(lineA, lineB, options.excludeTangents);
+            if (measure.isSlopeEqual(slopeA, slopeB)) {
+                //check for overlap
+                options.out_AreOverlapped = measure.isLineOverlapping(lineA, lineB, options.excludeTangents);
+            }
 
             return null;
         }
