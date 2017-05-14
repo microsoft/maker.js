@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.50
+ *   version: 0.9.51
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -308,8 +308,28 @@ var MakerJs;
      */
     function round(n, accuracy) {
         if (accuracy === void 0) { accuracy = .0000001; }
-        var places = 1 / accuracy;
-        return Math.round(n * places) / places;
+        var exp = 1 - String(1 / accuracy).length;
+        //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
+        // If the exp is undefined or zero...
+        if (typeof exp === 'undefined' || +exp === 0) {
+            return Math.round(n);
+        }
+        n = +n;
+        exp = +exp;
+        // If the value is not a number or the exp is not an integer...
+        if (isNaN(n) || !(typeof exp === 'number' && exp % 1 === 0)) {
+            return NaN;
+        }
+        // If the value is negative...
+        if (n < 0) {
+            return -round(-n, accuracy);
+        }
+        // Shift
+        var a = n.toString().split('e');
+        n = Math.round(+(a[0] + 'e' + (a[1] ? (+a[1] - exp) : -exp)));
+        // Shift back
+        a = n.toString().split('e');
+        return +(a[0] + 'e' + (a[1] ? (+a[1] + exp) : exp));
     }
     MakerJs.round = round;
     /**
@@ -5960,15 +5980,15 @@ var MakerJs;
          * @private
          */
         var chainLinkToPathDataMap = {};
-        chainLinkToPathDataMap[MakerJs.pathType.Arc] = function (arc, endPoint, reversed, d) {
+        chainLinkToPathDataMap[MakerJs.pathType.Arc] = function (arc, endPoint, reversed, d, accuracy) {
             d.push('A');
-            svgArcData(d, arc.radius, endPoint, MakerJs.angle.ofArcSpan(arc) > 180, reversed ? (arc.startAngle > arc.endAngle) : (arc.startAngle < arc.endAngle));
+            svgArcData(d, arc.radius, endPoint, accuracy, MakerJs.angle.ofArcSpan(arc) > 180, reversed ? (arc.startAngle > arc.endAngle) : (arc.startAngle < arc.endAngle));
         };
-        chainLinkToPathDataMap[MakerJs.pathType.Line] = function (line, endPoint, reversed, d) {
-            d.push('L', MakerJs.round(endPoint[0]), MakerJs.round(endPoint[1]));
+        chainLinkToPathDataMap[MakerJs.pathType.Line] = function (line, endPoint, reversed, d, accuracy) {
+            d.push('L', MakerJs.round(endPoint[0], accuracy), MakerJs.round(endPoint[1], accuracy));
         };
-        chainLinkToPathDataMap[MakerJs.pathType.BezierSeed] = function (seed, endPoint, reversed, d) {
-            svgBezierData(d, seed, reversed);
+        chainLinkToPathDataMap[MakerJs.pathType.BezierSeed] = function (seed, endPoint, reversed, d, accuracy) {
+            svgBezierData(d, seed, accuracy, reversed);
         };
         /**
          * @private
@@ -5978,14 +5998,19 @@ var MakerJs;
         }
         /**
          * Convert a chain to SVG path data.
+         *
+         * @param chain Chain to convert.
+         * @param offset IPoint relative offset point.
+         * @param accuracy Optional accuracy of SVG path data.
+         * @returns String of SVG path data.
          */
-        function chainToSVGPathData(chain, offset) {
+        function chainToSVGPathData(chain, offset, accuracy) {
             function offsetPoint(p) {
                 return MakerJs.point.add(p, offset);
             }
             var first = chain.links[0];
             var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0]));
-            var d = ['M', MakerJs.round(firstPoint[0]), MakerJs.round(firstPoint[1])];
+            var d = ['M', MakerJs.round(firstPoint[0], accuracy), MakerJs.round(firstPoint[1], accuracy)];
             for (var i = 0; i < chain.links.length; i++) {
                 var link = chain.links[i];
                 var pathContext = link.walkedPath.pathContext;
@@ -5996,7 +6021,7 @@ var MakerJs;
                         fixedPath = MakerJs.path.mirror(pathContext, false, true);
                     });
                     MakerJs.path.moveRelative(fixedPath, offset);
-                    fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1])), link.reversed, d);
+                    fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1])), link.reversed, d, accuracy);
                 }
             }
             if (chain.endless) {
@@ -6008,48 +6033,53 @@ var MakerJs;
         /**
          * @private
          */
-        function startSvgPathData(start, d) {
-            return ["M", MakerJs.round(start[0]), MakerJs.round(start[1])].concat(d);
+        function startSvgPathData(start, d, accuracy) {
+            return ["M", MakerJs.round(start[0], accuracy), MakerJs.round(start[1], accuracy)].concat(d);
         }
         /**
          * @private
          */
         var svgPathDataMap = {};
-        svgPathDataMap[MakerJs.pathType.Line] = function (line) {
-            return startSvgPathData(line.origin, MakerJs.point.rounded(line.end));
+        svgPathDataMap[MakerJs.pathType.Line] = function (line, accuracy) {
+            return startSvgPathData(line.origin, MakerJs.point.rounded(line.end, accuracy), accuracy);
         };
-        svgPathDataMap[MakerJs.pathType.Circle] = function (circle) {
-            return startSvgPathData(circle.origin, svgCircleData(circle.radius));
+        svgPathDataMap[MakerJs.pathType.Circle] = function (circle, accuracy) {
+            return startSvgPathData(circle.origin, svgCircleData(circle.radius, accuracy), accuracy);
         };
-        svgPathDataMap[MakerJs.pathType.Arc] = function (arc) {
+        svgPathDataMap[MakerJs.pathType.Arc] = function (arc, accuracy) {
             var arcPoints = MakerJs.point.fromArc(arc);
             if (MakerJs.measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-                return svgPathDataMap[MakerJs.pathType.Circle](arc);
+                return svgPathDataMap[MakerJs.pathType.Circle](arc, accuracy);
             }
             else {
-                var r = MakerJs.round(arc.radius);
                 var d = ['A'];
-                svgArcData(d, r, arcPoints[1], MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
-                return startSvgPathData(arcPoints[0], d);
+                svgArcData(d, arc.radius, arcPoints[1], accuracy, MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
+                return startSvgPathData(arcPoints[0], d, accuracy);
             }
         };
-        svgPathDataMap[MakerJs.pathType.BezierSeed] = function (seed) {
+        svgPathDataMap[MakerJs.pathType.BezierSeed] = function (seed, accuracy) {
             var d = [];
-            svgBezierData(d, seed);
-            return startSvgPathData(seed.origin, d);
+            svgBezierData(d, seed, accuracy);
+            return startSvgPathData(seed.origin, d, accuracy);
         };
         /**
-         * Convert a path to SVG path data.
+         * Export a path to SVG path data.
+         *
+         * @param pathToExport IPath to export.
+         * @param pathOffset IPoint relative offset of the path object.
+         * @param exportOffset IPoint relative offset point of the export.
+         * @param accuracy Optional accuracy of SVG path data.
+         * @returns String of SVG path data.
          */
-        function pathToSVGPathData(pathToExport, offset, offset2) {
+        function pathToSVGPathData(pathToExport, pathOffset, exportOffset, accuracy) {
             var fn = svgPathDataMap[pathToExport.type];
             if (fn) {
                 var fixedPath;
-                MakerJs.path.moveTemporary([pathToExport], [offset], function () {
+                MakerJs.path.moveTemporary([pathToExport], [pathOffset], function () {
                     fixedPath = MakerJs.path.mirror(pathToExport, false, true);
                 });
-                MakerJs.path.moveRelative(fixedPath, offset2);
-                var d = fn(fixedPath);
+                MakerJs.path.moveRelative(fixedPath, exportOffset);
+                var d = fn(fixedPath, accuracy);
                 return d.join(' ');
             }
             return '';
@@ -6088,7 +6118,7 @@ var MakerJs;
         /**
          * @private
          */
-        function getPathDataByLayer(modelToExport, offset, options) {
+        function getPathDataByLayer(modelToExport, offset, options, accuracy) {
             var pathDataByLayer = {};
             var beziers = getBezierModelsWithPaths(modelToExport);
             var tempKey = 'tempPaths';
@@ -6107,13 +6137,13 @@ var MakerJs;
             });
             MakerJs.model.findChains(modelToExport, function (chains, loose, layer) {
                 function single(walkedPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, accuracy);
                     pathDataByLayer[layer].push(pathData);
                 }
                 pathDataByLayer[layer] = [];
                 chains.map(function (chain) {
                     if (chain.links.length > 1) {
-                        var pathData = chainToSVGPathData(chain, offset);
+                        var pathData = chainToSVGPathData(chain, offset, accuracy);
                         pathDataByLayer[layer].push(pathData);
                     }
                     else {
@@ -6138,15 +6168,16 @@ var MakerJs;
          * @param modelToExport Model to export.
          * @param byLayers Boolean flag (default true) to return a map of path data by layer.
          * @param origin Optional reference origin.
+         * @param accuracy Optional accuracy of SVG decimals.
          * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
          */
-        function toSVGPathData(modelToExport, byLayers, origin) {
+        function toSVGPathData(modelToExport, byLayers, origin, accuracy) {
             if (byLayers === void 0) { byLayers = true; }
             var size = MakerJs.measure.modelExtents(modelToExport);
             if (!origin) {
                 origin = [-size.low[0], size.high[1]];
             }
-            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, { byLayers: byLayers });
+            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, { byLayers: byLayers }, accuracy);
             var pathDataStringByLayer = {};
             for (var layer in pathDataArrayByLayer) {
                 pathDataStringByLayer[layer] = pathDataArrayByLayer[layer].join(' ');
@@ -6181,10 +6212,22 @@ var MakerJs;
                     elements.push(value);
                 }
             }
+            function addSvgAttrs(attrs, elOpts) {
+                MakerJs.extendObject(attrs, {
+                    "stroke": elOpts.stroke,
+                    "stroke-width": elOpts.strokeWidth,
+                    "fill": elOpts.fill
+                });
+            }
             function createElement(tagname, attrs, layer, innerText, forcePush) {
                 if (innerText === void 0) { innerText = null; }
                 if (forcePush === void 0) { forcePush = false; }
-                attrs['vector-effect'] = 'non-scaling-stroke';
+                if (opts.layerOptions && opts.layerOptions[layer]) {
+                    addSvgAttrs(attrs, opts.layerOptions[layer]);
+                }
+                if (!opts.scalingStroke) {
+                    attrs['vector-effect'] = 'non-scaling-stroke';
+                }
                 var tag = new exporter.XmlTag(tagname, attrs);
                 if (innerText) {
                     tag.innerText = innerText;
@@ -6203,12 +6246,15 @@ var MakerJs;
             }
             //fixup options
             var opts = {
+                accuracy: .001,
                 annotate: false,
                 origin: null,
                 scale: 1,
                 stroke: "#000",
+                strokeLineCap: "round",
                 strokeWidth: '0.25mm',
                 fill: "none",
+                fillRule: "evenodd",
                 fontSize: '9pt',
                 useSvgPathOnly: true,
                 viewBox: true
@@ -6259,8 +6305,8 @@ var MakerJs;
             //begin svg output
             var svgAttrs;
             if (size && opts.viewBox) {
-                var width = MakerJs.round(size.high[0] - size.low[0]) * opts.scale;
-                var height = MakerJs.round(size.high[1] - size.low[1]) * opts.scale;
+                var width = MakerJs.round(size.width * opts.scale, opts.accuracy);
+                var height = MakerJs.round(size.height * opts.scale, opts.accuracy);
                 var viewBox = [0, 0, width, height];
                 var unit = useSvgUnit ? useSvgUnit.svgUnitType : '';
                 svgAttrs = {
@@ -6271,18 +6317,17 @@ var MakerJs;
             }
             var svgTag = new exporter.XmlTag('svg', MakerJs.extendObject(svgAttrs || {}, opts.svgAttrs));
             append(svgTag.getOpeningTag(false));
-            var svgGroup = new exporter.XmlTag('g', {
+            var groupAttrs = {
                 id: 'svgGroup',
-                stroke: opts.stroke,
-                "stroke-width": opts.strokeWidth,
-                "stroke-linecap": "round",
-                "fill": opts.fill,
-                "fill-rule": "evenodd",
+                "stroke-linecap": opts.strokeLineCap,
+                "fill-rule": opts.fillRule,
                 "font-size": opts.fontSize
-            });
+            };
+            addSvgAttrs(groupAttrs, opts);
+            var svgGroup = new exporter.XmlTag('g', groupAttrs);
             append(svgGroup.getOpeningTag(false));
             if (opts.useSvgPathOnly) {
-                var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true });
+                var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true }, opts.accuracy);
                 for (var layer in pathDataByLayer) {
                     var pathData = pathDataByLayer[layer].join(' ');
                     var attrs = { "d": pathData };
@@ -6296,21 +6341,21 @@ var MakerJs;
                 function drawText(id, textPoint) {
                     createElement("text", {
                         "id": id + "_text",
-                        "x": textPoint[0],
-                        "y": textPoint[1]
+                        "x": MakerJs.round(textPoint[0], opts.accuracy),
+                        "y": MakerJs.round(textPoint[1], opts.accuracy)
                     }, null, id);
                 }
                 function drawPath(id, x, y, d, layer, textPoint) {
                     createElement("path", {
                         "id": id,
-                        "d": ["M", MakerJs.round(x), MakerJs.round(y)].concat(d).join(" ")
+                        "d": ["M", MakerJs.round(x, opts.accuracy), MakerJs.round(y, opts.accuracy)].concat(d).join(" ")
                     }, layer);
                     if (opts.annotate) {
                         drawText(id, textPoint);
                     }
                 }
                 function circleInPaths(id, center, radius, layer) {
-                    var d = svgCircleData(radius);
+                    var d = svgCircleData(radius, opts.accuracy);
                     drawPath(id, center[0], center[1], d, layer, center);
                 }
                 var map = {};
@@ -6319,10 +6364,10 @@ var MakerJs;
                     var end = line.end;
                     createElement("line", {
                         "id": id,
-                        "x1": MakerJs.round(start[0]),
-                        "y1": MakerJs.round(start[1]),
-                        "x2": MakerJs.round(end[0]),
-                        "y2": MakerJs.round(end[1])
+                        "x1": MakerJs.round(start[0], opts.accuracy),
+                        "y1": MakerJs.round(start[1], opts.accuracy),
+                        "x2": MakerJs.round(end[0], opts.accuracy),
+                        "y2": MakerJs.round(end[1], opts.accuracy)
                     }, layer);
                     if (opts.annotate) {
                         drawText(id, MakerJs.point.middle(line));
@@ -6333,8 +6378,8 @@ var MakerJs;
                     createElement("circle", {
                         "id": id,
                         "r": circle.radius,
-                        "cx": MakerJs.round(center[0]),
-                        "cy": MakerJs.round(center[1])
+                        "cx": MakerJs.round(center[0], opts.accuracy),
+                        "cy": MakerJs.round(center[1], opts.accuracy)
                     }, layer);
                     if (opts.annotate) {
                         drawText(id, center);
@@ -6347,13 +6392,13 @@ var MakerJs;
                     }
                     else {
                         var d = ['A'];
-                        svgArcData(d, arc.radius, arcPoints[1], MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
+                        svgArcData(d, arc.radius, arcPoints[1], opts.accuracy, MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
                         drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, MakerJs.point.middle(arc));
                     }
                 };
                 map[MakerJs.pathType.BezierSeed] = function (id, seed, origin, layer) {
                     var d = [];
-                    svgBezierData(d, seed);
+                    svgBezierData(d, seed, opts.accuracy);
                     drawPath(id, seed.origin[0], seed.origin[1], d, layer, MakerJs.point.middle(seed));
                 };
                 function beginModel(id, modelContext) {
@@ -6384,12 +6429,12 @@ var MakerJs;
         /**
          * @private
          */
-        function svgCircleData(radius) {
-            var r = MakerJs.round(radius);
+        function svgCircleData(radius, accuracy) {
+            var r = MakerJs.round(radius, accuracy);
             var d = ['m', -r, 0];
             function halfCircle(sign) {
                 d.push('a');
-                svgArcData(d, r, [2 * r * sign, 0]);
+                svgArcData(d, r, [2 * r * sign, 0], accuracy);
             }
             halfCircle(1);
             halfCircle(-1);
@@ -6399,28 +6444,28 @@ var MakerJs;
         /**
          * @private
          */
-        function svgBezierData(d, seed, reversed) {
+        function svgBezierData(d, seed, accuracy, reversed) {
             if (seed.controls.length === 1) {
-                d.push('Q', MakerJs.round(seed.controls[0][0]), MakerJs.round(seed.controls[0][1]));
+                d.push('Q', MakerJs.round(seed.controls[0][0], accuracy), MakerJs.round(seed.controls[0][1], accuracy));
             }
             else {
                 var controls = reversed ? [seed.controls[1], seed.controls[0]] : seed.controls;
-                d.push('C', MakerJs.round(controls[0][0]), MakerJs.round(controls[0][1]), MakerJs.round(controls[1][0]), MakerJs.round(controls[1][1]));
+                d.push('C', MakerJs.round(controls[0][0], accuracy), MakerJs.round(controls[0][1], accuracy), MakerJs.round(controls[1][0], accuracy), MakerJs.round(controls[1][1], accuracy));
             }
             var final = reversed ? seed.origin : seed.end;
-            d.push(MakerJs.round(final[0]), MakerJs.round(final[1]));
+            d.push(MakerJs.round(final[0], accuracy), MakerJs.round(final[1], accuracy));
         }
         /**
          * @private
          */
-        function svgArcData(d, radius, endPoint, largeArc, decreasing) {
-            var r = MakerJs.round(radius);
+        function svgArcData(d, radius, endPoint, accuracy, largeArc, decreasing) {
+            var r = MakerJs.round(radius, accuracy);
             var end = endPoint;
             d.push(r, r);
             d.push(0); //0 = x-axis rotation
             d.push(largeArc ? 1 : 0); //large arc=1, small arc=0
             d.push(decreasing ? 0 : 1); //sweep-flag 0=decreasing, 1=increasing 
-            d.push(MakerJs.round(end[0]), MakerJs.round(end[1]));
+            d.push(MakerJs.round(end[0], accuracy), MakerJs.round(end[1], accuracy));
         }
         /**
          * Map of MakerJs unit system to SVG unit system
@@ -6440,6 +6485,14 @@ var MakerJs;
 (function (MakerJs) {
     var importer;
     (function (importer) {
+        /**
+         * Create a model from SVG path data.
+         *
+         * @param pathData SVG path data.
+         * @param options ISVGImportOptions object.
+         * @param options.bezierAccuracy Optional accuracy of Bezier curves.
+         * @returns An IModel object.
+         */
         function fromSVGPathData(pathData, options) {
             if (options === void 0) { options = {}; }
             var result = {};
@@ -8445,6 +8498,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.50";
+MakerJs.version = "0.9.51";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);

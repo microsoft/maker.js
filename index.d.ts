@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.50
+// Type definitions for Maker.js 0.9.51
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -1732,7 +1732,11 @@ declare namespace MakerJs.exporter {
      */
     interface IExportOptions {
         /**
-         * Unit system to embed in exported file.
+         * Optional exemplar of number of decimal places.
+         */
+        accuracy?: number;
+        /**
+         * Optional unit system to embed in exported file.
          */
         units?: string;
     }
@@ -2121,21 +2125,33 @@ declare namespace MakerJs.exporter {
     }
     /**
      * Convert a chain to SVG path data.
+     *
+     * @param chain Chain to convert.
+     * @param offset IPoint relative offset point.
+     * @param accuracy Optional accuracy of SVG path data.
+     * @returns String of SVG path data.
      */
-    function chainToSVGPathData(chain: IChain, offset: IPoint): string;
+    function chainToSVGPathData(chain: IChain, offset: IPoint, accuracy?: number): string;
     /**
-     * Convert a path to SVG path data.
+     * Export a path to SVG path data.
+     *
+     * @param pathToExport IPath to export.
+     * @param pathOffset IPoint relative offset of the path object.
+     * @param exportOffset IPoint relative offset point of the export.
+     * @param accuracy Optional accuracy of SVG path data.
+     * @returns String of SVG path data.
      */
-    function pathToSVGPathData(pathToExport: IPath, offset: IPoint, offset2: IPoint): string;
+    function pathToSVGPathData(pathToExport: IPath, pathOffset: IPoint, exportOffset: IPoint, accuracy?: number): string;
     /**
      * Convert a model to SVG path data.
      *
      * @param modelToExport Model to export.
      * @param byLayers Boolean flag (default true) to return a map of path data by layer.
      * @param origin Optional reference origin.
+     * @param accuracy Optional accuracy of SVG decimals.
      * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
      */
-    function toSVGPathData(modelToExport: IModel, byLayers?: boolean, origin?: IPoint): IPathDataByLayerMap | string;
+    function toSVGPathData(modelToExport: IModel, byLayers?: boolean, origin?: IPoint, accuracy?: number): IPathDataByLayerMap | string;
     function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
@@ -2155,27 +2171,32 @@ declare namespace MakerJs.exporter {
     /**
      * SVG rendering options.
      */
-    interface ISVGRenderOptions extends IExportOptions {
-        /**
-         * Optional attributes to add to the root svg tag.
-         */
-        svgAttrs?: IXmlTagAttrs;
+    interface ISVGElementRenderOptions {
         /**
          * SVG fill color.
          */
         fill?: string;
         /**
-         * SVG font size and font size units.
+         * SVG color of the rendered paths.
          */
-        fontSize?: string;
+        stroke?: string;
         /**
          * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
          */
         strokeWidth?: string;
+    }
+    /**
+     * SVG rendering options.
+     */
+    interface ISVGRenderOptions extends IExportOptions, ISVGElementRenderOptions {
         /**
-         * SVG color of the rendered paths.
+         * Optional attributes to add to the root svg tag.
          */
-        stroke?: string;
+        svgAttrs?: IXmlTagAttrs;
+        /**
+         * SVG font size and font size units.
+         */
+        fontSize?: string;
         /**
          * Scale of the SVG rendering.
          */
@@ -2196,6 +2217,24 @@ declare namespace MakerJs.exporter {
          * Flag to use SVG viewbox.
          */
         viewBox?: boolean;
+        /**
+         * SVG fill rule.
+         */
+        fillRule?: string;
+        /**
+         * SVG stroke linecap.
+         */
+        strokeLineCap?: string;
+        /**
+         * SVG options per layer.
+         */
+        layerOptions?: {
+            [layerId: string]: ISVGElementRenderOptions;
+        };
+        /**
+         * Flag to remove the "vector-effect: non-scaling-stroke" attribute.
+         */
+        scalingStroke?: boolean;
     }
 }
 declare namespace MakerJs.importer {
@@ -2208,6 +2247,14 @@ declare namespace MakerJs.importer {
          */
         bezierAccuracy?: number;
     }
+    /**
+     * Create a model from SVG path data.
+     *
+     * @param pathData SVG path data.
+     * @param options ISVGImportOptions object.
+     * @param options.bezierAccuracy Optional accuracy of Bezier curves.
+     * @returns An IModel object.
+     */
     function fromSVGPathData(pathData: string, options?: ISVGImportOptions): IModel;
 }
 declare namespace MakerJs.layout {
