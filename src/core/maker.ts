@@ -32,7 +32,7 @@ namespace MakerJs {
             var value = eval(name);
             return value;
         }
-        catch (e) {}
+        catch (e) { }
         return;
     }
 
@@ -91,8 +91,30 @@ namespace MakerJs {
      * @returns Rounded number.
      */
     export function round(n: number, accuracy = .0000001) {
-        var places = 1 / accuracy;
-        return Math.round(n * places) / places;
+        var exp = 1 - String(1 / accuracy).length;
+
+        //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
+        
+        // If the exp is undefined or zero...
+        if (typeof exp === 'undefined' || +exp === 0) {
+            return Math.round(n);
+        }
+        n = +n;
+        exp = +exp;
+        // If the value is not a number or the exp is not an integer...
+        if (isNaN(n) || !(typeof exp === 'number' && exp % 1 === 0)) {
+            return NaN;
+        }
+        // If the value is negative...
+        if (n < 0) {
+            return -round(-n, accuracy);
+        }
+        // Shift
+        var a = n.toString().split('e');
+        n = Math.round(+(a[0] + 'e' + (a[1] ? (+a[1] - exp) : -exp)));
+        // Shift back
+        a = n.toString().split('e');
+        return +(a[0] + 'e' + (a[1] ? (+a[1] + exp) : exp));
     }
 
     /**
