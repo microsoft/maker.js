@@ -4,8 +4,14 @@ namespace MakerJs.exporter {
      * @private
      */
     export interface IExportOptions {
+
         /**
-         * Unit system to embed in exported file.
+         * Optional exemplar of number of decimal places.
+         */
+        accuracy?: number;
+
+        /**
+         * Optional unit system to embed in exported file.
          */
         units?: string;
     }
