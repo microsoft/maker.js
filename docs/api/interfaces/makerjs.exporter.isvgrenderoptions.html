@@ -15,6 +15,9 @@ title: Api - ISVGRenderOptions Interface
 	<ul class="tsd-hierarchy">
 		<li>
 			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
+		</li>
+		<li>
+			<a href="makerjs.exporter.isvgelementrenderoptions.html" class="tsd-signature-type">ISVGElementRenderOptions</a>
 			<ul class="tsd-hierarchy">
 				<li>
 					<span class="target">ISVGRenderOptions</span>
@@ -30,13 +33,18 @@ title: Api - ISVGRenderOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.isvgrenderoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#annotate" class="tsd-kind-icon">annotate</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#fill" class="tsd-kind-icon">fill</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.isvgrenderoptions.html#fill" class="tsd-kind-icon">fill</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#fillrule" class="tsd-kind-icon">fill<wbr>Rule</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#fontsize" class="tsd-kind-icon">font<wbr>Size</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#layeroptions" class="tsd-kind-icon">layer<wbr>Options</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#origin" class="tsd-kind-icon">origin</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#scale" class="tsd-kind-icon">scale</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#stroke" class="tsd-kind-icon">stroke</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#strokewidth" class="tsd-kind-icon">stroke<wbr>Width</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#scalingstroke" class="tsd-kind-icon">scaling<wbr>Stroke</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.isvgrenderoptions.html#stroke" class="tsd-kind-icon">stroke</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#strokelinecap" class="tsd-kind-icon">stroke<wbr>Line<wbr>Cap</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.isvgrenderoptions.html#strokewidth" class="tsd-kind-icon">stroke<wbr>Width</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#svgattrs" class="tsd-kind-icon">svg<wbr>Attrs</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.isvgrenderoptions.html#units" class="tsd-kind-icon">units</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgrenderoptions.html#usesvgpathonly" class="tsd-kind-icon">use<wbr>Svg<wbr>Path<wbr>Only</a></li>
@@ -48,13 +56,29 @@ title: Api - ISVGRenderOptions Interface
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="accuracy" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> accuracy</h3>
+		<div class="tsd-signature tsd-kind-icon">accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#accuracy">accuracy</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/exporter.ts#L11">core/exporter.ts:11</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional exemplar of number of decimal places.</p>
+			</div>
+		</div>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 		<a name="annotate" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> annotate</h3>
 		<div class="tsd-signature tsd-kind-icon">annotate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L725">core/svg.ts:725</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L762">core/svg.ts:762</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -63,13 +87,14 @@ title: Api - ISVGRenderOptions Interface
 			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="fill" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> fill</h3>
 		<div class="tsd-signature tsd-kind-icon">fill<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.isvgelementrenderoptions.html">ISVGElementRenderOptions</a>.<a href="makerjs.exporter.isvgelementrenderoptions.html#fill">fill</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L700">core/svg.ts:700</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L726">core/svg.ts:726</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -79,12 +104,27 @@ title: Api - ISVGRenderOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="fillrule" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> fill<wbr>Rule</h3>
+		<div class="tsd-signature tsd-kind-icon">fill<wbr>Rule<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L782">core/svg.ts:782</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG fill rule.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 		<a name="fontsize" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> font<wbr>Size</h3>
 		<div class="tsd-signature tsd-kind-icon">font<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L705">core/svg.ts:705</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L752">core/svg.ts:752</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -94,12 +134,35 @@ title: Api - ISVGRenderOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="layeroptions" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> layer<wbr>Options</h3>
+		<div class="tsd-signature tsd-kind-icon">layer<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L792">core/svg.ts:792</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG options per layer.</p>
+			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>layerId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="makerjs.exporter.isvgelementrenderoptions.html" class="tsd-signature-type">ISVGElementRenderOptions</a></h5>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 		<a name="origin" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> origin</h3>
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L730">core/svg.ts:730</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L767">core/svg.ts:767</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -114,7 +177,7 @@ title: Api - ISVGRenderOptions Interface
 		<div class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L720">core/svg.ts:720</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L757">core/svg.ts:757</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -124,12 +187,28 @@ title: Api - ISVGRenderOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="scalingstroke" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> scaling<wbr>Stroke</h3>
+		<div class="tsd-signature tsd-kind-icon">scaling<wbr>Stroke<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L797">core/svg.ts:797</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Flag to remove the &quot;vector-effect: non-scaling-stroke&quot; attribute.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="stroke" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> stroke</h3>
 		<div class="tsd-signature tsd-kind-icon">stroke<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.isvgelementrenderoptions.html">ISVGElementRenderOptions</a>.<a href="makerjs.exporter.isvgelementrenderoptions.html#stroke">stroke</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L715">core/svg.ts:715</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L731">core/svg.ts:731</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -139,12 +218,28 @@ title: Api - ISVGRenderOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="strokelinecap" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> stroke<wbr>Line<wbr>Cap</h3>
+		<div class="tsd-signature tsd-kind-icon">stroke<wbr>Line<wbr>Cap<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L787">core/svg.ts:787</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG stroke linecap.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="strokewidth" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> stroke<wbr>Width</h3>
 		<div class="tsd-signature tsd-kind-icon">stroke<wbr>Width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.isvgelementrenderoptions.html">ISVGElementRenderOptions</a>.<a href="makerjs.exporter.isvgelementrenderoptions.html#strokewidth">strokeWidth</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L710">core/svg.ts:710</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L736">core/svg.ts:736</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -159,7 +254,7 @@ title: Api - ISVGRenderOptions Interface
 		<div class="tsd-signature tsd-kind-icon">svg<wbr>Attrs<span class="tsd-signature-symbol">:</span> <a href="makerjs.exporter.ixmltagattrs.html" class="tsd-signature-type">IXmlTagAttrs</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L695">core/svg.ts:695</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L747">core/svg.ts:747</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -175,12 +270,12 @@ title: Api - ISVGRenderOptions Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#units">units</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/exporter.ts#L10">core/exporter.ts:10</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/exporter.ts#L16">core/exporter.ts:16</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Unit system to embed in exported file.</p>
+				<p>Optional unit system to embed in exported file.</p>
 			</div>
 		</div>
 	</section>
@@ -190,7 +285,7 @@ title: Api - ISVGRenderOptions Interface
 		<div class="tsd-signature tsd-kind-icon">use<wbr>Svg<wbr>Path<wbr>Only<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L735">core/svg.ts:735</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L772">core/svg.ts:772</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -205,7 +300,7 @@ title: Api - ISVGRenderOptions Interface
 		<div class="tsd-signature tsd-kind-icon">view<wbr>Box<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/fef23d4/src/core/svg.ts#L740">core/svg.ts:740</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L777">core/svg.ts:777</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">

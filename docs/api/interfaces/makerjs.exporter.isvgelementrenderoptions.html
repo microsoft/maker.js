@@ -1,20 +1,26 @@
 ---
 layout: posts
-title: Api - Slot Class
+title: Api - ISVGElementRenderOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-comment">
+	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>SVG rendering options.</p>
+		</div>
+	</div>
+</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">Slot</span>
+			<span class="target">ISVGElementRenderOptions</span>
+			<ul class="tsd-hierarchy">
+				<li>
+					<a href="makerjs.exporter.isvgrenderoptions.html" class="tsd-signature-type">ISVGRenderOptions</a>
+				</li>
+			</ul>
 		</li>
-	</ul>
-</section>
-<section class="tsd-panel">
-	<h3>Implements</h3>
-	<ul class="tsd-hierarchy">
-		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -22,88 +28,62 @@ title: Api - Slot Class
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
-				<h3>Constructors</h3>
-				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.slot.html#constructor" class="tsd-kind-icon">constructor</a></li>
-				</ul>
-			</section>
-			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.slot.html#models" class="tsd-kind-icon">models</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.slot.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.slot.html#paths" class="tsd-kind-icon">paths</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgelementrenderoptions.html#fill" class="tsd-kind-icon">fill</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgelementrenderoptions.html#stroke" class="tsd-kind-icon">stroke</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgelementrenderoptions.html#strokewidth" class="tsd-kind-icon">stroke<wbr>Width</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
-	<h2>Constructors</h2>
-	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-		<a name="constructor" class="tsd-anchor"></a>
-		<h3>constructor</h3>
-		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Slot<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, endPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, isolateCaps<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.slot.html" class="tsd-signature-type">Slot</a></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/models/Slot.ts#L7">models/Slot.ts:7</a></li>
-					</ul>
-				</aside>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-					</li>
-					<li>
-						<h5>endPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-					</li>
-					<li>
-						<h5>radius: <span class="tsd-signature-type">number</span></h5>
-					</li>
-					<li>
-						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> isolateCaps: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.slot.html" class="tsd-signature-type">Slot</a></h4>
-			</li>
-		</ul>
-	</section>
-</section>
-<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="models" class="tsd-anchor"></a>
-		<h3>models</h3>
-		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="fill" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> fill</h3>
+		<div class="tsd-signature tsd-kind-icon">fill<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/models/Slot.ts#L7">models/Slot.ts:7</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L726">core/svg.ts:726</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG fill color.</p>
+			</div>
+		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="origin" class="tsd-anchor"></a>
-		<h3>origin</h3>
-		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="stroke" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> stroke</h3>
+		<div class="tsd-signature tsd-kind-icon">stroke<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/models/Slot.ts#L6">models/Slot.ts:6</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L731">core/svg.ts:731</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG color of the rendered paths.</p>
+			</div>
+		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="paths" class="tsd-anchor"></a>
-		<h3>paths</h3>
-		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="strokewidth" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> stroke<wbr>Width</h3>
+		<div class="tsd-signature tsd-kind-icon">stroke<wbr>Width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/models/Slot.ts#L5">models/Slot.ts:5</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4e52c1a/src/core/svg.ts#L736">core/svg.ts:736</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.</p>
+			</div>
+		</div>
 	</section>
 </section>
 </div>
