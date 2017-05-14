@@ -90,11 +90,11 @@ namespace MakerJs {
      * @param accuracy Optional exemplar of number of decimal places.
      * @returns Rounded number.
      */
-    export function round(n: number, accuracy = .0000001) {
+    export function round(n: number, accuracy = .0000001): number {
         var exp = 1 - String(1 / accuracy).length;
 
         //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
-        
+
         // If the exp is undefined or zero...
         if (typeof exp === 'undefined' || +exp === 0) {
             return Math.round(n);
