@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.51
+ *   version: 0.9.52
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2076,6 +2076,7 @@ var MakerJs;
         }
         model.convertUnits = convertUnits;
         /**
+         * DEPRECATED - use model.walk instead
          * Recursively walk through all paths for a given model.
          *
          * @param modelContext The model to walk.
@@ -3831,91 +3832,6 @@ var MakerJs;
             }
         }
         exporter.tryGetModelUnits = tryGetModelUnits;
-        /**
-         * Class to traverse an item 's models or paths and ultimately render each path.
-         * @private
-         */
-        var Exporter = (function () {
-            /**
-             * @param map Object containing properties: property name is the type of path, e.g. "line", "circle"; property value
-             * is a function to render a path. Function parameters are path and point.
-             * @param fixPoint Optional function to modify a point prior to export. Function parameter is a point; function must return a point.
-             * @param fixPath Optional function to modify a path prior to output. Function parameters are path and offset point; function must return a path.
-             */
-            function Exporter(map, fixPoint, fixPath, beginModel, endModel) {
-                this.map = map;
-                this.fixPoint = fixPoint;
-                this.fixPath = fixPath;
-                this.beginModel = beginModel;
-                this.endModel = endModel;
-            }
-            /**
-             * Export a path.
-             *
-             * @param pathToExport The path to export.
-             * @param offset The offset position of the path.
-             */
-            Exporter.prototype.exportPath = function (id, pathToExport, offset, layer) {
-                if (pathToExport) {
-                    var fn = this.map[pathToExport.type];
-                    if (fn) {
-                        fn(id, this.fixPath ? this.fixPath(pathToExport, offset) : pathToExport, offset, layer);
-                    }
-                }
-            };
-            /**
-             * Export a model.
-             *
-             * @param modelToExport The model to export.
-             * @param offset The offset position of the model.
-             */
-            Exporter.prototype.exportModel = function (modelId, modelToExport, offset) {
-                if (this.beginModel) {
-                    this.beginModel(modelId, modelToExport);
-                }
-                var newOffset = MakerJs.point.add((this.fixPoint ? this.fixPoint(modelToExport.origin) : modelToExport.origin), offset);
-                if (modelToExport.paths) {
-                    for (var id in modelToExport.paths) {
-                        var currPath = modelToExport.paths[id];
-                        if (!currPath)
-                            continue;
-                        this.exportPath(id, currPath, newOffset, currPath.layer || modelToExport.layer);
-                    }
-                }
-                if (modelToExport.models) {
-                    for (var id in modelToExport.models) {
-                        var currModel = modelToExport.models[id];
-                        if (!currModel)
-                            continue;
-                        this.exportModel(id, currModel, newOffset);
-                    }
-                }
-                if (this.endModel) {
-                    this.endModel(modelToExport);
-                }
-            };
-            /**
-             * Export an object.
-             *
-             * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
-             * @param offset The offset position of the object.
-             */
-            Exporter.prototype.exportItem = function (itemId, itemToExport, origin) {
-                if (MakerJs.isModel(itemToExport)) {
-                    this.exportModel(itemId, itemToExport, origin);
-                }
-                else if (MakerJs.isPath(itemToExport)) {
-                    this.exportPath(itemId, itemToExport, origin, null);
-                }
-                else {
-                    for (var id in itemToExport) {
-                        this.exportItem(id, itemToExport[id], origin);
-                    }
-                }
-            };
-            return Exporter;
-        }());
-        exporter.Exporter = Exporter;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3952,7 +3868,7 @@ var MakerJs;
 var MakerJs;
 (function (MakerJs) {
     var exporter;
-    (function (exporter_1) {
+    (function (exporter) {
         /**
          * Renders an item in AutoDesk DFX file format.
          *
@@ -3981,41 +3897,41 @@ var MakerJs;
                 return pathContext.layer || layer || 0;
             }
             var map = {};
-            map[MakerJs.pathType.Line] = function (id, line, origin, layer) {
+            map[MakerJs.pathType.Line] = function (id, line, offset, layer) {
                 append("0");
                 append("LINE");
                 append("8");
                 append(defaultLayer(line, layer));
                 append("10");
-                append(line.origin[0] + origin[0]);
+                append(line.origin[0] + offset[0]);
                 append("20");
-                append(line.origin[1] + origin[1]);
+                append(line.origin[1] + offset[1]);
                 append("11");
-                append(line.end[0] + origin[0]);
+                append(line.end[0] + offset[0]);
                 append("21");
-                append(line.end[1] + origin[1]);
+                append(line.end[1] + offset[1]);
             };
-            map[MakerJs.pathType.Circle] = function (id, circle, origin, layer) {
+            map[MakerJs.pathType.Circle] = function (id, circle, offset, layer) {
                 append("0");
                 append("CIRCLE");
                 append("8");
                 append(defaultLayer(circle, layer));
                 append("10");
-                append(circle.origin[0] + origin[0]);
+                append(circle.origin[0] + offset[0]);
                 append("20");
-                append(circle.origin[1] + origin[1]);
+                append(circle.origin[1] + offset[1]);
                 append("40");
                 append(circle.radius);
             };
-            map[MakerJs.pathType.Arc] = function (id, arc, origin, layer) {
+            map[MakerJs.pathType.Arc] = function (id, arc, offset, layer) {
                 append("0");
                 append("ARC");
                 append("8");
                 append(defaultLayer(arc, layer));
                 append("10");
-                append(arc.origin[0] + origin[0]);
+                append(arc.origin[0] + offset[0]);
                 append("20");
-                append(arc.origin[1] + origin[1]);
+                append(arc.origin[1] + offset[1]);
                 append("40");
                 append(arc.radius);
                 append("50");
@@ -4044,12 +3960,19 @@ var MakerJs;
             function entities() {
                 append("2");
                 append("ENTITIES");
-                var exporter = new exporter_1.Exporter(map);
-                exporter.exportItem('entities', itemToExport, MakerJs.point.zero());
+                var walkOptions = {
+                    onPath: function (walkedPath) {
+                        var fn = map[walkedPath.pathContext.type];
+                        if (fn) {
+                            fn(walkedPath.pathId, walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
+                        }
+                    }
+                };
+                MakerJs.model.walk(modelToExport, walkOptions);
             }
             //fixup options
             if (!opts.units) {
-                var units = exporter_1.tryGetModelUnits(itemToExport);
+                var units = exporter.tryGetModelUnits(itemToExport);
                 if (units) {
                     opts.units = units;
                 }
@@ -4065,7 +3988,7 @@ var MakerJs;
             append("EOF");
             return dxf.join('\n');
         }
-        exporter_1.toDXF = toDXF;
+        exporter.toDXF = toDXF;
         /**
          * @private
          */
@@ -6216,7 +6139,8 @@ var MakerJs;
                 MakerJs.extendObject(attrs, {
                     "stroke": elOpts.stroke,
                     "stroke-width": elOpts.strokeWidth,
-                    "fill": elOpts.fill
+                    "fill": elOpts.fill,
+                    "style": elOpts.cssStyle
                 });
             }
             function createElement(tagname, attrs, layer, innerText, forcePush) {
@@ -6409,11 +6333,31 @@ var MakerJs;
                     append(modelGroup.getClosingTag(), modelContext.layer);
                 }
                 var modelGroup = new exporter.XmlTag('g');
-                var exp = new exporter.Exporter(map, fixPoint, fixPath, beginModel, endModel);
-                exp.exportItem('0', itemToExport, opts.origin);
+                var walkOptions = {
+                    beforeChildWalk: function (walkedModel) {
+                        beginModel(walkedModel.childId, walkedModel.childModel);
+                        return true;
+                    },
+                    onPath: function (walkedPath) {
+                        var fn = map[walkedPath.pathContext.type];
+                        if (fn) {
+                            var offset = MakerJs.point.add(fixPoint(walkedPath.offset), opts.origin);
+                            fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer);
+                        }
+                    },
+                    afterChildWalk: function (walkedModel) {
+                        endModel(walkedModel.childModel);
+                    }
+                };
+                beginModel('0', modelToExport);
+                MakerJs.model.walk(modelToExport, walkOptions);
                 //export layers as groups
                 for (var layer in layers) {
                     var layerGroup = new exporter.XmlTag('g', { id: layer });
+                    //layerOptions
+                    if (opts.layerOptions && opts.layerOptions[layer]) {
+                        addSvgAttrs(layerGroup.attrs, opts.layerOptions[layer]);
+                    }
                     for (var i = 0; i < layers[layer].length; i++) {
                         layerGroup.innerText += layers[layer][i];
                     }
@@ -8498,6 +8442,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.51";
+MakerJs.version = "0.9.52";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);

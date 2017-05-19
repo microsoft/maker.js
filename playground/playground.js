@@ -1104,7 +1104,8 @@ var MakerJsPlayground;
             var renderModel = {
                 models: {
                     ROOT: processed.model
-                }
+                },
+                exporterOptions: processed.model.exporterOptions
             };
             var size = getModelNaturalSize();
             var multiplier = 10;
