@@ -38,45 +38,45 @@ namespace MakerJs.exporter {
             return pathContext.layer || layer || 0;
         }
 
-        var map: IPathOriginFunctionMap = {};
+        var map: { [type: string]: (id: string, pathValue: IPath, offset: IPoint, layer: string) => void; } = {};
 
-        map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string) {
+        map[pathType.Line] = function (id: string, line: IPathLine, offset: IPoint, layer: string) {
             append("0");
             append("LINE");
             append("8");
             append(defaultLayer(line, layer));
             append("10");
-            append(line.origin[0] + origin[0]);
+            append(line.origin[0] + offset[0]);
             append("20");
-            append(line.origin[1] + origin[1]);
+            append(line.origin[1] + offset[1]);
             append("11");
-            append(line.end[0] + origin[0]);
+            append(line.end[0] + offset[0]);
             append("21");
-            append(line.end[1] + origin[1]);
+            append(line.end[1] + offset[1]);
         };
 
-        map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string) {
+        map[pathType.Circle] = function (id: string, circle: IPathCircle, offset: IPoint, layer: string) {
             append("0");
             append("CIRCLE");
             append("8");
             append(defaultLayer(circle, layer));
             append("10");
-            append(circle.origin[0] + origin[0]);
+            append(circle.origin[0] + offset[0]);
             append("20");
-            append(circle.origin[1] + origin[1]);
+            append(circle.origin[1] + offset[1]);
             append("40");
             append(circle.radius);
         };
 
-        map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string) {
+        map[pathType.Arc] = function (id: string, arc: IPathArc, offset: IPoint, layer: string) {
             append("0");
             append("ARC");
             append("8");
             append(defaultLayer(arc, layer));
             append("10");
-            append(arc.origin[0] + origin[0]);
+            append(arc.origin[0] + offset[0]);
             append("20");
-            append(arc.origin[1] + origin[1]);
+            append(arc.origin[1] + offset[1]);
             append("40");
             append(arc.radius);
             append("50");
@@ -114,8 +114,16 @@ namespace MakerJs.exporter {
             append("2");
             append("ENTITIES");
 
-            var exporter = new Exporter(map);
-            exporter.exportItem('entities', itemToExport, point.zero());
+            var walkOptions: IWalkOptions = {
+                onPath: (walkedPath: IWalkPath) => {
+                    var fn = map[walkedPath.pathContext.type];
+                    if (fn) {
+                        fn(walkedPath.pathId, walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
+                    }
+                }
+            };
+
+            model.walk(modelToExport, walkOptions);
         }
 
         //fixup options

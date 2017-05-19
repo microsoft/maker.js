@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.51
+// Type definitions for Maker.js 0.9.52
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -379,15 +379,6 @@ declare namespace MakerJs {
      * @param item The item to test.
      */
     function isPathArcInBezierCurve(item: any): boolean;
-    /**
-     * A map of functions which accept a path as a parameter.
-     */
-    interface IPathFunctionMap {
-        /**
-         * Key is the type of a path, value is a function which accepts a path object as its parameter.
-         */
-        [type: string]: (pathValue: IPath) => void;
-    }
     /**
      * A map of functions which accept a path and an origin point as parameters.
      */
@@ -1335,6 +1326,7 @@ declare namespace MakerJs.model {
      */
     function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel;
     /**
+     * DEPRECATED - use model.walk instead
      * Recursively walk through all paths for a given model.
      *
      * @param modelContext The model to walk.
@@ -1745,45 +1737,6 @@ declare namespace MakerJs.exporter {
      * @private
      */
     function tryGetModelUnits(itemToExport: any): string;
-    /**
-     * Class to traverse an item 's models or paths and ultimately render each path.
-     * @private
-     */
-    class Exporter {
-        private map;
-        private fixPoint;
-        private fixPath;
-        private beginModel;
-        private endModel;
-        /**
-         * @param map Object containing properties: property name is the type of path, e.g. "line", "circle"; property value
-         * is a function to render a path. Function parameters are path and point.
-         * @param fixPoint Optional function to modify a point prior to export. Function parameter is a point; function must return a point.
-         * @param fixPath Optional function to modify a path prior to output. Function parameters are path and offset point; function must return a path.
-         */
-        constructor(map: IPathOriginFunctionMap, fixPoint?: (pointToFix: IPoint) => IPoint, fixPath?: (pathToFix: IPath, origin: IPoint) => IPath, beginModel?: (id: string, modelContext: IModel) => void, endModel?: (modelContext: IModel) => void);
-        /**
-         * Export a path.
-         *
-         * @param pathToExport The path to export.
-         * @param offset The offset position of the path.
-         */
-        exportPath(id: string, pathToExport: IPath, offset: IPoint, layer: string): void;
-        /**
-         * Export a model.
-         *
-         * @param modelToExport The model to export.
-         * @param offset The offset position of the model.
-         */
-        exportModel(modelId: string, modelToExport: IModel, offset: IPoint): void;
-        /**
-         * Export an object.
-         *
-         * @param item The object to export. May be a path, an array of paths, a model, or an array of models.
-         * @param offset The offset position of the object.
-         */
-        exportItem(itemId: string, itemToExport: any, origin: IPoint): void;
-    }
 }
 declare namespace MakerJs.importer {
     /**
@@ -2184,6 +2137,10 @@ declare namespace MakerJs.exporter {
          * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
          */
         strokeWidth?: string;
+        /**
+         * CSS style to apply to elements.
+         */
+        cssStyle?: string;
     }
     /**
      * SVG rendering options.

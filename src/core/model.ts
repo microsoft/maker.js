@@ -321,6 +321,7 @@ namespace MakerJs.model {
     }
 
     /**
+     * DEPRECATED - use model.walk instead
      * Recursively walk through all paths for a given model.
      * 
      * @param modelContext The model to walk.

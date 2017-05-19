@@ -210,7 +210,7 @@ var MakerJsRequireIframe;
                 else {
                     //restore properties from the "this" keyword
                     model = {};
-                    var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units'];
+                    var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units', 'exporterOptions'];
                     var hasProps = false;
                     for (var i = 0; i < props.length; i++) {
                         var prop = props[i];
