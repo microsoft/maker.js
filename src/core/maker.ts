@@ -387,17 +387,6 @@ namespace MakerJs {
     }
 
     /**
-     * A map of functions which accept a path as a parameter.
-     */
-    export interface IPathFunctionMap {
-
-        /**
-         * Key is the type of a path, value is a function which accepts a path object as its parameter.
-         */
-        [type: string]: (pathValue: IPath) => void;
-    }
-
-    /**
      * A map of functions which accept a path and an origin point as parameters.
      */
     export interface IPathOriginFunctionMap {

@@ -349,7 +349,8 @@ namespace MakerJs.exporter {
             extendObject(attrs, {
                 "stroke": elOpts.stroke,
                 "stroke-width": elOpts.strokeWidth,
-                "fill": elOpts.fill
+                "fill": elOpts.fill,
+                "style": elOpts.cssStyle
             });
         }
 
@@ -614,13 +615,40 @@ namespace MakerJs.exporter {
             }
 
             var modelGroup = new XmlTag('g');
-            var exp = new Exporter(map, fixPoint, fixPath, beginModel, endModel);
-            exp.exportItem('0', itemToExport, opts.origin);
+
+            var walkOptions: IWalkOptions = {
+
+                beforeChildWalk: (walkedModel: IWalkModel) : boolean => {
+                    beginModel(walkedModel.childId, walkedModel.childModel);
+                    return true;
+                },
+
+                onPath: (walkedPath: IWalkPath) => {
+                    var fn = map[walkedPath.pathContext.type];
+                    if (fn) {
+                        var offset = point.add(fixPoint(walkedPath.offset), opts.origin);
+                        fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer);
+                    }
+                },
+
+                afterChildWalk: (walkedModel: IWalkModel) => {
+                    endModel(walkedModel.childModel);
+                }
+            };
+
+            beginModel('0', modelToExport);
+
+            model.walk(modelToExport, walkOptions);
 
             //export layers as groups
             for (var layer in layers) {
 
                 var layerGroup = new XmlTag('g', { id: layer });
+
+                //layerOptions
+                if (opts.layerOptions && opts.layerOptions[layer]) {
+                    addSvgAttrs(layerGroup.attrs, opts.layerOptions[layer]);
+                }
 
                 for (var i = 0; i < layers[layer].length; i++) {
                     layerGroup.innerText += layers[layer][i];
@@ -734,6 +762,11 @@ namespace MakerJs.exporter {
          * SVG stroke width of paths. This may have a unit type suffix, if not, the value will be in the same unit system as the units property.
          */
         strokeWidth?: string;
+
+        /**
+         * CSS style to apply to elements.
+         */
+        cssStyle?: string;
     }
 
     /**

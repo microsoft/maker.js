@@ -1445,7 +1445,8 @@
             var renderModel: MakerJs.IModel = {
                 models: {
                     ROOT: processed.model
-                }
+                },
+                exporterOptions: processed.model.exporterOptions
             };
 
             var size = getModelNaturalSize();
