@@ -51,6 +51,7 @@
     var view: HTMLDivElement;
     var viewSvgContainer: HTMLDivElement;
     var gridPattern: Element;
+    var crosshairs: Element;
     var gridPatternFill: Element;
     var paramsDiv: HTMLDivElement;
     var measurementDiv: HTMLDivElement;
@@ -730,7 +731,9 @@
 
     function panGrid() {
         var p = makerjs.point.add(viewPanOffset, viewOrigin);
+        var op = makerjs.point.add(p, margin);
         gridPattern.setAttribute('patternTransform', 'translate(' + p[0] + ',' + p[1] + ')');
+        crosshairs.setAttribute('transform', 'translate(' + op[0] + ',' + op[1] + ')');
     }
 
     function getUnits() {
@@ -1442,25 +1445,10 @@
                 useSvgPathOnly: false
             };
 
-            var renderModel: MakerJs.IModel = {
-                models: {
-                    ROOT: processed.model
-                },
-                exporterOptions: processed.model.exporterOptions
-            };
-
-            var size = getModelNaturalSize();
-            var multiplier = 10;
-
             panGrid();
             zoomGrid();
 
-            renderModel.paths = {
-                'crosshairs-vertical': new makerjs.paths.Line([0, size[1] * multiplier], [0, -size[1] * multiplier]),
-                'crosshairs-horizontal': new makerjs.paths.Line([size[0] * multiplier, 0], [- size[0] * multiplier, 0])
-            };
-
-            html += makerjs.exporter.toSVG(renderModel, renderOptions);
+            html += makerjs.exporter.toSVG(processed.model, renderOptions);
         }
 
         viewSvgContainer.innerHTML = html;
@@ -1651,6 +1639,7 @@
         checkNotes = document.getElementById('check-notes') as HTMLInputElement;
         viewSvgContainer = document.getElementById('view-svg-container') as HTMLDivElement;
         gridPattern = document.getElementById('gridPattern');
+        crosshairs = document.getElementById('crosshairs');
         gridPatternFill = document.getElementById('gridPatternFill');
 
         margin = [viewSvgContainer.offsetLeft, viewSvgContainer.offsetTop];
