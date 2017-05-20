@@ -387,7 +387,7 @@ namespace MakerJs.exporter {
 
         //fixup options
         var opts: ISVGRenderOptions = {
-            accuracy: .001,            
+            accuracy: .001,
             annotate: false,
             origin: null,
             scale: 1,
@@ -515,11 +515,12 @@ namespace MakerJs.exporter {
                     id);
             }
 
-            function drawPath(id: string, x: number, y: number, d: ISvgPathData, layer: string, textPoint: IPoint) {
+            function drawPath(id: string, x: number, y: number, d: ISvgPathData, layer: string, route: string[], textPoint: IPoint) {
                 createElement(
                     "path",
                     {
                         "id": id,
+                        "data-route": route,
                         "d": ["M", round(x, opts.accuracy), round(y, opts.accuracy)].concat(d).join(" ")
                     },
                     layer);
@@ -529,15 +530,15 @@ namespace MakerJs.exporter {
                 }
             }
 
-            function circleInPaths(id: string, center: IPoint, radius: number, layer: string) {
+            function circleInPaths(id: string, center: IPoint, radius: number, layer: string, route: string[]) {
                 var d = svgCircleData(radius, opts.accuracy);
 
-                drawPath(id, center[0], center[1], d, layer, center);
+                drawPath(id, center[0], center[1], d, layer, route, center);
             }
 
-            var map: IPathOriginFunctionMap = {};
+            var map: { [type: string]: (id: string, pathValue: IPath, origin: IPoint, layer: string, route: string[]) => void; } = {};
 
-            map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string) {
+            map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string, route: string[]) {
 
                 var start = line.origin;
                 var end = line.end;
@@ -546,6 +547,7 @@ namespace MakerJs.exporter {
                     "line",
                     {
                         "id": id,
+                        "data-route": route,
                         "x1": round(start[0], opts.accuracy),
                         "y1": round(start[1], opts.accuracy),
                         "x2": round(end[0], opts.accuracy),
@@ -558,7 +560,7 @@ namespace MakerJs.exporter {
                 }
             };
 
-            map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string) {
+            map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string, route: string[]) {
 
                 var center = circle.origin;
 
@@ -566,6 +568,7 @@ namespace MakerJs.exporter {
                     "circle",
                     {
                         "id": id,
+                        "data-route": route,
                         "r": circle.radius,
                         "cx": round(center[0], opts.accuracy),
                         "cy": round(center[1], opts.accuracy)
@@ -577,12 +580,12 @@ namespace MakerJs.exporter {
                 }
             };
 
-            map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string) {
+            map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string, route: string[]) {
 
                 var arcPoints = point.fromArc(arc);
 
                 if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-                    circleInPaths(id, arc.origin, arc.radius, layer);
+                    circleInPaths(id, arc.origin, arc.radius, layer, route);
                 } else {
 
                     var d = ['A'];
@@ -595,14 +598,14 @@ namespace MakerJs.exporter {
                         arc.startAngle > arc.endAngle
                     );
 
-                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, point.middle(arc));
+                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, point.middle(arc));
                 }
             };
 
-            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, origin: IPoint, layer: string) {
+            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, origin: IPoint, layer: string, route: string[]) {
                 var d: ISvgPathData = [];
                 svgBezierData(d, seed, opts.accuracy);
-                drawPath(id, seed.origin[0], seed.origin[1], d, layer, point.middle(seed));
+                drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, point.middle(seed));
             };
 
             function beginModel(id: string, modelContext: IModel) {
@@ -618,7 +621,7 @@ namespace MakerJs.exporter {
 
             var walkOptions: IWalkOptions = {
 
-                beforeChildWalk: (walkedModel: IWalkModel) : boolean => {
+                beforeChildWalk: (walkedModel: IWalkModel): boolean => {
                     beginModel(walkedModel.childId, walkedModel.childModel);
                     return true;
                 },
@@ -627,7 +630,7 @@ namespace MakerJs.exporter {
                     var fn = map[walkedPath.pathContext.type];
                     if (fn) {
                         var offset = point.add(fixPoint(walkedPath.offset), opts.origin);
-                        fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer);
+                        fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer, walkedPath.route);
                     }
                 },
 
