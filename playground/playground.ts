@@ -74,7 +74,7 @@
     var exportWorker: Worker = null;
     var paramActiveTimeout: NodeJS.Timer;
     var longHoldTimeout: NodeJS.Timer;
-    var viewModelRootSelector = 'svg#drawing > g > g > g';
+    var viewModelRootSelector = 'svg#drawing > g > g';
     var viewOrigin: MakerJs.IPoint;
     var viewPanOffset: MakerJs.IPoint = [0, 0];
     var keepEventElement: HTMLElement = null;
@@ -491,21 +491,7 @@
 
         //trace back to root
         var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGGElement;
-        var route: string[] = [];
-        var element = path;
-
-        while (element !== root) {
-            var id = element.attributes.getNamedItem('id').value
-
-            route.unshift(id);
-
-            if (element.nodeName == 'g') {
-                route.unshift('models');
-            } else {
-                route.unshift('paths');
-            }
-            element = element.parentNode;
-        }
+        var route: string[] = JSON.parse(path.attributes.getNamedItem('data-route').value);
 
         if (processed.lockedPath && arraysEqual(processed.lockedPath.route, route)) {
 
@@ -1033,8 +1019,8 @@
         if (fromUI) {
 
             if (div.range && div.rangeText) {
-                    div.range.value = value;
-                    div.rangeText.value = value;
+                div.range.value = value;
+                div.rangeText.value = value;
             }
 
         } else {
@@ -1079,7 +1065,7 @@
             viewScale = null;
         }
 
-        if (renderOnWorkerThread && Worker) {
+        if (useWorkerThreads && Worker) {
 
             reConstructInWorker(
                 setProcessedModel,
@@ -1113,7 +1099,7 @@
     export var viewScale: number;
     export var querystringParams: QueryStringParams;
     export var pointers: Pointer.Manager;
-    export var renderOnWorkerThread = true;
+    export var useWorkerThreads = true;
     export var fontDir: string;
 
     export function runCodeFromEditor(paramValues?: any[]) {
@@ -1228,7 +1214,7 @@
                 constructOnMainThread(enableKit);
             }
 
-            if (renderOnWorkerThread && Worker) {
+            if (useWorkerThreads && Worker) {
 
                 constructInWorker(
                     codeMirrorEditor.getDoc().getValue(),
@@ -1527,28 +1513,32 @@
 
             //allow progress bar to render
             setTimeout(function () {
-                var fe = MakerJsPlaygroundExport.formatMap[response.request.format];
-
-                var encoded = encodeURIComponent(response.text);
-                var uriPrefix = 'data:' + fe.mediaType + ',';
-                var filename = (querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
-                var dataUri = uriPrefix + encoded;
-
-                //create a download link
-                var a = new makerjs.exporter.XmlTag('a', { href: dataUri, download: filename });
-                a.innerText = 'download ' + response.request.formatTitle;
-                document.getElementById('download-link-container').innerHTML = a.toString();
-
-                preview.value = response.text;
-
-                (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
-
-                //put the download ui into ready mode
-                toggleClass('download-generating');
-                toggleClass('download-ready');
+                setExportText(response.request.format, response.request.formatTitle, response.text);
             }, 300);
 
         }
+    }
+
+    function setExportText(format: MakerJsPlaygroundExport.ExportFormat, title: string, text: string) {
+        var fe = MakerJsPlaygroundExport.formatMap[format];
+
+        var encoded = encodeURIComponent(text);
+        var uriPrefix = 'data:' + fe.mediaType + ',';
+        var filename = (querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
+        var dataUri = uriPrefix + encoded;
+
+        //create a download link
+        var a = new makerjs.exporter.XmlTag('a', { href: dataUri, download: filename });
+        a.innerText = 'download ' + title;
+        document.getElementById('download-link-container').innerHTML = a.toString();
+
+        preview.value = text;
+
+        (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
+
+        //put the download ui into ready mode
+        toggleClass('download-generating');
+        toggleClass('download-ready');
     }
 
     export function downloadClick(a: HTMLAnchorElement, format: MakerJsPlaygroundExport.ExportFormat) {
@@ -1563,20 +1553,57 @@
             options: {}
         };
 
-        _downloadClick(request);
+        beginExport(request);
     }
 
-    function _downloadClick(request: MakerJsPlaygroundExport.IExportRequest) {
+    function beginExport(request: MakerJsPlaygroundExport.IExportRequest) {
+        
+        //put the download ui into generation mode
+        progress.style.width = '0';
+        toggleClass('download-generating');
+
+        if (useWorkerThreads && Worker) {
+            exportOnWorkerThread(request);
+        } else {
+            exportOnUIThread(request);
+        }
+    }
+
+    function exportOnUIThread(request: MakerJsPlaygroundExport.IExportRequest) {
+        var text: string;
+
+        switch (request.format) {
+            case MakerJsPlaygroundExport.ExportFormat.Dxf:
+                text = makerjs.exporter.toDXF(processed.model);
+                break;
+
+            case MakerJsPlaygroundExport.ExportFormat.Json:
+                text = JSON.stringify(processed.model, null, 2);
+                break;
+
+            case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
+                text = makerjs.exporter.toOpenJsCad(processed.model);
+                break;
+
+            case MakerJsPlaygroundExport.ExportFormat.Svg:
+                text = makerjs.exporter.toSVG(processed.model);
+                break;
+
+            default:
+                exportOnWorkerThread(request);
+                return;
+        }
+
+        setExportText(request.format, request.formatTitle, text);
+    }
+
+    function exportOnWorkerThread(request: MakerJsPlaygroundExport.IExportRequest) {
 
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
             exportWorker = new Worker('worker/export-worker.js?' + new Date().valueOf());
             exportWorker.onmessage = getExport;
         }
-
-        //put the download ui into generation mode
-        progress.style.width = '0';
-        toggleClass('download-generating');
 
         //tell the worker to process the job
         exportWorker.postMessage(request);
@@ -1665,6 +1692,8 @@
         document.body.classList.add('wait');
 
         querystringParams = new QueryStringParams();
+        useWorkerThreads = !querystringParams['noworker'];
+
         var parentLoad = querystringParams['parentload'] as string;
         if (parentLoad) {
 
