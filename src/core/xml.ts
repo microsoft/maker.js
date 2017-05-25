@@ -61,9 +61,13 @@
         public getOpeningTag(selfClose: boolean) {
             var attrs = '';
 
-            function outputAttr(attrName, attrValue) {
+            function outputAttr(attrName: string, attrValue: any) {
 
                 if (attrValue == null || typeof attrValue === 'undefined') return;
+
+                if (Array.isArray(attrValue) || typeof attrValue === 'object') {
+                    attrValue = JSON.stringify(attrValue);
+                }
 
                 if (typeof attrValue === 'string') {
                     attrValue = XmlTag.escapeString(attrValue);

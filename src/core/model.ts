@@ -374,7 +374,7 @@ namespace MakerJs.model {
                         pathContext: pathContext,
                         pathId: pathId,
                         route: route.concat(['paths', pathId]),
-                        routeKey: routeKey + '.paths' + JSON.stringify([pathId])
+                        routeKey: routeKey + (routeKey ? '.' : '') + 'paths' + JSON.stringify([pathId])
                     };
 
                     if (options.onPath) options.onPath(walkedPath);
@@ -392,7 +392,7 @@ namespace MakerJs.model {
                         layer: childModel.layer || layer,
                         offset: newOffset,
                         route: route.concat(['models', modelId]),
-                        routeKey: routeKey + '.models' + JSON.stringify([modelId]),
+                        routeKey: routeKey + (routeKey ? '.' : '') + 'models' + JSON.stringify([modelId]),
                         childId: modelId,
                         childModel: childModel
                     };

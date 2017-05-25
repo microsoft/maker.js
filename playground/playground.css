@@ -255,15 +255,11 @@ svg#drawing .locked {
     fill: yellow;
 }
 
-#view #crosshairs-vertical, #view #crosshairs-horizontal {
+#crosshairs line {
     stroke: #5B9DE3;
 }
 
-.collapse-origin #view #crosshairs-vertical, .collapse-origin #view #crosshairs-horizontal, .collapse-origin #grid {
-    display: none;
-}
-
-#crosshairs-horizontal_text, #crosshairs-vertical_text {
+.collapse-origin #crosshairs line, .collapse-origin #grid {
     display: none;
 }
 

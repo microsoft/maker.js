@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.52
+// Type definitions for Maker.js 0.9.53
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -246,10 +246,10 @@ declare namespace MakerJs {
      * Travel along a route inside of a model to extract a specific node in its tree.
      *
      * @param modelContext Model to travel within.
-     * @param routeKeyOrRoute String of a flattened route, or a string array of route segments.
+     * @param route String of a flattened route, or a string array of route segments.
      * @returns Model or Path object within the modelContext tree.
      */
-    function travel(modelContext: IModel, routeKeyOrRoute: string | string[]): {
+    function travel(modelContext: IModel, route: string | string[]): {
         path: IPath | IModel;
         offset: IPoint;
     };
@@ -379,15 +379,6 @@ declare namespace MakerJs {
      * @param item The item to test.
      */
     function isPathArcInBezierCurve(item: any): boolean;
-    /**
-     * A map of functions which accept a path and an origin point as parameters.
-     */
-    interface IPathOriginFunctionMap {
-        /**
-         * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
-         */
-        [type: string]: (id: string, pathValue: IPath, origin: IPoint, layer: string) => void;
-    }
     /**
      * String-based enumeration of all paths types.
      *
@@ -1737,6 +1728,29 @@ declare namespace MakerJs.exporter {
      * @private
      */
     function tryGetModelUnits(itemToExport: any): string;
+    /**
+     * Named colors, safe for CSS and DXF
+     * 17 colors from https://www.w3.org/TR/CSS21/syndata.html#value-def-color mapped to DXF equivalent AutoDesk Color Index
+     */
+    var colors: {
+        black: number;
+        red: number;
+        yellow: number;
+        lime: number;
+        aqua: number;
+        blue: number;
+        fuschia: number;
+        white: number;
+        gray: number;
+        maroon: number;
+        orange: number;
+        olive: number;
+        green: number;
+        teal: number;
+        navy: number;
+        purple: number;
+        silver: number;
+    };
 }
 declare namespace MakerJs.importer {
     /**
@@ -1757,9 +1771,24 @@ declare namespace MakerJs.exporter {
     function toDXF(pathsToExport: IPath[], options?: IDXFRenderOptions): string;
     function toDXF(pathToExport: IPath, options?: IDXFRenderOptions): string;
     /**
+     * DXF layer options.
+     */
+    interface IDXFLayerOptions {
+        /**
+         * DXF layer color.
+         */
+        color: number;
+    }
+    /**
      * DXF rendering options.
      */
     interface IDXFRenderOptions extends IExportOptions {
+        /**
+         * DXF options per layer.
+         */
+        layerOptions?: {
+            [layerId: string]: IDXFLayerOptions;
+        };
     }
 }
 declare namespace MakerJs.solvers {
