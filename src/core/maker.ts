@@ -129,7 +129,7 @@ namespace MakerJs {
             var element = route[i];
             var newElement: string;
             if (i % 2 === 0) {
-                newElement = '.' + element;
+                newElement = (i > 0 ? '.' : '') + element;
             } else {
                 newElement = JSON.stringify([element]);
             }
@@ -142,20 +142,20 @@ namespace MakerJs {
      * Travel along a route inside of a model to extract a specific node in its tree.
      * 
      * @param modelContext Model to travel within.
-     * @param routeKeyOrRoute String of a flattened route, or a string array of route segments.
+     * @param route String of a flattened route, or a string array of route segments.
      * @returns Model or Path object within the modelContext tree.
      */
-    export function travel(modelContext: IModel, routeKeyOrRoute: string | string[]) {
-        if (!modelContext || !routeKeyOrRoute) return null;
+    export function travel(modelContext: IModel, route: string | string[]) {
+        if (!modelContext || !route) return null;
 
-        var route: string[];
-        if (Array.isArray(routeKeyOrRoute)) {
-            route = routeKeyOrRoute;
+        var routeArray: string[];
+        if (Array.isArray(route)) {
+            routeArray = route;
         } else {
-            route = JSON.parse(routeKeyOrRoute);
+            routeArray = JSON.parse(route);
         }
 
-        var props = route.slice();
+        var props = routeArray.slice();
         var ref: any = modelContext;
         var origin = modelContext.origin || [0, 0];
 
@@ -384,17 +384,6 @@ namespace MakerJs {
      */
     export function isPathArcInBezierCurve(item: any): boolean {
         return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).bezierData = null);
-    }
-
-    /**
-     * A map of functions which accept a path and an origin point as parameters.
-     */
-    export interface IPathOriginFunctionMap {
-
-        /**
-         * Key is the type of a path, value is a function which accepts a path object a point object as its parameters.
-         */
-        [type: string]: (id: string, pathValue: IPath, origin: IPoint, layer: string) => void;
     }
 
     /**

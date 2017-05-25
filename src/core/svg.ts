@@ -345,19 +345,46 @@ namespace MakerJs.exporter {
             }
         }
 
+        function cssStyle(elOpts: ISVGElementRenderOptions) {
+            var a: string[] = [];
+
+            function push(name: string, val: string) {
+                if (val === undefined) return;
+                a.push(name + ':' + val);
+            }
+
+            push('stroke', elOpts.stroke);
+            push('stroke-width', elOpts.strokeWidth);
+            push('fill', elOpts.fill);
+
+            return a.join(';');
+        }
+
         function addSvgAttrs(attrs: IXmlTagAttrs, elOpts: ISVGElementRenderOptions) {
+            if (!elOpts) return;
+
             extendObject(attrs, {
                 "stroke": elOpts.stroke,
                 "stroke-width": elOpts.strokeWidth,
                 "fill": elOpts.fill,
-                "style": elOpts.cssStyle
+                "style": cssStyle(elOpts)
             });
+        }
+
+        function colorLayerOptions(layer: string): ISVGElementRenderOptions {
+            if (opts.layerOptions && opts.layerOptions[layer]) return opts.layerOptions[layer];
+
+            if (layer in colors) {
+                return {
+                    stroke: layer
+                };
+            }
         }
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null, forcePush = false) {
 
-            if (opts.layerOptions && opts.layerOptions[layer]) {
-                addSvgAttrs(attrs, opts.layerOptions[layer]);
+            if (tagname !== 'text') {
+                addSvgAttrs(attrs, colorLayerOptions(layer));
             }
 
             if (!opts.scalingStroke) {
@@ -387,7 +414,7 @@ namespace MakerJs.exporter {
 
         //fixup options
         var opts: ISVGRenderOptions = {
-            accuracy: .001,            
+            accuracy: .001,
             annotate: false,
             origin: null,
             scale: 1,
@@ -414,7 +441,7 @@ namespace MakerJs.exporter {
         }
 
         var elements: string[] = [];
-        var layers: ILayerElements = {};
+        var layers: { [id: string]: string[]; } = {};
 
         //measure the item to move it into svg area
 
@@ -503,7 +530,7 @@ namespace MakerJs.exporter {
 
         } else {
 
-            function drawText(id: string, textPoint: IPoint) {
+            function drawText(id: string, textPoint: IPoint, layer: string) {
                 createElement(
                     "text",
                     {
@@ -511,33 +538,34 @@ namespace MakerJs.exporter {
                         "x": round(textPoint[0], opts.accuracy),
                         "y": round(textPoint[1], opts.accuracy)
                     },
-                    null,
+                    layer,
                     id);
             }
 
-            function drawPath(id: string, x: number, y: number, d: ISvgPathData, layer: string, textPoint: IPoint) {
+            function drawPath(id: string, x: number, y: number, d: ISvgPathData, layer: string, route: string[], textPoint: IPoint) {
                 createElement(
                     "path",
                     {
                         "id": id,
+                        "data-route": route,
                         "d": ["M", round(x, opts.accuracy), round(y, opts.accuracy)].concat(d).join(" ")
                     },
                     layer);
 
                 if (opts.annotate) {
-                    drawText(id, textPoint);
+                    drawText(id, textPoint, layer);
                 }
             }
 
-            function circleInPaths(id: string, center: IPoint, radius: number, layer: string) {
+            function circleInPaths(id: string, center: IPoint, radius: number, layer: string, route: string[]) {
                 var d = svgCircleData(radius, opts.accuracy);
 
-                drawPath(id, center[0], center[1], d, layer, center);
+                drawPath(id, center[0], center[1], d, layer, route, center);
             }
 
-            var map: IPathOriginFunctionMap = {};
+            var map: { [type: string]: (id: string, pathValue: IPath, origin: IPoint, layer: string, route: string[]) => void; } = {};
 
-            map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string) {
+            map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string, route: string[]) {
 
                 var start = line.origin;
                 var end = line.end;
@@ -546,6 +574,7 @@ namespace MakerJs.exporter {
                     "line",
                     {
                         "id": id,
+                        "data-route": route,
                         "x1": round(start[0], opts.accuracy),
                         "y1": round(start[1], opts.accuracy),
                         "x2": round(end[0], opts.accuracy),
@@ -554,11 +583,11 @@ namespace MakerJs.exporter {
                     layer);
 
                 if (opts.annotate) {
-                    drawText(id, point.middle(line));
+                    drawText(id, point.middle(line), layer);
                 }
             };
 
-            map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string) {
+            map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string, route: string[]) {
 
                 var center = circle.origin;
 
@@ -566,6 +595,7 @@ namespace MakerJs.exporter {
                     "circle",
                     {
                         "id": id,
+                        "data-route": route,
                         "r": circle.radius,
                         "cx": round(center[0], opts.accuracy),
                         "cy": round(center[1], opts.accuracy)
@@ -573,16 +603,16 @@ namespace MakerJs.exporter {
                     layer);
 
                 if (opts.annotate) {
-                    drawText(id, center);
+                    drawText(id, center, layer);
                 }
             };
 
-            map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string) {
+            map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string, route: string[]) {
 
                 var arcPoints = point.fromArc(arc);
 
                 if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-                    circleInPaths(id, arc.origin, arc.radius, layer);
+                    circleInPaths(id, arc.origin, arc.radius, layer, route);
                 } else {
 
                     var d = ['A'];
@@ -595,14 +625,14 @@ namespace MakerJs.exporter {
                         arc.startAngle > arc.endAngle
                     );
 
-                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, point.middle(arc));
+                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, point.middle(arc));
                 }
             };
 
-            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, origin: IPoint, layer: string) {
+            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, origin: IPoint, layer: string, route: string[]) {
                 var d: ISvgPathData = [];
                 svgBezierData(d, seed, opts.accuracy);
-                drawPath(id, seed.origin[0], seed.origin[1], d, layer, point.middle(seed));
+                drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, point.middle(seed));
             };
 
             function beginModel(id: string, modelContext: IModel) {
@@ -618,7 +648,7 @@ namespace MakerJs.exporter {
 
             var walkOptions: IWalkOptions = {
 
-                beforeChildWalk: (walkedModel: IWalkModel) : boolean => {
+                beforeChildWalk: (walkedModel: IWalkModel): boolean => {
                     beginModel(walkedModel.childId, walkedModel.childModel);
                     return true;
                 },
@@ -627,7 +657,7 @@ namespace MakerJs.exporter {
                     var fn = map[walkedPath.pathContext.type];
                     if (fn) {
                         var offset = point.add(fixPoint(walkedPath.offset), opts.origin);
-                        fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer);
+                        fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer, walkedPath.route);
                     }
                 },
 
@@ -645,10 +675,7 @@ namespace MakerJs.exporter {
 
                 var layerGroup = new XmlTag('g', { id: layer });
 
-                //layerOptions
-                if (opts.layerOptions && opts.layerOptions[layer]) {
-                    addSvgAttrs(layerGroup.attrs, opts.layerOptions[layer]);
-                }
+                addSvgAttrs(layerGroup.attrs, colorLayerOptions(layer));
 
                 for (var i = 0; i < layers[layer].length; i++) {
                     layerGroup.innerText += layers[layer][i];
@@ -717,13 +744,6 @@ namespace MakerJs.exporter {
      */
     export interface svgUnitConversion {
         [unitType: string]: { svgUnitType: string; scaleConversion: number; };
-    }
-
-    /**
-     * @private
-     */
-    interface ILayerElements {
-        [id: string]: string[];
     }
 
     /**

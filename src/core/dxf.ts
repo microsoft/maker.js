@@ -18,6 +18,12 @@ namespace MakerJs.exporter {
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
 
         var opts: IDXFRenderOptions = {};
+        var layerIds: string[] = [];
+        var dxf: { [index: string]: (string | number)[] } = { "top": [], "bottom": [] };
+        var dxfIndex = "top";
+        function append(value: string | number) {
+            dxf[dxfIndex].push(value);
+        }
 
         extendObject(opts, options);
 
@@ -28,14 +34,22 @@ namespace MakerJs.exporter {
             }
         }
 
-        var dxf: string[] = [];
+        function colorLayerOptions(layer: string): IDXFLayerOptions {
+            if (opts.layerOptions && opts.layerOptions[layer]) return opts.layerOptions[layer];
 
-        function append(value) {
-            dxf.push(value);
+            if (layer in colors) {
+                return {
+                    color: colors[layer]
+                };
+            }
         }
 
-        function defaultLayer(pathContext: IPath, layer: string) {
-            return pathContext.layer || layer || 0;
+        function defaultLayer(pathContext: IPath, parentLayer: string) {
+            var layerId = pathContext.layer || parentLayer || '0';
+            if (layerIds.indexOf(layerId) < 0) {
+                layerIds.push(layerId);
+            }
+            return layerId;
         }
 
         var map: { [type: string]: (id: string, pathValue: IPath, offset: IPoint, layer: string) => void; } = {};
@@ -98,6 +112,43 @@ namespace MakerJs.exporter {
             append("ENDSEC");
         }
 
+        function tables(tableFn: () => void) {
+            append("2");
+            append("TABLES");
+            append("0");
+            append("TABLE");
+
+            tableFn();
+
+            append("0");
+            append("ENDTAB");
+        }
+
+        function layerOut(layerId: string, layerColor: number) {
+            append("0");
+            append("LAYER");
+            append("2");
+            append(layerId);
+            append("70");
+            append("0");
+            append("62");
+            append(layerColor);
+            append("6");
+            append("CONTINUOUS");
+        }
+
+        function layersOut() {
+            append("2");
+            append("LAYER");
+
+            layerIds.forEach(layerId => {
+                var layerOptions = colorLayerOptions(layerId);
+                if (layerOptions) {
+                    layerOut(layerId, layerOptions.color);
+                }
+            });
+        }
+
         function header() {
             var units = dxfUnit[opts.units];
 
@@ -144,12 +195,17 @@ namespace MakerJs.exporter {
             section(header);
         }
 
+        dxfIndex = "bottom";
         section(entities);
 
+        dxfIndex = "top";
+        section(() => tables(layersOut));
+
+        dxfIndex = "bottom";
         append("0");
         append("EOF");
 
-        return dxf.join('\n');
+        return dxf["top"].concat(dxf["bottom"]).join('\n');
     }
 
     /**
@@ -170,9 +226,25 @@ namespace MakerJs.exporter {
     dxfUnit[unitType.Meter] = 6;
 
     /**
+     * DXF layer options.
+     */
+    export interface IDXFLayerOptions {
+
+        /**
+         * DXF layer color.
+         */
+        color: number
+    }
+
+    /**
      * DXF rendering options.
      */
     export interface IDXFRenderOptions extends IExportOptions {
+
+        /**
+         * DXF options per layer.
+         */
+        layerOptions?: { [layerId: string]: IDXFLayerOptions };
     }
 
 }

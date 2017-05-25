@@ -1,4 +1,5 @@
-﻿
+﻿var makerjs = require('./../target/js/node.maker.js');
+
 function combine(angle, add) {
 
     var star1 = new makerjs.models.Oval(50, 100);
