@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.52
+ *   version: 0.9.53
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -344,7 +344,7 @@ var MakerJs;
             var element = route[i];
             var newElement;
             if (i % 2 === 0) {
-                newElement = '.' + element;
+                newElement = (i > 0 ? '.' : '') + element;
             }
             else {
                 newElement = JSON.stringify([element]);
@@ -358,20 +358,20 @@ var MakerJs;
      * Travel along a route inside of a model to extract a specific node in its tree.
      *
      * @param modelContext Model to travel within.
-     * @param routeKeyOrRoute String of a flattened route, or a string array of route segments.
+     * @param route String of a flattened route, or a string array of route segments.
      * @returns Model or Path object within the modelContext tree.
      */
-    function travel(modelContext, routeKeyOrRoute) {
-        if (!modelContext || !routeKeyOrRoute)
+    function travel(modelContext, route) {
+        if (!modelContext || !route)
             return null;
-        var route;
-        if (Array.isArray(routeKeyOrRoute)) {
-            route = routeKeyOrRoute;
+        var routeArray;
+        if (Array.isArray(route)) {
+            routeArray = route;
         }
         else {
-            route = JSON.parse(routeKeyOrRoute);
+            routeArray = JSON.parse(route);
         }
-        var props = route.slice();
+        var props = routeArray.slice();
         var ref = modelContext;
         var origin = modelContext.origin || [0, 0];
         while (props.length) {
@@ -2125,7 +2125,7 @@ var MakerJs;
                             pathContext: pathContext,
                             pathId: pathId,
                             route: route.concat(['paths', pathId]),
-                            routeKey: routeKey + '.paths' + JSON.stringify([pathId])
+                            routeKey: routeKey + (routeKey ? '.' : '') + 'paths' + JSON.stringify([pathId])
                         };
                         if (options.onPath)
                             options.onPath(walkedPath);
@@ -2141,7 +2141,7 @@ var MakerJs;
                             layer: childModel.layer || layer,
                             offset: newOffset,
                             route: route.concat(['models', modelId]),
-                            routeKey: routeKey + '.models' + JSON.stringify([modelId]),
+                            routeKey: routeKey + (routeKey ? '.' : '') + 'models' + JSON.stringify([modelId]),
                             childId: modelId,
                             childModel: childModel
                         };
@@ -3832,6 +3832,29 @@ var MakerJs;
             }
         }
         exporter.tryGetModelUnits = tryGetModelUnits;
+        /**
+         * Named colors, safe for CSS and DXF
+         * 17 colors from https://www.w3.org/TR/CSS21/syndata.html#value-def-color mapped to DXF equivalent AutoDesk Color Index
+         */
+        exporter.colors = {
+            black: 0,
+            red: 1,
+            yellow: 2,
+            lime: 3,
+            aqua: 4,
+            blue: 5,
+            fuschia: 6,
+            white: 7,
+            gray: 9,
+            maroon: 14,
+            orange: 30,
+            olive: 58,
+            green: 94,
+            teal: 134,
+            navy: 174,
+            purple: 214,
+            silver: 254
+        };
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3882,6 +3905,12 @@ var MakerJs;
             //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
             if (options === void 0) { options = {}; }
             var opts = {};
+            var layerIds = [];
+            var dxf = { "top": [], "bottom": [] };
+            var dxfIndex = "top";
+            function append(value) {
+                dxf[dxfIndex].push(value);
+            }
             MakerJs.extendObject(opts, options);
             if (MakerJs.isModel(itemToExport)) {
                 var modelToExport = itemToExport;
@@ -3889,12 +3918,21 @@ var MakerJs;
                     MakerJs.extendObject(opts, modelToExport.exporterOptions['toDXF']);
                 }
             }
-            var dxf = [];
-            function append(value) {
-                dxf.push(value);
+            function colorLayerOptions(layer) {
+                if (opts.layerOptions && opts.layerOptions[layer])
+                    return opts.layerOptions[layer];
+                if (layer in exporter.colors) {
+                    return {
+                        color: exporter.colors[layer]
+                    };
+                }
             }
-            function defaultLayer(pathContext, layer) {
-                return pathContext.layer || layer || 0;
+            function defaultLayer(pathContext, parentLayer) {
+                var layerId = pathContext.layer || parentLayer || '0';
+                if (layerIds.indexOf(layerId) < 0) {
+                    layerIds.push(layerId);
+                }
+                return layerId;
             }
             var map = {};
             map[MakerJs.pathType.Line] = function (id, line, offset, layer) {
@@ -3948,6 +3986,37 @@ var MakerJs;
                 append("0");
                 append("ENDSEC");
             }
+            function tables(tableFn) {
+                append("2");
+                append("TABLES");
+                append("0");
+                append("TABLE");
+                tableFn();
+                append("0");
+                append("ENDTAB");
+            }
+            function layerOut(layerId, layerColor) {
+                append("0");
+                append("LAYER");
+                append("2");
+                append(layerId);
+                append("70");
+                append("0");
+                append("62");
+                append(layerColor);
+                append("6");
+                append("CONTINUOUS");
+            }
+            function layersOut() {
+                append("2");
+                append("LAYER");
+                layerIds.forEach(function (layerId) {
+                    var layerOptions = colorLayerOptions(layerId);
+                    if (layerOptions) {
+                        layerOut(layerId, layerOptions.color);
+                    }
+                });
+            }
             function header() {
                 var units = dxfUnit[opts.units];
                 append("2");
@@ -3983,10 +4052,14 @@ var MakerJs;
             if (opts.units) {
                 section(header);
             }
+            dxfIndex = "bottom";
             section(entities);
+            dxfIndex = "top";
+            section(function () { return tables(layersOut); });
+            dxfIndex = "bottom";
             append("0");
             append("EOF");
-            return dxf.join('\n');
+            return dxf["top"].concat(dxf["bottom"]).join('\n');
         }
         exporter.toDXF = toDXF;
         /**
@@ -5566,6 +5639,9 @@ var MakerJs;
                 function outputAttr(attrName, attrValue) {
                     if (attrValue == null || typeof attrValue === 'undefined')
                         return;
+                    if (Array.isArray(attrValue) || typeof attrValue === 'object') {
+                        attrValue = JSON.stringify(attrValue);
+                    }
                     if (typeof attrValue === 'string') {
                         attrValue = XmlTag.escapeString(attrValue);
                     }
@@ -6135,19 +6211,42 @@ var MakerJs;
                     elements.push(value);
                 }
             }
+            function cssStyle(elOpts) {
+                var a = [];
+                function push(name, val) {
+                    if (val === undefined)
+                        return;
+                    a.push(name + ':' + val);
+                }
+                push('stroke', elOpts.stroke);
+                push('stroke-width', elOpts.strokeWidth);
+                push('fill', elOpts.fill);
+                return a.join(';');
+            }
             function addSvgAttrs(attrs, elOpts) {
+                if (!elOpts)
+                    return;
                 MakerJs.extendObject(attrs, {
                     "stroke": elOpts.stroke,
                     "stroke-width": elOpts.strokeWidth,
                     "fill": elOpts.fill,
-                    "style": elOpts.cssStyle
+                    "style": cssStyle(elOpts)
                 });
+            }
+            function colorLayerOptions(layer) {
+                if (opts.layerOptions && opts.layerOptions[layer])
+                    return opts.layerOptions[layer];
+                if (layer in exporter.colors) {
+                    return {
+                        stroke: layer
+                    };
+                }
             }
             function createElement(tagname, attrs, layer, innerText, forcePush) {
                 if (innerText === void 0) { innerText = null; }
                 if (forcePush === void 0) { forcePush = false; }
-                if (opts.layerOptions && opts.layerOptions[layer]) {
-                    addSvgAttrs(attrs, opts.layerOptions[layer]);
+                if (tagname !== 'text') {
+                    addSvgAttrs(attrs, colorLayerOptions(layer));
                 }
                 if (!opts.scalingStroke) {
                     attrs['vector-effect'] = 'non-scaling-stroke';
@@ -6262,68 +6361,71 @@ var MakerJs;
                 }
             }
             else {
-                function drawText(id, textPoint) {
+                function drawText(id, textPoint, layer) {
                     createElement("text", {
                         "id": id + "_text",
                         "x": MakerJs.round(textPoint[0], opts.accuracy),
                         "y": MakerJs.round(textPoint[1], opts.accuracy)
-                    }, null, id);
+                    }, layer, id);
                 }
-                function drawPath(id, x, y, d, layer, textPoint) {
+                function drawPath(id, x, y, d, layer, route, textPoint) {
                     createElement("path", {
                         "id": id,
+                        "data-route": route,
                         "d": ["M", MakerJs.round(x, opts.accuracy), MakerJs.round(y, opts.accuracy)].concat(d).join(" ")
                     }, layer);
                     if (opts.annotate) {
-                        drawText(id, textPoint);
+                        drawText(id, textPoint, layer);
                     }
                 }
-                function circleInPaths(id, center, radius, layer) {
+                function circleInPaths(id, center, radius, layer, route) {
                     var d = svgCircleData(radius, opts.accuracy);
-                    drawPath(id, center[0], center[1], d, layer, center);
+                    drawPath(id, center[0], center[1], d, layer, route, center);
                 }
                 var map = {};
-                map[MakerJs.pathType.Line] = function (id, line, origin, layer) {
+                map[MakerJs.pathType.Line] = function (id, line, origin, layer, route) {
                     var start = line.origin;
                     var end = line.end;
                     createElement("line", {
                         "id": id,
+                        "data-route": route,
                         "x1": MakerJs.round(start[0], opts.accuracy),
                         "y1": MakerJs.round(start[1], opts.accuracy),
                         "x2": MakerJs.round(end[0], opts.accuracy),
                         "y2": MakerJs.round(end[1], opts.accuracy)
                     }, layer);
                     if (opts.annotate) {
-                        drawText(id, MakerJs.point.middle(line));
+                        drawText(id, MakerJs.point.middle(line), layer);
                     }
                 };
-                map[MakerJs.pathType.Circle] = function (id, circle, origin, layer) {
+                map[MakerJs.pathType.Circle] = function (id, circle, origin, layer, route) {
                     var center = circle.origin;
                     createElement("circle", {
                         "id": id,
+                        "data-route": route,
                         "r": circle.radius,
                         "cx": MakerJs.round(center[0], opts.accuracy),
                         "cy": MakerJs.round(center[1], opts.accuracy)
                     }, layer);
                     if (opts.annotate) {
-                        drawText(id, center);
+                        drawText(id, center, layer);
                     }
                 };
-                map[MakerJs.pathType.Arc] = function (id, arc, origin, layer) {
+                map[MakerJs.pathType.Arc] = function (id, arc, origin, layer, route) {
                     var arcPoints = MakerJs.point.fromArc(arc);
                     if (MakerJs.measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-                        circleInPaths(id, arc.origin, arc.radius, layer);
+                        circleInPaths(id, arc.origin, arc.radius, layer, route);
                     }
                     else {
                         var d = ['A'];
                         svgArcData(d, arc.radius, arcPoints[1], opts.accuracy, MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
-                        drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, MakerJs.point.middle(arc));
+                        drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, MakerJs.point.middle(arc));
                     }
                 };
-                map[MakerJs.pathType.BezierSeed] = function (id, seed, origin, layer) {
+                map[MakerJs.pathType.BezierSeed] = function (id, seed, origin, layer, route) {
                     var d = [];
                     svgBezierData(d, seed, opts.accuracy);
-                    drawPath(id, seed.origin[0], seed.origin[1], d, layer, MakerJs.point.middle(seed));
+                    drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, MakerJs.point.middle(seed));
                 };
                 function beginModel(id, modelContext) {
                     modelGroup.attrs = { id: id };
@@ -6342,7 +6444,7 @@ var MakerJs;
                         var fn = map[walkedPath.pathContext.type];
                         if (fn) {
                             var offset = MakerJs.point.add(fixPoint(walkedPath.offset), opts.origin);
-                            fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer);
+                            fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer, walkedPath.route);
                         }
                     },
                     afterChildWalk: function (walkedModel) {
@@ -6354,10 +6456,7 @@ var MakerJs;
                 //export layers as groups
                 for (var layer in layers) {
                     var layerGroup = new exporter.XmlTag('g', { id: layer });
-                    //layerOptions
-                    if (opts.layerOptions && opts.layerOptions[layer]) {
-                        addSvgAttrs(layerGroup.attrs, opts.layerOptions[layer]);
-                    }
+                    addSvgAttrs(layerGroup.attrs, colorLayerOptions(layer));
                     for (var i = 0; i < layers[layer].length; i++) {
                         layerGroup.innerText += layers[layer][i];
                     }
@@ -8442,6 +8541,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.52";
+MakerJs.version = "0.9.53";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);

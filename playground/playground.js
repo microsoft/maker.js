@@ -22,6 +22,7 @@ var MakerJsPlayground;
     var view;
     var viewSvgContainer;
     var gridPattern;
+    var crosshairs;
     var gridPatternFill;
     var paramsDiv;
     var measurementDiv;
@@ -44,7 +45,7 @@ var MakerJsPlayground;
     var exportWorker = null;
     var paramActiveTimeout;
     var longHoldTimeout;
-    var viewModelRootSelector = 'svg#drawing > g > g > g';
+    var viewModelRootSelector = 'svg#drawing > g > g';
     var viewOrigin;
     var viewPanOffset = [0, 0];
     var keepEventElement = null;
@@ -365,19 +366,7 @@ var MakerJsPlayground;
     function lockToPath(path) {
         //trace back to root
         var root = viewSvgContainer.querySelector(viewModelRootSelector);
-        var route = [];
-        var element = path;
-        while (element !== root) {
-            var id = element.attributes.getNamedItem('id').value;
-            route.unshift(id);
-            if (element.nodeName == 'g') {
-                route.unshift('models');
-            }
-            else {
-                route.unshift('paths');
-            }
-            element = element.parentNode;
-        }
+        var route = JSON.parse(path.attributes.getNamedItem('data-route').value);
         if (processed.lockedPath && arraysEqual(processed.lockedPath.route, route)) {
             processed.lockedPath = null;
             setNotesFromModelOrKit();
@@ -549,7 +538,9 @@ var MakerJsPlayground;
     }
     function panGrid() {
         var p = makerjs.point.add(viewPanOffset, viewOrigin);
+        var op = makerjs.point.add(p, margin);
         gridPattern.setAttribute('patternTransform', 'translate(' + p[0] + ',' + p[1] + ')');
+        crosshairs.setAttribute('transform', 'translate(' + op[0] + ',' + op[1] + ')');
     }
     function getUnits() {
         if (processed.model && processed.model.units) {
@@ -828,7 +819,7 @@ var MakerJsPlayground;
         if (fit) {
             MakerJsPlayground.viewScale = null;
         }
-        if (MakerJsPlayground.renderOnWorkerThread && Worker) {
+        if (MakerJsPlayground.useWorkerThreads && Worker) {
             reConstructInWorker(setProcessedModel, constructOnMainThread);
         }
         else {
@@ -846,7 +837,7 @@ var MakerJsPlayground;
     MakerJsPlayground.relativePath = '';
     MakerJsPlayground.svgStrokeWidth = 2;
     MakerJsPlayground.svgFontSize = 14;
-    MakerJsPlayground.renderOnWorkerThread = true;
+    MakerJsPlayground.useWorkerThreads = true;
     function runCodeFromEditor(paramValues) {
         document.body.classList.add('wait');
         processed.kit = null;
@@ -927,7 +918,7 @@ var MakerJsPlayground;
             function setKitOnMainThread() {
                 constructOnMainThread(enableKit);
             }
-            if (MakerJsPlayground.renderOnWorkerThread && Worker) {
+            if (MakerJsPlayground.useWorkerThreads && Worker) {
                 constructInWorker(MakerJsPlayground.codeMirrorEditor.getDoc().getValue(), value.orderedDependencies, function (model) {
                     enableKit();
                     setProcessedModel(model);
@@ -1101,21 +1092,9 @@ var MakerJsPlayground;
                 scale: MakerJsPlayground.viewScale,
                 useSvgPathOnly: false
             };
-            var renderModel = {
-                models: {
-                    ROOT: processed.model
-                },
-                exporterOptions: processed.model.exporterOptions
-            };
-            var size = getModelNaturalSize();
-            var multiplier = 10;
             panGrid();
             zoomGrid();
-            renderModel.paths = {
-                'crosshairs-vertical': new makerjs.paths.Line([0, size[1] * multiplier], [0, -size[1] * multiplier]),
-                'crosshairs-horizontal': new makerjs.paths.Line([size[0] * multiplier, 0], [-size[0] * multiplier, 0])
-            };
-            html += makerjs.exporter.toSVG(renderModel, renderOptions);
+            html += makerjs.exporter.toSVG(processed.model, renderOptions);
         }
         viewSvgContainer.innerHTML = html;
         if (processed.lockedPath) {
@@ -1183,22 +1162,25 @@ var MakerJsPlayground;
         if (response.percentComplete == 100 && response.text) {
             //allow progress bar to render
             setTimeout(function () {
-                var fe = MakerJsPlaygroundExport.formatMap[response.request.format];
-                var encoded = encodeURIComponent(response.text);
-                var uriPrefix = 'data:' + fe.mediaType + ',';
-                var filename = (MakerJsPlayground.querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
-                var dataUri = uriPrefix + encoded;
-                //create a download link
-                var a = new makerjs.exporter.XmlTag('a', { href: dataUri, download: filename });
-                a.innerText = 'download ' + response.request.formatTitle;
-                document.getElementById('download-link-container').innerHTML = a.toString();
-                preview.value = response.text;
-                document.getElementById('download-filename').innerText = filename;
-                //put the download ui into ready mode
-                toggleClass('download-generating');
-                toggleClass('download-ready');
+                setExportText(response.request.format, response.request.formatTitle, response.text);
             }, 300);
         }
+    }
+    function setExportText(format, title, text) {
+        var fe = MakerJsPlaygroundExport.formatMap[format];
+        var encoded = encodeURIComponent(text);
+        var uriPrefix = 'data:' + fe.mediaType + ',';
+        var filename = (MakerJsPlayground.querystringParams['script'] || 'my-drawing') + '.' + fe.fileExtension;
+        var dataUri = uriPrefix + encoded;
+        //create a download link
+        var a = new makerjs.exporter.XmlTag('a', { href: dataUri, download: filename });
+        a.innerText = 'download ' + title;
+        document.getElementById('download-link-container').innerHTML = a.toString();
+        preview.value = text;
+        document.getElementById('download-filename').innerText = filename;
+        //put the download ui into ready mode
+        toggleClass('download-generating');
+        toggleClass('download-ready');
     }
     function downloadClick(a, format) {
         //TODO: show options
@@ -1209,18 +1191,47 @@ var MakerJsPlayground;
             model: processed.model,
             options: {}
         };
-        _downloadClick(request);
+        beginExport(request);
     }
     MakerJsPlayground.downloadClick = downloadClick;
-    function _downloadClick(request) {
+    function beginExport(request) {
+        //put the download ui into generation mode
+        progress.style.width = '0';
+        toggleClass('download-generating');
+        if (MakerJsPlayground.useWorkerThreads && Worker) {
+            exportOnWorkerThread(request);
+        }
+        else {
+            exportOnUIThread(request);
+        }
+    }
+    function exportOnUIThread(request) {
+        var text;
+        switch (request.format) {
+            case MakerJsPlaygroundExport.ExportFormat.Dxf:
+                text = makerjs.exporter.toDXF(processed.model);
+                break;
+            case MakerJsPlaygroundExport.ExportFormat.Json:
+                text = JSON.stringify(processed.model, null, 2);
+                break;
+            case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
+                text = makerjs.exporter.toOpenJsCad(processed.model);
+                break;
+            case MakerJsPlaygroundExport.ExportFormat.Svg:
+                text = makerjs.exporter.toSVG(processed.model);
+                break;
+            default:
+                exportOnWorkerThread(request);
+                return;
+        }
+        setExportText(request.format, request.formatTitle, text);
+    }
+    function exportOnWorkerThread(request) {
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
             exportWorker = new Worker('worker/export-worker.js?' + new Date().valueOf());
             exportWorker.onmessage = getExport;
         }
-        //put the download ui into generation mode
-        progress.style.width = '0';
-        toggleClass('download-generating');
         //tell the worker to process the job
         exportWorker.postMessage(request);
     }
@@ -1277,6 +1288,7 @@ var MakerJsPlayground;
         checkNotes = document.getElementById('check-notes');
         viewSvgContainer = document.getElementById('view-svg-container');
         gridPattern = document.getElementById('gridPattern');
+        crosshairs = document.getElementById('crosshairs');
         gridPatternFill = document.getElementById('gridPatternFill');
         margin = [viewSvgContainer.offsetLeft, viewSvgContainer.offsetTop];
         gridPattern.setAttribute('x', margin[0].toString());
@@ -1294,6 +1306,7 @@ var MakerJsPlayground;
         }
         document.body.classList.add('wait');
         MakerJsPlayground.querystringParams = new QueryStringParams();
+        MakerJsPlayground.useWorkerThreads = !MakerJsPlayground.querystringParams['noworker'];
         var parentLoad = MakerJsPlayground.querystringParams['parentload'];
         if (parentLoad) {
             var fn = parent[parentLoad];
