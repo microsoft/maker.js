@@ -345,19 +345,46 @@ namespace MakerJs.exporter {
             }
         }
 
+        function cssStyle(elOpts: ISVGElementRenderOptions) {
+            var a: string[] = [];
+
+            function push(name: string, val: string) {
+                if (val === undefined) return;
+                a.push(name + ':' + val);
+            }
+
+            push('stroke', elOpts.stroke);
+            push('stroke-width', elOpts.strokeWidth);
+            push('fill', elOpts.fill);
+
+            return a.join(';');
+        }
+
         function addSvgAttrs(attrs: IXmlTagAttrs, elOpts: ISVGElementRenderOptions) {
+            if (!elOpts) return;
+
             extendObject(attrs, {
                 "stroke": elOpts.stroke,
                 "stroke-width": elOpts.strokeWidth,
                 "fill": elOpts.fill,
-                "style": elOpts.cssStyle
+                "style": cssStyle(elOpts)
             });
+        }
+
+        function colorLayerOptions(layer: string): ISVGElementRenderOptions {
+            if (opts.layerOptions && opts.layerOptions[layer]) return opts.layerOptions[layer];
+
+            if (layer in colors) {
+                return {
+                    stroke: layer
+                };
+            }
         }
 
         function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null, forcePush = false) {
 
-            if (opts.layerOptions && opts.layerOptions[layer]) {
-                addSvgAttrs(attrs, opts.layerOptions[layer]);
+            if (tagname !== 'text') {
+                addSvgAttrs(attrs, colorLayerOptions(layer));
             }
 
             if (!opts.scalingStroke) {
@@ -414,7 +441,7 @@ namespace MakerJs.exporter {
         }
 
         var elements: string[] = [];
-        var layers: ILayerElements = {};
+        var layers: { [id: string]: string[]; } = {};
 
         //measure the item to move it into svg area
 
@@ -503,7 +530,7 @@ namespace MakerJs.exporter {
 
         } else {
 
-            function drawText(id: string, textPoint: IPoint) {
+            function drawText(id: string, textPoint: IPoint, layer: string) {
                 createElement(
                     "text",
                     {
@@ -511,7 +538,7 @@ namespace MakerJs.exporter {
                         "x": round(textPoint[0], opts.accuracy),
                         "y": round(textPoint[1], opts.accuracy)
                     },
-                    null,
+                    layer,
                     id);
             }
 
@@ -526,7 +553,7 @@ namespace MakerJs.exporter {
                     layer);
 
                 if (opts.annotate) {
-                    drawText(id, textPoint);
+                    drawText(id, textPoint, layer);
                 }
             }
 
@@ -556,7 +583,7 @@ namespace MakerJs.exporter {
                     layer);
 
                 if (opts.annotate) {
-                    drawText(id, point.middle(line));
+                    drawText(id, point.middle(line), layer);
                 }
             };
 
@@ -576,7 +603,7 @@ namespace MakerJs.exporter {
                     layer);
 
                 if (opts.annotate) {
-                    drawText(id, center);
+                    drawText(id, center, layer);
                 }
             };
 
@@ -648,10 +675,7 @@ namespace MakerJs.exporter {
 
                 var layerGroup = new XmlTag('g', { id: layer });
 
-                //layerOptions
-                if (opts.layerOptions && opts.layerOptions[layer]) {
-                    addSvgAttrs(layerGroup.attrs, opts.layerOptions[layer]);
-                }
+                addSvgAttrs(layerGroup.attrs, colorLayerOptions(layer));
 
                 for (var i = 0; i < layers[layer].length; i++) {
                     layerGroup.innerText += layers[layer][i];
@@ -720,13 +744,6 @@ namespace MakerJs.exporter {
      */
     export interface svgUnitConversion {
         [unitType: string]: { svgUnitType: string; scaleConversion: number; };
-    }
-
-    /**
-     * @private
-     */
-    interface ILayerElements {
-        [id: string]: string[];
     }
 
     /**
