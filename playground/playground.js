@@ -1094,7 +1094,12 @@ var MakerJsPlayground;
             };
             panGrid();
             zoomGrid();
+            //do not use actual units when rendering
+            var units = processed.model.units;
+            delete processed.model.units;
             html += makerjs.exporter.toSVG(processed.model, renderOptions);
+            if (units)
+                processed.model.units = units;
         }
         viewSvgContainer.innerHTML = html;
         if (processed.lockedPath) {
