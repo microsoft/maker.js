@@ -4,7 +4,7 @@ namespace MakerJs.models {
 
         public paths: IPathMap = {};
 
-        constructor(outerRadius: number, innerRadius: number) {
+        constructor(outerRadius: number, innerRadius?: number) {
 
             var radii = {
                 "Ring_outer": outerRadius,
@@ -12,6 +12,7 @@ namespace MakerJs.models {
             };
 
             for (var id in radii) {
+                if (radii[id] === void 0) continue;
                 this.paths[id] = new paths.Circle(point.zero(), radii[id]);
             }
         }

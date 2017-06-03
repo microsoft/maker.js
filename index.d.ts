@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.53
+// Type definitions for Maker.js 0.9.54
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2695,7 +2695,7 @@ declare namespace MakerJs.models {
 declare namespace MakerJs.models {
     class Ring implements IModel {
         paths: IPathMap;
-        constructor(outerRadius: number, innerRadius: number);
+        constructor(outerRadius: number, innerRadius?: number);
     }
 }
 declare namespace MakerJs.models {
