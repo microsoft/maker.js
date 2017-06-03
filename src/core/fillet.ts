@@ -462,17 +462,20 @@ namespace MakerJs.chain {
      * @param filletRadius Radius of the fillet.
      * @returns Model object containing paths which fillet the joints in the chain.
      */
-    export function fillet(chainToFillet: IChain, filletRadius: number) : IModel {
+    export function fillet(chainToFillet: IChain, filletRadius: number): IModel {
         var result: IModel = { paths: {} };
         var added = 0;
         var links = chainToFillet.links;
 
         function add(i1: number, i2: number) {
-            var f = path.fillet(links[i1].walkedPath.pathContext, links[i2].walkedPath.pathContext, filletRadius);
-            if (f) {
-                result.paths['fillet' + added] = f;
-                added++;
-            }
+            var p1 = links[i1].walkedPath, p2 = links[i2].walkedPath;
+            path.moveTemporary([p1.pathContext, p2.pathContext], [p1.offset, p2.offset], function () {
+                var f = path.fillet(p1.pathContext, p2.pathContext, filletRadius);
+                if (f) {
+                    result.paths['fillet' + added] = f;
+                    added++;
+                }
+            });
         }
 
         for (var i = 1; i < links.length; i++) {
