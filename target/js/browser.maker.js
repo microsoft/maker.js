@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.53
+ *   version: 0.9.54
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -4898,11 +4898,14 @@ var MakerJs;
             var added = 0;
             var links = chainToFillet.links;
             function add(i1, i2) {
-                var f = MakerJs.path.fillet(links[i1].walkedPath.pathContext, links[i2].walkedPath.pathContext, filletRadius);
-                if (f) {
-                    result.paths['fillet' + added] = f;
-                    added++;
-                }
+                var p1 = links[i1].walkedPath, p2 = links[i2].walkedPath;
+                MakerJs.path.moveTemporary([p1.pathContext, p2.pathContext], [p1.offset, p2.offset], function () {
+                    var f = MakerJs.path.fillet(p1.pathContext, p2.pathContext, filletRadius);
+                    if (f) {
+                        result.paths['fillet' + added] = f;
+                        added++;
+                    }
+                });
             }
             for (var i = 1; i < links.length; i++) {
                 add(i - 1, i);
@@ -8236,6 +8239,8 @@ var MakerJs;
                     "Ring_inner": innerRadius
                 };
                 for (var id in radii) {
+                    if (radii[id] === void 0)
+                        continue;
                     this.paths[id] = new MakerJs.paths.Circle(MakerJs.point.zero(), radii[id]);
                 }
             }
@@ -8541,6 +8546,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.53";
+MakerJs.version = "0.9.54";
 
 },{"clone":2,"openjscad-csg":1}]},{},[]);
