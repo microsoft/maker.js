@@ -153,7 +153,36 @@
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
      */
-    export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions) {
+    export function findChains(modelContext: IModel, options?: IFindChainsOptions): IChain[] | IChainsMap;
+
+    /**
+     * Find paths that have common endpoints and form chains.
+     * 
+     * @param modelContext The model to search for chains.
+     * @param callback Callback function when chains are found.
+     * @param options Optional options object.
+     */
+    export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): IChain[] | IChainsMap;
+
+    export function findChains(modelContext: IModel, ...args: any[]): IChain[] | IChainsMap {
+
+        var options: IFindChainsOptions;
+        var callback: IChainCallback;
+
+        switch (args.length) {
+            case 1:
+                if (typeof args[0] === 'function') {
+                    callback = args[0];
+                } else {
+                    options = args[0];
+                }
+                break;
+
+            case 2:
+                callback = args[0];
+                options = args[1];
+                break;
+        }
 
         var opts: IFindChainsOptions = {
             pointMatchingDistance: .005
@@ -263,10 +292,71 @@
             //sort to return largest chains first
             chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
 
-            callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+            if (opts.contain) {
+                var containedChains = getContainment(chainsByLayer[layer]);
+                chainsByLayer[layer] = containedChains;
+            }
+
+            if (callback) callback(chainsByLayer[layer], loose, layer, ignored[layer]);
         }
 
+        if (opts.byLayers) {
+            return chainsByLayer;
+        } else {
+            return chainsByLayer[''];
+        }
     }
+
+    /**
+     * @private
+     */
+    function getContainment(chains: IChain[]) {
+
+        function spin(callback: (c: IChain, i: number) => void) {
+            for (var i = 0; i < chains.length; i++) {
+                callback(chains[i], i);
+            }
+        }
+
+        var chainsAsModels = chains.map(c => chain.toNewModel(c));
+        var parents: IChain[] = [];
+
+        //see which are inside of each other
+        spin(function (chainContext, i1) {
+            var wp = chainContext.links[0].walkedPath;
+            var firstPath = path.move(path.clone(wp.pathContext), wp.offset);
+
+            if (!firstPath) return;
+
+            spin(function (otherChain, i2) {
+
+                if (chainContext === otherChain) return;
+                if (!otherChain.endless) return;
+
+                if (model.isPathInsideModel(firstPath, chainsAsModels[i2])) {
+                    parents[i1] = otherChain;
+                }
+            });
+        });
+
+        //convert parent to children
+        var result: IChain[] = [];
+        spin(function (chainContext, i) {
+            var parent = parents[i];
+
+            if (!parent) {
+                result.push(chainContext);
+            } else {
+                if (!parent.contains) {
+                    parent.contains = [];
+                }
+                parent.contains.push(chainContext);
+            }
+        });
+
+        return result;
+    }
+
 }
 
 namespace MakerJs.chain {

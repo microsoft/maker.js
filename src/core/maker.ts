@@ -667,6 +667,11 @@ namespace MakerJs {
          * Total length of all paths in the chain.
          */
         pathLength: number;
+
+        /**
+         * Chains that are contained within this chain. Populated when chains are found with the 'contain: true' option 
+         */
+        contains?: IChain[]
     }
 
     /**
@@ -700,6 +705,11 @@ namespace MakerJs {
          * Flag to not recurse models, look only within current model's immediate paths.
          */
         shallow?: boolean;
+
+        /**
+         * Flag to order chains in a heirarchy by their paths being within one another.
+         */
+        contain?: boolean;
     }
 
     /**
