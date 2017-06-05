@@ -675,6 +675,13 @@ namespace MakerJs {
     }
 
     /**
+     * A map of chains by layer.
+     */
+    export interface IChainsMap {
+        [layer: string]: IChain[];
+    }
+
+    /**
      * Test to see if an object implements the required properties of a chain.
      * 
      * @param item The item to test.

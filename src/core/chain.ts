@@ -10,13 +10,6 @@
     /**
      * @private
      */
-    interface IChainsMap {
-        [layer: string]: IChain[];
-    }
-
-    /**
-     * @private
-     */
     interface IWalkPathByLayerMap {
         [layer: string]: IWalkPath[];
     }
