@@ -172,6 +172,67 @@ namespace MakerJs.measure {
         return true;
     }
 
+    var graham_scan = require('graham_scan') as typeof ConvexHullGrahamScan;
+
+    /**
+     * @private
+     */
+    function serializePoint(p: number[]) {
+        return p.join(',');
+    }
+
+    /**
+     * Check for flow of paths in a chain being clockwise or not.
+     * 
+     * @param chainContext The chain to test.
+     * @returns Boolean true if paths in the chain flow clockwise.
+     */
+    export function isChainClockwise(chainContext: IChain): boolean {
+
+        //cannot do circle, or circular of 2 links
+        if (chainContext.links.length == 1 || (chainContext.links.length == 2 && chainContext.endless)) {
+            return null;
+        }
+
+        var convexHull = new graham_scan();
+        var pointsInChainOrder: string[] = [];
+
+        function add(endPoints: IPoint[], reversed: boolean) {
+            var p = endPoints[~~reversed];
+            convexHull.addPoint(p[0], p[1]);
+            pointsInChainOrder.push(serializePoint(p as number[]));
+        }
+
+        chainContext.links.forEach(link => add(link.endPoints, link.reversed));
+
+        if (!chainContext.endless) {
+            var lastLink = chainContext.links[chainContext.links.length - 1];
+            add(lastLink.endPoints, !lastLink.reversed);
+        }
+
+        //we only need to deal with 3 points
+        var hullPoints = convexHull.getHull().slice(0, 3).map((p): string => serializePoint([p.x, p.y]));
+        var ordered: string[] = [];
+        pointsInChainOrder.forEach(p => {
+            if (~hullPoints.indexOf(p)) ordered.push(p);
+        });
+
+        //now make sure endpoints of hull are endpoints of ordered. do this by managing the middle point
+        switch (ordered.indexOf(hullPoints[1])) {
+            case 0:
+                //shift down
+                ordered.unshift(ordered.pop());
+                break;
+            case 2:
+                //shift up
+                ordered.push(ordered.shift());
+                break;
+        }
+
+        //the hull is counterclockwise, so the result is clockwise if the first elements do not match
+        return hullPoints[0] != ordered[0];
+    }
+
     /**
      * Check for line overlapping another line.
      * 
