@@ -260,6 +260,12 @@
             walkOptions.beforeChildWalk = function () { return false; };
         }
 
+        var beziers: models.BezierCurve[];
+        if (opts.unifyBeziers) {
+            beziers = getBezierModels(modelContext);
+            swapBezierPathsWithSeeds(beziers, true);
+        }
+
         walk(modelContext, walkOptions);
 
         for (var layer in connectionMap) {
@@ -286,11 +292,15 @@
             chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
 
             if (opts.contain) {
-                var containedChains = getContainment(chainsByLayer[layer]);
+                var containedChains = getContainment(chainsByLayer[layer], opts.contain);
                 chainsByLayer[layer] = containedChains;
             }
 
             if (callback) callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+        }
+
+        if (beziers) {
+            swapBezierPathsWithSeeds(beziers, false);
         }
 
         if (opts.byLayers) {
@@ -303,25 +313,25 @@
     /**
      * @private
      */
-    function getContainment(chains: IChain[]) {
+    function getContainment(allChains: IChain[], opts: IContainChainsOptions) {
 
-        function spin(callback: (c: IChain, i: number) => void) {
+        function spin(chains: IChain[], callback: (c: IChain, i: number) => void) {
             for (var i = 0; i < chains.length; i++) {
                 callback(chains[i], i);
             }
         }
 
-        var chainsAsModels = chains.map(c => chain.toNewModel(c));
+        var chainsAsModels = allChains.map(c => chain.toNewModel(c));
         var parents: IChain[] = [];
 
         //see which are inside of each other
-        spin(function (chainContext, i1) {
+        spin(allChains, function (chainContext, i1) {
             var wp = chainContext.links[0].walkedPath;
             var firstPath = path.move(path.clone(wp.pathContext), wp.offset);
 
             if (!firstPath) return;
 
-            spin(function (otherChain, i2) {
+            spin(allChains, function (otherChain, i2) {
 
                 if (chainContext === otherChain) return;
                 if (!otherChain.endless) return;
@@ -334,7 +344,7 @@
 
         //convert parent to children
         var result: IChain[] = [];
-        spin(function (chainContext, i) {
+        spin(allChains, function (chainContext, i) {
             var parent = parents[i];
 
             if (!parent) {
@@ -347,7 +357,95 @@
             }
         });
 
+        if (opts.alernateWindings) {
+
+            function alternate(chains: IChain[], clockwise: boolean) {
+                spin(chains, function(chainContext, i) {
+
+                    if (chainContext.contains) {
+                        alternate(chainContext.contains, !clockwise);
+                    }
+                });
+            }
+
+            alternate(allChains, true);
+        }
+
         return result;
+    }
+
+    /**
+     * @private
+     */
+    function getBezierModels(modelContext: IModel): models.BezierCurve[] {
+
+        var beziers: models.BezierCurve[] = [];
+
+        function checkIsBezierWithPaths(b: IModel) {
+            if (b.type && b.type === models.BezierCurve.typeName && b.paths) {
+                beziers.push(b as models.BezierCurve);
+            }
+        }
+
+        var options: IWalkOptions = {
+            beforeChildWalk: function (walkedModel: IWalkModel): boolean {
+                checkIsBezierWithPaths(walkedModel.childModel);
+                return true;
+            }
+        };
+
+        var rootModel: IWalkModel = {
+            childId: '',
+            childModel: modelContext,
+            layer: '',
+            offset: modelContext.origin,
+            parentModel: null,
+            route: [],
+            routeKey: ''
+        };
+
+        checkIsBezierWithPaths(rootModel);
+
+        model.walk(modelContext, options);
+
+        return beziers;
+    }
+
+    /**
+     * @private
+     */
+    function swapBezierPathsWithSeeds(beziers: models.BezierCurve[], swap: boolean) {
+        const tempKey = 'tempPaths';
+
+        beziers.forEach(function (b: models.BezierCurve) {
+
+            if (swap) {
+
+                //use seeds as path, hide the arc paths from findChains()
+                var bezierSeeds = models.BezierCurve.getBezierSeeds(b);
+                if (bezierSeeds.length > 0) {
+                    b[tempKey] = b.paths;
+
+                    var newPaths: IPathMap = {};
+
+                    bezierSeeds.forEach(function (seed, i) {
+                        newPaths['seed_' + i] = seed;
+                    });
+
+                    b.paths = newPaths;
+                }
+
+            } else {
+                //revert the above
+
+                if (tempKey in b) {
+                    b.paths = b[tempKey];
+                    delete b[tempKey];
+                }
+
+            }
+        });
+
     }
 
 }

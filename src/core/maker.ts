@@ -699,7 +699,7 @@ namespace MakerJs {
     }
 
     /**
-     * Options to pass to model.findLoops.
+     * Options to pass to model.findChains.
      */
     export interface IFindChainsOptions extends IPointMatchOptions {
 
@@ -716,7 +716,23 @@ namespace MakerJs {
         /**
          * Flag to order chains in a heirarchy by their paths being within one another.
          */
-        contain?: boolean;
+        contain?: boolean | IContainChainsOptions;
+
+        /**
+         * Flag to flatten BezierCurve arc segments into IPathBezierSeeds.
+         */
+        unifyBeziers?: boolean;
+    }
+
+    /**
+     * Sub-options to pass to model.findChains.contain option.
+     */
+    export interface IContainChainsOptions {
+
+        /**
+         * Flag to alternate winding direction of contained chains.
+         */
+        alernateWindings?: boolean;
     }
 
     /**

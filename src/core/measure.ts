@@ -189,8 +189,8 @@ namespace MakerJs.measure {
      */
     export function isChainClockwise(chainContext: IChain): boolean {
 
-        //cannot do circle, or circular of 2 links
-        if (chainContext.links.length == 1 || (chainContext.links.length == 2 && chainContext.endless)) {
+        //cannot do non-endless, circle, or circular of 2 links
+        if (!chainContext.endless || chainContext.links.length == 1 || chainContext.links.length == 2) {
             return null;
         }
 
