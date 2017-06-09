@@ -359,11 +359,19 @@
 
         if (opts.alernateWindings) {
 
-            function alternate(chains: IChain[], clockwise: boolean) {
-                spin(chains, function(chainContext, i) {
+            function alternate(chains: IChain[], shouldBeClockwise: boolean) {
+                spin(chains, function (chainContext, i) {
+
+                    var isClockwise = measure.isChainClockwise(chainContext);
+
+                    if (isClockwise !== null) {
+                        if (!isClockwise && shouldBeClockwise || isClockwise && !shouldBeClockwise) {
+                            chain.reverse(chainContext);
+                        }
+                    }
 
                     if (chainContext.contains) {
-                        alternate(chainContext.contains, !clockwise);
+                        alternate(chainContext.contains, !shouldBeClockwise);
                     }
                 });
             }
