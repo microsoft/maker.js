@@ -69,6 +69,14 @@ var fonts = {
       "stencil"
     ]
   },
+  "vampiroone-regular": {
+    "displayName": "Vampiro One",
+    "path": "vampiroone/VampiroOne-Regular.ttf",
+    "tags": [
+      "connected",
+      "script"
+    ]
+  },
   "wallpoet-regular": {
     "displayName": "Wallpoet",
     "path": "wallpoet/Wallpoet-Regular.ttf",
