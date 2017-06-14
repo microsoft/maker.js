@@ -133,8 +133,13 @@ namespace MakerJsRequireIframe {
         return logHtmls;
     }
 
-    function getHtml() {
+    export function getHtml() {
         return htmls.concat(getLogsHtmls()).join('');
+    }
+
+    export function resetLog() {
+        htmls = [];
+        logs = [];
     }
 
     var head: HTMLHeadElement;
@@ -235,8 +240,7 @@ namespace MakerJsRequireIframe {
         function complete2() {
 
             //reset any calls to document.write
-            htmls = [];
-            logs = [];
+            resetLog();
 
             //reinstate alert
             window.alert = originalAlert;
@@ -250,7 +254,7 @@ namespace MakerJsRequireIframe {
                     captureExportedModel = itemToExport as MakerJs.IModel;
 
                 } else if (Array.isArray(itemToExport)) {
-                    captureExportedModel = { };
+                    captureExportedModel = {};
 
                     itemToExport.forEach((x, i) => {
                         if (makerjs.isModel(x)) {
@@ -390,3 +394,11 @@ namespace MakerJsRequireIframe {
     mockWalk(parent.makerjs, mockMakerJs);
 
 }
+
+parent.MakerJsPlayground.mainThreadConstructor = function (kit, params) {
+    MakerJsRequireIframe.resetLog();
+    return {
+        model: makerjs.kit.construct(kit, params),
+        html: MakerJsRequireIframe.getHtml()
+    };
+}; 
