@@ -256,7 +256,7 @@ svg#drawing .locked {
 }
 
 #crosshairs line {
-    stroke: #5B9DE3;
+    stroke: #87cefa;
 }
 
 .collapse-origin #crosshairs line, .collapse-origin #grid {
