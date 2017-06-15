@@ -95,6 +95,7 @@
   "homepage": "https://github.com/Microsoft/maker.js",
   "devDependencies": {
     "@types/codemirror": "0.0.38",
+    "@types/graham_scan": "^1.0.28",
     "@types/marked": "^0.0.28",
     "@types/text-encoding": "^0.0.30",
     "browserify": "^13.3.0",
@@ -105,7 +106,6 @@
   },
   "dependencies": {
     "@types/bezier-js": "^0.0.6",
-    "@types/graham_scan": "^1.0.28",
     "@types/node": "^7.0.5",
     "@types/openjscad": "^0.0.28",
     "@types/opentype.js": "^0.0.0",
