@@ -663,7 +663,7 @@ namespace MakerJs.exporter {
 
         function halfCircle(sign: number) {
             d.push('a');
-            svgArcData(d, r, [2 * r * sign, 0], accuracy, false, clockwiseCircle);
+            svgArcData(d, r, [2 * r * sign, 0], accuracy, false, !clockwiseCircle);
         }
 
         halfCircle(1);
@@ -691,13 +691,13 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function svgArcData(d: ISvgPathData, radius: number, endPoint: IPoint, accuracy: number, largeArc?: boolean, decreasing?: boolean) {
+    function svgArcData(d: ISvgPathData, radius: number, endPoint: IPoint, accuracy: number, largeArc?: boolean, increasing?: boolean) {
         var r = round(radius, accuracy);
         var end: IPoint = endPoint;
         d.push(r, r);
         d.push(0);                   //0 = x-axis rotation
         d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
-        d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
+        d.push(increasing ? 0 : 1);  //sweep-flag 0=increasing, 1=decreasing 
         d.push(round(end[0], accuracy), round(end[1], accuracy));
     }
 
