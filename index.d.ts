@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.54
+// Type definitions for Maker.js 0.9.55
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -609,6 +609,16 @@ declare namespace MakerJs {
          * Total length of all paths in the chain.
          */
         pathLength: number;
+        /**
+         * Chains that are contained within this chain. Populated when chains are found with the 'contain: true' option
+         */
+        contains?: IChain[];
+    }
+    /**
+     * A map of chains by layer.
+     */
+    interface IChainsMap {
+        [layer: string]: IChain[];
     }
     /**
      * Test to see if an object implements the required properties of a chain.
@@ -623,7 +633,7 @@ declare namespace MakerJs {
         (chains: IChain[], loose: IWalkPath[], layer: string, ignored?: IWalkPath[]): void;
     }
     /**
-     * Options to pass to model.findLoops.
+     * Options to pass to model.findChains.
      */
     interface IFindChainsOptions extends IPointMatchOptions {
         /**
@@ -634,6 +644,23 @@ declare namespace MakerJs {
          * Flag to not recurse models, look only within current model's immediate paths.
          */
         shallow?: boolean;
+        /**
+         * Flag to order chains in a heirarchy by their paths being within one another.
+         */
+        contain?: boolean | IContainChainsOptions;
+        /**
+         * Flag to flatten BezierCurve arc segments into IPathBezierSeeds.
+         */
+        unifyBeziers?: boolean;
+    }
+    /**
+     * Sub-options to pass to model.findChains.contain option.
+     */
+    interface IContainChainsOptions {
+        /**
+         * Flag to alternate winding direction of contained chains.
+         */
+        alernateWindings?: boolean;
     }
     /**
      * Reference to a model within a model.
@@ -949,9 +976,10 @@ declare namespace MakerJs.path {
      * Create a clone of a path. This is faster than cloneObject.
      *
      * @param pathToClone The path to clone.
+     * @param offset Optional point to move path a relative distance.
      * @returns Cloned path.
      */
-    function clone(pathToClone: IPath): IPath;
+    function clone(pathToClone: IPath, offset?: IPoint): IPath;
     /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      *
@@ -1361,7 +1389,7 @@ declare namespace MakerJs.model {
      */
     function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel): void;
     /**
-     * Combine 2 models.
+     * Combine 2 models. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
@@ -1371,29 +1399,33 @@ declare namespace MakerJs.model {
      * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
      * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
-    function combine(modelA: IModel, modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, options?: ICombineOptions): void;
+    function combine(modelA: IModel, modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, options?: ICombineOptions): IModel;
     /**
-     * Combine 2 models, resulting in a intersection.
+     * Combine 2 models, resulting in a intersection. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
-    function combineIntersection(modelA: IModel, modelB: IModel): void;
+    function combineIntersection(modelA: IModel, modelB: IModel): IModel;
     /**
-     * Combine 2 models, resulting in a subtraction of B from A.
+     * Combine 2 models, resulting in a subtraction of B from A. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
-    function combineSubtraction(modelA: IModel, modelB: IModel): void;
+    function combineSubtraction(modelA: IModel, modelB: IModel): IModel;
     /**
-     * Combine 2 models, resulting in a union.
+     * Combine 2 models, resulting in a union. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
-    function combineUnion(modelA: IModel, modelB: IModel): void;
+    function combineUnion(modelA: IModel, modelB: IModel): IModel;
 }
 declare namespace MakerJs {
     /**
@@ -1599,6 +1631,17 @@ declare namespace MakerJs.measure {
      * @returns Boolean true if bezier seed has control points on the line slope and between the line endpoints.
      */
     function isBezierSeedLinear(seed: IPathBezierSeed, exclusive?: boolean): boolean;
+    /**
+     * Check for flow of paths in a chain being clockwise or not.
+     *
+     * @param chainContext The chain to test.
+     * @param out_result Optional output object, if provided, will be populated with convex hull results.
+     * @returns Boolean true if paths in the chain flow clockwise.
+     */
+    function isChainClockwise(chainContext: IChain, out_result?: {
+        hullPoints?: IPoint[];
+        keyPoints?: IPoint[];
+    }): boolean;
     /**
      * Check for line overlapping another line.
      *
@@ -1905,8 +1948,18 @@ declare namespace MakerJs.model {
      *
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
+     * @returns An array of chains, or a map (keyed by layer id) of arrays of chains - if options.byLayers is true.
      */
-    function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): void;
+    function findChains(modelContext: IModel, options?: IFindChainsOptions): IChain[] | IChainsMap;
+    /**
+     * Find paths that have common endpoints and form chains.
+     *
+     * @param modelContext The model to search for chains.
+     * @param callback Callback function when chains are found.
+     * @param options Optional options object.
+     * @returns An array of chains, or a map (keyed by layer id) of arrays of chains - if options.byLayers is true.
+     */
+    function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): IChain[] | IChainsMap;
 }
 declare namespace MakerJs.chain {
     /**
@@ -2121,19 +2174,20 @@ declare namespace MakerJs.exporter {
      * @param pathOffset IPoint relative offset of the path object.
      * @param exportOffset IPoint relative offset point of the export.
      * @param accuracy Optional accuracy of SVG path data.
+     * @param clockwiseCircle Optional flag to use clockwise winding for circles.
      * @returns String of SVG path data.
      */
-    function pathToSVGPathData(pathToExport: IPath, pathOffset: IPoint, exportOffset: IPoint, accuracy?: number): string;
+    function pathToSVGPathData(pathToExport: IPath, pathOffset: IPoint, exportOffset: IPoint, accuracy?: number, clockwiseCircle?: boolean): string;
     /**
      * Convert a model to SVG path data.
      *
      * @param modelToExport Model to export.
-     * @param byLayers Boolean flag (default true) to return a map of path data by layer.
+     * @param byLayers_orFindChainsOptions Boolean flag (default true) to return a map of path data by layer, or an IFindChainsOptions object
      * @param origin Optional reference origin.
      * @param accuracy Optional accuracy of SVG decimals.
      * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
      */
-    function toSVGPathData(modelToExport: IModel, byLayers?: boolean, origin?: IPoint, accuracy?: number): IPathDataByLayerMap | string;
+    function toSVGPathData(modelToExport: IModel, byLayers_orFindChainsOptions?: boolean | IFindChainsOptions, origin?: IPoint, accuracy?: number): IPathDataByLayerMap | string;
     function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
     function toSVG(pathsToExport: IPath[], options?: ISVGRenderOptions): string;
     function toSVG(pathToExport: IPath, options?: ISVGRenderOptions): string;
@@ -2206,7 +2260,7 @@ declare namespace MakerJs.exporter {
         /**
          * SVG fill rule.
          */
-        fillRule?: string;
+        fillRule?: 'nonzero' | 'evenodd';
         /**
          * SVG stroke linecap.
          */
@@ -2400,7 +2454,9 @@ declare namespace MakerJs.models {
         constructor(origin: IPoint, controls: IPoint[], end: IPoint, accuracy?: number);
         constructor(origin: IPoint, control1: IPoint, control2: IPoint, end: IPoint, accuracy?: number);
         static typeName: string;
-        static getBezierSeeds(curve: BezierCurve, options?: IFindChainsOptions): IPathBezierSeed[];
+        static getBezierSeeds(curve: BezierCurve, options?: IFindChainsOptions): IPath[] | {
+            [layer: string]: IPath[];
+        };
         static computeLength(seed: IPathBezierSeed): number;
         static computePoint(seed: IPathBezierSeed, t: number): IPoint;
     }

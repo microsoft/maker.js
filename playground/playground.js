@@ -640,8 +640,9 @@ var MakerJsPlayground;
     }
     function constructOnMainThreadReal(realValues, successCb) {
         try {
-            var model = makerjs.kit.construct(processed.kit, realValues);
-            setProcessedModel(model);
+            var result = MakerJsPlayground.mainThreadConstructor(processed.kit, realValues);
+            processed.html = result.html;
+            setProcessedModel(result.model);
             if (successCb) {
                 successCb();
             }
