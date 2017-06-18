@@ -6,6 +6,13 @@ var fonts = {
       "stencil"
     ]
   },
+  "arbutusslab-regular": {
+    "displayName": "Arbutus Slab",
+    "path": "arbutusslab/ArbutusSlab-Regular.ttf",
+    "tags": [
+      "serif"
+    ]
+  },
   "blackopsone-regular": {
     "displayName": "Black Ops One",
     "path": "blackopsone/BlackOpsOne-Regular.ttf",
@@ -20,11 +27,54 @@ var fonts = {
       "stencil"
     ]
   },
+  "goblinone": {
+    "displayName": "Goblin One",
+    "path": "goblinone/GoblinOne.ttf",
+    "tags": [
+      "serif"
+    ]
+  },
+  "graduate-regular": {
+    "displayName": "Graduate",
+    "path": "graduate/Graduate-Regular.ttf",
+    "tags": [
+      "serif"
+    ]
+  },
   "keaniaone-regular": {
     "displayName": "Keania One",
-    "path": "keaniaone/KeaniaOne-Regular.ttf",
+    "path": "keaniaone/KeaniaOne-Regular.ttf"
+  },
+  "kumarone-regular": {
+    "displayName": "Kumar One",
+    "path": "kumarone/KumarOne-Regular.ttf"
+  },
+  "mavenpro-regular": {
+    "displayName": "Maven Pro",
+    "path": "mavenpro/MavenPro-Regular.ttf",
     "tags": [
-      "stencil"
+      "sans-serif"
+    ]
+  },
+  "mavenpro-black": {
+    "displayName": "Maven Pro Black",
+    "path": "mavenpro/MavenPro-Black.ttf",
+    "tags": [
+      "sans-serif"
+    ]
+  },
+  "mavenpro-bold": {
+    "displayName": "Maven Pro Bold",
+    "path": "mavenpro/MavenPro-Bold.ttf",
+    "tags": [
+      "sans-serif"
+    ]
+  },
+  "mavenpro-medium": {
+    "displayName": "Maven Pro Medium",
+    "path": "mavenpro/MavenPro-Medium.ttf",
+    "tags": [
+      "sans-serif"
     ]
   },
   "montserratsubrayada-regular": {
@@ -39,6 +89,20 @@ var fonts = {
     "path": "montserratsubrayada/MontserratSubrayada-Bold.ttf",
     "tags": [
       "connected"
+    ]
+  },
+  "newrocker-regular": {
+    "displayName": "New Rocker",
+    "path": "newrocker/NewRocker-Regular.ttf",
+    "tags": [
+      "gothic"
+    ]
+  },
+  "pirataone-regular": {
+    "displayName": "Pirata One",
+    "path": "pirataone/PirataOne-Regular.ttf",
+    "tags": [
+      "gothic"
     ]
   },
   "plaster-regular": {
