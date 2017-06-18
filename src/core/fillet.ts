@@ -469,6 +469,9 @@ namespace MakerJs.chain {
 
         function add(i1: number, i2: number) {
             var p1 = links[i1].walkedPath, p2 = links[i2].walkedPath;
+
+            if (p1.modelContext === p2. modelContext && p1.modelContext.type == models.BezierCurve.typeName) return;
+
             path.moveTemporary([p1.pathContext, p2.pathContext], [p1.offset, p2.offset], function () {
                 var f = path.fillet(p1.pathContext, p2.pathContext, filletRadius);
                 if (f) {

@@ -111,7 +111,7 @@ namespace MakerJs.exporter {
      * @private
      */
     interface ISvgPathDataMap {
-        [pathType: string]: (pathContext: IPath, accuracy: number) => ISvgPathData;
+        [pathType: string]: (pathContext: IPath, accuracy: number, clockwiseCircle?: boolean) => ISvgPathData;
     }
 
     /**
@@ -123,8 +123,8 @@ namespace MakerJs.exporter {
         return startSvgPathData(line.origin, point.rounded(line.end, accuracy) as Array<number>, accuracy);
     };
 
-    svgPathDataMap[pathType.Circle] = function (circle: IPathCircle, accuracy: number) {
-        return startSvgPathData(circle.origin, svgCircleData(circle.radius, accuracy), accuracy);
+    svgPathDataMap[pathType.Circle] = function (circle: IPathCircle, accuracy: number, clockwiseCircle: boolean) {
+        return startSvgPathData(circle.origin, svgCircleData(circle.radius, accuracy, clockwiseCircle), accuracy);
     };
 
     svgPathDataMap[pathType.Arc] = function (arc: IPathArc, accuracy: number) {
@@ -162,9 +162,10 @@ namespace MakerJs.exporter {
      * @param pathOffset IPoint relative offset of the path object.
      * @param exportOffset IPoint relative offset point of the export.
      * @param accuracy Optional accuracy of SVG path data.
+     * @param clockwiseCircle Optional flag to use clockwise winding for circles.
      * @returns String of SVG path data.
      */
-    export function pathToSVGPathData(pathToExport: IPath, pathOffset: IPoint, exportOffset: IPoint, accuracy?: number): string {
+    export function pathToSVGPathData(pathToExport: IPath, pathOffset: IPoint, exportOffset: IPoint, accuracy?: number, clockwiseCircle?: boolean): string {
         var fn = svgPathDataMap[pathToExport.type];
         if (fn) {
             var fixedPath: IPath;
@@ -173,7 +174,7 @@ namespace MakerJs.exporter {
             });
             path.moveRelative(fixedPath, exportOffset);
 
-            var d = fn(fixedPath, accuracy);
+            var d = fn(fixedPath, accuracy, clockwiseCircle);
             return d.join(' ');
         }
         return '';
@@ -182,104 +183,43 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function getBezierModelsWithPaths(modelToExport: IModel): IWalkModel[] {
-
-        var beziers: IWalkModel[] = [];
-
-        function checkIsBezierWithPaths(walkedModel: IWalkModel) {
-            var b = walkedModel.childModel;
-            if (b.type && b.type === models.BezierCurve.typeName && b.paths) {
-                beziers.push(walkedModel);
-            }
-        }
-
-        var options: IWalkOptions = {
-            beforeChildWalk: function (walkedModel: IWalkModel): boolean {
-                checkIsBezierWithPaths(walkedModel);
-                return true;
-            }
-        };
-
-        var rootModel: IWalkModel = {
-            childId: '',
-            childModel: modelToExport,
-            layer: '',
-            offset: modelToExport.origin,
-            parentModel: null,
-            route: [],
-            routeKey: ''
-        };
-
-        checkIsBezierWithPaths(rootModel);
-
-        model.walk(modelToExport, options);
-
-        return beziers;
-    }
-
-    /**
-     * @private
-     */
     function getPathDataByLayer(modelToExport: IModel, offset: IPoint, options: IFindChainsOptions, accuracy: number) {
         var pathDataByLayer: IPathDataMap = {};
 
-        var beziers = getBezierModelsWithPaths(modelToExport);
-        var tempKey = 'tempPaths';
-
-        beziers.forEach(function (walkedModel: IWalkModel) {
-
-            var b = walkedModel.childModel as models.BezierCurve;
-
-            //use seeds as path, hide the arc paths from findChains()
-            var bezierSeeds = models.BezierCurve.getBezierSeeds(b);
-            if (bezierSeeds.length > 0) {
-                b[tempKey] = b.paths;
-
-                var newPaths: IPathMap = {};
-
-                bezierSeeds.forEach(function (seed, i) {
-                    newPaths['seed_' + i] = seed;
-                });
-
-                b.paths = newPaths;
-            }
-
-        });
+        options.unifyBeziers = true;
 
         model.findChains(
             modelToExport,
             function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
-                function single(walkedPath: IWalkPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, accuracy);
+                function single(walkedPath: IWalkPath, clockwise?: boolean) {
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, accuracy, clockwise);
                     pathDataByLayer[layer].push(pathData);
                 }
 
                 pathDataByLayer[layer] = [];
 
-                chains.map(function (chain: IChain) {
-                    if (chain.links.length > 1) {
-                        var pathData = chainToSVGPathData(chain, offset, accuracy);
-                        pathDataByLayer[layer].push(pathData);
-                    } else {
-                        single(chain.links[0].walkedPath);
-                    }
-                });
+                function doChains(cs: IChain[], clockwise: boolean) {
+                    cs.forEach(function (chain: IChain) {
+                        if (chain.links.length > 1) {
+                            var pathData = chainToSVGPathData(chain, offset, accuracy);
+                            pathDataByLayer[layer].push(pathData);
+                        } else {
+                            single(chain.links[0].walkedPath, clockwise);
+                        }
+                        if (chain.contains) {
+                            doChains(chain.contains, !clockwise);
+                        }
+                    });
+                }
 
-                loose.map(single);
+                doChains(chains, true);
+
+                loose.forEach(wp => single(wp));
 
             },
             options
         );
-
-        //revert
-        beziers.forEach(function (walkedModel: IWalkModel) {
-            var b = walkedModel.childModel as models.BezierCurve;
-            if (tempKey in b) {
-                b.paths = b[tempKey];
-                delete b[tempKey];
-            }
-        });
 
         return pathDataByLayer;
     }
@@ -288,12 +228,24 @@ namespace MakerJs.exporter {
      * Convert a model to SVG path data.
      *
      * @param modelToExport Model to export.
-     * @param byLayers Boolean flag (default true) to return a map of path data by layer.
+     * @param byLayers_orFindChainsOptions Boolean flag (default true) to return a map of path data by layer, or an IFindChainsOptions object
      * @param origin Optional reference origin.
      * @param accuracy Optional accuracy of SVG decimals.
      * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
      */
-    export function toSVGPathData(modelToExport: IModel, byLayers = true, origin?: IPoint, accuracy?: number): IPathDataByLayerMap | string {
+    export function toSVGPathData(modelToExport: IModel, byLayers_orFindChainsOptions?: boolean | IFindChainsOptions, origin?: IPoint, accuracy?: number): IPathDataByLayerMap | string {
+
+        var findChainsOptions: IFindChainsOptions;
+
+        if (byLayers_orFindChainsOptions == undefined) {
+            findChainsOptions = {
+                byLayers: true
+            }
+        } else if (typeof byLayers_orFindChainsOptions === 'boolean') {
+            findChainsOptions = {
+                byLayers: byLayers_orFindChainsOptions
+            }
+        }
 
         var size = measure.modelExtents(modelToExport);
 
@@ -301,14 +253,14 @@ namespace MakerJs.exporter {
             origin = [-size.low[0], size.high[1]];
         }
 
-        var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, { byLayers: byLayers }, accuracy);
+        var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, findChainsOptions, accuracy);
         var pathDataStringByLayer: IPathDataByLayerMap = {};
 
         for (var layer in pathDataArrayByLayer) {
             pathDataStringByLayer[layer] = pathDataArrayByLayer[layer].join(' ');
         }
 
-        return byLayers ? pathDataStringByLayer : pathDataStringByLayer[''];
+        return findChainsOptions.byLayers ? pathDataStringByLayer : pathDataStringByLayer[''];
     }
 
     export function toSVG(modelToExport: IModel, options?: ISVGRenderOptions): string;
@@ -517,7 +469,17 @@ namespace MakerJs.exporter {
 
         if (opts.useSvgPathOnly) {
 
-            var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true }, opts.accuracy);
+            var findChainsOptions: IFindChainsOptions = {
+                byLayers: true
+            };
+
+            if (opts.fillRule === 'nonzero') {
+                findChainsOptions.contain = <IContainChainsOptions>{
+                    alernateWindings: true
+                }
+            }
+
+            var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, findChainsOptions, opts.accuracy);
 
             for (var layer in pathDataByLayer) {
                 var pathData = pathDataByLayer[layer].join(' ');
@@ -695,13 +657,13 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function svgCircleData(radius: number, accuracy: number): ISvgPathData {
+    function svgCircleData(radius: number, accuracy: number, clockwiseCircle?: boolean): ISvgPathData {
         var r = round(radius, accuracy);
         var d: ISvgPathData = ['m', -r, 0];
 
         function halfCircle(sign: number) {
             d.push('a');
-            svgArcData(d, r, [2 * r * sign, 0], accuracy);
+            svgArcData(d, r, [2 * r * sign, 0], accuracy, false, !clockwiseCircle);
         }
 
         halfCircle(1);
@@ -729,13 +691,13 @@ namespace MakerJs.exporter {
     /**
      * @private
      */
-    function svgArcData(d: ISvgPathData, radius: number, endPoint: IPoint, accuracy: number, largeArc?: boolean, decreasing?: boolean) {
+    function svgArcData(d: ISvgPathData, radius: number, endPoint: IPoint, accuracy: number, largeArc?: boolean, increasing?: boolean) {
         var r = round(radius, accuracy);
         var end: IPoint = endPoint;
         d.push(r, r);
         d.push(0);                   //0 = x-axis rotation
         d.push(largeArc ? 1 : 0);    //large arc=1, small arc=0
-        d.push(decreasing ? 0 : 1);  //sweep-flag 0=decreasing, 1=increasing 
+        d.push(increasing ? 0 : 1);  //sweep-flag 0=increasing, 1=decreasing 
         d.push(round(end[0], accuracy), round(end[1], accuracy));
     }
 
@@ -832,7 +794,7 @@ namespace MakerJs.exporter {
         /**
          * SVG fill rule.
          */
-        fillRule?: string;
+        fillRule?: 'nonzero' | 'evenodd';
 
         /**
          * SVG stroke linecap.

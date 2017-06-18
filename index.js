@@ -248,7 +248,7 @@ var MakerJs;
      * @returns True if the object is a number type.
      */
     function isNumber(value) {
-        return !isNaN(value);
+        return typeof value === 'number';
     }
     MakerJs.isNumber = isNumber;
     /**
@@ -261,26 +261,6 @@ var MakerJs;
         return typeof value === 'object';
     }
     MakerJs.isObject = isObject;
-    /**
-     * @private
-     */
-    var x = {};
-    /**
-     * @private
-     */
-    function reflectName(value) {
-        for (var prop in x) {
-            delete x[prop];
-            return prop;
-        }
-    }
-    /**
-     * @private
-     */
-    function hasNamedProperty(p, value) {
-        var prop = reflectName();
-        return (prop in p);
-    }
     //points
     /**
      * Test to see if an object implements the required properties of a point.
@@ -288,7 +268,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPoint(item) {
-        return (Array.isArray(item) && item.length == 2 && !isNaN(item[0]) && !isNaN(item[1]));
+        return item && Array.isArray(item) && item.length == 2 && isNumber(item[0]) && isNumber(item[1]);
     }
     MakerJs.isPoint = isPoint;
     /**
@@ -297,7 +277,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPath(item) {
-        return item && item.type && item.origin;
+        return item && item.type && isPoint(item.origin);
     }
     MakerJs.isPath = isPath;
     /**
@@ -306,7 +286,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPathLine(item) {
-        return isPath(item) && item.type == MakerJs.pathType.Line && item.end;
+        return isPath(item) && item.type == MakerJs.pathType.Line && isPoint(item.end);
     }
     MakerJs.isPathLine = isPathLine;
     /**
@@ -315,7 +295,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPathCircle(item) {
-        return isPath(item) && item.type == MakerJs.pathType.Circle && hasNamedProperty(item, x.radius = null);
+        return isPath(item) && item.type == MakerJs.pathType.Circle && isNumber(item.radius);
     }
     MakerJs.isPathCircle = isPathCircle;
     /**
@@ -324,7 +304,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPathArc(item) {
-        return isPath(item) && item.type == MakerJs.pathType.Arc && hasNamedProperty(item, x.radius = null) && hasNamedProperty(item, x.startAngle = null) && hasNamedProperty(item, x.endAngle = null);
+        return isPath(item) && item.type == MakerJs.pathType.Arc && isNumber(item.radius) && isNumber(item.startAngle) && isNumber(item.endAngle);
     }
     MakerJs.isPathArc = isPathArc;
     /**
@@ -333,7 +313,7 @@ var MakerJs;
      * @param item The item to test.
      */
     function isPathArcInBezierCurve(item) {
-        return isPathArc(item) && hasNamedProperty(item, x.bezierData = null);
+        return isPathArc(item) && isObject(item.bezierData) && isNumber(item.bezierData.startT) && isNumber(item.bezierData.endT);
     }
     MakerJs.isPathArcInBezierCurve = isPathArcInBezierCurve;
     /**
@@ -851,22 +831,26 @@ var MakerJs;
          * Create a clone of a path. This is faster than cloneObject.
          *
          * @param pathToClone The path to clone.
+         * @param offset Optional point to move path a relative distance.
          * @returns Cloned path.
          */
-        function clone(pathToClone) {
-            var result = null;
+        function clone(pathToClone, offset) {
+            var result = { type: pathToClone.type, origin: MakerJs.point.add(pathToClone.origin, offset) };
             switch (pathToClone.type) {
                 case MakerJs.pathType.Arc:
-                    var arc = pathToClone;
-                    result = new MakerJs.paths.Arc(MakerJs.point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
+                    result.radius = pathToClone.radius;
+                    result.startAngle = pathToClone.startAngle;
+                    result.endAngle = pathToClone.endAngle;
                     break;
                 case MakerJs.pathType.Circle:
-                    var circle = pathToClone;
-                    result = new MakerJs.paths.Circle(MakerJs.point.clone(circle.origin), circle.radius);
+                    result.radius = pathToClone.radius;
                     break;
                 case MakerJs.pathType.Line:
-                    var line = pathToClone;
-                    result = new MakerJs.paths.Line(MakerJs.point.clone(line.origin), MakerJs.point.clone(line.end));
+                    result.end = MakerJs.point.add(pathToClone.end, offset);
+                    break;
+                case MakerJs.pathType.BezierSeed:
+                    result.end = MakerJs.point.add(pathToClone.end, offset);
+                    result.controls = pathToClone.controls.map(function (p) { return MakerJs.point.add(p, offset); });
                     break;
             }
             copyLayer(pathToClone, result);
@@ -1239,11 +1223,34 @@ var MakerJs;
          * @returns Array of points which are on the path.
          */
         function toKeyPoints(pathContext, maxArcFacet) {
-            var fn = numberOfKeyPointsMap[pathContext.type];
-            if (fn) {
-                var numberOfKeyPoints = fn(pathContext, maxArcFacet);
-                if (numberOfKeyPoints) {
-                    return toPoints(pathContext, numberOfKeyPoints);
+            if (pathContext.type == MakerJs.pathType.BezierSeed) {
+                var curve = new MakerJs.models.BezierCurve(pathContext);
+                var curveKeyPoints;
+                MakerJs.model.findChains(curve, function (chains, loose, layer) {
+                    if (chains.length == 1) {
+                        var c = chains[0];
+                        switch (c.links[0].walkedPath.pathId) {
+                            case 'arc_0':
+                            case 'line_0':
+                                break;
+                            default:
+                                MakerJs.chain.reverse(c);
+                        }
+                        curveKeyPoints = MakerJs.chain.toKeyPoints(c);
+                    }
+                    else if (loose.length === 1) {
+                        curveKeyPoints = toKeyPoints(loose[0].pathContext);
+                    }
+                });
+                return curveKeyPoints;
+            }
+            else {
+                var fn = numberOfKeyPointsMap[pathContext.type];
+                if (fn) {
+                    var numberOfKeyPoints = fn(pathContext, maxArcFacet);
+                    if (numberOfKeyPoints) {
+                        return toPoints(pathContext, numberOfKeyPoints);
+                    }
                 }
             }
             return [];
@@ -1917,7 +1924,7 @@ var MakerJs;
                 return;
             function walkRecursive(modelContext, layer, offset, route, routeKey) {
                 var newOffset = MakerJs.point.add(modelContext.origin, offset);
-                layer = layer || '';
+                layer = (layer != undefined) ? layer : '';
                 if (modelContext.paths) {
                     for (var pathId in modelContext.paths) {
                         var pathContext = modelContext.paths[pathId];
@@ -1925,7 +1932,7 @@ var MakerJs;
                             continue;
                         var walkedPath = {
                             modelContext: modelContext,
-                            layer: pathContext.layer || layer,
+                            layer: (pathContext.layer != undefined) ? pathContext.layer : layer,
                             offset: newOffset,
                             pathContext: pathContext,
                             pathId: pathId,
@@ -1943,7 +1950,7 @@ var MakerJs;
                             continue;
                         var walkedModel = {
                             parentModel: modelContext,
-                            layer: childModel.layer || layer,
+                            layer: (childModel.layer != undefined) ? childModel.layer : layer,
                             offset: newOffset,
                             route: route.concat(['models', modelId]),
                             routeKey: routeKey + (routeKey ? '.' : '') + 'models' + JSON.stringify([modelId]),
@@ -2277,7 +2284,7 @@ var MakerJs;
             }
         }
         /**
-         * Combine 2 models.
+         * Combine 2 models. Each model will be modified accordingly.
          *
          * @param modelA First model to combine.
          * @param modelB Second model to combine.
@@ -2287,6 +2294,7 @@ var MakerJs;
          * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
          * @param keepDuplicates Flag to include paths which are duplicate in both models.
          * @param farPoint Optional point of reference which is outside the bounds of both models.
+         * @returns A new model containing both of the input models as "a" and "b".
          */
         function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, options) {
             if (includeAInsideB === void 0) { includeAInsideB = false; }
@@ -2321,6 +2329,7 @@ var MakerJs;
             for (var i = 0; i < pathsB.crossedPaths.length; i++) {
                 addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, function (p, id, o, reason) { return trackDeleted(1, p, id, o, reason); });
             }
+            var result = { models: { a: modelA, b: modelB } };
             if (opts.trimDeadEnds) {
                 var shouldKeep;
                 //union
@@ -2337,37 +2346,41 @@ var MakerJs;
                         return true;
                     };
                 }
-                model.removeDeadEnds({ models: { 0: modelA, 1: modelB } }, null, shouldKeep, function (wp, reason) { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason); });
+                model.removeDeadEnds(result, null, shouldKeep, function (wp, reason) { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason); });
             }
             //pass options back to caller
             MakerJs.extendObject(options, opts);
+            return result;
         }
         model.combine = combine;
         /**
-         * Combine 2 models, resulting in a intersection.
+         * Combine 2 models, resulting in a intersection. Each model will be modified accordingly.
          *
          * @param modelA First model to combine.
          * @param modelB Second model to combine.
+         * @returns A new model containing both of the input models as "a" and "b".
          */
         function combineIntersection(modelA, modelB) {
             return combine(modelA, modelB, true, false, true, false);
         }
         model.combineIntersection = combineIntersection;
         /**
-         * Combine 2 models, resulting in a subtraction of B from A.
+         * Combine 2 models, resulting in a subtraction of B from A. Each model will be modified accordingly.
          *
          * @param modelA First model to combine.
          * @param modelB Second model to combine.
+         * @returns A new model containing both of the input models as "a" and "b".
          */
         function combineSubtraction(modelA, modelB) {
             return combine(modelA, modelB, false, true, true, false);
         }
         model.combineSubtraction = combineSubtraction;
         /**
-         * Combine 2 models, resulting in a union.
+         * Combine 2 models, resulting in a union. Each model will be modified accordingly.
          *
          * @param modelA First model to combine.
          * @param modelB Second model to combine.
+         * @returns A new model containing both of the input models as "a" and "b".
          */
         function combineUnion(modelA, modelB) {
             return combine(modelA, modelB, false, true, false, true);
@@ -3160,6 +3173,60 @@ var MakerJs;
             return true;
         }
         measure.isBezierSeedLinear = isBezierSeedLinear;
+        var graham_scan = require('graham_scan');
+        /**
+         * @private
+         */
+        function serializePoint(p) {
+            return p.join(',');
+        }
+        /**
+         * Check for flow of paths in a chain being clockwise or not.
+         *
+         * @param chainContext The chain to test.
+         * @param out_result Optional output object, if provided, will be populated with convex hull results.
+         * @returns Boolean true if paths in the chain flow clockwise.
+         */
+        function isChainClockwise(chainContext, out_result) {
+            //cannot do non-endless or circle
+            if (!chainContext.endless || chainContext.links.length === 1) {
+                return null;
+            }
+            var convexHull = new graham_scan();
+            var pointsInChainOrder = [];
+            function add(endPoint) {
+                convexHull.addPoint(endPoint[0], endPoint[1]);
+                pointsInChainOrder.push(serializePoint(endPoint));
+            }
+            var keyPoints = MakerJs.chain.toKeyPoints(chainContext);
+            keyPoints.forEach(add);
+            //we only need to deal with 3 points
+            var hull = convexHull.getHull();
+            var hullPoints = hull.slice(0, 3).map(function (p) { return serializePoint([p.x, p.y]); });
+            var ordered = [];
+            pointsInChainOrder.forEach(function (p) {
+                if (~hullPoints.indexOf(p))
+                    ordered.push(p);
+            });
+            //now make sure endpoints of hull are endpoints of ordered. do this by managing the middle point
+            switch (ordered.indexOf(hullPoints[1])) {
+                case 0:
+                    //shift down
+                    ordered.unshift(ordered.pop());
+                    break;
+                case 2:
+                    //shift up
+                    ordered.push(ordered.shift());
+                    break;
+            }
+            if (out_result) {
+                out_result.hullPoints = hull.map(function (p) { return [p.x, p.y]; });
+                out_result.keyPoints = keyPoints;
+            }
+            //the hull is counterclockwise, so the result is clockwise if the first elements do not match
+            return hullPoints[0] != ordered[0];
+        }
+        measure.isChainClockwise = isChainClockwise;
         /**
          * Check for line overlapping another line.
          *
@@ -4704,6 +4771,8 @@ var MakerJs;
             var links = chainToFillet.links;
             function add(i1, i2) {
                 var p1 = links[i1].walkedPath, p2 = links[i2].walkedPath;
+                if (p1.modelContext === p2.modelContext && p1.modelContext.type == MakerJs.models.BezierCurve.typeName)
+                    return;
                 MakerJs.path.moveTemporary([p1.pathContext, p2.pathContext], [p1.offset, p2.offset], function () {
                     var f = MakerJs.path.fillet(p1.pathContext, p2.pathContext, filletRadius);
                     if (f) {
@@ -4856,13 +4925,27 @@ var MakerJs;
             return singleChain;
         }
         model.findSingleChain = findSingleChain;
-        /**
-         * Find paths that have common endpoints and form chains.
-         *
-         * @param modelContext The model to search for chains.
-         * @param options Optional options object.
-         */
-        function findChains(modelContext, callback, options) {
+        function findChains(modelContext) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var options;
+            var callback;
+            switch (args.length) {
+                case 1:
+                    if (typeof args[0] === 'function') {
+                        callback = args[0];
+                    }
+                    else {
+                        options = args[0];
+                    }
+                    break;
+                case 2:
+                    callback = args[0];
+                    options = args[1];
+                    break;
+            }
             var opts = {
                 pointMatchingDistance: .005
             };
@@ -4928,6 +5011,11 @@ var MakerJs;
             if (opts.shallow) {
                 walkOptions.beforeChildWalk = function () { return false; };
             }
+            var beziers;
+            if (opts.unifyBeziers) {
+                beziers = getBezierModels(modelContext);
+                swapBezierPathsWithSeeds(beziers, true);
+            }
             model.walk(modelContext, walkOptions);
             for (var layer in connectionMap) {
                 var connections = connectionMap[layer];
@@ -4944,10 +5032,155 @@ var MakerJs;
                 });
                 //sort to return largest chains first
                 chainsByLayer[layer].sort(function (a, b) { return b.pathLength - a.pathLength; });
-                callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+                if (opts.contain) {
+                    var containedChains = getContainment(chainsByLayer[layer], opts.contain);
+                    chainsByLayer[layer] = containedChains;
+                }
+                if (callback)
+                    callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+            }
+            if (beziers) {
+                swapBezierPathsWithSeeds(beziers, false);
+            }
+            if (opts.byLayers) {
+                return chainsByLayer;
+            }
+            else {
+                return chainsByLayer[''];
             }
         }
         model.findChains = findChains;
+        /**
+         * @private
+         */
+        function getContainment(allChains, opts) {
+            var chainsAsModels = allChains.map(function (c) { return MakerJs.chain.toNewModel(c); });
+            var parents = [];
+            //see which are inside of each other
+            allChains.forEach(function (chainContext, i1) {
+                if (!chainContext.endless)
+                    return;
+                var wp = chainContext.links[0].walkedPath;
+                var firstPath = MakerJs.path.clone(wp.pathContext, wp.offset);
+                allChains.forEach(function (otherChain, i2) {
+                    if (chainContext === otherChain)
+                        return;
+                    if (!otherChain.endless)
+                        return;
+                    if (model.isPathInsideModel(firstPath, chainsAsModels[i2])) {
+                        //since chains were sorted by pathLength, the smallest pathLength parent will be the parent if contained in multiple chains.
+                        parents[i1] = otherChain;
+                    }
+                });
+            });
+            //convert parent to children
+            var result = [];
+            allChains.forEach(function (chainContext, i) {
+                var parent = parents[i];
+                if (!parent) {
+                    result.push(chainContext);
+                }
+                else {
+                    if (!parent.contains) {
+                        parent.contains = [];
+                    }
+                    parent.contains.push(chainContext);
+                }
+            });
+            if (opts.alernateWindings) {
+                function alternate(chains, shouldBeClockwise) {
+                    chains.forEach(function (chainContext, i) {
+                        var isClockwise = MakerJs.measure.isChainClockwise(chainContext);
+                        if (isClockwise !== null) {
+                            if (!isClockwise && shouldBeClockwise || isClockwise && !shouldBeClockwise) {
+                                MakerJs.chain.reverse(chainContext);
+                            }
+                        }
+                        if (chainContext.contains) {
+                            alternate(chainContext.contains, !shouldBeClockwise);
+                        }
+                    });
+                }
+                alternate(result, true);
+            }
+            return result;
+        }
+        /**
+         * @private
+         */
+        function getBezierModels(modelContext) {
+            var beziers = [];
+            function checkIsBezier(wm) {
+                if (wm.childModel.type === MakerJs.models.BezierCurve.typeName) {
+                    beziers.push(wm);
+                }
+            }
+            var options = {
+                beforeChildWalk: function (walkedModel) {
+                    checkIsBezier(walkedModel);
+                    return true;
+                }
+            };
+            var rootModel = {
+                childId: '',
+                childModel: modelContext,
+                layer: modelContext.layer,
+                offset: modelContext.origin,
+                parentModel: null,
+                route: [],
+                routeKey: ''
+            };
+            checkIsBezier(rootModel);
+            model.walk(modelContext, options);
+            return beziers;
+        }
+        /**
+         * @private
+         */
+        function swapBezierPathsWithSeeds(beziers, swap) {
+            var tempKey = 'tempPaths';
+            var tempLayerKey = 'tempLayer';
+            beziers.forEach(function (wm) {
+                var b = wm.childModel;
+                if (swap) {
+                    //set layer prior to looking for seeds by layer
+                    if (wm.layer != undefined && wm.layer !== '') {
+                        b[tempLayerKey] = b.layer;
+                        b.layer = wm.layer;
+                    }
+                    //use seeds as path, hide the arc paths from findChains()
+                    var bezierSeedsByLayer = MakerJs.models.BezierCurve.getBezierSeeds(b, { byLayers: true });
+                    for (var layer in bezierSeedsByLayer) {
+                        var bezierSeeds = bezierSeedsByLayer[layer];
+                        if (bezierSeeds.length > 0) {
+                            b[tempKey] = b.paths;
+                            var newPaths = {};
+                            bezierSeeds.forEach(function (seed, i) {
+                                seed.layer = layer;
+                                newPaths['seed_' + i] = seed;
+                            });
+                            b.paths = newPaths;
+                        }
+                    }
+                }
+                else {
+                    //revert the above
+                    if (tempKey in b) {
+                        b.paths = b[tempKey];
+                        delete b[tempKey];
+                    }
+                    if (tempLayerKey in b) {
+                        if (b[tempLayerKey] == undefined) {
+                            delete b.layer;
+                        }
+                        else {
+                            b.layer = b[tempLayerKey];
+                        }
+                        delete b[tempLayerKey];
+                    }
+                }
+            });
+        }
     })(model = MakerJs.model || (MakerJs.model = {}));
 })(MakerJs || (MakerJs = {}));
 (function (MakerJs) {
@@ -5025,16 +5258,28 @@ var MakerJs;
             var result = { paths: {} };
             for (var i = 0; i < chainContext.links.length; i++) {
                 var wp = chainContext.links[i].walkedPath;
-                var id = MakerJs.model.getSimilarPathId(result, wp.pathId);
-                var newPath;
-                if (detachFromOldModel) {
-                    newPath = wp.pathContext;
-                    delete wp.modelContext.paths[wp.pathId];
+                if (wp.pathContext.type === MakerJs.pathType.BezierSeed) {
+                    if (detachFromOldModel) {
+                        delete wp.modelContext.paths[wp.pathId];
+                    }
+                    if (!result.models) {
+                        result.models = {};
+                    }
+                    var modelId = MakerJs.model.getSimilarModelId(result, wp.pathId);
+                    result.models[modelId] = MakerJs.model.moveRelative(new MakerJs.models.BezierCurve(wp.pathContext), wp.offset);
                 }
                 else {
-                    newPath = MakerJs.path.clone(wp.pathContext);
+                    var newPath;
+                    if (detachFromOldModel) {
+                        newPath = wp.pathContext;
+                        delete wp.modelContext.paths[wp.pathId];
+                    }
+                    else {
+                        newPath = MakerJs.path.clone(wp.pathContext);
+                    }
+                    var pathId = MakerJs.model.getSimilarPathId(result, wp.pathId);
+                    result.paths[pathId] = MakerJs.path.moveRelative(newPath, wp.offset);
                 }
-                result.paths[id] = MakerJs.path.moveRelative(newPath, wp.offset);
             }
             return result;
         }
@@ -5850,8 +6095,8 @@ var MakerJs;
         svgPathDataMap[MakerJs.pathType.Line] = function (line, accuracy) {
             return startSvgPathData(line.origin, MakerJs.point.rounded(line.end, accuracy), accuracy);
         };
-        svgPathDataMap[MakerJs.pathType.Circle] = function (circle, accuracy) {
-            return startSvgPathData(circle.origin, svgCircleData(circle.radius, accuracy), accuracy);
+        svgPathDataMap[MakerJs.pathType.Circle] = function (circle, accuracy, clockwiseCircle) {
+            return startSvgPathData(circle.origin, svgCircleData(circle.radius, accuracy, clockwiseCircle), accuracy);
         };
         svgPathDataMap[MakerJs.pathType.Arc] = function (arc, accuracy) {
             var arcPoints = MakerJs.point.fromArc(arc);
@@ -5876,9 +6121,10 @@ var MakerJs;
          * @param pathOffset IPoint relative offset of the path object.
          * @param exportOffset IPoint relative offset point of the export.
          * @param accuracy Optional accuracy of SVG path data.
+         * @param clockwiseCircle Optional flag to use clockwise winding for circles.
          * @returns String of SVG path data.
          */
-        function pathToSVGPathData(pathToExport, pathOffset, exportOffset, accuracy) {
+        function pathToSVGPathData(pathToExport, pathOffset, exportOffset, accuracy, clockwiseCircle) {
             var fn = svgPathDataMap[pathToExport.type];
             if (fn) {
                 var fixedPath;
@@ -5886,7 +6132,7 @@ var MakerJs;
                     fixedPath = MakerJs.path.mirror(pathToExport, false, true);
                 });
                 MakerJs.path.moveRelative(fixedPath, exportOffset);
-                var d = fn(fixedPath, accuracy);
+                var d = fn(fixedPath, accuracy, clockwiseCircle);
                 return d.join(' ');
             }
             return '';
@@ -5895,101 +6141,65 @@ var MakerJs;
         /**
          * @private
          */
-        function getBezierModelsWithPaths(modelToExport) {
-            var beziers = [];
-            function checkIsBezierWithPaths(walkedModel) {
-                var b = walkedModel.childModel;
-                if (b.type && b.type === MakerJs.models.BezierCurve.typeName && b.paths) {
-                    beziers.push(walkedModel);
-                }
-            }
-            var options = {
-                beforeChildWalk: function (walkedModel) {
-                    checkIsBezierWithPaths(walkedModel);
-                    return true;
-                }
-            };
-            var rootModel = {
-                childId: '',
-                childModel: modelToExport,
-                layer: '',
-                offset: modelToExport.origin,
-                parentModel: null,
-                route: [],
-                routeKey: ''
-            };
-            checkIsBezierWithPaths(rootModel);
-            MakerJs.model.walk(modelToExport, options);
-            return beziers;
-        }
-        /**
-         * @private
-         */
         function getPathDataByLayer(modelToExport, offset, options, accuracy) {
             var pathDataByLayer = {};
-            var beziers = getBezierModelsWithPaths(modelToExport);
-            var tempKey = 'tempPaths';
-            beziers.forEach(function (walkedModel) {
-                var b = walkedModel.childModel;
-                //use seeds as path, hide the arc paths from findChains()
-                var bezierSeeds = MakerJs.models.BezierCurve.getBezierSeeds(b);
-                if (bezierSeeds.length > 0) {
-                    b[tempKey] = b.paths;
-                    var newPaths = {};
-                    bezierSeeds.forEach(function (seed, i) {
-                        newPaths['seed_' + i] = seed;
-                    });
-                    b.paths = newPaths;
-                }
-            });
+            options.unifyBeziers = true;
             MakerJs.model.findChains(modelToExport, function (chains, loose, layer) {
-                function single(walkedPath) {
-                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, accuracy);
+                function single(walkedPath, clockwise) {
+                    var pathData = pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset, accuracy, clockwise);
                     pathDataByLayer[layer].push(pathData);
                 }
                 pathDataByLayer[layer] = [];
-                chains.map(function (chain) {
-                    if (chain.links.length > 1) {
-                        var pathData = chainToSVGPathData(chain, offset, accuracy);
-                        pathDataByLayer[layer].push(pathData);
-                    }
-                    else {
-                        single(chain.links[0].walkedPath);
-                    }
-                });
-                loose.map(single);
-            }, options);
-            //revert
-            beziers.forEach(function (walkedModel) {
-                var b = walkedModel.childModel;
-                if (tempKey in b) {
-                    b.paths = b[tempKey];
-                    delete b[tempKey];
+                function doChains(cs, clockwise) {
+                    cs.forEach(function (chain) {
+                        if (chain.links.length > 1) {
+                            var pathData = chainToSVGPathData(chain, offset, accuracy);
+                            pathDataByLayer[layer].push(pathData);
+                        }
+                        else {
+                            single(chain.links[0].walkedPath, clockwise);
+                        }
+                        if (chain.contains) {
+                            doChains(chain.contains, !clockwise);
+                        }
+                    });
                 }
-            });
+                doChains(chains, true);
+                loose.forEach(function (wp) { return single(wp); });
+            }, options);
             return pathDataByLayer;
         }
         /**
          * Convert a model to SVG path data.
          *
          * @param modelToExport Model to export.
-         * @param byLayers Boolean flag (default true) to return a map of path data by layer.
+         * @param byLayers_orFindChainsOptions Boolean flag (default true) to return a map of path data by layer, or an IFindChainsOptions object
          * @param origin Optional reference origin.
          * @param accuracy Optional accuracy of SVG decimals.
          * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
          */
-        function toSVGPathData(modelToExport, byLayers, origin, accuracy) {
-            if (byLayers === void 0) { byLayers = true; }
+        function toSVGPathData(modelToExport, byLayers_orFindChainsOptions, origin, accuracy) {
+            var findChainsOptions;
+            if (byLayers_orFindChainsOptions == undefined) {
+                findChainsOptions = {
+                    byLayers: true
+                };
+            }
+            else if (typeof byLayers_orFindChainsOptions === 'boolean') {
+                findChainsOptions = {
+                    byLayers: byLayers_orFindChainsOptions
+                };
+            }
             var size = MakerJs.measure.modelExtents(modelToExport);
             if (!origin) {
                 origin = [-size.low[0], size.high[1]];
             }
-            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, { byLayers: byLayers }, accuracy);
+            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, findChainsOptions, accuracy);
             var pathDataStringByLayer = {};
             for (var layer in pathDataArrayByLayer) {
                 pathDataStringByLayer[layer] = pathDataArrayByLayer[layer].join(' ');
             }
-            return byLayers ? pathDataStringByLayer : pathDataStringByLayer[''];
+            return findChainsOptions.byLayers ? pathDataStringByLayer : pathDataStringByLayer[''];
         }
         exporter.toSVGPathData = toSVGPathData;
         /**
@@ -6158,7 +6368,15 @@ var MakerJs;
             var svgGroup = new exporter.XmlTag('g', groupAttrs);
             append(svgGroup.getOpeningTag(false));
             if (opts.useSvgPathOnly) {
-                var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, { byLayers: true }, opts.accuracy);
+                var findChainsOptions = {
+                    byLayers: true
+                };
+                if (opts.fillRule === 'nonzero') {
+                    findChainsOptions.contain = {
+                        alernateWindings: true
+                    };
+                }
+                var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, findChainsOptions, opts.accuracy);
                 for (var layer in pathDataByLayer) {
                     var pathData = pathDataByLayer[layer].join(' ');
                     var attrs = { "d": pathData };
@@ -6280,12 +6498,12 @@ var MakerJs;
         /**
          * @private
          */
-        function svgCircleData(radius, accuracy) {
+        function svgCircleData(radius, accuracy, clockwiseCircle) {
             var r = MakerJs.round(radius, accuracy);
             var d = ['m', -r, 0];
             function halfCircle(sign) {
                 d.push('a');
-                svgArcData(d, r, [2 * r * sign, 0], accuracy);
+                svgArcData(d, r, [2 * r * sign, 0], accuracy, false, !clockwiseCircle);
             }
             halfCircle(1);
             halfCircle(-1);
@@ -6309,13 +6527,13 @@ var MakerJs;
         /**
          * @private
          */
-        function svgArcData(d, radius, endPoint, accuracy, largeArc, decreasing) {
+        function svgArcData(d, radius, endPoint, accuracy, largeArc, increasing) {
             var r = MakerJs.round(radius, accuracy);
             var end = endPoint;
             d.push(r, r);
             d.push(0); //0 = x-axis rotation
             d.push(largeArc ? 1 : 0); //large arc=1, small arc=0
-            d.push(decreasing ? 0 : 1); //sweep-flag 0=decreasing, 1=increasing 
+            d.push(increasing ? 0 : 1); //sweep-flag 0=increasing, 1=decreasing 
             d.push(MakerJs.round(end[0], accuracy), MakerJs.round(end[1], accuracy));
         }
         /**
@@ -7248,49 +7466,92 @@ var MakerJs;
             BezierCurve.getBezierSeeds = function (curve, options) {
                 if (options === void 0) { options = {}; }
                 options.shallow = true;
-                var b = seedToBezier(curve.seed);
-                var seeds = [];
+                var seedsByLayer = {};
+                function getActualBezierRange(arc, endpoints) {
+                    var b = getScratch(curve.seed);
+                    var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(function (t) { return new TPoint(b, t); });
+                    var ends = endpoints.slice();
+                    //clipped arcs will still have endpoints closer to the original endpoints
+                    var endpointDistancetoStart = ends.map(function (e) { return MakerJs.measure.pointDistance(e, tPoints[0].point); });
+                    if (endpointDistancetoStart[0] > endpointDistancetoStart[1])
+                        ends.reverse();
+                    for (var i = 2; i--;) {
+                        if (!MakerJs.measure.isPointEqual(ends[i], tPoints[i].point)) {
+                            return null;
+                        }
+                    }
+                    return arc.bezierData;
+                }
                 MakerJs.model.findChains(curve, function (chains, loose, layer) {
-                    if (chains.length === 0) {
-                        //if this is a linear curve then look if line ends are the same as bezier ends.
-                        if (loose.length === 1 && loose[0].pathContext.type === MakerJs.pathType.Line) {
-                            var line = loose[0].pathContext;
-                            if (MakerJs.measure.isPointEqual(line.origin, curve.seed.origin) && MakerJs.measure.isPointEqual(line.end, curve.seed.end)) {
-                                seeds.push(curve.seed);
+                    function addToLayer(pathToAdd, clone) {
+                        if (clone === void 0) { clone = false; }
+                        if (!seedsByLayer[layer]) {
+                            seedsByLayer[layer] = [];
+                        }
+                        seedsByLayer[layer].push(clone ? MakerJs.path.clone(pathToAdd) : pathToAdd);
+                    }
+                    function getChainBezierRange(c) {
+                        var endLinks = [c.links[0], c.links[c.links.length - 1]];
+                        if (endLinks[0].walkedPath.pathContext.bezierData.startT > endLinks[1].walkedPath.pathContext.bezierData.startT) {
+                            MakerJs.chain.reverse(c);
+                            endLinks.reverse();
+                        }
+                        var actualBezierRanges = endLinks.map(function (endLink) { return getActualBezierRange(endLink.walkedPath.pathContext, endLink.endPoints); });
+                        if (actualBezierRanges[0] && actualBezierRanges[1]) {
+                            return {
+                                startT: actualBezierRanges[0].startT,
+                                endT: actualBezierRanges[1].endT
+                            };
+                        }
+                        else if (c.links.length > 2) {
+                            if (!actualBezierRanges[0]) {
+                                //exclude the first from the chain
+                                addToLayer(c.links[0].walkedPath.pathContext, true);
+                                return {
+                                    startT: c.links[1].walkedPath.pathContext.bezierData.startT,
+                                    endT: actualBezierRanges[1].endT
+                                };
+                            }
+                            else if (!actualBezierRanges[1]) {
+                                //exclude the last from the chain
+                                addToLayer(c.links[c.links.length - 1].walkedPath.pathContext, true);
+                                return {
+                                    startT: actualBezierRanges[0].startT,
+                                    endT: c.links[c.links.length - 2].walkedPath.pathContext.bezierData.endT
+                                };
                             }
                         }
+                        return null;
                     }
-                    else if (chains.length === 1) {
-                        //check if endpoints are 0 and 1
-                        var chain = chains[0];
-                        var chainEnds = [chain.links[0], chain.links[chain.links.length - 1]];
-                        var chainReversed = false;
-                        //put them in bezier t order
-                        if (chainEnds[0].walkedPath.pathContext.bezierData.startT > chainEnds[1].walkedPath.pathContext.bezierData.startT) {
-                            chainEnds.reverse();
-                            chainReversed = true;
+                    chains.forEach(function (c) {
+                        var range = getChainBezierRange(c);
+                        if (range) {
+                            var b = getScratch(curve.seed);
+                            var piece = b.split(range.startT, range.endT);
+                            addToLayer(BezierToSeed(piece));
                         }
-                        var intact = true;
-                        for (var i = 2; i--;) {
-                            var chainEnd = chainEnds[i];
-                            var arc = chainEnd.walkedPath.pathContext;
-                            var reversed = (chainReversed !== chainEnd.reversed);
-                            var chainEndPoint = chainEnd.endPoints[reversed ? 1 - i : i];
-                            var trueEndpoint = b.compute(i === 0 ? arc.bezierData.startT : arc.bezierData.endT);
-                            if (!MakerJs.measure.isPointEqual(chainEndPoint, getIPoint(trueEndpoint), .00001)) {
-                                intact = false;
-                                break;
-                            }
+                        else {
+                            c.links.forEach(function (link) { return addToLayer(link.walkedPath.pathContext, true); });
                         }
-                        if (intact) {
-                            seeds.push(curve.seed);
+                    });
+                    loose.forEach(function (wp) {
+                        var range = getActualBezierRange(wp.pathContext, MakerJs.point.fromPathEnds(wp.pathContext));
+                        if (range) {
+                            var b = getScratch(curve.seed);
+                            var piece = b.split(range.startT, range.endT);
+                            addToLayer(BezierToSeed(piece));
                         }
-                    }
-                    else {
-                        //TODO: find bezier seeds from a split chain
-                    }
+                        else {
+                            addToLayer(wp.pathContext, true);
+                        }
+                    });
                 }, options);
-                return seeds;
+                if (options.byLayers) {
+                    return seedsByLayer;
+                }
+                else {
+                    return seedsByLayer[''];
+                }
             };
             BezierCurve.computeLength = function (seed) {
                 var b = seedToBezier(seed);
@@ -8351,5 +8612,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.54";
+MakerJs.version = "0.9.55";
 ﻿var Bezier = require('bezier-js');

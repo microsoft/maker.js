@@ -845,8 +845,11 @@
     function constructOnMainThreadReal(realValues: any[], successCb?: Function) {
 
         try {
-            var model = makerjs.kit.construct(processed.kit, realValues);
-            setProcessedModel(model);
+
+            var result = mainThreadConstructor(processed.kit, realValues);
+
+            processed.html = result.html;
+            setProcessedModel(result.model);
 
             if (successCb) {
                 successCb();
@@ -1100,6 +1103,7 @@
     export var querystringParams: QueryStringParams;
     export var pointers: Pointer.Manager;
     export var useWorkerThreads = true;
+    export var mainThreadConstructor: IConstructOnMainThread;
     export var fontDir: string;
 
     export function runCodeFromEditor(paramValues?: any[]) {
@@ -1177,6 +1181,10 @@
         } else {
             g.innerText = '';
         }
+    }
+
+    export interface IConstructOnMainThread {
+        (kit: MakerJs.IKit, params: any[]): { model: MakerJs.IModel, html: string };
     }
 
     export interface IProcessResult {
@@ -1563,7 +1571,7 @@
     }
 
     function beginExport(request: MakerJsPlaygroundExport.IExportRequest) {
-        
+
         //put the download ui into generation mode
         progress.style.width = '0';
         toggleClass('download-generating');
