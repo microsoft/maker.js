@@ -431,64 +431,103 @@
 
         public static typeName = 'BezierCurve';
 
-        public static getBezierSeeds(curve: BezierCurve, options: IFindChainsOptions = {}): IPathBezierSeed[] {
+        public static getBezierSeeds(curve: BezierCurve, options: IFindChainsOptions = {}): IPath[] | { [layer: string]: IPath[] } {
 
             options.shallow = true;
 
-            var b = seedToBezier(curve.seed);
+            var seedsByLayer: { [layer: string]: IPath[] } = {};
 
-            var seeds: IPathBezierSeed[] = [];
+            function getActualBezierRange(arc: IPathArcInBezierCurve, endpoints: IPoint[]): IBezierRange {
+                var b = getScratch(curve.seed);
+                var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(t => new TPoint(b, t));
+                var ends = endpoints.slice();
+
+                //clipped arcs will still have endpoints closer to the original endpoints
+                var endpointDistancetoStart = ends.map(e => measure.pointDistance(e, tPoints[0].point));
+                if (endpointDistancetoStart[0] > endpointDistancetoStart[1]) ends.reverse();
+
+                for (var i = 2; i--;) {
+                    if (!measure.isPointEqual(ends[i], tPoints[i].point)) {
+                        return null;
+                    }
+                }
+
+                return arc.bezierData;
+            }
 
             model.findChains(curve, function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
-                if (chains.length === 0) {
-
-                    //if this is a linear curve then look if line ends are the same as bezier ends.
-                    if (loose.length === 1 && loose[0].pathContext.type === pathType.Line) {
-                        var line = loose[0].pathContext as IPathLine;
-                        if (measure.isPointEqual(line.origin, curve.seed.origin) && measure.isPointEqual(line.end, curve.seed.end)) {
-                            seeds.push(curve.seed)
-                        }
+                function addToLayer(pathToAdd: IPath, clone = false) {
+                    if (!seedsByLayer[layer]) {
+                        seedsByLayer[layer] = [];
                     }
-
-                } else if (chains.length === 1) {
-                    //check if endpoints are 0 and 1
-
-                    var chain = chains[0];
-                    var chainEnds = [chain.links[0], chain.links[chain.links.length - 1]];
-                    var chainReversed = false;
-
-                    //put them in bezier t order
-                    if ((chainEnds[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (chainEnds[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT) {
-                        chainEnds.reverse();
-                        chainReversed = true;
-                    }
-
-                    var intact = true;
-
-                    for (var i = 2; i--;) {
-                        var chainEnd = chainEnds[i];
-                        var arc = chainEnd.walkedPath.pathContext as IPathArcInBezierCurve;
-                        var reversed = (chainReversed !== chainEnd.reversed);
-                        var chainEndPoint = chainEnd.endPoints[reversed ? 1 - i : i];
-                        var trueEndpoint = b.compute(i === 0 ? arc.bezierData.startT : arc.bezierData.endT);
-                        if (!measure.isPointEqual(chainEndPoint, getIPoint(trueEndpoint), .00001)) {
-                            intact = false;
-                            break;
-                        }
-                    }
-
-                    if (intact) {
-                        seeds.push(curve.seed)
-                    }
-
-                } else {
-                    //TODO: find bezier seeds from a split chain
+                    seedsByLayer[layer].push(clone ? path.clone(pathToAdd) : pathToAdd);
                 }
+
+                function getChainBezierRange(c: IChain): IBezierRange {
+
+                    var endLinks = [c.links[0], c.links[c.links.length - 1]];
+                    if ((endLinks[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (endLinks[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT) {
+                        chain.reverse(c);
+                        endLinks.reverse();
+                    }
+
+                    var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints));
+
+                    if (actualBezierRanges[0] && actualBezierRanges[1]) {
+                        return {
+                            startT: actualBezierRanges[0].startT,
+                            endT: actualBezierRanges[1].endT
+                        };
+                    } else if (c.links.length > 2) {
+                        if (!actualBezierRanges[0]) {
+                            //exclude the first from the chain
+                            addToLayer(c.links[0].walkedPath.pathContext, true);
+                            return {
+                                startT: (c.links[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT,
+                                endT: actualBezierRanges[1].endT
+                            };
+                        } else if (!actualBezierRanges[1]) {
+                            //exclude the last from the chain
+                            addToLayer(c.links[c.links.length - 1].walkedPath.pathContext, true);
+                            return {
+                                startT: actualBezierRanges[0].startT,
+                                endT: (c.links[c.links.length - 2].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT
+                            };
+                        }
+                    }
+                    return null;
+                }
+
+                chains.forEach(c => {
+                    var range = getChainBezierRange(c);
+                    if (range) {
+                        var b = getScratch(curve.seed);
+                        var piece = b.split(range.startT, range.endT);
+                        addToLayer(BezierToSeed(piece));
+                    } else {
+                        c.links.forEach(link => addToLayer(link.walkedPath.pathContext, true));
+                    }
+                });
+
+                loose.forEach(wp => {
+                    var range = getActualBezierRange(wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext));
+                    if (range) {
+                        var b = getScratch(curve.seed);
+                        var piece = b.split(range.startT, range.endT);
+                        addToLayer(BezierToSeed(piece));
+                    } else {
+                        addToLayer(wp.pathContext, true);
+                    }
+                });
 
             }, options);
 
-            return seeds;
+            if (options.byLayers) {
+                return seedsByLayer;
+            } else {
+                return seedsByLayer[''];
+            }
         }
 
         public static computeLength(seed: IPathBezierSeed): number {

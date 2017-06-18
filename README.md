@@ -1,6 +1,8 @@
 # Maker.js
 
-Maker.js, a Microsoft Garage project, is a JavaScript library for creating line drawings for CNC and laser cutters. It runs in both Node.js and web browsers.
+Your compass and straightedge, in JavaScript.
+
+Maker.js uses familiar concepts from geometry and drafting to create line drawings. Initially designated for CNC and laser cutters, Maker.js can also help you programmatically draw contours and shapes for any purpose. It runs in both Node.js and web browsers.
 
 [Demos](http://microsoft.github.io/maker.js/demos/) - [Documentation](http://microsoft.github.io/maker.js/docs/)
 
@@ -32,7 +34,7 @@ Easily add a curvature at the joint between any 2 paths, using a [traditional or
 
 Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains) or [loops](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findloops) formed by paths connecting end to end.
 
-Get the points along a path or a chain of paths.
+Get the [points along a path](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#topoints) or along a [chain of paths](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.chain.html#topoints).
 
 [Expand paths](http://microsoft.github.io/maker.js/docs/advanced-drawing/#Expanding%20paths) to simulate a stroke thickness, with the option to bevel joints.
 
@@ -130,9 +132,10 @@ Browse all the library features in the [API Documentation](http://microsoft.gith
 
 ### Contributing
 There are many ways to contribute to Maker.js:
+* [★ Star Maker.js on GitHub](https://github.com/Microsoft/maker.js)
 * Submit bugs and feature requests [on GitHub](https://github.com/Microsoft/maker.js/issues).
 * Create a demo for the [gallery](http://microsoft.github.io/maker.js/demos/#content).
-* Create lessons or videos(!) for the [documentation](http://microsoft.github.io/maker.js/docs/#content).
+* Create lessons or videos for the [documentation](http://microsoft.github.io/maker.js/docs/#content).
 * Enhance the [website](https://github.com/Microsoft/maker.js/tree/gh-pages).
 * Add features to the [Playground app](https://github.com/Microsoft/maker.js/tree/master/playground).
 * Create a new Maker.js app, and we will link to it here.
@@ -145,7 +148,7 @@ Some of these may require a [contributor agreement](https://github.com/Microsoft
 Maker.js depends on:
 * [Clone](https://github.com/pvorb/node-clone) by Paul Vorbach
 * [Bezier-js](https://github.com/Pomax/bezierjs) by Pomax
-
+* [Graham_scan](https://github.com/brian3kb/graham_scan_js) by Brian Barnett
 ---
 
-The Microsoft Garage turns fresh ideas into real projects. Learn more at [http://microsoft.com/garage](http://microsoft.com/garage).
+Maker.js is a Microsoft Garage project. The Microsoft Garage turns fresh ideas into real projects. Learn more at [http://microsoft.com/garage](http://microsoft.com/garage).

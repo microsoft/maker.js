@@ -388,7 +388,7 @@
     }
 
     /**
-     * Combine 2 models.
+     * Combine 2 models. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
@@ -398,13 +398,14 @@
      * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
      * @param keepDuplicates Flag to include paths which are duplicate in both models.
      * @param farPoint Optional point of reference which is outside the bounds of both models.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
     export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, options?: ICombineOptions) {
 
         var opts: ICombineOptions = {
             trimDeadEnds: true,
             pointMatchingDistance: .005,
-            out_deleted:[{ paths: {} }, { paths: {} }]
+            out_deleted: [{ paths: {} }, { paths: {} }]
         };
         extendObject(opts, options);
 
@@ -438,6 +439,8 @@
             addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, o, reason) => trackDeleted(1, p, id, o, reason));
         }
 
+        var result: IModel = { models: { a: modelA, b: modelB } };
+
         if (opts.trimDeadEnds) {
 
             var shouldKeep: IWalkPathBooleanCallback;
@@ -459,38 +462,43 @@
                 }
             }
 
-            removeDeadEnds(<IModel>{ models: { 0: modelA, 1: modelB } }, null, shouldKeep, (wp, reason) => { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason) });
+            removeDeadEnds(result, null, shouldKeep, (wp, reason) => { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason) });
         }
 
         //pass options back to caller
         extendObject(options, opts);
+
+        return result;
     }
 
     /**
-     * Combine 2 models, resulting in a intersection.
+     * Combine 2 models, resulting in a intersection. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
     export function combineIntersection(modelA: IModel, modelB: IModel) {
         return combine(modelA, modelB, true, false, true, false);
     }
 
     /**
-     * Combine 2 models, resulting in a subtraction of B from A.
+     * Combine 2 models, resulting in a subtraction of B from A. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
     export function combineSubtraction(modelA: IModel, modelB: IModel) {
         return combine(modelA, modelB, false, true, true, false);
     }
 
     /**
-     * Combine 2 models, resulting in a union.
+     * Combine 2 models, resulting in a union. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @returns A new model containing both of the input models as "a" and "b".
      */
     export function combineUnion(modelA: IModel, modelB: IModel) {
         return combine(modelA, modelB, false, true, false, true);

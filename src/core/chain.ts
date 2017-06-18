@@ -10,13 +10,6 @@
     /**
      * @private
      */
-    interface IChainsMap {
-        [layer: string]: IChain[];
-    }
-
-    /**
-     * @private
-     */
     interface IWalkPathByLayerMap {
         [layer: string]: IWalkPath[];
     }
@@ -152,8 +145,39 @@
      * 
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
+     * @returns An array of chains, or a map (keyed by layer id) of arrays of chains - if options.byLayers is true.
      */
-    export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions) {
+    export function findChains(modelContext: IModel, options?: IFindChainsOptions): IChain[] | IChainsMap;
+
+    /**
+     * Find paths that have common endpoints and form chains.
+     * 
+     * @param modelContext The model to search for chains.
+     * @param callback Callback function when chains are found.
+     * @param options Optional options object.
+     * @returns An array of chains, or a map (keyed by layer id) of arrays of chains - if options.byLayers is true.
+     */
+    export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): IChain[] | IChainsMap;
+
+    export function findChains(modelContext: IModel, ...args: any[]): IChain[] | IChainsMap {
+
+        var options: IFindChainsOptions;
+        var callback: IChainCallback;
+
+        switch (args.length) {
+            case 1:
+                if (typeof args[0] === 'function') {
+                    callback = args[0];
+                } else {
+                    options = args[0];
+                }
+                break;
+
+            case 2:
+                callback = args[0];
+                options = args[1];
+                break;
+        }
 
         var opts: IFindChainsOptions = {
             pointMatchingDistance: .005
@@ -238,6 +262,12 @@
             walkOptions.beforeChildWalk = function () { return false; };
         }
 
+        var beziers: IWalkModel[];
+        if (opts.unifyBeziers) {
+            beziers = getBezierModels(modelContext);
+            swapBezierPathsWithSeeds(beziers, true);
+        }
+
         walk(modelContext, walkOptions);
 
         for (var layer in connectionMap) {
@@ -263,10 +293,189 @@
             //sort to return largest chains first
             chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
 
-            callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+            if (opts.contain) {
+                var containedChains = getContainment(chainsByLayer[layer], opts.contain);
+                chainsByLayer[layer] = containedChains;
+            }
+
+            if (callback) callback(chainsByLayer[layer], loose, layer, ignored[layer]);
         }
 
+        if (beziers) {
+            swapBezierPathsWithSeeds(beziers, false);
+        }
+
+        if (opts.byLayers) {
+            return chainsByLayer;
+        } else {
+            return chainsByLayer[''];
+        }
     }
+
+    /**
+     * @private
+     */
+    function getContainment(allChains: IChain[], opts: IContainChainsOptions) {
+
+        var chainsAsModels = allChains.map(c => chain.toNewModel(c));
+        var parents: IChain[] = [];
+
+        //see which are inside of each other
+        allChains.forEach(function (chainContext, i1) {
+            if (!chainContext.endless) return;
+
+            var wp = chainContext.links[0].walkedPath;
+            var firstPath = path.clone(wp.pathContext, wp.offset);
+
+            allChains.forEach(function (otherChain, i2) {
+
+                if (chainContext === otherChain) return;
+                if (!otherChain.endless) return;
+
+                if (model.isPathInsideModel(firstPath, chainsAsModels[i2])) {
+
+                    //since chains were sorted by pathLength, the smallest pathLength parent will be the parent if contained in multiple chains.
+                    parents[i1] = otherChain;
+                }
+            });
+        });
+
+        //convert parent to children
+        var result: IChain[] = [];
+        allChains.forEach(function (chainContext, i) {
+            var parent = parents[i];
+
+            if (!parent) {
+                result.push(chainContext);
+            } else {
+                if (!parent.contains) {
+                    parent.contains = [];
+                }
+                parent.contains.push(chainContext);
+            }
+        });
+
+        if (opts.alernateWindings) {
+
+            function alternate(chains: IChain[], shouldBeClockwise: boolean) {
+                chains.forEach(function (chainContext, i) {
+
+                    var isClockwise = measure.isChainClockwise(chainContext);
+
+                    if (isClockwise !== null) {
+                        if (!isClockwise && shouldBeClockwise || isClockwise && !shouldBeClockwise) {
+                            chain.reverse(chainContext);
+                        }
+                    }
+
+                    if (chainContext.contains) {
+                        alternate(chainContext.contains, !shouldBeClockwise);
+                    }
+                });
+            }
+
+            alternate(result, true);
+        }
+
+        return result;
+    }
+
+    /**
+     * @private
+     */
+    function getBezierModels(modelContext: IModel): IWalkModel[] {
+
+        var beziers: IWalkModel[] = [];
+
+        function checkIsBezier(wm: IWalkModel) {
+            if (wm.childModel.type === models.BezierCurve.typeName) {
+                beziers.push(wm);
+            }
+        }
+
+        var options: IWalkOptions = {
+            beforeChildWalk: function (walkedModel: IWalkModel): boolean {
+                checkIsBezier(walkedModel);
+                return true;
+            }
+        };
+
+        var rootModel: IWalkModel = {
+            childId: '',
+            childModel: modelContext,
+            layer: modelContext.layer,
+            offset: modelContext.origin,
+            parentModel: null,
+            route: [],
+            routeKey: ''
+        };
+
+        checkIsBezier(rootModel);
+
+        model.walk(modelContext, options);
+
+        return beziers;
+    }
+
+    /**
+     * @private
+     */
+    function swapBezierPathsWithSeeds(beziers: IWalkModel[], swap: boolean) {
+        const tempKey = 'tempPaths';
+        const tempLayerKey = 'tempLayer';
+
+        beziers.forEach(wm => {
+            var b = wm.childModel as models.BezierCurve;
+
+            if (swap) {
+
+                //set layer prior to looking for seeds by layer
+                if (wm.layer != undefined && wm.layer !== '') {
+                    b[tempLayerKey] = (b as IModel).layer;
+                    (b as IModel).layer = wm.layer;
+                }
+
+                //use seeds as path, hide the arc paths from findChains()
+                var bezierSeedsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true }) as { [layer: string]: IPathBezierSeed[] };
+
+                for (var layer in bezierSeedsByLayer) {
+                    var bezierSeeds = bezierSeedsByLayer[layer];
+                    if (bezierSeeds.length > 0) {
+                        b[tempKey] = b.paths;
+
+                        var newPaths: IPathMap = {};
+
+                        bezierSeeds.forEach(function (seed, i) {
+                            seed.layer = layer;
+                            newPaths['seed_' + i] = seed;
+                        });
+
+                        b.paths = newPaths;
+                    }
+                }
+
+            } else {
+                //revert the above
+
+                if (tempKey in b) {
+                    b.paths = b[tempKey];
+                    delete b[tempKey];
+                }
+
+                if (tempLayerKey in b) {
+                    if (b[tempLayerKey] == undefined) {
+                        delete (b as IModel).layer;
+                    } else {
+                        (b as IModel).layer = b[tempLayerKey];
+                    }
+                    delete b[tempLayerKey];
+                }
+
+            }
+        });
+
+    }
+
 }
 
 namespace MakerJs.chain {
@@ -341,17 +550,32 @@ namespace MakerJs.chain {
 
         for (var i = 0; i < chainContext.links.length; i++) {
             var wp = chainContext.links[i].walkedPath;
-            var id = model.getSimilarPathId(result, wp.pathId);
 
-            var newPath: IPath;
-            if (detachFromOldModel) {
-                newPath = wp.pathContext;
-                delete wp.modelContext.paths[wp.pathId];
+            if (wp.pathContext.type === pathType.BezierSeed) {
+
+                if (detachFromOldModel) {
+                    delete wp.modelContext.paths[wp.pathId];
+                }
+
+                if (!result.models) {
+                    result.models = {};
+                }
+
+                var modelId = model.getSimilarModelId(result, wp.pathId);
+                result.models[modelId] = model.moveRelative(new models.BezierCurve(wp.pathContext as IPathBezierSeed), wp.offset);
+
             } else {
-                newPath = path.clone(wp.pathContext);
-            }
+                var newPath: IPath;
+                if (detachFromOldModel) {
+                    newPath = wp.pathContext;
+                    delete wp.modelContext.paths[wp.pathId];
+                } else {
+                    newPath = path.clone(wp.pathContext);
+                }
 
-            result.paths[id] = path.moveRelative(newPath, wp.offset);
+                var pathId = model.getSimilarPathId(result, wp.pathId);
+                result.paths[pathId] = path.moveRelative(newPath, wp.offset);
+            }
         }
 
         return result;

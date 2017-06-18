@@ -359,7 +359,7 @@ namespace MakerJs.model {
         function walkRecursive(modelContext: IModel, layer: string, offset: IPoint, route: string[], routeKey: string) {
 
             var newOffset = point.add(modelContext.origin, offset);
-            layer = layer || '';
+            layer = (layer != undefined) ? layer : '';
 
             if (modelContext.paths) {
                 for (var pathId in modelContext.paths) {
@@ -369,7 +369,7 @@ namespace MakerJs.model {
 
                     var walkedPath: IWalkPath = {
                         modelContext: modelContext,
-                        layer: pathContext.layer || layer,
+                        layer: (pathContext.layer != undefined) ? pathContext.layer : layer,
                         offset: newOffset,
                         pathContext: pathContext,
                         pathId: pathId,
@@ -389,7 +389,7 @@ namespace MakerJs.model {
 
                     var walkedModel: IWalkModel = {
                         parentModel: modelContext,
-                        layer: childModel.layer || layer,
+                        layer: (childModel.layer != undefined) ? childModel.layer : layer,
                         offset: newOffset,
                         route: route.concat(['models', modelId]),
                         routeKey: routeKey + (routeKey ? '.' : '') + 'models' + JSON.stringify([modelId]),

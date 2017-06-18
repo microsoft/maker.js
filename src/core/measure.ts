@@ -172,6 +172,69 @@ namespace MakerJs.measure {
         return true;
     }
 
+    var graham_scan = require('graham_scan') as typeof ConvexHullGrahamScan;
+
+    /**
+     * @private
+     */
+    function serializePoint(p: number[]) {
+        return p.join(',');
+    }
+
+    /**
+     * Check for flow of paths in a chain being clockwise or not.
+     * 
+     * @param chainContext The chain to test.
+     * @param out_result Optional output object, if provided, will be populated with convex hull results.
+     * @returns Boolean true if paths in the chain flow clockwise.
+     */
+    export function isChainClockwise(chainContext: IChain, out_result?: { hullPoints?: IPoint[], keyPoints?: IPoint[] }): boolean {
+
+        //cannot do non-endless or circle
+        if (!chainContext.endless || chainContext.links.length === 1) {
+            return null;
+        }
+
+        var convexHull = new graham_scan();
+        var pointsInChainOrder: string[] = [];
+
+        function add(endPoint: IPoint) {
+            convexHull.addPoint(endPoint[0], endPoint[1]);
+            pointsInChainOrder.push(serializePoint(endPoint as number[]));
+        }
+
+        var keyPoints = chain.toKeyPoints(chainContext);
+        keyPoints.forEach(add);
+
+        //we only need to deal with 3 points
+        var hull = convexHull.getHull();
+        var hullPoints = hull.slice(0, 3).map((p): string => serializePoint([p.x, p.y]));
+        var ordered: string[] = [];
+        pointsInChainOrder.forEach(p => {
+            if (~hullPoints.indexOf(p)) ordered.push(p);
+        });
+
+        //now make sure endpoints of hull are endpoints of ordered. do this by managing the middle point
+        switch (ordered.indexOf(hullPoints[1])) {
+            case 0:
+                //shift down
+                ordered.unshift(ordered.pop());
+                break;
+            case 2:
+                //shift up
+                ordered.push(ordered.shift());
+                break;
+        }
+
+        if (out_result) {
+            out_result.hullPoints = hull.map(p => [p.x, p.y]);
+            out_result.keyPoints = keyPoints;
+        }
+
+        //the hull is counterclockwise, so the result is clockwise if the first elements do not match
+        return hullPoints[0] != ordered[0];
+    }
+
     /**
      * Check for line overlapping another line.
      * 
