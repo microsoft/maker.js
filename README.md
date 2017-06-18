@@ -132,9 +132,10 @@ Browse all the library features in the [API Documentation](http://microsoft.gith
 
 ### Contributing
 There are many ways to contribute to Maker.js:
+* [★ Star Maker.js on GitHub](https://github.com/Microsoft/maker.js)
 * Submit bugs and feature requests [on GitHub](https://github.com/Microsoft/maker.js/issues).
 * Create a demo for the [gallery](http://microsoft.github.io/maker.js/demos/#content).
-* Create lessons or videos(!) for the [documentation](http://microsoft.github.io/maker.js/docs/#content).
+* Create lessons or videos for the [documentation](http://microsoft.github.io/maker.js/docs/#content).
 * Enhance the [website](https://github.com/Microsoft/maker.js/tree/gh-pages).
 * Add features to the [Playground app](https://github.com/Microsoft/maker.js/tree/master/playground).
 * Create a new Maker.js app, and we will link to it here.
