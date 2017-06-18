@@ -16,7 +16,7 @@
     "predocs": "rm -r -f ./docs/api",
     "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
     "start": "http-server -o -p 8020",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "maintainers": [
     {
@@ -102,6 +102,7 @@
     "browserify": "^13.3.0",
     "http-server": "^0.10.0",
     "licensify": "^3.1.2",
+    "mocha": "^3.4.2",
     "pretty-camel": "0.0.8",
     "sort-keys": "^1.1.2",
     "typescript": "^2.1.6"
