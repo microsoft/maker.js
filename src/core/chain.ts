@@ -145,6 +145,7 @@
      * 
      * @param modelContext The model to search for chains.
      * @param options Optional options object.
+     * @returns An array of chains, or a map (keyed by layer id) of arrays of chains - if options.byLayers is true.
      */
     export function findChains(modelContext: IModel, options?: IFindChainsOptions): IChain[] | IChainsMap;
 
@@ -154,6 +155,7 @@
      * @param modelContext The model to search for chains.
      * @param callback Callback function when chains are found.
      * @param options Optional options object.
+     * @returns An array of chains, or a map (keyed by layer id) of arrays of chains - if options.byLayers is true.
      */
     export function findChains(modelContext: IModel, callback: IChainCallback, options?: IFindChainsOptions): IChain[] | IChainsMap;
 
