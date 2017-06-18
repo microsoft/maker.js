@@ -94,6 +94,12 @@ var MakerJsRequireIframe;
     function getHtml() {
         return htmls.concat(getLogsHtmls()).join('');
     }
+    MakerJsRequireIframe.getHtml = getHtml;
+    function resetLog() {
+        htmls = [];
+        logs = [];
+    }
+    MakerJsRequireIframe.resetLog = resetLog;
     var head;
     var loads = {};
     var reloads = [];
@@ -168,8 +174,7 @@ var MakerJsRequireIframe;
         //run the code in 2 passes, first - to cache all required libraries, secondly the actual execution
         function complete2() {
             //reset any calls to document.write
-            htmls = [];
-            logs = [];
+            resetLog();
             //reinstate alert
             window.alert = originalAlert;
             var originalFn = parent.makerjs.exporter.toSVG;
@@ -285,4 +290,11 @@ var MakerJsRequireIframe;
     }
     mockWalk(parent.makerjs, mockMakerJs);
 })(MakerJsRequireIframe || (MakerJsRequireIframe = {}));
+parent.MakerJsPlayground.mainThreadConstructor = function (kit, params) {
+    MakerJsRequireIframe.resetLog();
+    return {
+        model: makerjs.kit.construct(kit, params),
+        html: MakerJsRequireIframe.getHtml()
+    };
+};
 //# sourceMappingURL=require-iframe.js.map
