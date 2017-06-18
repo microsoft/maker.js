@@ -185,33 +185,30 @@ namespace MakerJs.measure {
      * Check for flow of paths in a chain being clockwise or not.
      * 
      * @param chainContext The chain to test.
+     * @param out_result Optional output object, if provided, will be populated with convex hull results.
      * @returns Boolean true if paths in the chain flow clockwise.
      */
-    export function isChainClockwise(chainContext: IChain): boolean {
+    export function isChainClockwise(chainContext: IChain, out_result?: { hullPoints?: IPoint[], keyPoints?: IPoint[] }): boolean {
 
-        //cannot do non-endless, circle, or circular of 2 links
-        if (!chainContext.endless || chainContext.links.length == 1 || chainContext.links.length == 2) {
+        //cannot do non-endless or circle
+        if (!chainContext.endless || chainContext.links.length === 1) {
             return null;
         }
 
         var convexHull = new graham_scan();
         var pointsInChainOrder: string[] = [];
 
-        function add(endPoints: IPoint[], reversed: boolean) {
-            var p = endPoints[~~reversed];
-            convexHull.addPoint(p[0], p[1]);
-            pointsInChainOrder.push(serializePoint(p as number[]));
+        function add(endPoint: IPoint) {
+            convexHull.addPoint(endPoint[0], endPoint[1]);
+            pointsInChainOrder.push(serializePoint(endPoint as number[]));
         }
 
-        chainContext.links.forEach(link => add(link.endPoints, link.reversed));
-
-        if (!chainContext.endless) {
-            var lastLink = chainContext.links[chainContext.links.length - 1];
-            add(lastLink.endPoints, !lastLink.reversed);
-        }
+        var keyPoints = chain.toKeyPoints(chainContext);
+        keyPoints.forEach(add);
 
         //we only need to deal with 3 points
-        var hullPoints = convexHull.getHull().slice(0, 3).map((p): string => serializePoint([p.x, p.y]));
+        var hull = convexHull.getHull();
+        var hullPoints = hull.slice(0, 3).map((p): string => serializePoint([p.x, p.y]));
         var ordered: string[] = [];
         pointsInChainOrder.forEach(p => {
             if (~hullPoints.indexOf(p)) ordered.push(p);
@@ -227,6 +224,11 @@ namespace MakerJs.measure {
                 //shift up
                 ordered.push(ordered.shift());
                 break;
+        }
+
+        if (out_result) {
+            out_result.hullPoints = hull.map(p => [p.x, p.y]);
+            out_result.keyPoints = keyPoints;
         }
 
         //the hull is counterclockwise, so the result is clockwise if the first elements do not match
