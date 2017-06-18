@@ -323,9 +323,7 @@
             if (!chainContext.endless) return;
 
             var wp = chainContext.links[0].walkedPath;
-            var firstPath = path.moveRelative(path.clone(wp.pathContext), wp.offset);
-
-            if (!firstPath) return;
+            var firstPath = path.clone(wp.pathContext, wp.offset);
 
             allChains.forEach(function (otherChain, i2) {
 
