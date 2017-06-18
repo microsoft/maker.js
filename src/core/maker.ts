@@ -232,7 +232,7 @@ namespace MakerJs {
      * @returns True if the object is a number type.
      */
     export function isNumber(value: any): boolean {
-        return !isNaN(value);
+        return typeof value === 'number';
     }
 
     /**
@@ -245,29 +245,6 @@ namespace MakerJs {
         return typeof value === 'object';
     }
 
-    /**
-     * @private
-     */
-    var x = {} as IPath;
-
-    /**
-     * @private
-     */
-    function reflectName(value?: any) {
-        for (var prop in x) {
-            delete x[prop];
-            return prop;
-        }
-    }
-
-    /**
-     * @private
-     */
-    function hasNamedProperty(p: IPath, value: any) {
-        var prop = reflectName();
-        return (prop in p);
-    }
-
     //points
 
     /**
@@ -276,7 +253,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPoint(item: any) {
-        return (Array.isArray(item) && (item as Array<number>).length == 2 && !isNaN(item[0]) && !isNaN(item[1]));
+        return item && Array.isArray(item) && (item as Array<number>).length == 2 && isNumber(item[0]) && isNumber(item[1]);
     }
 
     /**
@@ -347,7 +324,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPath(item: any): boolean {
-        return item && item.type && item.origin;
+        return item && (item as IPath).type && isPoint((item as IPath).origin);
     }
 
     /**
@@ -356,7 +333,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathLine(item: any): boolean {
-        return isPath(item) && item.type == pathType.Line && item.end;
+        return isPath(item) && (<IPath>item).type == pathType.Line && isPoint((<IPathLine>item).end);
     }
 
     /**
@@ -365,7 +342,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathCircle(item: any): boolean {
-        return isPath(item) && item.type == pathType.Circle && hasNamedProperty(item, (<IPathCircle>x).radius = null);
+        return isPath(item) && (<IPath>item).type == pathType.Circle && isNumber((<IPathCircle>item).radius);
     }
 
     /**
@@ -374,7 +351,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathArc(item: any): boolean {
-        return isPath(item) && item.type == pathType.Arc && hasNamedProperty(item, (<IPathArc>x).radius = null) && hasNamedProperty(item, (<IPathArc>x).startAngle = null) && hasNamedProperty(item, (<IPathArc>x).endAngle = null);
+        return isPath(item) && (<IPath>item).type == pathType.Arc && isNumber((<IPathArc>item).radius) && isNumber((<IPathArc>item).startAngle) && isNumber((<IPathArc>item).endAngle);
     }
 
     /**
@@ -383,7 +360,7 @@ namespace MakerJs {
      * @param item The item to test.
      */
     export function isPathArcInBezierCurve(item: any): boolean {
-        return isPathArc(item) && hasNamedProperty(item, (<IPathArcInBezierCurve>x).bezierData = null);
+        return isPathArc(item) && isObject((<IPathArcInBezierCurve>item).bezierData) && isNumber((<IPathArcInBezierCurve>item).bezierData.startT) && isNumber((<IPathArcInBezierCurve>item).bezierData.endT);
     }
 
     /**
