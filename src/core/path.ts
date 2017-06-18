@@ -18,25 +18,30 @@ namespace MakerJs.path {
      * Create a clone of a path. This is faster than cloneObject.
      * 
      * @param pathToClone The path to clone.
+     * @param offset Optional point to move path a relative distance.
      * @returns Cloned path.
      */
-    export function clone(pathToClone: IPath): IPath {
-        var result: IPath = null;
+    export function clone(pathToClone: IPath, offset?: IPoint): IPath {
+        var result: IPath = { type: pathToClone.type, origin: point.add(pathToClone.origin, offset) };
 
         switch (pathToClone.type) {
             case pathType.Arc:
-                var arc = <IPathArc>pathToClone;
-                result = new paths.Arc(point.clone(arc.origin), arc.radius, arc.startAngle, arc.endAngle);
+                (<IPathArc>result).radius = (<IPathArc>pathToClone).radius;
+                (<IPathArc>result).startAngle = (<IPathArc>pathToClone).startAngle;
+                (<IPathArc>result).endAngle = (<IPathArc>pathToClone).endAngle;
                 break;
 
             case pathType.Circle:
-                var circle = <IPathCircle>pathToClone;
-                result = new paths.Circle(point.clone(circle.origin), circle.radius);
+                (<IPathCircle>result).radius = (<IPathCircle>pathToClone).radius;
                 break;
 
             case pathType.Line:
-                var line = <IPathLine>pathToClone;
-                result = new paths.Line(point.clone(line.origin), point.clone(line.end));
+                (<IPathLine>result).end = point.add((<IPathLine>pathToClone).end, offset);
+                break;
+
+            case pathType.BezierSeed:
+                (<IPathBezierSeed>result).end = point.add((<IPathBezierSeed>pathToClone).end, offset);
+                (<IPathBezierSeed>result).controls = (<IPathBezierSeed>pathToClone).controls.map(p => point.add(p, offset));
                 break;
         }
 
@@ -493,11 +498,32 @@ namespace MakerJs.path {
      * @returns Array of points which are on the path.
      */
     export function toKeyPoints(pathContext: IPath, maxArcFacet?: number): IPoint[] {
-        var fn = numberOfKeyPointsMap[pathContext.type];
-        if (fn) {
-            var numberOfKeyPoints = fn(pathContext, maxArcFacet);
-            if (numberOfKeyPoints) {
-                return toPoints(pathContext, numberOfKeyPoints);
+        if (pathContext.type == pathType.BezierSeed) {
+            var curve = new models.BezierCurve(pathContext as IPathBezierSeed);
+            var curveKeyPoints: IPoint[];
+            model.findChains(curve, function (chains: IChain[], loose: IWalkPath[], layer: string) {
+                if (chains.length == 1) {
+                    var c = chains[0];
+                    switch (c.links[0].walkedPath.pathId) {
+                        case 'arc_0':
+                        case 'line_0':
+                            break;
+                        default:
+                            chain.reverse(c);
+                    }
+                    curveKeyPoints = chain.toKeyPoints(c);
+                } else if (loose.length === 1) {
+                    curveKeyPoints = toKeyPoints(loose[0].pathContext);
+                }
+            });
+            return curveKeyPoints;
+        } else {
+            var fn = numberOfKeyPointsMap[pathContext.type];
+            if (fn) {
+                var numberOfKeyPoints = fn(pathContext, maxArcFacet);
+                if (numberOfKeyPoints) {
+                    return toPoints(pathContext, numberOfKeyPoints);
+                }
             }
         }
         return [];
