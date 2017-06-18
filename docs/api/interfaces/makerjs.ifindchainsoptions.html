@@ -6,7 +6,7 @@ title: Api - IFindChainsOptions Interface
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Options to pass to model.findLoops.</p>
+			<p>Options to pass to model.findChains.</p>
 		</div>
 	</div>
 </section>
@@ -31,8 +31,10 @@ title: Api - IFindChainsOptions Interface
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindchainsoptions.html#bylayers" class="tsd-kind-icon">by<wbr>Layers</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindchainsoptions.html#contain" class="tsd-kind-icon">contain</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ifindchainsoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindchainsoptions.html#shallow" class="tsd-kind-icon">shallow</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifindchainsoptions.html#unifybeziers" class="tsd-kind-icon">unify<wbr>Beziers</a></li>
 				</ul>
 			</section>
 		</div>
@@ -46,12 +48,27 @@ title: Api - IFindChainsOptions Interface
 		<div class="tsd-signature tsd-kind-icon">by<wbr>Layers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3844300/src/core/maker.ts#L697">core/maker.ts:697</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/a3f6bbcc/src/core/maker.ts#L686">core/maker.ts:686</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
 				<p>Flag to separate chains by layers.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="contain" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> contain</h3>
+		<div class="tsd-signature tsd-kind-icon">contain<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="makerjs.icontainchainsoptions.html" class="tsd-signature-type">IContainChainsOptions</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/a3f6bbcc/src/core/maker.ts#L696">core/maker.ts:696</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Flag to order chains in a heirarchy by their paths being within one another.</p>
 			</div>
 		</div>
 	</section>
@@ -62,7 +79,7 @@ title: Api - IFindChainsOptions Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3844300/src/core/maker.ts#L496">core/maker.ts:496</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/a3f6bbcc/src/core/maker.ts#L473">core/maker.ts:473</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -77,12 +94,27 @@ title: Api - IFindChainsOptions Interface
 		<div class="tsd-signature tsd-kind-icon">shallow<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3844300/src/core/maker.ts#L702">core/maker.ts:702</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/a3f6bbcc/src/core/maker.ts#L691">core/maker.ts:691</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
 				<p>Flag to not recurse models, look only within current model&#39;s immediate paths.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="unifybeziers" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> unify<wbr>Beziers</h3>
+		<div class="tsd-signature tsd-kind-icon">unify<wbr>Beziers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/a3f6bbcc/src/core/maker.ts#L701">core/maker.ts:701</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Flag to flatten BezierCurve arc segments into IPathBezierSeeds.</p>
 			</div>
 		</div>
 	</section>
