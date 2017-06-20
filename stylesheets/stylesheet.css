@@ -518,28 +518,8 @@ header .inner li a {
   border-top: solid 1px #fff;
 }
 
-#main-content {
-  float: left;
-  width: 690px;
-}
-
 #main-content img {
   max-width: 100%;
-}
-
-aside#sidebar {
-  float: right;
-  width: 200px;
-  min-height: 504px;
-  padding-left: 20px;
-  font-size: 12px;
-  line-height: 1.3;
-  background: transparent url(../images/sidebar-bg.jpg) 0 0 no-repeat;
-}
-
-aside#sidebar p.repo-owner,
-aside#sidebar p.repo-owner a {
-  font-weight: bold;
 }
 
 #downloads {
@@ -811,21 +791,6 @@ footer img {
   header a.button small {
     display: inline;
     font-size: 13px;
-  }
-  #main-content,
-  aside#sidebar {
-    float: none;
-    width: 100% ! important;
-  }
-  aside#sidebar {
-    min-height: 0;
-    padding: 20px 0;
-    margin-top: 20px;
-    background-image: none;
-    border-top: solid 1px #ddd;
-  }
-  aside#sidebar a.button {
-    display: none;
   }
   #main-content h1:before,
   #main-content h2:before,
