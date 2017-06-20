@@ -17,7 +17,8 @@ var fonts = {
     "displayName": "Black Ops One",
     "path": "blackopsone/BlackOpsOne-Regular.ttf",
     "tags": [
-      "stencil"
+      "stencil",
+      "straight"
     ]
   },
   "emblemaone-regular": {
@@ -38,16 +39,24 @@ var fonts = {
     "displayName": "Graduate",
     "path": "graduate/Graduate-Regular.ttf",
     "tags": [
-      "serif"
+      "serif",
+      "straight"
     ]
   },
   "keaniaone-regular": {
     "displayName": "Keania One",
-    "path": "keaniaone/KeaniaOne-Regular.ttf"
+    "path": "keaniaone/KeaniaOne-Regular.ttf",
+    "tags": [
+      "stencil"
+    ]
   },
   "kumarone-regular": {
     "displayName": "Kumar One",
-    "path": "kumarone/KumarOne-Regular.ttf"
+    "path": "kumarone/KumarOne-Regular.ttf",
+    "tags": [
+      "serif",
+      "straight"
+    ]
   },
   "mavenpro-regular": {
     "displayName": "Maven Pro",
@@ -123,6 +132,7 @@ var fonts = {
     "displayName": "Stardos Stencil",
     "path": "stardosstencil/StardosStencil-Regular.ttf",
     "tags": [
+      "serif",
       "stencil"
     ]
   },
@@ -130,6 +140,7 @@ var fonts = {
     "displayName": "Stardos Stencil Bold",
     "path": "stardosstencil/StardosStencil-Bold.ttf",
     "tags": [
+      "serif",
       "stencil"
     ]
   },
@@ -145,7 +156,8 @@ var fonts = {
     "displayName": "Wallpoet",
     "path": "wallpoet/Wallpoet-Regular.ttf",
     "tags": [
-      "stencil"
+      "stencil",
+      "straight"
     ]
   }
 };
