@@ -7442,8 +7442,13 @@ var MakerJs;
                 this.paths = {};
                 if (MakerJs.measure.isBezierSeedLinear(this.seed)) {
                     //use a line and exit
+                    var line = new MakerJs.paths.Line(MakerJs.point.clone(this.seed.origin), MakerJs.point.clone(this.seed.end));
+                    line.bezierData = {
+                        startT: 0,
+                        endT: 1
+                    };
                     this.paths = {
-                        "0": new MakerJs.paths.Line(MakerJs.point.clone(this.seed.origin), MakerJs.point.clone(this.seed.end))
+                        "0": line
                     };
                     return;
                 }
@@ -7535,6 +7540,10 @@ var MakerJs;
                         }
                     });
                     loose.forEach(function (wp) {
+                        if (wp.pathContext.type === MakerJs.pathType.Line) {
+                            //bezier is linear
+                            return addToLayer(wp.pathContext, true);
+                        }
                         var range = getActualBezierRange(wp.pathContext, MakerJs.point.fromPathEnds(wp.pathContext));
                         if (range) {
                             var b = getScratch(curve.seed);
@@ -8612,5 +8621,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.55";
+MakerJs.version = "0.9.56";
 ﻿var Bezier = require('bezier-js');

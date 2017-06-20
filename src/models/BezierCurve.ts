@@ -401,8 +401,15 @@
 
             if (measure.isBezierSeedLinear(this.seed)) {
                 //use a line and exit
+
+                var line = new paths.Line(point.clone(this.seed.origin), point.clone(this.seed.end));
+                (line as IPath as IPathArcInBezierCurve).bezierData = {
+                    startT: 0,
+                    endT: 1
+                };
+                
                 this.paths = {
-                    "0": new paths.Line(point.clone(this.seed.origin), point.clone(this.seed.end))
+                    "0": line 
                 };
                 return;
             }
@@ -511,6 +518,10 @@
                 });
 
                 loose.forEach(wp => {
+                    if (wp.pathContext.type === pathType.Line) {
+                        //bezier is linear
+                        return addToLayer(wp.pathContext, true);
+                    }
                     var range = getActualBezierRange(wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext));
                     if (range) {
                         var b = getScratch(curve.seed);
