@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.55
+ *   version: 0.9.56
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -7652,8 +7652,13 @@ var MakerJs;
                 this.paths = {};
                 if (MakerJs.measure.isBezierSeedLinear(this.seed)) {
                     //use a line and exit
+                    var line = new MakerJs.paths.Line(MakerJs.point.clone(this.seed.origin), MakerJs.point.clone(this.seed.end));
+                    line.bezierData = {
+                        startT: 0,
+                        endT: 1
+                    };
                     this.paths = {
-                        "0": new MakerJs.paths.Line(MakerJs.point.clone(this.seed.origin), MakerJs.point.clone(this.seed.end))
+                        "0": line
                     };
                     return;
                 }
@@ -7745,6 +7750,10 @@ var MakerJs;
                         }
                     });
                     loose.forEach(function (wp) {
+                        if (wp.pathContext.type === MakerJs.pathType.Line) {
+                            //bezier is linear
+                            return addToLayer(wp.pathContext, true);
+                        }
                         var range = getActualBezierRange(wp.pathContext, MakerJs.point.fromPathEnds(wp.pathContext));
                         if (range) {
                             var b = getScratch(curve.seed);
@@ -8822,6 +8831,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.55";
+MakerJs.version = "0.9.56";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
