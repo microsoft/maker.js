@@ -1,10 +1,12 @@
 {
   "allertastencil-regular": [ "stencil" ],
   "arbutusslab-regular": [ "serif" ],
-  "blackopsone-regular": [ "stencil" ],
+  "blackopsone-regular": [ "stencil", "straight" ],
   "emblemaone-regular": [ "stencil" ],
   "goblinone": [ "serif" ],
-  "graduate-regular": [ "serif" ],
+  "graduate-regular": [ "serif", "straight" ],
+  "keaniaone-regular": [ "stencil" ],
+  "kumarone-regular": [ "serif", "straight" ],
   "mavenpro-black": [ "sans-serif" ],
   "mavenpro-bold": [ "sans-serif" ],
   "mavenpro-medium": [ "sans-serif" ],
@@ -15,8 +17,8 @@
   "pirataone-regular": [ "gothic" ],
   "plaster-regular": [ "stencil" ],
   "sirinstencil-regular": [ "stencil" ],
-  "stardosstencil-regular": [ "stencil" ],
-  "stardosstencil-bold": [ "stencil" ],
+  "stardosstencil-regular": [ "serif", "stencil" ],
+  "stardosstencil-bold": [ "serif", "stencil" ],
   "vampiroone-regular": [ "connected", "script" ],
-  "wallpoet-regular": [ "stencil" ]
+  "wallpoet-regular": [ "stencil", "straight" ]
 }
