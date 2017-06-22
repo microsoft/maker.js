@@ -2556,7 +2556,10 @@ var MakerJs;
                         return true;
                     };
                 }
-                model.removeDeadEnds(result, null, shouldKeep, function (wp, reason) { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason); });
+                model.removeDeadEnds(result, null, shouldKeep, function (wp, reason) { 
+                 var which = wp.route[1] === 'a' ? 0 : 1;
+                 trackDeleted(which, wp.pathContext, wp.routeKey, wp.offset, reason); 
+                });
             }
             //pass options back to caller
             MakerJs.extendObject(options, opts);
