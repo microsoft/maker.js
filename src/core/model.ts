@@ -59,6 +59,7 @@ namespace MakerJs.model {
      * 
      * @param modelToOriginate The model to originate.
      * @param origin Optional offset reference point.
+     * @returns The original model (for cascading).
      */
     export function originate(modelToOriginate: IModel, origin?: IPoint) {
 
@@ -351,6 +352,7 @@ namespace MakerJs.model {
      * @param pathCallback Callback for each path.
      * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
      * @param modelCallbackAfterWalk Callback for each model after recursion.
+     * @returns The original model (for cascading).
      */
     export function walk(modelContext: IModel, options: IWalkOptions) {
 
@@ -412,6 +414,7 @@ namespace MakerJs.model {
 
         walkRecursive(modelContext, modelContext.layer, [0, 0], [], '');
 
+        return modelContext;
     }
 
     /**
