@@ -230,6 +230,7 @@
      *
      * @param modelToBreak The model containing paths to be broken.
      * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
+     * @returns The original model (for cascading).
      */
     export function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel) {
 
@@ -247,6 +248,8 @@
         };
 
         breakAllPathsAtIntersections(modelToBreak, modelToIntersect || modelToBreak, false, modelToBreakAtlas, modelToIntersectAtlas);
+
+        return modelToBreak;
     }
 
     /**
@@ -462,7 +465,10 @@
                 }
             }
 
-            removeDeadEnds(result, null, shouldKeep, (wp, reason) => { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason) });
+            removeDeadEnds(result, null, shouldKeep, (wp, reason) => {
+                var which = wp.route[1] === 'a' ? 0 : 1;
+                trackDeleted(which, wp.pathContext, wp.routeKey, wp.offset, reason)
+            });
         }
 
         //pass options back to caller
