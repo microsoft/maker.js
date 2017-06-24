@@ -293,7 +293,7 @@ var MakerJsRequireIframe;
 parent.MakerJsPlayground.mainThreadConstructor = function (kit, params) {
     MakerJsRequireIframe.resetLog();
     return {
-        model: makerjs.kit.construct(kit, params),
+        model: parent.makerjs.kit.construct(kit, params),
         html: MakerJsRequireIframe.getHtml()
     };
 };

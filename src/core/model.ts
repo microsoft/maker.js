@@ -1,6 +1,62 @@
 namespace MakerJs.model {
 
     /**
+     * Add a path as a child. This is basically equivalent to:
+     * ```
+     * parentModel.paths[childPathId] = childPath;
+     * ```
+     * with additional checks to make it safe for cascading.
+     * 
+     * @param modelContext The model to add to.
+     * @param pathContext The path to add.
+     * @param pathId The id of the path.
+     * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+     * @returns The original model (for cascading).
+     */
+    export function addPath(modelContext: IModel, pathContext: IPath, pathId: string, overWrite = false): IModel {
+        var id = overWrite ? pathId : getSimilarPathId(modelContext, pathId);
+        modelContext.paths = modelContext.paths || {};
+        modelContext.paths[id] = pathContext;
+        return modelContext;
+    }
+
+    /**
+     * Add a model as a child. This is basically equivalent to:
+     * ```
+     * parentModel.models[childModelId] = childModel;
+     * ```
+     * with additional checks to make it safe for cascading.
+     * 
+     * @param parentModel The model to add to.
+     * @param childModel The model to add.
+     * @param childModelId The id of the child model.
+     * @param overwrite Optional flag to overwrite any model referenced by childModelId. Default is false, which will create an id similar to childModelId.
+     * @returns The original model (for cascading).
+     */
+    export function addModel(parentModel: IModel, childModel: IModel, childModelId: string, overWrite = false): IModel {
+        var id = overWrite ? childModelId : getSimilarModelId(parentModel, childModelId);
+        parentModel.models = parentModel.models || {};
+        parentModel.models[id] = childModel;
+        return parentModel;
+    }
+
+    /**
+     * Add a model as a child of another model. This is basically equivalent to:
+     * ```
+     * parentModel.models[childModelId] = childModel;
+     * ```
+     * with additional checks to make it safe for cascading.
+     * 
+     * @param childModel The model to add.
+     * @param parentModel The model to add to.
+     * @returns The original model (for cascading).
+     */
+    export function addTo(childModel: IModel, parentModel: IModel, childModelId: string, overWrite = false): IModel {
+        addModel(parentModel, childModel, childModelId, overWrite);
+        return childModel;
+    }
+
+    /**
      * Count the number of child models within a given model.
      * 
      * @param modelContext The model containing other models.
@@ -19,21 +75,27 @@ namespace MakerJs.model {
     }
 
     /**
+     * @private
+     */
+    function getSimilarId(map: { [id: string]: any }, id: string): string {
+        if (!map) return id;
+        var i = 0;
+        var newId = id;
+        while (newId in map) {
+            i++;
+            newId = [id, i].join('_');
+        }
+        return newId;
+    }
+
+    /**
      * Get an unused id in the models map with the same prefix.
      * 
      * @param modelContext The model containing the models map.
      * @param modelId The id to use directly (if unused), or as a prefix.
      */
     export function getSimilarModelId(modelContext: IModel, modelId: string): string {
-        if (!modelContext.models) return modelId;
-
-        var i = 0;
-        var newModelId = modelId;
-        while (newModelId in modelContext.models) {
-            i++;
-            newModelId = modelId + '_' + i;
-        }
-        return newModelId;
+        return getSimilarId(modelContext.models, modelId);
     }
 
     /**
@@ -43,15 +105,7 @@ namespace MakerJs.model {
      * @param pathId The id to use directly (if unused), or as a prefix.
      */
     export function getSimilarPathId(modelContext: IModel, pathId: string): string {
-        if (!modelContext.paths) return pathId;
-
-        var i = 0;
-        var newPathId = pathId;
-        while (newPathId in modelContext.paths) {
-            i++;
-            newPathId = pathId + '_' + i;
-        }
-        return newPathId;
+        return getSimilarId(modelContext.paths, pathId);
     }
 
     /**
@@ -59,6 +113,7 @@ namespace MakerJs.model {
      * 
      * @param modelToOriginate The model to originate.
      * @param origin Optional offset reference point.
+     * @returns The original model (for cascading).
      */
     export function originate(modelToOriginate: IModel, origin?: IPoint) {
 
@@ -351,6 +406,7 @@ namespace MakerJs.model {
      * @param pathCallback Callback for each path.
      * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
      * @param modelCallbackAfterWalk Callback for each model after recursion.
+     * @returns The original model (for cascading).
      */
     export function walk(modelContext: IModel, options: IWalkOptions) {
 
@@ -412,6 +468,7 @@ namespace MakerJs.model {
 
         walkRecursive(modelContext, modelContext.layer, [0, 0], [], '');
 
+        return modelContext;
     }
 
     /**
