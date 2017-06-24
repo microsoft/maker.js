@@ -1,6 +1,24 @@
 namespace MakerJs.path {
 
     /**
+     * Add a path to a model. This is basically equivalent to:
+     * ```
+     * parentModel.paths[pathId] = childPath;
+     * ```
+     * with additional checks to make it safe for cascading.
+     * 
+     * @param childPath The path to add.
+     * @param parentModel The model to add to.
+     * @param pathId The id of the path.
+     * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+     * @returns The original path (for cascading).
+     */
+    export function addTo(childPath: IPath, parentModel: IModel, pathId: string, overwrite = false): IModel {
+        model.addPath(parentModel, childPath, pathId, overwrite);
+        return childPath;
+    }
+
+    /**
      * @private
      */
     function copyLayer(pathA: IPath, pathB: IPath) {
