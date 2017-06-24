@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.56
+// Type definitions for Maker.js 0.9.57
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -973,6 +973,20 @@ declare namespace MakerJs.point {
 }
 declare namespace MakerJs.path {
     /**
+     * Add a path to a model. This is basically equivalent to:
+     * ```
+     * parentModel.paths[pathId] = childPath;
+     * ```
+     * with additional checks to make it safe for cascading.
+     *
+     * @param childPath The path to add.
+     * @param parentModel The model to add to.
+     * @param pathId The id of the path.
+     * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+     * @returns The original path (for cascading).
+     */
+    function addTo(childPath: IPath, parentModel: IModel, pathId: string, overwrite?: boolean): IModel;
+    /**
      * Create a clone of a path. This is faster than cloneObject.
      *
      * @param pathToClone The path to clone.
@@ -1249,6 +1263,46 @@ declare namespace MakerJs.paths {
 }
 declare namespace MakerJs.model {
     /**
+     * Add a path as a child. This is basically equivalent to:
+     * ```
+     * parentModel.paths[childPathId] = childPath;
+     * ```
+     * with additional checks to make it safe for cascading.
+     *
+     * @param modelContext The model to add to.
+     * @param pathContext The path to add.
+     * @param pathId The id of the path.
+     * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+     * @returns The original model (for cascading).
+     */
+    function addPath(modelContext: IModel, pathContext: IPath, pathId: string, overWrite?: boolean): IModel;
+    /**
+     * Add a model as a child. This is basically equivalent to:
+     * ```
+     * parentModel.models[childModelId] = childModel;
+     * ```
+     * with additional checks to make it safe for cascading.
+     *
+     * @param parentModel The model to add to.
+     * @param childModel The model to add.
+     * @param childModelId The id of the child model.
+     * @param overwrite Optional flag to overwrite any model referenced by childModelId. Default is false, which will create an id similar to childModelId.
+     * @returns The original model (for cascading).
+     */
+    function addModel(parentModel: IModel, childModel: IModel, childModelId: string, overWrite?: boolean): IModel;
+    /**
+     * Add a model as a child of another model. This is basically equivalent to:
+     * ```
+     * parentModel.models[childModelId] = childModel;
+     * ```
+     * with additional checks to make it safe for cascading.
+     *
+     * @param childModel The model to add.
+     * @param parentModel The model to add to.
+     * @returns The original model (for cascading).
+     */
+    function addTo(childModel: IModel, parentModel: IModel, childModelId: string, overWrite?: boolean): IModel;
+    /**
      * Count the number of child models within a given model.
      *
      * @param modelContext The model containing other models.
@@ -1274,6 +1328,7 @@ declare namespace MakerJs.model {
      *
      * @param modelToOriginate The model to originate.
      * @param origin Optional offset reference point.
+     * @returns The original model (for cascading).
      */
     function originate(modelToOriginate: IModel, origin?: IPoint): IModel;
     /**
@@ -1359,8 +1414,9 @@ declare namespace MakerJs.model {
      * @param pathCallback Callback for each path.
      * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
      * @param modelCallbackAfterWalk Callback for each model after recursion.
+     * @returns The original model (for cascading).
      */
-    function walk(modelContext: IModel, options: IWalkOptions): void;
+    function walk(modelContext: IModel, options: IWalkOptions): IModel;
     /**
      * Move a model so its bounding box begins at [0, 0].
      *
@@ -1386,8 +1442,9 @@ declare namespace MakerJs.model {
      *
      * @param modelToBreak The model containing paths to be broken.
      * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
+     * @returns The original model (for cascading).
      */
-    function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel): void;
+    function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel): IModel;
     /**
      * Combine 2 models. Each model will be modified accordingly.
      *

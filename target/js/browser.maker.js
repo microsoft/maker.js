@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.56
+ *   version: 0.9.57
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -1026,6 +1026,25 @@ var MakerJs;
     var path;
     (function (path) {
         /**
+         * Add a path to a model. This is basically equivalent to:
+         * ```
+         * parentModel.paths[pathId] = childPath;
+         * ```
+         * with additional checks to make it safe for cascading.
+         *
+         * @param childPath The path to add.
+         * @param parentModel The model to add to.
+         * @param pathId The id of the path.
+         * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+         * @returns The original path (for cascading).
+         */
+        function addTo(childPath, parentModel, pathId, overwrite) {
+            if (overwrite === void 0) { overwrite = false; }
+            MakerJs.model.addPath(parentModel, childPath, pathId, overwrite);
+            return childPath;
+        }
+        path.addTo = addTo;
+        /**
          * @private
          */
         function copyLayer(pathA, pathB) {
@@ -1806,6 +1825,65 @@ var MakerJs;
     var model;
     (function (model) {
         /**
+         * Add a path as a child. This is basically equivalent to:
+         * ```
+         * parentModel.paths[childPathId] = childPath;
+         * ```
+         * with additional checks to make it safe for cascading.
+         *
+         * @param modelContext The model to add to.
+         * @param pathContext The path to add.
+         * @param pathId The id of the path.
+         * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+         * @returns The original model (for cascading).
+         */
+        function addPath(modelContext, pathContext, pathId, overWrite) {
+            if (overWrite === void 0) { overWrite = false; }
+            var id = overWrite ? pathId : getSimilarPathId(modelContext, pathId);
+            modelContext.paths = modelContext.paths || {};
+            modelContext.paths[id] = pathContext;
+            return modelContext;
+        }
+        model.addPath = addPath;
+        /**
+         * Add a model as a child. This is basically equivalent to:
+         * ```
+         * parentModel.models[childModelId] = childModel;
+         * ```
+         * with additional checks to make it safe for cascading.
+         *
+         * @param parentModel The model to add to.
+         * @param childModel The model to add.
+         * @param childModelId The id of the child model.
+         * @param overwrite Optional flag to overwrite any model referenced by childModelId. Default is false, which will create an id similar to childModelId.
+         * @returns The original model (for cascading).
+         */
+        function addModel(parentModel, childModel, childModelId, overWrite) {
+            if (overWrite === void 0) { overWrite = false; }
+            var id = overWrite ? childModelId : getSimilarModelId(parentModel, childModelId);
+            parentModel.models = parentModel.models || {};
+            parentModel.models[id] = childModel;
+            return parentModel;
+        }
+        model.addModel = addModel;
+        /**
+         * Add a model as a child of another model. This is basically equivalent to:
+         * ```
+         * parentModel.models[childModelId] = childModel;
+         * ```
+         * with additional checks to make it safe for cascading.
+         *
+         * @param childModel The model to add.
+         * @param parentModel The model to add to.
+         * @returns The original model (for cascading).
+         */
+        function addTo(childModel, parentModel, childModelId, overWrite) {
+            if (overWrite === void 0) { overWrite = false; }
+            addModel(parentModel, childModel, childModelId, overWrite);
+            return childModel;
+        }
+        model.addTo = addTo;
+        /**
          * Count the number of child models within a given model.
          *
          * @param modelContext The model containing other models.
@@ -1822,21 +1900,27 @@ var MakerJs;
         }
         model.countChildModels = countChildModels;
         /**
+         * @private
+         */
+        function getSimilarId(map, id) {
+            if (!map)
+                return id;
+            var i = 0;
+            var newId = id;
+            while (newId in map) {
+                i++;
+                newId = [id, i].join('_');
+            }
+            return newId;
+        }
+        /**
          * Get an unused id in the models map with the same prefix.
          *
          * @param modelContext The model containing the models map.
          * @param modelId The id to use directly (if unused), or as a prefix.
          */
         function getSimilarModelId(modelContext, modelId) {
-            if (!modelContext.models)
-                return modelId;
-            var i = 0;
-            var newModelId = modelId;
-            while (newModelId in modelContext.models) {
-                i++;
-                newModelId = modelId + '_' + i;
-            }
-            return newModelId;
+            return getSimilarId(modelContext.models, modelId);
         }
         model.getSimilarModelId = getSimilarModelId;
         /**
@@ -1846,15 +1930,7 @@ var MakerJs;
          * @param pathId The id to use directly (if unused), or as a prefix.
          */
         function getSimilarPathId(modelContext, pathId) {
-            if (!modelContext.paths)
-                return pathId;
-            var i = 0;
-            var newPathId = pathId;
-            while (newPathId in modelContext.paths) {
-                i++;
-                newPathId = pathId + '_' + i;
-            }
-            return newPathId;
+            return getSimilarId(modelContext.paths, pathId);
         }
         model.getSimilarPathId = getSimilarPathId;
         /**
@@ -1862,6 +1938,7 @@ var MakerJs;
          *
          * @param modelToOriginate The model to originate.
          * @param origin Optional offset reference point.
+         * @returns The original model (for cascading).
          */
         function originate(modelToOriginate, origin) {
             function innerOriginate(m, o) {
@@ -2128,6 +2205,7 @@ var MakerJs;
          * @param pathCallback Callback for each path.
          * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
          * @param modelCallbackAfterWalk Callback for each model after recursion.
+         * @returns The original model (for cascading).
          */
         function walk(modelContext, options) {
             if (!modelContext)
@@ -2179,6 +2257,7 @@ var MakerJs;
                 }
             }
             walkRecursive(modelContext, modelContext.layer, [0, 0], [], '');
+            return modelContext;
         }
         model.walk = walk;
         /**
@@ -2366,6 +2445,7 @@ var MakerJs;
          *
          * @param modelToBreak The model containing paths to be broken.
          * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
+         * @returns The original model (for cascading).
          */
         function breakPathsAtIntersections(modelToBreak, modelToIntersect) {
             var modelToBreakAtlas = new MakerJs.measure.Atlas(modelToBreak);
@@ -2381,6 +2461,7 @@ var MakerJs;
             }
             ;
             breakAllPathsAtIntersections(modelToBreak, modelToIntersect || modelToBreak, false, modelToBreakAtlas, modelToIntersectAtlas);
+            return modelToBreak;
         }
         model.breakPathsAtIntersections = breakPathsAtIntersections;
         /**
@@ -2556,7 +2637,10 @@ var MakerJs;
                         return true;
                     };
                 }
-                model.removeDeadEnds(result, null, shouldKeep, function (wp, reason) { trackDeleted(parseInt(wp.route[1]), wp.pathContext, wp.routeKey, wp.offset, reason); });
+                model.removeDeadEnds(result, null, shouldKeep, function (wp, reason) {
+                    var which = wp.route[1] === 'a' ? 0 : 1;
+                    trackDeleted(which, wp.pathContext, wp.routeKey, wp.offset, reason);
+                });
             }
             //pass options back to caller
             MakerJs.extendObject(options, opts);
@@ -8831,6 +8915,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.56";
+MakerJs.version = "0.9.57";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
