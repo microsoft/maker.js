@@ -127,8 +127,8 @@
     class TPoint {
         public point: IPoint;
 
-        constructor(b: BezierJs.Bezier, public t: number) {
-            this.point = getIPoint(b.get(t));
+        constructor(b: BezierJs.Bezier, public t: number, offset?: IPoint) {
+            this.point = point.add(getIPoint(b.get(t)), offset);
         }
     }
 
@@ -444,9 +444,9 @@
 
             var seedsByLayer: { [layer: string]: IPath[] } = {};
 
-            function getActualBezierRange(arc: IPathArcInBezierCurve, endpoints: IPoint[]): IBezierRange {
+            function getActualBezierRange(arc: IPathArcInBezierCurve, endpoints: IPoint[], offset: IPoint): IBezierRange {
                 var b = getScratch(curve.seed);
-                var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(t => new TPoint(b, t));
+                var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(t => new TPoint(b, t, offset));
                 var ends = endpoints.slice();
 
                 //clipped arcs will still have endpoints closer to the original endpoints
@@ -479,7 +479,7 @@
                         endLinks.reverse();
                     }
 
-                    var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints));
+                    var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints, endLink.walkedPath.offset));
 
                     if (actualBezierRanges[0] && actualBezierRanges[1]) {
                         return {
@@ -522,7 +522,7 @@
                         //bezier is linear
                         return addToLayer(wp.pathContext, true);
                     }
-                    var range = getActualBezierRange(wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext));
+                    var range = getActualBezierRange(wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext), wp.offset);
                     if (range) {
                         var b = getScratch(curve.seed);
                         var piece = b.split(range.startT, range.endT);

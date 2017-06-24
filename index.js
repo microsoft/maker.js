@@ -7330,9 +7330,9 @@ var MakerJs;
          * @private
          */
         var TPoint = (function () {
-            function TPoint(b, t) {
+            function TPoint(b, t, offset) {
                 this.t = t;
-                this.point = getIPoint(b.get(t));
+                this.point = MakerJs.point.add(getIPoint(b.get(t)), offset);
             }
             return TPoint;
         }());
@@ -7556,9 +7556,9 @@ var MakerJs;
                 if (options === void 0) { options = {}; }
                 options.shallow = true;
                 var seedsByLayer = {};
-                function getActualBezierRange(arc, endpoints) {
+                function getActualBezierRange(arc, endpoints, offset) {
                     var b = getScratch(curve.seed);
-                    var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(function (t) { return new TPoint(b, t); });
+                    var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(function (t) { return new TPoint(b, t, offset); });
                     var ends = endpoints.slice();
                     //clipped arcs will still have endpoints closer to the original endpoints
                     var endpointDistancetoStart = ends.map(function (e) { return MakerJs.measure.pointDistance(e, tPoints[0].point); });
@@ -7585,7 +7585,7 @@ var MakerJs;
                             MakerJs.chain.reverse(c);
                             endLinks.reverse();
                         }
-                        var actualBezierRanges = endLinks.map(function (endLink) { return getActualBezierRange(endLink.walkedPath.pathContext, endLink.endPoints); });
+                        var actualBezierRanges = endLinks.map(function (endLink) { return getActualBezierRange(endLink.walkedPath.pathContext, endLink.endPoints, endLink.walkedPath.offset); });
                         if (actualBezierRanges[0] && actualBezierRanges[1]) {
                             return {
                                 startT: actualBezierRanges[0].startT,
@@ -7628,7 +7628,7 @@ var MakerJs;
                             //bezier is linear
                             return addToLayer(wp.pathContext, true);
                         }
-                        var range = getActualBezierRange(wp.pathContext, MakerJs.point.fromPathEnds(wp.pathContext));
+                        var range = getActualBezierRange(wp.pathContext, MakerJs.point.fromPathEnds(wp.pathContext), wp.offset);
                         if (range) {
                             var b = getScratch(curve.seed);
                             var piece = b.split(range.startT, range.endT);
@@ -8705,5 +8705,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.57";
+MakerJs.version = "0.9.58";
 ﻿var Bezier = require('bezier-js');
