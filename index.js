@@ -7270,8 +7270,7 @@ var MakerJs;
                 scratch = new Bezier(bezierJsPoints);
             }
             else {
-                scratch.points = bezierJsPoints;
-                scratch.update();
+                Bezier.apply(scratch, bezierJsPoints);
             }
             return scratch;
         }
@@ -8705,5 +8704,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.58";
+MakerJs.version = "0.9.59";
 ﻿var Bezier = require('bezier-js');
