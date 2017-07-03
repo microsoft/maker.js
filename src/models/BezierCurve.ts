@@ -47,8 +47,8 @@
             ensureBezierLib();
             scratch = new Bezier(bezierJsPoints);
         } else {
-            scratch.points = bezierJsPoints;
-            scratch.update();
+            //invoke the constructor on the same object
+            Bezier.apply(scratch, bezierJsPoints);
         }
 
         return scratch;
