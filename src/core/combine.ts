@@ -105,72 +105,7 @@
     }
 
     /**
-     * @private
-     */
-    function addUniquePoints(pointArray: IPoint[], pointsToAdd: IPoint[]): number {
-
-        var added = 0;
-
-        function addUniquePoint(pointToAdd: IPoint) {
-            for (var i = 0; i < pointArray.length; i++) {
-                if (measure.isPointEqual(pointArray[i], pointToAdd, .000000001)) {
-                    return;
-                }
-            }
-            pointArray.push(pointToAdd);
-            added++;
-        }
-
-        for (var i = 0; i < pointsToAdd.length; i++) {
-            addUniquePoint(pointsToAdd[i]);
-        }
-
-        return added;
-    }
-
-    /**
-     * @private
-     */
-    function checkInsideForeignModel(segment: IPathInside, segmentOffset: IPoint, modelToIntersect: IModel, modelToIntersectAtlas: measure.Atlas, farPoint: IPoint = [7654321, 1234567]) {
-        var origin = point.add(point.middle(segment.path), segmentOffset);
-        var lineToFarPoint = new paths.Line(origin, farPoint);
-        var measureFarPoint = measure.pathExtents(lineToFarPoint);
-
-        var walkOptions: IWalkOptions = {
-            onPath: function (walkedPath: IWalkPath) {
-
-                if (modelToIntersectAtlas && !measure.isMeasurementOverlapping(measureFarPoint, modelToIntersectAtlas.pathMap[walkedPath.routeKey])) {
-                    return;
-                }
-
-                var options: IPathIntersectionOptions = { path2Offset: walkedPath.offset };
-
-                var farInt = path.intersection(lineToFarPoint, walkedPath.pathContext, options);
-
-                if (farInt) {
-                    var added = addUniquePoints(segment.uniqueForeignIntersectionPoints, farInt.intersectionPoints);
-
-                    //if number of intersections is an odd number, flip the flag.
-                    if (added % 2 == 1) {
-                        segment.isInside = !!!segment.isInside;
-                    }
-                }
-            },
-            beforeChildWalk: function (innerWalkedModel: IWalkModel): boolean {
-
-                if (!modelToIntersectAtlas) {
-                    return true;
-                }
-
-                //see if there is a model measurement. if not, it is because the model does not contain paths.
-                var innerModelMeasurement = modelToIntersectAtlas.modelMap[innerWalkedModel.routeKey];
-                return innerModelMeasurement && measure.isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
-            }
-        };
-        walk(modelToIntersect, walkOptions);
-    }
-
-    /**
+     * DEPRECATED - use measure.isPointInsideModel instead.
      * Check to see if a path is inside of a model.
      * 
      * @param pathContext The path to check.
@@ -179,30 +114,23 @@
      * @returns Boolean true if the path is inside of the modelContext.
      */
     export function isPathInsideModel(pathContext: IPath, modelContext: IModel, pathOffset?: IPoint, farPoint?: IPoint, measureAtlas?: measure.Atlas): boolean {
-        var segment: IPathInside = {
-            path: pathContext,
-            isInside: false,
-            uniqueForeignIntersectionPoints: []
+
+        var options: IMeasurePointInsideOptions = {
+            farPoint: farPoint,
+            measureAtlas: measureAtlas
         };
 
-        checkInsideForeignModel(segment, pathOffset, modelContext, measureAtlas, farPoint);
-
-        return !!segment.isInside;
+        var p = point.add(point.middle(pathContext), pathOffset);
+        return measure.isPointInsideModel(p, modelContext, options);
     }
 
     /**
      * @private
      */
-    interface IPathInside {
-        path: IPath;
+    interface ICrossedPathSegment {
         isInside?: boolean;
         uniqueForeignIntersectionPoints: IPoint[];
-    }
-
-    /**
-     * @private
-     */
-    interface ICrossedPathSegment extends IPathInside {
+        path: IPath;
         pathId: string;
         overlapped: boolean;
         duplicate?: boolean;
@@ -296,7 +224,10 @@
                 if (checkIsInside) {
                     //check each segment whether it is inside or outside
                     for (var i = 0; i < thisPath.segments.length; i++) {
-                        checkInsideForeignModel(thisPath.segments[i], thisPath.offset, modelToIntersect, modelToIntersectAtlas, farPoint);
+                        var p = point.add(point.middle(thisPath.segments[i].path), thisPath.offset);
+                        var pointInsideOptions: IMeasurePointInsideOptions = { measureAtlas: modelToIntersectAtlas, farPoint: farPoint };
+                        thisPath.segments[i].isInside = measure.isPointInsideModel(p, modelToIntersect, pointInsideOptions);
+                        thisPath.segments[i].uniqueForeignIntersectionPoints = pointInsideOptions.out_intersectionPoints;
                     }
                 }
 
@@ -399,8 +330,7 @@
      * @param includeAOutsideB Flag to include paths from modelA which are outside of modelB.
      * @param includeBInsideA Flag to include paths from modelB which are inside of modelA.
      * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
-     * @param keepDuplicates Flag to include paths which are duplicate in both models.
-     * @param farPoint Optional point of reference which is outside the bounds of both models.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
     export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, options?: ICombineOptions) {

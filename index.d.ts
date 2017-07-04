@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.59
+// Type definitions for Maker.js 0.9.60
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -348,6 +348,23 @@ declare namespace MakerJs {
          * Original routekey of the path, to identify where it came from.
          */
         routeKey: string;
+    }
+    /**
+     * Options to pass to measure.isPointInsideModel().
+     */
+    interface IMeasurePointInsideOptions {
+        /**
+         * Optional point of reference which is outside the bounds of the modelContext.
+         */
+        farPoint?: IPoint;
+        /**
+         * Optional atlas of measurements of paths within the model (to prevent intersection calculations).
+         */
+        measureAtlas?: measure.Atlas;
+        /**
+         * Output variable which will contain an array of points where the ray intersected the model. The ray is a line from pointToCheck to options.farPoint.
+         */
+        out_intersectionPoints?: IPoint[];
     }
     /**
      * Test to see if an object implements the required properties of a path.
@@ -703,6 +720,15 @@ declare namespace MakerJs {
          * Callback for every child model in every model, after all of its children have been walked.
          */
         afterChildWalk?: IWalkModelCallback;
+    }
+    /**
+     * A hexagon which surrounds a model.
+     */
+    interface IBoundingHex extends IModel {
+        /**
+         * Radius of the hexagon, which is also the length of a side.
+         */
+        radius: number;
     }
     /**
      * Describes a parameter and its limits.
@@ -1429,6 +1455,7 @@ declare namespace MakerJs.model {
 }
 declare namespace MakerJs.model {
     /**
+     * DEPRECATED - use measure.isPointInsideModel instead.
      * Check to see if a path is inside of a model.
      *
      * @param pathContext The path to check.
@@ -1454,8 +1481,7 @@ declare namespace MakerJs.model {
      * @param includeAOutsideB Flag to include paths from modelA which are outside of modelB.
      * @param includeBInsideA Flag to include paths from modelB which are inside of modelA.
      * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
-     * @param keepDuplicates Flag to include paths which are duplicate in both models.
-     * @param farPoint Optional point of reference which is outside the bounds of both models.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
     function combine(modelA: IModel, modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, options?: ICombineOptions): IModel;
@@ -1793,21 +1819,21 @@ declare namespace MakerJs.measure {
         measureModels(): void;
     }
     /**
-     * A hexagon which surrounds a model.
-     */
-    interface IBoundingHex extends IModel {
-        /**
-         * Radius of the hexagon, which is also the length of a side.
-         */
-        radius: number;
-    }
-    /**
      * Measures the minimum bounding hexagon surrounding a model. The hexagon is oriented such that the right and left sides are vertical, and the top and bottom are pointed.
      *
      * @param modelToMeasure The model to measure.
      * @returns IBoundingHex object which is a hexagon model, with an additional radius property.
      */
     function boundingHexagon(modelToMeasure: IModel): IBoundingHex;
+    /**
+     * Check to see if a point is inside of a model.
+     *
+     * @param pointToCheck The point to check.
+     * @param modelContext The model to check against.
+     * @param options Optional IMeasurePointInsideOptions object.
+     * @returns Boolean true if the path is inside of the modelContext.
+     */
+    function isPointInsideModel(pointToCheck: IPoint, modelContext: IModel, options?: IMeasurePointInsideOptions): boolean;
 }
 declare namespace MakerJs.exporter {
     /**

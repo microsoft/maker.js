@@ -210,7 +210,7 @@
 
                 if (firstLoop === secondLoop) return;
 
-                if (isPathInsideModel(firstPath, secondLoop)) {
+                if (measure.isPointInsideModel(point.middle(firstPath), secondLoop)) {
                     firstLoop.insideCount++;
                 }
 

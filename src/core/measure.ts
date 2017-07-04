@@ -713,17 +713,6 @@ namespace MakerJs.measure {
     }
 
     /**
-     * A hexagon which surrounds a model.
-     */
-    export interface IBoundingHex extends IModel {
-
-        /**
-         * Radius of the hexagon, which is also the length of a side.
-         */
-        radius: number;
-    }
-
-    /**
      * Measures the minimum bounding hexagon surrounding a model. The hexagon is oriented such that the right and left sides are vertical, and the top and bottom are pointed.
      * 
      * @param modelToMeasure The model to measure.
@@ -807,5 +796,100 @@ namespace MakerJs.measure {
         var p = point.rotate(solution.origin, solution.index * 60);
 
         return result(solution.radius, p, 'solved by ' + solution.index + ' as ' + solution.type);
+    }
+
+    /**
+     * @private
+     */
+    function addUniquePoints(pointArray: IPoint[], pointsToAdd: IPoint[]): number {
+
+        var added = 0;
+
+        function addUniquePoint(pointToAdd: IPoint) {
+            for (var i = 0; i < pointArray.length; i++) {
+                if (measure.isPointEqual(pointArray[i], pointToAdd, .000000001)) {
+                    return;
+                }
+            }
+            pointArray.push(pointToAdd);
+            added++;
+        }
+
+        for (var i = 0; i < pointsToAdd.length; i++) {
+            addUniquePoint(pointsToAdd[i]);
+        }
+
+        return added;
+    }
+
+    /**
+     * @private
+     */
+    function getFarPoint(modelContext: IModel, farPoint?: IPoint, measureAtlas?: measure.Atlas) {
+        if (farPoint) return farPoint;
+
+        function far(p: IPoint) {
+            return point.add(p, [0, 1]);
+        }
+
+        if (measureAtlas && measureAtlas.modelMap && measureAtlas.modelMap[''] && measureAtlas.modelMap[''].high) return far(measureAtlas.modelMap[''].high);
+
+        var m = measure.modelExtents(modelContext);
+        return far(m.high);
+    }
+
+    /**
+     * Check to see if a point is inside of a model.
+     * 
+     * @param pointToCheck The point to check.
+     * @param modelContext The model to check against.
+     * @param options Optional IMeasurePointInsideOptions object.
+     * @returns Boolean true if the path is inside of the modelContext.
+     */
+    export function isPointInsideModel(pointToCheck: IPoint, modelContext: IModel, options: IMeasurePointInsideOptions = {}): boolean {
+        if (!options.farPoint) {
+            options.farPoint = getFarPoint(modelContext, options.farPoint, options.measureAtlas);
+        }
+
+        options.out_intersectionPoints = [];
+
+        var isInside: boolean;
+        var lineToFarPoint = new paths.Line(pointToCheck, options.farPoint);
+        var measureFarPoint = measure.pathExtents(lineToFarPoint);
+
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
+
+                if (options.measureAtlas && !measure.isMeasurementOverlapping(measureFarPoint, options.measureAtlas.pathMap[walkedPath.routeKey])) {
+                    return;
+                }
+
+                var intersectOptions: IPathIntersectionOptions = { path2Offset: walkedPath.offset };
+
+                var farInt = path.intersection(lineToFarPoint, walkedPath.pathContext, intersectOptions);
+
+                if (farInt) {
+                    var added = addUniquePoints(options.out_intersectionPoints, farInt.intersectionPoints);
+
+                    //if number of intersections is an odd number, flip the flag.
+                    if (added % 2 == 1) {
+                        isInside = !!!isInside;
+                    }
+                }
+            },
+            beforeChildWalk: function (innerWalkedModel: IWalkModel): boolean {
+
+                if (!options.measureAtlas) {
+                    return true;
+                }
+
+                //see if there is a model measurement. if not, it is because the model does not contain paths.
+                var innerModelMeasurement = options.measureAtlas.modelMap[innerWalkedModel.routeKey];
+                return innerModelMeasurement && measure.isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
+            }
+        };
+        model.walk(modelContext, walkOptions);
+
+        return !!isInside;
     }
 }
