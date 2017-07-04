@@ -407,9 +407,9 @@
                     startT: 0,
                     endT: 1
                 };
-                
+
                 this.paths = {
-                    "0": line 
+                    "0": line
                 };
                 return;
             }
@@ -481,27 +481,29 @@
 
                     var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints, endLink.walkedPath.offset));
 
-                    if (actualBezierRanges[0] && actualBezierRanges[1]) {
-                        return {
-                            startT: actualBezierRanges[0].startT,
-                            endT: actualBezierRanges[1].endT
-                        };
+                    var result: IBezierRange = {
+                        startT: actualBezierRanges[0] ? actualBezierRanges[0].startT : null,
+                        endT: actualBezierRanges[1] ? actualBezierRanges[1].endT : null
+                    };
+
+                    if (result.startT !== null && result.endT !== null) {
+                        return result;
+
                     } else if (c.links.length > 2) {
-                        if (!actualBezierRanges[0]) {
+
+                        if (result.startT === null) {
                             //exclude the first from the chain
                             addToLayer(c.links[0].walkedPath.pathContext, true);
-                            return {
-                                startT: (c.links[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT,
-                                endT: actualBezierRanges[1].endT
-                            };
-                        } else if (!actualBezierRanges[1]) {
+                            result.startT = (c.links[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT;
+                        }
+
+                        if (result.endT === null) {
                             //exclude the last from the chain
                             addToLayer(c.links[c.links.length - 1].walkedPath.pathContext, true);
-                            return {
-                                startT: actualBezierRanges[0].startT,
-                                endT: (c.links[c.links.length - 2].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT
-                            };
+                            result.endT = (c.links[c.links.length - 2].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT;
                         }
+
+                        return result;
                     }
                     return null;
                 }
