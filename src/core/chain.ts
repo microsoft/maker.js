@@ -332,7 +332,7 @@
                 if (chainContext === otherChain) return;
                 if (!otherChain.endless) return;
 
-                if (model.isPathInsideModel(firstPath, chainsAsModels[i2])) {
+                if (measure.isPointInsideModel(point.middle(firstPath), chainsAsModels[i2])) {
 
                     //since chains were sorted by pathLength, the smallest pathLength parent will be the parent if contained in multiple chains.
                     parents[i1] = otherChain;
