@@ -196,13 +196,6 @@ namespace MakerJs.model {
     }
 
     /**
-     * Copy of the same name in loops.ts
-     * @private
-     */
-    interface IPathDirectionalWithPrimeContext extends IPathDirectional, IRefPathIdInModel {
-    }
-
-    /**
      * @private
      */
     function getEndlessChains(modelContext: IModel) {
@@ -261,7 +254,7 @@ namespace MakerJs.model {
                 var wp = c.links[0].walkedPath;
 
                 //see if it is inside the original model
-                var isInside = isPathInsideModel(wp.pathContext, closed, wp.offset);
+                var isInside = measure.isPointInsideModel(point.middle(wp.pathContext), closed, wp.offset);
 
                 //save the ones we want
                 if (inside && isInside || !inside && !isInside) {

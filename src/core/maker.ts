@@ -319,6 +319,27 @@ namespace MakerJs {
     }
 
     /**
+     * Options to pass to measure.isPointInsideModel().
+     */
+    export interface IMeasurePointInsideOptions {
+
+        /**
+         * Optional point of reference which is outside the bounds of the modelContext.
+         */
+        farPoint?: IPoint;
+
+        /**
+         * Optional atlas of measurements of paths within the model (to prevent intersection calculations).
+         */
+        measureAtlas?: measure.Atlas;
+
+        /**
+         * Output variable which will contain an array of points where the ray intersected the model. The ray is a line from pointToCheck to options.farPoint.
+         */
+        out_intersectionPoints?: IPoint[];
+    }
+
+    /**
      * Test to see if an object implements the required properties of a path.
      * 
      * @param item The item to test.
@@ -761,6 +782,19 @@ namespace MakerJs {
          */
         afterChildWalk?: IWalkModelCallback;
     }
+
+    /**
+     * A hexagon which surrounds a model.
+     */
+    export interface IBoundingHex extends IModel {
+
+        /**
+         * Radius of the hexagon, which is also the length of a side.
+         */
+        radius: number;
+    }
+
+    //kits
 
     /**
      * Describes a parameter and its limits.

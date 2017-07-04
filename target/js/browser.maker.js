@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.59
+ *   version: 0.9.60
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2370,59 +2370,7 @@ var MakerJs;
             }
         }
         /**
-         * @private
-         */
-        function addUniquePoints(pointArray, pointsToAdd) {
-            var added = 0;
-            function addUniquePoint(pointToAdd) {
-                for (var i = 0; i < pointArray.length; i++) {
-                    if (MakerJs.measure.isPointEqual(pointArray[i], pointToAdd, .000000001)) {
-                        return;
-                    }
-                }
-                pointArray.push(pointToAdd);
-                added++;
-            }
-            for (var i = 0; i < pointsToAdd.length; i++) {
-                addUniquePoint(pointsToAdd[i]);
-            }
-            return added;
-        }
-        /**
-         * @private
-         */
-        function checkInsideForeignModel(segment, segmentOffset, modelToIntersect, modelToIntersectAtlas, farPoint) {
-            if (farPoint === void 0) { farPoint = [7654321, 1234567]; }
-            var origin = MakerJs.point.add(MakerJs.point.middle(segment.path), segmentOffset);
-            var lineToFarPoint = new MakerJs.paths.Line(origin, farPoint);
-            var measureFarPoint = MakerJs.measure.pathExtents(lineToFarPoint);
-            var walkOptions = {
-                onPath: function (walkedPath) {
-                    if (modelToIntersectAtlas && !MakerJs.measure.isMeasurementOverlapping(measureFarPoint, modelToIntersectAtlas.pathMap[walkedPath.routeKey])) {
-                        return;
-                    }
-                    var options = { path2Offset: walkedPath.offset };
-                    var farInt = MakerJs.path.intersection(lineToFarPoint, walkedPath.pathContext, options);
-                    if (farInt) {
-                        var added = addUniquePoints(segment.uniqueForeignIntersectionPoints, farInt.intersectionPoints);
-                        //if number of intersections is an odd number, flip the flag.
-                        if (added % 2 == 1) {
-                            segment.isInside = !!!segment.isInside;
-                        }
-                    }
-                },
-                beforeChildWalk: function (innerWalkedModel) {
-                    if (!modelToIntersectAtlas) {
-                        return true;
-                    }
-                    //see if there is a model measurement. if not, it is because the model does not contain paths.
-                    var innerModelMeasurement = modelToIntersectAtlas.modelMap[innerWalkedModel.routeKey];
-                    return innerModelMeasurement && MakerJs.measure.isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
-                }
-            };
-            model.walk(modelToIntersect, walkOptions);
-        }
-        /**
+         * DEPRECATED - use measure.isPointInsideModel instead.
          * Check to see if a path is inside of a model.
          *
          * @param pathContext The path to check.
@@ -2431,13 +2379,12 @@ var MakerJs;
          * @returns Boolean true if the path is inside of the modelContext.
          */
         function isPathInsideModel(pathContext, modelContext, pathOffset, farPoint, measureAtlas) {
-            var segment = {
-                path: pathContext,
-                isInside: false,
-                uniqueForeignIntersectionPoints: []
+            var options = {
+                farPoint: farPoint,
+                measureAtlas: measureAtlas
             };
-            checkInsideForeignModel(segment, pathOffset, modelContext, measureAtlas, farPoint);
-            return !!segment.isInside;
+            var p = MakerJs.point.add(MakerJs.point.middle(pathContext), pathOffset);
+            return MakerJs.measure.isPointInsideModel(p, modelContext, options);
         }
         model.isPathInsideModel = isPathInsideModel;
         /**
@@ -2500,7 +2447,10 @@ var MakerJs;
                     if (checkIsInside) {
                         //check each segment whether it is inside or outside
                         for (var i = 0; i < thisPath.segments.length; i++) {
-                            checkInsideForeignModel(thisPath.segments[i], thisPath.offset, modelToIntersect, modelToIntersectAtlas, farPoint);
+                            var p = MakerJs.point.add(MakerJs.point.middle(thisPath.segments[i].path), thisPath.offset);
+                            var pointInsideOptions = { measureAtlas: modelToIntersectAtlas, farPoint: farPoint };
+                            thisPath.segments[i].isInside = MakerJs.measure.isPointInsideModel(p, modelToIntersect, pointInsideOptions);
+                            thisPath.segments[i].uniqueForeignIntersectionPoints = pointInsideOptions.out_intersectionPoints;
                         }
                     }
                     crossedPaths.push(thisPath);
@@ -2583,8 +2533,7 @@ var MakerJs;
          * @param includeAOutsideB Flag to include paths from modelA which are outside of modelB.
          * @param includeBInsideA Flag to include paths from modelB which are inside of modelA.
          * @param includeBOutsideA Flag to include paths from modelB which are outside of modelA.
-         * @param keepDuplicates Flag to include paths which are duplicate in both models.
-         * @param farPoint Optional point of reference which is outside the bounds of both models.
+         * @param options Optional ICombineOptions object.
          * @returns A new model containing both of the input models as "a" and "b".
          */
         function combine(modelA, modelB, includeAInsideB, includeAOutsideB, includeBInsideA, includeBOutsideA, options) {
@@ -3092,7 +3041,7 @@ var MakerJs;
                     //sample one link from the chain
                     var wp = c.links[0].walkedPath;
                     //see if it is inside the original model
-                    var isInside = model.isPathInsideModel(wp.pathContext, closed, wp.offset);
+                    var isInside = MakerJs.measure.isPointInsideModel(MakerJs.point.middle(wp.pathContext), closed, wp.offset);
                     //save the ones we want
                     if (inside && isInside || !inside && !isInside) {
                         result.models[childCount++] = MakerJs.chain.toNewModel(c);
@@ -3982,6 +3931,84 @@ var MakerJs;
             return result(solution.radius, p, 'solved by ' + solution.index + ' as ' + solution.type);
         }
         measure.boundingHexagon = boundingHexagon;
+        /**
+         * @private
+         */
+        function addUniquePoints(pointArray, pointsToAdd) {
+            var added = 0;
+            function addUniquePoint(pointToAdd) {
+                for (var i = 0; i < pointArray.length; i++) {
+                    if (measure.isPointEqual(pointArray[i], pointToAdd, .000000001)) {
+                        return;
+                    }
+                }
+                pointArray.push(pointToAdd);
+                added++;
+            }
+            for (var i = 0; i < pointsToAdd.length; i++) {
+                addUniquePoint(pointsToAdd[i]);
+            }
+            return added;
+        }
+        /**
+         * @private
+         */
+        function getFarPoint(modelContext, farPoint, measureAtlas) {
+            if (farPoint)
+                return farPoint;
+            function far(p) {
+                return MakerJs.point.add(p, [0, 1]);
+            }
+            if (measureAtlas && measureAtlas.modelMap && measureAtlas.modelMap[''] && measureAtlas.modelMap[''].high)
+                return far(measureAtlas.modelMap[''].high);
+            var m = measure.modelExtents(modelContext);
+            return far(m.high);
+        }
+        /**
+         * Check to see if a point is inside of a model.
+         *
+         * @param pointToCheck The point to check.
+         * @param modelContext The model to check against.
+         * @param options Optional IMeasurePointInsideOptions object.
+         * @returns Boolean true if the path is inside of the modelContext.
+         */
+        function isPointInsideModel(pointToCheck, modelContext, options) {
+            if (options === void 0) { options = {}; }
+            if (!options.farPoint) {
+                options.farPoint = getFarPoint(modelContext, options.farPoint, options.measureAtlas);
+            }
+            options.out_intersectionPoints = [];
+            var isInside;
+            var lineToFarPoint = new MakerJs.paths.Line(pointToCheck, options.farPoint);
+            var measureFarPoint = measure.pathExtents(lineToFarPoint);
+            var walkOptions = {
+                onPath: function (walkedPath) {
+                    if (options.measureAtlas && !measure.isMeasurementOverlapping(measureFarPoint, options.measureAtlas.pathMap[walkedPath.routeKey])) {
+                        return;
+                    }
+                    var intersectOptions = { path2Offset: walkedPath.offset };
+                    var farInt = MakerJs.path.intersection(lineToFarPoint, walkedPath.pathContext, intersectOptions);
+                    if (farInt) {
+                        var added = addUniquePoints(options.out_intersectionPoints, farInt.intersectionPoints);
+                        //if number of intersections is an odd number, flip the flag.
+                        if (added % 2 == 1) {
+                            isInside = !!!isInside;
+                        }
+                    }
+                },
+                beforeChildWalk: function (innerWalkedModel) {
+                    if (!options.measureAtlas) {
+                        return true;
+                    }
+                    //see if there is a model measurement. if not, it is because the model does not contain paths.
+                    var innerModelMeasurement = options.measureAtlas.modelMap[innerWalkedModel.routeKey];
+                    return innerModelMeasurement && measure.isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
+                }
+            };
+            MakerJs.model.walk(modelContext, walkOptions);
+            return !!isInside;
+        }
+        measure.isPointInsideModel = isPointInsideModel;
     })(measure = MakerJs.measure || (MakerJs.measure = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -5361,7 +5388,7 @@ var MakerJs;
                         return;
                     if (!otherChain.endless)
                         return;
-                    if (model.isPathInsideModel(firstPath, chainsAsModels[i2])) {
+                    if (MakerJs.measure.isPointInsideModel(MakerJs.point.middle(firstPath), chainsAsModels[i2])) {
                         //since chains were sorted by pathLength, the smallest pathLength parent will be the parent if contained in multiple chains.
                         parents[i1] = otherChain;
                     }
@@ -5816,7 +5843,7 @@ var MakerJs;
                 spin(function (secondLoop) {
                     if (firstLoop === secondLoop)
                         return;
-                    if (model.isPathInsideModel(firstPath, secondLoop)) {
+                    if (MakerJs.measure.isPointInsideModel(MakerJs.point.middle(firstPath), secondLoop)) {
                         firstLoop.insideCount++;
                     }
                 });
@@ -7480,6 +7507,7 @@ var MakerJs;
                 scratch = new Bezier(bezierJsPoints);
             }
             else {
+                //invoke the constructor on the same object
                 Bezier.apply(scratch, bezierJsPoints);
             }
             return scratch;
@@ -7795,29 +7823,25 @@ var MakerJs;
                             endLinks.reverse();
                         }
                         var actualBezierRanges = endLinks.map(function (endLink) { return getActualBezierRange(endLink.walkedPath.pathContext, endLink.endPoints, endLink.walkedPath.offset); });
-                        if (actualBezierRanges[0] && actualBezierRanges[1]) {
-                            return {
-                                startT: actualBezierRanges[0].startT,
-                                endT: actualBezierRanges[1].endT
-                            };
+                        var result = {
+                            startT: actualBezierRanges[0] ? actualBezierRanges[0].startT : null,
+                            endT: actualBezierRanges[1] ? actualBezierRanges[1].endT : null
+                        };
+                        if (result.startT !== null && result.endT !== null) {
+                            return result;
                         }
                         else if (c.links.length > 2) {
-                            if (!actualBezierRanges[0]) {
+                            if (result.startT === null) {
                                 //exclude the first from the chain
                                 addToLayer(c.links[0].walkedPath.pathContext, true);
-                                return {
-                                    startT: c.links[1].walkedPath.pathContext.bezierData.startT,
-                                    endT: actualBezierRanges[1].endT
-                                };
+                                result.startT = c.links[1].walkedPath.pathContext.bezierData.startT;
                             }
-                            else if (!actualBezierRanges[1]) {
+                            if (result.endT === null) {
                                 //exclude the last from the chain
                                 addToLayer(c.links[c.links.length - 1].walkedPath.pathContext, true);
-                                return {
-                                    startT: actualBezierRanges[0].startT,
-                                    endT: c.links[c.links.length - 2].walkedPath.pathContext.bezierData.endT
-                                };
+                                result.endT = c.links[c.links.length - 2].walkedPath.pathContext.bezierData.endT;
                             }
+                            return result;
                         }
                         return null;
                     }
@@ -8914,6 +8938,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.59";
+MakerJs.version = "0.9.60";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
