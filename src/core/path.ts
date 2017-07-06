@@ -365,6 +365,7 @@ namespace MakerJs.path {
      * @param lineB Second line to converge.
      * @param useOriginA Optional flag to converge the origin point of lineA instead of the end point.
      * @param useOriginB Optional flag to converge the origin point of lineB instead of the end point.
+     * @returns point of convergence.
      */
     export function converge(lineA: IPathLine, lineB: IPathLine, useOriginA?: boolean, useOriginB?: boolean): IPoint {
         var p = point.fromSlopeIntersection(lineA, lineB);
@@ -439,7 +440,7 @@ namespace MakerJs.path {
      * @param pathToAlter Path to alter.
      * @param distance Numeric amount of length to add or remove from the path. Use a positive number to lengthen, negative to shorten. When shortening: this function will not alter the path and will return null if the resulting path length is less than or equal to zero.
      * @param useOrigin Optional flag to alter from the origin instead of the end of the path.
-     * @returns The original path, or null if the path could not be altered.
+     * @returns The original path (for cascading), or null if the path could not be altered.
      */
     export function alterLength(pathToAlter: IPath, distance: number, useOrigin = false): IPath {
         if (!pathToAlter || !distance) return null;
@@ -551,6 +552,7 @@ namespace MakerJs.path {
      * Center a path at [0, 0].
      * 
      * @param pathToCenter The path to center.
+     * @returns The original path (for cascading).
      */
     export function center(pathToCenter: IPath) {
         var m = measure.pathExtents(pathToCenter);
@@ -564,6 +566,7 @@ namespace MakerJs.path {
      * Move a path so its bounding box begins at [0, 0].
      * 
      * @param pathToZero The path to zero.
+     * @returns The original path (for cascading).
      */
     export function zero(pathToZero: IPath) {
         var m = measure.pathExtents(pathToZero);

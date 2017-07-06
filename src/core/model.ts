@@ -10,7 +10,7 @@ namespace MakerJs.model {
      * @param modelContext The model to add to.
      * @param pathContext The path to add.
      * @param pathId The id of the path.
-     * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+     * @param overWrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
      * @returns The original model (for cascading).
      */
     export function addPath(modelContext: IModel, pathContext: IPath, pathId: string, overWrite = false): IModel {
@@ -30,7 +30,7 @@ namespace MakerJs.model {
      * @param parentModel The model to add to.
      * @param childModel The model to add.
      * @param childModelId The id of the child model.
-     * @param overwrite Optional flag to overwrite any model referenced by childModelId. Default is false, which will create an id similar to childModelId.
+     * @param overWrite Optional flag to overwrite any model referenced by childModelId. Default is false, which will create an id similar to childModelId.
      * @returns The original model (for cascading).
      */
     export function addModel(parentModel: IModel, childModel: IModel, childModelId: string, overWrite = false): IModel {
@@ -49,6 +49,8 @@ namespace MakerJs.model {
      * 
      * @param childModel The model to add.
      * @param parentModel The model to add to.
+     * @param childModelId The id of the child model.
+     * @param overWrite Optional flag to overwrite any model referenced by childModelId. Default is false, which will create an id similar to childModelId.
      * @returns The original model (for cascading).
      */
     export function addTo(childModel: IModel, parentModel: IModel, childModelId: string, overWrite = false): IModel {

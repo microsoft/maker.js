@@ -95,6 +95,7 @@ namespace MakerJs.model {
      * @param modelToExpand Model to expand.
      * @param distance Distance to expand.
      * @param joints Number of points at a joint between paths. Use 0 for round joints, 1 for pointed joints, 2 for beveled joints.
+     * @param combineOptions Optional object containing combine options.
      * @returns Model which surrounds the paths of the original model.
      */
     export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions: ICombineOptions = {}): IModel {
