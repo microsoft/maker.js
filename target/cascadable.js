@@ -39,15 +39,15 @@ function getComment(sig) {
     return `\n${indent2}/**\n${indent2} * ${sig.comment.shortText}\n${indent2} * \n${params.join('\n')}\n${indent2} */`;
 }
 
-function getCode(name, sig) {
+function getCode(name, sig, interfaceName) {
     var params = sig.parameters.slice(1).map(function (param) {
         var optional = (param.flags.isOptional || 'defaultValue' in param) ? '?' : '';
         return `${param.name}${optional}: ${param.type.name}`;
     });
-    return `${indent2}${name}(${params.join(', ')});`;
+    return `${indent2}${name}(${params.join(', ')}): ${interfaceName};`;
 }
 
-function getCascadable(project, namespaceArray) {
+function getCascadable(project, namespaceArray, interfaceName) {
     var functionArray = [];
     project.children.forEach(
         function externalModules(child, i) {
@@ -61,7 +61,7 @@ function getCascadable(project, namespaceArray) {
                         if (!isCascadable(ef)) return;
                         functionArray.push({
                             comment: getComment(ef.signatures[0]),
-                            code: getCode(ef.name, ef.signatures[0])
+                            code: getCode(ef.name, ef.signatures[0], interfaceName)
                         });
                     });
                 }
@@ -80,11 +80,12 @@ function getCascadable(project, namespaceArray) {
 }
 
 function describe(name) {
-    var cascadables = getCascadable(project, ["MakerJs", name.toLowerCase()]);
+    var interfaceName = `ICascade${name}`;
+    var cascadables = getCascadable(project, ["MakerJs", name.toLowerCase()], interfaceName);
     var content = cascadables.map(function (c) {
         return `${c.comment}\n${c.code}`;
     });
-    return `${indent}export interface ICascade${name} extends ICascade {\n${content.join('\n')}\n${indent}}\n`;
+    return `${indent}export interface ${interfaceName} extends ICascade {\n${content.join('\n')}\n${indent}}\n`;
 }
 
 var indent = '    ';

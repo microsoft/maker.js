@@ -8776,5 +8776,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.61";
+MakerJs.version = "0.9.62";
 ﻿var Bezier = require('bezier-js');
