@@ -376,7 +376,7 @@ namespace MakerJs.model {
     }
 
     /**
-     * DEPRECATED - use model.walk instead
+     * DEPRECATED - use model.walk instead.
      * Recursively walk through all paths for a given model.
      * 
      * @param modelContext The model to walk.
@@ -400,12 +400,10 @@ namespace MakerJs.model {
     }
 
     /**
-     * Recursively walk through all paths for a given model.
+     * Recursively walk through all child models and paths for a given model.
      * 
      * @param modelContext The model to walk.
-     * @param pathCallback Callback for each path.
-     * @param modelCallbackBeforeWalk Callback for each model prior to recursion, which can cancel the recursion if it returns false.
-     * @param modelCallbackAfterWalk Callback for each model after recursion.
+     * @param options Object containing callbacks.
      * @returns The original model (for cascading).
      */
     export function walk(modelContext: IModel, options: IWalkOptions) {
