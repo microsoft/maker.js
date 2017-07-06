@@ -855,6 +855,107 @@ namespace MakerJs {
         notes?: string;
     }
 
+    //cascades
+    /**
+     * A container that allows a series of functions to be called upon an object.
+     */
+    export interface ICascade {
+
+        /**
+         * The initial context object of the cascade.
+         */
+        $initial: any;
+
+        /**
+         * The current final value of the cascade.
+         */
+        $result: any;
+
+        /**
+         * Use the $original as the $result.
+         */
+        $reset: () => this;
+    }
+
+    /**
+     * @private
+     */
+    class Cascade<T> implements ICascade {
+        public $result: any;
+
+        constructor(private _module: any, public $initial: T) {
+            for (var methodName in this._module) this._shadow(methodName);
+            this.$result = $initial;
+        }
+
+        private _shadow(methodName: string) {
+            var _this = this;
+            this[methodName] = function () {
+                return _this._apply(_this._module[methodName], arguments);
+            }
+        }
+
+        private _apply(fn: Function, carriedArguments: IArguments) {
+            var args = [].slice.call(carriedArguments);
+            args.unshift(this.$result);
+            this.$result = fn.apply(undefined, args);
+            return this;
+        }
+
+        public $reset() {
+            this.$result = this.$initial;
+            return this;
+        }
+    }
+
+    /**
+     * Create a container to cascade a series of functions upon a model. This allows JQuery-style method chaining, e.g.:
+     * ```
+     * makerjs.$(shape).center().rotate(45).$result
+     * ```
+     * The output of each function call becomes the first parameter input to the next function call.
+     * The returned value of the last function call is available via the `.$result` property.
+     * 
+     * @param modelContext The initial model to execute functions upon.
+     * @returns A new cascade container with ICascadeModel methods.
+     */
+    export function $(modelContext: IModel): ICascadeModel;
+
+    /**
+     * Create a container to cascade a series of functions upon a path. This allows JQuery-style method chaining, e.g.:
+     * ```
+     * makerjs.$(path).center().rotate(90).$result
+     * ```
+     * The output of each function call becomes the first parameter input to the next function call.
+     * The returned value of the last function call is available via the `.$result` property.
+     * 
+     * @param pathContext The initial path to execute functions upon.
+     * @returns A new cascade container with ICascadePath methods.
+     */
+    export function $(pathContext: IModel): ICascadePath;
+
+    /**
+     * Create a container to cascade a series of functions upon a point. This allows JQuery-style method chaining, e.g.:
+     * ```
+     * makerjs.$([1,0]).scale(5).rotate(60).$result
+     * ```
+     * The output of each function call becomes the first parameter input to the next function call.
+     * The returned value of the last function call is available via the `.$result` property.
+     * 
+     * @param pointContext The initial point to execute functions upon.
+     * @returns A new cascade container with ICascadePoint methods.
+     */
+    export function $(pointContext: IPoint): ICascadePoint;
+
+    export function $(context: any): ICascade {
+        if (isModel(context)) {
+            return new Cascade<IModel>(model, context);
+        } else if (isPath(context)) {
+            return new Cascade<IPath>(path, context);
+        } else if (isPoint(context)) {
+            return new Cascade<IPoint>(point, context);
+        }
+    }
 }
 
 //CommonJs
