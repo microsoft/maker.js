@@ -8,6 +8,7 @@
 "files": [
     "../src/core/schema.ts",
     "../src/core/maker.ts",
+    "../src/core/cascades.ts",
     "../src/core/angle.ts",
     "../src/core/point.ts",
     "../src/core/path.ts",
