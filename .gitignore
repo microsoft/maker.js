@@ -1,6 +1,5 @@
 node_modules/
-debug/core/
-debug/models/
+debug/
 web.config
 CONTRIBUTING.md
 *.sln
