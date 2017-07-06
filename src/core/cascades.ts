@@ -17,7 +17,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        addModel(childModel: IModel, childModelId: string, overWrite?: boolean);
+        addModel(childModel: IModel, childModelId: string, overWrite?: boolean): ICascadeModel;
 
         /**
          * Add a path as a child. This is basically equivalent to:
@@ -32,7 +32,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        addPath(pathContext: IPath, pathId: string, overWrite?: boolean);
+        addPath(pathContext: IPath, pathId: string, overWrite?: boolean): ICascadeModel;
 
         /**
          * Add a model as a child of another model. This is basically equivalent to:
@@ -47,7 +47,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        addTo(parentModel: IModel, childModelId: string, overWrite?: boolean);
+        addTo(parentModel: IModel, childModelId: string, overWrite?: boolean): ICascadeModel;
 
         /**
          * Break a model's paths everywhere they intersect with another path.
@@ -56,7 +56,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        breakPathsAtIntersections(modelToIntersect?: IModel);
+        breakPathsAtIntersections(modelToIntersect?: IModel): ICascadeModel;
 
         /**
          * Center a model at [0, 0].
@@ -66,7 +66,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        center(centerX?: boolean, centerY?: boolean);
+        center(centerX?: boolean, centerY?: boolean): ICascadeModel;
 
         /**
          * Combine 2 models. Each model will be modified accordingly.
@@ -80,7 +80,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be A new model containing both of the input models as "a" and "b".
 
          */
-        combine(modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, options?: ICombineOptions);
+        combine(modelB: IModel, includeAInsideB?: boolean, includeAOutsideB?: boolean, includeBInsideA?: boolean, includeBOutsideA?: boolean, options?: ICombineOptions): ICascadeModel;
 
         /**
          * Combine 2 models, resulting in a intersection. Each model will be modified accordingly.
@@ -89,7 +89,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be A new model containing both of the input models as "a" and "b".
 
          */
-        combineIntersection(modelB: IModel);
+        combineIntersection(modelB: IModel): ICascadeModel;
 
         /**
          * Combine 2 models, resulting in a subtraction of B from A. Each model will be modified accordingly.
@@ -98,7 +98,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be A new model containing both of the input models as "a" and "b".
 
          */
-        combineSubtraction(modelB: IModel);
+        combineSubtraction(modelB: IModel): ICascadeModel;
 
         /**
          * Combine 2 models, resulting in a union. Each model will be modified accordingly.
@@ -107,7 +107,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be A new model containing both of the input models as "a" and "b".
 
          */
-        combineUnion(modelB: IModel);
+        combineUnion(modelB: IModel): ICascadeModel;
 
         /**
          * Convert a model to match a different unit system.
@@ -116,7 +116,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The scaled model (for cascading).
 
          */
-        convertUnits(destUnitType: string);
+        convertUnits(destUnitType: string): ICascadeModel;
 
         /**
          * Expand all paths in a model, then combine the resulting expansions.
@@ -127,7 +127,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be Model which surrounds the paths of the original model.
 
          */
-        expandPaths(distance: number, joints?: number, combineOptions?: ICombineOptions);
+        expandPaths(distance: number, joints?: number, combineOptions?: ICombineOptions): ICascadeModel;
 
         /**
          * Find paths that have common endpoints and form loops.
@@ -136,7 +136,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
 
          */
-        findLoops(options?: IFindLoopsOptions);
+        findLoops(options?: IFindLoopsOptions): ICascadeModel;
 
         /**
          * Create a clone of a model, mirrored on either or both x and y axes.
@@ -146,7 +146,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be Mirrored model.
 
          */
-        mirror(mirrorX: boolean, mirrorY: boolean);
+        mirror(mirrorX: boolean, mirrorY: boolean): ICascadeModel;
 
         /**
          * Move a model to an absolute point. Note that this is also accomplished by directly setting the origin property. This function exists for cascading.
@@ -155,7 +155,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        move(origin: IPoint);
+        move(origin: IPoint): ICascadeModel;
 
         /**
          * Move a model's origin by a relative amount.
@@ -164,7 +164,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        moveRelative(delta: IPoint);
+        moveRelative(delta: IPoint): ICascadeModel;
 
         /**
          * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
@@ -173,7 +173,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        originate(origin?: IPoint);
+        originate(origin?: IPoint): ICascadeModel;
 
         /**
          * Outline a model by a specified distance. Useful for accommodating for kerf.
@@ -185,7 +185,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be Model which surrounds the paths outside of the original model.
 
          */
-        outline(distance: number, joints?: number, inside?: boolean, options?: ICombineOptions);
+        outline(distance: number, joints?: number, inside?: boolean, options?: ICombineOptions): ICascadeModel;
 
         /**
          * Prefix the ids of paths in a model.
@@ -194,7 +194,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        prefixPathIds(prefix: string);
+        prefixPathIds(prefix: string): ICascadeModel;
 
         /**
          * Remove paths from a model which have endpoints that do not connect to other paths.
@@ -205,7 +205,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The input model (for cascading).
 
          */
-        removeDeadEnds(pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: undefined);
+        removeDeadEnds(pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: undefined): ICascadeModel;
 
         /**
          * Rotate a model.
@@ -215,7 +215,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        rotate(angleInDegrees: number, rotationOrigin?: IPoint);
+        rotate(angleInDegrees: number, rotationOrigin?: IPoint): ICascadeModel;
 
         /**
          * Scale a model.
@@ -225,7 +225,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        scale(scaleValue: number, scaleOrigin?: boolean);
+        scale(scaleValue: number, scaleOrigin?: boolean): ICascadeModel;
 
         /**
          * Simplify a model's paths by reducing redundancy: combine multiple overlapping paths into a single path. The model must be originated.
@@ -234,7 +234,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The simplified model (for cascading).
 
          */
-        simplify(options?: ISimplifyOptions);
+        simplify(options?: ISimplifyOptions): ICascadeModel;
 
         /**
          * Recursively walk through all child models and paths for a given model.
@@ -243,7 +243,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        walk(options: IWalkOptions);
+        walk(options: IWalkOptions): ICascadeModel;
 
         /**
          * Move a model so its bounding box begins at [0, 0].
@@ -253,7 +253,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
-        zero(zeroX?: boolean, zeroY?: boolean);
+        zero(zeroX?: boolean, zeroY?: boolean): ICascadeModel;
     }
 
     export interface ICascadePath extends ICascade {
@@ -266,7 +266,7 @@ with additional checks to make it safe for cascading.
          * @returns this cascade container, this.$result will be The original path (for cascading), or null if the path could not be altered.
 
          */
-        alterLength(distance: number, useOrigin?: boolean);
+        alterLength(distance: number, useOrigin?: boolean): ICascadePath;
 
         /**
          * Breaks a path in two. The supplied path will end at the supplied pointOfBreak,
@@ -277,7 +277,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new path of the same type, when path type is line or arc. Returns null for circle.
 
          */
-        breakAtPoint(pointOfBreak: IPoint);
+        breakAtPoint(pointOfBreak: IPoint): ICascadePath;
 
         /**
          * Center a path at [0, 0].
@@ -285,7 +285,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The original path (for cascading).
 
          */
-        center();
+        center(): ICascadePath;
 
         /**
          * Create a clone of a path. This is faster than cloneObject.
@@ -294,7 +294,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be Cloned path.
 
          */
-        clone(offset?: IPoint);
+        clone(offset?: IPoint): ICascadePath;
 
         /**
          * Create a clone of a path, mirrored on either or both x and y axes.
@@ -304,7 +304,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be Mirrored path.
 
          */
-        mirror(mirrorX: boolean, mirrorY: boolean);
+        mirror(mirrorX: boolean, mirrorY: boolean): ICascadePath;
 
         /**
          * Move a path to an absolute point.
@@ -313,7 +313,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The original path (for cascading).
 
          */
-        move(origin: IPoint);
+        move(origin: IPoint): ICascadePath;
 
         /**
          * Move a path's origin by a relative amount.
@@ -323,7 +323,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The original path (for cascading).
 
          */
-        moveRelative(delta: IPoint, subtract?: boolean);
+        moveRelative(delta: IPoint, subtract?: boolean): ICascadePath;
 
         /**
          * Rotate a path.
@@ -333,7 +333,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The original path (for cascading).
 
          */
-        rotate(angleInDegrees: number, rotationOrigin?: IPoint);
+        rotate(angleInDegrees: number, rotationOrigin?: IPoint): ICascadePath;
 
         /**
          * Scale a path.
@@ -342,7 +342,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The original path (for cascading).
 
          */
-        scale(scaleValue: number);
+        scale(scaleValue: number): ICascadePath;
 
         /**
          * Move a path so its bounding box begins at [0, 0].
@@ -350,7 +350,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The original path (for cascading).
 
          */
-        zero();
+        zero(): ICascadePath;
     }
 
     export interface ICascadePoint extends ICascade {
@@ -363,7 +363,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new point object.
 
          */
-        add(b: IPoint, subtract?: boolean);
+        add(b: IPoint, subtract?: boolean): ICascadePoint;
 
         /**
          * Get the average of two points.
@@ -372,7 +372,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be New point object which is the average of a and b.
 
          */
-        average(b: IPoint);
+        average(b: IPoint): ICascadePoint;
 
         /**
          * Clone a point into a new point.
@@ -380,7 +380,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new point with same values as the original.
 
          */
-        clone();
+        clone(): ICascadePoint;
 
         /**
          * From an array of points, find the closest point to a given reference point.
@@ -389,7 +389,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The first closest point from the pointOptions.
 
          */
-        closest(pointOptions: IPoint);
+        closest(pointOptions: IPoint): ICascadePoint;
 
         /**
          * Distort a point's coordinates.
@@ -399,7 +399,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new point.
 
          */
-        distort(scaleX: number, scaleY: number);
+        distort(scaleX: number, scaleY: number): ICascadePoint;
 
         /**
          * Create a clone of a point, mirrored on either or both x and y axes.
@@ -409,7 +409,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be Mirrored point.
 
          */
-        mirror(mirrorX: boolean, mirrorY: boolean);
+        mirror(mirrorX: boolean, mirrorY: boolean): ICascadePoint;
 
         /**
          * Rotate a point.
@@ -419,7 +419,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new point.
 
          */
-        rotate(angleInDegrees: number, rotationOrigin?: IPoint);
+        rotate(angleInDegrees: number, rotationOrigin?: IPoint): ICascadePoint;
 
         /**
          * Round the values of a point.
@@ -428,7 +428,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new point with the values rounded.
 
          */
-        rounded(accuracy?: number);
+        rounded(accuracy?: number): ICascadePoint;
 
         /**
          * Scale a point's coordinates.
@@ -437,7 +437,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new point.
 
          */
-        scale(scaleValue: number);
+        scale(scaleValue: number): ICascadePoint;
 
         /**
          * Subtract a point from another point, and return the result as a new point. Shortcut to Add(a, b, subtract = true).
@@ -446,6 +446,6 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be A new point object.
 
          */
-        subtract(b: IPoint);
+        subtract(b: IPoint): ICascadePoint;
     }
 }
