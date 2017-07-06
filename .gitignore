@@ -1,6 +1,5 @@
 node_modules/
-debug/core/
-debug/models/
+debug/
 web.config
 CONTRIBUTING.md
 *.sln
@@ -8,3 +7,4 @@ CONTRIBUTING.md
 /.vscode
 /docs/api/assets
 debug.log
+/target/project.json
