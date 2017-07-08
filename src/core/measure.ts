@@ -828,14 +828,12 @@ namespace MakerJs.measure {
     function getFarPoint(modelContext: IModel, farPoint?: IPoint, measureAtlas?: measure.Atlas) {
         if (farPoint) return farPoint;
 
-        function far(p: IPoint) {
-            return point.add(p, [0, 1]);
+        var high = measure.modelExtents(modelContext).high;
+        if (high) {
+            return point.add(high, [1, 1]);
         }
 
-        if (measureAtlas && measureAtlas.modelMap && measureAtlas.modelMap[''] && measureAtlas.modelMap[''].high) return far(measureAtlas.modelMap[''].high);
-
-        var m = measure.modelExtents(modelContext);
-        return far(m.high);
+        return [7654321, 1234567];
     }
 
     /**

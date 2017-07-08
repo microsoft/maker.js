@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.62
+ *   version: 0.9.63
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2591,12 +2591,16 @@ var MakerJs;
                 pointMatchingDistance: .005,
                 out_deleted: [{ paths: {} }, { paths: {} }]
             };
-            MakerJs.extendObject(opts, options);
             opts.measureA = opts.measureA || new MakerJs.measure.Atlas(modelA);
             opts.measureB = opts.measureB || new MakerJs.measure.Atlas(modelB);
             //make sure model measurements capture all paths
             opts.measureA.measureModels();
             opts.measureB.measureModels();
+            if (!options.farPoint) {
+                var measureBoth = MakerJs.measure.increase(opts.measureA.modelMap[''], opts.measureB.modelMap['']);
+                opts.farPoint = MakerJs.point.add(measureBoth.high, [1, 1]);
+            }
+            MakerJs.extendObject(opts, options);
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
@@ -4002,13 +4006,11 @@ var MakerJs;
         function getFarPoint(modelContext, farPoint, measureAtlas) {
             if (farPoint)
                 return farPoint;
-            function far(p) {
-                return MakerJs.point.add(p, [0, 1]);
+            var high = measure.modelExtents(modelContext).high;
+            if (high) {
+                return MakerJs.point.add(high, [1, 1]);
             }
-            if (measureAtlas && measureAtlas.modelMap && measureAtlas.modelMap[''] && measureAtlas.modelMap[''].high)
-                return far(measureAtlas.modelMap[''].high);
-            var m = measure.modelExtents(modelContext);
-            return far(m.high);
+            return [7654321, 1234567];
         }
         /**
          * Check to see if a point is inside of a model.
@@ -8986,6 +8988,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.62";
+MakerJs.version = "0.9.63";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
