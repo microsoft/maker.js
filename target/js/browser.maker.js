@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.64
+ *   version: 0.9.65
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2597,9 +2597,9 @@ var MakerJs;
             //make sure model measurements capture all paths
             opts.measureA.measureModels();
             opts.measureB.measureModels();
-            if (!options.farPoint) {
+            if (!opts.farPoint) {
                 var measureBoth = MakerJs.measure.increase(MakerJs.measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
-                opts.farPoint = options.farPoint = MakerJs.point.add(measureBoth.high, [1, 1]);
+                opts.farPoint = MakerJs.point.add(measureBoth.high, [1, 1]);
             }
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
@@ -2978,6 +2978,7 @@ var MakerJs;
                 }
             };
             var first = true;
+            var lastFarPoint = combineOptions.farPoint;
             var walkOptions = {
                 onPath: function (walkedPath) {
                     //don't expand paths shorter than the tolerance for combine operations
@@ -2992,6 +2993,8 @@ var MakerJs;
                         if (!first) {
                             model.combine(result, expandedPathModel, false, true, false, true, combineOptions);
                             combineOptions.measureA.modelsMeasured = false;
+                            lastFarPoint = combineOptions.farPoint;
+                            delete combineOptions.farPoint;
                             delete combineOptions.measureB;
                         }
                         result.models['expansions'].models[newId] = expandedPathModel;
@@ -3024,6 +3027,8 @@ var MakerJs;
                             //union this little pointy shape with the rest of the result
                             model.combine(result, straightened, false, true, false, true, combineOptions);
                             combineOptions.measureA.modelsMeasured = false;
+                            lastFarPoint = combineOptions.farPoint;
+                            delete combineOptions.farPoint;
                             delete combineOptions.measureB;
                             //replace the rounded path with the straightened model
                             straightCaps.models[id].models[walkedPath.pathId] = straightened;
@@ -3035,6 +3040,7 @@ var MakerJs;
                 //delete the round caps
                 delete result.models['caps'];
             }
+            combineOptions.farPoint = lastFarPoint;
             return result;
         }
         model.expandPaths = expandPaths;
@@ -8988,6 +8994,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.64";
+MakerJs.version = "0.9.65";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
