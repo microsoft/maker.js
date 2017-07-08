@@ -294,7 +294,8 @@
             chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
 
             if (opts.contain) {
-                var containedChains = getContainment(chainsByLayer[layer], {alernateWindings:true});
+                var containChainsOptions: IContainChainsOptions = isObject(opts.contain) ? opts.contain as IContainChainsOptions : { alernateWindings: false };
+                var containedChains = getContainment(chainsByLayer[layer], containChainsOptions);
                 chainsByLayer[layer] = containedChains;
             }
 
@@ -315,7 +316,7 @@
     /**
      * @private
      */
-    function getContainment(allChains: IChain[], opts: IContainChainsOptions) {
+    function getContainment(allChains: IChain[], opts: boolean | IContainChainsOptions) {
 
         var chainsAsModels = allChains.map(c => chain.toNewModel(c));
         var parents: IChain[] = [];
