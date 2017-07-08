@@ -110,6 +110,7 @@ namespace MakerJs.model {
         };
 
         var first = true;
+        var lastFarPoint = combineOptions.farPoint;
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
@@ -130,6 +131,9 @@ namespace MakerJs.model {
                     if (!first) {
                         combine(result, expandedPathModel, false, true, false, true, combineOptions);
                         combineOptions.measureA.modelsMeasured = false;
+
+                        lastFarPoint = combineOptions.farPoint;
+                        delete combineOptions.farPoint;
                         delete combineOptions.measureB;
                     }
 
@@ -178,6 +182,10 @@ namespace MakerJs.model {
                         //union this little pointy shape with the rest of the result
                         combine(result, straightened, false, true, false, true, combineOptions);
                         combineOptions.measureA.modelsMeasured = false;
+
+                        lastFarPoint = combineOptions.farPoint;
+
+                        delete combineOptions.farPoint;
                         delete combineOptions.measureB;
 
                         //replace the rounded path with the straightened model
@@ -192,6 +200,8 @@ namespace MakerJs.model {
             //delete the round caps
             delete result.models['caps'];
         }
+
+        combineOptions.farPoint = lastFarPoint;
 
         return result;
     }

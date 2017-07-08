@@ -349,9 +349,9 @@
         opts.measureA.measureModels();
         opts.measureB.measureModels();
 
-        if (!options.farPoint) {
+        if (!opts.farPoint) {
             var measureBoth = measure.increase(measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
-            opts.farPoint = options.farPoint = point.add(measureBoth.high, [1, 1]);
+            opts.farPoint = point.add(measureBoth.high, [1, 1]); 
         }
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
