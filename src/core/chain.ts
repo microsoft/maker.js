@@ -316,7 +316,7 @@
     /**
      * @private
      */
-    function getContainment(allChains: IChain[], opts: boolean | IContainChainsOptions) {
+    function getContainment(allChains: IChain[], opts: IContainChainsOptions) {
 
         var chainsAsModels = allChains.map(c => chain.toNewModel(c));
         var parents: IChain[] = [];
