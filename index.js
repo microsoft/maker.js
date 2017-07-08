@@ -2381,16 +2381,16 @@ var MakerJs;
                 pointMatchingDistance: .005,
                 out_deleted: [{ paths: {} }, { paths: {} }]
             };
+            MakerJs.extendObject(opts, options);
             opts.measureA = opts.measureA || new MakerJs.measure.Atlas(modelA);
             opts.measureB = opts.measureB || new MakerJs.measure.Atlas(modelB);
             //make sure model measurements capture all paths
             opts.measureA.measureModels();
             opts.measureB.measureModels();
             if (!options.farPoint) {
-                var measureBoth = MakerJs.measure.increase(opts.measureA.modelMap[''], opts.measureB.modelMap['']);
-                opts.farPoint = MakerJs.point.add(measureBoth.high, [1, 1]);
+                var measureBoth = MakerJs.measure.increase(MakerJs.measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
+                opts.farPoint = options.farPoint = MakerJs.point.add(measureBoth.high, [1, 1]);
             }
-            MakerJs.extendObject(opts, options);
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
@@ -8778,5 +8778,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.63";
+MakerJs.version = "0.9.64";
 ﻿var Bezier = require('bezier-js');
