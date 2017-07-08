@@ -340,7 +340,6 @@
             pointMatchingDistance: .005,
             out_deleted: [{ paths: {} }, { paths: {} }]
         };
-        extendObject(opts, options);
 
         opts.measureA = opts.measureA || new measure.Atlas(modelA);
         opts.measureB = opts.measureB || new measure.Atlas(modelB);
@@ -348,6 +347,13 @@
         //make sure model measurements capture all paths
         opts.measureA.measureModels();
         opts.measureB.measureModels();
+
+        if (!options.farPoint) {
+            var measureBoth = measure.increase(opts.measureA.modelMap[''], opts.measureB.modelMap['']);
+            opts.farPoint = point.add(measureBoth.high, [1, 1]);
+        }
+
+        extendObject(opts, options);
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
         var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
