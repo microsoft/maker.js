@@ -294,7 +294,8 @@
             chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
 
             if (opts.contain) {
-                var containedChains = getContainment(chainsByLayer[layer], opts.contain);
+                var containChainsOptions: IContainChainsOptions = isObject(opts.contain) ? opts.contain as IContainChainsOptions : { alernateWindings: false };
+                var containedChains = getContainment(chainsByLayer[layer], containChainsOptions);
                 chainsByLayer[layer] = containedChains;
             }
 
