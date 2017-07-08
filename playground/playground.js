@@ -405,7 +405,7 @@ var MakerJsPlayground;
         if (!processed.lockedPath)
             return null;
         var ref = processed.model;
-        var origin = processed.model.origin || [0, 0];
+        var origin = makerjs.isPoint(processed.model.origin) ? processed.model.origin : [0, 0];
         var route = processed.lockedPath.route.slice();
         while (route.length) {
             var prop = route.shift();
@@ -581,6 +581,8 @@ var MakerJsPlayground;
             initialize();
         }
         //todo: find minimum viewScale
+        if (!makerjs.isPoint(processed.model.origin))
+            processed.model.origin = [0, 0];
         var newMeasurement = makerjs.measure.modelExtents(processed.model);
         processed.measurement = newMeasurement;
         if (!processed.measurement) {
