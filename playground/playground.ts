@@ -1093,6 +1093,10 @@
     export var dockMode: string;
     export var codeMirrorEditor: CodeMirror.Editor;
     export var codeMirrorOptions: CodeMirror.EditorConfiguration = {
+        extraKeys: {
+            "Ctrl-Enter": () => { runCodeFromEditor() },
+            "Ctrl-I": () => { toggleClass('collapse-insert-menu') }
+        },
         lineNumbers: true,
         theme: 'twilight',
         viewportMargin: Infinity
@@ -1655,6 +1659,21 @@
             dockEditor(dockModes.SideBySide);
         }
 
+    }
+
+    export function loadInsertPage() {
+        var div = document.querySelector('#insert-menu') as HTMLDivElement;
+        if (div.childNodes.length == 0) {
+            var insertIframe = document.createElement('iframe');
+            insertIframe.setAttribute('src', 'insert/index.html');
+            div.appendChild(insertIframe);
+        }
+    }
+
+    export function insertText(text: string) {
+        var doc = codeMirrorEditor.getDoc();
+        var range = doc.getCursor();
+        doc.replaceRange(text, range);
     }
 
     //execution

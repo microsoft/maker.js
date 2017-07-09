@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Maker.js Playground Javascript Insert</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!--
+
+    *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    *****************************************************************************
+
+    https://github.com/Microsoft/maker.js
+
+    -->
+
+    <link href="insert.css" rel="stylesheet" />
+
+    <script>
+        var makerjs = parent.makerjs;
+
+        function QueryStringParams(querystring) {
+            if (querystring === void 0) { querystring = document.location.search.substring(1); }
+            if (querystring) {
+                var pairs = querystring.split('&');
+                for (var i = 0; i < pairs.length; i++) {
+                    var pair = pairs[i].split('=');
+                    this[pair[0]] = decodeURIComponent(pair[1]);
+                }
+            }
+        }
+
+        var queryStringParams = new QueryStringParams();
+    </script>
+
+</head>
+
+<body>
+    <main>
+
+        <button id="back" onclick="history.back()">&#x25C0; back</button>
+
+        <section id="insert">
+            Detail
+            <script>
+                document.write(queryStringParams['id']);
+            </script>
+        </section>
+
+    </main>
+</body>
+
+</html>

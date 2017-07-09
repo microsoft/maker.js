@@ -1,0 +1,55 @@
+body {
+    background-color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+button,
+input,
+select {
+    font-family: monospace;
+}
+
+header {
+    padding: 1em 1em 0 1em;
+}
+
+main {
+    margin: 1em;
+    position: relative;
+}
+
+label {
+    color: #999;
+    font-size: 17px;
+    font-variant: small-caps;
+    letter-spacing: 0.2ex;
+    word-spacing: -0.3ex;
+}
+
+a {
+    text-decoration: none;
+}
+
+a,
+a:visited {
+    color: #cc0;
+    line-height: 18px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#back {
+    background-color: transparent;
+    border: 0;
+    color: #cc0;
+    outline: none;
+}
+
+#back:hover {
+    text-decoration: underline;
+}
