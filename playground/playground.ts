@@ -1663,28 +1663,40 @@
 
     export function loadInsertPage() {
         var div = document.querySelector('#insert-menu') as HTMLDivElement;
-        if (div.childNodes.length == 0) {
+        var append = div.childNodes.length === 0;
+        if (append) {
             var insertIframe = document.createElement('iframe');
             insertIframe.setAttribute('src', 'insert/index.html');
             div.appendChild(insertIframe);
+        }
+
+        if (toggleClass('collapse-insert-menu')) {
+            //showing
+
+            if (!append) {
+                //existing
+                div.querySelector('iframe').contentWindow['doFocus']();
+            }
         }
     }
 
     export function command(cmd: string, value: any) {
         switch (cmd) {
-            case "run":
-                setTimeout(() => runCodeFromEditor(), 0);
-                break;
             case "insert":
-                setTimeout(() => {
+                return setTimeout(() => {
                     var doc = codeMirrorEditor.getDoc();
                     var range = doc.getCursor();
                     doc.replaceRange(value, range);
                 }, 0);
-                break;
+            case "run":
+                return setTimeout(() => runCodeFromEditor(), 0);
             case "toggle":
-                setTimeout(() => toggleClass(value), 0);
-                break
+                return setTimeout(() => toggleClass(value), 0);
+            case "undo":
+                return setTimeout(() => {
+                    var doc = codeMirrorEditor.getDoc();
+                    doc.undo();
+                }, 0);
         }
     }
 
@@ -1722,6 +1734,8 @@
 
         var pre = document.getElementById('init-javascript-code') as HTMLPreElement;
         codeMirrorOptions.value = pre.innerText;
+        codeMirrorOptions["styleActiveLine"] = true;    //TODO use addons in declaration
+
         codeMirrorEditor = CodeMirror(
             function (elt) {
                 pre.parentNode.replaceChild(elt, pre);
