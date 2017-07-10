@@ -1670,10 +1670,22 @@
         }
     }
 
-    export function insertText(text: string) {
-        var doc = codeMirrorEditor.getDoc();
-        var range = doc.getCursor();
-        doc.replaceRange(text, range);
+    export function command(cmd: string, value: any) {
+        switch (cmd) {
+            case "run":
+                setTimeout(() => runCodeFromEditor(), 0);
+                break;
+            case "insert":
+                setTimeout(() => {
+                    var doc = codeMirrorEditor.getDoc();
+                    var range = doc.getCursor();
+                    doc.replaceRange(value, range);
+                }, 0);
+                break;
+            case "toggle":
+                setTimeout(() => toggleClass(value), 0);
+                break
+        }
     }
 
     //execution
