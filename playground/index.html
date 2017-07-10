@@ -32,6 +32,7 @@
     <script src="../external/pep/pep.js"></script>
     <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
+    <script src="../external/codemirror/addon/active-line.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
     <script src="../external/bezier-js/bezier.js"></script>
     <script src="../external/opentype/opentype.js"></script>
@@ -215,7 +216,7 @@
                         JavaScript <span id="code-editor-title">code editor</span>
                     </span>
                     <div id="insert-top">
-                        <button onclick="MakerJsPlayground.loadInsertPage();MakerJsPlayground.toggleClass('collapse-insert-menu')">Insert <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
+                        <button onclick="MakerJsPlayground.loadInsertPage()">Insert <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
                         <div id="insert-menu"></div>
                     </div>
                     <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()" title="Run (CTRL + Enter)">&nbsp;&#x25BA; Run&nbsp;</button>
