@@ -92,15 +92,15 @@ header h1 {
     padding-right: 0;
 }
 
-#rendering-options-top button .icon.dropdown {
+#rendering-options-top button .icon.dropdown, #insert-top button .icon.dropdown {
     display: none;
 }
 
-.collapse-rendering-options #rendering-options-top button .icon.dropdown {
+.collapse-rendering-options #rendering-options-top button .icon.dropdown, .collapse-insert-menu #insert-top button .icon.dropdown {
     display: inline;
 }
 
-.collapse-rendering-options #rendering-options-top button .icon.dropup {
+.collapse-rendering-options #rendering-options-top button .icon.dropup, .collapse-insert-menu #insert-top button .icon.dropup {
     display: none;
 }
 
@@ -162,7 +162,7 @@ body.show-params-link #params-link {
     clear: right;
 }
 
-.collapse-rendering-options #rendering-options-menu {
+.collapse-rendering-options #rendering-options-menu, .collapse-insert-menu #insert-menu {
     display: none;
 }
 
@@ -703,4 +703,36 @@ body.full-screen {
 
 .full-screen .grid-line-10 {
     stroke: #ccc;
+}
+
+#insert-top {
+    display: inline-block;
+    position: relative;
+}
+
+#insert-menu {
+    background-color: #333;
+    height: 40em;
+    margin: 0 0 2em 0;
+    min-height: 23em;
+    padding: 0;
+    position: absolute;
+    right: -6em;
+    width: 20em;
+    z-index: 7; /* above CodeMirror scrollbars */
+}
+
+#insert-menu iframe {
+    border: 0;
+    height: 100%;
+    width: 100%;
+}
+
+@media only screen and (max-width: 400px) {
+    #insert-menu {
+        width: 16em;
+    }
+    #code-editor-title {
+        display: none;
+    }
 }

@@ -1093,6 +1093,10 @@
     export var dockMode: string;
     export var codeMirrorEditor: CodeMirror.Editor;
     export var codeMirrorOptions: CodeMirror.EditorConfiguration = {
+        extraKeys: {
+            "Ctrl-Enter": () => { runCodeFromEditor() },
+            "Ctrl-I": () => { toggleClass('collapse-insert-menu') }
+        },
         lineNumbers: true,
         theme: 'twilight',
         viewportMargin: Infinity
@@ -1657,6 +1661,45 @@
 
     }
 
+    export function loadInsertPage() {
+        var div = document.querySelector('#insert-menu') as HTMLDivElement;
+        var append = div.childNodes.length === 0;
+        if (append) {
+            var insertIframe = document.createElement('iframe');
+            insertIframe.setAttribute('src', 'insert/index.html');
+            div.appendChild(insertIframe);
+        }
+
+        if (toggleClass('collapse-insert-menu')) {
+            //showing
+
+            if (!append) {
+                //existing
+                div.querySelector('iframe').contentWindow['doFocus']();
+            }
+        }
+    }
+
+    export function command(cmd: string, value: any) {
+        switch (cmd) {
+            case "insert":
+                return setTimeout(() => {
+                    var doc = codeMirrorEditor.getDoc();
+                    var range = doc.getCursor();
+                    doc.replaceRange(value, range);
+                }, 0);
+            case "run":
+                return setTimeout(() => runCodeFromEditor(), 0);
+            case "toggle":
+                return setTimeout(() => toggleClass(value), 0);
+            case "undo":
+                return setTimeout(() => {
+                    var doc = codeMirrorEditor.getDoc();
+                    doc.undo();
+                }, 0);
+        }
+    }
+
     //execution
 
     window.onload = function (ev) {
@@ -1691,6 +1734,8 @@
 
         var pre = document.getElementById('init-javascript-code') as HTMLPreElement;
         codeMirrorOptions.value = pre.innerText;
+        codeMirrorOptions["styleActiveLine"] = true;    //TODO use addons in declaration
+
         codeMirrorEditor = CodeMirror(
             function (elt) {
                 pre.parentNode.replaceChild(elt, pre);
