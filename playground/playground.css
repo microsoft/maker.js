@@ -719,7 +719,7 @@ body.full-screen {
     position: absolute;
     right: -6em;
     width: 20em;
-    z-index: 3; /* above CodeMirror */
+    z-index: 7; /* above CodeMirror scrollbars */
 }
 
 #insert-menu iframe {
