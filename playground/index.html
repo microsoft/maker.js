@@ -32,6 +32,7 @@
     <script src="../external/pep/pep.js"></script>
     <script src="../external/marked/marked.js"></script>
     <script src="../external/codemirror/lib/codemirror.js"></script>
+    <script src="../external/codemirror/addon/active-line.js"></script>
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
     <script src="../external/bezier-js/bezier.js"></script>
     <script src="../external/opentype/opentype.js"></script>
@@ -53,7 +54,7 @@
     </script>
 
 </head>
-<body class="no-notes collapse-annotation">
+<body class="no-notes collapse-annotation collapse-insert-menu">
     <a name="top"></a>
 
     <main>
@@ -151,9 +152,13 @@
             <div>
                 <div class="code-header">
                     <span>
-                        JavaScript code editor
+                        JavaScript <span id="code-editor-title">code editor</span>
                     </span>
-                    <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()">&nbsp;&#x25BA; Run&nbsp;</button>
+                    <div id="insert-top">
+                        <button onclick="MakerJsPlayground.loadInsertPage()">Insert <span class="icon dropup">&#x25B4;</span><span class="icon dropdown">&#x25BE;</span></button>
+                        <div id="insert-menu"></div>
+                    </div>
+                    <button class="run" onclick="MakerJsPlayground.runCodeFromEditor()" title="Run (CTRL + Enter)">&nbsp;&#x25BA; Run&nbsp;</button>
                     <span class="status"></span>
                 </div>
 
@@ -167,7 +172,7 @@ this.paths = {
     mouth: new makerjs.paths.Arc([0, 0], 50, 225, 315),
     wink: new makerjs.paths.Line([-35, 20], [-15, 20])
 };
-this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScript code, then click **Run** to see your drawing.';
+this.notes = '# Welcome to the Maker.js playground \n You can edit the JavaScript code, then click **Run** (or CTRL + Enter) to see your drawing.';
 
 //press enter here to add more blank lines
 

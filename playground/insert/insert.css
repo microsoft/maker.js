@@ -1,0 +1,108 @@
+body {
+    background-color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+button,
+input,
+select {
+    font-family: monospace;
+}
+
+header {
+    padding: 1em 1em 0 1em;
+}
+
+main {
+    margin: 1em;
+    position: relative;
+}
+
+h1, h2 {
+    color: #bbb;
+}
+
+h1 {
+    font-size: 20px;
+    font-variant: small-caps;
+    font-weight: normal;
+    letter-spacing: 0.2ex;
+    text-transform: lowercase;
+    word-spacing: -0.3ex;
+}
+
+h2 {
+    border-bottom: 1px solid #555;
+    font-size: 20px;
+}
+
+label {
+    color: #999;
+    font-size: 17px;
+    font-variant: small-caps;
+    letter-spacing: 0.2ex;
+    word-spacing: -0.3ex;
+}
+
+a {
+    text-decoration: none;
+}
+
+a,
+a:visited {
+    color: #cc0;
+    line-height: 18px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#back {
+    background-color: transparent;
+    border: 0;
+    color: #cc0;
+    outline: none;
+}
+
+#back:hover {
+    text-decoration: underline;
+}
+
+section {
+    margin-top: 1em;
+}
+
+section.input div {
+    margin-bottom: .5em;
+}
+
+section.input input[type='text'] {
+    background-color: #ddd;
+    display: block;
+}
+
+section.input input[type='checkbox'] {
+    margin-left: 0;
+    position: relative;
+    top: 3px;
+}
+
+section.input input[type='submit'] {
+    background-color: goldenrod;
+    border-bottom-color: darkgoldenrod;
+    border-left-color: lightgoldenrodyellow;
+    border-right-color: darkgoldenrod;
+    border-top-color: lightgoldenrodyellow;
+    border-width: 3px;
+}
+
+#preview {
+    background-color: #222;
+    color: #fff;
+    overflow: auto;
+    padding: .5em;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Maker.js Playground Javascript Insert</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!--
+
+    *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    *****************************************************************************
+
+    https://github.com/Microsoft/maker.js
+
+    -->
+
+    <link href="insert.css" rel="stylesheet" />
+
+    <script>
+        var makerjs = parent.makerjs;
+
+        function doFocus() {
+            //no-op
+        }
+
+        function sortIds(module, skip) {
+            var ids = [];
+            for (var id in module) {
+                if (id === skip) continue;
+                ids.push(id);
+            }
+            return ids.sort();
+        }
+
+        var groups = [
+            //{ id: "module", items: ["module definition", "parameters"] },
+            { id: "script", items: ["if statement", "local function", "for loop"] },
+            { id: "paths", items: ["Arc", "Circle", "Line"] },
+            { id: "models", items: sortIds(makerjs.models, 'Text') },
+            //{ id: "layouts", items: sortIds(makerjs.layout) },
+            //{ id: "makerjs functions", items: ["$", "cloneObject", "round", "unit conversion"] },
+            //{ id: "path functions", items: sortIds(makerjs.path) },
+            //{ id: "model functions", items: sortIds(makerjs.model) },
+            //{ id: "measure functions", items: sortIds(makerjs.measure) },
+            //{ id: "angle functions", items: sortIds(makerjs.angle) },
+            //{ id: "point functions", items: sortIds(makerjs.point) },
+            //{ id: "chain functions", items: sortIds(makerjs.chain) },
+            //{ id: "solver functions", items: sortIds(makerjs.solvers) }
+        ];
+
+        document.addEventListener("keydown", function(e) {
+            switch (e.key) {
+                case 'Enter':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('run');
+                case 'Escape':
+                    return parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+                case 'i':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+                case 'z':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('undo');
+            }
+        });
+
+    </script>
+
+</head>
+
+<body>
+    <main>
+
+        <h1>Code snippets</h1>
+
+        <section id="list">
+            <script>
+                document.write(
+                    groups.map(function (group) {
+                        var navItems = group.items.map(function (id) {
+                            return `<li><a href="detail.html?group=${encodeURIComponent(group.id)}&id=${encodeURIComponent(id)}">${id}</a></li>`;
+                        }).join('');
+
+                        return `<div><label>${group.id}</label><ul>${navItems}</ul></div>`;
+                    }).join('')
+                );
+            </script>
+        </section>
+
+    </main>
+</body>
+
+</html>

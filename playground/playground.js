@@ -833,6 +833,10 @@ var MakerJsPlayground;
         setNotes(processed.model.notes || (processed.kit ? processed.kit.notes : ''));
     }
     MakerJsPlayground.codeMirrorOptions = {
+        extraKeys: {
+            "Ctrl-Enter": function () { runCodeFromEditor(); },
+            "Ctrl-I": function () { toggleClass('collapse-insert-menu'); }
+        },
         lineNumbers: true,
         theme: 'twilight',
         viewportMargin: Infinity
@@ -1276,6 +1280,43 @@ var MakerJsPlayground;
         }
     }
     MakerJsPlayground.onWindowResize = onWindowResize;
+    function loadInsertPage() {
+        var div = document.querySelector('#insert-menu');
+        var append = div.childNodes.length === 0;
+        if (append) {
+            var insertIframe = document.createElement('iframe');
+            insertIframe.setAttribute('src', 'insert/index.html');
+            div.appendChild(insertIframe);
+        }
+        if (toggleClass('collapse-insert-menu')) {
+            //showing
+            if (!append) {
+                //existing
+                div.querySelector('iframe').contentWindow['doFocus']();
+            }
+        }
+    }
+    MakerJsPlayground.loadInsertPage = loadInsertPage;
+    function command(cmd, value) {
+        switch (cmd) {
+            case "insert":
+                return setTimeout(function () {
+                    var doc = MakerJsPlayground.codeMirrorEditor.getDoc();
+                    var range = doc.getCursor();
+                    doc.replaceRange(value, range);
+                }, 0);
+            case "run":
+                return setTimeout(function () { return runCodeFromEditor(); }, 0);
+            case "toggle":
+                return setTimeout(function () { return toggleClass(value); }, 0);
+            case "undo":
+                return setTimeout(function () {
+                    var doc = MakerJsPlayground.codeMirrorEditor.getDoc();
+                    doc.undo();
+                }, 0);
+        }
+    }
+    MakerJsPlayground.command = command;
     //execution
     window.onload = function (ev) {
         if (window.orientation === void 0) {
@@ -1303,6 +1344,7 @@ var MakerJsPlayground;
         gridPattern.setAttribute('y', margin[1].toString());
         var pre = document.getElementById('init-javascript-code');
         MakerJsPlayground.codeMirrorOptions.value = pre.innerText;
+        MakerJsPlayground.codeMirrorOptions["styleActiveLine"] = true; //TODO use addons in declaration
         MakerJsPlayground.codeMirrorEditor = CodeMirror(function (elt) {
             pre.parentNode.replaceChild(elt, pre);
         }, MakerJsPlayground.codeMirrorOptions);
