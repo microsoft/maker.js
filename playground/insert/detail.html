@@ -32,12 +32,16 @@
     <script>
         var makerjs = parent.makerjs;
 
+        function doFocus() {
+            document.querySelector('form').elements[0].focus();
+        }
+
         var details = {
             "script": {
                 "if statement": {
                     inputs: [
                         { title: "condition", type: "text", value: "condition" },
-                        { title: "has else", type: "checkbox" }
+                        { title: "has else", type: "bool" }
                     ],
                     template: function (condition, hasElse) {
                         return `if (${condition}) {\n\n}${hasElse ? ` else {\n\n}` : ''}`;
@@ -92,8 +96,28 @@
                         return `makerjs.$(new makerjs.paths.Line(${origin}, ${end})).addTo(this);`;
                     }
                 }
-            }
+            },
+            "models": (function () {
+                var models = {};
+
+                for (var id in makerjs.models) {
+                    if (id === 'Text') continue;    //TODO get font
+                    models[id] = getModel(id)
+                }
+
+                return models;
+            })()
         };
+
+        function getModel(id) {
+            return {
+                inputs: makerjs.models[id].metaParameters,
+                template: function () {
+                    var args = [].slice.call(arguments);
+                    return `makerjs.$(new makerjs.models.${id}(${args.join(', ')})).addTo(this);`;
+                }
+            };
+        }
 
         var selectedDetail;
 
@@ -115,11 +139,15 @@
         }
 
         document.addEventListener("keydown", function (e) {
-            if (e.key == 'i' && e.ctrlKey) {
-                parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
-            }
-            if (e.key == 'Enter' && e.ctrlKey) {
-                parent.MakerJsPlayground.command('run');
+            switch (e.key) {
+                case 'Enter':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('run');
+                case 'Escape':
+                    return parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+                case 'i':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+                case 'z':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('undo');
             }
         });
 
@@ -138,14 +166,18 @@
 
         function convertInput(input) {
             var textbox = checkbox = '';
+            var value = input.value;
             switch (input.type) {
+                case 'select':
+                    value = JSON.stringify(value[0]);
+                case 'range':
                 case 'text':
-                    var value = typeof input.value !== 'undefined' ? input.value : '';
+                    value = typeof value !== 'undefined' ? value : '';
                     textbox = `<input type='text' onfocus="this.setSelectionRange(0, this.value.length)" onkeyup="getInputs()" value="${value}" onchange="getInputs()" />`;
                     break;
 
-                case 'checkbox':
-                    checkbox = `<input type='checkbox' ${input.checked ? 'checked' : ''}" onchange="getInputs()" />`;
+                case 'bool':
+                    checkbox = `<input type='checkbox' ${input.checked ? 'checked' : ''}" onchange="getInputs()" /> `;  //keep trailing space
                     break;
             }
             return `<div><label>${checkbox}${input.title}<label/>${textbox}</div>`;
@@ -154,7 +186,11 @@
         function showDetail() {
             var form = document.querySelector('form');
             var inputs = selectedDetail.inputs.map(convertInput);
+
+            //add 2 elements
             inputs.push(`<div><label><input type='checkbox' id="newlines" onchange="getInputs()"/> add newlines<label/></div>`);
+            inputs.push(`<div><input type='submit' value="&#x2295; insert at cursor"/></div>`);
+
             form.innerHTML = inputs.join('');
             setTimeout(function () {
                 form.elements[0].focus();
@@ -162,26 +198,40 @@
             }, 0);
         }
 
+        function getInputValue(element) {
+            if (element.type === 'checkbox') {
+                return element.checked;
+            }
+
+            var num = parseFloat(element.value);
+            if (!isNaN(num)) {
+                return num;
+            }
+
+            try {
+                var parsed = JSON.parse(element.value);
+                if (Array.isArray(parsed)) {
+                    return element.value;
+                }
+            }
+            catch (e) { }
+
+            //TODO return JSON.stringify for text params
+            
+            return element.value;
+        }
+
         function getInputs() {
             var form = document.querySelector('form');
-            var elements = [].slice.call(form.elements).slice();
-            var newlines = false;
-            var values = elements.map(function (element) {
-                if (element.id === 'newlines') {
-                    newlines = element.checked;
-                }
-                if (element.type === 'checkbox') {
-                    return element.checked;
-                }
-                return element.value;
-            });
-            var pre = document.querySelector('pre');
+            var elements = [].slice.call(form.elements).slice(0, -2);   //remove the 2 added elements
+            var values = elements.map(getInputValue);
+            var preview = document.querySelector('#preview');
             var output = [selectedDetail.template.apply(null, values)];
-            if (newlines) {
+            if (form.elements.newlines.checked) {
                 output.unshift('\n');
                 output.push('\n\n');
             }
-            pre.innerText = output.join('');
+            preview.innerText = output.join('');
         }
     </script>
 
@@ -192,22 +242,20 @@
 
         <button id="back" onclick="history.back()">&#x25C0; back</button>
 
-        <h1>
+        <h2>
             <script>
                 document.write(queryStringParams['id']);
             </script>
-        </h1>
+        </h2>
 
         <section class="input">
-            <form onsubmit="return false"></form>
-
-            <div class="submit">
-                <button onclick="parent.MakerJsPlayground.command('insert', document.querySelector('pre').innerText)">&#x2295; insert at cursor</button>
-            </div>
-
+            <form onsubmit="parent.MakerJsPlayground.command('insert', document.querySelector('#preview').innerText);return false;"></form>
         </section>
 
-        <pre></pre>
+        <section class="preview">
+            <label>preview</label>
+            <div id="preview"></div>
+        </section>
 
     </main>
 

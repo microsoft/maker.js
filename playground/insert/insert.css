@@ -21,9 +21,21 @@ main {
     position: relative;
 }
 
-h1 {
-    border-bottom: 1px solid #555;
+h1, h2 {
     color: #bbb;
+}
+
+h1 {
+    font-size: 20px;
+    font-variant: small-caps;
+    font-weight: normal;
+    letter-spacing: 0.2ex;
+    text-transform: lowercase;
+    word-spacing: -0.3ex;
+}
+
+h2 {
+    border-bottom: 1px solid #555;
     font-size: 20px;
 }
 
@@ -60,15 +72,16 @@ a:hover {
     text-decoration: underline;
 }
 
-section.input div {
-    margin-top: .5em;
+section {
+    margin-top: 1em;
 }
 
-section.input div.submit {
-    margin-top: 1.5em;
+section.input div {
+    margin-bottom: .5em;
 }
 
 section.input input[type='text'] {
+    background-color: #ddd;
     display: block;
 }
 
@@ -78,11 +91,18 @@ section.input input[type='checkbox'] {
     top: 3px;
 }
 
-pre {
-    background-color: #222;
-    color: #fff;
-    margin-top: 2em;
-    overflow-x: scroll;
-    padding: .5em;
+section.input input[type='submit'] {
+    background-color: goldenrod;
+    border-bottom-color: darkgoldenrod;
+    border-left-color: lightgoldenrodyellow;
+    border-right-color: darkgoldenrod;
+    border-top-color: lightgoldenrodyellow;
+    border-width: 3px;
 }
 
+#preview {
+    background-color: #222;
+    color: #fff;
+    overflow: auto;
+    padding: .5em;
+}

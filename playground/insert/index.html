@@ -32,9 +32,14 @@
     <script>
         var makerjs = parent.makerjs;
 
-        function sortIds(module) {
+        function doFocus() {
+            //no-op
+        }
+
+        function sortIds(module, skip) {
             var ids = [];
             for (var id in module) {
+                if (id === skip) continue;
                 ids.push(id);
             }
             return ids.sort();
@@ -44,7 +49,7 @@
             //{ id: "module", items: ["module definition", "parameters"] },
             { id: "script", items: ["if statement", "local function", "for loop"] },
             { id: "paths", items: ["Arc", "Circle", "Line"] },
-            { id: "models", items: sortIds(makerjs.models) },
+            { id: "models", items: sortIds(makerjs.models, 'Text') },
             //{ id: "layouts", items: sortIds(makerjs.layout) },
             //{ id: "makerjs functions", items: ["$", "cloneObject", "round", "unit conversion"] },
             //{ id: "path functions", items: sortIds(makerjs.path) },
@@ -57,11 +62,15 @@
         ];
 
         document.addEventListener("keydown", function(e) {
-            if (e.key == 'i' && e.ctrlKey) {
-                parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
-            }
-            if (e.key == 'Enter' && e.ctrlKey) {
-                parent.MakerJsPlayground.command('run');
+            switch (e.key) {
+                case 'Enter':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('run');
+                case 'Escape':
+                    return parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+                case 'i':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+                case 'z':
+                    return e.ctrlKey && parent.MakerJsPlayground.command('undo');
             }
         });
 
@@ -71,6 +80,8 @@
 
 <body>
     <main>
+
+        <h1>Code snippets</h1>
 
         <section id="list">
             <script>
