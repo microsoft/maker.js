@@ -32,6 +32,97 @@
     <script>
         var makerjs = parent.makerjs;
 
+        var details = {
+            "script": {
+                "if statement": {
+                    inputs: [
+                        { title: "condition", type: "text", value: "condition" },
+                        { title: "has else", type: "checkbox" }
+                    ],
+                    template: function (condition, hasElse) {
+                        return `if (${condition}) {\n\n}${hasElse ? ` else {\n\n}` : ''}`;
+                    }
+                },
+                "local function": {
+                    inputs: [
+                        { title: "function name", type: "text", value: "myFunction" }
+                    ],
+                    template: function (name) {
+                        return `function ${name} () {\n\n}`;
+                    }
+                },
+                "for loop": {
+                    inputs: [
+                        { title: "variable name", type: "text", value: "i" },
+                        { title: "start", type: "text", value: "0" },
+                        { title: "end", type: "text", value: "10" }
+                    ],
+                    template: function (i, start, end) {
+                        return `for (var ${i} = ${start}; ${i} < ${end}; ${i}++) {\n\n}`;
+                    }
+                }
+            },
+            "paths": {
+                "Arc": {
+                    inputs: [
+                        { title: "origin", type: "text", value: "[0, 0]" },
+                        { title: "radius", type: "text", value: "10" },
+                        { title: "start angle", type: "text", value: "0" },
+                        { title: "end angle", type: "text", value: "180" }
+                    ],
+                    template: function (origin, radius, startAngle, endAngle) {
+                        return `makerjs.$(new makerjs.paths.Arc(${origin}, ${radius}, ${startAngle}, ${endAngle})).addTo(this);`;
+                    }
+                },
+                "Circle": {
+                    inputs: [
+                        { title: "origin", type: "text", value: "[0, 0]" },
+                        { title: "radius", type: "text", value: "10" }
+                    ],
+                    template: function (origin, radius) {
+                        return `makerjs.$(new makerjs.paths.Circle(${origin}, ${radius})).addTo(this);`;
+                    }
+                },
+                "Line": {
+                    inputs: [
+                        { title: "origin", type: "text", value: "[0, 0]" },
+                        { title: "end", type: "text", value: "[20, 20]" }
+                    ],
+                    template: function (origin, end) {
+                        return `makerjs.$(new makerjs.paths.Line(${origin}, ${end})).addTo(this);`;
+                    }
+                }
+            }
+        };
+
+        var selectedDetail;
+
+        window.onload = function () {
+            var groupParam = queryStringParams['group'];
+            var idParam = queryStringParams['id'];
+            if (groupParam && idParam) {
+                var group = details[groupParam];
+                if (group) {
+                    var detail = group[idParam];
+                    if (detail) {
+                        selectedDetail = detail;
+                        showDetail();
+                        return;
+                    }
+                }
+            }
+            //showError();
+        }
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key == 'i' && e.ctrlKey) {
+                parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+            }
+            if (e.key == 'Enter' && e.ctrlKey) {
+                parent.MakerJsPlayground.command('run');
+            }
+        });
+
         function QueryStringParams(querystring) {
             if (querystring === void 0) { querystring = document.location.search.substring(1); }
             if (querystring) {
@@ -44,6 +135,54 @@
         }
 
         var queryStringParams = new QueryStringParams();
+
+        function convertInput(input) {
+            var textbox = checkbox = '';
+            switch (input.type) {
+                case 'text':
+                    var value = typeof input.value !== 'undefined' ? input.value : '';
+                    textbox = `<input type='text' onfocus="this.setSelectionRange(0, this.value.length)" onkeyup="getInputs()" value="${value}" onchange="getInputs()" />`;
+                    break;
+
+                case 'checkbox':
+                    checkbox = `<input type='checkbox' ${input.checked ? 'checked' : ''}" onchange="getInputs()" />`;
+                    break;
+            }
+            return `<div><label>${checkbox}${input.title}<label/>${textbox}</div>`;
+        }
+
+        function showDetail() {
+            var form = document.querySelector('form');
+            var inputs = selectedDetail.inputs.map(convertInput);
+            inputs.push(`<div><label><input type='checkbox' id="newlines" onchange="getInputs()"/> add newlines<label/></div>`);
+            form.innerHTML = inputs.join('');
+            setTimeout(function () {
+                form.elements[0].focus();
+                getInputs();
+            }, 0);
+        }
+
+        function getInputs() {
+            var form = document.querySelector('form');
+            var elements = [].slice.call(form.elements).slice();
+            var newlines = false;
+            var values = elements.map(function (element) {
+                if (element.id === 'newlines') {
+                    newlines = element.checked;
+                }
+                if (element.type === 'checkbox') {
+                    return element.checked;
+                }
+                return element.value;
+            });
+            var pre = document.querySelector('pre');
+            var output = [selectedDetail.template.apply(null, values)];
+            if (newlines) {
+                output.unshift('\n');
+                output.push('\n\n');
+            }
+            pre.innerText = output.join('');
+        }
     </script>
 
 </head>
@@ -53,14 +192,25 @@
 
         <button id="back" onclick="history.back()">&#x25C0; back</button>
 
-        <section id="insert">
-            Detail
+        <h1>
             <script>
                 document.write(queryStringParams['id']);
             </script>
+        </h1>
+
+        <section class="input">
+            <form onsubmit="return false"></form>
+
+            <div class="submit">
+                <button onclick="parent.MakerJsPlayground.command('insert', document.querySelector('pre').innerText)">&#x2295; insert at cursor</button>
+            </div>
+
         </section>
 
+        <pre></pre>
+
     </main>
+
 </body>
 
 </html>

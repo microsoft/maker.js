@@ -21,6 +21,12 @@ main {
     position: relative;
 }
 
+h1 {
+    border-bottom: 1px solid #555;
+    color: #bbb;
+    font-size: 20px;
+}
+
 label {
     color: #999;
     font-size: 17px;
@@ -53,3 +59,30 @@ a:hover {
 #back:hover {
     text-decoration: underline;
 }
+
+section.input div {
+    margin-top: .5em;
+}
+
+section.input div.submit {
+    margin-top: 1.5em;
+}
+
+section.input input[type='text'] {
+    display: block;
+}
+
+section.input input[type='checkbox'] {
+    margin-left: 0;
+    position: relative;
+    top: 3px;
+}
+
+pre {
+    background-color: #222;
+    color: #fff;
+    margin-top: 2em;
+    overflow-x: scroll;
+    padding: .5em;
+}
+

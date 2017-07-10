@@ -41,24 +41,30 @@
         }
 
         var groups = [
-            { id: "module", items: ["module definition", "parameters"] },
+            //{ id: "module", items: ["module definition", "parameters"] },
             { id: "script", items: ["if statement", "local function", "for loop"] },
             { id: "paths", items: ["Arc", "Circle", "Line"] },
             { id: "models", items: sortIds(makerjs.models) },
-            { id: "layouts", items: sortIds(makerjs.layout) },
-            { id: "makerjs functions", items: ["$", "cloneObject", "round", "unit conversion"] },
-            { id: "path functions", items: sortIds(makerjs.path) },
-            { id: "model functions", items: sortIds(makerjs.model) },
-            { id: "measure functions", items: sortIds(makerjs.measure) },
-            { id: "angle functions", items: sortIds(makerjs.angle) },
-            { id: "point functions", items: sortIds(makerjs.point) },
-            { id: "chain functions", items: sortIds(makerjs.chain) },
-            { id: "solver functions", items: sortIds(makerjs.solvers) }
+            //{ id: "layouts", items: sortIds(makerjs.layout) },
+            //{ id: "makerjs functions", items: ["$", "cloneObject", "round", "unit conversion"] },
+            //{ id: "path functions", items: sortIds(makerjs.path) },
+            //{ id: "model functions", items: sortIds(makerjs.model) },
+            //{ id: "measure functions", items: sortIds(makerjs.measure) },
+            //{ id: "angle functions", items: sortIds(makerjs.angle) },
+            //{ id: "point functions", items: sortIds(makerjs.point) },
+            //{ id: "chain functions", items: sortIds(makerjs.chain) },
+            //{ id: "solver functions", items: sortIds(makerjs.solvers) }
         ];
 
-        function detail() {
+        document.addEventListener("keydown", function(e) {
+            if (e.key == 'i' && e.ctrlKey) {
+                parent.MakerJsPlayground.command('toggle', 'collapse-insert-menu');
+            }
+            if (e.key == 'Enter' && e.ctrlKey) {
+                parent.MakerJsPlayground.command('run');
+            }
+        });
 
-        }
     </script>
 
 </head>
