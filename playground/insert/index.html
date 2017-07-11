@@ -61,7 +61,7 @@
             //{ id: "solver functions", items: sortIds(makerjs.solvers) }
         ];
 
-        document.addEventListener("keydown", function(e) {
+        document.addEventListener("keydown", function (e) {
             switch (e.key) {
                 case 'Enter':
                     return e.ctrlKey && parent.MakerJsPlayground.command('run');
@@ -73,17 +73,14 @@
                     return e.ctrlKey && parent.MakerJsPlayground.command('undo');
             }
         });
-
     </script>
 
 </head>
 
 <body>
     <main>
-
-        <h1>Code snippets</h1>
-
         <section id="list">
+            <h1>Code snippets</h1>
             <script>
                 document.write(
                     groups.map(function (group) {
@@ -96,7 +93,6 @@
                 );
             </script>
         </section>
-
     </main>
 </body>
 
