@@ -1686,7 +1686,8 @@
                 return setTimeout(() => {
                     var doc = codeMirrorEditor.getDoc();
                     var range = doc.getCursor();
-                    doc.replaceRange(value, range);
+                    range.ch = 0;
+                    doc.replaceRange(value + '\n', range);
                 }, 0);
             case "run":
                 return setTimeout(() => runCodeFromEditor(), 0);
