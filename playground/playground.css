@@ -712,6 +712,7 @@ body.full-screen {
 
 #insert-menu {
     background-color: #333;
+    box-shadow: 6px 6px 6px rgba(0,0,0,0.15);
     height: 40em;
     margin: 0 0 2em 0;
     min-height: 23em;

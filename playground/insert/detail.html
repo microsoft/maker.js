@@ -40,7 +40,7 @@
             "script": {
                 "if statement": {
                     inputs: [
-                        { title: "condition", type: "text", value: "condition" },
+                        { title: "condition", type: "raw", value: "condition" },
                         { title: "has else", type: "bool" }
                     ],
                     template: function (condition, hasElse) {
@@ -49,7 +49,7 @@
                 },
                 "local function": {
                     inputs: [
-                        { title: "function name", type: "text", value: "myFunction" }
+                        { title: "function name", type: "raw", value: "myFunction" }
                     ],
                     template: function (name) {
                         return `function ${name} () {\n\n}`;
@@ -57,9 +57,9 @@
                 },
                 "for loop": {
                     inputs: [
-                        { title: "variable name", type: "text", value: "i" },
-                        { title: "start", type: "text", value: "0" },
-                        { title: "end", type: "text", value: "10" }
+                        { title: "variable name", type: "raw", value: "i" },
+                        { title: "start", type: "raw", value: "0" },
+                        { title: "end", type: "raw", value: "10" }
                     ],
                     template: function (i, start, end) {
                         return `for (var ${i} = ${start}; ${i} < ${end}; ${i}++) {\n\n}`;
@@ -69,31 +69,34 @@
             "paths": {
                 "Arc": {
                     inputs: [
-                        { title: "origin", type: "text", value: "[0, 0]" },
-                        { title: "radius", type: "text", value: "10" },
-                        { title: "start angle", type: "text", value: "0" },
-                        { title: "end angle", type: "text", value: "180" }
+                        { title: "name", type: "text", value: "arc" },
+                        { title: "origin", type: "raw", value: "[0, 0]" },
+                        { title: "radius", type: "raw", value: "10" },
+                        { title: "start angle", type: "raw", value: "0" },
+                        { title: "end angle", type: "raw", value: "180" }
                     ],
-                    template: function (origin, radius, startAngle, endAngle) {
-                        return `makerjs.$(new makerjs.paths.Arc(${origin}, ${radius}, ${startAngle}, ${endAngle})).addTo(this);`;
+                    template: function (name, origin, radius, startAngle, endAngle) {
+                        return `makerjs.$(new makerjs.paths.Arc(${origin}, ${radius}, ${startAngle}, ${endAngle})).addTo(this, ${name});`;
                     }
                 },
                 "Circle": {
                     inputs: [
-                        { title: "origin", type: "text", value: "[0, 0]" },
-                        { title: "radius", type: "text", value: "10" }
+                        { title: "name", type: "text", value: "circle" },
+                        { title: "origin", type: "raw", value: "[0, 0]" },
+                        { title: "radius", type: "raw", value: "10" }
                     ],
-                    template: function (origin, radius) {
-                        return `makerjs.$(new makerjs.paths.Circle(${origin}, ${radius})).addTo(this);`;
+                    template: function (name, origin, radius) {
+                        return `makerjs.$(new makerjs.paths.Circle(${origin}, ${radius})).addTo(this, ${name});`;
                     }
                 },
                 "Line": {
                     inputs: [
-                        { title: "origin", type: "text", value: "[0, 0]" },
-                        { title: "end", type: "text", value: "[20, 20]" }
+                        { title: "name", type: "text", value: "line" },
+                        { title: "origin", type: "raw", value: "[0, 0]" },
+                        { title: "end", type: "raw", value: "[20, 20]" }
                     ],
-                    template: function (origin, end) {
-                        return `makerjs.$(new makerjs.paths.Line(${origin}, ${end})).addTo(this);`;
+                    template: function (name, origin, end) {
+                        return `makerjs.$(new makerjs.paths.Line(${origin}, ${end})).addTo(this, ${name});`;
                     }
                 }
             },
@@ -110,11 +113,28 @@
         };
 
         function getModel(id) {
+            var inputs = makerjs.models[id].metaParameters.slice();
+            inputs.unshift({ title: "name", type: "text", value: id.toLowerCase() });   //name is first
+            inputs.push({ title: "origin", type: "raw", value: "[0, 0]" });
+
             return {
-                inputs: makerjs.models[id].metaParameters,
+                inputs: inputs,
                 template: function () {
                     var args = [].slice.call(arguments);
-                    return `makerjs.$(new makerjs.models.${id}(${args.join(', ')})).addTo(this);`;
+                    var origin = args.pop();
+                    var name = args.shift();
+
+                    try {
+                        var o = JSON.parse(origin);
+                        if (Array.isArray(o) && makerjs.measure.isPointEqual(o, [0, 0])) {
+                            origin = null;
+                        }
+                    }
+                    catch (e) { }
+
+                    var move = origin ? `.move(${origin})` : '';
+
+                    return `makerjs.$(new makerjs.models.${id}(${args.join(', ')}))${move}.addTo(this, ${name});`;
                 }
             };
         }
@@ -167,17 +187,19 @@
         function convertInput(input) {
             var textbox = checkbox = '';
             var value = input.value;
+            var dataTypeAttr = `data-type="${input.type}"`;
             switch (input.type) {
                 case 'select':
                     value = JSON.stringify(value[0]);
                 case 'range':
+                case 'raw':
                 case 'text':
                     value = typeof value !== 'undefined' ? value : '';
-                    textbox = `<input type='text' onfocus="this.setSelectionRange(0, this.value.length)" onkeyup="getInputs()" value="${value}" onchange="getInputs()" />`;
+                    textbox = `<input type='text' ${dataTypeAttr} onfocus="this.setSelectionRange(0, this.value.length)" onkeyup="getInputs()" value="${value}" onchange="getInputs()" />`;
                     break;
 
                 case 'bool':
-                    checkbox = `<input type='checkbox' ${input.checked ? 'checked' : ''}" onchange="getInputs()" /> `;  //keep trailing space
+                    checkbox = `<input type='checkbox' ${dataTypeAttr} ${input.checked ? 'checked' : ''}" onchange="getInputs()" /> `;  //keep trailing space
                     break;
             }
             return `<div><label>${checkbox}${input.title}<label/>${textbox}</div>`;
@@ -199,26 +221,19 @@
         }
 
         function getInputValue(element) {
-            if (element.type === 'checkbox') {
-                return element.checked;
-            }
+            var dataType = element.getAttribute('data-type');
 
-            var num = parseFloat(element.value);
-            if (!isNaN(num)) {
-                return num;
-            }
+            switch (dataType) {
+                case 'bool':
+                    return element.checked;
 
-            try {
-                var parsed = JSON.parse(element.value);
-                if (Array.isArray(parsed)) {
+                case 'text':
+                    return JSON.stringify(element.value);
+
+                case 'raw':
+                default:
                     return element.value;
-                }
             }
-            catch (e) { }
-
-            //TODO return JSON.stringify for text params
-            
-            return element.value;
         }
 
         function getInputs() {
