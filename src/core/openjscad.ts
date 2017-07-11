@@ -32,10 +32,10 @@
         if (!facetSize) return;
 
         var circle = new paths.Circle([0, 0], arcOrCircle.radius);
-        
+
         var length = measure.pathLength(circle);
         if (!length) return;
-        
+
         return length / facetSize;
     }
 
@@ -112,7 +112,7 @@
 
         for (var pathId in modelContext.paths) {
             var pathContext = modelContext.paths[pathId];
-            
+
             var fn = first ? beginMap[pathContext.type] : appendMap[pathContext.type];
 
             if (fn) {
@@ -263,7 +263,7 @@
 
         var f = new Function('CAG', 'CSG', script);
 
-        var csg = <CSG>f(container.CAG, container.CSG);
+        var csg = f(container.CAG, container.CSG) as CSG;
 
         return csg.toStlString();
     }
@@ -298,4 +298,41 @@
         [modelId: string]: IOpenJsCadOptions;
     }
 }
- 
+
+//minimial OpenJscad - CSG declaration
+declare class CxG {
+    toStlString(): string;
+}
+
+declare class CSG extends CxG {
+}
+
+declare class Vector2D extends CxG {
+}
+
+declare namespace CSG {
+    interface IRadiusOptions {
+        radius?: number;
+        resolution?: number;
+    }
+    interface ICircleOptions extends IRadiusOptions {
+        center?: Vector2D | number[];
+    }
+    interface IArcOptions extends ICircleOptions {
+        startangle?: number;
+        endangle?: number;
+        maketangent?: boolean;
+    }
+    interface IEllpiticalArcOptions extends IRadiusOptions {
+        clockwise?: boolean;
+        large?: boolean;
+        xaxisrotation?: number;
+        xradius?: number;
+        yradius?: number;
+    }
+}
+declare interface CAG_extrude_options {
+    offset?: number[];
+    twistangle?: number;
+    twiststeps?: number;
+}
