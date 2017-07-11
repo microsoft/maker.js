@@ -78,7 +78,7 @@
             "paths": {
                 "Arc": {
                     inputs: [
-                        { title: "name", type: "text", value: "arc" },
+                        { title: "id", type: "text", value: "arc" },
                         { title: "origin", type: "raw", value: "[0, 0]" },
                         { title: "radius", type: "raw", value: "10" },
                         { title: "start angle", type: "raw", value: "0" },
@@ -90,7 +90,7 @@
                 },
                 "Circle": {
                     inputs: [
-                        { title: "name", type: "text", value: "circle" },
+                        { title: "id", type: "text", value: "circle" },
                         { title: "origin", type: "raw", value: "[0, 0]" },
                         { title: "radius", type: "raw", value: "10" }
                     ],
@@ -100,7 +100,7 @@
                 },
                 "Line": {
                     inputs: [
-                        { title: "name", type: "text", value: "line" },
+                        { title: "id", type: "text", value: "line" },
                         { title: "origin", type: "raw", value: "[0, 0]" },
                         { title: "end", type: "raw", value: "[20, 20]" }
                     ],
@@ -123,7 +123,7 @@
 
         function getModel(id) {
             var inputs = makerjs.models[id].metaParameters.slice();
-            inputs.unshift({ title: "name", type: "text", value: id.toLowerCase() });   //name is first
+            inputs.unshift({ title: "id", type: "text", value: id.toLowerCase() });   //name is first
             inputs.push({ title: "origin", type: "raw", value: "[0, 0]" });
 
             return {
@@ -258,24 +258,23 @@
 
 <body>
     <main>
+        <section>
+            <button id="back" onclick="history.back()">&#x25C4; back</button>
+            <h2>
+                <script>
+                    document.write(queryStringParams['id']);
+                </script>
+            </h2>
 
-        <button id="back" onclick="history.back()">&#x25C0; back</button>
+            <div class="input subsection">
+                <form onsubmit="parent.MakerJsPlayground.command('insert', document.querySelector('#preview').innerText);return false;"></form>
+            </div>
 
-        <h2>
-            <script>
-                document.write(queryStringParams['id']);
-            </script>
-        </h2>
-
-        <section class="input">
-            <form onsubmit="parent.MakerJsPlayground.command('insert', document.querySelector('#preview').innerText);return false;"></form>
+            <div class="preview subsection">
+                <label>preview</label>
+                <div id="preview"></div>
+            </div>
         </section>
-
-        <section class="preview">
-            <label>preview</label>
-            <div id="preview"></div>
-        </section>
-
     </main>
 
 </body>
