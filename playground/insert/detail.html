@@ -38,6 +38,15 @@
 
         var details = {
             "script": {
+                "variable": {
+                    inputs: [
+                        { title: "variable name", type: "raw", value: "name" },
+                        { title: "variable value", type: "raw", value: "0" }
+                    ],
+                    template: function (name, value) {
+                        return `var ${name} = ${value};`;
+                    }
+                },
                 "if statement": {
                     inputs: [
                         { title: "condition", type: "raw", value: "condition" },
@@ -209,8 +218,7 @@
             var form = document.querySelector('form');
             var inputs = selectedDetail.inputs.map(convertInput);
 
-            //add 2 elements
-            inputs.push(`<div><label><input type='checkbox' id="newlines" onchange="getInputs()"/> add newlines<label/></div>`);
+            //add submit button
             inputs.push(`<div><input type='submit' value="&#x2295; insert at cursor"/></div>`);
 
             form.innerHTML = inputs.join('');
@@ -238,14 +246,10 @@
 
         function getInputs() {
             var form = document.querySelector('form');
-            var elements = [].slice.call(form.elements).slice(0, -2);   //remove the 2 added elements
+            var elements = [].slice.call(form.elements).slice(0, -1);   //remove submit button
             var values = elements.map(getInputValue);
             var preview = document.querySelector('#preview');
             var output = [selectedDetail.template.apply(null, values)];
-            if (form.elements.newlines.checked) {
-                output.unshift('\n');
-                output.push('\n\n');
-            }
             preview.innerText = output.join('');
         }
     </script>
