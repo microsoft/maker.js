@@ -306,65 +306,34 @@
         paramsDiv.setAttribute('disabled', 'true');
     }
 
-    function safeParamName(unsafeParamName: string) {
-        return unsafeParamName.replace(/\(.*\)/gi, '').trim().replace(/\s/gi, '_');
+    function safeParamName(m: MakerJs.IMetaParameter) {
+        return m.title.replace(/\(.*\)/gi, '').trim().replace(/\s/gi, '_');
     }
 
-    function metaParameterAsString(mp: MakerJs.IMetaParameter) {
+    function metaParameterAsString(m: MakerJs.IMetaParameter) {
         var result: string[] = [];
-        for (var prop in mp) {
-            result.push(prop + ': ' + JSON.stringify(mp[prop]));
+        for (var prop in m) {
+            result.push(prop + ': ' + JSON.stringify(m[prop]));
         }
         return '{ ' + result.join(', ') + ' }';
     }
 
-    function generateCodeFromKit(id: string, kit: MakerJs.IKit, paramValues: any[]): string {
-        var values: string[] = [];
-        var comment: string[] = [];
+    function generateCodeFromKit(id: string, kit: MakerJs.IKit): string {
         var code: string[] = [];
-        var safeParamNames: string[] = [];
-
-        var firstComment = "//" + id + " parameters: ";
-
-        for (var i in kit.metaParameters) {
-            safeParamNames.push(safeParamName(kit.metaParameters[i].title));
-            comment.push(firstComment + kit.metaParameters[i].title);
-            firstComment = "";
-
-            var value: any;
-
-            if (kit.metaParameters[i].type === 'font') {
-                value = 'font';
-
-            } else {
-                value = kit.metaParameters[i].value;
-
-                if (kit.metaParameters[i].type === 'select') {
-                    value = value[0];
-                }
-
-                value = JSON.stringify(value);
-            }
-
-            values.push(value);
-
-            if (paramValues && paramValues.length >= values.length) {
-                values[values.length - 1] = paramValues[values.length - 1];
-            }
-        }
+        var safeParamNames = kit.metaParameters.map(safeParamName).join(', ');
 
         code.push("var makerjs = require('makerjs');");
         code.push("");
-        code.push("function demo(" + safeParamNames.join(', ') + ") {");
+        code.push("function demo(" + safeParamNames + ") {");
         code.push("");
         code.push("  this.models = {");
-        code.push("    example: new makerjs.models." + id + "(" + safeParamNames.join(', ') + ")");
+        code.push("    example: new makerjs.models." + id + "(" + safeParamNames + ")");
         code.push("  };");
         code.push("");
         code.push("}");
         code.push("");
         code.push("demo.metaParameters = [");
-        code.push((makerjs.models[id] as MakerJs.IKit).metaParameters.map(m => '  ' + metaParameterAsString(m)).join(',\n'));
+        code.push(kit.metaParameters.map(m => '  ' + metaParameterAsString(m)).join(',\n'));
         code.push("];");
         code.push("");
         code.push("module.exports = demo;");
@@ -1800,7 +1769,7 @@
 
                     if (scriptname in makerjs.models) {
 
-                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
+                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
                         codeMirrorEditor.getDoc().setValue(code);
                         runCodeFromEditor(paramValues);
 
