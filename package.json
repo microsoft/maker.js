@@ -95,7 +95,6 @@
     "@types/graham_scan": "^1.0.28",
     "@types/marked": "^0.0.28",
     "@types/node": "^7.0.8",
-    "@types/openjscad": "^0.0.28",
     "@types/opentype.js": "^0.0.0",
     "@types/pdfkit": "^0.7.35",
     "@types/text-encoding": "^0.0.30",
