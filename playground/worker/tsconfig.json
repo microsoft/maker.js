@@ -9,6 +9,7 @@
     "../iexport.ts",
     "../irender.ts",
     "../fontloader.ts",
+    "../../external/OpenJsCad/csg.d.ts",
     "export-worker.ts",
     "render-worker.ts",
     "string-reader.ts"
