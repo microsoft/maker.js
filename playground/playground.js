@@ -220,12 +220,24 @@ var MakerJsPlayground;
         saveParamsLink();
         paramsDiv.setAttribute('disabled', 'true');
     }
+    function safeParamName(unsafeParamName) {
+        return unsafeParamName.replace(/\(.*\)/gi, '').trim().replace(/\s/gi, '_');
+    }
+    function metaParameterAsString(mp) {
+        var result = [];
+        for (var prop in mp) {
+            result.push(prop + ': ' + JSON.stringify(mp[prop]));
+        }
+        return '{ ' + result.join(', ') + ' }';
+    }
     function generateCodeFromKit(id, kit, paramValues) {
         var values = [];
         var comment = [];
         var code = [];
+        var safeParamNames = [];
         var firstComment = "//" + id + " parameters: ";
         for (var i in kit.metaParameters) {
+            safeParamNames.push(safeParamName(kit.metaParameters[i].title));
             comment.push(firstComment + kit.metaParameters[i].title);
             firstComment = "";
             var value;
@@ -246,14 +258,19 @@ var MakerJsPlayground;
         }
         code.push("var makerjs = require('makerjs');");
         code.push("");
-        code.push("/* Example:");
+        code.push("function demo(" + safeParamNames.join(', ') + ") {");
         code.push("");
-        code.push(comment.join(", "));
-        code.push("var my" + id + " = new makerjs.models." + id + "(" + values.join(', ') + ");");
+        code.push("  this.models = {");
+        code.push("    example: new makerjs.models." + id + "(" + safeParamNames.join(', ') + ")");
+        code.push("  };");
         code.push("");
-        code.push("*/");
+        code.push("}");
         code.push("");
-        code.push("module.exports = makerjs.models." + id + ";");
+        code.push("demo.metaParameters = [");
+        code.push(makerjs.models[id].metaParameters.map(function (m) { return '  ' + metaParameterAsString(m); }).join(',\n'));
+        code.push("];");
+        code.push("");
+        code.push("module.exports = demo;");
         return code.join('\n');
     }
     function resetDownload() {
