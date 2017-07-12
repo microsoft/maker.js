@@ -32,6 +32,7 @@
     "../src/core/chain.ts",
     "../src/core/loops.ts",
     "../src/core/xml.ts",
+    "../external/OpenJsCad/csg.d.ts",
     "../src/core/openjscad.ts",
     "../src/core/pdf.ts",
     "../src/core/svg.ts",
