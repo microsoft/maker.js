@@ -220,40 +220,34 @@ var MakerJsPlayground;
         saveParamsLink();
         paramsDiv.setAttribute('disabled', 'true');
     }
-    function generateCodeFromKit(id, kit, paramValues) {
-        var values = [];
-        var comment = [];
-        var code = [];
-        var firstComment = "//" + id + " parameters: ";
-        for (var i in kit.metaParameters) {
-            comment.push(firstComment + kit.metaParameters[i].title);
-            firstComment = "";
-            var value;
-            if (kit.metaParameters[i].type === 'font') {
-                value = 'font';
-            }
-            else {
-                value = kit.metaParameters[i].value;
-                if (kit.metaParameters[i].type === 'select') {
-                    value = value[0];
-                }
-                value = JSON.stringify(value);
-            }
-            values.push(value);
-            if (paramValues && paramValues.length >= values.length) {
-                values[values.length - 1] = paramValues[values.length - 1];
-            }
+    function safeParamName(m) {
+        return m.title.replace(/\(.*\)/gi, '').trim().replace(/\s/gi, '_');
+    }
+    function metaParameterAsString(m) {
+        var result = [];
+        for (var prop in m) {
+            result.push(prop + ': ' + JSON.stringify(m[prop]));
         }
+        return '{ ' + result.join(', ') + ' }';
+    }
+    function generateCodeFromKit(id, kit) {
+        var code = [];
+        var safeParamNames = kit.metaParameters.map(safeParamName).join(', ');
         code.push("var makerjs = require('makerjs');");
         code.push("");
-        code.push("/* Example:");
+        code.push("function demo(" + safeParamNames + ") {");
         code.push("");
-        code.push(comment.join(", "));
-        code.push("var my" + id + " = new makerjs.models." + id + "(" + values.join(', ') + ");");
+        code.push("  this.models = {");
+        code.push("    example: new makerjs.models." + id + "(" + safeParamNames + ")");
+        code.push("  };");
         code.push("");
-        code.push("*/");
+        code.push("}");
         code.push("");
-        code.push("module.exports = makerjs.models." + id + ";");
+        code.push("demo.metaParameters = [");
+        code.push(kit.metaParameters.map(function (m) { return '  ' + metaParameterAsString(m); }).join(',\n'));
+        code.push("];");
+        code.push("");
+        code.push("module.exports = demo;");
         return code.join('\n');
     }
     function resetDownload() {
@@ -1377,7 +1371,7 @@ var MakerJsPlayground;
                 else {
                     var paramValues = getHashParams();
                     if (scriptname in makerjs.models) {
-                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], paramValues);
+                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
                         MakerJsPlayground.codeMirrorEditor.getDoc().setValue(code);
                         runCodeFromEditor(paramValues);
                     }
