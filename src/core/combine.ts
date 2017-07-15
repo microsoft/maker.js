@@ -154,6 +154,7 @@
     }
 
     /**
+     * DEPRECATED
      * Break a model's paths everywhere they intersect with another path.
      *
      * @param modelToBreak The model containing paths to be broken.
@@ -360,14 +361,12 @@
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
         function trackDeleted(which: number, deletedPath: IPath, routeKey: string, offset: IPoint, reason: string) {
-            opts.out_deleted[which].paths[counts[which]++] = deletedPath;
+            addPath(opts.out_deleted[which], deletedPath, 'deleted');
             path.moveRelative(deletedPath, offset);
             var p = deletedPath as IPathRemoved;
             p.reason = reason;
             p.routeKey = routeKey;
         }
-
-        var counts = [0, 0];
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
             addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, o, reason) => trackDeleted(0, p, id, o, reason));
