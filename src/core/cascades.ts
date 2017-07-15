@@ -50,7 +50,8 @@ with additional checks to make it safe for cascading.
         addTo(parentModel: IModel, childModelId: string, overWrite?: boolean): ICascadeModel;
 
         /**
-         * Break a model's paths everywhere they intersect with another path.
+         * DEPRECATED
+Break a model's paths everywhere they intersect with another path.
          * 
          * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
          * @returns this cascade container, this.$result will be The original model (for cascading).

@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.65
+// Type definitions for Maker.js 0.9.66
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -880,7 +880,8 @@ with additional checks to make it safe for cascading.
          */
         addTo(parentModel: IModel, childModelId: string, overWrite?: boolean): ICascadeModel;
         /**
-         * Break a model's paths everywhere they intersect with another path.
+         * DEPRECATED
+Break a model's paths everywhere they intersect with another path.
          *
          * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
          * @returns this cascade container, this.$result will be The original model (for cascading).
@@ -1923,6 +1924,7 @@ declare namespace MakerJs.model {
      */
     function isPathInsideModel(pathContext: IPath, modelContext: IModel, pathOffset?: IPoint, farPoint?: IPoint, measureAtlas?: measure.Atlas): boolean;
     /**
+     * DEPRECATED
      * Break a model's paths everywhere they intersect with another path.
      *
      * @param modelToBreak The model containing paths to be broken.
