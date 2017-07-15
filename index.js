@@ -2223,6 +2223,7 @@ var MakerJs;
         }
         model.isPathInsideModel = isPathInsideModel;
         /**
+         * DEPRECATED
          * Break a model's paths everywhere they intersect with another path.
          *
          * @param modelToBreak The model containing paths to be broken.
@@ -2395,13 +2396,12 @@ var MakerJs;
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
             function trackDeleted(which, deletedPath, routeKey, offset, reason) {
-                opts.out_deleted[which].paths[counts[which]++] = deletedPath;
+                model.addPath(opts.out_deleted[which], deletedPath, 'deleted');
                 MakerJs.path.moveRelative(deletedPath, offset);
                 var p = deletedPath;
                 p.reason = reason;
                 p.routeKey = routeKey;
             }
-            var counts = [0, 0];
             for (var i = 0; i < pathsA.crossedPaths.length; i++) {
                 addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, function (p, id, o, reason) { return trackDeleted(0, p, id, o, reason); });
             }
@@ -4530,6 +4530,27 @@ var MakerJs;
             }
             //get X of c2 origin
             var x = c2.origin[0];
+            //see if circles are tangent interior on left side
+            if (MakerJs.round(c2.radius - x - c1.radius) == 0) {
+                if (options.excludeTangents) {
+                    return null;
+                }
+                return [[unRotate(180)], [unRotate(180)]];
+            }
+            //see if circles are tangent interior on right side
+            if (MakerJs.round(c2.radius + x - c1.radius) == 0) {
+                if (options.excludeTangents) {
+                    return null;
+                }
+                return [[unRotate(0)], [unRotate(0)]];
+            }
+            //see if circles are tangent exterior
+            if (MakerJs.round(x - c2.radius - c1.radius) == 0) {
+                if (options.excludeTangents) {
+                    return null;
+                }
+                return [[unRotate(0)], [unRotate(180)]];
+            }
             //see if c2 is outside of c1
             if (MakerJs.round(x - c2.radius) > c1.radius) {
                 return null;
@@ -4541,20 +4562,6 @@ var MakerJs;
             //see if c1 is within c2
             if (MakerJs.round(x - c2.radius) < -c1.radius) {
                 return null;
-            }
-            //see if circles are tangent interior
-            if (MakerJs.round(c2.radius - x - c1.radius) == 0) {
-                if (options.excludeTangents) {
-                    return null;
-                }
-                return [[unRotate(180)], [unRotate(180)]];
-            }
-            //see if circles are tangent exterior
-            if (MakerJs.round(x - c2.radius - c1.radius) == 0) {
-                if (options.excludeTangents) {
-                    return null;
-                }
-                return [[unRotate(0)], [unRotate(180)]];
             }
             function bothAngles(oneAngle) {
                 return [unRotate(oneAngle), unRotate(MakerJs.angle.mirror(oneAngle, false, true))];
@@ -5198,7 +5205,8 @@ var MakerJs;
                 //sort to return largest chains first
                 chainsByLayer[layer].sort(function (a, b) { return b.pathLength - a.pathLength; });
                 if (opts.contain) {
-                    var containedChains = getContainment(chainsByLayer[layer], opts.contain);
+                    var containChainsOptions = MakerJs.isObject(opts.contain) ? opts.contain : { alernateWindings: false };
+                    var containedChains = getContainment(chainsByLayer[layer], containChainsOptions);
                     chainsByLayer[layer] = containedChains;
                 }
                 if (callback)
@@ -8784,5 +8792,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.65";
+MakerJs.version = "0.9.66";
 ﻿var Bezier = require('bezier-js');
