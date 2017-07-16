@@ -35,7 +35,7 @@ function Wireframe(columns, column, extra, radius, split) {
 
 function WindowArch(width, columns, extra, split, spacing, fillet) {
     var radius = width / 2;
-    var column = (width / spacing) / columns;
+    var column = (width + spacing) / columns;
     var dome = new makerjs.models.Dome(width, radius);
     var wireframe = new Wireframe(columns, column, extra, radius, split);
     var frame = makerjs.model.expandPaths(wireframe, spacing / 2);
