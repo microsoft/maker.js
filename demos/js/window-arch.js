@@ -35,10 +35,10 @@ function Wireframe(columns, column, extra, radius, split) {
 
 function WindowArch(width, columns, extra, split, spacing, fillet) {
     var radius = width / 2;
-    var column = width / columns;
+    var column = (width / spacing) / columns;
     var dome = new makerjs.models.Dome(width, radius);
     var wireframe = new Wireframe(columns, column, extra, radius, split);
-    var frame = makerjs.model.expandPaths(wireframe, spacing)
+    var frame = makerjs.model.expandPaths(wireframe, spacing / 2);
     this.models = {
         dome: dome,
         frame: frame
@@ -55,7 +55,7 @@ function WindowArch(width, columns, extra, split, spacing, fillet) {
 }
 
 WindowArch.metaParameters = [
-    { title: "width", type: "range", min: 12, max: 200, value: 200 },
+    { title: "width", type: "range", min: 12, max: 500, value: 200 },
     { title: "columns", type: "range", min: 1, max: 10, value: 6 },
     { title: "extra wedge", type: "bool", value: false },
     { title: "split central dome on even columns", type: "bool", value: false },
