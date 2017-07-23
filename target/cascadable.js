@@ -42,7 +42,8 @@ function getComment(sig) {
 function getCode(name, sig, interfaceName) {
     var params = sig.parameters.slice(1).map(function (param) {
         var optional = (param.flags.isOptional || 'defaultValue' in param) ? '?' : '';
-        return `${param.name}${optional}: ${param.type.name}`;
+        var typename = (param.type.type === 'array') ? param.type.elementType.name + '[]' : param.type.name;
+        return `${param.name}${optional}: ${typename}`;
     });
     return `${indent2}${name}(${params.join(', ')}): ${interfaceName};`;
 }
@@ -82,10 +83,10 @@ function getCascadable(project, namespaceArray, interfaceName) {
 function describe(name) {
     var interfaceName = `ICascade${name}`;
     var cascadables = getCascadable(project, ["MakerJs", name.toLowerCase()], interfaceName);
-    var content = cascadables.map(function (c) {
+    var innerContent = cascadables.map(function (c) {
         return `${c.comment}\n${c.code}`;
     });
-    return `${indent}export interface ${interfaceName} extends ICascade {\n${content.join('\n')}\n${indent}}\n`;
+    return `${indent}export interface ${interfaceName} extends ICascade {\n${innerContent.join('\n')}\n${indent}}\n`;
 }
 
 var indent = '    ';
