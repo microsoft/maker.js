@@ -6025,9 +6025,10 @@ var MakerJs;
          * @param options.resolution Size of facets.
          * @returns String of JavaScript containing a main() function for OpenJsCad.
          */
-        function toOpenJsCad(modelToExport, options) {
-            if (!modelToExport)
+        function toOpenJsCad(itemToExport, options) {
+            if (!itemToExport)
                 return '';
+            var modelToExport;
             var all = '';
             var depth = 0;
             var depthModel;
@@ -6037,6 +6038,18 @@ var MakerJs;
                 functionName: 'main'
             };
             MakerJs.extendObject(opts, options);
+            if (MakerJs.isModel(itemToExport)) {
+                modelToExport = itemToExport;
+            }
+            else {
+                if (Array.isArray(itemToExport)) {
+                    modelToExport = { paths: {} };
+                    itemToExport.forEach(function (p, i) { return modelToExport.paths[i] = p; });
+                }
+                else {
+                    modelToExport = { paths: { 0: itemToExport } };
+                }
+            }
             if (modelToExport.exporterOptions) {
                 MakerJs.extendObject(opts, modelToExport.exporterOptions['toOpenJsCad']);
             }
@@ -7530,7 +7543,7 @@ var MakerJs;
                 }
                 this.type = MakerJs.pathType.BezierSeed;
                 switch (args.length) {
-                    case 1:
+                    case 1://point array
                         var points = args[0];
                         this.origin = points[0];
                         if (points.length === 3) {
@@ -7545,7 +7558,7 @@ var MakerJs;
                             this.end = points[1];
                         }
                         break;
-                    case 3:
+                    case 3://quadratic or cubic
                         if (Array.isArray(args[1])) {
                             this.controls = args[1];
                         }
@@ -7554,7 +7567,7 @@ var MakerJs;
                         }
                         this.end = args[2];
                         break;
-                    case 4:
+                    case 4://cubic params
                         this.controls = [args[1], args[2]];
                         this.end = args[3];
                         break;
@@ -7582,7 +7595,7 @@ var MakerJs;
                             break;
                         }
                     //fall through to point array
-                    case 1:
+                    case 1://point array or seed
                         if (isArrayArg0) {
                             var points = args[0];
                             this.seed = new BezierSeed(points);
@@ -7742,9 +7755,9 @@ var MakerJs;
                 var computedPoint = s.compute(t);
                 return getIPoint(computedPoint);
             };
+            BezierCurve.typeName = 'BezierCurve';
             return BezierCurve;
         }());
-        BezierCurve.typeName = 'BezierCurve';
         models.BezierCurve = BezierCurve;
         BezierCurve.metaParameters = [
             {
@@ -8172,7 +8185,7 @@ var MakerJs;
                 var maxRadius;
                 switch (style) {
                     case -1: //horizontal
-                    case 1:
+                    case 1://vertical
                         maxRadius = maxSide / 2;
                         break;
                     case 0: //equal
@@ -8792,5 +8805,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.66";
+MakerJs.version = "0.9.67";
 ﻿var Bezier = require('bezier-js');
