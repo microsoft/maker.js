@@ -105,7 +105,7 @@
     "opentype.js": "^0.6.5",
     "pretty-camel": "0.0.8",
     "sort-keys": "^1.1.2",
-    "typedoc": "^0.7.1",
+    "typedoc": "^0.5.10",
     "typescript": "^2.4.2"
   },
   "dependencies": {
