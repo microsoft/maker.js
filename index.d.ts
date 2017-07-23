@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.66
+// Type definitions for Maker.js 0.9.67
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -1184,7 +1184,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The first closest point from the pointOptions.
 
          */
-        closest(pointOptions: IPoint): ICascadePoint;
+        closest(pointOptions: IPoint[]): ICascadePoint;
         /**
          * Distort a point's coordinates.
          *
@@ -2652,7 +2652,7 @@ declare namespace MakerJs.exporter {
     /**
      * OpenJsCad export options.
      */
-    interface IOpenJsCadOptions extends IFindLoopsOptions {
+    interface IOpenJsCadOptions extends IFindLoopsOptions, IExportOptions {
         /**
          * Optional depth of 3D extrusion.
          */

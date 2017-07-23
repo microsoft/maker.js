@@ -142,9 +142,10 @@
      * @param options.resolution Size of facets.
      * @returns String of JavaScript containing a main() function for OpenJsCad.
      */
-    export function toOpenJsCad(modelToExport: IModel, options?: IOpenJsCadOptions): string {
-        if (!modelToExport) return '';
+    export function toOpenJsCad(itemToExport: any, options?: IOpenJsCadOptions): string {
+        if (!itemToExport) return '';
 
+        var modelToExport: IModel;
         var all = '';
         var depth = 0;
         var depthModel: IModel;
@@ -156,6 +157,17 @@
         };
 
         extendObject(opts, options);
+
+        if (isModel(itemToExport)) {
+            modelToExport = itemToExport;
+        } else {
+            if (Array.isArray(itemToExport)) {
+                modelToExport = { paths: {} };
+                itemToExport.forEach((p, i) => modelToExport.paths[i] = p);
+            } else {
+                modelToExport = { paths: { 0: itemToExport } };
+            }
+        }
 
         if (modelToExport.exporterOptions) {
             extendObject(opts, modelToExport.exporterOptions['toOpenJsCad']);
@@ -271,7 +283,7 @@
     /**
      * OpenJsCad export options.
      */
-    export interface IOpenJsCadOptions extends IFindLoopsOptions {
+    export interface IOpenJsCadOptions extends IFindLoopsOptions, IExportOptions {
 
         /**
          * Optional depth of 3D extrusion.
