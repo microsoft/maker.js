@@ -390,7 +390,7 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          * @returns this cascade container, this.$result will be The first closest point from the pointOptions.
 
          */
-        closest(pointOptions: IPoint): ICascadePoint;
+        closest(pointOptions: IPoint[]): ICascadePoint;
 
         /**
          * Distort a point's coordinates.
