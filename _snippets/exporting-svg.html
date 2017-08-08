@@ -6,7 +6,13 @@ title: SVG
 
 <p>
     Call <code><a href="/maker.js/docs/api/modules/makerjs.exporter.html#tosvg">makerjs.exporter.toSVG</a>(model)</code> passing your model. This function returns a string of SVG.
-    The SVG can be styled with CSS.
+</p>
+
+<p>
+    If your drawing has layers with names that match the following reserved color names,
+    paths on that layer will have a stroke color automatically:
+    <br/>
+    aqua, black, blue, fuschia, green, gray, lime, maroon, navy, olive, orange, purple, red, silver, teal, white, yellow
 </p>
 
 <h4>Advanced options</h4>
@@ -47,11 +53,11 @@ title: SVG
             <td></td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fill">fill</a></td>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#accuracy">accuracy</a></td>
             <td>
-                string - CSS color (default: none)
+                number - Exemplar number of decimal digits (default: .001)
             </td>
-            <td>Path-only</td>
+            <td>Both</td>
         </tr>
         <tr>
             <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#annotate">annotate</a></td>
@@ -64,9 +70,60 @@ title: SVG
             <td>Separate</td>
         </tr>
         <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#cssstyle">cssStyle</a></td>
+            <td>
+                string - CSS style
+            </td>
+            <td>Both</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fill">fill</a></td>
+            <td>
+                string - CSS color (default: none)
+            </td>
+            <td>Path-only</td>
+        </tr>
+        <tr>
             <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fontsize">fontSize</a></td>
             <td>
                 string - CSS font size + units (default: 9pt)
+            </td>
+            <td>Separate + annotate</td>
+        </tr>
+        <tr>
+            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#layeroptions">layerOptions</a></td>
+            <td>
+                object map - keys are the layer names, values are an object with these properties:
+                <table>
+                    <tr>
+                        <th>property</th>
+                        <th>values</th>
+                    </tr>
+                    <tr>
+                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#cssstyle">cssStyle</a></td>
+                        <td>
+                            string - CSS style
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#fill">fill</a></td>
+                        <td>
+                            string - CSS color (default: none)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#stroke">stroke</a></td>
+                        <td>
+                            string - CSS color (default: black)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#strokewidth">strokeWidth</a></td>
+                        <td>
+                            string - SVG width + units (default: 0.25mm)
+                        </td>
+                    </tr>
+                </table>
             </td>
             <td>Separate + annotate</td>
         </tr>
