@@ -171,7 +171,7 @@ namespace MakerJs {
         }
 
         return {
-            path: <IPath | IModel>ref,
+            result: <IPath | IModel>ref,
             offset: origin
         };
 
