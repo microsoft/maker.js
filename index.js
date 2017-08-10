@@ -189,7 +189,7 @@ var MakerJs;
             }
         }
         return {
-            path: ref,
+            result: ref,
             offset: origin
         };
     }
@@ -8805,5 +8805,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.67";
+MakerJs.version = "0.9.68";
 ﻿var Bezier = require('bezier-js');
