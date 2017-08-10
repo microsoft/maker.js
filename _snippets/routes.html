@@ -3,93 +3,42 @@ title: Routes
 ---
 
 <p>
-    Given the following example tree structure, we are able to refer to deep objects by using the dot notation: 
+    We know that we are able to refer to deep objects by using the dot notation: 
 </p>
-
-<pre>
-plate
-+-models
-| +-outer
-| | +-paths
-| |   +-TopLeft
-| |   +-Top
-| |   +-TopRight
-| |   +-Left
-| |   +-Right
-| |   +-BottomLeft
-| |   +-Bottom
-| |   +-BottomRight
-| +-bolts
-|   +-paths
-|     +-TopLeft_bolt
-|     +-TopRight_bolt
-|     +-BottomLeft_bolt
-|     +-BottomRight_bolt
-+paths
- +-hole
-</pre>
 
 {% highlight javascript %}
 var bottomRight_bolt = plate.models.bolts.paths.BottomRight_bolt;
 {% endhighlight %}
 
 <p>
-    Every object in the tree is accessible via a route like this. Let's expand all possible routes of this tree
-    that reach a child model or a child path - and since we know they each will begin with <code>plate</code>, 
-    we will omit the root object from each result:
+    The reference from <code>plate</code> to <code>BottomRight_bolt</code> is hard-coded. Suppose that we had a
+    model <code>plate2</code> which was a duplicate of <code>plate</code> - we would need to have to hard-code 
+    the reference to its <code>BottomRight_bolt</code>: 
 </p>
 
 {% highlight javascript %}
-models.outer
-models.outer.paths.TopLeft
-models.outer.paths.Top
-models.outer.paths.TopRight
-models.outer.paths.Left
-models.outer.paths.Right
-models.outer.paths.BottomLeft
-models.outer.paths.Bottom
-models.outer.paths.BottomRight
-models.bolts
-models.bolts.paths.TopLeft_bolt
-models.bolts.paths.TopRight_bolt
-models.bolts.paths.BottomLeft_bolt
-models.bolts.paths.BottomRight_bolt
-paths.hole
+var bottomRight_bolt2 = plate2.models.bolts.paths.BottomRight_bolt;
 {% endhighlight %}
 
 <p>
-    Instead of the dot notation, let's put each segment into an array element:
+    Instead of hard-coded dot notation, we can have an abstract way of referencing deep objects by using a <b>route</b>.
+    It is simply an array of strings that represent the segments names between the dots. We do not put the root object in a route.
+    A route that we can apply to both <code>plate</code> and <code>plate2</code> would be:
 </p>
 
 {% highlight javascript %}
-["models", "outer"]
-["models", "outer", "paths", "TopLeft"]
-["models", "outer", "paths", "Top"]
-["models", "outer", "paths", "TopRight"]
-["models", "outer", "paths", "Left"]
-["models", "outer", "paths", "Right"]
-["models", "outer", "paths", "BottomLeft"]
-["models", "outer", "paths", "Bottom"]
-["models", "outer", "paths", "BottomRight"]
-["models", "bolts"]
-["models", "bolts", "paths", "TopLeft_bolt"]
-["models", "bolts", "paths", "TopRight_bolt"]
-["models", "bolts", "paths", "BottomLeft_bolt"]
-["models", "bolts", "paths", "BottomRight_bolt"]
-["paths", "hole"]
+var route = ["models", "bolts", "paths", "BottomRight_bolt"];
 {% endhighlight %}
-
-<p>
-    These are what is known in Maker.js as a <b>route</b>. It is simply an array of strings that represent the
-    segments names to traverse a tree.
-</p>
-
-<!-- 
 
 <h4>Travel a route</h4>
 
 <p>
-    Use <a href="http://microsoft.github.io/maker.js/docs/api/index.html#travel">makerjs.travel(rootModel, route)</a> to get to a child object in rootModel via a route:
+    Use <a href="http://microsoft.github.io/maker.js/docs/api/index.html#travel">makerjs.travel(rootModel, route)</a> to get to a child object in rootModel via a route. 
+    This function will return an object with these 2 properties:
+    <ul>
+        <li><b>result</b>: model or path - the object referenced by the route</li>
+        <li><b>offset</b>: point - the offset of the result object's origin from the rootModel's origin</li>
+    </ul>
 </p>
 
 {% highlight javascript %}
@@ -106,14 +55,27 @@ var plate = {
     }
 }
 
+var plate2 = makerjs.cloneObject(plate);
+plate2.origin = [70, 0];
+
 //route to the BottomRight_bolt circle
 var route = ["models", "bolts", "paths", "BottomRight_bolt"];
 
-//create a local variable for BottomRight_bolt hole
-var bottomRight_bolt = makerjs.travel(plate, route);
+//create a local variables for BottomRight_bolt holes
+var bottomRight_bolt = makerjs.travel(plate, route).result;
 bottomRight_bolt.radius = 2;
 
-var svg = makerjs.exporter.toSVG(plate);
+var bottomRight_bolt2 = makerjs.travel(plate2, route).result;
+bottomRight_bolt2.radius = 7;
+
+var plates = {
+    models: {
+        plate: plate,
+        plate2: plate2
+    }
+};
+
+var svg = makerjs.exporter.toSVG(plates);
 
 document.write(svg);
 {% endhighlight %}
@@ -122,7 +84,7 @@ document.write(svg);
     LiveDoc.evalLastCode();
 </script>
 
--->
+<h4>Route Keys</h4>
 
 <p>
     Additionally, we can "flatten" a route array into a string, known as a <b>route key</b>, by calling 
