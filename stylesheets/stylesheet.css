@@ -568,6 +568,7 @@ pre {
   padding: 16px;
   overflow: auto;
   background: #282b2e;  
+  color: #ddd;
 }
 pre code {
   padding: 0;
