@@ -1,0 +1,14 @@
+---
+title: Flow direction of paths
+---
+
+<p>
+    The three types of paths in Maker.js are line, arc and circle. A circle has no end points, and therefore cannot
+    connect to other paths to form a chain. Lines and arcs however, may connect to other lines or arcs at their end
+    points to form chains. In context of a chain, lines and arcs each have a concept of a directional flow:
+</p>
+
+<ul>
+    <li>line - a line flows from its origin to its end.</li>
+    <li>arc - an arc flows from its startAngle to its endAngle, in the polar (counter-clockwise) direction.</li>
+</ul>
