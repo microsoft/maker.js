@@ -50,10 +50,10 @@ plate
 | |   +-BottomRight
 | +-bolts
 |   +-paths
-|     +-TopLeft
-|     +-TopRight
-|     +-BottomLeft
-|     +-BottomRight
+|     +-TopLeft_bolt
+|     +-TopRight_bolt
+|     +-BottomLeft_bolt
+|     +-BottomRight_bolt
 +paths
  +-hole
 </pre>
@@ -79,7 +79,7 @@ var plate = {
 }
 
 //change radius of BottomRight bolt hole
-plate.models.bolts.paths.BottomRight.radius = 2;
+plate.models.bolts.paths.BottomRight_bolt.radius = 2;
 
 var svg = makerjs.exporter.toSVG(plate);
 
@@ -91,9 +91,9 @@ document.write(svg);
 </script>
 
 <p>
-  We can access the BottomRight circle from the plate downward. Notice that in this tree structure, you cannot access upwardly. 
-  The <code>plate</code> object contains <code>BottomRight</code> and its parents, but <code>BottomRight</code> does not have a relationship with its container.
-  To illustrate this, let's create a local valiable for <code>BottomRight</code>:
+  We can access the BottomRight_bolt circle from the plate downward. Notice that in this tree structure, you cannot access upwardly. 
+  The <code>plate</code> object contains <code>BottomRight_bolt</code> and its parents, but <code>BottomRight_bolt</code> does not have a relationship with its container.
+  To illustrate this, let's create a local valiable for <code>BottomRight_bolt</code>:
 </p>
 
 {% highlight javascript %}
@@ -111,10 +111,10 @@ var plate = {
 }
 
 //create a local variable for BottomRight bolt hole
-var bottomRight = plate.models.bolts.paths.BottomRight;
-bottomRight.radius = 2;
+var bottomRight_bolt = plate.models.bolts.paths.BottomRight_bolt;
+bottomRight_bolt.radius = 2;
 
-//bottomRight is a circle - it only has radius and origin properties.
+//bottomRight_bolt is a circle - it only has radius and origin properties.
 
 var svg = makerjs.exporter.toSVG(plate);
 
@@ -122,6 +122,6 @@ document.write(svg);
 {% endhighlight %}
 
 <p>
-    There are no properties of the <code>bottomRight</code> circle object which access anything up the tree. It also does not have any references to its sibling circles within <code>bolt.paths</code>. 
+    There are no properties of the <code>bottomRight_bolt</code> circle object which access anything up the tree. It also does not have any references to its sibling circles within <code>bolt.paths</code>. 
     This is the nature of a simple tree structure.
 </p>
