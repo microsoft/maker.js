@@ -398,28 +398,13 @@ var MakerJsPlayground;
     function getLockedPathAndOffset() {
         if (!processed.lockedPath)
             return null;
-        var ref = processed.model;
-        var origin = makerjs.isPoint(processed.model.origin) ? processed.model.origin : [0, 0];
-        var route = processed.lockedPath.route.slice();
-        while (route.length) {
-            var prop = route.shift();
-            ref = ref[prop];
-            if (!ref)
-                return null;
-            if (ref.origin && route.length) {
-                origin = makerjs.point.add(origin, ref.origin);
-            }
-        }
-        return {
-            path: ref,
-            offset: origin
-        };
+        return makerjs.travel(processed.model, processed.lockedPath.route);
     }
     function updateLockedPathNotes() {
         if (processed.model && processed.lockedPath) {
             var pathAndOffset = getLockedPathAndOffset();
             if (pathAndOffset) {
-                setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.path) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
+                setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.result) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
             }
             else {
                 setNotesFromModelOrKit();
@@ -432,7 +417,7 @@ var MakerJsPlayground;
         var pathAndOffset = getLockedPathAndOffset();
         if (!pathAndOffset)
             return null;
-        var measure = makerjs.measure.pathExtents(pathAndOffset.path);
+        var measure = makerjs.measure.pathExtents(pathAndOffset.result);
         measure.high = makerjs.point.add(measure.high, pathAndOffset.offset);
         measure.low = makerjs.point.add(measure.low, pathAndOffset.offset);
         return measure;
