@@ -393,9 +393,10 @@ svg#pointers line {
 }
 
 #download a, #download button {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    color: #555;
+    background-color: #ddd;
+    border: 0;
+    color: #333;
+    cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
     display: inline-block;

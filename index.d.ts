@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.67
+// Type definitions for Maker.js 0.9.68
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -250,7 +250,7 @@ declare namespace MakerJs {
      * @returns Model or Path object within the modelContext tree.
      */
     function travel(modelContext: IModel, route: string | string[]): {
-        path: IPath | IModel;
+        result: IPath | IModel;
         offset: IPoint;
     };
     /**
