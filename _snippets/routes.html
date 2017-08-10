@@ -21,16 +21,16 @@ plate
 | |   +-BottomRight
 | +-bolts
 |   +-paths
-|     +-TopLeft
-|     +-TopRight
-|     +-BottomLeft
-|     +-BottomRight
+|     +-TopLeft_bolt
+|     +-TopRight_bolt
+|     +-BottomLeft_bolt
+|     +-BottomRight_bolt
 +paths
  +-hole
 </pre>
 
 {% highlight javascript %}
-var bottomRight = plate.models.bolts.paths.BottomRight;
+var bottomRight_bolt = plate.models.bolts.paths.BottomRight_bolt;
 {% endhighlight %}
 
 <p>
@@ -50,10 +50,10 @@ models.outer.paths.BottomLeft
 models.outer.paths.Bottom
 models.outer.paths.BottomRight
 models.bolts
-models.bolts.paths.TopLeft
-models.bolts.paths.TopRight
-models.bolts.paths.BottomLeft
-models.bolts.paths.BottomRight
+models.bolts.paths.TopLeft_bolt
+models.bolts.paths.TopRight_bolt
+models.bolts.paths.BottomLeft_bolt
+models.bolts.paths.BottomRight_bolt
 paths.hole
 {% endhighlight %}
 
@@ -72,10 +72,10 @@ paths.hole
 ["models", "outer", "paths", "Bottom"]
 ["models", "outer", "paths", "BottomRight"]
 ["models", "bolts"]
-["models", "bolts", "paths", "TopLeft"]
-["models", "bolts", "paths", "TopRight"]
-["models", "bolts", "paths", "BottomLeft"]
-["models", "bolts", "paths", "BottomRight"]
+["models", "bolts", "paths", "TopLeft_bolt"]
+["models", "bolts", "paths", "TopRight_bolt"]
+["models", "bolts", "paths", "BottomLeft_bolt"]
+["models", "bolts", "paths", "BottomRight_bolt"]
 ["paths", "hole"]
 {% endhighlight %}
 
@@ -104,14 +104,12 @@ var plate = {
     }
 }
 
-//route to the BottomRight circle
-var route = ["models", "bolts", "paths", "BottomRight"];
+//route to the BottomRight_bolt circle
+var route = ["models", "bolts", "paths", "BottomRight_bolt"];
 
-//create a local variable for BottomRight bolt hole
-var bottomRight = makerjs.travel(plate, route);
-bottomRight.radius = 2;
-
-//bottomRight is a circle - it only has radius and origin properties.
+//create a local variable for BottomRight_bolt hole
+var bottomRight_bolt = makerjs.travel(plate, route);
+bottomRight_bolt.radius = 2;
 
 var svg = makerjs.exporter.toSVG(plate);
 
