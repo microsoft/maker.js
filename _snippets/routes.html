@@ -1,0 +1,136 @@
+---
+title: Routes
+---
+
+<p>
+    Given the following example tree structure, we are able to refer to deep objects by using the dot notation: 
+</p>
+
+<pre>
+plate
++-models
+| +-outer
+| | +-paths
+| |   +-TopLeft
+| |   +-Top
+| |   +-TopRight
+| |   +-Left
+| |   +-Right
+| |   +-BottomLeft
+| |   +-Bottom
+| |   +-BottomRight
+| +-bolts
+|   +-paths
+|     +-TopLeft
+|     +-TopRight
+|     +-BottomLeft
+|     +-BottomRight
++paths
+ +-hole
+</pre>
+
+{% highlight javascript %}
+var bottomRight = plate.models.bolts.paths.BottomRight;
+{% endhighlight %}
+
+<p>
+    Every object in the tree is accessible via a route like this. Let's expand all possible routes of this tree
+    that reach a child model or a child path - and since we know they each will begin with <code>plate</code>, 
+    we will omit the root object from each result:
+</p>
+
+{% highlight javascript %}
+models.outer
+models.outer.paths.TopLeft
+models.outer.paths.Top
+models.outer.paths.TopRight
+models.outer.paths.Left
+models.outer.paths.Right
+models.outer.paths.BottomLeft
+models.outer.paths.Bottom
+models.outer.paths.BottomRight
+models.bolts
+models.bolts.paths.TopLeft
+models.bolts.paths.TopRight
+models.bolts.paths.BottomLeft
+models.bolts.paths.BottomRight
+paths.hole
+{% endhighlight %}
+
+<p>
+    Instead of the dot notation, let's put each segment into an array element:
+</p>
+
+{% highlight javascript %}
+["models", "outer"]
+["models", "outer", "paths", "TopLeft"]
+["models", "outer", "paths", "Top"]
+["models", "outer", "paths", "TopRight"]
+["models", "outer", "paths", "Left"]
+["models", "outer", "paths", "Right"]
+["models", "outer", "paths", "BottomLeft"]
+["models", "outer", "paths", "Bottom"]
+["models", "outer", "paths", "BottomRight"]
+["models", "bolts"]
+["models", "bolts", "paths", "TopLeft"]
+["models", "bolts", "paths", "TopRight"]
+["models", "bolts", "paths", "BottomLeft"]
+["models", "bolts", "paths", "BottomRight"]
+["paths", "hole"]
+{% endhighlight %}
+
+<p>
+    These are what is known in Maker.js as a <b>route</b>. It is simply an array of strings that represent the
+    segments names to traverse a tree.
+</p>
+
+<h4>Travel a route</h4>
+
+<p>
+    Use <a href="">makerjs.travel(rootModel, route)</a> to get to a child object in rootModel via a route:
+</p>
+
+{% highlight javascript %}
+//mounting plate
+var makerjs = require('makerjs');
+
+var plate = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.RoundRectangle(120, 100, 10)),
+        bolts: makerjs.model.center(new makerjs.models.BoltRectangle(100, 80, 5))
+    },
+    paths: {
+        hole: new makerjs.paths.Circle(25)
+    }
+}
+
+//route to the BottomRight circle
+var route = ["models", "bolts", "paths", "BottomRight"];
+
+//create a local variable for BottomRight bolt hole
+var bottomRight = makerjs.travel(plate, route);
+bottomRight.radius = 2;
+
+//bottomRight is a circle - it only has radius and origin properties.
+
+var svg = makerjs.exporter.toSVG(plate);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+
+
+
+
+
+<p>
+    Additionally, we can "flatten" a route array into a string, known as a <b>route key</b>, by calling 
+    <a href="">makerjs.createRouteKey(route)</a> and passing a route.
+    Every route key is of course unique in the scope of the root object. 
+    You may use it as a way of identifying a child path or model.
+</p>
+
