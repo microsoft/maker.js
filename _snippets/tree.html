@@ -94,5 +94,9 @@ document.write(svg);
   We can access the BottomRight_bolt circle from the <code>plate</code> object downward. Notice that in this tree structure, you cannot access upwardly. 
   The <code>plate</code> object contains the <code>bolt</code> model which contains the <code>BottomRight_bolt</code> path, but <code>BottomRight_bolt</code>
   does not have a reference to its container. There are no properties of the <code>bottomRight_bolt</code> circle object which access anything up the tree. 
-  It also does not have any references to its sibling circles within <code>bolt.paths</code>. This is the nature of a simple tree structure.
+  It also does not have any references to its sibling circles within <code>bolt.paths</code>.
+</p>
+
+<p>
+     Downward-only access is the nature of a simple object tree structure. We can overcome this using <b>routes<b>.
 </p>
