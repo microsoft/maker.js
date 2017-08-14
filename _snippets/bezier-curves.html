@@ -3,8 +3,8 @@ title: Bezier curves
 ---
 
 <p>
-    Bezier curves are a fascinating and complex topic too large to cover here, it is recommended that you visit <a href="http://pomax.github.io/bezierinfo/">A Primer on Bezier Curves</a> by <a href="">Mike Kamermans (aka Pomax)</a>.
-    Maker.js depends on Pomax's <a href="http://pomax.github.io/bezierjs/">Bezier.js</a> which is a vital site to visit for understanding Bezier curve functionality in depth.
+    Bezier curves are a fascinating and complex topic too large to cover here, it is recommended that you visit <a href="//pomax.github.io/bezierinfo/">A Primer on Bezier Curves by Mike Kamermans (aka Pomax)</a>.
+    Maker.js depends on Pomax's <a href="//pomax.github.io/bezierjs/">Bezier.js</a> which is a vital site to visit for understanding Bezier curve functionality in depth.
 </p>
 
 <p>
@@ -17,7 +17,7 @@ title: Bezier curves
 <p>
     Prior to generating the arcs, the curve is broken down into a series of sub-curves. It is from the sub-curves that the arcs are generated. Each sub-curve is guaranteed to not have an "S" shape so that it more closely resembles a circular arc.
     The sub-curves are also broken at their rectangular "boundary box" points so that we are guaranteed that the boundary box tangent points are truly points on the curve and not approximations.
-    In the Bezier.js terminology, these breaking points are known as <a href="https://pomax.github.io/bezierjs/#extrema">extrema</a>.
+    In the Bezier.js terminology, these breaking points are known as <a href="//pomax.github.io/bezierjs/#extrema">extrema</a>.
 </p>
 <p>
     Now we are at the beginning of the process, where you call <a href="/maker.js/docs/api/classes/makerjs.models.beziercurve.html#content">makerjs.models.BezierCurve</a> with the <b>new</b> operator. 
