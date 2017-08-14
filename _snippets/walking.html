@@ -59,3 +59,37 @@ title: Walking a model tree
         <li>routeKey: a string representation of the route which may safely be used as a unique key identifier for this model.</li>
     </ul>
 </p>
+
+<h4>Example</h4>
+
+<p>Flip all arcs within a round rectangle:</p>
+
+{% highlight javascript %}
+//render a model using mixed units
+var makerjs = require('makerjs');
+
+function flipArc(arc) {
+  var chord = new makerjs.paths.Chord(arc);
+  var midPoint = makerjs.point.middle(chord);
+  makerjs.path.rotate(arc, 180, midPoint);
+}
+
+var shape = new makerjs.models.RoundRectangle(100, 50, 10)
+
+var walkOptions = {
+  onPath: function (wp) {
+    if (wp.pathContext.type === 'arc') {
+      flipArc(wp.pathContext);
+    }
+  }
+};
+
+makerjs.model.walk(shape, walkOptions);
+var svg = makerjs.exporter.toSVG(shape);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
