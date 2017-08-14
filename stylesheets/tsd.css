@@ -464,72 +464,6 @@ svg {
     padding: 2px;
 }
 
-svg path, svg line, svg circle {
-    stroke-width: 2px;    
-}
-
-#view {
-    background-color: #317CCF;
-    overflow: hidden;
-    position: relative;
-    height: 400px;
-}
-@media only screen and (max-width: 767px) {
-  #view {
-      height: 220px;
-      margin-left: -20px;
-      margin-right: -20px;
-  }    
-}
-
-#view svg, .svg-zone, #export-zone {
-    height: 100%;
-}
-
-#export-zone {
-    position: absolute;
-    top: 0;
-}
-
-#view svg line, #view svg circle, #view svg path {
-    stroke: #fff;
-    stroke-width: 2;
-    fill: none;
-}
-#view #crosshairs-vertical, #view #crosshairs-horizontal  {
-    stroke: #4DD2FF;
-    stroke-width: 1;
-}
-
-#view .svg-pan-zoom-control-background {
-    fill: none;
-}
-
-#view #svg-pan-zoom-controls path {
-    stroke-width: 0;
-    fill: #fff;
-    opacity: 1;
-}
-
-.selectModelCode {
-     margin-bottom: 20px;
-}
-.optionpanel a {
-  margin-right: 20px;
-}
-
-#paramBar {
-  overflow-y: scroll;
-  max-height: 350px;
-}
-
-#params {
-    margin-top: 15px;
-}
-#params div {
-  margin-bottom: 10px;
-}
-
 .fiddle {
     color: #4682b4;
     float: right;
@@ -580,6 +514,7 @@ svg path, svg line, svg circle {
 
 .thumb svg path {
     stroke: #fff;
+    stroke-width: 1.4px;
 }
 
 button.livedoc-play {

@@ -2,6 +2,23 @@
 layout: posts
 ---
 
+<script type="text/javascript">
+	var makerjs = require('makerjs');
+	var toSVG = makerjs.exporter.toSVG;
+	makerjs.exporter.toSVG = function (item, options) {
+		if (makerjs.isModel(item)) {
+			var m = makerjs.measure.modelExtents(item);
+			if (m && m.height) {
+				if (!options) {
+					options = {};
+				}
+				options.strokeWidth = 2 * (m.height / 100) + 'px';
+			}
+		}
+		return toSVG(item, options);
+	}
+</script>
+
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="xtsd-panel-group tsd-index-group">
 	<section class="tsd-panel tsd-index-panel">
