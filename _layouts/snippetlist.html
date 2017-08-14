@@ -3,19 +3,21 @@ layout: posts
 ---
 
 <script type="text/javascript">
-	var makerjs = require('makerjs');
-	var toSVG = makerjs.exporter.toSVG;
-	makerjs.exporter.toSVG = function (item, options) {
-		if (makerjs.isModel(item)) {
-			var m = makerjs.measure.modelExtents(item);
-			if (m && m.height) {
-				if (!options) {
-					options = {};
+	if (navigator.userAgent.indexOf('Edge') > 0) {
+		var makerjs = require('makerjs');
+		var toSVG = makerjs.exporter.toSVG;
+		makerjs.exporter.toSVG = function (item, options) {
+			if (makerjs.isModel(item)) {
+				var m = makerjs.measure.modelExtents(item);
+				if (m && m.height) {
+					if (!options) {
+						options = {};
+					}
+					options.strokeWidth = 2 * (m.height / 100) + 'px';
 				}
-				options.strokeWidth = 2 * (m.height / 100) + 'px';
 			}
+			return toSVG(item, options);
 		}
-		return toSVG(item, options);
 	}
 </script>
 
