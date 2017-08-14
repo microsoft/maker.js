@@ -18,6 +18,8 @@ layout: posts
 			}
 			return toSVG(item, options);
 		}
+	} else {
+		document.write('<style type="text/css">svg path, svg line, svg circle { stroke-width: 2px; }</style>');
 	}
 </script>
 
