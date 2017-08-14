@@ -62,13 +62,13 @@ title: Walking a model tree
 
 <h4>Example</h4>
 
-<p>Flip all arcs within a round rectangle:</p>
+<p>In this example we will create a RoundRectangle and walk its tree. We have an <code>onPath</code> function that will get called for every path in the model. If the path is an arc, we will invert it:</p>
 
 {% highlight javascript %}
 //render a model using mixed units
 var makerjs = require('makerjs');
 
-function flipArc(arc) {
+function invertArc(arc) {
   var chord = new makerjs.paths.Chord(arc);
   var midPoint = makerjs.point.middle(chord);
   makerjs.path.rotate(arc, 180, midPoint);
@@ -79,7 +79,7 @@ var shape = new makerjs.models.RoundRectangle(100, 50, 10)
 var walkOptions = {
   onPath: function (wp) {
     if (wp.pathContext.type === 'arc') {
-      flipArc(wp.pathContext);
+      invertArc(wp.pathContext);
     }
   }
 };
