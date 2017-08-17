@@ -3,7 +3,7 @@ layout: posts
 ---
 
 <script type="text/javascript">
-	if (navigator.userAgent.indexOf('Edge') > 0) {
+	if (navigator.userAgent.indexOf('Edge') > 0 || navigator.userAgent.indexOf('Trident') > 0) {
 		var makerjs = require('makerjs');
 		var toSVG = makerjs.exporter.toSVG;
 		makerjs.exporter.toSVG = function (item, options) {
@@ -14,6 +14,7 @@ layout: posts
 						options = {};
 					}
 					options.strokeWidth = 2 * (m.height / 100) + 'px';
+					options.closingTags = true;
 				}
 			}
 			return toSVG(item, options);
