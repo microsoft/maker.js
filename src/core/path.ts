@@ -115,6 +115,21 @@ namespace MakerJs.path {
     };
 
     /**
+     * Set the layer of a path. This is equivalent to:
+     * ```
+     * pathContext.layer = layer;
+     * ```
+     * 
+     * @param pathContext The path to set the layer.
+     * @param layer The layer name.
+     * @returns The original path (for cascading).
+     */
+    export function layer(pathContext: IPath, layer: string): IPath {
+        pathContext.layer = layer;
+        return pathContext;
+    }
+
+    /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      * 
      * @param pathToMirror The path to mirror.

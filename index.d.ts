@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.68
+// Type definitions for Maker.js 0.9.69
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -898,6 +898,13 @@ Break a model's paths everywhere they intersect with another path.
          */
         center(centerX?: boolean, centerY?: boolean): ICascadeModel;
         /**
+         * Clone a model. Alias of makerjs.cloneObject(modelToClone)
+         *
+         * @returns this cascade container, this.$result will be A clone of the model you passed.
+
+         */
+        clone(): ICascadeModel;
+        /**
          * Combine 2 models. Each model will be modified accordingly.
          *
          * @param modelB Second model to combine.
@@ -960,6 +967,17 @@ Break a model's paths everywhere they intersect with another path.
 
          */
         findLoops(options?: IFindLoopsOptions): ICascadeModel;
+        /**
+         * Set the layer of a model. This is equivalent to:
+```
+modelContext.layer = layer;
+```
+         *
+         * @param layer The layer name.
+         * @returns this cascade container, this.$result will be The original model (for cascading).
+
+         */
+        layer(layer: string): ICascadeModel;
         /**
          * Create a clone of a model, mirrored on either or both x and y axes.
          *
@@ -1101,6 +1119,17 @@ For Circle, the original path will be converted in place to an Arc, and null is 
 
          */
         clone(offset?: IPoint): ICascadePath;
+        /**
+         * Set the layer of a path. This is equivalent to:
+```
+pathContext.layer = layer;
+```
+         *
+         * @param layer The layer name.
+         * @returns this cascade container, this.$result will be The original path (for cascading).
+
+         */
+        layer(layer: string): ICascadePath;
         /**
          * Create a clone of a path, mirrored on either or both x and y axes.
          *
@@ -1477,6 +1506,17 @@ declare namespace MakerJs.path {
      */
     function clone(pathToClone: IPath, offset?: IPoint): IPath;
     /**
+     * Set the layer of a path. This is equivalent to:
+     * ```
+     * pathContext.layer = layer;
+     * ```
+     *
+     * @param pathContext The path to set the layer.
+     * @param layer The layer name.
+     * @returns The original path (for cascading).
+     */
+    function layer(pathContext: IPath, layer: string): IPath;
+    /**
      * Create a clone of a path, mirrored on either or both x and y axes.
      *
      * @param pathToMirror The path to mirror.
@@ -1790,6 +1830,13 @@ declare namespace MakerJs.model {
      */
     function addTo(childModel: IModel, parentModel: IModel, childModelId: string, overWrite?: boolean): IModel;
     /**
+     * Clone a model. Alias of makerjs.cloneObject(modelToClone)
+     *
+     * @param modelToClone The model to clone.
+     * @returns A clone of the model you passed.
+     */
+    function clone(modelToClone: IModel): IModel;
+    /**
      * Count the number of child models within a given model.
      *
      * @param modelContext The model containing other models.
@@ -1810,6 +1857,17 @@ declare namespace MakerJs.model {
      * @param pathId The id to use directly (if unused), or as a prefix.
      */
     function getSimilarPathId(modelContext: IModel, pathId: string): string;
+    /**
+     * Set the layer of a model. This is equivalent to:
+     * ```
+     * modelContext.layer = layer;
+     * ```
+     *
+     * @param modelContext The model to set the layer.
+     * @param layer The layer name.
+     * @returns The original model (for cascading).
+     */
+    function layer(modelContext: IModel, layer: string): IModel;
     /**
      * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
      *
@@ -2605,6 +2663,10 @@ declare namespace MakerJs.exporter {
          */
         innerTextEscaped: boolean;
         /**
+         * Flag to explicitly close XML tags.
+         */
+        closingTags?: boolean;
+        /**
          * Escapes certain characters within a string so that it can appear in a tag or its attribute.
          *
          * @returns Escaped string.
@@ -2821,6 +2883,10 @@ declare namespace MakerJs.exporter {
          * Flag to remove the "vector-effect: non-scaling-stroke" attribute.
          */
         scalingStroke?: boolean;
+        /**
+         * Flag to explicitly close XML tags.
+         */
+        closingTags?: boolean;
     }
 }
 declare namespace MakerJs.importer {

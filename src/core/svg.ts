@@ -319,7 +319,7 @@ namespace MakerJs.exporter {
                 "stroke": elOpts.stroke,
                 "stroke-width": elOpts.strokeWidth,
                 "fill": elOpts.fill,
-                "style": cssStyle(elOpts)
+                "style": elOpts.cssStyle || cssStyle(elOpts)
             });
         }
 
@@ -344,6 +344,7 @@ namespace MakerJs.exporter {
             }
 
             var tag = new XmlTag(tagname, attrs);
+            tag.closingTags = opts.closingTags;
 
             if (innerText) {
                 tag.innerText = innerText;
@@ -810,6 +811,11 @@ namespace MakerJs.exporter {
          * Flag to remove the "vector-effect: non-scaling-stroke" attribute.
          */
         scalingStroke?: boolean;
+
+        /**
+         * Flag to explicitly close XML tags.
+         */
+        closingTags?: boolean;
     }
 
 }
