@@ -91,15 +91,12 @@
 </head>
 <body>
 
-    <div id="svgText"></div>
-
     <script>
         var constructor = module.exports;
         var parameters = makerjs.kit.getParameterValues(constructor);
         var model = makerjs.kit.construct(constructor, parameters);
-        var svg = makerjs.exporter.toSVG(model, { closingTags: true});
+        var svg = makerjs.exporter.toSVG(model);
         document.write(svg);
-        document.getElementById('svgText').innerText = svg;
     </script>
 
 </body>
