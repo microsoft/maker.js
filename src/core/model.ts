@@ -59,6 +59,16 @@ namespace MakerJs.model {
     }
 
     /**
+     * Clone a model. Alias of makerjs.cloneObject(modelToClone)
+     * 
+     * @param modelToClone The model to clone.
+     * @returns A clone of the model you passed.
+     */
+    export function clone(modelToClone: IModel): IModel {
+        return cloneObject(modelToClone);
+    }
+
+    /**
      * Count the number of child models within a given model.
      * 
      * @param modelContext The model containing other models.
@@ -108,6 +118,21 @@ namespace MakerJs.model {
      */
     export function getSimilarPathId(modelContext: IModel, pathId: string): string {
         return getSimilarId(modelContext.paths, pathId);
+    }
+
+    /**
+     * Set the layer of a model. This is equivalent to:
+     * ```
+     * modelContext.layer = layer;
+     * ```
+     * 
+     * @param modelContext The model to set the layer.
+     * @param layer The layer name.
+     * @returns The original model (for cascading).
+     */
+    export function layer(modelContext: IModel, layer: string): IModel {
+        modelContext.layer = layer;
+        return modelContext;
     }
 
     /**

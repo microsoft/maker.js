@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.68
+ *   version: 0.9.69
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -1148,6 +1148,21 @@ var MakerJs;
             return mirrored;
         };
         /**
+         * Set the layer of a path. This is equivalent to:
+         * ```
+         * pathContext.layer = layer;
+         * ```
+         *
+         * @param pathContext The path to set the layer.
+         * @param layer The layer name.
+         * @returns The original path (for cascading).
+         */
+        function layer(pathContext, layer) {
+            pathContext.layer = layer;
+            return pathContext;
+        }
+        path.layer = layer;
+        /**
          * Create a clone of a path, mirrored on either or both x and y axes.
          *
          * @param pathToMirror The path to mirror.
@@ -1928,6 +1943,16 @@ var MakerJs;
         }
         model.addTo = addTo;
         /**
+         * Clone a model. Alias of makerjs.cloneObject(modelToClone)
+         *
+         * @param modelToClone The model to clone.
+         * @returns A clone of the model you passed.
+         */
+        function clone(modelToClone) {
+            return MakerJs.cloneObject(modelToClone);
+        }
+        model.clone = clone;
+        /**
          * Count the number of child models within a given model.
          *
          * @param modelContext The model containing other models.
@@ -1977,6 +2002,21 @@ var MakerJs;
             return getSimilarId(modelContext.paths, pathId);
         }
         model.getSimilarPathId = getSimilarPathId;
+        /**
+         * Set the layer of a model. This is equivalent to:
+         * ```
+         * modelContext.layer = layer;
+         * ```
+         *
+         * @param modelContext The model to set the layer.
+         * @param layer The layer name.
+         * @returns The original model (for cascading).
+         */
+        function layer(modelContext, layer) {
+            modelContext.layer = layer;
+            return modelContext;
+        }
+        model.layer = layer;
         /**
          * Moves all of a model's children (models and paths, recursively) in reference to a single common origin. Useful when points between children need to connect to each other.
          *
@@ -6109,7 +6149,7 @@ var MakerJs;
              */
             XmlTag.prototype.toString = function () {
                 var selfClose = !this.innerText;
-                if (selfClose) {
+                if (selfClose && !this.closingTags) {
                     return this.getOpeningTag(true);
                 }
                 else {
@@ -6643,7 +6683,7 @@ var MakerJs;
                     "stroke": elOpts.stroke,
                     "stroke-width": elOpts.strokeWidth,
                     "fill": elOpts.fill,
-                    "style": cssStyle(elOpts)
+                    "style": elOpts.cssStyle || cssStyle(elOpts)
                 });
             }
             function colorLayerOptions(layer) {
@@ -6665,6 +6705,7 @@ var MakerJs;
                     attrs['vector-effect'] = 'non-scaling-stroke';
                 }
                 var tag = new exporter.XmlTag(tagname, attrs);
+                tag.closingTags = opts.closingTags;
                 if (innerText) {
                     tag.innerText = innerText;
                 }
@@ -9012,6 +9053,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.68";
+MakerJs.version = "0.9.69";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
