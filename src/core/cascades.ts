@@ -70,6 +70,14 @@ Break a model's paths everywhere they intersect with another path.
         center(centerX?: boolean, centerY?: boolean): ICascadeModel;
 
         /**
+         * Clone a model. Alias of makerjs.cloneObject(modelToClone)
+         * 
+         * @returns this cascade container, this.$result will be A clone of the model you passed.
+
+         */
+        clone(): ICascadeModel;
+
+        /**
          * Combine 2 models. Each model will be modified accordingly.
          * 
          * @param modelB Second model to combine.
@@ -138,6 +146,18 @@ Break a model's paths everywhere they intersect with another path.
 
          */
         findLoops(options?: IFindLoopsOptions): ICascadeModel;
+
+        /**
+         * Set the layer of a model. This is equivalent to:
+```
+modelContext.layer = layer;
+```
+         * 
+         * @param layer The layer name.
+         * @returns this cascade container, this.$result will be The original model (for cascading).
+
+         */
+        layer(layer: string): ICascadeModel;
 
         /**
          * Create a clone of a model, mirrored on either or both x and y axes.
@@ -296,6 +316,18 @@ For Circle, the original path will be converted in place to an Arc, and null is 
 
          */
         clone(offset?: IPoint): ICascadePath;
+
+        /**
+         * Set the layer of a path. This is equivalent to:
+```
+pathContext.layer = layer;
+```
+         * 
+         * @param layer The layer name.
+         * @returns this cascade container, this.$result will be The original path (for cascading).
+
+         */
+        layer(layer: string): ICascadePath;
 
         /**
          * Create a clone of a path, mirrored on either or both x and y axes.
