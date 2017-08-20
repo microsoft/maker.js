@@ -40,6 +40,8 @@ Learn more in [the tutorial](http://microsoft.github.io/maker.js/docs/basic-draw
 
 * Find [intersection points or intersection angles](http://microsoft.github.io/maker.js/docs/intermediate-drawing/#Intersection) of paths.
 
+* [Traverse a model tree](http://microsoft.github.io/maker.js/docs/model-trees/#content) to reason over its children.
+
 * Detect [chains](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.model.html#findchains) formed by paths connecting end to end.
 
 * Get the [points along a path](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.path.html#topoints) or along a [chain of paths](http://microsoft.github.io/maker.js/docs/api/modules/makerjs.chain.html#topoints).
