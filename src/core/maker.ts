@@ -659,7 +659,7 @@ namespace MakerJs {
         /**
          * Flag if this chain forms a loop end to end.
          */
-        endless?: boolean
+        endless: boolean
 
         /**
          * Total length of all paths in the chain.
