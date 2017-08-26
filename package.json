@@ -8,7 +8,7 @@
     "compile-browser-livedoc": "tsc docgen/livedoc.ts --lib es2015,dom",
     "compile-typescript": "npm run compile-node-demo && npm run compile-browser-livedoc",
     "build": "npm run compile-typescript",
-    "project": "typedoc ./src --json ./target/project.json && node ./target/project-to-data.js > ./_data/project.json",
+    "project": "typedoc ./src --json ./target/project.json && node ./docgen/project-to-data.js > ./_data/project.json",
     "cleandocs": "rm -r -f ./docs/api",
     "predocs": "npm run cleandocs && npm run project",
     "docs": "typedoc ./src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api --ignoreCompilerErrors",

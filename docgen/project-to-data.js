@@ -1,5 +1,5 @@
 var fs = require('fs');
-var project = require('./project.json');
+var project = require('../target/project.json');
 
 function cleanParameters(parameters) {
     return parameters.map(function (p) {
@@ -9,7 +9,7 @@ function cleanParameters(parameters) {
                 case 'id':
                 case 'kind':
                 case 'kindString':
-                case 'flags':
+                //case 'flags':
                     continue;
 
                 case 'comment':
@@ -75,7 +75,7 @@ function processChild(parent, child) {
     for (var prop in child) {
         switch (prop) {
             case 'children':
-            case 'flags':
+            //case 'flags':
             case 'groups':
             case 'id':
             case 'kind':
