@@ -10,3 +10,7 @@ CONTRIBUTING.md
 /docs/api/assets
 debug.log
 /target/project.json
+Gemfile
+Gemfile.lock
+_site/
+.jekyll-metadata

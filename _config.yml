@@ -1,5 +1,6 @@
 url: http://microsoft.github.io/maker.js
 baseurl: /maker.js
 encoding: utf-8
+exclude: ['docgen/typedoc-theme']
 collections:
 - snippets
