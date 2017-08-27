@@ -201,12 +201,21 @@ function homePage() {
 
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
 
-        var anim = new makerjs.exporter.XmlTag('img', { src: '/maker.js/images/anim-wheel.gif' });
+        console.log('writing about markdown');
+
+        var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
+
+        var sections = readmeMarkdown.split('\n## ');
+
+        //remove H1 tag and make the slogan an H2
+        var topSection = sections[0].replace('# Maker.js\r\n\r\n', '## ');
+
+        stream.write(section(marked(topSection)) + '\n');
 
         var h2 = new makerjs.exporter.XmlTag('h2');
         h2.innerText = 'Latest demos';
 
-        var demos = [anim.toString(), h2.toString()];
+        var demos = [h2.toString()];
 
         var max = 6;
 
@@ -225,11 +234,6 @@ function homePage() {
 
         stream.write(section(demos.join('\n')) + '\n');
 
-        console.log('writing about markdown');
-
-        var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
-
-        var sections = readmeMarkdown.split('\n## ');
 
         //skip the first section, begin with 1
         for (var i = 1; i < sections.length; i++) {
