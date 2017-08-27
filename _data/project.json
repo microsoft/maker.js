@@ -108,7 +108,7 @@
                   "name": "arc",
                   "flags": {},
                   "comment": "An arc path object.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 }
               ],
               "type": "number"
@@ -139,7 +139,7 @@
                   "name": "arc",
                   "flags": {},
                   "comment": "An arc path object.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 },
                 {
                   "name": "ratio",
@@ -177,7 +177,7 @@
                   "name": "arc",
                   "flags": {},
                   "comment": "The arc to measure.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 }
               ],
               "type": "number"
@@ -208,7 +208,7 @@
                   "name": "line",
                   "flags": {},
                   "comment": "The line path to find the angle of.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 }
               ],
               "type": "number"
@@ -239,13 +239,13 @@
                   "name": "origin",
                   "flags": {},
                   "comment": "Point of origin of the angle.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "pointToFindAngle",
                   "flags": {},
                   "comment": "The point to find the angle.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
               "type": "number"
@@ -276,13 +276,13 @@
                   "name": "origin",
                   "flags": {},
                   "comment": "Point of origin of the angle.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "pointToFindAngle",
                   "flags": {},
                   "comment": "The point to find the angle.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
               "type": "number"
@@ -389,16 +389,16 @@
                   "name": "pathToBreak",
                   "flags": {},
                   "comment": "The path to break.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "pointOfBreak",
                   "flags": {},
                   "comment": "The point at which to break the path.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -426,7 +426,7 @@
                   "name": "pathToExpand",
                   "flags": {},
                   "comment": "Path to expand.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "expansion",
@@ -443,7 +443,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -471,7 +471,7 @@
                   "name": "arc",
                   "flags": {},
                   "comment": "Arc to straighten.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 },
                 {
                   "name": "bevel",
@@ -498,7 +498,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -526,13 +526,13 @@
                   "name": "lineA",
                   "flags": {},
                   "comment": "First line to fillet, which will be modified to fit the fillet.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "lineB",
                   "flags": {},
                   "comment": "Second line to fillet, which will be modified to fit the fillet.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "filletRadius",
@@ -544,10 +544,10 @@
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "PointMatchOptions"
+                  "type": "IPointMatchOptions"
                 }
               ],
-              "type": "Arc"
+              "type": "IPathArc"
             }
           ],
           "sources": [
@@ -575,13 +575,13 @@
                   "name": "pathA",
                   "flags": {},
                   "comment": "First path to fillet, which will be modified to fit the fillet.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "pathB",
                   "flags": {},
                   "comment": "Second path to fillet, which will be modified to fit the fillet.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "filletRadius",
@@ -595,10 +595,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional IPointMatchOptions object to specify pointMatchingDistance.",
-                  "type": "PointMatchOptions"
+                  "type": "IPointMatchOptions"
                 }
               ],
-              "type": "Arc"
+              "type": "IPathArc"
             }
           ],
           "sources": [
@@ -626,23 +626,23 @@
                   "name": "path1",
                   "flags": {},
                   "comment": "First path to find intersection.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "path2",
                   "flags": {},
                   "comment": "Second path to find intersection.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "options",
                   "flags": {},
                   "comment": "Optional IPathIntersectionOptions.",
-                  "type": "PathIntersectionOptions",
+                  "type": "IPathIntersectionOptions",
                   "defaultValue": " {}"
                 }
               ],
-              "type": "PathIntersection"
+              "type": "IPathIntersection"
             }
           ],
           "sources": [
@@ -670,13 +670,13 @@
                   "name": "childPath",
                   "flags": {},
                   "comment": "The path to add.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "parentModel",
                   "flags": {},
                   "comment": "The model to add to.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "pathId",
@@ -692,7 +692,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -720,7 +720,7 @@
                   "name": "pathToAlter",
                   "flags": {},
                   "comment": "Path to alter.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "distance",
@@ -736,7 +736,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -764,10 +764,10 @@
                   "name": "pathToCenter",
                   "flags": {},
                   "comment": "The path to center.",
-                  "type": "Path"
+                  "type": "IPath"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -795,7 +795,7 @@
                   "name": "pathToClone",
                   "flags": {},
                   "comment": "The path to clone.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "offset",
@@ -803,10 +803,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional point to move path a relative distance.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -834,13 +834,13 @@
                   "name": "lineA",
                   "flags": {},
                   "comment": "First line to converge.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "lineB",
                   "flags": {},
                   "comment": "Second line to converge.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "useOriginA",
@@ -859,7 +859,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -887,7 +887,7 @@
                   "name": "pathToDistort",
                   "flags": {},
                   "comment": "The path to distort.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "scaleX",
@@ -929,7 +929,7 @@
                   "name": "pathContext",
                   "flags": {},
                   "comment": "The path to set the layer.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "layer",
@@ -938,7 +938,7 @@
                   "type": "string"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -966,7 +966,7 @@
                   "name": "pathToMirror",
                   "flags": {},
                   "comment": "The path to mirror.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "mirrorX",
@@ -981,7 +981,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -1009,16 +1009,16 @@
                   "name": "pathToMove",
                   "flags": {},
                   "comment": "The path to move.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "origin",
                   "flags": {},
                   "comment": "The new origin for the path.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -1046,13 +1046,13 @@
                   "name": "pathToMove",
                   "flags": {},
                   "comment": "The path to move.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "delta",
                   "flags": {},
                   "comment": "The x & y adjustments as a point object.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "subtract",
@@ -1063,7 +1063,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -1090,13 +1090,13 @@
                   "name": "pathsToMove",
                   "flags": {},
                   "comment": "The paths to move.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "deltas",
                   "flags": {},
                   "comment": "The x & y adjustments as a point object array.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "task",
@@ -1133,7 +1133,7 @@
                   "name": "pathToRotate",
                   "flags": {},
                   "comment": "The path to rotate.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "angleInDegrees",
@@ -1145,11 +1145,11 @@
                   "name": "rotationOrigin",
                   "flags": {},
                   "comment": "The center point of rotation.",
-                  "type": "Point",
+                  "type": "IPoint",
                   "defaultValue": " [0, 0]"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -1177,7 +1177,7 @@
                   "name": "pathToScale",
                   "flags": {},
                   "comment": "The path to scale.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "scaleValue",
@@ -1186,7 +1186,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -1214,7 +1214,7 @@
                   "name": "pathContext",
                   "flags": {},
                   "comment": "Path to get points from.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "maxArcFacet",
@@ -1225,7 +1225,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -1253,7 +1253,7 @@
                   "name": "pathContext",
                   "flags": {},
                   "comment": "Path to get points from.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "numberOfPoints",
@@ -1262,7 +1262,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -1290,10 +1290,10 @@
                   "name": "pathToZero",
                   "flags": {},
                   "comment": "The path to zero.",
-                  "type": "Path"
+                  "type": "IPath"
                 }
               ],
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -1335,7 +1335,7 @@
                   "name": "chainContext",
                   "flags": {},
                   "comment": "Chain to cycle through. Must be endless.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "amount",
@@ -1345,7 +1345,7 @@
                   "defaultValue": "1"
                 }
               ],
-              "type": "Chain"
+              "type": "IChain"
             }
           ],
           "sources": [
@@ -1373,10 +1373,10 @@
                   "name": "chainContext",
                   "flags": {},
                   "comment": "Chain to reverse.",
-                  "type": "Chain"
+                  "type": "IChain"
                 }
               ],
-              "type": "Chain"
+              "type": "IChain"
             }
           ],
           "sources": [
@@ -1404,7 +1404,7 @@
                   "name": "chainContext",
                   "flags": {},
                   "comment": "Chain to cycle through. Must be endless.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "routeKey",
@@ -1413,7 +1413,7 @@
                   "type": "string"
                 }
               ],
-              "type": "Chain"
+              "type": "IChain"
             }
           ],
           "sources": [
@@ -1441,7 +1441,7 @@
                   "name": "chainContext",
                   "flags": {},
                   "comment": "Chain of paths to get points from.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "maxArcFacet",
@@ -1452,7 +1452,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -1480,7 +1480,7 @@
                   "name": "chainContext",
                   "flags": {},
                   "comment": "Chain to convert to a model.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "detachFromOldModel",
@@ -1490,7 +1490,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -1518,7 +1518,7 @@
                   "name": "chainContext",
                   "flags": {},
                   "comment": "Chain of paths to get points from.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "distanceOrDistances",
@@ -1533,7 +1533,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -1561,7 +1561,7 @@
                   "name": "chainToFillet",
                   "flags": {},
                   "comment": "The chain to add fillets to.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "filletRadius",
@@ -1570,7 +1570,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -1612,7 +1612,7 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to search for chains.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
@@ -1620,7 +1620,7 @@
                     "isOptional": true
                   },
                   "comment": "Optional options object.",
-                  "type": "FindChainsOptions"
+                  "type": "IFindChainsOptions"
                 }
               ]
             },
@@ -1636,13 +1636,13 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to search for chains.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "callback",
                   "flags": {},
                   "comment": "Callback function when chains are found.",
-                  "type": "ChainCallback"
+                  "type": "IChainCallback"
                 },
                 {
                   "name": "options",
@@ -1650,7 +1650,7 @@
                     "isOptional": true
                   },
                   "comment": "Optional options object.",
-                  "type": "FindChainsOptions"
+                  "type": "IFindChainsOptions"
                 }
               ]
             }
@@ -1690,10 +1690,10 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to search for a chain.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "Chain"
+              "type": "IChain"
             }
           ],
           "sources": [
@@ -1721,7 +1721,7 @@
                   "name": "modelToBreak",
                   "flags": {},
                   "comment": "The model containing paths to be broken.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "modelToIntersect",
@@ -1729,10 +1729,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional model containing paths to look for intersection, or else the modelToBreak will be used.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -1760,13 +1760,13 @@
                   "name": "modelA",
                   "flags": {},
                   "comment": "First model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "includeAInsideB",
@@ -1802,10 +1802,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional ICombineOptions object.",
-                  "type": "CombineOptions"
+                  "type": "ICombineOptions"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -1833,16 +1833,16 @@
                   "name": "modelA",
                   "flags": {},
                   "comment": "First model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -1870,16 +1870,16 @@
                   "name": "modelA",
                   "flags": {},
                   "comment": "First model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -1907,16 +1907,16 @@
                   "name": "modelA",
                   "flags": {},
                   "comment": "First model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -1944,20 +1944,20 @@
                   "name": "pathContext",
                   "flags": {},
                   "comment": "The path to check.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to check against.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "pathOffset",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "farPoint",
@@ -1965,7 +1965,7 @@
                     "isOptional": true
                   },
                   "comment": "Optional point of reference which is outside the bounds of the modelContext.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "measureAtlas",
@@ -2003,7 +2003,7 @@
                   "name": "modelToExpand",
                   "flags": {},
                   "comment": "Model to expand.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "distance",
@@ -2022,11 +2022,11 @@
                   "name": "combineOptions",
                   "flags": {},
                   "comment": "Optional object containing combine options.",
-                  "type": "CombineOptions",
+                  "type": "ICombineOptions",
                   "defaultValue": " {}"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2054,7 +2054,7 @@
                   "name": "modelToOutline",
                   "flags": {},
                   "comment": "Model to outline.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "distance",
@@ -2080,11 +2080,11 @@
                   "name": "options",
                   "flags": {},
                   "comment": "Options to send to combine() function.",
-                  "type": "CombineOptions",
+                  "type": "ICombineOptions",
                   "defaultValue": " {}"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2111,7 +2111,7 @@
                   "name": "loopToDetach",
                   "flags": {},
                   "comment": "The model to search for loops.\n",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
               "type": "void"
@@ -2142,7 +2142,7 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to search for loops.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
@@ -2150,10 +2150,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional options object.",
-                  "type": "FindLoopsOptions"
+                  "type": "IFindLoopsOptions"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2181,7 +2181,7 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to search for dead ends.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "pointMatchingDistance",
@@ -2197,7 +2197,7 @@
                     "isOptional": true
                   },
                   "comment": "Optional callback function (which should return a boolean) to decide if a dead end path should be kept instead.",
-                  "type": "WalkPathBooleanCallback"
+                  "type": "IWalkPathBooleanCallback"
                 },
                 {
                   "name": "trackDeleted",
@@ -2207,7 +2207,7 @@
                   "comment": "Optional callback function which will log discarded paths and the reason they were discarded."
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2235,13 +2235,13 @@
                   "name": "parentModel",
                   "flags": {},
                   "comment": "The model to add to.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "childModel",
                   "flags": {},
                   "comment": "The model to add.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "childModelId",
@@ -2257,7 +2257,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2285,13 +2285,13 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to add to.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "pathContext",
                   "flags": {},
                   "comment": "The path to add.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "pathId",
@@ -2307,7 +2307,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2335,13 +2335,13 @@
                   "name": "childModel",
                   "flags": {},
                   "comment": "The model to add.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "parentModel",
                   "flags": {},
                   "comment": "The model to add to.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "childModelId",
@@ -2357,7 +2357,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2385,7 +2385,7 @@
                   "name": "modelToCenter",
                   "flags": {},
                   "comment": "The model to center.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "centerX",
@@ -2402,7 +2402,7 @@
                   "defaultValue": "true"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2430,10 +2430,10 @@
                   "name": "modelToClone",
                   "flags": {},
                   "comment": "The model to clone.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2461,7 +2461,7 @@
                   "name": "modeltoConvert",
                   "flags": {},
                   "comment": "The model to convert.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "destUnitType",
@@ -2470,7 +2470,7 @@
                   "type": "string"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2498,7 +2498,7 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model containing other models.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
               "type": "number"
@@ -2528,7 +2528,7 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model containing the models map.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "modelId",
@@ -2564,7 +2564,7 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model containing the paths map.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "pathId",
@@ -2601,7 +2601,7 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to set the layer.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "layer",
@@ -2610,7 +2610,7 @@
                   "type": "string"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2638,7 +2638,7 @@
                   "name": "modelToMirror",
                   "flags": {},
                   "comment": "The model to mirror.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "mirrorX",
@@ -2653,7 +2653,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2681,16 +2681,16 @@
                   "name": "modelToMove",
                   "flags": {},
                   "comment": "The model to move.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "origin",
                   "flags": {},
                   "comment": "The new position of the model.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2718,16 +2718,16 @@
                   "name": "modelToMove",
                   "flags": {},
                   "comment": "The model to move.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "delta",
                   "flags": {},
                   "comment": "The x & y adjustments as a point object.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2755,7 +2755,7 @@
                   "name": "modelToOriginate",
                   "flags": {},
                   "comment": "The model to originate.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "origin",
@@ -2763,10 +2763,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional offset reference point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2794,7 +2794,7 @@
                   "name": "modelToPrefix",
                   "flags": {},
                   "comment": "The model to prefix.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "prefix",
@@ -2803,7 +2803,7 @@
                   "type": "string"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2831,7 +2831,7 @@
                   "name": "modelToRotate",
                   "flags": {},
                   "comment": "The model to rotate.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "angleInDegrees",
@@ -2843,11 +2843,11 @@
                   "name": "rotationOrigin",
                   "flags": {},
                   "comment": "The center point of rotation.",
-                  "type": "Point",
+                  "type": "IPoint",
                   "defaultValue": " [0, 0]"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2875,7 +2875,7 @@
                   "name": "modelToScale",
                   "flags": {},
                   "comment": "The model to scale.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "scaleValue",
@@ -2891,7 +2891,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2919,16 +2919,16 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to walk.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
                   "flags": {},
                   "comment": "Object containing callbacks.",
-                  "type": "WalkOptions"
+                  "type": "IWalkOptions"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -2955,13 +2955,13 @@
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to walk.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "callback",
                   "flags": {},
                   "comment": "Callback for each path.\n",
-                  "type": "ModelPathCallback"
+                  "type": "IModelPathCallback"
                 }
               ],
               "type": "void"
@@ -2992,7 +2992,7 @@
                   "name": "modelToZero",
                   "flags": {},
                   "comment": "The model to zero.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "zeroX",
@@ -3009,7 +3009,7 @@
                   "defaultValue": "true"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -3036,7 +3036,7 @@
                 {
                   "name": "modelToSimplify",
                   "flags": {},
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
@@ -3044,10 +3044,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional options object.",
-                  "type": "SimplifyOptions"
+                  "type": "ISimplifyOptions"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -3072,7 +3072,7 @@
         }
       ],
       "Interface": {
-        "DXFLayerOptions": {
+        "IDXFLayerOptions": {
           "flags": {
             "isExported": true
           },
@@ -3108,7 +3108,7 @@
             }
           }
         },
-        "DXFRenderOptions": {
+        "IDXFRenderOptions": {
           "flags": {
             "isExported": true
           },
@@ -3242,7 +3242,7 @@
             }
           }
         },
-        "OpenJsCadOptions": {
+        "IOpenJsCadOptions": {
           "flags": {
             "isExported": true
           },
@@ -3371,7 +3371,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "OpenJsCadOptionsMap",
+                "name": "IOpenJsCadOptionsMap",
                 "id": 1910
               }
             },
@@ -3452,7 +3452,7 @@
             }
           }
         },
-        "OpenJsCadOptionsMap": {
+        "IOpenJsCadOptionsMap": {
           "flags": {
             "isExported": true
           },
@@ -3491,7 +3491,7 @@
             }
           ]
         },
-        "PDFRenderOptions": {
+        "IPDFRenderOptions": {
           "flags": {
             "isExported": true
           },
@@ -3555,7 +3555,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               }
             },
@@ -3606,7 +3606,7 @@
             }
           }
         },
-        "PathDataByLayerMap": {
+        "IPathDataByLayerMap": {
           "flags": {
             "isExported": true
           },
@@ -3650,7 +3650,7 @@
             }
           ]
         },
-        "SVGElementRenderOptions": {
+        "ISVGElementRenderOptions": {
           "flags": {
             "isExported": true
           },
@@ -3754,7 +3754,7 @@
             }
           }
         },
-        "SVGRenderOptions": {
+        "ISVGRenderOptions": {
           "flags": {
             "isExported": true
           },
@@ -4022,7 +4022,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               }
             },
@@ -4153,7 +4153,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "XmlTagAttrs",
+                "name": "IXmlTagAttrs",
                 "id": 1866
               }
             },
@@ -4351,14 +4351,14 @@
                 {
                   "name": "modelToExport",
                   "flags": {},
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "DXFRenderOptions"
+                  "type": "IDXFRenderOptions"
                 }
               ],
               "type": "string"
@@ -4374,14 +4374,14 @@
                 {
                   "name": "pathsToExport",
                   "flags": {},
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "DXFRenderOptions"
+                  "type": "IDXFRenderOptions"
                 }
               ],
               "type": "string"
@@ -4397,14 +4397,14 @@
                 {
                   "name": "pathToExport",
                   "flags": {},
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "DXFRenderOptions"
+                  "type": "IDXFRenderOptions"
                 }
               ],
               "type": "string"
@@ -4443,12 +4443,12 @@
                 {
                   "name": "modelToExport",
                   "flags": {},
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "optionsMap",
                   "flags": {},
-                  "type": "OpenJsCadOptionsMap"
+                  "type": "IOpenJsCadOptionsMap"
                 }
               ],
               "type": "string"
@@ -4482,14 +4482,14 @@
                 {
                   "name": "modelToExport",
                   "flags": {},
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "OpenJsCadOptions"
+                  "type": "IOpenJsCadOptions"
                 }
               ],
               "type": "string"
@@ -4505,14 +4505,14 @@
                 {
                   "name": "pathsToExport",
                   "flags": {},
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "OpenJsCadOptions"
+                  "type": "IOpenJsCadOptions"
                 }
               ],
               "type": "string"
@@ -4528,14 +4528,14 @@
                 {
                   "name": "pathToExport",
                   "flags": {},
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "OpenJsCadOptions"
+                  "type": "IOpenJsCadOptions"
                 }
               ],
               "type": "string"
@@ -4581,13 +4581,13 @@
                   "name": "modelToExport",
                   "flags": {},
                   "comment": "Model object to export.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
                   "flags": {},
                   "comment": "Export options object.",
-                  "type": "OpenJsCadOptions",
+                  "type": "IOpenJsCadOptions",
                   "defaultValue": " {}"
                 }
               ],
@@ -4624,7 +4624,7 @@
                   "name": "modelToExport",
                   "flags": {},
                   "comment": "Model object to export.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
@@ -4632,7 +4632,7 @@
                     "isOptional": true
                   },
                   "comment": "Export options object.",
-                  "type": "PDFRenderOptions"
+                  "type": "IPDFRenderOptions"
                 }
               ],
               "type": "void"
@@ -4663,13 +4663,13 @@
                   "name": "chain",
                   "flags": {},
                   "comment": "Chain to convert.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "offset",
                   "flags": {},
                   "comment": "IPoint relative offset point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "accuracy",
@@ -4708,19 +4708,19 @@
                   "name": "pathToExport",
                   "flags": {},
                   "comment": "IPath to export.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "pathOffset",
                   "flags": {},
                   "comment": "IPoint relative offset of the path object.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "exportOffset",
                   "flags": {},
                   "comment": "IPoint relative offset point of the export.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "accuracy",
@@ -4770,14 +4770,14 @@
                 {
                   "name": "modelToExport",
                   "flags": {},
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "SVGRenderOptions"
+                  "type": "ISVGRenderOptions"
                 }
               ],
               "type": "string"
@@ -4793,14 +4793,14 @@
                 {
                   "name": "pathsToExport",
                   "flags": {},
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "SVGRenderOptions"
+                  "type": "ISVGRenderOptions"
                 }
               ],
               "type": "string"
@@ -4816,14 +4816,14 @@
                 {
                   "name": "pathToExport",
                   "flags": {},
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "options",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "SVGRenderOptions"
+                  "type": "ISVGRenderOptions"
                 }
               ],
               "type": "string"
@@ -4869,7 +4869,7 @@
                   "name": "modelToExport",
                   "flags": {},
                   "comment": "Model to export.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "byLayers_orFindChainsOptions",
@@ -4884,7 +4884,7 @@
                     "isOptional": true
                   },
                   "comment": "Optional reference origin.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "accuracy",
@@ -5313,13 +5313,13 @@
                   "name": "pathA",
                   "flags": {},
                   "comment": "First path.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "pathB",
                   "flags": {},
                   "comment": "Second path.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "withinPointDistance",
@@ -5333,14 +5333,14 @@
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "pathBOffset",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
               "type": "boolean"
@@ -5371,13 +5371,13 @@
                   "name": "a",
                   "flags": {},
                   "comment": "First point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "withinDistance",
@@ -5415,12 +5415,12 @@
                   "name": "p",
                   "flags": {},
                   "comment": "Point to check.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "slope",
                   "flags": {},
-                  "type": "Slope"
+                  "type": "ISlope"
                 },
                 {
                   "name": "withinDistance",
@@ -5458,13 +5458,13 @@
                   "name": "slopeA",
                   "flags": {},
                   "comment": "The ISlope to test.",
-                  "type": "Slope"
+                  "type": "ISlope"
                 },
                 {
                   "name": "slopeB",
                   "flags": {},
                   "comment": "The ISlope to check for equality.",
-                  "type": "Slope"
+                  "type": "ISlope"
                 }
               ],
               "type": "boolean"
@@ -5495,13 +5495,13 @@
                   "name": "slopeA",
                   "flags": {},
                   "comment": "The ISlope to test.",
-                  "type": "Slope"
+                  "type": "ISlope"
                 },
                 {
                   "name": "slopeB",
                   "flags": {},
                   "comment": "The ISlope to check for parallel.",
-                  "type": "Slope"
+                  "type": "ISlope"
                 }
               ],
               "type": "boolean"
@@ -5532,10 +5532,10 @@
                   "name": "measureToAugment",
                   "flags": {},
                   "comment": "The measurement to augment.",
-                  "type": "Measure"
+                  "type": "IMeasure"
                 }
               ],
-              "type": "MeasureWithCenter"
+              "type": "IMeasureWithCenter"
             }
           ],
           "sources": [
@@ -5563,10 +5563,10 @@
                   "name": "modelToMeasure",
                   "flags": {},
                   "comment": "The model to measure.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "BoundingHex"
+              "type": "IBoundingHex"
             }
           ],
           "sources": [
@@ -5594,16 +5594,16 @@
                   "name": "baseMeasure",
                   "flags": {},
                   "comment": "The measurement to increase.",
-                  "type": "Measure"
+                  "type": "IMeasure"
                 },
                 {
                   "name": "addMeasure",
                   "flags": {},
                   "comment": "The additional measurement.",
-                  "type": "Measure"
+                  "type": "IMeasure"
                 }
               ],
-              "type": "Measure"
+              "type": "IMeasure"
             }
           ],
           "sources": [
@@ -5631,13 +5631,13 @@
                   "name": "arc",
                   "flags": {},
                   "comment": "The arc to test.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 },
                 {
                   "name": "towardsPoint",
                   "flags": {},
                   "comment": "The point to test.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
               "type": "boolean"
@@ -5668,13 +5668,13 @@
                   "name": "arcA",
                   "flags": {},
                   "comment": "The arc to test.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 },
                 {
                   "name": "arcB",
                   "flags": {},
                   "comment": "The arc to check for overlap.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 },
                 {
                   "name": "excludeTangents",
@@ -5766,7 +5766,7 @@
                   "name": "arc",
                   "flags": {},
                   "comment": "Arc to test against.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 },
                 {
                   "name": "exclusive",
@@ -5803,13 +5803,13 @@
                   "name": "pointInQuestion",
                   "flags": {},
                   "comment": "The point to test.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "line",
                   "flags": {},
                   "comment": "Line to test against.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "exclusive",
@@ -5846,7 +5846,7 @@
                   "name": "seed",
                   "flags": {},
                   "comment": "The bezier seed to test.",
-                  "type": "BezierSeed"
+                  "type": "IPathBezierSeed"
                 },
                 {
                   "name": "exclusive",
@@ -5885,7 +5885,7 @@
                   "name": "chainContext",
                   "flags": {},
                   "comment": "The chain to test.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "out_result",
@@ -5923,13 +5923,13 @@
                   "name": "lineA",
                   "flags": {},
                   "comment": "The line to test.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "lineB",
                   "flags": {},
                   "comment": "The line to check for overlap.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "excludeTangents",
@@ -5966,13 +5966,13 @@
                   "name": "measureA",
                   "flags": {},
                   "comment": "The measurement to test.",
-                  "type": "Measure"
+                  "type": "IMeasure"
                 },
                 {
                   "name": "measureB",
                   "flags": {},
                   "comment": "The measurement to check for overlap.",
-                  "type": "Measure"
+                  "type": "IMeasure"
                 }
               ],
               "type": "boolean"
@@ -6003,19 +6003,19 @@
                   "name": "pointToCheck",
                   "flags": {},
                   "comment": "The point to check.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "modelContext",
                   "flags": {},
                   "comment": "The model to check against.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "options",
                   "flags": {},
                   "comment": "Optional IMeasurePointInsideOptions object.",
-                  "type": "MeasurePointInsideOptions",
+                  "type": "IMeasurePointInsideOptions",
                   "defaultValue": " {}"
                 }
               ],
@@ -6045,10 +6045,10 @@
                 {
                   "name": "line",
                   "flags": {},
-                  "type": "Line"
+                  "type": "IPathLine"
                 }
               ],
-              "type": "Slope"
+              "type": "ISlope"
             }
           ],
           "sources": [
@@ -6076,7 +6076,7 @@
                   "name": "modelToMeasure",
                   "flags": {},
                   "comment": "The model to measure.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "atlas",
@@ -6087,7 +6087,7 @@
                   "type": "Atlas"
                 }
               ],
-              "type": "MeasureWithCenter"
+              "type": "IMeasureWithCenter"
             }
           ],
           "sources": [
@@ -6115,7 +6115,7 @@
                   "name": "modelToMeasure",
                   "flags": {},
                   "comment": "The model containing paths to measure.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
               "type": "number"
@@ -6146,17 +6146,17 @@
                   "name": "pathToMeasure",
                   "flags": {},
                   "comment": "The path to measure.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "addOffset",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Measure"
+              "type": "IMeasure"
             }
           ],
           "sources": [
@@ -6184,7 +6184,7 @@
                   "name": "pathToMeasure",
                   "flags": {},
                   "comment": "The path to measure.",
-                  "type": "Path"
+                  "type": "IPath"
                 }
               ],
               "type": "number"
@@ -6215,13 +6215,13 @@
                   "name": "a",
                   "flags": {},
                   "comment": "First point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
               "type": "number"
@@ -6279,7 +6279,7 @@
                   {
                     "name": "modelContext",
                     "flags": {},
-                    "type": "Model"
+                    "type": "IModel"
                   }
                 ],
                 "type": "Atlas"
@@ -6305,7 +6305,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Model",
+                "name": "IModel",
                 "id": 48
               }
             },
@@ -6326,7 +6326,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "MeasureMap",
+                "name": "IMeasureMap",
                 "id": 71
               }
             },
@@ -6368,7 +6368,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "MeasureMap",
+                "name": "IMeasureMap",
                 "id": 71
               }
             }
@@ -6482,11 +6482,11 @@
                   "name": "options",
                   "flags": {},
                   "comment": "ISVGImportOptions object.",
-                  "type": "SVGImportOptions",
+                  "type": "ISVGImportOptions",
                   "defaultValue": " {}"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6499,7 +6499,7 @@
         }
       },
       "Interface": {
-        "SVGImportOptions": {
+        "ISVGImportOptions": {
           "flags": {
             "isExported": true
           },
@@ -6567,7 +6567,7 @@
                   "name": "ctor",
                   "flags": {},
                   "comment": "The constructor for the class which is an IKit.",
-                  "type": "Kit"
+                  "type": "IKit"
                 },
                 {
                   "name": "args",
@@ -6576,7 +6576,7 @@
                   "type": "any"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6604,7 +6604,7 @@
                   "name": "ctor",
                   "flags": {},
                   "comment": "The constructor for the class which is an IKit.",
-                  "type": "Kit"
+                  "type": "IKit"
                 }
               ],
               "type": "any"
@@ -6649,13 +6649,13 @@
                   "name": "parentModel",
                   "flags": {},
                   "comment": "The model containing children to lay out.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "onChain",
                   "flags": {},
                   "comment": "The chain on which to lay out.",
-                  "type": "Chain"
+                  "type": "IChain"
                 },
                 {
                   "name": "baseline",
@@ -6685,7 +6685,7 @@
                   "defaultValue": "true"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6713,13 +6713,13 @@
                   "name": "parentModel",
                   "flags": {},
                   "comment": "The model containing children to lay out.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "onPath",
                   "flags": {},
                   "comment": "The path on which to lay out.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "baseline",
@@ -6750,7 +6750,7 @@
                   "defaultValue": "true"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6799,7 +6799,7 @@
                   "comment": "Optional numeric distance between each clone. Can also be a 2 dimensional array of numbers, to specify distances in x and y dimensions."
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6842,7 +6842,7 @@
                   "defaultValue": "0"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6891,7 +6891,7 @@
                   "comment": "Optional numeric distance between each clone. Can also be a 2 dimensional array of numbers, to specify distances in x and y dimensions."
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6940,7 +6940,7 @@
                   "defaultValue": "0"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -6983,7 +6983,7 @@
                   "defaultValue": "0"
                 }
               ],
-              "type": "Model"
+              "type": "IModel"
             }
           ],
           "sources": [
@@ -7041,7 +7041,7 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "radius",
@@ -7071,12 +7071,12 @@
                   {
                     "name": "pointA",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "pointB",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "radius",
@@ -7106,12 +7106,12 @@
                   {
                     "name": "pointA",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "pointB",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "clockwise",
@@ -7133,17 +7133,17 @@
                   {
                     "name": "pointA",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "pointB",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "pointC",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   }
                 ],
                 "type": "Arc"
@@ -7187,7 +7187,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7301,7 +7301,7 @@
                   {
                     "name": "arc",
                     "flags": {},
-                    "type": "Arc"
+                    "type": "IPathArc"
                   }
                 ],
                 "type": "Chord"
@@ -7323,7 +7323,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7346,7 +7346,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7429,7 +7429,7 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "radius",
@@ -7450,12 +7450,12 @@
                   {
                     "name": "pointA",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "pointB",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   }
                 ],
                 "type": "Circle"
@@ -7471,17 +7471,17 @@
                   {
                     "name": "pointA",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "pointB",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "pointC",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   }
                 ],
                 "type": "Circle"
@@ -7503,7 +7503,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7591,7 +7591,7 @@
                   {
                     "name": "points",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   }
                 ],
                 "type": "Line"
@@ -7606,12 +7606,12 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "end",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   }
                 ],
                 "type": "Line"
@@ -7633,7 +7633,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7656,7 +7656,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7736,7 +7736,7 @@
                   {
                     "name": "toLine",
                     "flags": {},
-                    "type": "Line"
+                    "type": "IPathLine"
                   },
                   {
                     "name": "distance",
@@ -7746,7 +7746,7 @@
                   {
                     "name": "nearPoint",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   }
                 ],
                 "type": "Parallel"
@@ -7768,7 +7768,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7791,7 +7791,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -7855,13 +7855,13 @@
                   "name": "a",
                   "flags": {},
                   "comment": "First point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "subtract",
@@ -7872,7 +7872,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -7900,16 +7900,16 @@
                   "name": "a",
                   "flags": {},
                   "comment": "First point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -7937,10 +7937,10 @@
                   "name": "pointToClone",
                   "flags": {},
                   "comment": "The point to clone.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -7968,16 +7968,16 @@
                   "name": "referencePoint",
                   "flags": {},
                   "comment": "The reference point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "pointOptions",
                   "flags": {},
                   "comment": "Array of points to choose from.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8005,7 +8005,7 @@
                   "name": "pointToDistort",
                   "flags": {},
                   "comment": "The point to distort.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "scaleX",
@@ -8020,7 +8020,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8054,10 +8054,10 @@
                   "name": "circle",
                   "flags": {},
                   "comment": "A circle or arc.",
-                  "type": "Circle"
+                  "type": "IPathCircle"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8085,10 +8085,10 @@
                   "name": "arc",
                   "flags": {},
                   "comment": "The arc path object.",
-                  "type": "Arc"
+                  "type": "IPathArc"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8116,17 +8116,17 @@
                   "name": "pathContext",
                   "flags": {},
                   "comment": "The path object.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "pathOffset",
                   "flags": {
                     "isOptional": true
                   },
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8163,7 +8163,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8191,23 +8191,23 @@
                   "name": "lineA",
                   "flags": {},
                   "comment": "First line to use for slope.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "lineB",
                   "flags": {},
                   "comment": "Second line to use for slope.",
-                  "type": "Line"
+                  "type": "IPathLine"
                 },
                 {
                   "name": "options",
                   "flags": {},
                   "comment": "Optional IPathIntersectionOptions.",
-                  "type": "PathIntersectionBaseOptions",
+                  "type": "IPathIntersectionBaseOptions",
                   "defaultValue": " {}"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8235,7 +8235,7 @@
                   "name": "pathContext",
                   "flags": {},
                   "comment": "The path object.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "ratio",
@@ -8245,7 +8245,7 @@
                   "defaultValue": "0.5"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8273,7 +8273,7 @@
                   "name": "pointToMirror",
                   "flags": {},
                   "comment": "The point to mirror.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "mirrorX",
@@ -8288,7 +8288,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8316,7 +8316,7 @@
                   "name": "pointToRotate",
                   "flags": {},
                   "comment": "The point to rotate.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "angleInDegrees",
@@ -8328,11 +8328,11 @@
                   "name": "rotationOrigin",
                   "flags": {},
                   "comment": "The center point of rotation.",
-                  "type": "Point",
+                  "type": "IPoint",
                   "defaultValue": " [0, 0]"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8360,7 +8360,7 @@
                   "name": "pointContext",
                   "flags": {},
                   "comment": "The point to serialize.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "accuracy",
@@ -8371,7 +8371,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8399,7 +8399,7 @@
                   "name": "pointToScale",
                   "flags": {},
                   "comment": "The point to scale.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "scaleValue",
@@ -8408,7 +8408,7 @@
                   "type": "number"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8436,16 +8436,16 @@
                   "name": "a",
                   "flags": {},
                   "comment": "First point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8468,7 +8468,7 @@
                 "shortText": "A point at 0,0 coordinates.\nNOTE: It is important to call this as a method, with the empty parentheses.",
                 "returns": "A new point.\n"
               },
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
           "sources": [
@@ -8510,13 +8510,13 @@
                   "name": "a",
                   "flags": {},
                   "comment": "First circle.",
-                  "type": "Circle"
+                  "type": "IPathCircle"
                 },
                 {
                   "name": "b",
                   "flags": {},
                   "comment": "Second circle.",
-                  "type": "Circle"
+                  "type": "IPathCircle"
                 },
                 {
                   "name": "inner",
@@ -8809,7 +8809,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -8847,7 +8847,7 @@
                   {
                     "name": "points",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "accuracy",
@@ -8866,7 +8866,7 @@
                   {
                     "name": "seed",
                     "flags": {},
-                    "type": "BezierSeed"
+                    "type": "IPathBezierSeed"
                   },
                   {
                     "name": "accuracy",
@@ -8885,17 +8885,17 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "control",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "end",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "accuracy",
@@ -8914,17 +8914,17 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "controls",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "end",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "accuracy",
@@ -8943,22 +8943,22 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "control1",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "control2",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "end",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "accuracy",
@@ -9004,7 +9004,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "ModelMap",
+                "name": "IModelMap",
                 "id": 45
               },
               "implementationOf": {
@@ -9027,7 +9027,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -9050,7 +9050,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -9073,7 +9073,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "BezierSeed",
+                "name": "IPathBezierSeed",
                 "id": 27
               }
             },
@@ -9135,7 +9135,7 @@
                     {
                       "name": "seed",
                       "flags": {},
-                      "type": "BezierSeed"
+                      "type": "IPathBezierSeed"
                     }
                   ],
                   "type": "number"
@@ -9163,7 +9163,7 @@
                     {
                       "name": "seed",
                       "flags": {},
-                      "type": "BezierSeed"
+                      "type": "IPathBezierSeed"
                     },
                     {
                       "name": "t",
@@ -9171,7 +9171,7 @@
                       "type": "number"
                     }
                   ],
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
               "sources": [
@@ -9201,7 +9201,7 @@
                     {
                       "name": "options",
                       "flags": {},
-                      "type": "FindChainsOptions",
+                      "type": "IFindChainsOptions",
                       "defaultValue": " {}"
                     }
                   ]
@@ -9282,7 +9282,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -9352,7 +9352,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -9473,7 +9473,7 @@
                   {
                     "name": "points",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   }
                 ],
                 "type": "ConnectTheDots"
@@ -9495,7 +9495,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -9581,7 +9581,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -9660,7 +9660,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -9728,7 +9728,7 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "radiusX",
@@ -9804,7 +9804,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "ModelMap",
+                "name": "IModelMap",
                 "id": 45
               },
               "implementationOf": {
@@ -9827,7 +9827,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -9905,7 +9905,7 @@
                   {
                     "name": "arc",
                     "flags": {},
-                    "type": "Arc"
+                    "type": "IPathArc"
                   },
                   {
                     "name": "distortX",
@@ -9944,7 +9944,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "ModelMap",
+                "name": "IModelMap",
                 "id": 45
               },
               "implementationOf": {
@@ -9991,7 +9991,7 @@
                   {
                     "name": "points",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "ids",
@@ -10020,7 +10020,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10085,7 +10085,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10172,7 +10172,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "ModelMap",
+                "name": "IModelMap",
                 "id": 45
               },
               "implementationOf": {
@@ -10195,7 +10195,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10274,7 +10274,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10352,7 +10352,7 @@
                       "defaultValue": "false"
                     }
                   ],
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
               "sources": [
@@ -10417,7 +10417,7 @@
                   {
                     "name": "modelToSurround",
                     "flags": {},
-                    "type": "Model"
+                    "type": "IModel"
                   },
                   {
                     "name": "margin",
@@ -10440,7 +10440,7 @@
                   {
                     "name": "measurement",
                     "flags": {},
-                    "type": "Measure"
+                    "type": "IMeasure"
                   }
                 ],
                 "type": "Rectangle"
@@ -10462,7 +10462,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -10485,7 +10485,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10552,7 +10552,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10620,7 +10620,7 @@
                   {
                     "name": "modelToSurround",
                     "flags": {},
-                    "type": "Model"
+                    "type": "IModel"
                   },
                   {
                     "name": "margin",
@@ -10647,7 +10647,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -10670,7 +10670,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10735,7 +10735,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10773,12 +10773,12 @@
                   {
                     "name": "origin",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "endPoint",
                     "flags": {},
-                    "type": "Point"
+                    "type": "IPoint"
                   },
                   {
                     "name": "radius",
@@ -10811,7 +10811,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "ModelMap",
+                "name": "IModelMap",
                 "id": 45
               },
               "implementationOf": {
@@ -10834,7 +10834,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "Point",
+                "name": "IPoint",
                 "id": 3
               },
               "implementationOf": {
@@ -10857,7 +10857,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10917,7 +10917,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -10995,7 +10995,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "PathMap",
+                "name": "IPathMap",
                 "id": 42
               },
               "implementationOf": {
@@ -11126,7 +11126,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "ModelMap",
+                "name": "IModelMap",
                 "id": 45
               },
               "implementationOf": {
@@ -11141,7 +11141,7 @@
     }
   },
   "Interface": {
-    "CascadeModel": {
+    "ICascadeModel": {
       "flags": {
         "isExported": true
       },
@@ -11277,7 +11277,7 @@
                   "name": "childModel",
                   "flags": {},
                   "comment": "The model to add.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "childModelId",
@@ -11294,7 +11294,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11322,7 +11322,7 @@
                   "name": "pathContext",
                   "flags": {},
                   "comment": "The path to add.",
-                  "type": "Path"
+                  "type": "IPath"
                 },
                 {
                   "name": "pathId",
@@ -11339,7 +11339,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11367,7 +11367,7 @@
                   "name": "parentModel",
                   "flags": {},
                   "comment": "The model to add to.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "childModelId",
@@ -11384,7 +11384,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11414,10 +11414,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional model containing paths to look for intersection, or else the modelToBreak will be used.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11458,7 +11458,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11481,7 +11481,7 @@
                 "shortText": "Clone a model. Alias of makerjs.cloneObject(modelToClone)",
                 "returns": "this cascade container, this.$result will be A clone of the model you passed.\n\n"
               },
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11509,7 +11509,7 @@
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 },
                 {
                   "name": "includeAInsideB",
@@ -11549,10 +11549,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional ICombineOptions object.",
-                  "type": "CombineOptions"
+                  "type": "ICombineOptions"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11580,10 +11580,10 @@
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11611,10 +11611,10 @@
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11642,10 +11642,10 @@
                   "name": "modelB",
                   "flags": {},
                   "comment": "Second model to combine.",
-                  "type": "Model"
+                  "type": "IModel"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11676,7 +11676,7 @@
                   "type": "string"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11720,10 +11720,10 @@
                     "isOptional": true
                   },
                   "comment": "(default {}) Optional object containing combine options.",
-                  "type": "CombineOptions"
+                  "type": "ICombineOptions"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11753,10 +11753,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional options object.",
-                  "type": "FindLoopsOptions"
+                  "type": "IFindLoopsOptions"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11787,7 +11787,7 @@
                   "type": "string"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11824,7 +11824,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11852,10 +11852,10 @@
                   "name": "origin",
                   "flags": {},
                   "comment": "The new position of the model.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11883,10 +11883,10 @@
                   "name": "delta",
                   "flags": {},
                   "comment": "The x & y adjustments as a point object.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11916,10 +11916,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional offset reference point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -11971,10 +11971,10 @@
                     "isOptional": true
                   },
                   "comment": "(default {}) Options to send to combine() function.",
-                  "type": "CombineOptions"
+                  "type": "ICombineOptions"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12005,7 +12005,7 @@
                   "type": "string"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12043,7 +12043,7 @@
                     "isOptional": true
                   },
                   "comment": "Optional callback function (which should return a boolean) to decide if a dead end path should be kept instead.",
-                  "type": "WalkPathBooleanCallback"
+                  "type": "IWalkPathBooleanCallback"
                 },
                 {
                   "name": "trackDeleted",
@@ -12054,7 +12054,7 @@
                   "type": "undefined"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12090,10 +12090,10 @@
                     "isOptional": true
                   },
                   "comment": "(default [0, 0]) The center point of rotation.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12132,7 +12132,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12162,10 +12162,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional options object.",
-                  "type": "SimplifyOptions"
+                  "type": "ISimplifyOptions"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12193,10 +12193,10 @@
                   "name": "options",
                   "flags": {},
                   "comment": "Object containing callbacks.",
-                  "type": "WalkOptions"
+                  "type": "IWalkOptions"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12237,7 +12237,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadeModel"
+              "type": "ICascadeModel"
             }
           ],
           "sources": [
@@ -12250,7 +12250,7 @@
         }
       }
     },
-    "CascadePath": {
+    "ICascadePath": {
       "flags": {
         "isExported": true
       },
@@ -12397,7 +12397,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12425,10 +12425,10 @@
                   "name": "pointOfBreak",
                   "flags": {},
                   "comment": "The point at which to break the path.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12451,7 +12451,7 @@
                 "shortText": "Center a path at [0, 0].",
                 "returns": "this cascade container, this.$result will be The original path (for cascading).\n\n"
               },
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12481,10 +12481,10 @@
                     "isOptional": true
                   },
                   "comment": "Optional point to move path a relative distance.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12515,7 +12515,7 @@
                   "type": "string"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12552,7 +12552,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12580,10 +12580,10 @@
                   "name": "origin",
                   "flags": {},
                   "comment": "The new origin for the path.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12611,7 +12611,7 @@
                   "name": "delta",
                   "flags": {},
                   "comment": "The x & y adjustments as a point object.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "subtract",
@@ -12622,7 +12622,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12658,10 +12658,10 @@
                     "isOptional": true
                   },
                   "comment": "(default [0, 0]) The center point of rotation.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12692,7 +12692,7 @@
                   "type": "number"
                 }
               ],
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12715,7 +12715,7 @@
                 "shortText": "Move a path so its bounding box begins at [0, 0].",
                 "returns": "this cascade container, this.$result will be The original path (for cascading).\n\n"
               },
-              "type": "CascadePath"
+              "type": "ICascadePath"
             }
           ],
           "sources": [
@@ -12728,7 +12728,7 @@
         }
       }
     },
-    "CascadePoint": {
+    "ICascadePoint": {
       "flags": {
         "isExported": true
       },
@@ -12864,7 +12864,7 @@
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 },
                 {
                   "name": "subtract",
@@ -12875,7 +12875,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -12903,10 +12903,10 @@
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -12929,7 +12929,7 @@
                 "shortText": "Clone a point into a new point.",
                 "returns": "this cascade container, this.$result will be A new point with same values as the original.\n\n"
               },
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -12957,10 +12957,10 @@
                   "name": "pointOptions",
                   "flags": {},
                   "comment": "Array of points to choose from.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -12997,7 +12997,7 @@
                   "type": "number"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -13034,7 +13034,7 @@
                   "type": "boolean"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -13070,10 +13070,10 @@
                     "isOptional": true
                   },
                   "comment": "(default [0, 0]) The center point of rotation.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -13106,7 +13106,7 @@
                   "type": "number"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -13137,7 +13137,7 @@
                   "type": "number"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -13165,10 +13165,10 @@
                   "name": "b",
                   "flags": {},
                   "comment": "Second point.",
-                  "type": "Point"
+                  "type": "IPoint"
                 }
               ],
-              "type": "CascadePoint"
+              "type": "ICascadePoint"
             }
           ],
           "sources": [
@@ -13181,7 +13181,7 @@
         }
       }
     },
-    "Collection": {
+    "ICollection": {
       "flags": {
         "isExported": true
       },
@@ -13247,7 +13247,7 @@
         }
       }
     },
-    "CollectionKeyComparer": {
+    "ICollectionKeyComparer": {
       "flags": {
         "isExported": true
       },
@@ -13293,7 +13293,7 @@
         }
       ]
     },
-    "BoundingHex": {
+    "IBoundingHex": {
       "flags": {
         "isExported": true
       },
@@ -13423,7 +13423,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "ModelMap",
+            "name": "IModelMap",
             "id": 45
           },
           "inheritedFrom": {
@@ -13474,7 +13474,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -13500,7 +13500,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "PathMap",
+            "name": "IPathMap",
             "id": 42
           },
           "inheritedFrom": {
@@ -13580,7 +13580,7 @@
         }
       }
     },
-    "Cascade": {
+    "ICascade": {
       "flags": {
         "isExported": true
       },
@@ -13706,7 +13706,7 @@
         }
       }
     },
-    "Chain": {
+    "IChain": {
       "flags": {
         "isExported": true
       },
@@ -13739,7 +13739,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Chain",
+            "name": "IChain",
             "id": 154
           }
         },
@@ -13780,7 +13780,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "ChainLink",
+            "name": "IChainLink",
             "id": 149
           }
         },
@@ -13805,7 +13805,7 @@
         }
       }
     },
-    "ChainCallback": {
+    "IChainCallback": {
       "flags": {
         "isExported": true
       },
@@ -13823,12 +13823,12 @@
             {
               "name": "chains",
               "flags": {},
-              "type": "Chain"
+              "type": "IChain"
             },
             {
               "name": "loose",
               "flags": {},
-              "type": "WalkPath"
+              "type": "IWalkPath"
             },
             {
               "name": "layer",
@@ -13840,7 +13840,7 @@
               "flags": {
                 "isOptional": true
               },
-              "type": "WalkPath"
+              "type": "IWalkPath"
             }
           ],
           "type": "void"
@@ -13854,7 +13854,7 @@
         }
       ]
     },
-    "ChainLink": {
+    "IChainLink": {
       "flags": {
         "isExported": true
       },
@@ -13886,7 +13886,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -13944,13 +13944,13 @@
           ],
           "type": {
             "type": "reference",
-            "name": "WalkPath",
+            "name": "IWalkPath",
             "id": 135
           }
         }
       }
     },
-    "ChainsMap": {
+    "IChainsMap": {
       "flags": {
         "isExported": true
       },
@@ -13996,7 +13996,7 @@
         }
       ]
     },
-    "CombineOptions": {
+    "ICombineOptions": {
       "flags": {
         "isExported": true
       },
@@ -14035,7 +14035,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -14099,7 +14099,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Model",
+            "name": "IModel",
             "id": 48
           }
         },
@@ -14150,7 +14150,7 @@
         }
       }
     },
-    "ContainChainsOptions": {
+    "IContainChainsOptions": {
       "flags": {
         "isExported": true
       },
@@ -14187,7 +14187,7 @@
         }
       }
     },
-    "FindChainsOptions": {
+    "IFindChainsOptions": {
       "flags": {
         "isExported": true
       },
@@ -14326,7 +14326,7 @@
         }
       }
     },
-    "FindLoopsOptions": {
+    "IFindLoopsOptions": {
       "flags": {
         "isExported": true
       },
@@ -14402,7 +14402,7 @@
         }
       }
     },
-    "Kit": {
+    "IKit": {
       "flags": {
         "isExported": true
       },
@@ -14433,7 +14433,7 @@
                 "type": "any"
               }
             ],
-            "type": "Model"
+            "type": "IModel"
           }
         ]
       },
@@ -14456,7 +14456,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "MetaParameter",
+            "name": "IMetaParameter",
             "id": 211
           }
         },
@@ -14482,7 +14482,7 @@
         }
       }
     },
-    "Measure": {
+    "IMeasure": {
       "flags": {
         "isExported": true
       },
@@ -14520,7 +14520,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -14540,13 +14540,13 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         }
       }
     },
-    "MeasureMap": {
+    "IMeasureMap": {
       "flags": {
         "isExported": true
       },
@@ -14591,7 +14591,7 @@
         }
       ]
     },
-    "MeasurePointInsideOptions": {
+    "IMeasurePointInsideOptions": {
       "flags": {
         "isExported": true
       },
@@ -14623,7 +14623,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -14666,13 +14666,13 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         }
       }
     },
-    "MeasureWithCenter": {
+    "IMeasureWithCenter": {
       "flags": {
         "isExported": true
       },
@@ -14710,7 +14710,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -14749,7 +14749,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -14774,7 +14774,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -14804,7 +14804,7 @@
         }
       }
     },
-    "MetaParameter": {
+    "IMetaParameter": {
       "flags": {
         "isExported": true
       },
@@ -14938,7 +14938,7 @@
         }
       }
     },
-    "ModelPathCallback": {
+    "IModelPathCallback": {
       "flags": {
         "isExported": true
       },
@@ -14956,7 +14956,7 @@
             {
               "name": "modelContext",
               "flags": {},
-              "type": "Model"
+              "type": "IModel"
             },
             {
               "name": "pathId",
@@ -14966,7 +14966,7 @@
             {
               "name": "pathContext",
               "flags": {},
-              "type": "Path"
+              "type": "IPath"
             }
           ],
           "type": "void"
@@ -14980,7 +14980,7 @@
         }
       ]
     },
-    "PathDirectional": {
+    "IPathDirectional": {
       "flags": {
         "isExported": true
       },
@@ -15026,7 +15026,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -15071,7 +15071,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -15126,7 +15126,7 @@
         }
       }
     },
-    "PathIntersection": {
+    "IPathIntersection": {
       "flags": {
         "isExported": true
       },
@@ -15158,7 +15158,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -15206,7 +15206,7 @@
         }
       }
     },
-    "PathIntersectionBaseOptions": {
+    "IPathIntersectionBaseOptions": {
       "flags": {
         "isExported": true
       },
@@ -15270,7 +15270,7 @@
         }
       }
     },
-    "PathIntersectionOptions": {
+    "IPathIntersectionOptions": {
       "flags": {
         "isExported": true
       },
@@ -15359,7 +15359,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -15380,13 +15380,13 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         }
       }
     },
-    "PathRemoved": {
+    "IPathRemoved": {
       "flags": {
         "isExported": true
       },
@@ -15449,7 +15449,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -15522,7 +15522,7 @@
         }
       }
     },
-    "PointMatchOptions": {
+    "IPointMatchOptions": {
       "flags": {
         "isExported": true
       },
@@ -15581,7 +15581,7 @@
         }
       }
     },
-    "RefModelInModel": {
+    "IRefModelInModel": {
       "flags": {
         "isExported": true
       },
@@ -15632,7 +15632,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Model",
+            "name": "IModel",
             "id": 48
           }
         },
@@ -15649,13 +15649,13 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Model",
+            "name": "IModel",
             "id": 48
           }
         }
       }
     },
-    "RefPathIdInModel": {
+    "IRefPathIdInModel": {
       "flags": {
         "isExported": true
       },
@@ -15695,7 +15695,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Model",
+            "name": "IModel",
             "id": 48
           }
         },
@@ -15717,7 +15717,7 @@
         }
       }
     },
-    "RouteOffset": {
+    "IRouteOffset": {
       "flags": {
         "isExported": true
       },
@@ -15773,7 +15773,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -15812,7 +15812,7 @@
         }
       }
     },
-    "SimplifyOptions": {
+    "ISimplifyOptions": {
       "flags": {
         "isExported": true
       },
@@ -15881,7 +15881,7 @@
         }
       }
     },
-    "Slope": {
+    "ISlope": {
       "flags": {
         "isExported": true
       },
@@ -15931,7 +15931,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Line",
+            "name": "IPathLine",
             "id": 10
           }
         },
@@ -15977,7 +15977,7 @@
         }
       }
     },
-    "WalkModel": {
+    "IWalkModel": {
       "flags": {
         "isExported": true
       },
@@ -16038,7 +16038,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Model",
+            "name": "IModel",
             "id": 48
           },
           "inheritedFrom": {
@@ -16081,7 +16081,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -16103,7 +16103,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Model",
+            "name": "IModel",
             "id": 48
           },
           "inheritedFrom": {
@@ -16157,7 +16157,7 @@
         }
       }
     },
-    "WalkModelCallback": {
+    "IWalkModelCallback": {
       "flags": {
         "isExported": true
       },
@@ -16175,7 +16175,7 @@
             {
               "name": "context",
               "flags": {},
-              "type": "WalkModel"
+              "type": "IWalkModel"
             }
           ],
           "type": "void"
@@ -16189,7 +16189,7 @@
         }
       ]
     },
-    "WalkModelCancellableCallback": {
+    "IWalkModelCancellableCallback": {
       "flags": {
         "isExported": true
       },
@@ -16207,7 +16207,7 @@
             {
               "name": "context",
               "flags": {},
-              "type": "WalkModel"
+              "type": "IWalkModel"
             }
           ],
           "type": "boolean"
@@ -16221,7 +16221,7 @@
         }
       ]
     },
-    "WalkOptions": {
+    "IWalkOptions": {
       "flags": {
         "isExported": true
       },
@@ -16253,7 +16253,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "WalkModelCallback",
+            "name": "IWalkModelCallback",
             "id": 188
           }
         },
@@ -16274,7 +16274,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "WalkModelCancellableCallback",
+            "name": "IWalkModelCancellableCallback",
             "id": 191
           }
         },
@@ -16295,13 +16295,13 @@
           ],
           "type": {
             "type": "reference",
-            "name": "WalkPathCallback",
+            "name": "IWalkPathCallback",
             "id": 143
           }
         }
       }
     },
-    "WalkPath": {
+    "IWalkPath": {
       "flags": {
         "isExported": true
       },
@@ -16374,7 +16374,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Model",
+            "name": "IModel",
             "id": 48
           },
           "inheritedFrom": {
@@ -16396,7 +16396,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -16418,7 +16418,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Path",
+            "name": "IPath",
             "id": 6
           }
         },
@@ -16488,7 +16488,7 @@
         }
       }
     },
-    "WalkPathBooleanCallback": {
+    "IWalkPathBooleanCallback": {
       "flags": {
         "isExported": true
       },
@@ -16506,7 +16506,7 @@
             {
               "name": "context",
               "flags": {},
-              "type": "WalkPath"
+              "type": "IWalkPath"
             }
           ],
           "type": "boolean"
@@ -16520,7 +16520,7 @@
         }
       ]
     },
-    "WalkPathCallback": {
+    "IWalkPathCallback": {
       "flags": {
         "isExported": true
       },
@@ -16538,7 +16538,7 @@
             {
               "name": "context",
               "flags": {},
-              "type": "WalkPath"
+              "type": "IWalkPath"
             }
           ],
           "type": "void"
@@ -16552,7 +16552,7 @@
         }
       ]
     },
-    "BezierRange": {
+    "IBezierRange": {
       "flags": {
         "isExported": true
       },
@@ -16607,7 +16607,7 @@
         }
       }
     },
-    "Model": {
+    "IModel": {
       "flags": {
         "isExported": true
       },
@@ -16840,7 +16840,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "ModelMap",
+            "name": "IModelMap",
             "id": 45
           }
         },
@@ -16881,7 +16881,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -16902,7 +16902,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "PathMap",
+            "name": "IPathMap",
             "id": 42
           }
         },
@@ -16948,7 +16948,7 @@
         }
       }
     },
-    "ModelMap": {
+    "IModelMap": {
       "flags": {
         "isExported": true
       },
@@ -16993,7 +16993,7 @@
         }
       ]
     },
-    "Path": {
+    "IPath": {
       "flags": {
         "isExported": true
       },
@@ -17071,7 +17071,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -17096,7 +17096,7 @@
         }
       }
     },
-    "Arc": {
+    "IPathArc": {
       "flags": {
         "isExported": true
       },
@@ -17186,7 +17186,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -17264,7 +17264,7 @@
         }
       }
     },
-    "ArcInBezierCurve": {
+    "IPathArcInBezierCurve": {
       "flags": {
         "isExported": true
       },
@@ -17299,7 +17299,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "BezierRange",
+            "name": "IBezierRange",
             "id": 34
           }
         },
@@ -17344,7 +17344,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -17379,7 +17379,7 @@
         }
       }
     },
-    "BezierSeed": {
+    "IPathBezierSeed": {
       "flags": {
         "isExported": true
       },
@@ -17425,7 +17425,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -17445,7 +17445,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -17495,7 +17495,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -17521,7 +17521,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "BezierRange",
+            "name": "IBezierRange",
             "id": 34
           }
         },
@@ -17551,7 +17551,7 @@
         }
       }
     },
-    "Circle": {
+    "IPathCircle": {
       "flags": {
         "isExported": true
       },
@@ -17629,7 +17629,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -17683,7 +17683,7 @@
         }
       }
     },
-    "Line": {
+    "IPathLine": {
       "flags": {
         "isExported": true
       },
@@ -17746,7 +17746,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           }
         },
@@ -17791,7 +17791,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Point",
+            "name": "IPoint",
             "id": 3
           },
           "inheritedFrom": {
@@ -17826,7 +17826,7 @@
         }
       }
     },
-    "PathMap": {
+    "IPathMap": {
       "flags": {
         "isExported": true
       },
@@ -17891,7 +17891,7 @@
         }
       ]
     },
-    "Point": {
+    "IPoint": {
       "flags": {
         "isExported": true
       },
@@ -17980,7 +17980,7 @@
                 "flags": {
                   "isOptional": true
                 },
-                "type": "CollectionKeyComparer"
+                "type": "ICollectionKeyComparer"
               }
             ],
             "type": "Collector"
@@ -18003,7 +18003,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "Collection",
+            "name": "ICollection",
             "id": 1096,
             "typeArguments": [
               {
@@ -18233,10 +18233,10 @@
               "name": "modelContext",
               "flags": {},
               "comment": "The initial model to execute functions upon.",
-              "type": "Model"
+              "type": "IModel"
             }
           ],
-          "type": "CascadeModel"
+          "type": "ICascadeModel"
         },
         {
           "name": "$",
@@ -18250,10 +18250,10 @@
               "name": "pathContext",
               "flags": {},
               "comment": "The initial path to execute functions upon.",
-              "type": "Model"
+              "type": "IModel"
             }
           ],
-          "type": "CascadePath"
+          "type": "ICascadePath"
         },
         {
           "name": "$",
@@ -18267,10 +18267,10 @@
               "name": "pointContext",
               "flags": {},
               "comment": "The initial point to execute functions upon.",
-              "type": "Point"
+              "type": "IPoint"
             }
           ],
-          "type": "CascadePoint"
+          "type": "ICascadePoint"
         }
       ],
       "sources": [
@@ -18793,7 +18793,7 @@
               "name": "modelContext",
               "flags": {},
               "comment": "Model to travel within.",
-              "type": "Model"
+              "type": "IModel"
             },
             {
               "name": "route",

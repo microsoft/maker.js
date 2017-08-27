@@ -1,28 +1,6 @@
 var fs = require('fs');
 var project = require('../target/project.json');
 
-function docName(name) {
-    switch (name) {
-        case 'IPathArc':
-        case 'IPathCircle':
-        case 'IPathLine':
-        case 'IPathBezierSeed':
-        case 'IPathArcInBezierCurve':
-            return name.substring(5);
-
-        default:
-            var first1 = name.substr(0, 1);
-            if (first1 == 'I') {
-
-                var first2 = name.substr(0, 2);
-                if (first2.toUpperCase() == first2) {
-                    return name.substring(1);
-                }
-            }
-            return name;
-    }
-}
-
 function cleanParameters(parameters) {
     return parameters.map(function (p) {
         var parameter2 = {};
@@ -31,7 +9,7 @@ function cleanParameters(parameters) {
                 case 'id':
                 case 'kind':
                 case 'kindString':
-                    //case 'flags':
+                //case 'flags':
                     continue;
 
                 case 'comment':
@@ -39,9 +17,7 @@ function cleanParameters(parameters) {
                     break;
 
                 case 'type':
-                    if (p.type.name) {
-                        parameter2.type = docName(p.type.name);
-                    }
+                    parameter2.type = p.type.name;
                     break;
 
                 default:
@@ -74,10 +50,8 @@ function cleanSignatures(signatures, kind, newChild) {
                 case 'flags':
                     continue;
 
-                case 'type':
-                    if (s.type.name) {
-                        signature2.type = docName(s.type.name);
-                    }
+                    case 'type':
+                    signature2.type = s.type.name;
                     break;
 
                 case 'parameters':
@@ -96,8 +70,7 @@ function processChild(parent, child) {
     if (child.flags && child.flags.isPrivate) return;
 
     var kind = parent[child.kindString] = parent[child.kindString] || {};
-    var name = docName(child.name);
-    var newChild = kind[name] = kind[name] || {};
+    var newChild = kind[child.name] = kind[child.name] || {};
 
     for (var prop in child) {
         switch (prop) {
@@ -111,12 +84,6 @@ function processChild(parent, child) {
                 //case 'sources':
                 //skip
                 continue;
-
-            case 'type':
-                var t = child[prop];
-                if (t.name) t.name = docName(t.name);
-                newChild.type = t;
-                break;
 
             case 'signatures':
                 cleanSignatures(child.signatures, kind, newChild);
