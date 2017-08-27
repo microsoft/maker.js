@@ -667,7 +667,7 @@ namespace MakerJs {
         pathLength: number;
 
         /**
-         * Chains that are contained within this chain. Populated when chains are found with the 'contain: true' option 
+         * Chains that are contained within this chain. Populated when chains are found with the 'contain' option 
          */
         contains?: IChain[]
     }
