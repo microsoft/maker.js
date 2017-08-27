@@ -8,7 +8,7 @@ namespace LiveDoc {
         var allCodes = getAllCodes();
         var code = allCodes.item(allCodes.length - 1) as HTMLElement;
 
-        document.write('<div id="' + codeOutputId(allCodes.length - 1) + '">')
+        document.write('<div class="code-output" id="' + codeOutputId(allCodes.length - 1) + '">')
         document.write('<p>Example output:</p>')
 
         eval(code.innerText);
@@ -32,7 +32,7 @@ namespace LiveDoc {
 
         var iframe = document.createElement('iframe');
         iframe.className = 'play';
-        iframe.src = '//microsoft.github.io/maker.js/playground/embed.html?parentload=getcode';
+        iframe.src = '/maker.js/playground/embed.html?parentload=getcode';
         iframe.frameBorder = '0';
         iframe.scrolling = 'no';
         iframe.style.display = 'none';
