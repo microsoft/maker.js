@@ -1,6 +1,23 @@
 var fs = require('fs');
 var project = require('../target/project.json');
 
+function deepClean(obj) {
+    if (typeof obj === 'object') {
+        for (var prop in obj) {
+            switch (prop) {
+                case 'groups':
+                case 'kind':
+                case 'id':
+                    delete obj[prop];
+                    break;
+                default:
+                    deepClean(obj[prop]);
+            }
+        }
+    }
+    return obj;
+}
+
 function cleanParameters(parameters) {
     return parameters.map(function (p) {
         var parameter2 = {};
@@ -9,7 +26,7 @@ function cleanParameters(parameters) {
                 case 'id':
                 case 'kind':
                 case 'kindString':
-                //case 'flags':
+                    //case 'flags':
                     continue;
 
                 case 'comment':
@@ -21,7 +38,7 @@ function cleanParameters(parameters) {
                     break;
 
                 default:
-                    parameter2[prop] = p[prop];
+                    parameter2[prop] = deepClean(p[prop]);
             }
         }
         return parameter2;
@@ -50,7 +67,7 @@ function cleanSignatures(signatures, kind, newChild) {
                 case 'flags':
                     continue;
 
-                    case 'type':
+                case 'type':
                     signature2.type = s.type.name;
                     break;
 
@@ -59,7 +76,7 @@ function cleanSignatures(signatures, kind, newChild) {
                     break;
 
                 default:
-                    signature2[prop] = s[prop];
+                    signature2[prop] = deepClean(s[prop]);
             }
         }
         addSignature(s.kindString, signature2);
@@ -90,7 +107,7 @@ function processChild(parent, child) {
                 break;
 
             default:
-                newChild[prop] = child[prop];
+                newChild[prop] = deepClean(child[prop]);
         }
     }
 

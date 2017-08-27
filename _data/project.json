@@ -65,12 +65,7 @@
               "kindString": "Call signature",
               "comment": {
                 "shortText": "Ensures an angle is not greater than 360",
-                "tags": [
-                  {
-                    "tag": "retiurns",
-                    "text": "Same polar angle but not greater than 360 degrees.\n"
-                  }
-                ]
+                "returns": "Same polar angle but not greater than 360 degrees.\n"
               },
               "parameters": [
                 {
@@ -1351,7 +1346,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 491,
+              "line": 463,
               "character": 25
             }
           ]
@@ -1382,7 +1377,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 513,
+              "line": 485,
               "character": 27
             }
           ]
@@ -1419,7 +1414,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 526,
+              "line": 498,
               "character": 27
             }
           ]
@@ -1458,7 +1453,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 658,
+              "line": 630,
               "character": 31
             }
           ]
@@ -1496,7 +1491,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 549,
+              "line": 521,
               "character": 30
             }
           ]
@@ -1539,7 +1534,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 603,
+              "line": 575,
               "character": 28
             }
           ]
@@ -1658,17 +1653,17 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 150,
+              "line": 122,
               "character": 30
             },
             {
               "fileName": "core/chain.ts",
-              "line": 160,
+              "line": 132,
               "character": 30
             },
             {
               "fileName": "core/chain.ts",
-              "line": 162,
+              "line": 134,
               "character": 30
             }
           ]
@@ -1699,7 +1694,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 130,
+              "line": 102,
               "character": 35
             }
           ]
@@ -3125,8 +3120,7 @@
           "extendedTypes": [
             {
               "type": "reference",
-              "name": "IExportOptions",
-              "id": 1446
+              "name": "IExportOptions"
             }
           ],
           "Property": {
@@ -3151,8 +3145,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.accuracy",
-                "id": 1447
+                "name": "IExportOptions.accuracy"
               }
             },
             "layerOptions": {
@@ -3173,23 +3166,17 @@
               "type": {
                 "type": "reflection",
                 "declaration": {
-                  "id": 1483,
                   "name": "__type",
-                  "kind": 65536,
                   "kindString": "Type literal",
                   "flags": {},
                   "indexSignature": [
                     {
-                      "id": 1484,
                       "name": "__index",
-                      "kind": 8192,
                       "kindString": "Index signature",
                       "flags": {},
                       "parameters": [
                         {
-                          "id": 1485,
                           "name": "layerId",
-                          "kind": 32768,
                           "kindString": "Parameter",
                           "flags": {},
                           "type": {
@@ -3200,8 +3187,7 @@
                       ],
                       "type": {
                         "type": "reference",
-                        "name": "IDXFLayerOptions",
-                        "id": 1479
+                        "name": "IDXFLayerOptions"
                       }
                     }
                   ],
@@ -3236,8 +3222,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.units",
-                "id": 1448
+                "name": "IExportOptions.units"
               }
             }
           }
@@ -3259,13 +3244,11 @@
           "extendedTypes": [
             {
               "type": "reference",
-              "name": "IFindLoopsOptions",
-              "id": 110
+              "name": "IFindLoopsOptions"
             },
             {
               "type": "reference",
-              "name": "IExportOptions",
-              "id": 1446
+              "name": "IExportOptions"
             }
           ],
           "Property": {
@@ -3290,8 +3273,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.accuracy",
-                "id": 1447
+                "name": "IExportOptions.accuracy"
               }
             },
             "extrusion": {
@@ -3371,8 +3353,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IOpenJsCadOptionsMap",
-                "id": 1910
+                "name": "IOpenJsCadOptionsMap"
               }
             },
             "pointMatchingDistance": {
@@ -3396,8 +3377,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IPointMatchOptions.pointMatchingDistance",
-                "id": 102
+                "name": "IPointMatchOptions.pointMatchingDistance"
               }
             },
             "removeFromOriginal": {
@@ -3421,8 +3401,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IFindLoopsOptions.removeFromOriginal",
-                "id": 111
+                "name": "IFindLoopsOptions.removeFromOriginal"
               }
             },
             "units": {
@@ -3446,8 +3425,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.units",
-                "id": 1448
+                "name": "IExportOptions.units"
               }
             }
           }
@@ -3458,16 +3436,12 @@
           },
           "indexSignature": [
             {
-              "id": 1911,
               "name": "__index",
-              "kind": 8192,
               "kindString": "Index signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 1912,
                   "name": "modelId",
-                  "kind": 32768,
                   "kindString": "Parameter",
                   "flags": {},
                   "type": {
@@ -3478,8 +3452,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IOpenJsCadOptions",
-                "id": 1901
+                "name": "IOpenJsCadOptions"
               }
             }
           ],
@@ -3508,8 +3481,7 @@
           "extendedTypes": [
             {
               "type": "reference",
-              "name": "IExportOptions",
-              "id": 1446
+              "name": "IExportOptions"
             }
           ],
           "Property": {
@@ -3534,8 +3506,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.accuracy",
-                "id": 1447
+                "name": "IExportOptions.accuracy"
               }
             },
             "origin": {
@@ -3555,8 +3526,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               }
             },
             "stroke": {
@@ -3600,8 +3570,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.units",
-                "id": 1448
+                "name": "IExportOptions.units"
               }
             }
           }
@@ -3615,9 +3584,7 @@
           },
           "indexSignature": [
             {
-              "id": 1961,
               "name": "__index",
-              "kind": 8192,
               "kindString": "Index signature",
               "flags": {},
               "comment": {
@@ -3625,9 +3592,7 @@
               },
               "parameters": [
                 {
-                  "id": 1962,
                   "name": "layer",
-                  "kind": 32768,
                   "kindString": "Parameter",
                   "flags": {},
                   "type": {
@@ -3667,8 +3632,7 @@
           "extendedBy": [
             {
               "type": "reference",
-              "name": "ISVGRenderOptions",
-              "id": 2223
+              "name": "ISVGRenderOptions"
             }
           ],
           "Property": {
@@ -3771,13 +3735,11 @@
           "extendedTypes": [
             {
               "type": "reference",
-              "name": "IExportOptions",
-              "id": 1446
+              "name": "IExportOptions"
             },
             {
               "type": "reference",
-              "name": "ISVGElementRenderOptions",
-              "id": 2218
+              "name": "ISVGElementRenderOptions"
             }
           ],
           "Property": {
@@ -3802,8 +3764,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.accuracy",
-                "id": 1447
+                "name": "IExportOptions.accuracy"
               }
             },
             "annotate": {
@@ -3867,8 +3828,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "ISVGElementRenderOptions.cssStyle",
-                "id": 2222
+                "name": "ISVGElementRenderOptions.cssStyle"
               }
             },
             "fill": {
@@ -3892,8 +3852,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "ISVGElementRenderOptions.fill",
-                "id": 2219
+                "name": "ISVGElementRenderOptions.fill"
               }
             },
             "fillRule": {
@@ -3963,23 +3922,17 @@
               "type": {
                 "type": "reflection",
                 "declaration": {
-                  "id": 2234,
                   "name": "__type",
-                  "kind": 65536,
                   "kindString": "Type literal",
                   "flags": {},
                   "indexSignature": [
                     {
-                      "id": 2235,
                       "name": "__index",
-                      "kind": 8192,
                       "kindString": "Index signature",
                       "flags": {},
                       "parameters": [
                         {
-                          "id": 2236,
                           "name": "layerId",
-                          "kind": 32768,
                           "kindString": "Parameter",
                           "flags": {},
                           "type": {
@@ -3990,8 +3943,7 @@
                       ],
                       "type": {
                         "type": "reference",
-                        "name": "ISVGElementRenderOptions",
-                        "id": 2218
+                        "name": "ISVGElementRenderOptions"
                       }
                     }
                   ],
@@ -4022,8 +3974,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               }
             },
             "scale": {
@@ -4087,8 +4038,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "ISVGElementRenderOptions.stroke",
-                "id": 2220
+                "name": "ISVGElementRenderOptions.stroke"
               }
             },
             "strokeLineCap": {
@@ -4132,8 +4082,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "ISVGElementRenderOptions.strokeWidth",
-                "id": 2221
+                "name": "ISVGElementRenderOptions.strokeWidth"
               }
             },
             "svgAttrs": {
@@ -4153,8 +4102,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IXmlTagAttrs",
-                "id": 1866
+                "name": "IXmlTagAttrs"
               }
             },
             "units": {
@@ -4178,8 +4126,7 @@
               },
               "inheritedFrom": {
                 "type": "reference",
-                "name": "IExportOptions.units",
-                "id": 1448
+                "name": "IExportOptions.units"
               }
             },
             "useSvgPathOnly": {
@@ -4233,9 +4180,7 @@
           },
           "indexSignature": [
             {
-              "id": 2213,
               "name": "__index",
-              "kind": 8192,
               "kindString": "Index signature",
               "flags": {},
               "comment": {
@@ -4243,9 +4188,7 @@
               },
               "parameters": [
                 {
-                  "id": 2214,
                   "name": "unitType",
-                  "kind": 32768,
                   "kindString": "Parameter",
                   "flags": {},
                   "type": {
@@ -4257,16 +4200,12 @@
               "type": {
                 "type": "reflection",
                 "declaration": {
-                  "id": 2215,
                   "name": "__type",
-                  "kind": 65536,
                   "kindString": "Type literal",
                   "flags": {},
                   "children": [
                     {
-                      "id": 2217,
                       "name": "scaleConversion",
-                      "kind": 32,
                       "kindString": "Variable",
                       "flags": {},
                       "sources": [
@@ -4282,9 +4221,7 @@
                       }
                     },
                     {
-                      "id": 2216,
                       "name": "svgUnitType",
-                      "kind": 32,
                       "kindString": "Variable",
                       "flags": {},
                       "sources": [
@@ -4298,16 +4235,6 @@
                         "type": "instrinct",
                         "name": "string"
                       }
-                    }
-                  ],
-                  "groups": [
-                    {
-                      "title": "Variables",
-                      "kind": 32,
-                      "children": [
-                        2217,
-                        2216
-                      ]
                     }
                   ],
                   "sources": [
@@ -5235,8 +5162,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "svgUnitConversion",
-            "id": 2212
+            "name": "svgUnitConversion"
           }
         }
       }
@@ -6305,8 +6231,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IModel",
-                "id": 48
+                "name": "IModel"
               }
             },
             "modelMap": {
@@ -6326,8 +6251,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IMeasureMap",
-                "id": 71
+                "name": "IMeasureMap"
               }
             },
             "modelsMeasured": {
@@ -6368,8 +6292,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IMeasureMap",
-                "id": 71
+                "name": "IMeasureMap"
               }
             }
           },
@@ -7025,8 +6948,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IPathArc",
-              "id": 20
+              "name": "IPathArc"
             }
           ],
           "Constructor": {
@@ -7169,8 +7091,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathArc.endAngle",
-                "id": 22
+                "name": "IPathArc.endAngle"
               }
             },
             "origin": {
@@ -7187,13 +7108,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathArc.origin",
-                "id": 25
+                "name": "IPathArc.origin"
               }
             },
             "radius": {
@@ -7214,8 +7133,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathArc.radius",
-                "id": 23
+                "name": "IPathArc.radius"
               }
             },
             "startAngle": {
@@ -7236,8 +7154,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathArc.startAngle",
-                "id": 21
+                "name": "IPathArc.startAngle"
               }
             },
             "type": {
@@ -7258,8 +7175,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathArc.type",
-                "id": 24
+                "name": "IPathArc.type"
               }
             }
           }
@@ -7288,8 +7204,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IPathLine",
-              "id": 10
+              "name": "IPathLine"
             }
           ],
           "Constructor": {
@@ -7323,13 +7238,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.end",
-                "id": 11
+                "name": "IPathLine.end"
               }
             },
             "origin": {
@@ -7346,13 +7259,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.origin",
-                "id": 13
+                "name": "IPathLine.origin"
               }
             },
             "type": {
@@ -7373,8 +7284,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.type",
-                "id": 12
+                "name": "IPathLine.type"
               }
             }
           }
@@ -7396,8 +7306,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IPathCircle",
-              "id": 15
+              "name": "IPathCircle"
             }
           ],
           "Constructor": {
@@ -7503,13 +7412,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathCircle.origin",
-                "id": 18
+                "name": "IPathCircle.origin"
               }
             },
             "radius": {
@@ -7530,8 +7437,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathCircle.radius",
-                "id": 16
+                "name": "IPathCircle.radius"
               }
             },
             "type": {
@@ -7552,8 +7458,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathCircle.type",
-                "id": 17
+                "name": "IPathCircle.type"
               }
             }
           }
@@ -7575,8 +7480,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IPathLine",
-              "id": 10
+              "name": "IPathLine"
             }
           ],
           "Constructor": {
@@ -7633,13 +7537,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.end",
-                "id": 11
+                "name": "IPathLine.end"
               }
             },
             "origin": {
@@ -7656,13 +7558,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.origin",
-                "id": 13
+                "name": "IPathLine.origin"
               }
             },
             "type": {
@@ -7683,8 +7583,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.type",
-                "id": 12
+                "name": "IPathLine.type"
               }
             }
           }
@@ -7723,8 +7622,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IPathLine",
-              "id": 10
+              "name": "IPathLine"
             }
           ],
           "Constructor": {
@@ -7768,13 +7666,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.end",
-                "id": 11
+                "name": "IPathLine.end"
               }
             },
             "origin": {
@@ -7791,13 +7687,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.origin",
-                "id": 13
+                "name": "IPathLine.origin"
               }
             },
             "type": {
@@ -7818,8 +7712,7 @@
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IPathLine.type",
-                "id": 12
+                "name": "IPathLine.type"
               }
             }
           }
@@ -8764,8 +8657,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -8809,13 +8701,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -8834,8 +8724,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9004,13 +8893,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IModelMap",
-                "id": 45
+                "name": "IModelMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.models",
-                "id": 52
+                "name": "IModel.models"
               }
             },
             "origin": {
@@ -9027,13 +8914,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.origin",
-                "id": 49
+                "name": "IModel.origin"
               }
             },
             "paths": {
@@ -9050,13 +8935,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             },
             "seed": {
@@ -9073,8 +8956,7 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathBezierSeed",
-                "id": 27
+                "name": "IPathBezierSeed"
               }
             },
             "type": {
@@ -9096,8 +8978,7 @@
               "defaultValue": " BezierCurve.typeName",
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.type",
-                "id": 50
+                "name": "IModel.type"
               }
             },
             "typeName": {
@@ -9231,8 +9112,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9282,13 +9162,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -9307,8 +9185,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9352,13 +9229,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -9377,8 +9252,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9495,13 +9369,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -9520,8 +9392,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9581,13 +9452,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -9606,8 +9475,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9660,13 +9528,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -9685,8 +9551,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9804,13 +9669,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IModelMap",
-                "id": 45
+                "name": "IModelMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.models",
-                "id": 52
+                "name": "IModel.models"
               }
             },
             "origin": {
@@ -9827,13 +9690,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.origin",
-                "id": 49
+                "name": "IModel.origin"
               }
             }
           }
@@ -9852,8 +9713,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -9944,13 +9804,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IModelMap",
-                "id": 45
+                "name": "IModelMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.models",
-                "id": 52
+                "name": "IModel.models"
               }
             }
           }
@@ -9969,8 +9827,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10020,13 +9877,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10045,8 +9900,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10085,13 +9939,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10110,8 +9962,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10172,13 +10023,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IModelMap",
-                "id": 45
+                "name": "IModelMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.models",
-                "id": 52
+                "name": "IModel.models"
               }
             },
             "paths": {
@@ -10195,13 +10044,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10220,8 +10067,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10274,13 +10120,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           },
@@ -10379,8 +10223,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10462,13 +10305,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.origin",
-                "id": 49
+                "name": "IModel.origin"
               }
             },
             "paths": {
@@ -10485,13 +10326,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10510,8 +10349,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10552,13 +10390,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10577,8 +10413,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10647,13 +10482,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.origin",
-                "id": 49
+                "name": "IModel.origin"
               }
             },
             "paths": {
@@ -10670,13 +10503,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10695,8 +10526,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10735,13 +10565,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10760,8 +10588,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10811,13 +10638,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IModelMap",
-                "id": 45
+                "name": "IModelMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.models",
-                "id": 52
+                "name": "IModel.models"
               }
             },
             "origin": {
@@ -10834,13 +10659,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPoint",
-                "id": 3
+                "name": "IPoint"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.origin",
-                "id": 49
+                "name": "IModel.origin"
               }
             },
             "paths": {
@@ -10857,13 +10680,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10882,8 +10703,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10917,13 +10737,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           }
@@ -10942,8 +10760,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -10995,13 +10812,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IPathMap",
-                "id": 42
+                "name": "IPathMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.paths",
-                "id": 51
+                "name": "IModel.paths"
               }
             }
           },
@@ -11055,8 +10870,7 @@
           "implementedTypes": [
             {
               "type": "reference",
-              "name": "IModel",
-              "id": 48
+              "name": "IModel"
             }
           ],
           "Constructor": {
@@ -11126,13 +10940,11 @@
               ],
               "type": {
                 "type": "reference",
-                "name": "IModelMap",
-                "id": 45
+                "name": "IModelMap"
               },
               "implementationOf": {
                 "type": "reference",
-                "name": "IModel.models",
-                "id": 52
+                "name": "IModel.models"
               }
             }
           }
@@ -11155,8 +10967,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "ICascade",
-          "id": 224
+          "name": "ICascade"
         }
       ],
       "Property": {
@@ -11180,8 +10991,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$initial",
-            "id": 225
+            "name": "ICascade.$initial"
           }
         },
         "$reset": {
@@ -11201,16 +11011,12 @@
           "type": {
             "type": "reflection",
             "declaration": {
-              "id": 441,
               "name": "__type",
-              "kind": 65536,
               "kindString": "Type literal",
               "flags": {},
               "signatures": [
                 {
-                  "id": 442,
                   "name": "__call",
-                  "kind": 4096,
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
@@ -11230,8 +11036,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$reset",
-            "id": 227
+            "name": "ICascade.$reset"
           }
         },
         "$result": {
@@ -11254,8 +11059,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$result",
-            "id": 226
+            "name": "ICascade.$result"
           }
         }
       },
@@ -12264,8 +12068,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "ICascade",
-          "id": 224
+          "name": "ICascade"
         }
       ],
       "Property": {
@@ -12289,8 +12092,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$initial",
-            "id": 225
+            "name": "ICascade.$initial"
           }
         },
         "$reset": {
@@ -12310,16 +12112,12 @@
           "type": {
             "type": "reflection",
             "declaration": {
-              "id": 482,
               "name": "__type",
-              "kind": 65536,
               "kindString": "Type literal",
               "flags": {},
               "signatures": [
                 {
-                  "id": 483,
                   "name": "__call",
-                  "kind": 4096,
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
@@ -12339,8 +12137,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$reset",
-            "id": 227
+            "name": "ICascade.$reset"
           }
         },
         "$result": {
@@ -12363,8 +12160,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$result",
-            "id": 226
+            "name": "ICascade.$result"
           }
         }
       },
@@ -12742,8 +12538,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "ICascade",
-          "id": 224
+          "name": "ICascade"
         }
       ],
       "Property": {
@@ -12767,8 +12562,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$initial",
-            "id": 225
+            "name": "ICascade.$initial"
           }
         },
         "$reset": {
@@ -12788,16 +12582,12 @@
           "type": {
             "type": "reflection",
             "declaration": {
-              "id": 521,
               "name": "__type",
-              "kind": 65536,
               "kindString": "Type literal",
               "flags": {},
               "signatures": [
                 {
-                  "id": 522,
                   "name": "__call",
-                  "kind": 4096,
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
@@ -12817,8 +12607,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$reset",
-            "id": 227
+            "name": "ICascade.$reset"
           }
         },
         "$result": {
@@ -12841,8 +12630,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "ICascade.$result",
-            "id": 226
+            "name": "ICascade.$result"
           }
         }
       },
@@ -13190,16 +12978,12 @@
       },
       "typeParameter": [
         {
-          "id": 1097,
           "name": "K",
-          "kind": 131072,
           "kindString": "Type parameter",
           "flags": {}
         },
         {
-          "id": 1098,
           "name": "T",
-          "kind": 131072,
           "kindString": "Type parameter",
           "flags": {}
         }
@@ -13256,9 +13040,7 @@
       },
       "typeParameter": [
         {
-          "id": 1092,
           "name": "K",
-          "kind": 131072,
           "kindString": "Type parameter",
           "flags": {}
         }
@@ -13310,8 +13092,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IModel",
-          "id": 48
+          "name": "IModel"
         }
       ],
       "Property": {
@@ -13333,25 +13114,19 @@
           "type": {
             "type": "reflection",
             "declaration": {
-              "id": 208,
               "name": "__type",
-              "kind": 65536,
               "kindString": "Type literal",
               "flags": {
                 "isExported": true
               },
               "indexSignature": [
                 {
-                  "id": 209,
                   "name": "__index",
-                  "kind": 8192,
                   "kindString": "Index signature",
                   "flags": {},
                   "parameters": [
                     {
-                      "id": 210,
                       "name": "exporterName",
-                      "kind": 32768,
                       "kindString": "Parameter",
                       "flags": {},
                       "type": {
@@ -13377,8 +13152,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.exporterOptions",
-            "id": 56
+            "name": "IModel.exporterOptions"
           }
         },
         "layer": {
@@ -13402,8 +13176,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.layer",
-            "id": 55
+            "name": "IModel.layer"
           }
         },
         "models": {
@@ -13423,13 +13196,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModelMap",
-            "id": 45
+            "name": "IModelMap"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.models",
-            "id": 52
+            "name": "IModel.models"
           }
         },
         "notes": {
@@ -13453,8 +13224,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.notes",
-            "id": 54
+            "name": "IModel.notes"
           }
         },
         "origin": {
@@ -13474,13 +13244,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.origin",
-            "id": 49
+            "name": "IModel.origin"
           }
         },
         "paths": {
@@ -13500,13 +13268,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPathMap",
-            "id": 42
+            "name": "IPathMap"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.paths",
-            "id": 51
+            "name": "IModel.paths"
           }
         },
         "radius": {
@@ -13549,8 +13315,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.\"type\"",
-            "id": 50
+            "name": "IModel.\"type\""
           }
         },
         "units": {
@@ -13574,8 +13339,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IModel.units",
-            "id": 53
+            "name": "IModel.units"
           }
         }
       }
@@ -13597,25 +13361,21 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "ICascadeModel",
-          "id": 337
+          "name": "ICascadeModel"
         },
         {
           "type": "reference",
-          "name": "ICascadePath",
-          "id": 443
+          "name": "ICascadePath"
         },
         {
           "type": "reference",
-          "name": "ICascadePoint",
-          "id": 484
+          "name": "ICascadePoint"
         }
       ],
       "implementedBy": [
         {
           "type": "reference",
-          "name": "Cascade",
-          "id": 230
+          "name": "Cascade"
         }
       ],
       "Property": {
@@ -13655,18 +13415,14 @@
           "type": {
             "type": "reflection",
             "declaration": {
-              "id": 228,
               "name": "__type",
-              "kind": 65536,
               "kindString": "Type literal",
               "flags": {
                 "isExported": true
               },
               "signatures": [
                 {
-                  "id": 229,
                   "name": "__call",
-                  "kind": 4096,
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
@@ -13727,7 +13483,7 @@
             "isOptional": true
           },
           "comment": {
-            "shortText": "Chains that are contained within this chain. Populated when chains are found with the 'contain: true' option"
+            "shortText": "Chains that are contained within this chain. Populated when chains are found with the 'contain' option"
           },
           "sources": [
             {
@@ -13739,14 +13495,12 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IChain",
-            "id": 154
+            "name": "IChain"
           }
         },
         "endless": {
           "flags": {
-            "isExported": true,
-            "isOptional": true
+            "isExported": true
           },
           "comment": {
             "shortText": "Flag if this chain forms a loop end to end."
@@ -13780,8 +13534,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IChainLink",
-            "id": 149
+            "name": "IChainLink"
           }
         },
         "pathLength": {
@@ -13886,8 +13639,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "pathLength": {
@@ -13944,8 +13696,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IWalkPath",
-            "id": 135
+            "name": "IWalkPath"
           }
         }
       }
@@ -13959,9 +13710,7 @@
       },
       "indexSignature": [
         {
-          "id": 160,
           "name": "__index",
-          "kind": 8192,
           "kindString": "Index signature",
           "flags": {},
           "comment": {
@@ -13969,9 +13718,7 @@
           },
           "parameters": [
             {
-              "id": 161,
               "name": "layer",
-              "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
               "type": {
@@ -13983,8 +13730,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IChain",
-            "id": 154
+            "name": "IChain"
           }
         }
       ],
@@ -14013,8 +13759,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPointMatchOptions",
-          "id": 101
+          "name": "IPointMatchOptions"
         }
       ],
       "Property": {
@@ -14035,8 +13780,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "measureA": {
@@ -14056,8 +13800,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Atlas",
-            "id": 1278
+            "name": "Atlas"
           }
         },
         "measureB": {
@@ -14077,8 +13820,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Atlas",
-            "id": 1278
+            "name": "Atlas"
           }
         },
         "out_deleted": {
@@ -14099,8 +13841,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           }
         },
         "pointMatchingDistance": {
@@ -14124,8 +13865,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPointMatchOptions.pointMatchingDistance",
-            "id": 102
+            "name": "IPointMatchOptions.pointMatchingDistance"
           }
         },
         "trimDeadEnds": {
@@ -14204,8 +13944,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPointMatchOptions",
-          "id": 101
+          "name": "IPointMatchOptions"
         }
       ],
       "Property": {
@@ -14253,8 +13992,7 @@
               },
               {
                 "type": "reference",
-                "name": "IContainChainsOptions",
-                "id": 174
+                "name": "IContainChainsOptions"
               }
             ]
           }
@@ -14280,8 +14018,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPointMatchOptions.pointMatchingDistance",
-            "id": 102
+            "name": "IPointMatchOptions.pointMatchingDistance"
           }
         },
         "shallow": {
@@ -14343,15 +14080,13 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPointMatchOptions",
-          "id": 101
+          "name": "IPointMatchOptions"
         }
       ],
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IOpenJsCadOptions",
-          "id": 1901
+          "name": "IOpenJsCadOptions"
         }
       ],
       "Property": {
@@ -14376,8 +14111,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPointMatchOptions.pointMatchingDistance",
-            "id": 102
+            "name": "IPointMatchOptions.pointMatchingDistance"
           }
         },
         "removeFromOriginal": {
@@ -14456,8 +14190,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IMetaParameter",
-            "id": 211
+            "name": "IMetaParameter"
           }
         },
         "notes": {
@@ -14499,8 +14232,7 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IMeasureWithCenter",
-          "id": 65
+          "name": "IMeasureWithCenter"
         }
       ],
       "Property": {
@@ -14520,8 +14252,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "low": {
@@ -14540,8 +14271,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         }
       }
@@ -14555,9 +14285,7 @@
       },
       "indexSignature": [
         {
-          "id": 72,
           "name": "__index",
-          "kind": 8192,
           "kindString": "Index signature",
           "flags": {},
           "comment": {
@@ -14565,9 +14293,7 @@
           },
           "parameters": [
             {
-              "id": 73,
               "name": "key",
-              "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
               "type": {
@@ -14578,8 +14304,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IMeasure",
-            "id": 62
+            "name": "IMeasure"
           }
         }
       ],
@@ -14623,8 +14348,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "measureAtlas": {
@@ -14644,8 +14368,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "Atlas",
-            "id": 1278
+            "name": "Atlas"
           }
         },
         "out_intersectionPoints": {
@@ -14666,8 +14389,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         }
       }
@@ -14689,8 +14411,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IMeasure",
-          "id": 62
+          "name": "IMeasure"
         }
       ],
       "Property": {
@@ -14710,8 +14431,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "height": {
@@ -14749,13 +14469,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IMeasure.high",
-            "id": 64
+            "name": "IMeasure.high"
           }
         },
         "low": {
@@ -14774,13 +14492,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IMeasure.low",
-            "id": 63
+            "name": "IMeasure.low"
           }
         },
         "width": {
@@ -14997,15 +14713,13 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPath",
-          "id": 6
+          "name": "IPath"
         }
       ],
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IPathDirectionalWithPrimeContext",
-          "id": 1770
+          "name": "IPathDirectionalWithPrimeContext"
         }
       ],
       "Property": {
@@ -15026,8 +14740,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "layer": {
@@ -15051,8 +14764,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.layer",
-            "id": 9
+            "name": "IPath.layer"
           }
         },
         "origin": {
@@ -15071,13 +14783,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.origin",
-            "id": 8
+            "name": "IPath.origin"
           }
         },
         "reversed": {
@@ -15120,8 +14830,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.\"type\"",
-            "id": 7
+            "name": "IPath.\"type\""
           }
         }
       }
@@ -15158,8 +14867,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "path1Angles": {
@@ -15223,8 +14931,7 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IPathIntersectionOptions",
-          "id": 92
+          "name": "IPathIntersectionOptions"
         }
       ],
       "Property": {
@@ -15287,8 +14994,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPathIntersectionBaseOptions",
-          "id": 89
+          "name": "IPathIntersectionBaseOptions"
         }
       ],
       "Property": {
@@ -15313,8 +15019,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPathIntersectionBaseOptions.excludeTangents",
-            "id": 90
+            "name": "IPathIntersectionBaseOptions.excludeTangents"
           }
         },
         "out_AreOverlapped": {
@@ -15338,8 +15043,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPathIntersectionBaseOptions.out_AreOverlapped",
-            "id": 91
+            "name": "IPathIntersectionBaseOptions.out_AreOverlapped"
           }
         },
         "path1Offset": {
@@ -15359,8 +15063,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "path2Offset": {
@@ -15380,8 +15083,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         }
       }
@@ -15403,8 +15105,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPath",
-          "id": 6
+          "name": "IPath"
         }
       ],
       "Property": {
@@ -15429,8 +15130,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.layer",
-            "id": 9
+            "name": "IPath.layer"
           }
         },
         "origin": {
@@ -15449,13 +15149,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.origin",
-            "id": 8
+            "name": "IPath.origin"
           }
         },
         "reason": {
@@ -15516,8 +15214,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.\"type\"",
-            "id": 7
+            "name": "IPath.\"type\""
           }
         }
       }
@@ -15539,23 +15236,19 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "ICombineOptions",
-          "id": 103
+          "name": "ICombineOptions"
         },
         {
           "type": "reference",
-          "name": "IFindLoopsOptions",
-          "id": 110
+          "name": "IFindLoopsOptions"
         },
         {
           "type": "reference",
-          "name": "ISimplifyOptions",
-          "id": 113
+          "name": "ISimplifyOptions"
         },
         {
           "type": "reference",
-          "name": "IFindChainsOptions",
-          "id": 168
+          "name": "IFindChainsOptions"
         }
       ],
       "Property": {
@@ -15598,8 +15291,7 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IWalkModel",
-          "id": 180
+          "name": "IWalkModel"
         }
       ],
       "Property": {
@@ -15632,8 +15324,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           }
         },
         "parentModel": {
@@ -15649,8 +15340,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           }
         }
       }
@@ -15672,13 +15362,11 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IWalkPath",
-          "id": 135
+          "name": "IWalkPath"
         },
         {
           "type": "reference",
-          "name": "IPathDirectionalWithPrimeContext",
-          "id": 1770
+          "name": "IPathDirectionalWithPrimeContext"
         }
       ],
       "Property": {
@@ -15695,8 +15383,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           }
         },
         "pathId": {
@@ -15734,13 +15421,11 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IWalkPath",
-          "id": 135
+          "name": "IWalkPath"
         },
         {
           "type": "reference",
-          "name": "IWalkModel",
-          "id": 180
+          "name": "IWalkModel"
         }
       ],
       "Property": {
@@ -15773,8 +15458,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "route": {
@@ -15829,8 +15513,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPointMatchOptions",
-          "id": 101
+          "name": "IPointMatchOptions"
         }
       ],
       "Property": {
@@ -15855,8 +15538,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPointMatchOptions.pointMatchingDistance",
-            "id": 102
+            "name": "IPointMatchOptions.pointMatchingDistance"
           }
         },
         "scalarMatchingDistance": {
@@ -15931,8 +15613,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPathLine",
-            "id": 10
+            "name": "IPathLine"
           }
         },
         "slope": {
@@ -15994,13 +15675,11 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IRefModelInModel",
-          "id": 176
+          "name": "IRefModelInModel"
         },
         {
           "type": "reference",
-          "name": "IRouteOffset",
-          "id": 130
+          "name": "IRouteOffset"
         }
       ],
       "Property": {
@@ -16021,8 +15700,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRefModelInModel.childId",
-            "id": 178
+            "name": "IRefModelInModel.childId"
           }
         },
         "childModel": {
@@ -16038,13 +15716,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRefModelInModel.childModel",
-            "id": 179
+            "name": "IRefModelInModel.childModel"
           }
         },
         "layer": {
@@ -16064,8 +15740,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.layer",
-            "id": 131
+            "name": "IRouteOffset.layer"
           }
         },
         "offset": {
@@ -16081,13 +15756,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.offset",
-            "id": 132
+            "name": "IRouteOffset.offset"
           }
         },
         "parentModel": {
@@ -16103,13 +15776,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRefModelInModel.parentModel",
-            "id": 177
+            "name": "IRefModelInModel.parentModel"
           }
         },
         "route": {
@@ -16130,8 +15801,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.route",
-            "id": 133
+            "name": "IRouteOffset.route"
           }
         },
         "routeKey": {
@@ -16151,8 +15821,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.routeKey",
-            "id": 134
+            "name": "IRouteOffset.routeKey"
           }
         }
       }
@@ -16253,8 +15922,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IWalkModelCallback",
-            "id": 188
+            "name": "IWalkModelCallback"
           }
         },
         "beforeChildWalk": {
@@ -16274,8 +15942,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IWalkModelCancellableCallback",
-            "id": 191
+            "name": "IWalkModelCancellableCallback"
           }
         },
         "onPath": {
@@ -16295,8 +15962,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IWalkPathCallback",
-            "id": 143
+            "name": "IWalkPathCallback"
           }
         }
       }
@@ -16318,25 +15984,21 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IRefPathIdInModel",
-          "id": 127
+          "name": "IRefPathIdInModel"
         },
         {
           "type": "reference",
-          "name": "IRouteOffset",
-          "id": 130
+          "name": "IRouteOffset"
         }
       ],
       "extendedBy": [
         {
           "type": "reference",
-          "name": "ICrossedPath",
-          "id": 1008
+          "name": "ICrossedPath"
         },
         {
           "type": "reference",
-          "name": "IRefPathEndpoints",
-          "id": 1795
+          "name": "IRefPathEndpoints"
         }
       ],
       "Property": {
@@ -16357,8 +16019,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.layer",
-            "id": 131
+            "name": "IRouteOffset.layer"
           }
         },
         "modelContext": {
@@ -16374,13 +16035,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRefPathIdInModel.modelContext",
-            "id": 128
+            "name": "IRefPathIdInModel.modelContext"
           }
         },
         "offset": {
@@ -16396,13 +16055,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.offset",
-            "id": 132
+            "name": "IRouteOffset.offset"
           }
         },
         "pathContext": {
@@ -16418,8 +16075,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPath",
-            "id": 6
+            "name": "IPath"
           }
         },
         "pathId": {
@@ -16439,8 +16095,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRefPathIdInModel.pathId",
-            "id": 129
+            "name": "IRefPathIdInModel.pathId"
           }
         },
         "route": {
@@ -16461,8 +16116,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.route",
-            "id": 133
+            "name": "IRouteOffset.route"
           }
         },
         "routeKey": {
@@ -16482,8 +16136,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IRouteOffset.routeKey",
-            "id": 134
+            "name": "IRouteOffset.routeKey"
           }
         }
       }
@@ -16625,120 +16278,97 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IBoundingHex",
-          "id": 198
+          "name": "IBoundingHex"
         },
         {
           "type": "reference",
-          "name": "ILoopModel",
-          "id": 1782
+          "name": "ILoopModel"
         }
       ],
       "implementedBy": [
         {
           "type": "reference",
-          "name": "Belt",
-          "id": 2748
+          "name": "Belt"
         },
         {
           "type": "reference",
-          "name": "BezierCurve",
-          "id": 2454
+          "name": "BezierCurve"
         },
         {
           "type": "reference",
-          "name": "BoltCircle",
-          "id": 2643
+          "name": "BoltCircle"
         },
         {
           "type": "reference",
-          "name": "BoltRectangle",
-          "id": 2654
+          "name": "BoltRectangle"
         },
         {
           "type": "reference",
-          "name": "ConnectTheDots",
-          "id": 2590
+          "name": "ConnectTheDots"
         },
         {
           "type": "reference",
-          "name": "Dogbone",
-          "id": 2664
+          "name": "Dogbone"
         },
         {
           "type": "reference",
-          "name": "Dome",
-          "id": 2676
+          "name": "Dome"
         },
         {
           "type": "reference",
-          "name": "Ellipse",
-          "id": 2544
+          "name": "Ellipse"
         },
         {
           "type": "reference",
-          "name": "EllipticArc",
-          "id": 2563
+          "name": "EllipticArc"
         },
         {
           "type": "reference",
-          "name": "Holes",
-          "id": 2633
+          "name": "Holes"
         },
         {
           "type": "reference",
-          "name": "Oval",
-          "id": 2701
+          "name": "Oval"
         },
         {
           "type": "reference",
-          "name": "OvalArc",
-          "id": 2710
+          "name": "OvalArc"
         },
         {
           "type": "reference",
-          "name": "Polygon",
-          "id": 2612
+          "name": "Polygon"
         },
         {
           "type": "reference",
-          "name": "Rectangle",
-          "id": 2724
+          "name": "Rectangle"
         },
         {
           "type": "reference",
-          "name": "Ring",
-          "id": 2739
+          "name": "Ring"
         },
         {
           "type": "reference",
-          "name": "RoundRectangle",
-          "id": 2687
+          "name": "RoundRectangle"
         },
         {
           "type": "reference",
-          "name": "SCurve",
-          "id": 2758
+          "name": "SCurve"
         },
         {
           "type": "reference",
-          "name": "Slot",
-          "id": 2767
+          "name": "Slot"
         },
         {
           "type": "reference",
-          "name": "Square",
-          "id": 2780
+          "name": "Square"
         },
         {
           "type": "reference",
-          "name": "Star",
-          "id": 2788
+          "name": "Star"
         },
         {
           "type": "reference",
-          "name": "Text",
-          "id": 2803
+          "name": "Text"
         }
       ],
       "Property": {
@@ -16760,25 +16390,19 @@
           "type": {
             "type": "reflection",
             "declaration": {
-              "id": 57,
               "name": "__type",
-              "kind": 65536,
               "kindString": "Type literal",
               "flags": {
                 "isExported": true
               },
               "indexSignature": [
                 {
-                  "id": 58,
                   "name": "__index",
-                  "kind": 8192,
                   "kindString": "Index signature",
                   "flags": {},
                   "parameters": [
                     {
-                      "id": 59,
                       "name": "exporterName",
-                      "kind": 32768,
                       "kindString": "Parameter",
                       "flags": {},
                       "type": {
@@ -16840,8 +16464,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModelMap",
-            "id": 45
+            "name": "IModelMap"
           }
         },
         "notes": {
@@ -16881,8 +16504,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "paths": {
@@ -16902,8 +16524,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPathMap",
-            "id": 42
+            "name": "IPathMap"
           }
         },
         "type": {
@@ -16957,9 +16578,7 @@
       },
       "indexSignature": [
         {
-          "id": 46,
           "name": "__index",
-          "kind": 8192,
           "kindString": "Index signature",
           "flags": {},
           "comment": {
@@ -16967,9 +16586,7 @@
           },
           "parameters": [
             {
-              "id": 47,
               "name": "id",
-              "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
               "type": {
@@ -16980,8 +16597,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IModel",
-            "id": 48
+            "name": "IModel"
           }
         }
       ],
@@ -17010,28 +16626,23 @@
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IPathLine",
-          "id": 10
+          "name": "IPathLine"
         },
         {
           "type": "reference",
-          "name": "IPathCircle",
-          "id": 15
+          "name": "IPathCircle"
         },
         {
           "type": "reference",
-          "name": "IPathArcInBezierCurve",
-          "id": 37
+          "name": "IPathArcInBezierCurve"
         },
         {
           "type": "reference",
-          "name": "IPathRemoved",
-          "id": 74
+          "name": "IPathRemoved"
         },
         {
           "type": "reference",
-          "name": "IPathDirectional",
-          "id": 116
+          "name": "IPathDirectional"
         }
       ],
       "Property": {
@@ -17071,8 +16682,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "type": {
@@ -17114,15 +16724,13 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPathCircle",
-          "id": 15
+          "name": "IPathCircle"
         }
       ],
       "implementedBy": [
         {
           "type": "reference",
-          "name": "Arc",
-          "id": 829
+          "name": "Arc"
         }
       ],
       "Property": {
@@ -17166,8 +16774,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.layer",
-            "id": 9
+            "name": "IPath.layer"
           }
         },
         "origin": {
@@ -17186,13 +16793,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.origin",
-            "id": 8
+            "name": "IPath.origin"
           }
         },
         "radius": {
@@ -17215,8 +16820,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPathCircle.radius",
-            "id": 16
+            "name": "IPathCircle.radius"
           }
         },
         "startAngle": {
@@ -17258,8 +16862,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.\"type\"",
-            "id": 7
+            "name": "IPath.\"type\""
           }
         }
       }
@@ -17281,8 +16884,7 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPath",
-          "id": 6
+          "name": "IPath"
         }
       ],
       "Property": {
@@ -17299,8 +16901,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IBezierRange",
-            "id": 34
+            "name": "IBezierRange"
           }
         },
         "layer": {
@@ -17324,8 +16925,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.layer",
-            "id": 9
+            "name": "IPath.layer"
           }
         },
         "origin": {
@@ -17344,13 +16944,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.origin",
-            "id": 8
+            "name": "IPath.origin"
           }
         },
         "type": {
@@ -17373,8 +16971,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.\"type\"",
-            "id": 7
+            "name": "IPath.\"type\""
           }
         }
       }
@@ -17396,15 +16993,13 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPathLine",
-          "id": 10
+          "name": "IPathLine"
         }
       ],
       "implementedBy": [
         {
           "type": "reference",
-          "name": "BezierSeed",
-          "id": 2433
+          "name": "BezierSeed"
         }
       ],
       "Property": {
@@ -17425,8 +17020,7 @@
           "type": {
             "type": "reference",
             "isArray": true,
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "end": {
@@ -17445,13 +17039,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPathLine.end",
-            "id": 11
+            "name": "IPathLine.end"
           }
         },
         "layer": {
@@ -17475,8 +17067,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.layer",
-            "id": 9
+            "name": "IPath.layer"
           }
         },
         "origin": {
@@ -17495,13 +17086,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.origin",
-            "id": 8
+            "name": "IPath.origin"
           }
         },
         "parentRange": {
@@ -17521,8 +17110,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IBezierRange",
-            "id": 34
+            "name": "IBezierRange"
           }
         },
         "type": {
@@ -17545,8 +17133,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.\"type\"",
-            "id": 7
+            "name": "IPath.\"type\""
           }
         }
       }
@@ -17569,22 +17156,19 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPath",
-          "id": 6
+          "name": "IPath"
         }
       ],
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IPathArc",
-          "id": 20
+          "name": "IPathArc"
         }
       ],
       "implementedBy": [
         {
           "type": "reference",
-          "name": "Circle",
-          "id": 855
+          "name": "Circle"
         }
       ],
       "Property": {
@@ -17609,8 +17193,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.layer",
-            "id": 9
+            "name": "IPath.layer"
           }
         },
         "origin": {
@@ -17629,13 +17212,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.origin",
-            "id": 8
+            "name": "IPath.origin"
           }
         },
         "radius": {
@@ -17677,8 +17258,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.\"type\"",
-            "id": 7
+            "name": "IPath.\"type\""
           }
         }
       }
@@ -17701,32 +17281,27 @@
       "extendedTypes": [
         {
           "type": "reference",
-          "name": "IPath",
-          "id": 6
+          "name": "IPath"
         }
       ],
       "extendedBy": [
         {
           "type": "reference",
-          "name": "IPathBezierSeed",
-          "id": 27
+          "name": "IPathBezierSeed"
         }
       ],
       "implementedBy": [
         {
           "type": "reference",
-          "name": "Chord",
-          "id": 882
+          "name": "Chord"
         },
         {
           "type": "reference",
-          "name": "Line",
-          "id": 872
+          "name": "Line"
         },
         {
           "type": "reference",
-          "name": "Parallel",
-          "id": 889
+          "name": "Parallel"
         }
       ],
       "Property": {
@@ -17746,8 +17321,7 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           }
         },
         "layer": {
@@ -17771,8 +17345,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.layer",
-            "id": 9
+            "name": "IPath.layer"
           }
         },
         "origin": {
@@ -17791,13 +17364,11 @@
           ],
           "type": {
             "type": "reference",
-            "name": "IPoint",
-            "id": 3
+            "name": "IPoint"
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.origin",
-            "id": 8
+            "name": "IPath.origin"
           }
         },
         "type": {
@@ -17820,8 +17391,7 @@
           },
           "inheritedFrom": {
             "type": "reference",
-            "name": "IPath.\"type\"",
-            "id": 7
+            "name": "IPath.\"type\""
           }
         }
       }
@@ -17835,9 +17405,7 @@
       },
       "indexSignature": [
         {
-          "id": 43,
           "name": "__index",
-          "kind": 8192,
           "kindString": "Index signature",
           "flags": {},
           "comment": {
@@ -17845,9 +17413,7 @@
           },
           "parameters": [
             {
-              "id": 44,
               "name": "id",
-              "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
               "type": {
@@ -17861,23 +17427,19 @@
             "types": [
               {
                 "type": "reference",
-                "name": "IPath",
-                "id": 6
+                "name": "IPath"
               },
               {
                 "type": "reference",
-                "name": "IPathArc",
-                "id": 20
+                "name": "IPathArc"
               },
               {
                 "type": "reference",
-                "name": "IPathCircle",
-                "id": 15
+                "name": "IPathCircle"
               },
               {
                 "type": "reference",
-                "name": "IPathLine",
-                "id": 10
+                "name": "IPathLine"
               }
             ]
           }
@@ -17901,9 +17463,7 @@
       },
       "indexSignature": [
         {
-          "id": 4,
           "name": "__index",
-          "kind": 8192,
           "kindString": "Index signature",
           "flags": {},
           "comment": {
@@ -17912,9 +17472,7 @@
           },
           "parameters": [
             {
-              "id": 5,
               "name": "index",
-              "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
               "type": {
@@ -17948,16 +17506,12 @@
       },
       "typeParameter": [
         {
-          "id": 1102,
           "name": "K",
-          "kind": 131072,
           "kindString": "Type parameter",
           "flags": {}
         },
         {
-          "id": 1103,
           "name": "T",
-          "kind": 131072,
           "kindString": "Type parameter",
           "flags": {}
         }
@@ -18004,7 +17558,6 @@
             "type": "reference",
             "isArray": true,
             "name": "ICollection",
-            "id": 1096,
             "typeArguments": [
               {
                 "type": "typeParameter",
@@ -18310,9 +17863,7 @@
           },
           "typeParameter": [
             {
-              "id": 283,
               "name": "T",
-              "kind": 131072,
               "kindString": "Type parameter",
               "flags": {}
             }
