@@ -4,7 +4,7 @@ namespace MakerJs.angle {
      * Ensures an angle is not greater than 360
      * 
      * @param angleInDegrees Angle in degrees.
-     * @retiurns Same polar angle but not greater than 360 degrees.
+     * @returns Same polar angle but not greater than 360 degrees.
      */
     export function noRevolutions(angleInDegrees: number) {
         var revolutions = Math.floor(angleInDegrees / 360);
