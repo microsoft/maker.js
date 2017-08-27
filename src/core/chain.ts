@@ -3,34 +3,6 @@
     /**
      * @private
      */
-    interface IConnectionsMap {
-        [layer: string]: Collector<IPoint, IChainLink>;
-    }
-
-    /**
-     * @private
-     */
-    interface IWalkPathByLayerMap {
-        [layer: string]: IWalkPath[];
-    }
-
-    /**
-     * @private
-     */
-    interface IChainFound {
-        (chain: IChain): void;
-    }
-
-    /**
-     * @private
-     */
-    interface IChainNotFound {
-        (path: IWalkPath): void;
-    }
-
-    /**
-     * @private
-     */
     function getOpposedLink(linkedPaths: IChainLink[], pathContext: IPath): IChainLink {
         if (linkedPaths[0].walkedPath.pathContext === pathContext) {
             return linkedPaths[1];
@@ -41,9 +13,9 @@
     /**
      * @private
      */
-    function followLinks(connections: Collector<IPoint, IChainLink>, chainFound: IChainFound, chainNotFound?: IChainNotFound) {
+    function followLinks(connections: Collector<IPoint, IChainLink>, chainFound: { (chain: Partial<IChain>): void; }, chainNotFound?: { (path: IWalkPath): void; }) {
 
-        function followLink(currLink: IChainLink, chain: IChain, firstLink: IChainLink) {
+        function followLink(currLink: IChainLink, chain: Partial<IChain>, firstLink: IChainLink) {
 
             while (currLink) {
 
@@ -83,7 +55,7 @@
 
             if (linkedPaths && linkedPaths.length > 0) {
 
-                var chain: IChain = {
+                var chain: Partial<IChain> = {
                     links: [],
                     pathLength: 0
                 };
@@ -189,9 +161,9 @@
             return distance <= opts.pointMatchingDistance;
         }
 
-        var connectionMap: IConnectionsMap = {};
+        var connectionMap: { [layer: string]: Collector<IPoint, IChainLink>; } = {};
         var chainsByLayer: IChainsMap = {};
-        var ignored: IWalkPathByLayerMap = {};
+        var ignored: { [layer: string]: IWalkPath[]; } = {};
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
