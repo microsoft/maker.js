@@ -659,7 +659,7 @@ namespace MakerJs {
         /**
          * Flag if this chain forms a loop end to end.
          */
-        endless?: boolean
+        endless: boolean
 
         /**
          * Total length of all paths in the chain.
@@ -667,7 +667,7 @@ namespace MakerJs {
         pathLength: number;
 
         /**
-         * Chains that are contained within this chain. Populated when chains are found with the 'contain: true' option 
+         * Chains that are contained within this chain. Populated when chains are found with the 'contain' option 
          */
         contains?: IChain[]
     }
