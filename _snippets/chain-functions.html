@@ -63,18 +63,14 @@ var model = {
 
 };
 
-//find all chains
-makerjs.model.findChains(model, function(chains, loose, layer) {
+//find the chain
+var chain = makerjs.model.findSingleChain(model);
 
-    //just use the first chain
-    var chain = chains[0];
+//add fillets to the chain
+var filletsModel = makerjs.chain.fillet(chain, 10);
 
-    //add fillets to the chain
-    var filletsModel = makerjs.chain.fillet(chain, 10);
-
-    //put the fillets in the tree
-    model.models.fillets = filletsModel;
-});
+//put the fillets in the tree
+model.models.fillets = filletsModel;
 
 var svg = makerjs.exporter.toSVG(model);
 
@@ -161,15 +157,14 @@ m.model.originate(expansion);
 m.model.simplify(expansion);
 
 //find chains
-m.model.findChains(expansion, function(chains, loose, layer) {
+var chains = m.model.findChains(expansion);
 
-  //start at 1 - ignore the longest chain which is the perimeter
-  for (var i = 1; i < chains.length; i++) {
+//start at 1 - ignore the longest chain which is the perimeter
+for (var i = 1; i < chains.length; i++) {
 
-    //save the fillets in the model tree 
-    expansion.models['fillets' + i] = m.chain.fillet(chains[i], 2);
-  }
-});
+  //save the fillets in the model tree 
+  expansion.models['fillets' + i] = m.chain.fillet(chains[i], 2);
+}
 
 var svg = m.exporter.toSVG(expansion);
 
