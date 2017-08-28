@@ -728,9 +728,9 @@ namespace MakerJs {
     export interface IContainChainsOptions {
 
         /**
-         * Flag to alternate winding direction of contained chains.
+         * Flag to alternate direction of contained chains.
          */
-        alernateWindings?: boolean;
+        alternateDirection?: boolean;
     }
 
     /**
