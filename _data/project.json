@@ -65,12 +65,7 @@
               "kindString": "Call signature",
               "comment": {
                 "shortText": "Ensures an angle is not greater than 360",
-                "tags": [
-                  {
-                    "tag": "retiurns",
-                    "text": "Same polar angle but not greater than 360 degrees.\n"
-                  }
-                ]
+                "returns": "Same polar angle but not greater than 360 degrees.\n"
               },
               "parameters": [
                 {
@@ -1351,7 +1346,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 491,
+              "line": 463,
               "character": 25
             }
           ]
@@ -1382,7 +1377,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 513,
+              "line": 485,
               "character": 27
             }
           ]
@@ -1419,7 +1414,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 526,
+              "line": 498,
               "character": 27
             }
           ]
@@ -1458,7 +1453,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 658,
+              "line": 630,
               "character": 31
             }
           ]
@@ -1496,7 +1491,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 549,
+              "line": 521,
               "character": 30
             }
           ]
@@ -1539,7 +1534,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 603,
+              "line": 575,
               "character": 28
             }
           ]
@@ -1658,17 +1653,17 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 150,
+              "line": 122,
               "character": 30
             },
             {
               "fileName": "core/chain.ts",
-              "line": 160,
+              "line": 132,
               "character": 30
             },
             {
               "fileName": "core/chain.ts",
-              "line": 162,
+              "line": 134,
               "character": 30
             }
           ]
@@ -1699,7 +1694,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 130,
+              "line": 102,
               "character": 35
             }
           ]
@@ -3372,7 +3367,7 @@
               "type": {
                 "type": "reference",
                 "name": "IOpenJsCadOptionsMap",
-                "id": 1910
+                "id": 1904
               }
             },
             "pointMatchingDistance": {
@@ -3458,14 +3453,14 @@
           },
           "indexSignature": [
             {
-              "id": 1911,
+              "id": 1905,
               "name": "__index",
               "kind": 8192,
               "kindString": "Index signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 1912,
+                  "id": 1906,
                   "name": "modelId",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3479,7 +3474,7 @@
               "type": {
                 "type": "reference",
                 "name": "IOpenJsCadOptions",
-                "id": 1901
+                "id": 1895
               }
             }
           ],
@@ -3615,7 +3610,7 @@
           },
           "indexSignature": [
             {
-              "id": 1961,
+              "id": 1955,
               "name": "__index",
               "kind": 8192,
               "kindString": "Index signature",
@@ -3625,7 +3620,7 @@
               },
               "parameters": [
                 {
-                  "id": 1962,
+                  "id": 1956,
                   "name": "layer",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3668,7 +3663,7 @@
             {
               "type": "reference",
               "name": "ISVGRenderOptions",
-              "id": 2223
+              "id": 2217
             }
           ],
           "Property": {
@@ -3777,7 +3772,7 @@
             {
               "type": "reference",
               "name": "ISVGElementRenderOptions",
-              "id": 2218
+              "id": 2212
             }
           ],
           "Property": {
@@ -3868,7 +3863,7 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ISVGElementRenderOptions.cssStyle",
-                "id": 2222
+                "id": 2216
               }
             },
             "fill": {
@@ -3893,7 +3888,7 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ISVGElementRenderOptions.fill",
-                "id": 2219
+                "id": 2213
               }
             },
             "fillRule": {
@@ -3963,21 +3958,21 @@
               "type": {
                 "type": "reflection",
                 "declaration": {
-                  "id": 2234,
+                  "id": 2228,
                   "name": "__type",
                   "kind": 65536,
                   "kindString": "Type literal",
                   "flags": {},
                   "indexSignature": [
                     {
-                      "id": 2235,
+                      "id": 2229,
                       "name": "__index",
                       "kind": 8192,
                       "kindString": "Index signature",
                       "flags": {},
                       "parameters": [
                         {
-                          "id": 2236,
+                          "id": 2230,
                           "name": "layerId",
                           "kind": 32768,
                           "kindString": "Parameter",
@@ -3991,7 +3986,7 @@
                       "type": {
                         "type": "reference",
                         "name": "ISVGElementRenderOptions",
-                        "id": 2218
+                        "id": 2212
                       }
                     }
                   ],
@@ -4088,7 +4083,7 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ISVGElementRenderOptions.stroke",
-                "id": 2220
+                "id": 2214
               }
             },
             "strokeLineCap": {
@@ -4133,7 +4128,7 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ISVGElementRenderOptions.strokeWidth",
-                "id": 2221
+                "id": 2215
               }
             },
             "svgAttrs": {
@@ -4154,7 +4149,7 @@
               "type": {
                 "type": "reference",
                 "name": "IXmlTagAttrs",
-                "id": 1866
+                "id": 1860
               }
             },
             "units": {
@@ -4233,7 +4228,7 @@
           },
           "indexSignature": [
             {
-              "id": 2213,
+              "id": 2207,
               "name": "__index",
               "kind": 8192,
               "kindString": "Index signature",
@@ -4243,7 +4238,7 @@
               },
               "parameters": [
                 {
-                  "id": 2214,
+                  "id": 2208,
                   "name": "unitType",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -4257,14 +4252,14 @@
               "type": {
                 "type": "reflection",
                 "declaration": {
-                  "id": 2215,
+                  "id": 2209,
                   "name": "__type",
                   "kind": 65536,
                   "kindString": "Type literal",
                   "flags": {},
                   "children": [
                     {
-                      "id": 2217,
+                      "id": 2211,
                       "name": "scaleConversion",
                       "kind": 32,
                       "kindString": "Variable",
@@ -4282,7 +4277,7 @@
                       }
                     },
                     {
-                      "id": 2216,
+                      "id": 2210,
                       "name": "svgUnitType",
                       "kind": 32,
                       "kindString": "Variable",
@@ -4305,8 +4300,8 @@
                       "title": "Variables",
                       "kind": 32,
                       "children": [
-                        2217,
-                        2216
+                        2211,
+                        2210
                       ]
                     }
                   ],
@@ -5236,7 +5231,7 @@
           "type": {
             "type": "reference",
             "name": "svgUnitConversion",
-            "id": 2212
+            "id": 2206
           }
         }
       }
@@ -13727,7 +13722,7 @@
             "isOptional": true
           },
           "comment": {
-            "shortText": "Chains that are contained within this chain. Populated when chains are found with the 'contain: true' option"
+            "shortText": "Chains that are contained within this chain. Populated when chains are found with the 'contain' option"
           },
           "sources": [
             {
@@ -13745,8 +13740,7 @@
         },
         "endless": {
           "flags": {
-            "isExported": true,
-            "isOptional": true
+            "isExported": true
           },
           "comment": {
             "shortText": "Flag if this chain forms a loop end to end."
@@ -14165,19 +14159,19 @@
         }
       ],
       "Property": {
-        "alernateWindings": {
+        "alternateDirection": {
           "flags": {
             "isExported": true,
             "isOptional": true
           },
           "comment": {
-            "shortText": "Flag to alternate winding direction of contained chains."
+            "shortText": "Flag to alternate direction of contained chains."
           },
           "sources": [
             {
               "fileName": "core/maker.ts",
               "line": 733,
-              "character": 24
+              "character": 26
             }
           ],
           "type": {
@@ -14351,7 +14345,7 @@
         {
           "type": "reference",
           "name": "IOpenJsCadOptions",
-          "id": 1901
+          "id": 1895
         }
       ],
       "Property": {
@@ -15005,7 +14999,7 @@
         {
           "type": "reference",
           "name": "IPathDirectionalWithPrimeContext",
-          "id": 1770
+          "id": 1764
         }
       ],
       "Property": {
@@ -15678,7 +15672,7 @@
         {
           "type": "reference",
           "name": "IPathDirectionalWithPrimeContext",
-          "id": 1770
+          "id": 1764
         }
       ],
       "Property": {
@@ -16336,7 +16330,7 @@
         {
           "type": "reference",
           "name": "IRefPathEndpoints",
-          "id": 1795
+          "id": 1789
         }
       ],
       "Property": {
@@ -16631,114 +16625,114 @@
         {
           "type": "reference",
           "name": "ILoopModel",
-          "id": 1782
+          "id": 1776
         }
       ],
       "implementedBy": [
         {
           "type": "reference",
           "name": "Belt",
-          "id": 2748
+          "id": 2742
         },
         {
           "type": "reference",
           "name": "BezierCurve",
-          "id": 2454
+          "id": 2448
         },
         {
           "type": "reference",
           "name": "BoltCircle",
-          "id": 2643
+          "id": 2637
         },
         {
           "type": "reference",
           "name": "BoltRectangle",
-          "id": 2654
+          "id": 2648
         },
         {
           "type": "reference",
           "name": "ConnectTheDots",
-          "id": 2590
+          "id": 2584
         },
         {
           "type": "reference",
           "name": "Dogbone",
-          "id": 2664
+          "id": 2658
         },
         {
           "type": "reference",
           "name": "Dome",
-          "id": 2676
+          "id": 2670
         },
         {
           "type": "reference",
           "name": "Ellipse",
-          "id": 2544
+          "id": 2538
         },
         {
           "type": "reference",
           "name": "EllipticArc",
-          "id": 2563
+          "id": 2557
         },
         {
           "type": "reference",
           "name": "Holes",
-          "id": 2633
+          "id": 2627
         },
         {
           "type": "reference",
           "name": "Oval",
-          "id": 2701
+          "id": 2695
         },
         {
           "type": "reference",
           "name": "OvalArc",
-          "id": 2710
+          "id": 2704
         },
         {
           "type": "reference",
           "name": "Polygon",
-          "id": 2612
+          "id": 2606
         },
         {
           "type": "reference",
           "name": "Rectangle",
-          "id": 2724
+          "id": 2718
         },
         {
           "type": "reference",
           "name": "Ring",
-          "id": 2739
+          "id": 2733
         },
         {
           "type": "reference",
           "name": "RoundRectangle",
-          "id": 2687
+          "id": 2681
         },
         {
           "type": "reference",
           "name": "SCurve",
-          "id": 2758
+          "id": 2752
         },
         {
           "type": "reference",
           "name": "Slot",
-          "id": 2767
+          "id": 2761
         },
         {
           "type": "reference",
           "name": "Square",
-          "id": 2780
+          "id": 2774
         },
         {
           "type": "reference",
           "name": "Star",
-          "id": 2788
+          "id": 2782
         },
         {
           "type": "reference",
           "name": "Text",
-          "id": 2803
+          "id": 2797
         }
       ],
       "Property": {
@@ -17404,7 +17398,7 @@
         {
           "type": "reference",
           "name": "BezierSeed",
-          "id": 2433
+          "id": 2427
         }
       ],
       "Property": {
