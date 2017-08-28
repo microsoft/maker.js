@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.69
+// Type definitions for Maker.js 0.9.70
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -621,13 +621,13 @@ declare namespace MakerJs {
         /**
          * Flag if this chain forms a loop end to end.
          */
-        endless?: boolean;
+        endless: boolean;
         /**
          * Total length of all paths in the chain.
          */
         pathLength: number;
         /**
-         * Chains that are contained within this chain. Populated when chains are found with the 'contain: true' option
+         * Chains that are contained within this chain. Populated when chains are found with the 'contain' option
          */
         contains?: IChain[];
     }
@@ -675,9 +675,9 @@ declare namespace MakerJs {
      */
     interface IContainChainsOptions {
         /**
-         * Flag to alternate winding direction of contained chains.
+         * Flag to alternate direction of contained chains.
          */
-        alernateWindings?: boolean;
+        alternateDirection?: boolean;
     }
     /**
      * Reference to a model within a model.
@@ -1272,7 +1272,7 @@ declare namespace MakerJs.angle {
      * Ensures an angle is not greater than 360
      *
      * @param angleInDegrees Angle in degrees.
-     * @retiurns Same polar angle but not greater than 360 degrees.
+     * @returns Same polar angle but not greater than 360 degrees.
      */
     function noRevolutions(angleInDegrees: number): number;
     /**
