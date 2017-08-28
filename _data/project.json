@@ -13905,19 +13905,19 @@
         }
       ],
       "Property": {
-        "alernateWindings": {
+        "alternateDirection": {
           "flags": {
             "isExported": true,
             "isOptional": true
           },
           "comment": {
-            "shortText": "Flag to alternate winding direction of contained chains."
+            "shortText": "Flag to alternate direction of contained chains."
           },
           "sources": [
             {
               "fileName": "core/maker.ts",
               "line": 733,
-              "character": 24
+              "character": 26
             }
           ],
           "type": {
