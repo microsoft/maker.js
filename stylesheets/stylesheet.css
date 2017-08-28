@@ -565,10 +565,11 @@ code {
 }
 
 pre {
-  padding: 16px;
+  padding: 1em;
   overflow: auto;
   background: #282b2e;  
   color: #ddd;
+  margin: 1em 0 0 0;
 }
 pre code {
   padding: 0;

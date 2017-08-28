@@ -1,124 +1,17 @@
 ---
-title: Chains
+title: Finding loose paths
 ---
 
-<p>
-    A chain is an ordered collection of paths that connect end-to-end. A chain may be <b>endless</b> which means the chain ends at its beginning (and is most likely forming a closed geometry).
-    The paths in a chain might be contained in more than one model. To illustrate this, we will look at the example from the combine operations above:
-</p>
+You may also wish to find paths that are <b>not</b> part of a chain. This will require you to pass a callback function
+which will be passed these three parameters:
 
-{% highlight javascript %}
-//a rectangle and an oval
+<ul>
+    <li>chains: an array of chains that were found. (both endless and non-endless)</li>
+    <li>loose: an array of paths that did not connect in a chain.</li>
+    <li>layer: the layer name containing the above.</li>
+</ul>
 
-var m = require('makerjs');
-
-function example(origin) {
-    this.models = {
-        rect: new m.models.Rectangle(100, 50),
-        oval: m.model.move(new m.models.Oval(100, 50), [50, 25])
-    };
-    this.origin = origin;
-}
-
-var x = new example();
-
-var svg = m.exporter.toSVG(x);
-
-document.write(svg);
-{% endhighlight %}
-
-<script>
-    LiveDoc.evalLastCode();
-</script>
-
-<p>
-    Above we see two chains: all of the lines in the rectangle form an endless chain, as well as all of the paths of the oval.
-</p>
-
-<p>
-    Now, let's combine these in a union:
-</p>
-
-{% highlight javascript %}
-//combine a rectangle and an oval
-
-var m = require('makerjs');
-
-function example(origin) {
-    this.models = {
-        rect: new m.models.Rectangle(100, 50),
-        oval: m.model.move(new m.models.Oval(100, 50), [50, 25])
-    };
-    this.origin = origin;
-}
-
-var x = new example();
-
-m.model.combineUnion(x.models.rect, x.models.oval);
-
-var svg = m.exporter.toSVG(x);
-
-document.write(svg);
-{% endhighlight %}
-
-<script>
-    LiveDoc.evalLastCode();
-</script>
-
-<p>
-    We have combined the rectangle and the oval, and they now form one chain. Yet they are still two models. Next we will add a few more paths to the example:
-</p>
-
-{% highlight javascript %}
-//combine a rectangle and an oval, add some other paths
-
-var m = require('makerjs');
-
-function example(origin) {
-    this.models = {
-        rect: new m.models.Rectangle(100, 50),
-        oval: m.model.move(new m.models.Oval(100, 50), [50, 25])
-    };
-    this.origin = origin;
-}
-
-var x = new example();
-
-m.model.combineUnion(x.models.rect, x.models.oval);
-
-//add a couple more paths into the scene
-x.paths = {
-    line1: new m.paths.Line([150, 10], [220, 10]),
-    line2: new m.paths.Line([220, 50], [220, 10]),
-    line3: new m.paths.Line([220, 75], [260, 35]),
-    circle: new m.paths.Circle([185, 50], 15)
-};
-
-var svg = m.exporter.toSVG(x);
-
-document.write(svg);
-{% endhighlight %}
-
-<script>
-    LiveDoc.evalLastCode();
-</script>
-
-<p>
-    A circle is a closed geometry. In Maker.js, a circle is also an endless chain. Line1 and line2 form a chain. The diagonal line3 is not part of a chain.
-</p>
-
-<h4>Finding Chains</h4>
-
-<p>
-    Now that we have these concepts illustrated, let's call <a href="/maker.js/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains</a>, passing our model,
-    and a function to collect what we found. This function will be passed these three parameters:
-    <ul>
-        <li>chains: an array of chains that were found. (both endless and non-endless)</li>
-        <li>loose: an array of paths that did not connect in a chain.</li>
-        <li>layer: the layer name containing the above.</li>
-    </ul>
-    This function will get called once for each logical layer. Since our example has no layers (logically it's all one "null" layer), our function will only get called once.
-</p>
+This function will get called once for each logical layer. Since our example has no layers (logically it's all one "null" layer), our function will only get called once.
 
 {% highlight javascript %}
 //combine a rectangle and an oval, add some other paths
@@ -144,7 +37,11 @@ x.paths = {
     circle: new m.paths.Circle([185, 50], 15)
 };
 
-//find chains and output the results, without even rendering visually
+var svg = m.exporter.toSVG(x);
+
+document.write(svg);
+
+//find chains and output the results
 
 m.model.findChains(x, function(chains, loose, layer) {
     document.write('found ' + chains.length + ' chain(s) and ' + loose.length + ' loose path(s) on layer ' + layer);
@@ -155,43 +52,3 @@ m.model.findChains(x, function(chains, loose, layer) {
 <script>
     LiveDoc.evalLastCode();
 </script>
-
-<hr />
-
-<p>
-    <h5>chains array, sorted descending by pathLength of each chain</h5>
-
-    As expected, we found 3 chains. But what is a chain? A chain is an object with these three properties:
-    <ul>
-        <li>endless: boolean.</li>
-        <li>links: array of <a href="/maker.js/docs/api/interfaces/makerjs.ichainlink.html">chain link</a> objects.</li>
-        <li>pathLength: total length of all paths within the chain.</li>
-    </ul>
-
-    A chain link is an object containing data about the path which is a link in the chain. It has these properties:
-    <ul>
-        <li>endPoints: array of the 2 endpoints of the path forming the link, in absolute coordinates.</li>
-        <li>reversed: boolean, explained below.</li>
-        <li>pathLength: length of the path forming the link.</li>
-        <li>walkedPath: a <a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object, which contains one path. We will explain this type of object in the next section.</li>
-    </ul>
-
-    For any chain, it is quite arbitrary which is the first link and which is the last link. It is still the same chain if it were to begin at the last link and end at the first
-    - but if it did, then the links would also be reversed. So this is what it means for a link to be reversed, but this also means that the path would "flow" in reverse.
-    Here is how paths flow normally:
-
-    <ul>
-        <li>line - a line flows from its origin to its end.</li>
-        <li>arc - an arc flows from its startAngle to its endAngle, in the polar (counter-clockwise) direction.</li>
-    </ul>
-
-    Therefore, if the <code>reversed</code> flag is true, then the path in the chain link was found to flow opposite of the norm.
-
-    <h5>loose paths array</h5>
-
-    This is an array of <a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> objects, explained in the next section.
-
-</p>
-
-
-

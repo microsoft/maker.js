@@ -457,6 +457,17 @@ ul.tsd-parameters .tsd-comment, ul.tsd-type-parameters .tsd-comment { margin-top
 .tsd-sources ul, .tsd-sources p { margin: 0 !important; }
 .tsd-sources ul { list-style: none; padding: 0; }
 
+.code-output {
+    background-color: rgba(176, 196, 222, .1);
+    border: 1px solid rgba(176, 196, 222, .2);
+    border-top-width: 0;
+    color: rgb(70, 130, 180);
+    font-family: monospace;
+    margin-bottom: 1em;
+    padding: 1em;
+    text-transform: lowercase;
+}
+
 svg {
     height: 100px;
     width: 100%;
@@ -534,7 +545,7 @@ a.edit-source {
 
 iframe.play {
     width: 100%;
-    margin-bottom: 20px;
+    margin: 1em 0;
 }
 
 /* hide the play buton on mobile phones */
