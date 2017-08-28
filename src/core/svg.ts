@@ -476,7 +476,7 @@ namespace MakerJs.exporter {
 
             if (opts.fillRule === 'nonzero') {
                 findChainsOptions.contain = <IContainChainsOptions>{
-                    alernateWindings: true
+                    alternateDirection: true
                 }
             }
 

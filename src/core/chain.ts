@@ -266,7 +266,7 @@
             chainsByLayer[layer].sort((a: IChain, b: IChain) => { return b.pathLength - a.pathLength });
 
             if (opts.contain) {
-                var containChainsOptions: IContainChainsOptions = isObject(opts.contain) ? opts.contain as IContainChainsOptions : { alernateWindings: false };
+                var containChainsOptions: IContainChainsOptions = isObject(opts.contain) ? opts.contain as IContainChainsOptions : { alternateDirection: false };
                 var containedChains = getContainment(chainsByLayer[layer], containChainsOptions);
                 chainsByLayer[layer] = containedChains;
             }
@@ -328,7 +328,7 @@
             }
         });
 
-        if (opts.alernateWindings) {
+        if (opts.alternateDirection) {
 
             function alternate(chains: IChain[], shouldBeClockwise: boolean) {
                 chains.forEach(function (chainContext, i) {

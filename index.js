@@ -401,7 +401,7 @@ var MakerJs;
          * Ensures an angle is not greater than 360
          *
          * @param angleInDegrees Angle in degrees.
-         * @retiurns Same polar angle but not greater than 360 degrees.
+         * @returns Same polar angle but not greater than 360 degrees.
          */
         function noRevolutions(angleInDegrees) {
             var revolutions = Math.floor(angleInDegrees / 360);
@@ -5245,7 +5245,7 @@ var MakerJs;
                 //sort to return largest chains first
                 chainsByLayer[layer].sort(function (a, b) { return b.pathLength - a.pathLength; });
                 if (opts.contain) {
-                    var containChainsOptions = MakerJs.isObject(opts.contain) ? opts.contain : { alernateWindings: false };
+                    var containChainsOptions = MakerJs.isObject(opts.contain) ? opts.contain : { alternateDirection: false };
                     var containedChains = getContainment(chainsByLayer[layer], containChainsOptions);
                     chainsByLayer[layer] = containedChains;
                 }
@@ -5300,7 +5300,7 @@ var MakerJs;
                     parent.contains.push(chainContext);
                 }
             });
-            if (opts.alernateWindings) {
+            if (opts.alternateDirection) {
                 function alternate(chains, shouldBeClockwise) {
                     chains.forEach(function (chainContext, i) {
                         var isClockwise = MakerJs.measure.isChainClockwise(chainContext);
@@ -6602,7 +6602,7 @@ var MakerJs;
                 };
                 if (opts.fillRule === 'nonzero') {
                     findChainsOptions.contain = {
-                        alernateWindings: true
+                        alternateDirection: true
                     };
                 }
                 var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, findChainsOptions, opts.accuracy);
@@ -8846,5 +8846,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.69";
+MakerJs.version = "0.9.70";
 ﻿var Bezier = require('bezier-js');
