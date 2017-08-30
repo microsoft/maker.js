@@ -226,6 +226,48 @@ namespace MakerJs.layout {
     }
 
     /**
+     * Layout clones in a radial format.
+     * 
+     * Example:
+     * ```
+     * //daisy petals
+     * var makerjs = require('makerjs');
+     *
+     * var belt = new makerjs.models.Belt(5, 50, 20);
+     *
+     * makerjs.model.move(belt, [25, 0]);
+     * 
+     * var petals = makerjs.layout.cloneToRadial(belt, 8, 45);
+     * 
+     * document.write(makerjs.exporter.toSVG(petals));
+     * ```
+     * 
+     * @param itemToClone: Either a model or a path object.
+     * @param count Number of clones in the radial result.
+     * @param angleInDegrees angle of rotation between clones..
+     * @returns A new model with clones in a radial format.
+     */
+    export function cloneToRadial(itemToClone: IModel | IPath, count: number, angleInDegrees: number, rotationOrigin?: IPoint) {
+        var result: IModel = {};
+        var add: IPathMap | IModelMap;
+        var rotateFn: (x: IModel | IPath, angleInDegrees: number, rotationOrigin?: IPoint) => IModel | IPath;
+
+        if (isModel(itemToClone)) {
+            add = result.models = {};
+            rotateFn = model.rotate;
+        } else {
+            add = result.paths = {};
+            rotateFn = path.rotate;
+        }
+
+        for (var i = 0; i < count; i++) {
+            add[i] = rotateFn(cloneObject(itemToClone), i * angleInDegrees, rotationOrigin);
+        }
+
+        return result;
+    }
+
+    /**
      * @private
      */
     function cloneTo(dimension: number, itemToClone: IModel | IPath, count: number, margin: number): IModel {
