@@ -108,3 +108,24 @@ document.write(m.exporter.toSVG(pattern));
 <script>
     LiveDoc.evalLastCode();
 </script>
+
+<h4>Radial</h4>
+
+Call <a href="/maker.js/docs/api/modules/makerjs.layout.html#clonetoradial">makerjs.layout.cloneToRadial(path or model, count, angleInDegrees, [optional] rotationOrigin)</a> to repeatedly clone and layout in a radial format.
+The interval will be the path's or model's bounding hexagon. Extra margin is optional.
+
+{% highlight javascript %}
+//spinner
+
+var m = require('makerjs');
+
+var rect = m.model.move(new m.models.Rectangle(30, 10), [40, -5]);
+
+var spinner = m.layout.cloneToRadial(rect, 16, 22.5);
+
+document.write(m.exporter.toSVG(spinner));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
