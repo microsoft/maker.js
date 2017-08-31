@@ -6728,7 +6728,7 @@
           "sources": [
             {
               "fileName": "core/layout.ts",
-              "line": 403,
+              "line": 445,
               "character": 32
             }
           ]
@@ -6771,7 +6771,7 @@
           "sources": [
             {
               "fileName": "core/layout.ts",
-              "line": 279,
+              "line": 321,
               "character": 33
             }
           ]
@@ -6820,7 +6820,7 @@
           "sources": [
             {
               "fileName": "core/layout.ts",
-              "line": 330,
+              "line": 372,
               "character": 31
             }
           ]
@@ -6869,8 +6869,57 @@
           "sources": [
             {
               "fileName": "core/layout.ts",
-              "line": 435,
+              "line": 477,
               "character": 36
+            }
+          ]
+        },
+        "cloneToRadial": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "cloneToRadial",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Layout clones in a radial format.",
+                "text": "Example:\n```\n//daisy petals\nvar makerjs = require('makerjs');\n\nvar belt = new makerjs.models.Belt(5, 50, 20);\n\nmakerjs.model.move(belt, [25, 0]);\n\nvar petals = makerjs.layout.cloneToRadial(belt, 8, 45);\n\ndocument.write(makerjs.exporter.toSVG(petals));\n```\n",
+                "returns": "A new model with clones in a radial format.\n"
+              },
+              "parameters": [
+                {
+                  "name": "itemToClone",
+                  "flags": {}
+                },
+                {
+                  "name": "count",
+                  "flags": {},
+                  "comment": "Number of clones in the radial result.",
+                  "type": "number"
+                },
+                {
+                  "name": "angleInDegrees",
+                  "flags": {},
+                  "comment": "angle of rotation between clones..",
+                  "type": "number"
+                },
+                {
+                  "name": "rotationOrigin",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "type": "IPoint"
+                }
+              ],
+              "type": "IModel"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/layout.ts",
+              "line": 250,
+              "character": 33
             }
           ]
         },
@@ -6912,7 +6961,7 @@
           "sources": [
             {
               "fileName": "core/layout.ts",
-              "line": 308,
+              "line": 350,
               "character": 30
             }
           ]
