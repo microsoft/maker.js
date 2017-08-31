@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.70
+// Type definitions for Maker.js 0.9.71
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2939,6 +2939,29 @@ declare namespace MakerJs.layout {
      * @returns The parentModel, for cascading.
      */
     function childrenOnChain(parentModel: IModel, onChain: IChain, baseline?: number, reversed?: boolean, contain?: boolean, rotated?: boolean): IModel;
+    /**
+     * Layout clones in a radial format.
+     *
+     * Example:
+     * ```
+     * //daisy petals
+     * var makerjs = require('makerjs');
+     *
+     * var belt = new makerjs.models.Belt(5, 50, 20);
+     *
+     * makerjs.model.move(belt, [25, 0]);
+     *
+     * var petals = makerjs.layout.cloneToRadial(belt, 8, 45);
+     *
+     * document.write(makerjs.exporter.toSVG(petals));
+     * ```
+     *
+     * @param itemToClone: Either a model or a path object.
+     * @param count Number of clones in the radial result.
+     * @param angleInDegrees angle of rotation between clones..
+     * @returns A new model with clones in a radial format.
+     */
+    function cloneToRadial(itemToClone: IModel | IPath, count: number, angleInDegrees: number, rotationOrigin?: IPoint): IModel;
     /**
      * Layout clones in a column format.
      *

@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.70
+ *   version: 0.9.71
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -7376,6 +7376,46 @@ var MakerJs;
         }
         layout.childrenOnChain = childrenOnChain;
         /**
+         * Layout clones in a radial format.
+         *
+         * Example:
+         * ```
+         * //daisy petals
+         * var makerjs = require('makerjs');
+         *
+         * var belt = new makerjs.models.Belt(5, 50, 20);
+         *
+         * makerjs.model.move(belt, [25, 0]);
+         *
+         * var petals = makerjs.layout.cloneToRadial(belt, 8, 45);
+         *
+         * document.write(makerjs.exporter.toSVG(petals));
+         * ```
+         *
+         * @param itemToClone: Either a model or a path object.
+         * @param count Number of clones in the radial result.
+         * @param angleInDegrees angle of rotation between clones..
+         * @returns A new model with clones in a radial format.
+         */
+        function cloneToRadial(itemToClone, count, angleInDegrees, rotationOrigin) {
+            var result = {};
+            var add;
+            var rotateFn;
+            if (MakerJs.isModel(itemToClone)) {
+                add = result.models = {};
+                rotateFn = MakerJs.model.rotate;
+            }
+            else {
+                add = result.paths = {};
+                rotateFn = MakerJs.path.rotate;
+            }
+            for (var i = 0; i < count; i++) {
+                add[i] = rotateFn(MakerJs.cloneObject(itemToClone), i * angleInDegrees, rotationOrigin);
+            }
+            return result;
+        }
+        layout.cloneToRadial = cloneToRadial;
+        /**
          * @private
          */
         function cloneTo(dimension, itemToClone, count, margin) {
@@ -9053,6 +9093,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.70";
+MakerJs.version = "0.9.71";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
