@@ -687,7 +687,7 @@
                   "defaultValue": "false"
                 }
               ],
-              "type": "IModel"
+              "type": "IPath"
             }
           ],
           "sources": [
@@ -12214,6 +12214,51 @@
         }
       },
       "Method": {
+        "addTo": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "addTo",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Add a path to a model. This is basically equivalent to:\n```\nparentModel.paths[pathId] = childPath;\n```\nwith additional checks to make it safe for cascading.",
+                "returns": "this cascade container, this.$result will be The original path (for cascading).\n\n"
+              },
+              "parameters": [
+                {
+                  "name": "parentModel",
+                  "flags": {},
+                  "comment": "The model to add to.",
+                  "type": "IModel"
+                },
+                {
+                  "name": "pathId",
+                  "flags": {},
+                  "comment": "The id of the path.",
+                  "type": "string"
+                },
+                {
+                  "name": "overwrite",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "(default false) Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.",
+                  "type": "boolean"
+                }
+              ],
+              "type": "ICascadePath"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/cascades.ts",
+              "line": 295,
+              "character": 13
+            }
+          ]
+        },
         "alterLength": {
           "flags": {
             "isExported": true
@@ -12248,7 +12293,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 290,
+              "line": 305,
               "character": 19
             }
           ]
@@ -12279,7 +12324,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 301,
+              "line": 316,
               "character": 20
             }
           ]
@@ -12302,7 +12347,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 309,
+              "line": 324,
               "character": 14
             }
           ]
@@ -12335,7 +12380,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 318,
+              "line": 333,
               "character": 13
             }
           ]
@@ -12366,7 +12411,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 330,
+              "line": 345,
               "character": 13
             }
           ]
@@ -12403,7 +12448,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 340,
+              "line": 355,
               "character": 14
             }
           ]
@@ -12434,7 +12479,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 349,
+              "line": 364,
               "character": 12
             }
           ]
@@ -12473,7 +12518,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 359,
+              "line": 374,
               "character": 20
             }
           ]
@@ -12512,7 +12557,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 369,
+              "line": 384,
               "character": 14
             }
           ]
@@ -12543,7 +12588,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 378,
+              "line": 393,
               "character": 13
             }
           ]
@@ -12566,7 +12611,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 386,
+              "line": 401,
               "character": 12
             }
           ]
@@ -12580,7 +12625,7 @@
       "sources": [
         {
           "fileName": "core/cascades.ts",
-          "line": 389,
+          "line": 404,
           "character": 34
         }
       ],
@@ -12718,7 +12763,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 399,
+              "line": 414,
               "character": 11
             }
           ]
@@ -12749,7 +12794,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 408,
+              "line": 423,
               "character": 15
             }
           ]
@@ -12772,7 +12817,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 416,
+              "line": 431,
               "character": 13
             }
           ]
@@ -12803,7 +12848,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 425,
+              "line": 440,
               "character": 15
             }
           ]
@@ -12840,7 +12885,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 435,
+              "line": 450,
               "character": 15
             }
           ]
@@ -12877,7 +12922,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 445,
+              "line": 460,
               "character": 14
             }
           ]
@@ -12916,7 +12961,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 455,
+              "line": 470,
               "character": 14
             }
           ]
@@ -12949,7 +12994,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 464,
+              "line": 479,
               "character": 15
             }
           ]
@@ -12980,7 +13025,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 473,
+              "line": 488,
               "character": 13
             }
           ]
@@ -13011,7 +13056,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 482,
+              "line": 497,
               "character": 16
             }
           ]
