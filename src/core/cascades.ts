@@ -280,6 +280,21 @@ modelContext.layer = layer;
     export interface ICascadePath extends ICascade {
 
         /**
+         * Add a path to a model. This is basically equivalent to:
+```
+parentModel.paths[pathId] = childPath;
+```
+with additional checks to make it safe for cascading.
+         * 
+         * @param parentModel The model to add to.
+         * @param pathId The id of the path.
+         * @param overwrite (default false) Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
+         * @returns this cascade container, this.$result will be The original path (for cascading).
+
+         */
+        addTo(parentModel: IModel, pathId: string, overwrite?: boolean): ICascadePath;
+
+        /**
          * Alter a path by lengthening or shortening it.
          * 
          * @param distance Numeric amount of length to add or remove from the path. Use a positive number to lengthen, negative to shorten. When shortening: this function will not alter the path and will return null if the resulting path length is less than or equal to zero.

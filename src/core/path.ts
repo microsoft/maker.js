@@ -13,7 +13,7 @@ namespace MakerJs.path {
      * @param overwrite Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.
      * @returns The original path (for cascading).
      */
-    export function addTo(childPath: IPath, parentModel: IModel, pathId: string, overwrite = false): IModel {
+    export function addTo(childPath: IPath, parentModel: IModel, pathId: string, overwrite = false): IPath {
         model.addPath(parentModel, childPath, pathId, overwrite);
         return childPath;
     }
