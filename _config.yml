@@ -1,4 +1,4 @@
-url: http://microsoft.github.io/maker.js
+url: http://maker.js.org
 baseurl: /maker.js
 encoding: utf-8
 exclude: ['docgen/typedoc-theme']
