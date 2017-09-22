@@ -26,7 +26,7 @@ var LiveDoc;
         button.classList.add('wait');
         var iframe = document.createElement('iframe');
         iframe.className = 'play';
-        iframe.src = '/maker.js/playground/embed.html?parentload=getcode';
+        iframe.src = '/playground/embed.html?parentload=getcode';
         iframe.frameBorder = '0';
         iframe.scrolling = 'no';
         iframe.style.display = 'none';

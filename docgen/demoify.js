@@ -172,7 +172,7 @@ function homePage() {
             demos.push(thumbnail(key, kit, ''));
         }
         var allDemosP = new makerjs.exporter.XmlTag('p');
-        allDemosP.innerText = anchor('see all demos', "/maker.js/demos/#content");
+        allDemosP.innerText = anchor('see all demos', "/demos/#content");
         allDemosP.innerTextEscaped = true;
         demos.push(allDemosP.toString());
         stream.write(section(demos.join('\n')) + '\n');

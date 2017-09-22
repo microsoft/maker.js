@@ -18,7 +18,7 @@ function Nameplate(fontPath, text, fontSize, fontMargin, boltMargin, boltRadius,
     } else {
 
         //load a font asynchronously
-        opentype.load('/maker.js/fonts/' + fontPath, function (err, font) {
+        opentype.load('/fonts/' + fontPath, function (err, font) {
             if (!err) {
 
                 //use the models from makerjs-nameplate

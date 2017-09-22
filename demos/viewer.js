@@ -272,7 +272,7 @@ var Viewer = {
             }
 
             var script = document.createElement('script');
-            script.setAttribute('src', '/maker.js/demos/' + filename + '.js');
+            script.setAttribute('src', '/demos/' + filename + '.js');
             
             script.onload = function () {
                 setTimeout(newModelCode, 0);

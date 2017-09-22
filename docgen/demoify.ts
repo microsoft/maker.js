@@ -227,7 +227,7 @@ function homePage() {
         }
 
         var allDemosP = new makerjs.exporter.XmlTag('p');
-        allDemosP.innerText = anchor('see all demos', "/maker.js/demos/#content");
+        allDemosP.innerText = anchor('see all demos', "/demos/#content");
         allDemosP.innerTextEscaped = true;
 
         demos.push(allDemosP.toString());
