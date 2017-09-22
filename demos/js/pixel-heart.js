@@ -78,7 +78,7 @@ function Heart(desired_width) {
 
 /**
  * Define input properties for when this module is used within the maker.js playground.
- * See http://microsoft.github.io/maker.js/playground
+ * See http://maker.js.org/playground
  */
 Heart.metaParameters = [
     { title: "Width", type: "range", min: 1, max: 130, value: 13 }
