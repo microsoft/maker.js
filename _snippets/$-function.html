@@ -7,7 +7,7 @@ title: The $ function
     inspired by the <a href="http://www.jquery.com">jQuery</a> library.
 </p>
 
-Call <a href="/maker.js/docs/api/index.html#_">makerjs.$(x)</a> to get a <b>cascade container</b> object returned.
+Call <a href="/docs/api/index.html#_">makerjs.$(x)</a> to get a <b>cascade container</b> object returned.
 You can then invoke a series of cascading functions upon x. The output of each function becomes the input of the next.
 A cascade container will only work with functions that output the same type of object that they input as their first parameter, 
 which must be one of these types:
@@ -34,9 +34,9 @@ These are prefixed with $:
 Depending on the type of x, a cascade container will provide all of the functions from one of the corresponding modules. 
 
 <ul>
-    <li><a href="/maker.js/docs/api/modules/makerjs.model.html"><b>model</b> module</a> / <a href="/maker.js/docs/api/interfaces/makerjs.icascademodel.html"><i>cascade-safe functions</i></a></li>
-    <li><a href="/maker.js/docs/api/modules/makerjs.path.html"><b>path</b> module</a> / <a href="/maker.js/docs/api/interfaces/makerjs.icascadepath.html"><i>cascade-safe functions</i></a></li>
-    <li><a href="/maker.js/docs/api/modules/makerjs.point.html"><b>point</b> module</a> / <a href="/maker.js/docs/api/interfaces/makerjs.icascadepoint.html"><i>cascade-safe functions</i></a></li>
+    <li><a href="/docs/api/modules/makerjs.model.html"><b>model</b> module</a> / <a href="/docs/api/interfaces/makerjs.icascademodel.html"><i>cascade-safe functions</i></a></li>
+    <li><a href="/docs/api/modules/makerjs.path.html"><b>path</b> module</a> / <a href="/docs/api/interfaces/makerjs.icascadepath.html"><i>cascade-safe functions</i></a></li>
+    <li><a href="/docs/api/modules/makerjs.point.html"><b>point</b> module</a> / <a href="/docs/api/interfaces/makerjs.icascadepoint.html"><i>cascade-safe functions</i></a></li>
 </ul>
 
 These are the same functions that we've covered in previous lessons. One difference is that you do not need to provide the first parameter, 
@@ -80,7 +80,7 @@ the final operation (<i>moveRelative([0, 15])</i>) is at the bottom, and the fun
 
 <h4>Using addTo() instead of .$result</h4>
 
-In some cases, you can avoid using <b>.$result</b> and just <a href="/maker.js/docs/api/modules/makerjs.path.html#addto">add a path</a> or <a href="/maker.js/docs/api/modules/makerjs.model.html#addto">add a model</a> to a parent model by calling <b>addTo(model, id)</b>.
+In some cases, you can avoid using <b>.$result</b> and just <a href="/docs/api/modules/makerjs.path.html#addto">add a path</a> or <a href="/docs/api/modules/makerjs.model.html#addto">add a model</a> to a parent model by calling <b>addTo(model, id)</b>.
 This is particularly useful prior to a call that creates a clone (such as <b>mirror</b>):
 
 {% highlight javascript %}

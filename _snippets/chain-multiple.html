@@ -2,7 +2,7 @@
 title: Find multiple chains
 ---
 
-You can find multiple chains by calling <a href="/maker.js/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains(model)</a>, 
+You can find multiple chains by calling <a href="/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains(model)</a>, 
 which will return an array of chains, sorted by largest to smallest on the <b>pathLength</b> property.
 We can find 2 chains in this drawing with 2 rectangles:
     
@@ -35,7 +35,7 @@ document.write('found ' + chains.length + ' chains');
 <h4>Containment</h4>
 
 Instead of a "flat" array, we can see the containment of chains by also passing an <code>{ contain: true }</code> object to 
-<a href="/maker.js/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains(model, options)</a>:
+<a href="/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains(model, options)</a>:
 
 {% highlight javascript %}
 //2 concentric rectangles

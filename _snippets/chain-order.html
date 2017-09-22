@@ -8,7 +8,7 @@ The answer is: it is quite arbitrary. There is no guarantee that the order will 
 
 <h4>Reverse a chain</h4>
 
-If you have deduced that your chain needs to be reversed, you can call <a href="/maker.js/docs/api/modules/makerjs.chain.html#reverse">makerjs.chain.reverse(chain)</a>.
+If you have deduced that your chain needs to be reversed, you can call <a href="/docs/api/modules/makerjs.chain.html#reverse">makerjs.chain.reverse(chain)</a>.
 
 <h4>Beginning of a chain</h4>
 
@@ -16,12 +16,12 @@ Another issue with endless chains is, which link is at the beginning of the link
 If you need to specify which link is at the beginning of an endless chain, you have 2 functions at your disposal:
 
 <ul>
-    <li><a href="/maker.js/docs/api/modules/makerjs.chain.html#cycle">makerjs.chain.cycle(chain, amount)</a> - Shift the links of an endless chain.</li>
-    <li><a href="/maker.js/docs/api/modules/makerjs.chain.html#startat">makerjs.chain.startAt(chain, routeKey)</a> - Set the beginning of an endless chain to a known routeKey of a path.</li>
+    <li><a href="/docs/api/modules/makerjs.chain.html#cycle">makerjs.chain.cycle(chain, amount)</a> - Shift the links of an endless chain.</li>
+    <li><a href="/docs/api/modules/makerjs.chain.html#startat">makerjs.chain.startAt(chain, routeKey)</a> - Set the beginning of an endless chain to a known routeKey of a path.</li>
 </ul>
 
 <h4>Clockwise</h4>
 
 If you have an endless chain, you also have the option to see if your links flow in a clockwise direction.
-Call <a href="/maker.js/docs/api/modules/makerjs.measure.html#ischainclockwise">makerjs.measure.isChainClockwise(chain)</a>
+Call <a href="/docs/api/modules/makerjs.measure.html#ischainclockwise">makerjs.measure.isChainClockwise(chain)</a>
 which returns a boolean, unless your chain has one link which is a circle - in which case it will return null.

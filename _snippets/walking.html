@@ -3,7 +3,7 @@ title: Walking a model tree
 ---
 
 <p>
-    You can traverse a model tree by calling <a href="/maker.js/docs/api/modules/makerjs.model.html#walk">makerjs.model.walk</a> with your model and an object with these optional properties:
+    You can traverse a model tree by calling <a href="/docs/api/modules/makerjs.model.html#walk">makerjs.model.walk</a> with your model and an object with these optional properties:
 
     <table>
         <tr>
@@ -13,17 +13,17 @@ title: Walking a model tree
         </tr>
         <tr>
             <td>onPath</td>
-            <td>function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object)</td>
+            <td>function(<a href="/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object)</td>
             <td>called for every path (in every model) in your tree.</td>
         </tr>
         <tr>
             <td>beforeChildWalk</td>
-            <td>function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>)</td>
+            <td>function(<a href="/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>)</td>
             <td>called for every model in your tree, prior to diving deeper down the tree. <b>Return false if you wish to not dive deeper.</b></td>
         </tr>
         <tr>
             <td>afterChildWalk</td>
-            <td>function(<a href="/maker.js/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>)</td>
+            <td>function(<a href="/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>)</td>
             <td>called for every model in your tree, after returning from a deep dive down the tree.</td>
         </tr>
     </table>

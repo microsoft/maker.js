@@ -5,7 +5,7 @@ title: SVG
 <h4>Simple export</h4>
 
 <p>
-    Call <code><a href="/maker.js/docs/api/modules/makerjs.exporter.html#tosvg">makerjs.exporter.toSVG</a>(model)</code> passing your model. This function returns a string of SVG.
+    Call <code><a href="/docs/api/modules/makerjs.exporter.html#tosvg">makerjs.exporter.toSVG</a>(model)</code> passing your model. This function returns a string of SVG.
 </p>
 
 <p>
@@ -33,7 +33,7 @@ title: SVG
 </p>
 
 <p>
-    You may override the default export behavior by calling <code><a href="/maker.js/docs/api/modules/makerjs.exporter.html#tosvg">makerjs.exporter.toSVG</a>(model, options)</code> and passing an options object.
+    You may override the default export behavior by calling <code><a href="/docs/api/modules/makerjs.exporter.html#tosvg">makerjs.exporter.toSVG</a>(model, options)</code> and passing an options object.
     The options object has these properties:
 
     <table>
@@ -43,7 +43,7 @@ title: SVG
             <th>mode avalability</th>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#usesvgpathonly">useSvgPathOnly</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#usesvgpathonly">useSvgPathOnly</a></td>
             <td>
                 <ul>
                     <li>true (default) - Path-only mode</li>
@@ -53,14 +53,14 @@ title: SVG
             <td></td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#accuracy">accuracy</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#accuracy">accuracy</a></td>
             <td>
                 number - Exemplar number of decimal digits (default: .001)
             </td>
             <td>Both</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#annotate">annotate</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#annotate">annotate</a></td>
             <td>
                 <ul>
                     <li>true - Adds SVG <code>&lt;text&gt;</code> elements with the path id</li>
@@ -70,21 +70,21 @@ title: SVG
             <td>Separate</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#cssstyle">cssStyle</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#cssstyle">cssStyle</a></td>
             <td>
                 string - CSS style
             </td>
             <td>Both</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fill">fill</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fill">fill</a></td>
             <td>
                 string - CSS color (default: none)
             </td>
             <td>Path-only</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fillrule">fillRule</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fillrule">fillRule</a></td>
             <td>
                 string - <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule">SVG fill-rule</a> (default: "evenodd")
                 <ul>
@@ -95,14 +95,14 @@ title: SVG
             <td>Path-only</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fontsize">fontSize</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#fontsize">fontSize</a></td>
             <td>
                 string - CSS font size + units (default: 9pt)
             </td>
             <td>Separate + annotate</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#layeroptions">layerOptions</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#layeroptions">layerOptions</a></td>
             <td>
                 object map - keys are the layer names, values are an object with these properties:
                 <table>
@@ -111,25 +111,25 @@ title: SVG
                         <th>values</th>
                     </tr>
                     <tr>
-                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#cssstyle">cssStyle</a></td>
+                        <td><a href="/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#cssstyle">cssStyle</a></td>
                         <td>
                             string - CSS style
                         </td>
                     </tr>
                     <tr>
-                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#fill">fill</a></td>
+                        <td><a href="/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#fill">fill</a></td>
                         <td>
                             string - CSS color (default: none)
                         </td>
                     </tr>
                     <tr>
-                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#stroke">stroke</a></td>
+                        <td><a href="/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#stroke">stroke</a></td>
                         <td>
                             string - CSS color (default: black)
                         </td>
                     </tr>
                     <tr>
-                        <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#strokewidth">strokeWidth</a></td>
+                        <td><a href="/docs/api/interfaces/makerjs.exporter.isvgelementrenderoptions.html#strokewidth">strokeWidth</a></td>
                         <td>
                             string - SVG width + units (default: 0.25mm)
                         </td>
@@ -139,49 +139,49 @@ title: SVG
             <td>Both</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#origin">origin</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#origin">origin</a></td>
             <td>
                 point - offset your drawing in the SVG coordinate space (default: null)
             </td>
             <td>Separate</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#scale">scale</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#scale">scale</a></td>
             <td>
                 number - scale your drawing (default: 1)
             </td>
             <td>Separate</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#stroke">stroke</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#stroke">stroke</a></td>
             <td>
                 string - CSS color (default: black)
             </td>
             <td>Both</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#strokewidth">strokeWidth</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#strokewidth">strokeWidth</a></td>
             <td>
                 string - SVG width + units (default: 0.25mm)
             </td>
             <td>Both</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#svgattrs">svgAttrs</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#svgattrs">svgAttrs</a></td>
             <td>
                 object map - attributes to add to the root svg tag
             </td>
             <td>Both</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#units">units</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#units">units</a></td>
             <td>
-                <a href="/maker.js/docs/api/index.html#unittype">Maker.js unit type</a> (default - extracted from drawing. If unit system is not in drawing or not passed, it will use SVG default of pixels)
+                <a href="/docs/api/index.html#unittype">Maker.js unit type</a> (default - extracted from drawing. If unit system is not in drawing or not passed, it will use SVG default of pixels)
             </td>
             <td>Both</td>
         </tr>
         <tr>
-            <td><a href="/maker.js/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#viewbox">viewbox</a></td>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.isvgrenderoptions.html#viewbox">viewbox</a></td>
             <td>
                 <ul>
                     <li>true (default) - use SVG viewbox, stretch drawing to fill the SVG element.</li>
