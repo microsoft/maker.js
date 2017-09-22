@@ -252,7 +252,7 @@
 
             case environmentTypes.BrowserUI:
                 if (!('CAG' in window) || !('CSG' in window)) {
-                    throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add script tags.";
+                    throw "OpenJsCad library not found. Download http://maker.js.org/external/OpenJsCad/csg.js and http://maker.js.org/external/OpenJsCad/formats.js to your website and add script tags.";
                 }
                 container = window;
                 break;
@@ -264,7 +264,7 @@
 
             case environmentTypes.WebWorker:
                 if (!('CAG' in self) || !('CSG' in self)) {
-                    throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
+                    throw "OpenJsCad library not found. Download http://maker.js.org/external/OpenJsCad/csg.js and http://maker.js.org/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
                 }
                 container = self;
                 break;
