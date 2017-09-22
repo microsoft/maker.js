@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.71
+ *   version: 0.9.73
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -6364,7 +6364,7 @@ var MakerJs;
             switch (MakerJs.environment) {
                 case MakerJs.environmentTypes.BrowserUI:
                     if (!('CAG' in window) || !('CSG' in window)) {
-                        throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add script tags.";
+                        throw "OpenJsCad library not found. Download http://maker.js.org/external/OpenJsCad/csg.js and http://maker.js.org/external/OpenJsCad/formats.js to your website and add script tags.";
                     }
                     container = window;
                     break;
@@ -6374,7 +6374,7 @@ var MakerJs;
                     break;
                 case MakerJs.environmentTypes.WebWorker:
                     if (!('CAG' in self) || !('CSG' in self)) {
-                        throw "OpenJsCad library not found. Download http://microsoft.github.io/maker.js/external/OpenJsCad/csg.js and http://microsoft.github.io/maker.js/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
+                        throw "OpenJsCad library not found. Download http://maker.js.org/external/OpenJsCad/csg.js and http://maker.js.org/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
                     }
                     container = self;
                     break;
@@ -9093,6 +9093,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.71";
+MakerJs.version = "0.9.73";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);

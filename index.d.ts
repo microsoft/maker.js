@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.71
+// Type definitions for Maker.js 0.9.73
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -3392,7 +3392,7 @@ declare namespace MakerJs.models {
          * document.write(svg);
          * ```
          *
-         * @param measurement IMeasure object. See http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#pathextents and http://microsoft.github.io/maker.js/docs/api/modules/makerjs.measure.html#modelextents to get measurements of paths and models.
+         * @param measurement IMeasure object. See http://maker.js.org/docs/api/modules/makerjs.measure.html#pathextents and http://maker.js.org/docs/api/modules/makerjs.measure.html#modelextents to get measurements of paths and models.
          */
         constructor(measurement: IMeasure);
     }
