@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.73
+ *   version: 0.9.74
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -4517,13 +4517,13 @@ var MakerJs;
                     var arcAngles = getAnglesWithinArc(angles[0], arc, options);
                     if (arcAngles) {
                         var circleAngles;
-                        //if both point are on arc, use both on circle
+                        //if both points are on arc, use both on circle
                         if (arcAngles.length == 2) {
                             circleAngles = angles[1];
                         }
                         else {
                             //use the corresponding point on circle 
-                            var index = findCorrespondingAngleIndex(angles, arcAngles);
+                            var index = findCorrespondingAngleIndex(angles[0], arcAngles[0]);
                             circleAngles = [angles[1][index]];
                         }
                         result = {
@@ -4662,8 +4662,8 @@ var MakerJs;
          * @private
          */
         function findCorrespondingAngleIndex(circleAngles, arcAngle) {
-            for (var i = 0; i < circleAngles.length; i++) {
-                if (circleAngles[i][0] == arcAngle[0])
+            for (var i = 2; i--;) {
+                if (circleAngles[i] === arcAngle)
                     return i;
             }
         }
@@ -9093,6 +9093,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.73";
+MakerJs.version = "0.9.74";
 
 },{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
