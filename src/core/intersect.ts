@@ -82,12 +82,12 @@ namespace MakerJs.path {
                 if (arcAngles) {
                     var circleAngles: number[];
 
-                    //if both point are on arc, use both on circle
+                    //if both points are on arc, use both on circle
                     if (arcAngles.length == 2) {
                         circleAngles = angles[1];
                     } else {
                         //use the corresponding point on circle 
-                        var index = findCorrespondingAngleIndex(angles, arcAngles);
+                        var index = findCorrespondingAngleIndex(angles[0], arcAngles[0]);
                         circleAngles = [angles[1][index]];
                     }
 
@@ -251,9 +251,9 @@ namespace MakerJs.path {
     /**
      * @private
      */
-    function findCorrespondingAngleIndex(circleAngles: number[][], arcAngle: number[]): number {
-        for (var i = 0; i < circleAngles.length; i++) {
-            if (circleAngles[i][0] == arcAngle[0]) return i;
+    function findCorrespondingAngleIndex(circleAngles: number[], arcAngle: number): number {
+        for (var i = 2; i--;) {
+            if (circleAngles[i] === arcAngle) return i;
         }
     }
 

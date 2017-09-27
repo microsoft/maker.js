@@ -1,0 +1,30 @@
+var assert = require('assert');
+var makerjs = require('../index.js')
+
+describe('Path Intersection', function () {
+
+    it('should intersect an arc and a circle', function () {
+
+        const
+            c = {
+                "type": "circle",
+                "origin": [0, 0],
+                "radius": 1.0123663832210559
+            },
+            a = {
+                "type": "arc",
+                "origin": [0.8873663832210559, 0],
+                "radius": 0.375,
+                "startAngle": 0,
+                "endAngle": 106.36363636363635
+            };
+
+        const int = makerjs.path.intersection(a, c);        
+        assert.ok(int);
+        assert.ok(int.path1Angles);
+        assert.ok(int.path1Angles[0]);
+        assert.ok(int.path2Angles);
+        assert.ok(int.path2Angles[0]);
+    });
+
+});
