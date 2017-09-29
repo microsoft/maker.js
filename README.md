@@ -116,7 +116,15 @@ var makerjs = require('makerjs');
 
 Add a script tag to your HTML:
 ```
-<script src="https://cdn.jsdelivr.net/npm/makerjs@0.9.74/target/js/browser.maker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/makerjs@0/target/js/browser.maker.js"></script>
+```
+To work with Bezier Curves, you will also need a copy of [Bezier.js by Pomax](http://pomax.github.io/bezierjs/)
+```
+<script src="https://cdn.jsdelivr.net/npm/bezier-js@2/bezier.js"></script>
+```
+To work with fonts, you will need both Bezier.js(above) and a copy of [Opentype.js by Frederik De Bleser](https://github.com/nodebox/opentype.js)
+```
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@0/dist/opentype.js"></script>
 ```
 
 In your JavaScript, use the require function to get a reference:
