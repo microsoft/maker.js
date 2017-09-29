@@ -112,6 +112,18 @@ In your JavaScript, use the require function to get a reference:
 var makerjs = require('makerjs');
 ```
 
+### To use via CDN
+
+Add a script tag to your HTML:
+```
+<script src="https://cdn.jsdelivr.net/npm/makerjs@0.9.74/target/js/browser.maker.js"></script>
+```
+
+In your JavaScript, use the require function to get a reference:
+```
+var makerjs = require('makerjs');
+```
+
 ### To use in Node.js
 
 To depend on Maker.js, run this from the command line:
