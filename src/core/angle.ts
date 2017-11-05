@@ -129,4 +129,49 @@ namespace MakerJs.angle {
 
         return angleInDegrees;
     }
+
+    /**
+     * @private
+     */
+    var linkLineMap: { [pathType: string]: (p: IPath, first: boolean, reversed: boolean) => IPathLine } = {};
+
+    linkLineMap[pathType.Arc] = function (arc: IPathArc, first: boolean, reversed: boolean) {
+        const fromEnd = first != reversed;
+        const angleToRotate = fromEnd ? arc.endAngle - 90 : arc.startAngle + 90;
+        const origin = point.fromArc(arc)[fromEnd ? 1 : 0];
+        const end = point.rotate(point.add(origin, [arc.radius, 0]), angleToRotate, origin);
+        return new paths.Line(first ? [end, origin] : [origin, end]);
+    };
+
+    linkLineMap[pathType.Line] = function (line: IPathLine, first: boolean, reversed: boolean) {
+        return reversed ? new paths.Line(line.end, line.origin) : line;
+    };
+
+    /**
+     * @private
+     */
+    function getLinkLine(chainLink: IChainLink, first: boolean) {
+        if (chainLink) {
+            const p = chainLink.walkedPath.pathContext;
+            const fn = linkLineMap[p.type];
+            if (fn) {
+                return fn(p, first, chainLink.reversed);
+            }
+        }
+    }
+
+    /**
+     * Get the angle of a joint between 2 chain links.
+     * 
+     * @param linkA First chain link.
+     * @param linkB Second chain link.
+     * @returns Mirrored angle.
+     */
+    export function ofChainLinkJoint(linkA: IChainLink, linkB: IChainLink) {
+        if (arguments.length < 2) return null;
+        const linkLines: IPathLine[] = [linkA, linkB].map((link, i) => getLinkLine(link, i === 0));
+        var result = noRevolutions(ofLineInDegrees(linkLines[1]) - ofLineInDegrees(linkLines[0]));
+        if (result > 180) result -= 360;
+        return result
+    }
 }
