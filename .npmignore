@@ -26,3 +26,4 @@ tsd.json
 CONTRIBUTING.md
 Web.config
 debug.log
+.travis.yml

@@ -526,6 +526,49 @@ var MakerJs;
             return angleInDegrees;
         }
         angle.mirror = mirror;
+        /**
+         * @private
+         */
+        var linkLineMap = {};
+        linkLineMap[MakerJs.pathType.Arc] = function (arc, first, reversed) {
+            var fromEnd = first != reversed;
+            var angleToRotate = fromEnd ? arc.endAngle - 90 : arc.startAngle + 90;
+            var origin = MakerJs.point.fromArc(arc)[fromEnd ? 1 : 0];
+            var end = MakerJs.point.rotate(MakerJs.point.add(origin, [arc.radius, 0]), angleToRotate, origin);
+            return new MakerJs.paths.Line(first ? [end, origin] : [origin, end]);
+        };
+        linkLineMap[MakerJs.pathType.Line] = function (line, first, reversed) {
+            return reversed ? new MakerJs.paths.Line(line.end, line.origin) : line;
+        };
+        /**
+         * @private
+         */
+        function getLinkLine(chainLink, first) {
+            if (chainLink) {
+                var p = chainLink.walkedPath.pathContext;
+                var fn = linkLineMap[p.type];
+                if (fn) {
+                    return fn(p, first, chainLink.reversed);
+                }
+            }
+        }
+        /**
+         * Get the angle of a joint between 2 chain links.
+         *
+         * @param linkA First chain link.
+         * @param linkB Second chain link.
+         * @returns Mirrored angle.
+         */
+        function ofChainLinkJoint(linkA, linkB) {
+            if (arguments.length < 2)
+                return null;
+            var linkLines = [linkA, linkB].map(function (link, i) { return getLinkLine(link, i === 0); });
+            var result = noRevolutions(ofLineInDegrees(linkLines[1]) - ofLineInDegrees(linkLines[0]));
+            if (result > 180)
+                result -= 360;
+            return result;
+        }
+        angle.ofChainLinkJoint = ofChainLinkJoint;
     })(angle = MakerJs.angle || (MakerJs.angle = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -4845,6 +4888,7 @@ var MakerJs;
          * @returns Arc path object of the new fillet.
          */
         function dogbone(lineA, lineB, filletRadius, options) {
+            //TODO: allow arcs in dogbone
             if (MakerJs.isPathLine(lineA) && MakerJs.isPathLine(lineB) && filletRadius && filletRadius > 0) {
                 var opts = {
                     pointMatchingDistance: .005
@@ -4970,14 +5014,15 @@ var MakerJs;
 (function (MakerJs) {
     var chain;
     (function (chain) {
-        /**
-         * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
-         *
-         * @param chainToFillet The chain to add fillets to.
-         * @param filletRadius Radius of the fillet.
-         * @returns Model object containing paths which fillet the joints in the chain.
-         */
-        function fillet(chainToFillet, filletRadius) {
+        function dogbone(chainToFillet, filletSpec) {
+            return chainFillet(false, chainToFillet, filletSpec);
+        }
+        chain.dogbone = dogbone;
+        function fillet(chainToFillet, filletSpec) {
+            return chainFillet(true, chainToFillet, filletSpec);
+        }
+        chain.fillet = fillet;
+        function chainFillet(traditional, chainToFillet, filletSpec) {
             var result = { paths: {} };
             var added = 0;
             var links = chainToFillet.links;
@@ -4986,9 +5031,27 @@ var MakerJs;
                 if (p1.modelContext === p2.modelContext && p1.modelContext.type == MakerJs.models.BezierCurve.typeName)
                     return;
                 MakerJs.path.moveTemporary([p1.pathContext, p2.pathContext], [p1.offset, p2.offset], function () {
-                    var f = MakerJs.path.fillet(p1.pathContext, p2.pathContext, filletRadius);
-                    if (f) {
-                        result.paths['fillet' + added] = f;
+                    var filletRadius;
+                    if (MakerJs.isObject(filletSpec)) {
+                        var a = MakerJs.angle.ofChainLinkJoint(links[i1], links[i2]);
+                        if (MakerJs.round(a) === 0)
+                            return;
+                        filletRadius = (a > 0) ? filletSpec.left : filletSpec.right;
+                    }
+                    else {
+                        filletRadius = filletSpec;
+                    }
+                    if (!filletRadius || filletRadius < 0)
+                        return;
+                    var filletArc;
+                    if (traditional) {
+                        filletArc = MakerJs.path.fillet(p1.pathContext, p2.pathContext, filletRadius);
+                    }
+                    else {
+                        filletArc = MakerJs.path.dogbone(p1.pathContext, p2.pathContext, filletRadius);
+                    }
+                    if (filletArc) {
+                        result.paths['fillet' + added] = filletArc;
                         added++;
                     }
                 });
@@ -5003,7 +5066,6 @@ var MakerJs;
                 return null;
             return result;
         }
-        chain.fillet = fillet;
     })(chain = MakerJs.chain || (MakerJs.chain = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -8886,5 +8948,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.74";
+MakerJs.version = "0.9.75";
 ﻿var Bezier = require('bezier-js');

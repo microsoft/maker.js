@@ -306,6 +306,7 @@ namespace MakerJs.path {
      * @returns Arc path object of the new fillet.
      */
     export function dogbone(lineA: IPathLine, lineB: IPathLine, filletRadius: number, options?: IPointMatchOptions): IPathArc {
+        //TODO: allow arcs in dogbone
 
         if (isPathLine(lineA) && isPathLine(lineB) && filletRadius && filletRadius > 0) {
 
@@ -456,13 +457,54 @@ namespace MakerJs.path {
 namespace MakerJs.chain {
 
     /**
+     * Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object. 
+     *
+     * @param chainToFillet The chain to add fillets to.
+     * @param filletRadius Radius of the fillet.
+     * @returns Model object containing paths which fillet the joints in the chain.
+     */
+    export function dogbone(chainToFillet: IChain, filletRadius: number): IModel;
+
+    /**
+     * Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object. 
+     *
+     * @param chainToFillet The chain to add fillets to.
+     * @param filletRadii Object specifying directional radii.
+     * @param filletRadii.left Radius of left turning fillets.
+     * @param filletRadii.right Radius of right turning fillets.
+     * @returns Model object containing paths which fillet the joints in the chain.
+     */
+    export function dogbone(chainToFillet: IChain, filletRadii: { left?: number, right?: number }): IModel;
+
+    export function dogbone(chainToFillet: IChain, filletSpec: any): IModel {
+        return chainFillet(false, chainToFillet, filletSpec);
+    }
+
+    /**
      * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object. 
      *
      * @param chainToFillet The chain to add fillets to.
      * @param filletRadius Radius of the fillet.
      * @returns Model object containing paths which fillet the joints in the chain.
      */
-    export function fillet(chainToFillet: IChain, filletRadius: number): IModel {
+    export function fillet(chainToFillet: IChain, filletRadius: number): IModel;
+
+    /**
+     * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object. 
+     *
+     * @param chainToFillet The chain to add fillets to.
+     * @param filletRadii Object specifying directional radii.
+     * @param filletRadii.left Radius of left turning fillets.
+     * @param filletRadii.right Radius of right turning fillets.
+     * @returns Model object containing paths which fillet the joints in the chain.
+     */
+    export function fillet(chainToFillet: IChain, filletRadii: { left?: number, right?: number }): IModel;
+
+    export function fillet(chainToFillet: IChain, filletSpec: any): IModel {
+        return chainFillet(true, chainToFillet, filletSpec);
+    }
+
+    function chainFillet(traditional: boolean, chainToFillet: IChain, filletSpec: any): IModel {
         var result: IModel = { paths: {} };
         var added = 0;
         var links = chainToFillet.links;
@@ -470,12 +512,27 @@ namespace MakerJs.chain {
         function add(i1: number, i2: number) {
             var p1 = links[i1].walkedPath, p2 = links[i2].walkedPath;
 
-            if (p1.modelContext === p2. modelContext && p1.modelContext.type == models.BezierCurve.typeName) return;
+            if (p1.modelContext === p2.modelContext && p1.modelContext.type == models.BezierCurve.typeName) return;
 
             path.moveTemporary([p1.pathContext, p2.pathContext], [p1.offset, p2.offset], function () {
-                var f = path.fillet(p1.pathContext, p2.pathContext, filletRadius);
-                if (f) {
-                    result.paths['fillet' + added] = f;
+                let filletRadius: number;
+                if (isObject(filletSpec)) {
+                    const a = angle.ofChainLinkJoint(links[i1], links[i2]);
+                    if (round(a) === 0) return;
+                    filletRadius = (a > 0) ? filletSpec.left : filletSpec.right;
+                } else {
+                    filletRadius = filletSpec;
+                }
+                if (!filletRadius || filletRadius < 0) return;
+
+                let filletArc: IPathArc;
+                if (traditional) {
+                    filletArc = path.fillet(p1.pathContext, p2.pathContext, filletRadius);
+                } else {
+                    filletArc = path.dogbone(p1.pathContext as IPathLine, p2.pathContext as IPathLine, filletRadius);                    
+                }
+                if (filletArc) {
+                    result.paths['fillet' + added] = filletArc;
                     added++;
                 }
             });
@@ -493,5 +550,4 @@ namespace MakerJs.chain {
 
         return result;
     }
-
 }
