@@ -10,7 +10,9 @@ title: Api - chain Module
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.chain.html#chainfillet" class="tsd-kind-icon">chain<wbr>Fillet</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#cycle" class="tsd-kind-icon">cycle</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#dogbone" class="tsd-kind-icon">dogbone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#fillet" class="tsd-kind-icon">fillet</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.chain.html#removeduplicateends" class="tsd-kind-icon">remove<wbr>Duplicate<wbr>Ends</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#reverse" class="tsd-kind-icon">reverse</a></li>
@@ -25,6 +27,35 @@ title: Api - chain Module
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+		<a name="chainfillet" class="tsd-anchor"></a>
+		<h3>chain<wbr>Fillet</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">chain<wbr>Fillet<span class="tsd-signature-symbol">(</span>traditional<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletSpec<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/fillet.ts#L507">core/fillet.ts:507</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>traditional: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+					</li>
+					<li>
+						<h5>filletSpec: <span class="tsd-signature-type">any</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="cycle" class="tsd-anchor"></a>
 		<h3>cycle</h3>
@@ -35,7 +66,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/chain.ts#L463">core/chain.ts:463</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/chain.ts#L463">core/chain.ts:463</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -64,16 +95,99 @@ title: Api - chain Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-		<a name="fillet" class="tsd-anchor"></a>
-		<h3>fillet</h3>
+		<a name="dogbone" class="tsd-anchor"></a>
+		<h3>dogbone</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-			<li class="tsd-signature tsd-kind-icon">fillet<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">dogbone<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">dogbone<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadii<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/fillet.ts#L465">core/fillet.ts:465</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/fillet.ts#L466">core/fillet.ts:466</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain to add fillets to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Radius of the fillet.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/fillet.ts#L477">core/fillet.ts:477</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain to add fillets to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadii: <span class="tsd-signature-type">object</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Object specifying directional radii.</p>
+						</div>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> left<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of left turning fillets.</p>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> right<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of right turning fillets.</p>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="fillet" class="tsd-anchor"></a>
+		<h3>fillet</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">fillet<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">fillet<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadii<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/fillet.ts#L490">core/fillet.ts:490</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -99,6 +213,49 @@ title: Api - chain Module
 				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
 				<p>Model object containing paths which fillet the joints in the chain.</p>
 			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/fillet.ts#L501">core/fillet.ts:501</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain to add fillets to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadii: <span class="tsd-signature-type">object</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Object specifying directional radii.</p>
+						</div>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> left<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of left turning fillets.</p>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> right<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of right turning fillets.</p>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
@@ -111,7 +268,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/chain.ts#L560">core/chain.ts:560</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/chain.ts#L560">core/chain.ts:560</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -139,7 +296,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/chain.ts#L485">core/chain.ts:485</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/chain.ts#L485">core/chain.ts:485</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -171,7 +328,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/chain.ts#L498">core/chain.ts:498</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/chain.ts#L498">core/chain.ts:498</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -209,7 +366,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/chain.ts#L630">core/chain.ts:630</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/chain.ts#L630">core/chain.ts:630</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -247,7 +404,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/chain.ts#L521">core/chain.ts:521</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/chain.ts#L521">core/chain.ts:521</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -285,7 +442,7 @@ title: Api - chain Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b98b4b10/src/core/chain.ts#L575">core/chain.ts:575</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/685c65d5/src/core/chain.ts#L575">core/chain.ts:575</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

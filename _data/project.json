@@ -186,6 +186,43 @@
             }
           ]
         },
+        "ofChainLinkJoint": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "ofChainLinkJoint",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Get the angle of a joint between 2 chain links.",
+                "returns": "Mirrored angle.\n"
+              },
+              "parameters": [
+                {
+                  "name": "linkA",
+                  "flags": {},
+                  "comment": "First chain link.",
+                  "type": "IChainLink"
+                },
+                {
+                  "name": "linkB",
+                  "flags": {},
+                  "comment": "Second chain link.",
+                  "type": "IChainLink"
+                }
+              ],
+              "type": "number"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/angle.ts",
+              "line": 170,
+              "character": 36
+            }
+          ]
+        },
         "ofLineInDegrees": {
           "flags": {
             "isExported": true
@@ -599,7 +636,7 @@
           "sources": [
             {
               "fileName": "core/fillet.ts",
-              "line": 374,
+              "line": 375,
               "character": 26
             }
           ]
@@ -1308,7 +1345,7 @@
       "sources": [
         {
           "fileName": "core/fillet.ts",
-          "line": 456,
+          "line": 457,
           "character": 23
         }
       ],
@@ -1539,6 +1576,109 @@
             }
           ]
         },
+        "chainFillet": {
+          "flags": {},
+          "signatures": [
+            {
+              "name": "chainFillet",
+              "kindString": "Call signature",
+              "parameters": [
+                {
+                  "name": "traditional",
+                  "flags": {},
+                  "type": "boolean"
+                },
+                {
+                  "name": "chainToFillet",
+                  "flags": {},
+                  "type": "IChain"
+                },
+                {
+                  "name": "filletSpec",
+                  "flags": {},
+                  "type": "any"
+                }
+              ],
+              "type": "IModel"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/fillet.ts",
+              "line": 507,
+              "character": 24
+            }
+          ]
+        },
+        "dogbone": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "dogbone",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.",
+                "returns": "Model object containing paths which fillet the joints in the chain.\n"
+              },
+              "parameters": [
+                {
+                  "name": "chainToFillet",
+                  "flags": {},
+                  "comment": "The chain to add fillets to.",
+                  "type": "IChain"
+                },
+                {
+                  "name": "filletRadius",
+                  "flags": {},
+                  "comment": "Radius of the fillet.",
+                  "type": "number"
+                }
+              ],
+              "type": "IModel"
+            },
+            {
+              "name": "dogbone",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.",
+                "returns": "Model object containing paths which fillet the joints in the chain.\n"
+              },
+              "parameters": [
+                {
+                  "name": "chainToFillet",
+                  "flags": {},
+                  "comment": "The chain to add fillets to.",
+                  "type": "IChain"
+                },
+                {
+                  "name": "filletRadii",
+                  "flags": {},
+                  "comment": "Object specifying directional radii."
+                }
+              ],
+              "type": "IModel"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/fillet.ts",
+              "line": 466,
+              "character": 27
+            },
+            {
+              "fileName": "core/fillet.ts",
+              "line": 477,
+              "character": 27
+            },
+            {
+              "fileName": "core/fillet.ts",
+              "line": 479,
+              "character": 27
+            }
+          ]
+        },
         "fillet": {
           "flags": {
             "isExported": true
@@ -1566,12 +1706,44 @@
                 }
               ],
               "type": "IModel"
+            },
+            {
+              "name": "fillet",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.",
+                "returns": "Model object containing paths which fillet the joints in the chain.\n"
+              },
+              "parameters": [
+                {
+                  "name": "chainToFillet",
+                  "flags": {},
+                  "comment": "The chain to add fillets to.",
+                  "type": "IChain"
+                },
+                {
+                  "name": "filletRadii",
+                  "flags": {},
+                  "comment": "Object specifying directional radii."
+                }
+              ],
+              "type": "IModel"
             }
           ],
           "sources": [
             {
               "fileName": "core/fillet.ts",
-              "line": 465,
+              "line": 490,
+              "character": 26
+            },
+            {
+              "fileName": "core/fillet.ts",
+              "line": 501,
+              "character": 26
+            },
+            {
+              "fileName": "core/fillet.ts",
+              "line": 503,
               "character": 26
             }
           ]
