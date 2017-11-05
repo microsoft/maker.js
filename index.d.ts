@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.74
+// Type definitions for Maker.js 0.9.75
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -1357,6 +1357,14 @@ declare namespace MakerJs.angle {
      * @returns Mirrored angle.
      */
     function mirror(angleInDegrees: number, mirrorX: boolean, mirrorY: boolean): number;
+    /**
+     * Get the angle of a joint between 2 chain links.
+     *
+     * @param linkA First chain link.
+     * @param linkB Second chain link.
+     * @returns Mirrored angle.
+     */
+    function ofChainLinkJoint(linkA: IChainLink, linkB: IChainLink): number;
 }
 declare namespace MakerJs.point {
     /**
@@ -2526,6 +2534,27 @@ declare namespace MakerJs.path {
 }
 declare namespace MakerJs.chain {
     /**
+     * Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
+     *
+     * @param chainToFillet The chain to add fillets to.
+     * @param filletRadius Radius of the fillet.
+     * @returns Model object containing paths which fillet the joints in the chain.
+     */
+    function dogbone(chainToFillet: IChain, filletRadius: number): IModel;
+    /**
+     * Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
+     *
+     * @param chainToFillet The chain to add fillets to.
+     * @param filletRadii Object specifying directional radii.
+     * @param filletRadii.left Radius of left turning fillets.
+     * @param filletRadii.right Radius of right turning fillets.
+     * @returns Model object containing paths which fillet the joints in the chain.
+     */
+    function dogbone(chainToFillet: IChain, filletRadii: {
+        left?: number;
+        right?: number;
+    }): IModel;
+    /**
      * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
      *
      * @param chainToFillet The chain to add fillets to.
@@ -2533,6 +2562,19 @@ declare namespace MakerJs.chain {
      * @returns Model object containing paths which fillet the joints in the chain.
      */
     function fillet(chainToFillet: IChain, filletRadius: number): IModel;
+    /**
+     * Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.
+     *
+     * @param chainToFillet The chain to add fillets to.
+     * @param filletRadii Object specifying directional radii.
+     * @param filletRadii.left Radius of left turning fillets.
+     * @param filletRadii.right Radius of right turning fillets.
+     * @returns Model object containing paths which fillet the joints in the chain.
+     */
+    function fillet(chainToFillet: IChain, filletRadii: {
+        left?: number;
+        right?: number;
+    }): IModel;
 }
 declare namespace MakerJs.kit {
     /**
