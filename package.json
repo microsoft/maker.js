@@ -98,6 +98,7 @@
   },
   "homepage": "https://github.com/Microsoft/maker.js",
   "devDependencies": {
+    "@jscad/csg": "^0.3.7",
     "@types/codemirror": "0.0.38",
     "@types/graham_scan": "^1.0.28",
     "@types/marked": "^0.0.28",
