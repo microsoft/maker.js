@@ -195,6 +195,7 @@ onmessage = (ev: MessageEvent) => {
 
     var result: MakerJsPlaygroundExport.IExportResponse = {
         request: request,
+        error: null,
         text: null,
         percentComplete: 0
     };
@@ -213,7 +214,11 @@ onmessage = (ev: MessageEvent) => {
         }
 
         //call the exporter function.
-        result.text = exporter(request.model, request.options);
+        try {
+            result.text = exporter(request.model, request.options);
+        } catch (e) {
+            result.error = e;
+        }
         result.percentComplete = 100;
         postMessage(result);
 

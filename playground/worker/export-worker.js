@@ -132,6 +132,7 @@ onmessage = function (ev) {
     var request = ev.data;
     var result = {
         request: request,
+        error: null,
         text: null,
         percentComplete: 0
     };
@@ -146,7 +147,12 @@ onmessage = function (ev) {
             postMessage(result);
         };
         //call the exporter function.
-        result.text = exporter(request.model, request.options);
+        try {
+            result.text = exporter(request.model, request.options);
+        }
+        catch (e) {
+            result.error = e;
+        }
         result.percentComplete = 100;
         postMessage(result);
     }

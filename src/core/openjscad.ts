@@ -196,6 +196,10 @@
                 depth++;
             }
 
+            if (result.length === 0) {
+                throw ('No closed geometries found.');
+            }
+                
             var extrudeOptions: CAG_extrude_options = { offset: [0, 0, opts.extrusion] };
             result.push(wrap('.extrude', JSON.stringify(extrudeOptions), true));
 
@@ -259,7 +263,7 @@
 
             case environmentTypes.NodeJs:
                 //this can throw if not found
-                container = require('openjscad-csg');
+                container = eval('require("openjscad-csg")');
                 break;
 
             case environmentTypes.WebWorker:
@@ -278,6 +282,88 @@
         var csg = f(container.CAG, container.CSG) as CSG;
 
         return csg.toStlString();
+    }
+
+    /**
+     * @private
+     */
+    function unionize(arr: jscad.CAG[]) {
+        let result = arr.shift();
+        arr.forEach(el => result = result.union(el));
+        return result;
+    }
+
+    /**
+     * Converts a model to a @jscad/csg object - 2D to 2D.
+     * 
+     * Example:
+     * ```
+     * //First, use npm install @jscad/csg from the command line in your jscad project
+     * //Create a CAG instance from a model.
+     * var { CAG } = require('@jscad/csg'); 
+     * var model = new makerjs.models.Ellipse(70, 40);
+     * var cag = makerjs.exporter.toJscadCAG(CAG, model, 1);
+     * ```
+     * 
+     * @param jscadCAG @jscad/csg CAG engine.
+     * @param modelToExport Model object to export.
+     * @param maxArcFacet The maximum length between points on an arc or circle.
+     * @param findChainsOptions Optional IFindChainsOptions options object.
+     * @param findChainsOptions.byLayers Optional flag to separate chains by layers.
+     * @param findChainsOptions.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @returns jscad CAG object in 2D.
+     */
+    export function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, maxArcFacet: number, findChainsOptions?: IFindChainsOptions) {
+        const adds: jscad.CAG[] = [];
+
+        function chainToCag(c: IChain) {
+            const keyPoints = chain.toKeyPoints(c, maxArcFacet);
+            keyPoints.push(keyPoints[0]);
+            return jscadCAG.fromPoints(keyPoints);
+        }
+
+        function subtractChainsToCag(cs: IChain[]) {
+            const subtracts: jscad.CAG[] = [];
+            cs.forEach(c => {
+                if (!c.endless) return;
+                const cag = chainToCag(c);
+                if (c.contains) {
+                    addChainsToCag(c.contains);
+                }
+                subtracts.unshift(cag);
+            });
+            return unionize(subtracts);
+        }
+
+        function addChainsToCag(cs: IChain[]) {
+            cs.forEach(c => {
+                if (!c.endless) return;
+                let cag = chainToCag(c);
+                if (c.contains) {
+                    const subtract = subtractChainsToCag(c.contains);
+                    cag = cag.subtract(subtract);
+                }
+                adds.unshift(cag);
+            });
+        }
+
+        const options: IFindChainsOptions = findChainsOptions ? cloneObject(findChainsOptions) : {};
+        options.contain = true;
+
+        const chainsResult = model.findChains(modelToExport, options);
+        if (Array.isArray(chainsResult)) {
+            addChainsToCag(chainsResult);
+        } else {
+            for (let layer in chainsResult) {
+                addChainsToCag(chainsResult[layer]);
+            }
+        }
+
+        if (adds.length === 0) {
+            throw ('No closed geometries found.');
+        }
+
+        return unionize(adds);
     }
 
     /**

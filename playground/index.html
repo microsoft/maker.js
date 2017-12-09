@@ -113,8 +113,8 @@
 
     <section id="download">
 
-            <div id="download-select">
-                <h2>Choose a file format to download your customized drawing <span class="unitless">(units will be millimeters)</span></h2>
+        <div id="download-select">
+            <h2>Choose a file format to download your customized drawing <span class="unitless">(units will be millimeters)</span></h2>
 
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
             <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
@@ -129,6 +129,12 @@
 
             <button onclick="MakerJsPlayground.cancelExport()">cancel</button>
             <div id="download-progress"></div>
+        </div>
+
+        <div id="download-error">
+            <h2>There was an error generating your file</h2>
+            <div id="download-error-message"></div>
+            <button class="close" onclick="MakerJsPlayground.toggleClass('download-error')">close</button>
         </div>
 
         <div id="download-ready">
