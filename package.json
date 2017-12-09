@@ -9,7 +9,7 @@
     "cat-node": "cat target/header.txt target/js/node.js target/node-requires.js > target/js/node.maker.js && rm target/js/node.js",
     "version-tsd": "node ./target/version-tsd.js > index.d.ts && rm target/maker.d.ts",
     "target-node-platform": "cd target && mv maker.js js/node.js && cd ..",
-    "target-browser-platform": "browserify -p licensify --ignore buffer --ignore openjscad-csg -r ./target/js/node.js:makerjs -o ./target/js/browser.js",
+    "target-browser-platform": "browserify -p licensify --ignore buffer -r ./target/js/node.js:makerjs -o ./target/js/browser.js",
     "version-inside": "node ./target/version-inside.js",
     "build-debug": "tsc",
     "project": "typedoc ./src --json ./target/project.json",
@@ -119,5 +119,11 @@
     "bezier-js": "^2.1.0",
     "clone": "^1.0.2",
     "graham_scan": "^1.0.4"
-  }
+  },
+  "files": [
+    "external/jscad/csg.d.ts",
+    "target/js/browser.maker.js",
+    "index.d.ts",
+    "index.js"
+  ]
 }
