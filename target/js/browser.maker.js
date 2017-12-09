@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://github.com/Microsoft/maker.js
- *   version: 0.9.75
+ *   version: 0.9.76
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -6380,6 +6380,9 @@ var MakerJs;
                     result.push(wrap(operator, union, result.length));
                     depth++;
                 }
+                if (result.length === 0) {
+                    throw ('No closed geometries found.');
+                }
                 var extrudeOptions = { offset: [0, 0, opts.extrusion] };
                 result.push(wrap('.extrude', JSON.stringify(extrudeOptions), true));
                 all = 'return ' + result.join('');
@@ -6432,7 +6435,7 @@ var MakerJs;
                     break;
                 case MakerJs.environmentTypes.NodeJs:
                     //this can throw if not found
-                    container = require('openjscad-csg');
+                    container = eval('require("openjscad-csg")');
                     break;
                 case MakerJs.environmentTypes.WebWorker:
                     if (!('CAG' in self) || !('CSG' in self)) {
@@ -6448,6 +6451,83 @@ var MakerJs;
             return csg.toStlString();
         }
         exporter.toSTL = toSTL;
+        /**
+         * @private
+         */
+        function unionize(arr) {
+            var result = arr.shift();
+            arr.forEach(function (el) { return result = result.union(el); });
+            return result;
+        }
+        /**
+         * Converts a model to a @jscad/csg object - 2D to 2D.
+         *
+         * Example:
+         * ```
+         * //First, use npm install @jscad/csg from the command line in your jscad project
+         * //Create a CAG instance from a model.
+         * var { CAG } = require('@jscad/csg');
+         * var model = new makerjs.models.Ellipse(70, 40);
+         * var cag = makerjs.exporter.toJscadCAG(CAG, model, 1);
+         * ```
+         *
+         * @param jscadCAG @jscad/csg CAG engine.
+         * @param modelToExport Model object to export.
+         * @param maxArcFacet The maximum length between points on an arc or circle.
+         * @param findChainsOptions Optional IFindChainsOptions options object.
+         * @param findChainsOptions.byLayers Optional flag to separate chains by layers.
+         * @param findChainsOptions.pointMatchingDistance Optional max distance to consider two points as the same.
+         * @returns jscad CAG object in 2D.
+         */
+        function toJscadCAG(jscadCAG, modelToExport, maxArcFacet, findChainsOptions) {
+            var adds = [];
+            function chainToCag(c) {
+                var keyPoints = MakerJs.chain.toKeyPoints(c, maxArcFacet);
+                keyPoints.push(keyPoints[0]);
+                return jscadCAG.fromPoints(keyPoints);
+            }
+            function subtractChainsToCag(cs) {
+                var subtracts = [];
+                cs.forEach(function (c) {
+                    if (!c.endless)
+                        return;
+                    var cag = chainToCag(c);
+                    if (c.contains) {
+                        addChainsToCag(c.contains);
+                    }
+                    subtracts.unshift(cag);
+                });
+                return unionize(subtracts);
+            }
+            function addChainsToCag(cs) {
+                cs.forEach(function (c) {
+                    if (!c.endless)
+                        return;
+                    var cag = chainToCag(c);
+                    if (c.contains) {
+                        var subtract = subtractChainsToCag(c.contains);
+                        cag = cag.subtract(subtract);
+                    }
+                    adds.unshift(cag);
+                });
+            }
+            var options = findChainsOptions ? MakerJs.cloneObject(findChainsOptions) : {};
+            options.contain = true;
+            var chainsResult = MakerJs.model.findChains(modelToExport, options);
+            if (Array.isArray(chainsResult)) {
+                addChainsToCag(chainsResult);
+            }
+            else {
+                for (var layer in chainsResult) {
+                    addChainsToCag(chainsResult[layer]);
+                }
+            }
+            if (adds.length === 0) {
+                throw ('No closed geometries found.');
+            }
+            return unionize(adds);
+        }
+        exporter.toJscadCAG = toJscadCAG;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -9155,6 +9235,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.75";
+MakerJs.version = "0.9.76";
 
-},{"clone":2,"graham_scan":3,"openjscad-csg":1}]},{},[]);
+},{"clone":2,"graham_scan":3}]},{},[]);

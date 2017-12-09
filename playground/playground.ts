@@ -57,6 +57,7 @@
     var measurementDiv: HTMLDivElement;
     var progress: HTMLDivElement;
     var preview: HTMLTextAreaElement;
+    var downloadError: HTMLDivElement;
     var checkFitToScreen: HTMLInputElement;
     var checkShowGrid: HTMLInputElement;
     var checkNotes: HTMLInputElement;
@@ -343,6 +344,7 @@
 
     function resetDownload() {
         cancelExport();
+        document.body.classList.remove('download-error');
         document.body.classList.remove('download-ready');
     }
 
@@ -1496,17 +1498,27 @@
 
         progress.style.width = response.percentComplete + '%';
 
-        if (response.percentComplete == 100 && response.text) {
+        if (response.percentComplete == 100 && response.text || response.error) {
 
             //allow progress bar to render
             setTimeout(function () {
-                setExportText(response.request.format, response.request.formatTitle, response.text);
+                setExportText(response.request.format, response.request.formatTitle, response.text, response.error);
             }, 300);
 
         }
     }
 
-    function setExportText(format: MakerJsPlaygroundExport.ExportFormat, title: string, text: string) {
+    function setExportText(format: MakerJsPlaygroundExport.ExportFormat, title: string, text: string, error: string) {
+        if (error) {
+            downloadError.innerText = error;
+
+            //put the download ui into ready mode
+            toggleClass('download-generating');
+            toggleClass('download-error');
+
+            return;
+        }
+
         var fe = MakerJsPlaygroundExport.formatMap[format];
 
         var encoded = encodeURIComponent(text);
@@ -1522,7 +1534,7 @@
         preview.value = text;
 
         (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
-
+    
         //put the download ui into ready mode
         toggleClass('download-generating');
         toggleClass('download-ready');
@@ -1552,36 +1564,43 @@
         if (useWorkerThreads && Worker) {
             exportOnWorkerThread(request);
         } else {
-            exportOnUIThread(request);
+            if (!exportOnUIThread(request)) {
+                exportOnWorkerThread(request);
+            }
         }
     }
 
     function exportOnUIThread(request: MakerJsPlaygroundExport.IExportRequest) {
         var text: string;
+        var error: string;
 
-        switch (request.format) {
-            case MakerJsPlaygroundExport.ExportFormat.Dxf:
-                text = makerjs.exporter.toDXF(processed.model);
-                break;
+        try {
+            switch (request.format) {
+                case MakerJsPlaygroundExport.ExportFormat.Dxf:
+                    text = makerjs.exporter.toDXF(processed.model);
+                    break;
 
-            case MakerJsPlaygroundExport.ExportFormat.Json:
-                text = JSON.stringify(processed.model, null, 2);
-                break;
+                case MakerJsPlaygroundExport.ExportFormat.Json:
+                    text = JSON.stringify(processed.model, null, 2);
+                    break;
 
-            case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
-                text = makerjs.exporter.toOpenJsCad(processed.model);
-                break;
+                case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
+                    text = makerjs.exporter.toOpenJsCad(processed.model);
+                    break;
 
-            case MakerJsPlaygroundExport.ExportFormat.Svg:
-                text = makerjs.exporter.toSVG(processed.model);
-                break;
+                case MakerJsPlaygroundExport.ExportFormat.Svg:
+                    text = makerjs.exporter.toSVG(processed.model);
+                    break;
 
-            default:
-                exportOnWorkerThread(request);
-                return;
+                default:
+                    return false;
+            }
+        } catch (e) {
+            error = e;
         }
 
-        setExportText(request.format, request.formatTitle, text);
+        setExportText(request.format, request.formatTitle, text, error);
+        return true;
     }
 
     function exportOnWorkerThread(request: MakerJsPlaygroundExport.IExportRequest) {
@@ -1688,6 +1707,7 @@
         measurementDiv = document.getElementById('measurement') as HTMLDivElement;
         progress = document.getElementById('download-progress') as HTMLDivElement;
         preview = document.getElementById('download-preview') as HTMLTextAreaElement;
+        downloadError = document.getElementById('download-error-message') as HTMLDivElement;
         checkFitToScreen = document.getElementById('check-fit-on-screen') as HTMLInputElement;
         checkShowGrid = document.getElementById('check-show-origin') as HTMLInputElement;
         checkNotes = document.getElementById('check-notes') as HTMLInputElement;
