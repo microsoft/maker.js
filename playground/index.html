@@ -36,7 +36,7 @@
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
     <script src="../external/bezier-js/bezier.js"></script>
     <script src="../external/opentype/opentype.js"></script>
-
+    
     <script>
         //pretend we are in node
         var module = {};
@@ -190,6 +190,12 @@
 
                 <button onclick="MakerJsPlayground.cancelExport()">cancel</button>
                 <div id="download-progress"></div>
+            </div>
+
+            <div id="download-error">
+                <h2>There was an error generating your file</h2>
+                <div id="download-error-message"></div>
+                <button class="close" onclick="MakerJsPlayground.toggleClass('download-error')">close</button>
             </div>
 
             <div id="download-ready">

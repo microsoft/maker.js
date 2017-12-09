@@ -23,6 +23,7 @@
 
     export interface IExportResponse {
         request: IExportRequest;
+        error: string;
         text: string;
         percentComplete: number;
     }

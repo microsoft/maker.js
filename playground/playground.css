@@ -424,7 +424,7 @@ svg#pointers line {
     padding-right: 2em;
 }
 
-#download-generating, #download-ready
+#download-generating, #download-ready, #download-error
 {
     display: none;
 }
@@ -456,7 +456,11 @@ svg#pointers line {
     display: block;
 }
 
-.download-ready #download-select, .download-ready #download-generating {
+.download-error #download-error {
+    display: block;    
+}
+
+.download-ready #download-select, .download-ready #download-generating, .download-error #download-select, .download-error #download-generating {
     display: none;
 }
 
