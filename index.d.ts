@@ -1,7 +1,9 @@
-// Type definitions for Maker.js 0.9.75
+// Type definitions for Maker.js 0.9.76
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+/// <reference path="external/jscad/csg.d.ts" />
 /// <reference types="pdfkit" />
 /// <reference types="bezier-js" />
 /**
@@ -2767,6 +2769,27 @@ declare namespace MakerJs.exporter {
      * @returns String of STL format of 3D object.
      */
     function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions): string;
+    /**
+     * Converts a model to a @jscad/csg object - 2D to 2D.
+     *
+     * Example:
+     * ```
+     * //First, use npm install @jscad/csg from the command line in your jscad project
+     * //Create a CAG instance from a model.
+     * var { CAG } = require('@jscad/csg');
+     * var model = new makerjs.models.Ellipse(70, 40);
+     * var cag = makerjs.exporter.toJscadCAG(CAG, model, 1);
+     * ```
+     *
+     * @param jscadCAG @jscad/csg CAG engine.
+     * @param modelToExport Model object to export.
+     * @param maxArcFacet The maximum length between points on an arc or circle.
+     * @param findChainsOptions Optional IFindChainsOptions options object.
+     * @param findChainsOptions.byLayers Optional flag to separate chains by layers.
+     * @param findChainsOptions.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @returns jscad CAG object in 2D.
+     */
+    function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, maxArcFacet: number, findChainsOptions?: IFindChainsOptions): jscad.CAG;
     /**
      * OpenJsCad export options.
      */

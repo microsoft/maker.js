@@ -28,6 +28,7 @@ var MakerJsPlayground;
     var measurementDiv;
     var progress;
     var preview;
+    var downloadError;
     var checkFitToScreen;
     var checkShowGrid;
     var checkNotes;
@@ -252,6 +253,7 @@ var MakerJsPlayground;
     }
     function resetDownload() {
         cancelExport();
+        document.body.classList.remove('download-error');
         document.body.classList.remove('download-ready');
     }
     var Frown = (function () {
@@ -1150,14 +1152,21 @@ var MakerJsPlayground;
     function getExport(ev) {
         var response = ev.data;
         progress.style.width = response.percentComplete + '%';
-        if (response.percentComplete == 100 && response.text) {
+        if (response.percentComplete == 100 && response.text || response.error) {
             //allow progress bar to render
             setTimeout(function () {
-                setExportText(response.request.format, response.request.formatTitle, response.text);
+                setExportText(response.request.format, response.request.formatTitle, response.text, response.error);
             }, 300);
         }
     }
-    function setExportText(format, title, text) {
+    function setExportText(format, title, text, error) {
+        if (error) {
+            downloadError.innerText = error;
+            //put the download ui into ready mode
+            toggleClass('download-generating');
+            toggleClass('download-error');
+            return;
+        }
         var fe = MakerJsPlaygroundExport.formatMap[format];
         var encoded = encodeURIComponent(text);
         var uriPrefix = 'data:' + fe.mediaType + ',';
@@ -1193,29 +1202,37 @@ var MakerJsPlayground;
             exportOnWorkerThread(request);
         }
         else {
-            exportOnUIThread(request);
+            if (!exportOnUIThread(request)) {
+                exportOnWorkerThread(request);
+            }
         }
     }
     function exportOnUIThread(request) {
         var text;
-        switch (request.format) {
-            case MakerJsPlaygroundExport.ExportFormat.Dxf:
-                text = makerjs.exporter.toDXF(processed.model);
-                break;
-            case MakerJsPlaygroundExport.ExportFormat.Json:
-                text = JSON.stringify(processed.model, null, 2);
-                break;
-            case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
-                text = makerjs.exporter.toOpenJsCad(processed.model);
-                break;
-            case MakerJsPlaygroundExport.ExportFormat.Svg:
-                text = makerjs.exporter.toSVG(processed.model);
-                break;
-            default:
-                exportOnWorkerThread(request);
-                return;
+        var error;
+        try {
+            switch (request.format) {
+                case MakerJsPlaygroundExport.ExportFormat.Dxf:
+                    text = makerjs.exporter.toDXF(processed.model);
+                    break;
+                case MakerJsPlaygroundExport.ExportFormat.Json:
+                    text = JSON.stringify(processed.model, null, 2);
+                    break;
+                case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
+                    text = makerjs.exporter.toOpenJsCad(processed.model);
+                    break;
+                case MakerJsPlaygroundExport.ExportFormat.Svg:
+                    text = makerjs.exporter.toSVG(processed.model);
+                    break;
+                default:
+                    return false;
+            }
         }
-        setExportText(request.format, request.formatTitle, text);
+        catch (e) {
+            error = e;
+        }
+        setExportText(request.format, request.formatTitle, text, error);
+        return true;
     }
     function exportOnWorkerThread(request) {
         //initialize a worker - this will download scripts into the worker
@@ -1312,6 +1329,7 @@ var MakerJsPlayground;
         measurementDiv = document.getElementById('measurement');
         progress = document.getElementById('download-progress');
         preview = document.getElementById('download-preview');
+        downloadError = document.getElementById('download-error-message');
         checkFitToScreen = document.getElementById('check-fit-on-screen');
         checkShowGrid = document.getElementById('check-show-origin');
         checkNotes = document.getElementById('check-notes');
