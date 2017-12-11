@@ -284,6 +284,9 @@
         return csg.toStlString();
     }
 
+    /**
+     * @private
+     */
     interface IAdd {
         cag: jscad.CAG;
         subtracts: jscad.CAG[][];
@@ -420,11 +423,21 @@
         modelMap?: IOpenJsCadOptionsMap;
     }
 
+    /**
+     * Map of OpenJsCad export options.
+     */
     export interface IOpenJsCadOptionsMap {
         [modelId: string]: IOpenJsCadOptions;
     }
 
+    /**
+     * JsCad CAG export options.
+     */
     export interface IJsCadCagOptions extends IFindChainsOptions {
+
+        /**
+         * Optional callback to get status during the export.
+         */
         statusCallback?: IStatusCallback;
     }
 }
