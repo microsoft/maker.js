@@ -108,6 +108,7 @@
     <script src="../fonts/fonts.js"></script>
     <script src="fontloader.js"></script>
     <script src="playground.js"></script>
+    <script src="format-options.js"></script>
     <script>
         //config
         MakerJsPlayground.relativePath = '../examples/';
@@ -184,6 +185,64 @@
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Stl);">.stl</button>
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Pdf);">.pdf</button>
             </div>
+            
+            <div id="download-options">
+                <!-- <iframe id="download-options-iframe"></iframe> -->
+                
+                <div data-format="Dxf" class="download-option">
+                    <h2>Dxf options</h2>
+                        Dxf
+                </div>
+
+                <div data-format="Svg" class="download-option">
+                    <h2>Svg options</h2>
+                        Svg
+                </div>
+
+                <div data-format="Json" class="download-option">
+                    <h2>Json options</h2>
+                    <div class="option-block">
+                        <label for="json-indent">Indentation</label>
+                        <select id="json-indent">
+                            <option value="0">None</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="json-accuracy">Rounding</label>
+                        <select id="json-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">None</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div data-format="OpenJsCad" class="download-option">
+                    <h2>OpenJsCad options</h2>
+                        OpenJsCad
+                </div>
+
+                <div data-format="Stl" class="download-option">
+                    <h2>Stl options</h2>
+                        Stl
+                </div>
+
+                <div data-format="Pdf" class="download-option">
+                    <h2>Pdf options</h2>
+                        Pdf
+                </div>
+
+                <button class="generate" onclick="MakerJsPlayground.getFormatOptions()">generate</button>
+                <button class="close" onclick="MakerJsPlayground.toggleClass('download-options')">cancel</button>
+            </div>
 
             <div id="download-generating">
                 <h2>Generating your customized drawing...</h2>
@@ -202,6 +261,9 @@
                 <h2>Your customized drawing file is ready for download</h2>
 
                 <span id="download-link-container"></span>
+                <span>
+                    <button class="back" onclick="MakerJsPlayground.toggleClass('download-ready');MakerJsPlayground.toggleClass('download-options')">back</button>
+                </span>
                 <span>
                     <button class="close" onclick="MakerJsPlayground.toggleClass('download-ready')">close</button>
                 </span>

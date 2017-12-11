@@ -10,6 +10,7 @@
     "pointer.ts",
     "fontloader.ts",
     "playground.ts",
+    "format-options.ts",
     "require-iframe.ts"
   ]
 }

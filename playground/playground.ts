@@ -1534,31 +1534,32 @@
         preview.value = text;
 
         (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
-    
+
         //put the download ui into ready mode
         toggleClass('download-generating');
         toggleClass('download-ready');
     }
 
     export function downloadClick(a: HTMLAnchorElement, format: MakerJsPlaygroundExport.ExportFormat) {
-
-        //TODO: show options
-        //TODO: get options
-
-        var request: MakerJsPlaygroundExport.IExportRequest = {
-            format: format,
-            formatTitle: a.innerText,
-            model: processed.model,
-            options: {}
-        };
-
-        beginExport(request);
+        //show options
+        FormatOptions.activateOption(format, a.innerText);
+        toggleClass('download-options');
     }
 
-    function beginExport(request: MakerJsPlaygroundExport.IExportRequest) {
+    export function getFormatOptions() {
+
+        var formatOption = MakerJsPlayground.FormatOptions.current;
+
+        var request: MakerJsPlaygroundExport.IExportRequest = {
+            format: formatOption.format,
+            formatTitle: formatOption.formatTitle,
+            model: processed.model,
+            options: formatOption.getOptionObject()
+        };
 
         //put the download ui into generation mode
         progress.style.width = '0';
+        toggleClass('download-options');
         toggleClass('download-generating');
 
         if (useWorkerThreads && Worker) {
