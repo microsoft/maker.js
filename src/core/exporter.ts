@@ -17,6 +17,17 @@ namespace MakerJs.exporter {
     }
 
     /**
+     * Options for JSON export.
+     */
+    export interface IJsonExportOptions extends IExportOptions {
+
+        /**
+         * Optional number of characters to indent after a newline.
+         */
+        indentation?: number;
+    }
+
+    /**
      * Try to get the unit system from a model
      * @private
      */
