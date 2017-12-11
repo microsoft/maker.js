@@ -3,7 +3,8 @@
 interface CanvasRenderingContext2D {
 }
 
-declare var PDFDocument: PDFKit.PDFDocument;
+// dependency libraries
+let PDFDocument: PDFKit.PDFDocument;
 
 /* module system */
 
@@ -25,93 +26,22 @@ importScripts(
 
 var makerjs: typeof MakerJs = require('makerjs');
 
-var unionCount = 0;
-var unionIndex = 0;
-var polygonCount = 0;
-var polygonIndex = 0;
+var deps: { [format: number]: boolean } = {};
 
-var incrementUnion: Function;
-var incrementPolygon: Function;
-
-var deps: { [format: number]: { loaded: boolean; load?: Function } } = {};
-
-deps[MakerJsPlaygroundExport.ExportFormat.Dxf] = { loaded: true };
-deps[MakerJsPlaygroundExport.ExportFormat.Json] = { loaded: true };
-deps[MakerJsPlaygroundExport.ExportFormat.OpenJsCad] = { loaded: true };
-deps[MakerJsPlaygroundExport.ExportFormat.Svg] = { loaded: true };
-
-deps[MakerJsPlaygroundExport.ExportFormat.Stl] = {
-    loaded: false,
-    load: function () {
-
-        importScripts(
-            '../../external/OpenJsCad/csg.js',
-            '../../external/OpenJsCad/formats.js'
-        );
-
-        CSG.Path2D.prototype['appendArc2'] = CSG.Path2D.prototype.appendArc;
-        CSG.Path2D.prototype.appendArc = function (endpoint: CSG.Vector2D, options: CSG.IEllpiticalArcOptions): CSG.Path2D {
-            unionIndex++;
-            incrementUnion();
-            return this['appendArc2'](endpoint, options);
-        };
-
-        CSG.Path2D.prototype['appendPoint2'] = CSG.Path2D.prototype.appendPoint;
-        CSG.Path2D.prototype.appendPoint = function (point: CSG.Vector2D): CSG.Path2D {
-            unionIndex++;
-            incrementUnion();
-            return this['appendPoint2'](point);
-        };
-
-        CAG.prototype['union2'] = CAG.prototype.union;
-        CAG.prototype.union = function (cag: any): CAG {
-            unionIndex++;
-            incrementUnion();
-            return this['union2'](cag);
-        };
-
-        CSG.Polygon.prototype['toStlString2'] = CSG.Polygon.prototype.toStlString;
-        CSG.Polygon.prototype.toStlString = function (): string {
-            polygonIndex++;
-            incrementPolygon();
-            return this['toStlString2']();
-        };
-
-        CSG.prototype['toStlString2'] = CSG.prototype.toStlString;
-        CSG.prototype.toStlString = function (): string {
-            polygonCount = (<CSG>this).polygons.length;
-            polygonIndex = 0;
-            return this['toStlString2']();
-        };
-    }
-};
-
-deps[MakerJsPlaygroundExport.ExportFormat.Pdf] = {
-    loaded: false,
-    load: function () {
-        importScripts(
-            '../../external/text-encoding/encoding-indexes.js',
-            '../../external/text-encoding/encoding.js',
-            '../../external/PDFKit/pdfkit.js',
-            'string-reader.js'
-        );
-    }
-
-    //TODO: instrument stringreader for PDF percentage ouput
-};
+deps[MakerJsPlaygroundExport.ExportFormat.Dxf] = true;
+deps[MakerJsPlaygroundExport.ExportFormat.Json] = true;
+deps[MakerJsPlaygroundExport.ExportFormat.OpenJsCad] = true;
+deps[MakerJsPlaygroundExport.ExportFormat.Svg] = true;
+deps[MakerJsPlaygroundExport.ExportFormat.Stl] = false;
+deps[MakerJsPlaygroundExport.ExportFormat.Pdf] = false;
 
 interface IExporter {
-    (modelToExport: MakerJs.IModel, options: MakerJs.exporter.IExportOptions): any;
+    (modelToExport: MakerJs.IModel | any, options?: MakerJs.exporter.IExportOptions | any): any;
 }
 
 function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: MakerJsPlaygroundExport.IExportResponse): IExporter {
 
     var f = MakerJsPlaygroundExport.ExportFormat;
-
-    if (!deps[format].loaded) {
-        deps[format].load();
-        deps[format].loaded = true;
-    }
 
     switch (format) {
         case f.Json:
@@ -135,23 +65,49 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
         case f.Stl:
             function toStl(model: MakerJs.IModel, options: MakerJs.exporter.IOpenJsCadOptions) {
 
-                var script = makerjs.exporter.toOpenJsCad(model, options);
-                script += 'return ' + options.functionName + '();';
+                if (!deps[MakerJsPlaygroundExport.ExportFormat.Stl]) {
+                    importScripts(
+                        '../../external/jscad/csg.js',
+                        '../../external/jscad/stl-serializer.js'
+                    );
+                    deps[MakerJsPlaygroundExport.ExportFormat.Stl] = true;
+                }
 
-                unionCount = (script.match(/union/g) || []).length
-                    + (script.match(/appendArc/g) || []).length
-                    + (script.match(/appendPoint/g) || []).length;
-                unionIndex = 0;
+                const { CAG, CSG }: { CAG: typeof jscad.CAG, CSG: typeof jscad.CSG } = require('@jscad/csg');
+                const stlSerializer: jscad.StlSerializer = require('@jscad/stl-serializer');
 
-                var f = new Function(script);
-                var csg = <CSG>f();
+                function makePhasedCallback(phaseStart: number, phaseSpan: number) {
+                    return function statusCallback(status) {
+                        result.percentComplete = phaseStart + status.progress * phaseSpan / 100;
+                        postMessage(result);
+                    }
+                }
 
-                return csg.toStlString();
+                const cag = makerjs.exporter.toJscadCAG(CAG, model, options.facetSize, { statusCallback: makePhasedCallback(0, 33) });
+
+                //next phase: extrude to csg
+                const csg = cag.extrude({ offset: [0, 0, options.extrusion] })
+
+                result.percentComplete = 66;   //3 phases of this export
+                postMessage(result);
+
+                //next phase: serialize
+                return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(67, 33) });
             }
             return toStl;
 
         case f.Pdf:
             function toPdf(model: MakerJs.IModel, options: MakerJs.exporter.IExportOptions) {
+
+                if (!deps[MakerJsPlaygroundExport.ExportFormat.Pdf]) {
+                    importScripts(
+                        '../../external/text-encoding/encoding-indexes.js',
+                        '../../external/text-encoding/encoding.js',
+                        '../../external/PDFKit/pdfkit.js',
+                        'string-reader.js'
+                    );
+                    deps[MakerJsPlaygroundExport.ExportFormat.Pdf] = true;
+                }
 
                 function complete(pdfDataString: string) {
                     result.text = pdfDataString;
@@ -202,16 +158,6 @@ onmessage = (ev: MessageEvent) => {
 
     var exporter = getExporter(request.format, result);
     if (exporter) {
-
-        incrementUnion = function () {
-            result.percentComplete = 50 * unionIndex / unionCount;
-            postMessage(result);
-        };
-
-        incrementPolygon = function () {
-            result.percentComplete = 50 + 50 * polygonIndex / polygonCount;
-            postMessage(result);
-        }
 
         //call the exporter function.
         try {

@@ -3,7 +3,6 @@
 declare namespace jscad {
 
     class CxG {
-        toStlString(): string;
     }
 
     class CSG extends CxG {

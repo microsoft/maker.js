@@ -4,6 +4,8 @@
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
   "main": "index.js",
   "scripts": {
+    "build-jscad-csg": "browserify -p licensify -r @jscad/csg -o external/jscad/csg.js",
+    "build-jscad-stl": "browserify -p licensify -r @jscad/stl-serializer --ignore @jscad/csg -o external/jscad/stl-serializer.js",
     "compile-playground": "tsc -p playground && tsc -p playground/worker",
     "cat-browser": "cat target/header.txt target/js/browser.js > target/js/browser.maker.js && rm target/js/browser.js",
     "cat-node": "cat target/header.txt target/js/node.js target/node-requires.js > target/js/node.maker.js && rm target/js/node.js",
@@ -99,6 +101,7 @@
   "homepage": "https://github.com/Microsoft/maker.js",
   "devDependencies": {
     "@jscad/csg": "^0.3.7",
+    "@jscad/stl-serializer": "^0.1.0",
     "@types/codemirror": "0.0.38",
     "@types/graham_scan": "^1.0.28",
     "@types/marked": "^0.0.28",
