@@ -45,21 +45,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
 
     switch (format) {
         case f.Json:
-            function toJson(model: MakerJs.IModel, options: MakerJs.exporter.IJsonExportOptions) {
-                function replacer(key: string, value: any) {
-                    if (makerjs.isNumber(value)) {
-                        const newValue = makerjs.round(value, options.accuracy);
-                        return newValue
-                    }
-                    if (makerjs.isPoint(value)) {
-                        const newPoint = makerjs.point.rounded(value, options.accuracy);
-                        return newPoint;
-                    }
-                    return value;
-                }
-                return JSON.stringify(model, options.accuracy && replacer, options.indentation);
-            }
-            return toJson;
+            return makerjs.exporter.toJson;
 
         case f.Dxf:
             function toDXF(model: MakerJs.IModel, options: MakerJs.exporter.IDXFRenderOptions) {
