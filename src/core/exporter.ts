@@ -50,4 +50,7 @@ namespace MakerJs.exporter {
         silver: 254
     }
 
+    export interface IStatusCallback {
+        (status: { progress?: number }): void;
+    }
 }

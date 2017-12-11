@@ -199,7 +199,7 @@
             if (result.length === 0) {
                 throw ('No closed geometries found.');
             }
-                
+
             var extrudeOptions: CAG_extrude_options = { offset: [0, 0, opts.extrusion] };
             result.push(wrap('.extrude', JSON.stringify(extrudeOptions), true));
 
@@ -284,13 +284,9 @@
         return csg.toStlString();
     }
 
-    /**
-     * @private
-     */
-    function unionize(arr: jscad.CAG[]) {
-        let result = arr.shift();
-        arr.forEach(el => result = result.union(el));
-        return result;
+    interface IAdd {
+        cag: jscad.CAG;
+        subtracts: jscad.CAG[][];
     }
 
     /**
@@ -308,13 +304,25 @@
      * @param jscadCAG @jscad/csg CAG engine.
      * @param modelToExport Model object to export.
      * @param maxArcFacet The maximum length between points on an arc or circle.
-     * @param findChainsOptions Optional IFindChainsOptions options object.
-     * @param findChainsOptions.byLayers Optional flag to separate chains by layers.
-     * @param findChainsOptions.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options Optional IFindChainsOptions options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
      * @returns jscad CAG object in 2D.
      */
-    export function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, maxArcFacet: number, findChainsOptions?: IFindChainsOptions) {
-        const adds: jscad.CAG[] = [];
+    export function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, maxArcFacet: number, jsCadCagOptions?: IJsCadCagOptions) {
+        const adds: IAdd[] = [];
+        const status = { total: 0, complete: 0 };
+
+        function unionize(phaseStart: number, phaseSpan: number, arr: jscad.CAG[]) {
+            let result = arr.shift();
+            arr.forEach(el => result = result.union(el));
+            status.complete++;
+
+            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: phaseStart + phaseSpan * status.complete / status.total });
+
+            return result;
+        }
 
         function chainToCag(c: IChain) {
             const keyPoints = chain.toKeyPoints(c, maxArcFacet);
@@ -322,48 +330,68 @@
             return jscadCAG.fromPoints(keyPoints);
         }
 
-        function subtractChainsToCag(cs: IChain[]) {
+        function subtractChains(cs: IChain[]) {
             const subtracts: jscad.CAG[] = [];
             cs.forEach(c => {
                 if (!c.endless) return;
-                const cag = chainToCag(c);
                 if (c.contains) {
-                    addChainsToCag(c.contains);
+                    addChains(c.contains);
                 }
-                subtracts.unshift(cag);
+                status.total++;
+                subtracts.unshift(chainToCag(c));
             });
-            return unionize(subtracts);
+            return subtracts;
         }
 
-        function addChainsToCag(cs: IChain[]) {
+        function addChains(cs: IChain[]) {
             cs.forEach(c => {
                 if (!c.endless) return;
-                let cag = chainToCag(c);
+                const add: IAdd = { cag: chainToCag(c), subtracts: [] };
                 if (c.contains) {
-                    const subtract = subtractChainsToCag(c.contains);
-                    cag = cag.subtract(subtract);
+                    const subtracts = subtractChains(c.contains);
+                    if (subtracts.length > 0) {
+                        add.subtracts.push(subtracts);
+                    }
                 }
-                adds.unshift(cag);
+                status.total++;
+                adds.unshift(add);
             });
         }
 
-        const options: IFindChainsOptions = findChainsOptions ? cloneObject(findChainsOptions) : {};
+        const options: IFindChainsOptions = jsCadCagOptions ? cloneObject(jsCadCagOptions) : {};
         options.contain = true;
+
+        jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 25 });
 
         const chainsResult = model.findChains(modelToExport, options);
         if (Array.isArray(chainsResult)) {
-            addChainsToCag(chainsResult);
+            addChains(chainsResult);
         } else {
             for (let layer in chainsResult) {
-                addChainsToCag(chainsResult[layer]);
+                addChains(chainsResult[layer]);
             }
         }
 
+        jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 50 });
+
         if (adds.length === 0) {
+            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
             throw ('No closed geometries found.');
         }
 
-        return unionize(adds);
+        const flatAdds = adds.map(add => {
+            let result = add.cag;
+            add.subtracts.forEach(subtract => {
+                const union = unionize(50, 50, subtract);
+                result = result.subtract(union);
+            })
+            return result;
+        });
+        const result = unionize(50, 50, flatAdds);
+
+        jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
+
+        return result;
     }
 
     /**
@@ -394,5 +422,9 @@
 
     export interface IOpenJsCadOptionsMap {
         [modelId: string]: IOpenJsCadOptions;
+    }
+
+    export interface IJsCadCagOptions extends IFindChainsOptions {
+        statusCallback?: IStatusCallback;
     }
 }
