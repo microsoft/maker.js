@@ -1183,20 +1183,22 @@ var MakerJsPlayground;
         toggleClass('download-ready');
     }
     function downloadClick(a, format) {
-        //TODO: show options
-        //TODO: get options
-        var request = {
-            format: format,
-            formatTitle: a.innerText,
-            model: processed.model,
-            options: {}
-        };
-        beginExport(request);
+        //show options
+        MakerJsPlayground.FormatOptions.activateOption(format, a.innerText, processed.model.units);
+        toggleClass('download-options');
     }
     MakerJsPlayground.downloadClick = downloadClick;
-    function beginExport(request) {
+    function getFormatOptions() {
+        var formatOption = MakerJsPlayground.FormatOptions.current;
+        var request = {
+            format: formatOption.format,
+            formatTitle: formatOption.formatTitle,
+            model: processed.model,
+            options: formatOption.getOptionObject()
+        };
         //put the download ui into generation mode
         progress.style.width = '0';
+        toggleClass('download-options');
         toggleClass('download-generating');
         if (MakerJsPlayground.useWorkerThreads && Worker) {
             exportOnWorkerThread(request);
@@ -1207,6 +1209,7 @@ var MakerJsPlayground;
             }
         }
     }
+    MakerJsPlayground.getFormatOptions = getFormatOptions;
     function exportOnUIThread(request) {
         var text;
         var error;

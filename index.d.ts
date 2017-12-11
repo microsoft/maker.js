@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.76
+// Type definitions for Maker.js 0.9.77
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2143,6 +2143,13 @@ declare namespace MakerJs.units {
      * @returns Numeric ratio of the conversion.
      */
     function conversionScale(srcUnitType: string, destUnitType: string): number;
+    /**
+     * Check to see if unit type is a valid Maker.js unit.
+     *
+     * @param tryUnit unit type to check.
+     * @returns Boolean true if unit type is valid.
+     */
+    function isValidUnit(tryUnit: string): boolean;
 }
 declare namespace MakerJs.measure {
     /**
@@ -2393,6 +2400,25 @@ declare namespace MakerJs.exporter {
         units?: string;
     }
     /**
+     * Options for JSON export.
+     */
+    interface IJsonExportOptions extends IExportOptions {
+        /**
+         * Optional number of characters to indent after a newline.
+         */
+        indentation?: number;
+    }
+    /**
+     * Renders an item in JSON.
+     *
+     * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
+     * @param options Rendering options object.
+     * @param options.accuracy Optional exemplar of number of decimal places.
+     * @param options.indentation Optional number of characters to indent after a newline.
+     * @returns String of DXF content.
+     */
+    function toJson(itemToExport: any, options?: MakerJs.exporter.IJsonExportOptions): string;
+    /**
      * Try to get the unit system from a model
      * @private
      */
@@ -2420,6 +2446,11 @@ declare namespace MakerJs.exporter {
         purple: number;
         silver: number;
     };
+    interface IStatusCallback {
+        (status: {
+            progress?: number;
+        }): void;
+    }
 }
 declare namespace MakerJs.importer {
     /**
@@ -2784,12 +2815,13 @@ declare namespace MakerJs.exporter {
      * @param jscadCAG @jscad/csg CAG engine.
      * @param modelToExport Model object to export.
      * @param maxArcFacet The maximum length between points on an arc or circle.
-     * @param findChainsOptions Optional IFindChainsOptions options object.
-     * @param findChainsOptions.byLayers Optional flag to separate chains by layers.
-     * @param findChainsOptions.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options Optional IFindChainsOptions options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
      * @returns jscad CAG object in 2D.
      */
-    function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, maxArcFacet: number, findChainsOptions?: IFindChainsOptions): jscad.CAG;
+    function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, maxArcFacet: number, jsCadCagOptions?: IJsCadCagOptions): jscad.CAG;
     /**
      * OpenJsCad export options.
      */
@@ -2811,8 +2843,20 @@ declare namespace MakerJs.exporter {
          */
         modelMap?: IOpenJsCadOptionsMap;
     }
+    /**
+     * Map of OpenJsCad export options.
+     */
     interface IOpenJsCadOptionsMap {
         [modelId: string]: IOpenJsCadOptions;
+    }
+    /**
+     * JsCad CAG export options.
+     */
+    interface IJsCadCagOptions extends IFindChainsOptions {
+        /**
+         * Optional callback to get status during the export.
+         */
+        statusCallback?: IStatusCallback;
     }
 }
 declare namespace MakerJs.exporter {

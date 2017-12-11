@@ -113,7 +113,7 @@ var MakerJs;
      */
     function round(n, accuracy) {
         if (accuracy === void 0) { accuracy = .0000001; }
-        var exp = 1 - String(1 / accuracy).length;
+        var exp = 1 - String(Math.ceil(1 / accuracy)).length;
         //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
         // If the exp is undefined or zero...
         if (typeof exp === 'undefined' || +exp === 0) {
@@ -2076,14 +2076,7 @@ var MakerJs;
          * @returns The scaled model (for cascading).
          */
         function convertUnits(modeltoConvert, destUnitType) {
-            var validUnitType = false;
-            for (var id in MakerJs.unitType) {
-                if (MakerJs.unitType[id] == destUnitType) {
-                    validUnitType = true;
-                    break;
-                }
-            }
-            if (modeltoConvert.units && validUnitType) {
+            if (modeltoConvert.units && MakerJs.units.isValidUnit(modeltoConvert.units) && MakerJs.units.isValidUnit(destUnitType)) {
                 var ratio = MakerJs.units.conversionScale(modeltoConvert.units, destUnitType);
                 if (ratio != 1) {
                     scale(modeltoConvert, ratio);
@@ -3052,9 +3045,24 @@ var MakerJs;
                 //create a new conversionsand cache it in the table.
                 addConversion(srcUnitType, destUnitType, table[srcUnitType][base] * table[base][destUnitType]);
             }
-            return table[srcUnitType][destUnitType];
+            return table[srcUnitType] && table[srcUnitType][destUnitType];
         }
         units.conversionScale = conversionScale;
+        /**
+         * Check to see if unit type is a valid Maker.js unit.
+         *
+         * @param tryUnit unit type to check.
+         * @returns Boolean true if unit type is valid.
+         */
+        function isValidUnit(tryUnit) {
+            for (var id in MakerJs.unitType) {
+                if (MakerJs.unitType[id] == tryUnit) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        units.isValidUnit = isValidUnit;
     })(units = MakerJs.units || (MakerJs.units = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
@@ -3943,6 +3951,31 @@ var MakerJs;
     var exporter;
     (function (exporter) {
         /**
+         * Renders an item in JSON.
+         *
+         * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
+         * @param options Rendering options object.
+         * @param options.accuracy Optional exemplar of number of decimal places.
+         * @param options.indentation Optional number of characters to indent after a newline.
+         * @returns String of DXF content.
+         */
+        function toJson(itemToExport, options) {
+            if (options === void 0) { options = {}; }
+            function replacer(key, value) {
+                if (MakerJs.isNumber(value)) {
+                    var newValue = MakerJs.round(value, options.accuracy);
+                    return newValue;
+                }
+                if (MakerJs.isPoint(value)) {
+                    var newPoint = MakerJs.point.rounded(value, options.accuracy);
+                    return newPoint;
+                }
+                return value;
+            }
+            return JSON.stringify(itemToExport, options.accuracy && replacer, options.indentation);
+        }
+        exporter.toJson = toJson;
+        /**
          * Try to get the unit system from a model
          * @private
          */
@@ -4061,13 +4094,13 @@ var MakerJs;
                 append("8");
                 append(defaultLayer(line, layer));
                 append("10");
-                append(line.origin[0] + offset[0]);
+                append(MakerJs.round(line.origin[0] + offset[0], opts.accuracy));
                 append("20");
-                append(line.origin[1] + offset[1]);
+                append(MakerJs.round(line.origin[1] + offset[1], opts.accuracy));
                 append("11");
-                append(line.end[0] + offset[0]);
+                append(MakerJs.round(line.end[0] + offset[0], opts.accuracy));
                 append("21");
-                append(line.end[1] + offset[1]);
+                append(MakerJs.round(line.end[1] + offset[1], opts.accuracy));
             };
             map[MakerJs.pathType.Circle] = function (id, circle, offset, layer) {
                 append("0");
@@ -4075,11 +4108,11 @@ var MakerJs;
                 append("8");
                 append(defaultLayer(circle, layer));
                 append("10");
-                append(circle.origin[0] + offset[0]);
+                append(MakerJs.round(circle.origin[0] + offset[0], opts.accuracy));
                 append("20");
-                append(circle.origin[1] + offset[1]);
+                append(MakerJs.round(circle.origin[1] + offset[1], opts.accuracy));
                 append("40");
-                append(circle.radius);
+                append(MakerJs.round(circle.radius, opts.accuracy));
             };
             map[MakerJs.pathType.Arc] = function (id, arc, offset, layer) {
                 append("0");
@@ -4087,15 +4120,15 @@ var MakerJs;
                 append("8");
                 append(defaultLayer(arc, layer));
                 append("10");
-                append(arc.origin[0] + offset[0]);
+                append(MakerJs.round(arc.origin[0] + offset[0], opts.accuracy));
                 append("20");
-                append(arc.origin[1] + offset[1]);
+                append(MakerJs.round(arc.origin[1] + offset[1], opts.accuracy));
                 append("40");
-                append(arc.radius);
+                append(MakerJs.round(arc.radius, opts.accuracy));
                 append("50");
-                append(arc.startAngle);
+                append(MakerJs.round(arc.startAngle, opts.accuracy));
                 append("51");
-                append(arc.endAngle);
+                append(MakerJs.round(arc.endAngle, opts.accuracy));
             };
             //TODO - handle scenario if any bezier seeds get passed
             //map[pathType.BezierSeed]
@@ -6245,14 +6278,6 @@ var MakerJs;
         }
         exporter.toSTL = toSTL;
         /**
-         * @private
-         */
-        function unionize(arr) {
-            var result = arr.shift();
-            arr.forEach(function (el) { return result = result.union(el); });
-            return result;
-        }
-        /**
          * Converts a model to a @jscad/csg object - 2D to 2D.
          *
          * Example:
@@ -6267,58 +6292,83 @@ var MakerJs;
          * @param jscadCAG @jscad/csg CAG engine.
          * @param modelToExport Model object to export.
          * @param maxArcFacet The maximum length between points on an arc or circle.
-         * @param findChainsOptions Optional IFindChainsOptions options object.
-         * @param findChainsOptions.byLayers Optional flag to separate chains by layers.
-         * @param findChainsOptions.pointMatchingDistance Optional max distance to consider two points as the same.
+         * @param options Optional IFindChainsOptions options object.
+         * @param options.byLayers Optional flag to separate chains by layers.
+         * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+         * @param options.statusCallback Optional callback function to get the percentage complete.
          * @returns jscad CAG object in 2D.
          */
-        function toJscadCAG(jscadCAG, modelToExport, maxArcFacet, findChainsOptions) {
+        function toJscadCAG(jscadCAG, modelToExport, maxArcFacet, jsCadCagOptions) {
             var adds = [];
+            var status = { total: 0, complete: 0 };
+            function unionize(phaseStart, phaseSpan, arr) {
+                var result = arr.shift();
+                arr.forEach(function (el) { return result = result.union(el); });
+                status.complete++;
+                jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: phaseStart + phaseSpan * status.complete / status.total });
+                return result;
+            }
             function chainToCag(c) {
                 var keyPoints = MakerJs.chain.toKeyPoints(c, maxArcFacet);
                 keyPoints.push(keyPoints[0]);
                 return jscadCAG.fromPoints(keyPoints);
             }
-            function subtractChainsToCag(cs) {
+            function subtractChains(cs) {
                 var subtracts = [];
                 cs.forEach(function (c) {
                     if (!c.endless)
                         return;
-                    var cag = chainToCag(c);
                     if (c.contains) {
-                        addChainsToCag(c.contains);
+                        addChains(c.contains);
                     }
-                    subtracts.unshift(cag);
+                    status.total++;
+                    subtracts.unshift(chainToCag(c));
                 });
-                return unionize(subtracts);
+                return subtracts;
             }
-            function addChainsToCag(cs) {
+            function addChains(cs) {
                 cs.forEach(function (c) {
                     if (!c.endless)
                         return;
-                    var cag = chainToCag(c);
+                    var add = { cag: chainToCag(c), subtracts: [] };
                     if (c.contains) {
-                        var subtract = subtractChainsToCag(c.contains);
-                        cag = cag.subtract(subtract);
+                        var subtracts = subtractChains(c.contains);
+                        if (subtracts.length > 0) {
+                            add.subtracts.push(subtracts);
+                        }
                     }
-                    adds.unshift(cag);
+                    status.total++;
+                    adds.unshift(add);
                 });
             }
-            var options = findChainsOptions ? MakerJs.cloneObject(findChainsOptions) : {};
+            var options = jsCadCagOptions ? MakerJs.cloneObject(jsCadCagOptions) : {};
             options.contain = true;
+            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 25 });
             var chainsResult = MakerJs.model.findChains(modelToExport, options);
             if (Array.isArray(chainsResult)) {
-                addChainsToCag(chainsResult);
+                addChains(chainsResult);
             }
             else {
                 for (var layer in chainsResult) {
-                    addChainsToCag(chainsResult[layer]);
+                    addChains(chainsResult[layer]);
                 }
             }
+            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 50 });
             if (adds.length === 0) {
+                jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
                 throw ('No closed geometries found.');
             }
-            return unionize(adds);
+            var flatAdds = adds.map(function (add) {
+                var result = add.cag;
+                add.subtracts.forEach(function (subtract) {
+                    var union = unionize(50, 50, subtract);
+                    result = result.subtract(union);
+                });
+                return result;
+            });
+            var result = unionize(50, 50, flatAdds);
+            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
+            return result;
         }
         exporter.toJscadCAG = toJscadCAG;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
@@ -9028,5 +9078,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.76";
+MakerJs.version = "0.9.77";
 ﻿var Bezier = require('bezier-js');
