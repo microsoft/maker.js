@@ -187,20 +187,67 @@
             </div>
             
             <div id="download-options">
-                <!-- <iframe id="download-options-iframe"></iframe> -->
                 
                 <div data-format="Dxf" class="download-option">
                     <h2>Dxf options</h2>
-                        Dxf
+                    <div class="option-block">
+                        <label for="dxf-accuracy">Accuracy</label>
+                        <select id="dxf-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                    <!--
+                        TODO:
+                        units
+                    -->
                 </div>
 
                 <div data-format="Svg" class="download-option">
                     <h2>Svg options</h2>
-                        Svg
+                    <div class="option-block">
+                        <label for="svg-accuracy">Accuracy</label>
+                        <select id="svg-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                    <!--
+                        TODO: Many options 
+                    -->
                 </div>
 
+                <!--
+                    TODO: SVG Path data
+                -->
+                
                 <div data-format="Json" class="download-option">
                     <h2>Json options</h2>
+                    <div class="option-block">
+                        <label for="json-accuracy">Accuracy</label>
+                        <select id="json-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
                     <div class="option-block">
                         <label for="json-indent">Indentation</label>
                         <select id="json-indent">
@@ -210,34 +257,82 @@
                             <option value="4">4</option>
                         </select>
                     </div>
-                    <div class="option-block">
-                        <label for="json-accuracy">Rounding</label>
-                        <select id="json-accuracy">
-                            <option value="1">Integer</option>
-                            <option value=".1">.1</option>
-                            <option value=".01">.01</option>
-                            <option value=".001">.001</option>
-                            <option value=".0001" selected>.0001</option>
-                            <option value=".00001">.00001</option>
-                            <option value=".000001">.000001</option>
-                            <option value="-1">None</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div data-format="OpenJsCad" class="download-option">
                     <h2>OpenJsCad options</h2>
-                        OpenJsCad
+                    <div class="option-block">
+                        <label for="openjscad-facetsize">Arc Facet size</label>
+                        <select id="openjscad-facetsize">
+                            <option value=".01">.01</option>
+                            <option value=".05">.05</option>
+                            <option value=".1">.1</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <!-- 
+                        TODO:
+                        Accuracy
+                        Indentation,
+                        flavor: Classic or Node
+                     -->
                 </div>
 
                 <div data-format="Stl" class="download-option">
                     <h2>Stl options</h2>
-                        Stl
+                    <div class="option-block">
+                        <label for="stl-facetsize">Arc Facet size</label>
+                        <select id="stl-facetsize">
+                            <option value=".01">.01</option>
+                            <option value=".05">.05</option>
+                            <option value=".1">.1</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1">1</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">2</option>
+                            <option value="2.5" selected>2.5</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <!--
+                        TODO:
+                        extrusion
+                        layers
+                    -->
                 </div>
 
                 <div data-format="Pdf" class="download-option">
                     <h2>Pdf options</h2>
-                        Pdf
+                    <div class="option-block">
+                        <label for="pdf-toptmargin">Top margin</label>
+                        <select id="pdf-topmargin">
+                            <option value="0">0</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1" selected>1</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="pdf-leftmargin">Left margin</label>
+                        <select id="pdf-leftmargin">
+                            <option value="0">0</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1" selected>1</option>
+                        </select>
+                    </div>
+                    <!--
+                        stroke color
+                        stroke thickness
+                        stroke style
+                        layers
+                    -->
                 </div>
 
                 <button class="generate" onclick="MakerJsPlayground.getFormatOptions()">generate</button>

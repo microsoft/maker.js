@@ -78,7 +78,6 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
 
                 const defaultOptions: MakerJs.exporter.IOpenJsCadOptions = {
                     extrusion: 1
-                    //TODO guesstimate a facet size
                 };
                 const options: MakerJs.exporter.IOpenJsCadOptions = makerjs.extendObject(defaultOptions, inputOptions);
 
@@ -106,7 +105,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return toStl;
 
         case f.Pdf:
-            function toPdf(model: MakerJs.IModel, options: MakerJs.exporter.IExportOptions) {
+            function toPdf(model: MakerJs.IModel, exportOptions: MakerJs.exporter.IPDFRenderOptions) {
 
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Pdf]) {
                     importScripts(
@@ -138,11 +137,6 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
                 var stream = doc.pipe(reader);
 
                 //TODO: break up model across pages
-
-                //one inch margin
-                var exportOptions: MakerJs.exporter.IPDFRenderOptions = {
-                    origin: [72, 72]
-                };
 
                 makerjs.exporter.toPDF(doc, model, exportOptions);
 

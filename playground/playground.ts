@@ -1542,7 +1542,7 @@
 
     export function downloadClick(a: HTMLAnchorElement, format: MakerJsPlaygroundExport.ExportFormat) {
         //show options
-        FormatOptions.activateOption(format, a.innerText);
+        FormatOptions.activateOption(format, a.innerText, processed.model.units);
         toggleClass('download-options');
     }
 

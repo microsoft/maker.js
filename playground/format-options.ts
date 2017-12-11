@@ -1,7 +1,7 @@
 namespace MakerJsPlayground.FormatOptions {
 
     class BaseOptions {
-        constructor(public format: MakerJsPlaygroundExport.ExportFormat, public formatTitle: string, public div: HTMLDivElement) {
+        constructor(public format: MakerJsPlaygroundExport.ExportFormat, public formatTitle: string, public div: HTMLDivElement, public units: string) {
         }
 
         $(selector: string) {
@@ -13,6 +13,13 @@ namespace MakerJsPlayground.FormatOptions {
             return select.value;
         }
 
+        addAccuracy(selector: string, options: MakerJs.exporter.IExportOptions) {
+            const accuracy = +this.$selectValue(selector);
+            if (accuracy >= 0) {
+                options.accuracy = accuracy;
+            }
+        }
+
         getOptionObject(): MakerJs.exporter.IExportOptions {
             throw 'not implemented';
         }
@@ -21,6 +28,7 @@ namespace MakerJsPlayground.FormatOptions {
     class DxfOptions extends BaseOptions {
         getOptionObject() {
             const options: MakerJs.exporter.IDXFRenderOptions = {};
+            this.addAccuracy('#dxf-accuracy', options);
             return options;
         }
     }
@@ -28,6 +36,7 @@ namespace MakerJsPlayground.FormatOptions {
     class SvgOptions extends BaseOptions {
         getOptionObject() {
             const options: MakerJs.exporter.ISVGRenderOptions = {};
+            this.addAccuracy('#svg-accuracy', options);
             return options;
         }
     }
@@ -37,31 +46,37 @@ namespace MakerJsPlayground.FormatOptions {
             const options: MakerJs.exporter.IJsonExportOptions = {
                 indentation: +this.$selectValue('#json-indent')
             };
-            const accuracy = +this.$selectValue('#json-accuracy');
-            if (accuracy >= 0) {
-                options.accuracy = accuracy;
-            }
+            this.addAccuracy('#json-accuracy', options);
             return options;
         }
     }
 
     class OpenJsCadOptions extends BaseOptions {
         getOptionObject() {
-            const options: MakerJs.exporter.IOpenJsCadOptions = {};
+            const options: MakerJs.exporter.IOpenJsCadOptions = {
+                facetSize: +this.$selectValue('#openjscad-facetsize')
+            };
             return options;
         }
     }
 
     class StlOptions extends BaseOptions {
         getOptionObject() {
-            const options: MakerJs.exporter.IOpenJsCadOptions = {};
+            const options: MakerJs.exporter.IOpenJsCadOptions = {
+                facetSize: +this.$selectValue('#stl-facetsize')
+            };
             return options;
         }
     }
 
     class PdfOptions extends BaseOptions {
         getOptionObject() {
-            const options: MakerJs.exporter.IPDFRenderOptions = {};
+            const options: MakerJs.exporter.IPDFRenderOptions = {
+                origin: [
+                    +this.$selectValue('#pdf-leftmargin') * 72,
+                    +this.$selectValue('#pdf-topmargin') * 72
+                ]
+            };
             return options;
         }
     }
@@ -76,7 +91,7 @@ namespace MakerJsPlayground.FormatOptions {
 
     export var current: BaseOptions;
 
-    export function activateOption(format: MakerJsPlaygroundExport.ExportFormat, formatTitle: string) {
+    export function activateOption(format: MakerJsPlaygroundExport.ExportFormat, formatTitle: string, units: string) {
         const formatId = MakerJsPlaygroundExport.ExportFormat[format];
 
         //deselect all
@@ -88,7 +103,7 @@ namespace MakerJsPlayground.FormatOptions {
         div.classList.add('selected');
 
         let formatClass = registry[format];
-        current = new formatClass(format, formatTitle, div);
+        current = new formatClass(format, formatTitle, div, units);
     }
 
 }
