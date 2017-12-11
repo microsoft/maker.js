@@ -63,7 +63,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return makerjs.exporter.toOpenJsCad;
 
         case f.Stl:
-            function toStl(model: MakerJs.IModel, options: MakerJs.exporter.IOpenJsCadOptions) {
+            function toStl(model: MakerJs.IModel, inputOptions: MakerJs.exporter.IOpenJsCadOptions) {
 
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Stl]) {
                     importScripts(
@@ -72,6 +72,15 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
                     );
                     deps[MakerJsPlaygroundExport.ExportFormat.Stl] = true;
                 }
+
+                //make sure size is in mm for STL
+                model = makerjs.model.convertUnits(model, makerjs.unitType.Millimeter);
+
+                const defaultOptions: MakerJs.exporter.IOpenJsCadOptions = {
+                    extrusion: 1
+                    //TODO guesstimate a facet size
+                };
+                const options: MakerJs.exporter.IOpenJsCadOptions = makerjs.extendObject(defaultOptions, inputOptions);
 
                 const { CAG, CSG }: { CAG: typeof jscad.CAG, CSG: typeof jscad.CSG } = require('@jscad/csg');
                 const stlSerializer: jscad.StlSerializer = require('@jscad/stl-serializer');
@@ -163,7 +172,7 @@ onmessage = (ev: MessageEvent) => {
         try {
             result.text = exporter(request.model, request.options);
         } catch (e) {
-            result.error = e;
+            result.error = '' + e;
         }
         result.percentComplete = 100;
         postMessage(result);
