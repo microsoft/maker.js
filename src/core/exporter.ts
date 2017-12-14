@@ -11,7 +11,7 @@ namespace MakerJs.exporter {
         accuracy?: number;
 
         /**
-         * Optional unit system to embed in exported file.
+         * Optional unit system to embed in exported file, if the export format allows alternate unit systems.
          */
         units?: string;
     }
