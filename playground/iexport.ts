@@ -7,11 +7,14 @@
         OpenJsCad,
         Stl,
         Pdf
-    };
+    }
 
-    export interface IExportRequest {
+    interface IExportMessage {
         format: ExportFormat;
         formatTitle: string;
+    }
+
+    export interface IExportRequest extends IExportMessage {
         model: MakerJs.IModel;
         options: MakerJs.exporter.IExportOptions;
     }
@@ -21,8 +24,7 @@
         fileExtension: string
     }
 
-    export interface IExportResponse {
-        request: IExportRequest;
+    export interface IExportResponse extends IExportMessage {
         error: string;
         text: string;
         percentComplete: number;

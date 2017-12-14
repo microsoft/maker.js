@@ -1502,7 +1502,7 @@
 
             //allow progress bar to render
             setTimeout(function () {
-                setExportText(response.request.format, response.request.formatTitle, response.text, response.error);
+                setExportText(response.format, response.formatTitle, response.text, response.error);
             }, 300);
 
         }
@@ -1542,7 +1542,7 @@
 
     export function downloadClick(a: HTMLAnchorElement, format: MakerJsPlaygroundExport.ExportFormat) {
         //show options
-        FormatOptions.activateOption(format, a.innerText, processed.model.units);
+        FormatOptions.activateOption(format, a.innerText, processed.model);
         toggleClass('download-options');
     }
 
