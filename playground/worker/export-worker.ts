@@ -63,7 +63,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return makerjs.exporter.toOpenJsCad;
 
         case f.Stl:
-            function toStl(model: MakerJs.IModel, inputOptions: MakerJs.exporter.IOpenJsCadOptions) {
+            function toStl(model: MakerJs.IModel, options: MakerJs.exporter.IJsCadCsgOptions) {
 
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Stl]) {
                     importScripts(
@@ -76,12 +76,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
                 //make sure size is in mm for STL
                 model = makerjs.model.convertUnits(model, makerjs.unitType.Millimeter);
 
-                const defaultOptions: MakerJs.exporter.IOpenJsCadOptions = {
-                    extrusion: 1
-                };
-                const options: MakerJs.exporter.IOpenJsCadOptions = makerjs.extendObject(defaultOptions, inputOptions);
-
-                const { CAG, CSG }: { CAG: typeof jscad.CAG, CSG: typeof jscad.CSG } = require('@jscad/csg');
+                const { CAG }: { CAG: typeof jscad.CAG } = require('@jscad/csg');
                 const stlSerializer: jscad.StlSerializer = require('@jscad/stl-serializer');
 
                 function makePhasedCallback(phaseStart: number, phaseSpan: number) {
@@ -90,17 +85,10 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
                         postMessage(result);
                     }
                 }
+                options.statusCallback = makePhasedCallback(0, 50);
+                const csg = makerjs.exporter.toJsCadCSG(CAG, model, options);
 
-                const cag = makerjs.exporter.toJscadCAG(CAG, model, options.facetSize, { statusCallback: makePhasedCallback(0, 33) });
-
-                //next phase: extrude to csg
-                const csg = cag.extrude({ offset: [0, 0, options.extrusion] })
-
-                result.percentComplete = 66;   //3 phases of this export
-                postMessage(result);
-
-                //next phase: serialize
-                return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(67, 33) });
+                return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(50, 50) });
             }
             return toStl;
 
@@ -153,7 +141,8 @@ onmessage = (ev: MessageEvent) => {
     var request = ev.data as MakerJsPlaygroundExport.IExportRequest;
 
     var result: MakerJsPlaygroundExport.IExportResponse = {
-        request: request,
+        format: request.format,
+        formatTitle: request.formatTitle,
         error: null,
         text: null,
         percentComplete: 0
