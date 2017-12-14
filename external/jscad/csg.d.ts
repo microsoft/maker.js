@@ -3,11 +3,14 @@
 declare namespace jscad {
 
     class CxG {
+        translate(v: number[]): this;
     }
 
     class CSG extends CxG {
         polygons: CSG.Polygon[];
         toCompactBinary(): any;
+        union(csg: CSG[]): CSG;
+        union(csg: CSG): CSG;
     }
 
     namespace CSG {
