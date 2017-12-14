@@ -1,11 +1,16 @@
 namespace MakerJsPlayground.FormatOptions {
 
     class BaseOptions {
-        constructor(public format: MakerJsPlaygroundExport.ExportFormat, public formatTitle: string, public div: HTMLDivElement, public units: string) {
+        constructor(public format: MakerJsPlaygroundExport.ExportFormat, public formatTitle: string, public div: HTMLDivElement, public model: MakerJs.IModel) {
         }
 
         $(selector: string) {
             return this.div.querySelector(selector);
+        }
+
+        $number(selector: string) {
+            const select = this.$(selector) as HTMLInputElement;
+            return select.valueAsNumber;
         }
 
         $selectValue(selector: string) {
@@ -26,6 +31,14 @@ namespace MakerJsPlayground.FormatOptions {
     }
 
     class DxfOptions extends BaseOptions {
+        constructor(format: MakerJsPlaygroundExport.ExportFormat, formatTitle: string, div: HTMLDivElement, model: MakerJs.IModel) {
+            super(format, formatTitle, div, model);
+
+            // TODO:
+            // inspect model to see if it contains units
+            // show unit picker if it does not
+        }
+
         getOptionObject() {
             const options: MakerJs.exporter.IDXFRenderOptions = {};
             this.addAccuracy('#dxf-accuracy', options);
@@ -61,9 +74,19 @@ namespace MakerJsPlayground.FormatOptions {
     }
 
     class StlOptions extends BaseOptions {
+        constructor(format: MakerJsPlaygroundExport.ExportFormat, formatTitle: string, div: HTMLDivElement, model: MakerJs.IModel) {
+            super(format, formatTitle, div, model);
+
+            //modelToExport.exporterOptions['toJsCadCSG'])
+            // TODO:
+            // inspect model to see if it contains expoprterOptions.layerOptions
+            // then disable extrude
+        }
+        
         getOptionObject() {
-            const options: MakerJs.exporter.IOpenJsCadOptions = {
-                facetSize: +this.$selectValue('#stl-facetsize')
+            const options: MakerJs.exporter.IJsCadCsgOptions = {
+                maxArcFacet: +this.$selectValue('#stl-facetsize'),
+                extrude: this.$number('#stl-extrude')
             };
             return options;
         }
@@ -91,7 +114,7 @@ namespace MakerJsPlayground.FormatOptions {
 
     export var current: BaseOptions;
 
-    export function activateOption(format: MakerJsPlaygroundExport.ExportFormat, formatTitle: string, units: string) {
+    export function activateOption(format: MakerJsPlaygroundExport.ExportFormat, formatTitle: string, model: MakerJs.IModel) {
         const formatId = MakerJsPlaygroundExport.ExportFormat[format];
 
         //deselect all
@@ -103,7 +126,7 @@ namespace MakerJsPlayground.FormatOptions {
         div.classList.add('selected');
 
         let formatClass = registry[format];
-        current = new formatClass(format, formatTitle, div, units);
+        current = new formatClass(format, formatTitle, div, model);
     }
 
 }
