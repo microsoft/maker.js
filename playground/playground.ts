@@ -1549,6 +1549,9 @@
     export function getFormatOptions() {
 
         var formatOption = MakerJsPlayground.FormatOptions.current;
+        if (!formatOption) {
+            return;
+        }
 
         var request: MakerJsPlaygroundExport.IExportRequest = {
             format: formatOption.format,
@@ -1586,11 +1589,12 @@
                     break;
 
                 case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
-                    text = makerjs.exporter.toOpenJsCad(processed.model);
+                    //text = makerjs.exporter.toOpenJsCad(processed.model);
+                    text = makerjs.exporter.toJscadScript(processed.model, request.options);
                     break;
 
                 case MakerJsPlaygroundExport.ExportFormat.Svg:
-                    text = makerjs.exporter.toSVG(processed.model);
+                    text = makerjs.exporter.toSVG(processed.model, request.options);
                     break;
 
                 default:
