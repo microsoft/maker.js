@@ -60,7 +60,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return makerjs.exporter.toSVG;
 
         case f.OpenJsCad:
-            return makerjs.exporter.toOpenJsCad;
+            return makerjs.exporter.toJscadScript;
 
         case f.Stl:
             function toStl(model: MakerJs.IModel, options: MakerJs.exporter.IJscadCsgOptions) {
@@ -79,16 +79,12 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
                 const { CAG }: { CAG: typeof jscad.CAG } = require('@jscad/csg');
                 const stlSerializer: jscad.StlSerializer = require('@jscad/stl-serializer');
 
-                function makePhasedCallback(phaseStart: number, phaseSpan: number) {
-                    return function statusCallback(status) {
-                        result.percentComplete = phaseStart + status.progress * phaseSpan / 100;
-                        postMessage(result);
-                    }
+                options.statusCallback = function (status) {
+                    result.percentComplete = status.progress;
+                    postMessage(result);
                 }
-                options.statusCallback = makePhasedCallback(0, 50);
-                const csg = makerjs.exporter.toJscadCSG(CAG, model, options);
 
-                return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(50, 50) });
+                return makerjs.exporter.toJscadSTL(CAG, stlSerializer, model, options);
             }
             return toStl;
 
