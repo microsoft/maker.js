@@ -36,13 +36,13 @@
         var length = measure.pathLength(circle);
         if (!length) return;
 
-        return length / facetSize;
+        return Math.ceil(length / facetSize);
     }
 
     /**
      * @private
      */
-    function pathsToOpenJsCad(modelContext: IModel, facetSize?: number): string {
+    function pathsToOpenJsCad(modelContext: IModel, accuracy?: number, facetSize?: number): string {
 
         var head = '';
         var tail = '';
@@ -54,8 +54,8 @@
 
         beginMap[pathType.Circle] = function (circle: IPathCircle, dirPath: IPathDirectional) {
             var circleOptions: CSG.ICircleOptions = {
-                center: <number[]>point.rounded(circle.origin),
-                radius: circle.radius,
+                center: <number[]>point.rounded(circle.origin, accuracy),
+                radius: round(circle.radius, accuracy),
                 resolution: facetSizeToResolution(circle, facetSize)
             };
             head = wrap('CAG.circle', JSON.stringify(circleOptions), true);
@@ -63,7 +63,7 @@
         };
 
         beginMap[pathType.Line] = function (line: IPathLine, dirPath: IPathDirectional) {
-            head = wrap('new CSG.Path2D', JSON.stringify(dirPath.reversed ? [dirPath.endPoints[1], dirPath.endPoints[0]] : dirPath.endPoints), true);
+            head = wrap('new CSG.Path2D', JSON.stringify(dirPath.reversed ? [point.rounded(dirPath.endPoints[1], accuracy), point.rounded(dirPath.endPoints[0], accuracy)] : dirPath.endPoints), true);
         };
 
         beginMap[pathType.Arc] = function (arc: IPathArc, dirPath: IPathDirectional) {
@@ -72,10 +72,10 @@
                 reverseTail = true;
             }
             var arcOptions: CSG.IArcOptions = {
-                center: <number[]>point.rounded(arc.origin),
-                radius: arc.radius,
-                startangle: arc.startAngle,
-                endangle: endAngle,
+                center: <number[]>point.rounded(arc.origin, accuracy),
+                radius: round(arc.radius, accuracy),
+                startangle: round(arc.startAngle, accuracy),
+                endangle: round(endAngle, accuracy),
                 resolution: facetSizeToResolution(arc, facetSize)
             };
             head = wrap('new CSG.Path2D.arc', JSON.stringify(arcOptions), true);
@@ -85,7 +85,7 @@
 
         appendMap[pathType.Line] = function (line: IPathLine, dirPath: IPathDirectional) {
             var reverse = (reverseTail != dirPath.reversed);
-            var endPoint = point.rounded(dirPath.endPoints[reverse ? 0 : 1]);
+            var endPoint = point.rounded(dirPath.endPoints[reverse ? 0 : 1], accuracy);
             append(wrap('.appendPoint', JSON.stringify(endPoint), true));
         };
 
@@ -93,12 +93,12 @@
             var reverse = (reverseTail != dirPath.reversed);
             var endAngle = angle.ofArcEnd(arc);
             var arcOptions: CSG.IEllpiticalArcOptions = {
-                radius: arc.radius,
+                radius: round(arc.radius, accuracy),
                 clockwise: reverse,
                 large: Math.abs(endAngle - arc.startAngle) > 180,
                 resolution: facetSizeToResolution(arc, facetSize)
             };
-            var endPoint = point.rounded(dirPath.endPoints[reverse ? 0 : 1]);
+            var endPoint = point.rounded(dirPath.endPoints[reverse ? 0 : 1], accuracy);
             append(wrap('.appendArc', JSON.stringify(endPoint) + ',' + JSON.stringify(arcOptions), true));
         }
 
@@ -189,7 +189,7 @@
                 var union = '';
                 for (var modelId in depthModel.models) {
                     var subModel = depthModel.models[modelId];
-                    union += wrap('.union', pathsToOpenJsCad(subModel, opts.facetSize), union);
+                    union += wrap('.union', pathsToOpenJsCad(subModel, opts.accuracy, opts.facetSize), union);
                 }
                 var operator = (depth % 2 == 0) ? '.union' : '.subtract';
                 result.push(wrap(operator, union, result.length));
@@ -287,9 +287,16 @@
     /**
      * @private
      */
-    interface IAdd {
-        cag: jscad.CAG;
-        subtracts: jscad.CAG[][];
+    interface IAdd<T> {
+        cag: T;
+        subtracts: T[][];
+    }
+
+    /**
+     * @private
+     */
+    interface IOperate<T> {
+        (a: T, b: T): T
     }
 
     /**
@@ -313,13 +320,35 @@
      * @param options.statusCallback Optional callback function to get the percentage complete.
      * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
      */
-    export function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, jsCadCagOptions: IJsCadCagOptions = {}) {
-        const adds: { [layerId: string]: IAdd[] } = {};
+    export function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, jsCadCagOptions?: IJscadCagOptions) {
+
+        function chainToJscadCag(c: IChain, maxArcFacet: number) {
+            const keyPoints = chain.toKeyPoints(c, maxArcFacet);
+            keyPoints.push(keyPoints[0]);
+            return jscadCAG.fromPoints(keyPoints);
+        }
+
+        function jscadCagUnion(augend: jscad.CAG, addend: jscad.CAG) {
+            return augend.union(addend);
+        }
+
+        function jscadCagSubtraction(minuend: jscad.CAG, subtrahend: jscad.CAG) {
+            return minuend.subtract(subtrahend);
+        }
+
+        return convertChainsTo2D<jscad.CAG>(chainToJscadCag, jscadCagUnion, jscadCagSubtraction, modelToExport, jsCadCagOptions);
+    }
+
+    /**
+     * @private
+     */
+    function convertChainsTo2D<T>(convertToT: { (c: IChain, maxArcFacet: number): T }, union: IOperate<T>, subtraction: IOperate<T>, modelToExport: IModel, jsCadCagOptions: IJscadCagOptions = {}) {
+        const adds: { [layerId: string]: IAdd<T>[] } = {};
         const status = { total: 0, complete: 0 };
 
-        function unionize(phaseStart: number, phaseSpan: number, arr: jscad.CAG[]) {
+        function unionize(phaseStart: number, phaseSpan: number, arr: T[]) {
             let result = arr.shift();
-            arr.forEach(el => result = result.union(el));
+            arr.forEach(el => result = union(result, el));
             status.complete++;
 
             jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: phaseStart + phaseSpan * status.complete / status.total });
@@ -327,21 +356,15 @@
             return result;
         }
 
-        function chainToCag(c: IChain) {
-            const keyPoints = chain.toKeyPoints(c, jsCadCagOptions.maxArcFacet);
-            keyPoints.push(keyPoints[0]);
-            return jscadCAG.fromPoints(keyPoints);
-        }
-
         function subtractChains(layerId: string, cs: IChain[]) {
-            const subtracts: jscad.CAG[] = [];
+            const subtracts: T[] = [];
             cs.forEach(c => {
                 if (!c.endless) return;
                 if (c.contains) {
                     addChains(layerId, c.contains);
                 }
                 status.total++;
-                subtracts.unshift(chainToCag(c));
+                subtracts.unshift(convertToT(c, jsCadCagOptions.maxArcFacet));
             });
             return subtracts;
         }
@@ -349,7 +372,7 @@
         function addChains(layerId: string, cs: IChain[]) {
             cs.forEach(c => {
                 if (!c.endless) return;
-                const add: IAdd = { cag: chainToCag(c), subtracts: [] };
+                const add: IAdd<T> = { cag: convertToT(c, jsCadCagOptions.maxArcFacet), subtracts: [] };
                 if (c.contains) {
                     const subtracts = subtractChains(layerId, c.contains);
                     if (subtracts.length > 0) {
@@ -392,14 +415,14 @@
             throw ('No closed geometries found.');
         }
 
-        const resultMap: { [layerId: string]: jscad.CAG } = {};
+        const resultMap: { [layerId: string]: T } = {};
 
         for (let layerId in adds) {
             const flatAdds = adds[layerId].map(add => {
                 let result = add.cag;
                 add.subtracts.forEach(subtract => {
                     const union = unionize(50, 50, subtract);
-                    result = result.subtract(union);
+                    result = subtraction(result, union);
                 })
                 return result;
             });
@@ -434,13 +457,41 @@
      * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
      * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
      */
-    export function toJsCadCSG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, options: IJsCadCsgOptions = {}) {
-       
+    export function toJscadCSG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, options?: IJscadCsgOptions) {
+
+        function to2D(opts: IJscadCsgOptions) {
+            return toJscadCAG(jscadCAG, modelToExport, opts);
+        }
+
+        function to3D(cag: jscad.CAG, extrude: number, z: number) {
+            var csg = cag.extrude({ offset: [0, 0, extrude] });
+            if (z) {
+                csg = csg.translate([0, 0, z]);
+            }
+            return csg;
+        }
+
+        function union3D(augend: jscad.CSG, addend: jscad.CSG) {
+            return augend.union(addend);
+        }
+
+        return convert2Dto3D<jscad.CAG, jscad.CSG>(to2D, to3D, union3D, modelToExport, options);
+    }
+
+    /**
+     * @private
+     */
+    function convert2Dto3D<T2D, T3D>(
+        to2D: { (options: IJscadCsgOptions): T2D | { [layerId: string]: T2D } },
+        to3D: { (result2D: T2D, extrude: number, z: number): T3D },
+        union3D: { (a: T3D, b: T3D): T3D },
+        modelToExport: IModel, options: IJscadCsgOptions = {}) {
+
         const originalCb = options.statusCallback;
 
         function makePhasedCallback(phaseStart: number, phaseSpan: number) {
             return function statusCallback(status) {
-                originalCb({ progress: phaseStart + status.progress * phaseSpan / 100 });
+                originalCb && originalCb({ progress: phaseStart + status.progress * phaseSpan / 100 });
             }
         }
 
@@ -450,30 +501,24 @@
         }
 
         if (modelToExport.exporterOptions) {
-            extendObject(options, modelToExport.exporterOptions['toJsCadCSG']);
+            extendObject(options, modelToExport.exporterOptions['toJscadCSG']);
         }
 
         options.byLayers = options.byLayers || (options.layerOptions && true);
         options.statusCallback = makePhasedCallback(0, 50);
 
-        const cagResult = toJscadCAG(jscadCAG, modelToExport, options);
-        const csgs: jscad.CSG[] = [];
-
-        function addCagToCsg(cag: jscad.CAG, extrude: number, z: number) {
-            var csg = cag.extrude({ offset: [0, 0, extrude] });
-            if (z) {
-                csg = csg.translate([0, 0, z]);
-            }
-            csgs.push(csg);
-        }
+        const result2D = to2D(options);
+        const csgs: T3D[] = [];
 
         if (options.byLayers) {
-            for (let layerId in cagResult as { [layerId: string]: jscad.CAG }) {
+            for (let layerId in result2D as { [layerId: string]: T2D }) {
                 let layerOptions = options.layerOptions[layerId];
-                addCagToCsg(cagResult[layerId], layerOptions.extrude || options.extrude, getDefinedNumber(layerOptions.z, options.z));
+                let csg = to3D(result2D[layerId], layerOptions.extrude || options.extrude, getDefinedNumber(layerOptions.z, options.z));
+                csgs.push(csg);
             }
         } else {
-            addCagToCsg(cagResult as jscad.CAG, options.extrude, options.z);
+            let csg = to3D(result2D as T2D, options.extrude, options.z);
+            csgs.push(csg);
         }
 
         options.statusCallback = makePhasedCallback(50, 100);
@@ -482,7 +527,7 @@
 
         let result = csgs.shift();
         csgs.forEach((el, i) => {
-            result = result.union(el);
+            result = union3D(result, el);
             status.complete++;
             options.statusCallback({ progress: status.complete / status.total });
         });
@@ -526,7 +571,7 @@
     /**
      * JsCad CAG export options.
      */
-    export interface IJsCadCagOptions extends IExportOptions, IPointMatchOptions {
+    export interface IJscadCagOptions extends IExportOptions, IPointMatchOptions {
 
         /**
          * Flag to separate chains by layers.
@@ -544,7 +589,7 @@
         statusCallback?: IStatusCallback;
     }
 
-    export interface IJsCadExtrudeOptions {
+    export interface IJscadExtrudeOptions {
 
         /**
          * Optional depth of 3D extrusion.
@@ -557,11 +602,11 @@
         z?: number;
     }
 
-    export interface IJsCadCsgOptions extends IJsCadCagOptions, IJsCadExtrudeOptions {
+    export interface IJscadCsgOptions extends IJscadCagOptions, IJscadExtrudeOptions {
 
         /**
          * SVG options per layer.
          */
-        layerOptions?: { [layerId: string]: IJsCadExtrudeOptions };
+        layerOptions?: { [layerId: string]: IJscadExtrudeOptions };
     }
 }
