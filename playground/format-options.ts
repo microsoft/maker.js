@@ -28,6 +28,10 @@ namespace MakerJsPlayground.FormatOptions {
         getOptionObject(): MakerJs.exporter.IExportOptions {
             throw 'not implemented';
         }
+
+        validate() {
+            return true;
+        }
     }
 
     class DxfOptions extends BaseOptions {
@@ -64,10 +68,19 @@ namespace MakerJsPlayground.FormatOptions {
         }
     }
 
-    class OpenJsCadOptions extends BaseOptions {
+    class JscadScriptOptions extends BaseOptions {
         getOptionObject() {
-            const options: MakerJs.exporter.IOpenJsCadOptions = {
-                facetSize: +this.$selectValue('#openjscad-facetsize')
+            const extrude = this.$number('#openjscad-extrusion');
+            if (extrude <=0) {
+                //show the UI
+                return null;
+            } else {
+                //hide the ui
+            }
+            const options: MakerJs.exporter.IJscadScriptOptions = {
+                extrude,
+                functionName: this.$selectValue('#openjscad-name'),
+                maxArcFacet: +this.$selectValue('#openjscad-facetsize')
             };
             this.addAccuracy('#openjscad-accuracy', options);
             return options;
@@ -78,12 +91,12 @@ namespace MakerJsPlayground.FormatOptions {
         constructor(format: MakerJsPlaygroundExport.ExportFormat, formatTitle: string, div: HTMLDivElement, model: MakerJs.IModel) {
             super(format, formatTitle, div, model);
 
-            //modelToExport.exporterOptions['toJsCadCSG'])
+            //modelToExport.exporterOptions['toJscadCSG'])
             // TODO:
-            // inspect model to see if it contains expoprterOptions.layerOptions
+            // inspect model to see if it contains exporterOptions.layerOptions
             // then disable extrude
         }
-        
+
         getOptionObject() {
             const options: MakerJs.exporter.IJscadCsgOptions = {
                 maxArcFacet: +this.$selectValue('#stl-facetsize'),
@@ -105,13 +118,13 @@ namespace MakerJsPlayground.FormatOptions {
         }
     }
 
-    let registry: { [format: number]: typeof BaseOptions } = {};
-    registry[MakerJsPlaygroundExport.ExportFormat.Dxf] = DxfOptions;
-    registry[MakerJsPlaygroundExport.ExportFormat.Json] = JsonOptions;
-    registry[MakerJsPlaygroundExport.ExportFormat.OpenJsCad] = OpenJsCadOptions;
-    registry[MakerJsPlaygroundExport.ExportFormat.Pdf] = PdfOptions;
-    registry[MakerJsPlaygroundExport.ExportFormat.Stl] = StlOptions;
-    registry[MakerJsPlaygroundExport.ExportFormat.Svg] = SvgOptions;
+    let classes: { [format: number]: typeof BaseOptions } = {};
+    classes[MakerJsPlaygroundExport.ExportFormat.Dxf] = DxfOptions;
+    classes[MakerJsPlaygroundExport.ExportFormat.Json] = JsonOptions;
+    classes[MakerJsPlaygroundExport.ExportFormat.OpenJsCad] = JscadScriptOptions;
+    classes[MakerJsPlaygroundExport.ExportFormat.Pdf] = PdfOptions;
+    classes[MakerJsPlaygroundExport.ExportFormat.Stl] = StlOptions;
+    classes[MakerJsPlaygroundExport.ExportFormat.Svg] = SvgOptions;
 
     export var current: BaseOptions;
 
@@ -126,7 +139,7 @@ namespace MakerJsPlayground.FormatOptions {
         const div = document.querySelector(`.download-option[data-format="${formatId}"]`) as HTMLDivElement;
         div.classList.add('selected');
 
-        let formatClass = registry[format];
+        let formatClass = classes[format];
         current = new formatClass(format, formatTitle, div, model);
     }
 

@@ -262,6 +262,10 @@
                 <div data-format="OpenJsCad" class="download-option">
                     <h2>OpenJsCad options</h2>
                     <div class="option-block">
+                        <label for="openjscad-name">Function name</label>
+                        <input id="openjscad-name" type="text" value="main" />
+                    </div>
+                    <div class="option-block">
                         <label for="openjscad-accuracy">Accuracy</label>
                         <select id="openjscad-accuracy">
                             <option value="1">Integer</option>
@@ -292,9 +296,12 @@
                             <option value="10">10</option>
                         </select>
                     </div>
+                    <div class="option-block">
+                        <label for="openjscad-extrusion">Extrusion</label>
+                        <input id="openjscad-extrusion" type="number" value="1" min="0" />
+                    </div>
                     <!-- 
                         TODO:
-                        Accuracy
                         Indentation,
                         flavor: Classic or Node
                      -->
