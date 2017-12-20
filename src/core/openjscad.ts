@@ -590,19 +590,19 @@
     export function toJscadScript(modelToExport: IModel, options: IJscadScriptOptions = {}) {
 
         function _chainToJscadScript(c: IChain, maxArcFacet: number) {
-            return chainToJscadScript(c, maxArcFacet, options.accuracy);
+            return wrap(chainToJscadScript(c, maxArcFacet, options.accuracy));
         }
 
-        function jscadCagUnion(augend: string, addend: string) {
+        function scriptUnion(augend: string, addend: string) {
             return augend + `.union(${addend})`;
         }
 
-        function jscadCagSubtraction(minuend: string, subtrahend: string) {
+        function scriptSubtraction(minuend: string, subtrahend: string) {
             return minuend + `.subtract(${subtrahend})`;
         }
 
         function to2D(opts: IJscadCsgOptions) {
-            return convertChainsTo2D<string>(_chainToJscadScript, jscadCagUnion, jscadCagSubtraction, modelToExport, options);
+            return convertChainsTo2D<string>(_chainToJscadScript, scriptUnion, scriptSubtraction, modelToExport, options);
         }
 
         function to3D(cag: string, extrude: number, z: number) {
@@ -613,13 +613,16 @@
             return csg;
         }
 
-        function union3D(augend: string, addend: string) {
-            return augend + `.union(${addend})`;
+        function wrap(s: string) {
+            return `${nl}${indent}${s}${nl}`;
         }
 
-        const result = convert2Dto3D<string, string>(to2D, to3D, union3D, modelToExport, options);
+        const indent = new Array((options.indent || 0) + 1).join(' ');
+        const nl = options.indent ? '\n' : '';
 
-        return `function ${options.functionName || 'main'}(){return ${result}; }`;
+        const result = convert2Dto3D<string, string>(to2D, to3D, scriptUnion, modelToExport, options);
+
+        return `function ${options.functionName || 'main'}(){${wrap(`return ${result};`)}}${nl}`;
     }
 
     /**
