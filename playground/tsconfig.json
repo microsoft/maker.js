@@ -4,6 +4,8 @@
     "sourceMap": true
   },
   "files": [
+    "../external/jscad/io.d.ts",
+    "../external/jscad/stl-serializer.d.ts",
     "../index.d.ts",
     "iexport.ts",
     "irender.ts",

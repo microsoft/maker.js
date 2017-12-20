@@ -126,6 +126,8 @@
   },
   "files": [
     "external/jscad/csg.d.ts",
+    "external/jscad/io.d.ts",
+    "external/jscad/stl-serializer.d.ts",
     "target/js/browser.maker.js",
     "index.d.ts",
     "index.js"

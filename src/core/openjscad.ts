@@ -134,6 +134,7 @@
     export function toOpenJsCad(pathToExport: IPath, options?: IOpenJsCadOptions): string;
 
     /**
+     * DEPRECATED - use .toJscadScript() instead.
      * Creates a string of JavaScript code for execution with the OpenJsCad engine.
      * 
      * @param modelToExport Model object to export.
@@ -209,6 +210,9 @@
         return 'function ' + opts.functionName + '(){' + all + ';}';
     }
 
+    /**
+     * @private
+     */
     function exportFromOptionsMap(modelToExport: IModel, optionsMap: IOpenJsCadOptionsMap): string {
 
         if (!modelToExport.models) return;
@@ -239,6 +243,7 @@
     }
 
     /**
+     * DEPRECATED - use .toJscadSTL() instead.
      * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
      * 
      * @param modelToExport Model object to export.
@@ -297,6 +302,15 @@
      */
     interface IOperate<T> {
         (a: T, b: T): T
+    }
+
+    /**
+     * @private
+     */
+    function makePhasedCallback(originalCb: IStatusCallback, phaseStart: number, phaseSpan: number) {
+        return function statusCallback(status) {
+            originalCb && originalCb({ progress: phaseStart + status.progress * phaseSpan / 100 });
+        }
     }
 
     /**
@@ -489,12 +503,6 @@
 
         const originalCb = options.statusCallback;
 
-        function makePhasedCallback(phaseStart: number, phaseSpan: number) {
-            return function statusCallback(status) {
-                originalCb && originalCb({ progress: phaseStart + status.progress * phaseSpan / 100 });
-            }
-        }
-
         function getDefinedNumber(a: number, b: number) {
             if (isNumber(a)) return a;
             return b;
@@ -505,7 +513,7 @@
         }
 
         options.byLayers = options.byLayers || (options.layerOptions && true);
-        options.statusCallback = makePhasedCallback(0, 50);
+        options.statusCallback = makePhasedCallback(originalCb, 0, 50);
 
         const result2D = to2D(options);
         const csgs: T3D[] = [];
@@ -521,7 +529,7 @@
             csgs.push(csg);
         }
 
-        options.statusCallback = makePhasedCallback(50, 100);
+        options.statusCallback = makePhasedCallback(originalCb, 50, 100);
 
         const status = { total: csgs.length - 1, complete: 0 };
 
@@ -533,6 +541,45 @@
         });
 
         return result;
+    }
+
+    /**
+     * Creates a string of JavaScript code for execution with a Jscad environment.
+     * 
+     * @param modelToExport Model object to export.
+     * @param options Export options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.maxArcFacet The maximum length between points on an arc or circle.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
+     * @param options.extrude Optional default extrusion distance.
+     * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+     * @returns String of JavaScript containing a main() function for Jscad.
+     */
+    export function toJscadScript(modelToExport: IModel, options?: IJscadScriptOptions) {
+
+    }
+
+    /**
+     * Exports a model in STL format - 2D to 3D.
+     * 
+     * @param jscadCAG @jscad/csg CAG engine.
+     * @param stlSerializer @jscad/stl-serializer (require('@jscad/stl-serializer')).
+     * @param modelToExport Model object to export.
+     * @param options Optional options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.maxArcFacet The maximum length between points on an arc or circle.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
+     * @param options.extrude Optional default extrusion distance.
+     * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+     * @returns String in STL ASCII format.
+     */
+    export function toJscadSTL(CAG: typeof jscad.CAG, stlSerializer: jscad.StlSerializer, modelToExport: IModel, options?: IJscadCsgOptions) {
+        const originalCb = options.statusCallback;
+        options.statusCallback = makePhasedCallback(originalCb, 0, 50);
+        const csg = toJscadCSG(CAG, modelToExport, options);
+        return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(originalCb, 50, 50) });
     }
 
     /**
@@ -569,7 +616,7 @@
     }
 
     /**
-     * JsCad CAG export options.
+     * Jscad CAG export options.
      */
     export interface IJscadCagOptions extends IExportOptions, IPointMatchOptions {
 
@@ -589,6 +636,9 @@
         statusCallback?: IStatusCallback;
     }
 
+    /**
+     * Jscad CAG extrusion options.
+     */
     export interface IJscadExtrudeOptions {
 
         /**
@@ -602,11 +652,25 @@
         z?: number;
     }
 
+    /**
+     * Jscad CSG export options.
+     */
     export interface IJscadCsgOptions extends IJscadCagOptions, IJscadExtrudeOptions {
 
         /**
          * SVG options per layer.
          */
         layerOptions?: { [layerId: string]: IJscadExtrudeOptions };
+    }
+
+    /**
+     * Jscad Script export options.
+     */
+    export interface IJscadScriptOptions extends IJscadCsgOptions {
+
+        /**
+         * Optional number of spaces to indent.
+         */
+        indent?: number;
     }
 }
