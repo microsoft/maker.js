@@ -63,7 +63,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return makerjs.exporter.toOpenJsCad;
 
         case f.Stl:
-            function toStl(model: MakerJs.IModel, options: MakerJs.exporter.IJsCadCsgOptions) {
+            function toStl(model: MakerJs.IModel, options: MakerJs.exporter.IJscadCsgOptions) {
 
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Stl]) {
                     importScripts(
@@ -86,7 +86,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
                     }
                 }
                 options.statusCallback = makePhasedCallback(0, 50);
-                const csg = makerjs.exporter.toJsCadCSG(CAG, model, options);
+                const csg = makerjs.exporter.toJscadCSG(CAG, model, options);
 
                 return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(50, 50) });
             }
