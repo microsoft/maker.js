@@ -3,15 +3,15 @@
     /**
      * @private
      */
-    interface IPathDirectionalFunction {
-        (pathValue: IPath, pathDirectional: IPathDirectional): void;
+    interface IChainLinkFunction {
+        (pathValue: IPath, link: IChainLink): void;
     }
 
     /**
      * @private
      */
-    interface IPathDirectionalFunctionMap {
-        [type: string]: IPathDirectionalFunction;
+    interface IChainLinkFunctionMap {
+        [type: string]: IChainLinkFunction;
     }
 
     /**
@@ -42,7 +42,7 @@
     /**
      * @private
      */
-    function pathsToOpenJsCad(modelContext: IModel, accuracy?: number, facetSize?: number): string {
+    function chainToJscadScript(chainContext: IChain, facetSize?: number, accuracy?: number): string {
 
         var head = '';
         var tail = '';
@@ -50,11 +50,11 @@
         var exit = false;
         var reverseTail = false;
 
-        var beginMap: IPathDirectionalFunctionMap = {};
+        var beginMap: IChainLinkFunctionMap = {};
 
-        beginMap[pathType.Circle] = function (circle: IPathCircle, dirPath: IPathDirectional) {
+        beginMap[pathType.Circle] = function (circle: IPathCircle, link: IChainLink) {
             var circleOptions: CSG.ICircleOptions = {
-                center: <number[]>point.rounded(circle.origin, accuracy),
+                center: <number[]>point.rounded(point.add(circle.origin, link.walkedPath.offset), accuracy),
                 radius: round(circle.radius, accuracy),
                 resolution: facetSizeToResolution(circle, facetSize)
             };
@@ -62,17 +62,22 @@
             exit = true;
         };
 
-        beginMap[pathType.Line] = function (line: IPathLine, dirPath: IPathDirectional) {
-            head = wrap('new CSG.Path2D', JSON.stringify(dirPath.reversed ? [point.rounded(dirPath.endPoints[1], accuracy), point.rounded(dirPath.endPoints[0], accuracy)] : dirPath.endPoints), true);
+        beginMap[pathType.Line] = function (line: IPathLine, link: IChainLink) {
+            let points = link.endPoints.map(p => point.rounded(p, accuracy));
+            if (link.reversed) {
+                points.reverse();
+            }
+            head = wrap('new CSG.Path2D',
+                JSON.stringify(points), true);
         };
 
-        beginMap[pathType.Arc] = function (arc: IPathArc, dirPath: IPathDirectional) {
+        beginMap[pathType.Arc] = function (arc: IPathArc, link: IChainLink) {
             var endAngle = angle.ofArcEnd(arc);
-            if (dirPath.reversed) {
+            if (link.reversed) {
                 reverseTail = true;
             }
             var arcOptions: CSG.IArcOptions = {
-                center: <number[]>point.rounded(arc.origin, accuracy),
+                center: <number[]>point.rounded(point.add(arc.origin, link.walkedPath.offset), accuracy),
                 radius: round(arc.radius, accuracy),
                 startangle: round(arc.startAngle, accuracy),
                 endangle: round(endAngle, accuracy),
@@ -81,16 +86,16 @@
             head = wrap('new CSG.Path2D.arc', JSON.stringify(arcOptions), true);
         };
 
-        var appendMap: IPathDirectionalFunctionMap = {};
+        var appendMap: IChainLinkFunctionMap = {};
 
-        appendMap[pathType.Line] = function (line: IPathLine, dirPath: IPathDirectional) {
-            var reverse = (reverseTail != dirPath.reversed);
-            var endPoint = point.rounded(dirPath.endPoints[reverse ? 0 : 1], accuracy);
+        appendMap[pathType.Line] = function (line: IPathLine, link: IChainLink) {
+            var reverse = (reverseTail != link.reversed);
+            var endPoint = point.rounded(link.endPoints[reverse ? 0 : 1], accuracy);
             append(wrap('.appendPoint', JSON.stringify(endPoint), true));
         };
 
-        appendMap[pathType.Arc] = function (arc: IPathArc, dirPath: IPathDirectional) {
-            var reverse = (reverseTail != dirPath.reversed);
+        appendMap[pathType.Arc] = function (arc: IPathArc, link: IChainLink) {
+            var reverse = (reverseTail != link.reversed);
             var endAngle = angle.ofArcEnd(arc);
             var arcOptions: CSG.IEllpiticalArcOptions = {
                 radius: round(arc.radius, accuracy),
@@ -98,7 +103,7 @@
                 large: Math.abs(endAngle - arc.startAngle) > 180,
                 resolution: facetSizeToResolution(arc, facetSize)
             };
-            var endPoint = point.rounded(dirPath.endPoints[reverse ? 0 : 1], accuracy);
+            var endPoint = point.rounded(link.endPoints[reverse ? 0 : 1], accuracy);
             append(wrap('.appendArc', JSON.stringify(endPoint) + ',' + JSON.stringify(arcOptions), true));
         }
 
@@ -110,13 +115,14 @@
             }
         }
 
-        for (var pathId in modelContext.paths) {
-            var pathContext = modelContext.paths[pathId];
+        for (let i = 0; i < chainContext.links.length; i++) {
+            let link = chainContext.links[i];
+            var pathContext = link.walkedPath.pathContext;
 
             var fn = first ? beginMap[pathContext.type] : appendMap[pathContext.type];
 
             if (fn) {
-                fn(pathContext, <IPathDirectional>pathContext);
+                fn(pathContext, link);
             }
 
             if (exit) {
@@ -127,6 +133,30 @@
         }
 
         return head + tail + '.close().innerToCAG()';
+    }
+
+    function makeFakeChainFromLoop(modelContext: IModel) {
+        const fakeChain: IChain = { endless: true, links: [], pathLength: 0 };
+        for (let pathId in modelContext.paths) {
+            let pathContext = modelContext.paths[pathId] as IPathDirectional;
+            let walkedPath: IWalkPath = {
+                layer: '',
+                modelContext,
+                offset: [0, 0],
+                pathContext,
+                pathId,
+                route: [],
+                routeKey: ''
+            };
+            let link: IChainLink = {
+                endPoints: pathContext.endPoints,
+                pathLength: 0,
+                reversed: pathContext.reversed,
+                walkedPath
+            };
+            fakeChain.links.push(link);
+        }
+        return fakeChain;
     }
 
     export function toOpenJsCad(modelToExport: IModel, options?: IOpenJsCadOptions): string;
@@ -190,7 +220,8 @@
                 var union = '';
                 for (var modelId in depthModel.models) {
                     var subModel = depthModel.models[modelId];
-                    union += wrap('.union', pathsToOpenJsCad(subModel, opts.accuracy, opts.facetSize), union);
+                    var fakeChain = makeFakeChainFromLoop(subModel);
+                    union += wrap('.union', chainToJscadScript(fakeChain, opts.facetSize, opts.accuracy), union);
                 }
                 var operator = (depth % 2 == 0) ? '.union' : '.subtract';
                 result.push(wrap(operator, union, result.length));
@@ -556,8 +587,39 @@
      * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
      * @returns String of JavaScript containing a main() function for Jscad.
      */
-    export function toJscadScript(modelToExport: IModel, options?: IJscadScriptOptions) {
+    export function toJscadScript(modelToExport: IModel, options: IJscadScriptOptions = {}) {
 
+        function _chainToJscadScript(c: IChain, maxArcFacet: number) {
+            return chainToJscadScript(c, maxArcFacet, options.accuracy);
+        }
+
+        function jscadCagUnion(augend: string, addend: string) {
+            return augend + `.union(${addend})`;
+        }
+
+        function jscadCagSubtraction(minuend: string, subtrahend: string) {
+            return minuend + `.subtract(${subtrahend})`;
+        }
+
+        function to2D(opts: IJscadCsgOptions) {
+            return convertChainsTo2D<string>(_chainToJscadScript, jscadCagUnion, jscadCagSubtraction, modelToExport, options);
+        }
+
+        function to3D(cag: string, extrude: number, z: number) {
+            var csg = cag + `.extrude({ offset: [0, 0, ${extrude}] })`;
+            if (z) {
+                csg = csg + `.translate([0, 0, ${z}])`;
+            }
+            return csg;
+        }
+
+        function union3D(augend: string, addend: string) {
+            return augend + `.union(${addend})`;
+        }
+
+        const result = convert2Dto3D<string, string>(to2D, to3D, union3D, modelToExport, options);
+
+        return `function ${options.functionName || 'main'}(){return ${result}; }`;
     }
 
     /**
@@ -667,6 +729,11 @@
      * Jscad Script export options.
      */
     export interface IJscadScriptOptions extends IJscadCsgOptions {
+
+        /**
+         * Optional override of function name, default is "main".
+         */
+        functionName?: string;
 
         /**
          * Optional number of spaces to indent.
