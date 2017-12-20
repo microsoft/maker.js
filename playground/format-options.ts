@@ -10,7 +10,10 @@ namespace MakerJsPlayground.FormatOptions {
 
         $number(selector: string) {
             const select = this.$(selector) as HTMLInputElement;
-            return select.valueAsNumber;
+            if (makerjs.isNumber(select.valueAsNumber)) {
+                return select.valueAsNumber;
+            }
+            return parseInt(select.value);
         }
 
         $selectValue(selector: string) {
@@ -71,7 +74,7 @@ namespace MakerJsPlayground.FormatOptions {
     class JscadScriptOptions extends BaseOptions {
         getOptionObject() {
             const extrude = this.$number('#openjscad-extrusion');
-            if (extrude <=0) {
+            if (extrude <= 0) {
                 //show the UI
                 return null;
             } else {
@@ -80,6 +83,7 @@ namespace MakerJsPlayground.FormatOptions {
             const options: MakerJs.exporter.IJscadScriptOptions = {
                 extrude,
                 functionName: this.$selectValue('#openjscad-name'),
+                indent: this.$number('#openjscad-indent'),
                 maxArcFacet: +this.$selectValue('#openjscad-facetsize')
             };
             this.addAccuracy('#openjscad-accuracy', options);
