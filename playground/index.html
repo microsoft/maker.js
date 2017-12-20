@@ -262,6 +262,19 @@
                 <div data-format="OpenJsCad" class="download-option">
                     <h2>OpenJsCad options</h2>
                     <div class="option-block">
+                        <label for="openjscad-accuracy">Accuracy</label>
+                        <select id="openjscad-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001" selected>.001</option>
+                            <option value=".0001">.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
                         <label for="openjscad-facetsize">Arc Facet size</label>
                         <select id="openjscad-facetsize">
                             <option value=".01">.01</option>
@@ -270,6 +283,13 @@
                             <option value=".25">.25</option>
                             <option value=".5">.5</option>
                             <option value="1">1</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">2</option>
+                            <option value="2.5" selected>2.5</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
                         </select>
                     </div>
                     <!-- 

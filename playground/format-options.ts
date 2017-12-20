@@ -69,6 +69,7 @@ namespace MakerJsPlayground.FormatOptions {
             const options: MakerJs.exporter.IOpenJsCadOptions = {
                 facetSize: +this.$selectValue('#openjscad-facetsize')
             };
+            this.addAccuracy('#openjscad-accuracy', options);
             return options;
         }
     }
@@ -84,7 +85,7 @@ namespace MakerJsPlayground.FormatOptions {
         }
         
         getOptionObject() {
-            const options: MakerJs.exporter.IJsCadCsgOptions = {
+            const options: MakerJs.exporter.IJscadCsgOptions = {
                 maxArcFacet: +this.$selectValue('#stl-facetsize'),
                 extrude: this.$number('#stl-extrude')
             };
