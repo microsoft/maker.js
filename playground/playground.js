@@ -1155,7 +1155,7 @@ var MakerJsPlayground;
         if (response.percentComplete == 100 && response.text || response.error) {
             //allow progress bar to render
             setTimeout(function () {
-                setExportText(response.request.format, response.request.formatTitle, response.text, response.error);
+                setExportText(response.format, response.formatTitle, response.text, response.error);
             }, 300);
         }
     }
@@ -1183,20 +1183,25 @@ var MakerJsPlayground;
         toggleClass('download-ready');
     }
     function downloadClick(a, format) {
-        //TODO: show options
-        //TODO: get options
-        var request = {
-            format: format,
-            formatTitle: a.innerText,
-            model: processed.model,
-            options: {}
-        };
-        beginExport(request);
+        //show options
+        MakerJsPlayground.FormatOptions.activateOption(format, a.innerText, processed.model);
+        toggleClass('download-options');
     }
     MakerJsPlayground.downloadClick = downloadClick;
-    function beginExport(request) {
+    function getFormatOptions() {
+        var formatOption = MakerJsPlayground.FormatOptions.current;
+        if (!formatOption) {
+            return;
+        }
+        var request = {
+            format: formatOption.format,
+            formatTitle: formatOption.formatTitle,
+            model: processed.model,
+            options: formatOption.getOptionObject()
+        };
         //put the download ui into generation mode
         progress.style.width = '0';
+        toggleClass('download-options');
         toggleClass('download-generating');
         if (MakerJsPlayground.useWorkerThreads && Worker) {
             exportOnWorkerThread(request);
@@ -1207,6 +1212,7 @@ var MakerJsPlayground;
             }
         }
     }
+    MakerJsPlayground.getFormatOptions = getFormatOptions;
     function exportOnUIThread(request) {
         var text;
         var error;
@@ -1219,10 +1225,11 @@ var MakerJsPlayground;
                     text = JSON.stringify(processed.model, null, 2);
                     break;
                 case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
-                    text = makerjs.exporter.toOpenJsCad(processed.model);
+                    //text = makerjs.exporter.toOpenJsCad(processed.model);
+                    text = makerjs.exporter.toJscadScript(processed.model, request.options);
                     break;
                 case MakerJsPlaygroundExport.ExportFormat.Svg:
-                    text = makerjs.exporter.toSVG(processed.model);
+                    text = makerjs.exporter.toSVG(processed.model, request.options);
                     break;
                 default:
                     return false;

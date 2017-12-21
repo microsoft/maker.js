@@ -3,12 +3,14 @@
 declare namespace jscad {
 
     class CxG {
-        toStlString(): string;
+        translate(v: number[]): this;
     }
 
     class CSG extends CxG {
         polygons: CSG.Polygon[];
         toCompactBinary(): any;
+        union(csg: CSG[]): CSG;
+        union(csg: CSG): CSG;
     }
 
     namespace CSG {
@@ -45,6 +47,7 @@ declare namespace jscad {
             appendPoints(points: Vector2D[]): Path2D;
             close(): Path2D;
             innerToCAG(): CAG;
+            appendBezier(controlpoints: any, options: any): Path2D;
             appendArc(endpoint: Vector2D, options: IEllpiticalArcOptions): Path2D;
         }
 

@@ -69,12 +69,26 @@ namespace MakerJs.units {
 
         //look for a cached conversion in the table.
         if (!table[srcUnitType][destUnitType]) {
-            
+
             //create a new conversionsand cache it in the table.
             addConversion(srcUnitType, destUnitType, table[srcUnitType][base] * table[base][destUnitType]);
         }
 
-        return table[srcUnitType][destUnitType];
+        return table[srcUnitType] && table[srcUnitType][destUnitType];
     }
 
+    /**
+     * Check to see if unit type is a valid Maker.js unit. 
+     * 
+     * @param tryUnit unit type to check.
+     * @returns Boolean true if unit type is valid.
+     */
+    export function isValidUnit(tryUnit: string) {
+        for (let id in unitType) {
+            if (unitType[id] == tryUnit) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

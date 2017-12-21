@@ -9,7 +9,6 @@ var MakerJsPlaygroundExport;
         ExportFormat[ExportFormat["Stl"] = 4] = "Stl";
         ExportFormat[ExportFormat["Pdf"] = 5] = "Pdf";
     })(ExportFormat = MakerJsPlaygroundExport.ExportFormat || (MakerJsPlaygroundExport.ExportFormat = {}));
-    ;
     MakerJsPlaygroundExport.formatMap = {};
     MakerJsPlaygroundExport.formatMap[ExportFormat.Json] = {
         mediaType: 'application/json',

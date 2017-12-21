@@ -91,7 +91,7 @@ namespace MakerJs {
      * @returns Rounded number.
      */
     export function round(n: number, accuracy = .0000001): number {
-        var exp = 1 - String(1 / accuracy).length;
+        var exp = 1 - String(Math.ceil(1 / accuracy)).length;
 
         //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
 
@@ -841,7 +841,7 @@ namespace MakerJs {
          * The constructor. The kit must be "new-able" and it must produce an IModel.
          * It can have any number of any type of parameters.
          */
-        new (...args: any[]): IModel;
+        new(...args: any[]): IModel;
 
         /**
          * Attached to the constructor is a property named metaParameters which is an array of IMetaParameter objects.

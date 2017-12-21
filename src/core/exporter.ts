@@ -11,9 +11,44 @@ namespace MakerJs.exporter {
         accuracy?: number;
 
         /**
-         * Optional unit system to embed in exported file.
+         * Optional unit system to embed in exported file, if the export format allows alternate unit systems.
          */
         units?: string;
+    }
+
+    /**
+     * Options for JSON export.
+     */
+    export interface IJsonExportOptions extends IExportOptions {
+
+        /**
+         * Optional number of characters to indent after a newline.
+         */
+        indentation?: number;
+    }
+
+    /**
+     * Renders an item in JSON.
+     * 
+     * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
+     * @param options Rendering options object.
+     * @param options.accuracy Optional exemplar of number of decimal places.
+     * @param options.indentation Optional number of characters to indent after a newline.
+     * @returns String of DXF content.
+     */
+    export function toJson(itemToExport: any, options: MakerJs.exporter.IJsonExportOptions = {}) {
+        function replacer(key: string, value: any) {
+            if (isNumber(value)) {
+                const newValue = round(value, options.accuracy);
+                return newValue
+            }
+            if (isPoint(value)) {
+                const newPoint = point.rounded(value, options.accuracy);
+                return newPoint;
+            }
+            return value;
+        }
+        return JSON.stringify(itemToExport, options.accuracy && replacer, options.indentation);
     }
 
     /**
@@ -50,4 +85,7 @@ namespace MakerJs.exporter {
         silver: 254
     }
 
+    export interface IStatusCallback {
+        (status: { progress?: number }): void;
+    }
 }

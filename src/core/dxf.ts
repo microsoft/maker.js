@@ -60,13 +60,13 @@ namespace MakerJs.exporter {
             append("8");
             append(defaultLayer(line, layer));
             append("10");
-            append(line.origin[0] + offset[0]);
+            append(round(line.origin[0] + offset[0], opts.accuracy));
             append("20");
-            append(line.origin[1] + offset[1]);
+            append(round(line.origin[1] + offset[1], opts.accuracy));
             append("11");
-            append(line.end[0] + offset[0]);
+            append(round(line.end[0] + offset[0], opts.accuracy));
             append("21");
-            append(line.end[1] + offset[1]);
+            append(round(line.end[1] + offset[1], opts.accuracy));
         };
 
         map[pathType.Circle] = function (id: string, circle: IPathCircle, offset: IPoint, layer: string) {
@@ -75,11 +75,11 @@ namespace MakerJs.exporter {
             append("8");
             append(defaultLayer(circle, layer));
             append("10");
-            append(circle.origin[0] + offset[0]);
+            append(round(circle.origin[0] + offset[0], opts.accuracy));
             append("20");
-            append(circle.origin[1] + offset[1]);
+            append(round(circle.origin[1] + offset[1], opts.accuracy));
             append("40");
-            append(circle.radius);
+            append(round(circle.radius, opts.accuracy));
         };
 
         map[pathType.Arc] = function (id: string, arc: IPathArc, offset: IPoint, layer: string) {
@@ -88,15 +88,15 @@ namespace MakerJs.exporter {
             append("8");
             append(defaultLayer(arc, layer));
             append("10");
-            append(arc.origin[0] + offset[0]);
+            append(round(arc.origin[0] + offset[0], opts.accuracy));
             append("20");
-            append(arc.origin[1] + offset[1]);
+            append(round(arc.origin[1] + offset[1], opts.accuracy));
             append("40");
-            append(arc.radius);
+            append(round(arc.radius, opts.accuracy));
             append("50");
-            append(arc.startAngle);
+            append(round(arc.startAngle, opts.accuracy));
             append("51");
-            append(arc.endAngle);
+            append(round(arc.endAngle, opts.accuracy));
         };
 
         //TODO - handle scenario if any bezier seeds get passed

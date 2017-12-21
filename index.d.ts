@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.76
+// Type definitions for Maker.js 0.9.77
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2143,6 +2143,13 @@ declare namespace MakerJs.units {
      * @returns Numeric ratio of the conversion.
      */
     function conversionScale(srcUnitType: string, destUnitType: string): number;
+    /**
+     * Check to see if unit type is a valid Maker.js unit.
+     *
+     * @param tryUnit unit type to check.
+     * @returns Boolean true if unit type is valid.
+     */
+    function isValidUnit(tryUnit: string): boolean;
 }
 declare namespace MakerJs.measure {
     /**
@@ -2388,10 +2395,29 @@ declare namespace MakerJs.exporter {
          */
         accuracy?: number;
         /**
-         * Optional unit system to embed in exported file.
+         * Optional unit system to embed in exported file, if the export format allows alternate unit systems.
          */
         units?: string;
     }
+    /**
+     * Options for JSON export.
+     */
+    interface IJsonExportOptions extends IExportOptions {
+        /**
+         * Optional number of characters to indent after a newline.
+         */
+        indentation?: number;
+    }
+    /**
+     * Renders an item in JSON.
+     *
+     * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
+     * @param options Rendering options object.
+     * @param options.accuracy Optional exemplar of number of decimal places.
+     * @param options.indentation Optional number of characters to indent after a newline.
+     * @returns String of DXF content.
+     */
+    function toJson(itemToExport: any, options?: MakerJs.exporter.IJsonExportOptions): string;
     /**
      * Try to get the unit system from a model
      * @private
@@ -2420,6 +2446,11 @@ declare namespace MakerJs.exporter {
         purple: number;
         silver: number;
     };
+    interface IStatusCallback {
+        (status: {
+            progress?: number;
+        }): void;
+    }
 }
 declare namespace MakerJs.importer {
     /**
@@ -2760,6 +2791,7 @@ declare namespace MakerJs.exporter {
     function toOpenJsCad(pathsToExport: IPath[], options?: IOpenJsCadOptions): string;
     function toOpenJsCad(pathToExport: IPath, options?: IOpenJsCadOptions): string;
     /**
+     * DEPRECATED - use .toJscadSTL() instead.
      * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
      *
      * @param modelToExport Model object to export.
@@ -2778,18 +2810,75 @@ declare namespace MakerJs.exporter {
      * //Create a CAG instance from a model.
      * var { CAG } = require('@jscad/csg');
      * var model = new makerjs.models.Ellipse(70, 40);
-     * var cag = makerjs.exporter.toJscadCAG(CAG, model, 1);
+     * var cag = makerjs.exporter.toJscadCAG(CAG, model, {maxArcFacet: 1});
      * ```
      *
      * @param jscadCAG @jscad/csg CAG engine.
      * @param modelToExport Model object to export.
-     * @param maxArcFacet The maximum length between points on an arc or circle.
-     * @param findChainsOptions Optional IFindChainsOptions options object.
-     * @param findChainsOptions.byLayers Optional flag to separate chains by layers.
-     * @param findChainsOptions.pointMatchingDistance Optional max distance to consider two points as the same.
-     * @returns jscad CAG object in 2D.
+     * @param options Optional options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.maxArcFacet The maximum length between points on an arc or circle.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
+     * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
      */
-    function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, maxArcFacet: number, findChainsOptions?: IFindChainsOptions): jscad.CAG;
+    function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, jsCadCagOptions?: IJscadCagOptions): jscad.CAG | {
+        [layerId: string]: jscad.CAG;
+    };
+    /**
+     * Converts a model to a @jscad/csg object - 2D to 3D.
+     *
+     * Example:
+     * ```
+     * //First, use npm install @jscad/csg from the command line in your jscad project
+     * //Create a CSG instance from a model.
+     * var { CAG } = require('@jscad/csg');
+     * var model = new makerjs.models.Ellipse(70, 40);
+     * var csg = makerjs.exporter.toJscadCSG(CAG, model, {maxArcFacet: 1, extrude: 10});
+     * ```
+     *
+     * @param jscadCAG @jscad/csg CAG engine.
+     * @param modelToExport Model object to export.
+     * @param options Optional options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.maxArcFacet The maximum length between points on an arc or circle.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
+     * @param options.extrude Optional default extrusion distance.
+     * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+     * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
+     */
+    function toJscadCSG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, options?: IJscadCsgOptions): jscad.CSG;
+    /**
+     * Creates a string of JavaScript code for execution with a Jscad environment.
+     *
+     * @param modelToExport Model object to export.
+     * @param options Export options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.maxArcFacet The maximum length between points on an arc or circle.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
+     * @param options.extrude Optional default extrusion distance.
+     * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+     * @returns String of JavaScript containing a main() function for Jscad.
+     */
+    function toJscadScript(modelToExport: IModel, options?: IJscadScriptOptions): string;
+    /**
+     * Exports a model in STL format - 2D to 3D.
+     *
+     * @param jscadCAG @jscad/csg CAG engine.
+     * @param stlSerializer @jscad/stl-serializer (require('@jscad/stl-serializer')).
+     * @param modelToExport Model object to export.
+     * @param options Optional options object.
+     * @param options.byLayers Optional flag to separate chains by layers.
+     * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param options.maxArcFacet The maximum length between points on an arc or circle.
+     * @param options.statusCallback Optional callback function to get the percentage complete.
+     * @param options.extrude Optional default extrusion distance.
+     * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+     * @returns String in STL ASCII format.
+     */
+    function toJscadSTL(CAG: typeof jscad.CAG, stlSerializer: jscad.StlSerializer, modelToExport: IModel, options?: IJscadCsgOptions): string | ArrayBuffer[];
     /**
      * OpenJsCad export options.
      */
@@ -2811,8 +2900,65 @@ declare namespace MakerJs.exporter {
          */
         modelMap?: IOpenJsCadOptionsMap;
     }
+    /**
+     * Map of OpenJsCad export options.
+     */
     interface IOpenJsCadOptionsMap {
         [modelId: string]: IOpenJsCadOptions;
+    }
+    /**
+     * Jscad CAG export options.
+     */
+    interface IJscadCagOptions extends IExportOptions, IPointMatchOptions {
+        /**
+         * Flag to separate chains by layers.
+         */
+        byLayers?: boolean;
+        /**
+         * The maximum length between points on an arc or circle.
+         */
+        maxArcFacet?: number;
+        /**
+         * Optional callback to get status during the export.
+         */
+        statusCallback?: IStatusCallback;
+    }
+    /**
+     * Jscad CAG extrusion options.
+     */
+    interface IJscadExtrudeOptions {
+        /**
+         * Optional depth of 3D extrusion.
+         */
+        extrude?: number;
+        /**
+         * Optional depth of 3D extrusion.
+         */
+        z?: number;
+    }
+    /**
+     * Jscad CSG export options.
+     */
+    interface IJscadCsgOptions extends IJscadCagOptions, IJscadExtrudeOptions {
+        /**
+         * SVG options per layer.
+         */
+        layerOptions?: {
+            [layerId: string]: IJscadExtrudeOptions;
+        };
+    }
+    /**
+     * Jscad Script export options.
+     */
+    interface IJscadScriptOptions extends IJscadCsgOptions {
+        /**
+         * Optional override of function name, default is "main".
+         */
+        functionName?: string;
+        /**
+         * Optional number of spaces to indent.
+         */
+        indent?: number;
     }
 }
 declare namespace MakerJs.exporter {
