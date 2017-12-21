@@ -1502,7 +1502,7 @@
 
             //allow progress bar to render
             setTimeout(function () {
-                setExportText(response.request.format, response.request.formatTitle, response.text, response.error);
+                setExportText(response.format, response.formatTitle, response.text, response.error);
             }, 300);
 
         }
@@ -1534,31 +1534,35 @@
         preview.value = text;
 
         (<HTMLSpanElement>document.getElementById('download-filename')).innerText = filename;
-    
+
         //put the download ui into ready mode
         toggleClass('download-generating');
         toggleClass('download-ready');
     }
 
     export function downloadClick(a: HTMLAnchorElement, format: MakerJsPlaygroundExport.ExportFormat) {
-
-        //TODO: show options
-        //TODO: get options
-
-        var request: MakerJsPlaygroundExport.IExportRequest = {
-            format: format,
-            formatTitle: a.innerText,
-            model: processed.model,
-            options: {}
-        };
-
-        beginExport(request);
+        //show options
+        FormatOptions.activateOption(format, a.innerText, processed.model);
+        toggleClass('download-options');
     }
 
-    function beginExport(request: MakerJsPlaygroundExport.IExportRequest) {
+    export function getFormatOptions() {
+
+        var formatOption = MakerJsPlayground.FormatOptions.current;
+        if (!formatOption) {
+            return;
+        }
+
+        var request: MakerJsPlaygroundExport.IExportRequest = {
+            format: formatOption.format,
+            formatTitle: formatOption.formatTitle,
+            model: processed.model,
+            options: formatOption.getOptionObject()
+        };
 
         //put the download ui into generation mode
         progress.style.width = '0';
+        toggleClass('download-options');
         toggleClass('download-generating');
 
         if (useWorkerThreads && Worker) {
@@ -1585,11 +1589,12 @@
                     break;
 
                 case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
-                    text = makerjs.exporter.toOpenJsCad(processed.model);
+                    //text = makerjs.exporter.toOpenJsCad(processed.model);
+                    text = makerjs.exporter.toJscadScript(processed.model, request.options);
                     break;
 
                 case MakerJsPlaygroundExport.ExportFormat.Svg:
-                    text = makerjs.exporter.toSVG(processed.model);
+                    text = makerjs.exporter.toSVG(processed.model, request.options);
                     break;
 
                 default:

@@ -47,6 +47,7 @@
     <script src="../fonts/fonts.js"></script>
     <script src="fontloader.js"></script>
     <script src="playground.js"></script>
+    <script src="format-options.js"></script>
     <script>
         //config
         MakerJsPlayground.relativePath = '../demos/js/';
@@ -116,13 +117,201 @@
         <div id="download-select">
             <h2>Choose a file format to download your customized drawing <span class="unitless">(units will be millimeters)</span></h2>
 
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Json);">json</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.OpenJsCad);">openjscad</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Stl);">.stl</button>
-            <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Pdf);">.pdf</button>
-        </div>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Json);">json</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.OpenJsCad);">openjscad</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Stl);">.stl</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Pdf);">.pdf</button>
+            </div>
+            
+            <div id="download-options">
+                
+                <div data-format="Dxf" class="download-option">
+                    <h2>Dxf options</h2>
+                    <div class="option-block">
+                        <label for="dxf-accuracy">Accuracy</label>
+                        <select id="dxf-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                    <!--
+                        TODO:
+                        units
+                    -->
+                </div>
+
+                <div data-format="Svg" class="download-option">
+                    <h2>Svg options</h2>
+                    <div class="option-block">
+                        <label for="svg-accuracy">Accuracy</label>
+                        <select id="svg-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                    <!--
+                        TODO: Many options 
+                    -->
+                </div>
+
+                <!--
+                    TODO: SVG Path data
+                -->
+                
+                <div data-format="Json" class="download-option">
+                    <h2>Json options</h2>
+                    <div class="option-block">
+                        <label for="json-accuracy">Accuracy</label>
+                        <select id="json-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="json-indent">Indentation</label>
+                        <select id="json-indent">
+                            <option value="0">None</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div data-format="OpenJsCad" class="download-option">
+                    <h2>OpenJsCad options</h2>
+                    <div class="option-block">
+                        <label for="openjscad-name">Function name</label>
+                        <input id="openjscad-name" type="text" value="main" />
+                    </div>
+                    <div class="option-block">
+                        <label for="openjscad-indent">Indentation</label>
+                        <select id="openjscad-indent">
+                            <option value="0">None</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="openjscad-accuracy">Accuracy</label>
+                        <select id="openjscad-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001" selected>.001</option>
+                            <option value=".0001">.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="openjscad-facetsize">Arc Facet size</label>
+                        <select id="openjscad-facetsize">
+                            <option value=".01">.01</option>
+                            <option value=".05">.05</option>
+                            <option value=".1">.1</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1">1</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">2</option>
+                            <option value="2.5" selected>2.5</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="openjscad-extrusion">Extrusion</label>
+                        <input id="openjscad-extrusion" type="number" value="1" min="0" />
+                    </div>
+                    <!-- 
+                        TODO:
+                        Indentation,
+                        flavor: Classic or Node
+                     -->
+                </div>
+
+                <div data-format="Stl" class="download-option">
+                    <h2>Stl options</h2>
+                    <div class="option-block">
+                        <label for="stl-facetsize">Arc Facet size</label>
+                        <select id="stl-facetsize">
+                            <option value=".01">.01</option>
+                            <option value=".05">.05</option>
+                            <option value=".1">.1</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1">1</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">2</option>
+                            <option value="2.5" selected>2.5</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <div class="option-block" id="stl-extrusion-block">
+                        <label for="stl-extrude">Extrusion amount</label>
+                        <input type="number" id="stl-extrude" value="1" />
+                    </div>
+                </div>
+
+                <div data-format="Pdf" class="download-option">
+                    <h2>Pdf options</h2>
+                    <div class="option-block">
+                        <label for="pdf-toptmargin">Top margin</label>
+                        <select id="pdf-topmargin">
+                            <option value="0">0</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1" selected>1</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="pdf-leftmargin">Left margin</label>
+                        <select id="pdf-leftmargin">
+                            <option value="0">0</option>
+                            <option value=".25">.25</option>
+                            <option value=".5">.5</option>
+                            <option value="1" selected>1</option>
+                        </select>
+                    </div>
+                    <!--
+                        stroke color
+                        stroke thickness
+                        stroke style
+                        layers
+                    -->
+                </div>
+
+                <button class="generate" onclick="MakerJsPlayground.getFormatOptions()">generate</button>
+                <button class="close" onclick="MakerJsPlayground.toggleClass('download-options')">cancel</button>
+            </div>
 
         <div id="download-generating">
             <h2>Generating your customized drawing...</h2>
@@ -140,15 +329,19 @@
         <div id="download-ready">
             <h2>Your customized drawing file is ready for download</h2>
 
-            <span id="download-link-container"></span>
-            <span>
-                <button class="close" onclick="MakerJsPlayground.toggleClass('download-ready')">close</button>
-            </span>
-            <div id="download-preview-container">
-                <textarea id="download-preview" rows="8" readonly></textarea>
-            </div>
-            <div class="onscreen-help">
-                If your browser does not support the download button above, <button onclick="MakerJsPlayground.copyToClipboard()">copy the text above</button> and paste into a new text file named <b id="download-filename">myfile.txt</b> on your computer.
+                <span id="download-link-container"></span>
+                <span>
+                    <button class="back" onclick="MakerJsPlayground.toggleClass('download-ready');MakerJsPlayground.toggleClass('download-options')">back</button>
+                </span>
+                <span>
+                    <button class="close" onclick="MakerJsPlayground.toggleClass('download-ready')">close</button>
+                </span>
+                <div id="download-preview-container">
+                    <textarea id="download-preview" rows="8" readonly></textarea>
+                </div>
+                <div class="onscreen-help">
+                    If your browser does not support the download button above, <button onclick="MakerJsPlayground.copyToClipboard()">copy the text above</button> and paste into a new text file named <b id="download-filename">myfile.txt</b> on your computer.
+                </div>
             </div>
         </div>
 

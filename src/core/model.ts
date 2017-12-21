@@ -379,16 +379,7 @@ namespace MakerJs.model {
      */
     export function convertUnits(modeltoConvert: IModel, destUnitType: string): IModel {
 
-        var validUnitType = false;
-
-        for (var id in unitType) {
-            if (unitType[id] == destUnitType) {
-                validUnitType = true;
-                break;
-            }
-        }
-
-        if (modeltoConvert.units && validUnitType) {
+        if (modeltoConvert.units && units.isValidUnit(modeltoConvert.units) && units.isValidUnit(destUnitType)) {
             var ratio = units.conversionScale(modeltoConvert.units, destUnitType);
 
             if (ratio != 1) {

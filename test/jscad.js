@@ -12,4 +12,24 @@ describe('jscad', function () {
         assert.ok(cag);
     });
 
+    it('can reach 100% progress for jscad CAG subtractions', function () {
+
+        var { CAG } = require('@jscad/csg');
+
+        var model = {};
+        for (let i = 0; i < 10; i++) {
+            makerjs.$(new makerjs.models.Square(i * 10)).addTo(model);
+        }
+
+        var progress = 0;
+
+        function statusCallback(status) {
+            progress = status.progress;
+            console.log(progress);
+        }
+        var cag = makerjs.exporter.toJscadCAG(CAG, model, { statusCallback });
+
+        assert.equal(100, progress);
+    });
+
 });

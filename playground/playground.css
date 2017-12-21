@@ -424,9 +424,43 @@ svg#pointers line {
     padding-right: 2em;
 }
 
-#download-generating, #download-ready, #download-error
+#download-generating, #download-ready, #download-error, #download-options
 {
     display: none;
+}
+
+#download-options .download-option {
+    border: 1px inset;
+    box-sizing: border-box;
+    display: none;
+    font-size: medium;
+    padding: .5em;
+    margin-bottom: .5em;
+    width: 100%;
+}
+
+#download-options .download-option.selected {
+    display: block;
+}
+
+#download-options .download-option h2 {
+    font-variant: small-caps;
+    margin-bottom: .5em;
+}
+
+#download-options .download-option label {
+    display: block;
+    font-size: smaller;
+}
+
+#download-options .download-option .option-block {
+    display: inline-block;
+    margin-left: 1em;
+    min-width: 8em;
+}
+
+#download-options .download-option select {
+    width: 100%;
 }
 
 #download-preview-container {
@@ -444,23 +478,23 @@ svg#pointers line {
     font-size: small;
 }
 
-.download-generating #download-generating {
-    display: block;
-}
-
-.download-generating #download-select, .download-generating #download-ready {
+.download-options #download-select,
+.download-generating #download-select,
+.download-generating #download-ready {
     display: none;
 }
 
-.download-ready #download-ready {
-    display: block;
-}
-
+.download-generating #download-generating,
+.download-ready #download-ready,
+.download-options #download-options,
 .download-error #download-error {
     display: block;    
 }
 
-.download-ready #download-select, .download-ready #download-generating, .download-error #download-select, .download-error #download-generating {
+.download-ready #download-select, 
+.download-ready #download-generating, 
+.download-error #download-select, 
+.download-error #download-generating {
     display: none;
 }
 
