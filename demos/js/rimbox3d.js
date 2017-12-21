@@ -14,12 +14,16 @@ function rimbox3d(width, height, holeRadius, rim, z) {
 
     delete this.models.bottom.models.bolts;
 
+    this.models.bottom.layer = "bottom";
+    this.models.side.layer = "side";
+    this.models.lid.layer = "lid";
+
     this.exporterOptions = {
-        toOpenJsCad: {
-            modelMap: {
-                bottom: { extrusion: 1 },
-                side: { extrusion: z },
-                lid: { extrusion: rim }
+        toJscadCSG: {
+            layerOptions: {
+                bottom: { extrude: 1 },
+                side: { extrude: z },
+                lid: { extrude: rim }
             }
         }
     };
