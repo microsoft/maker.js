@@ -1155,7 +1155,7 @@ var MakerJsPlayground;
         if (response.percentComplete == 100 && response.text || response.error) {
             //allow progress bar to render
             setTimeout(function () {
-                setExportText(response.request.format, response.request.formatTitle, response.text, response.error);
+                setExportText(response.format, response.formatTitle, response.text, response.error);
             }, 300);
         }
     }
@@ -1184,12 +1184,15 @@ var MakerJsPlayground;
     }
     function downloadClick(a, format) {
         //show options
-        MakerJsPlayground.FormatOptions.activateOption(format, a.innerText, processed.model.units);
+        MakerJsPlayground.FormatOptions.activateOption(format, a.innerText, processed.model);
         toggleClass('download-options');
     }
     MakerJsPlayground.downloadClick = downloadClick;
     function getFormatOptions() {
         var formatOption = MakerJsPlayground.FormatOptions.current;
+        if (!formatOption) {
+            return;
+        }
         var request = {
             format: formatOption.format,
             formatTitle: formatOption.formatTitle,
@@ -1222,10 +1225,11 @@ var MakerJsPlayground;
                     text = JSON.stringify(processed.model, null, 2);
                     break;
                 case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
-                    text = makerjs.exporter.toOpenJsCad(processed.model);
+                    //text = makerjs.exporter.toOpenJsCad(processed.model);
+                    text = makerjs.exporter.toJscadScript(processed.model, request.options);
                     break;
                 case MakerJsPlaygroundExport.ExportFormat.Svg:
-                    text = makerjs.exporter.toSVG(processed.model);
+                    text = makerjs.exporter.toSVG(processed.model, request.options);
                     break;
                 default:
                     return false;

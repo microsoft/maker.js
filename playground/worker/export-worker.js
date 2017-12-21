@@ -34,34 +34,22 @@ function getExporter(format, result) {
         case f.Svg:
             return makerjs.exporter.toSVG;
         case f.OpenJsCad:
-            return makerjs.exporter.toOpenJsCad;
+            return makerjs.exporter.toJscadScript;
         case f.Stl:
-            function toStl(model, inputOptions) {
+            function toStl(model, options) {
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Stl]) {
                     importScripts('../../external/jscad/csg.js', '../../external/jscad/stl-serializer.js');
                     deps[MakerJsPlaygroundExport.ExportFormat.Stl] = true;
                 }
                 //make sure size is in mm for STL
                 model = makerjs.model.convertUnits(model, makerjs.unitType.Millimeter);
-                var defaultOptions = {
-                    extrusion: 1
-                };
-                var options = makerjs.extendObject(defaultOptions, inputOptions);
-                var _a = require('@jscad/csg'), CAG = _a.CAG, CSG = _a.CSG;
+                var CAG = require('@jscad/csg').CAG;
                 var stlSerializer = require('@jscad/stl-serializer');
-                function makePhasedCallback(phaseStart, phaseSpan) {
-                    return function statusCallback(status) {
-                        result.percentComplete = phaseStart + status.progress * phaseSpan / 100;
-                        postMessage(result);
-                    };
-                }
-                var cag = makerjs.exporter.toJscadCAG(CAG, model, options.facetSize, { statusCallback: makePhasedCallback(0, 33) });
-                //next phase: extrude to csg
-                var csg = cag.extrude({ offset: [0, 0, options.extrusion] });
-                result.percentComplete = 66; //3 phases of this export
-                postMessage(result);
-                //next phase: serialize
-                return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(67, 33) });
+                options.statusCallback = function (status) {
+                    result.percentComplete = status.progress;
+                    postMessage(result);
+                };
+                return makerjs.exporter.toJscadSTL(CAG, stlSerializer, model, options);
             }
             return toStl;
         case f.Pdf:
@@ -98,7 +86,8 @@ function getExporter(format, result) {
 onmessage = function (ev) {
     var request = ev.data;
     var result = {
-        request: request,
+        format: request.format,
+        formatTitle: request.formatTitle,
         error: null,
         text: null,
         percentComplete: 0

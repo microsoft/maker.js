@@ -13,14 +13,21 @@ var MakerJsPlayground;
     var FormatOptions;
     (function (FormatOptions) {
         var BaseOptions = (function () {
-            function BaseOptions(format, formatTitle, div, units) {
+            function BaseOptions(format, formatTitle, div, model) {
                 this.format = format;
                 this.formatTitle = formatTitle;
                 this.div = div;
-                this.units = units;
+                this.model = model;
             }
             BaseOptions.prototype.$ = function (selector) {
                 return this.div.querySelector(selector);
+            };
+            BaseOptions.prototype.$number = function (selector) {
+                var select = this.$(selector);
+                if (makerjs.isNumber(select.valueAsNumber)) {
+                    return select.valueAsNumber;
+                }
+                return parseInt(select.value);
             };
             BaseOptions.prototype.$selectValue = function (selector) {
                 var select = this.$(selector);
@@ -35,12 +42,18 @@ var MakerJsPlayground;
             BaseOptions.prototype.getOptionObject = function () {
                 throw 'not implemented';
             };
+            BaseOptions.prototype.validate = function () {
+                return true;
+            };
             return BaseOptions;
         }());
         var DxfOptions = (function (_super) {
             __extends(DxfOptions, _super);
-            function DxfOptions() {
-                return _super !== null && _super.apply(this, arguments) || this;
+            function DxfOptions(format, formatTitle, div, model) {
+                return _super.call(this, format, formatTitle, div, model) || this;
+                // TODO:
+                // inspect model to see if it contains units
+                // show unit picker if it does not
             }
             DxfOptions.prototype.getOptionObject = function () {
                 var options = {};
@@ -75,27 +88,44 @@ var MakerJsPlayground;
             };
             return JsonOptions;
         }(BaseOptions));
-        var OpenJsCadOptions = (function (_super) {
-            __extends(OpenJsCadOptions, _super);
-            function OpenJsCadOptions() {
+        var JscadScriptOptions = (function (_super) {
+            __extends(JscadScriptOptions, _super);
+            function JscadScriptOptions() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-            OpenJsCadOptions.prototype.getOptionObject = function () {
+            JscadScriptOptions.prototype.getOptionObject = function () {
+                var extrude = this.$number('#openjscad-extrusion');
+                if (extrude <= 0) {
+                    //show the UI
+                    return null;
+                }
+                else {
+                    //hide the ui
+                }
                 var options = {
-                    facetSize: +this.$selectValue('#openjscad-facetsize')
+                    extrude: extrude,
+                    functionName: this.$selectValue('#openjscad-name'),
+                    indent: this.$number('#openjscad-indent'),
+                    maxArcFacet: +this.$selectValue('#openjscad-facetsize')
                 };
+                this.addAccuracy('#openjscad-accuracy', options);
                 return options;
             };
-            return OpenJsCadOptions;
+            return JscadScriptOptions;
         }(BaseOptions));
         var StlOptions = (function (_super) {
             __extends(StlOptions, _super);
-            function StlOptions() {
-                return _super !== null && _super.apply(this, arguments) || this;
+            function StlOptions(format, formatTitle, div, model) {
+                return _super.call(this, format, formatTitle, div, model) || this;
+                //modelToExport.exporterOptions['toJscadCSG'])
+                // TODO:
+                // inspect model to see if it contains exporterOptions.layerOptions
+                // then disable extrude
             }
             StlOptions.prototype.getOptionObject = function () {
                 var options = {
-                    facetSize: +this.$selectValue('#stl-facetsize')
+                    maxArcFacet: +this.$selectValue('#stl-facetsize'),
+                    extrude: this.$number('#stl-extrude')
                 };
                 return options;
             };
@@ -117,14 +147,14 @@ var MakerJsPlayground;
             };
             return PdfOptions;
         }(BaseOptions));
-        var registry = {};
-        registry[MakerJsPlaygroundExport.ExportFormat.Dxf] = DxfOptions;
-        registry[MakerJsPlaygroundExport.ExportFormat.Json] = JsonOptions;
-        registry[MakerJsPlaygroundExport.ExportFormat.OpenJsCad] = OpenJsCadOptions;
-        registry[MakerJsPlaygroundExport.ExportFormat.Pdf] = PdfOptions;
-        registry[MakerJsPlaygroundExport.ExportFormat.Stl] = StlOptions;
-        registry[MakerJsPlaygroundExport.ExportFormat.Svg] = SvgOptions;
-        function activateOption(format, formatTitle, units) {
+        var classes = {};
+        classes[MakerJsPlaygroundExport.ExportFormat.Dxf] = DxfOptions;
+        classes[MakerJsPlaygroundExport.ExportFormat.Json] = JsonOptions;
+        classes[MakerJsPlaygroundExport.ExportFormat.OpenJsCad] = JscadScriptOptions;
+        classes[MakerJsPlaygroundExport.ExportFormat.Pdf] = PdfOptions;
+        classes[MakerJsPlaygroundExport.ExportFormat.Stl] = StlOptions;
+        classes[MakerJsPlaygroundExport.ExportFormat.Svg] = SvgOptions;
+        function activateOption(format, formatTitle, model) {
             var formatId = MakerJsPlaygroundExport.ExportFormat[format];
             //deselect all
             var all = document.querySelectorAll(".download-option");
@@ -133,8 +163,8 @@ var MakerJsPlayground;
             //select current
             var div = document.querySelector(".download-option[data-format=\"" + formatId + "\"]");
             div.classList.add('selected');
-            var formatClass = registry[format];
-            FormatOptions.current = new formatClass(format, formatTitle, div, units);
+            var formatClass = classes[format];
+            FormatOptions.current = new formatClass(format, formatTitle, div, model);
         }
         FormatOptions.activateOption = activateOption;
     })(FormatOptions = MakerJsPlayground.FormatOptions || (MakerJsPlayground.FormatOptions = {}));

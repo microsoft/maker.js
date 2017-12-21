@@ -6281,60 +6281,64 @@ var MakerJs;
             var length = MakerJs.measure.pathLength(circle);
             if (!length)
                 return;
-            return length / facetSize;
+            return Math.ceil(length / facetSize);
         }
         /**
          * @private
          */
-        function pathsToOpenJsCad(modelContext, facetSize) {
+        function chainToJscadScript(chainContext, facetSize, accuracy) {
             var head = '';
             var tail = '';
             var first = true;
             var exit = false;
             var reverseTail = false;
             var beginMap = {};
-            beginMap[MakerJs.pathType.Circle] = function (circle, dirPath) {
+            beginMap[MakerJs.pathType.Circle] = function (circle, link) {
                 var circleOptions = {
-                    center: MakerJs.point.rounded(circle.origin),
-                    radius: circle.radius,
+                    center: MakerJs.point.rounded(MakerJs.point.add(circle.origin, link.walkedPath.offset), accuracy),
+                    radius: MakerJs.round(circle.radius, accuracy),
                     resolution: facetSizeToResolution(circle, facetSize)
                 };
                 head = wrap('CAG.circle', JSON.stringify(circleOptions), true);
                 exit = true;
             };
-            beginMap[MakerJs.pathType.Line] = function (line, dirPath) {
-                head = wrap('new CSG.Path2D', JSON.stringify(dirPath.reversed ? [dirPath.endPoints[1], dirPath.endPoints[0]] : dirPath.endPoints), true);
+            beginMap[MakerJs.pathType.Line] = function (line, link) {
+                var points = link.endPoints.map(function (p) { return MakerJs.point.rounded(p, accuracy); });
+                if (link.reversed) {
+                    points.reverse();
+                }
+                head = wrap('new CSG.Path2D', JSON.stringify(points), true);
             };
-            beginMap[MakerJs.pathType.Arc] = function (arc, dirPath) {
+            beginMap[MakerJs.pathType.Arc] = function (arc, link) {
                 var endAngle = MakerJs.angle.ofArcEnd(arc);
-                if (dirPath.reversed) {
+                if (link.reversed) {
                     reverseTail = true;
                 }
                 var arcOptions = {
-                    center: MakerJs.point.rounded(arc.origin),
-                    radius: arc.radius,
-                    startangle: arc.startAngle,
-                    endangle: endAngle,
+                    center: MakerJs.point.rounded(MakerJs.point.add(arc.origin, link.walkedPath.offset), accuracy),
+                    radius: MakerJs.round(arc.radius, accuracy),
+                    startangle: MakerJs.round(arc.startAngle, accuracy),
+                    endangle: MakerJs.round(endAngle, accuracy),
                     resolution: facetSizeToResolution(arc, facetSize)
                 };
                 head = wrap('new CSG.Path2D.arc', JSON.stringify(arcOptions), true);
             };
             var appendMap = {};
-            appendMap[MakerJs.pathType.Line] = function (line, dirPath) {
-                var reverse = (reverseTail != dirPath.reversed);
-                var endPoint = MakerJs.point.rounded(dirPath.endPoints[reverse ? 0 : 1]);
+            appendMap[MakerJs.pathType.Line] = function (line, link) {
+                var reverse = (reverseTail != link.reversed);
+                var endPoint = MakerJs.point.rounded(link.endPoints[reverse ? 0 : 1], accuracy);
                 append(wrap('.appendPoint', JSON.stringify(endPoint), true));
             };
-            appendMap[MakerJs.pathType.Arc] = function (arc, dirPath) {
-                var reverse = (reverseTail != dirPath.reversed);
+            appendMap[MakerJs.pathType.Arc] = function (arc, link) {
+                var reverse = (reverseTail != link.reversed);
                 var endAngle = MakerJs.angle.ofArcEnd(arc);
                 var arcOptions = {
-                    radius: arc.radius,
+                    radius: MakerJs.round(arc.radius, accuracy),
                     clockwise: reverse,
                     large: Math.abs(endAngle - arc.startAngle) > 180,
                     resolution: facetSizeToResolution(arc, facetSize)
                 };
-                var endPoint = MakerJs.point.rounded(dirPath.endPoints[reverse ? 0 : 1]);
+                var endPoint = MakerJs.point.rounded(link.endPoints[reverse ? 0 : 1], accuracy);
                 append(wrap('.appendArc', JSON.stringify(endPoint) + ',' + JSON.stringify(arcOptions), true));
             };
             function append(s) {
@@ -6345,11 +6349,12 @@ var MakerJs;
                     tail += s;
                 }
             }
-            for (var pathId in modelContext.paths) {
-                var pathContext = modelContext.paths[pathId];
+            for (var i = 0; i < chainContext.links.length; i++) {
+                var link = chainContext.links[i];
+                var pathContext = link.walkedPath.pathContext;
                 var fn = first ? beginMap[pathContext.type] : appendMap[pathContext.type];
                 if (fn) {
-                    fn(pathContext, pathContext);
+                    fn(pathContext, link);
                 }
                 if (exit) {
                     return head;
@@ -6358,7 +6363,31 @@ var MakerJs;
             }
             return head + tail + '.close().innerToCAG()';
         }
+        function makeFakeChainFromLoop(modelContext) {
+            var fakeChain = { endless: true, links: [], pathLength: 0 };
+            for (var pathId in modelContext.paths) {
+                var pathContext = modelContext.paths[pathId];
+                var walkedPath = {
+                    layer: '',
+                    modelContext: modelContext,
+                    offset: [0, 0],
+                    pathContext: pathContext,
+                    pathId: pathId,
+                    route: [],
+                    routeKey: ''
+                };
+                var link = {
+                    endPoints: pathContext.endPoints,
+                    pathLength: 0,
+                    reversed: pathContext.reversed,
+                    walkedPath: walkedPath
+                };
+                fakeChain.links.push(link);
+            }
+            return fakeChain;
+        }
         /**
+         * DEPRECATED - use .toJscadScript() instead.
          * Creates a string of JavaScript code for execution with the OpenJsCad engine.
          *
          * @param modelToExport Model object to export.
@@ -6407,7 +6436,8 @@ var MakerJs;
                     var union = '';
                     for (var modelId in depthModel.models) {
                         var subModel = depthModel.models[modelId];
-                        union += wrap('.union', pathsToOpenJsCad(subModel, opts.facetSize), union);
+                        var fakeChain = makeFakeChainFromLoop(subModel);
+                        union += wrap('.union', chainToJscadScript(fakeChain, opts.facetSize, opts.accuracy), union);
                     }
                     var operator = (depth % 2 == 0) ? '.union' : '.subtract';
                     result.push(wrap(operator, union, result.length));
@@ -6423,6 +6453,9 @@ var MakerJs;
             return 'function ' + opts.functionName + '(){' + all + ';}';
         }
         exporter.toOpenJsCad = toOpenJsCad;
+        /**
+         * @private
+         */
         function exportFromOptionsMap(modelToExport, optionsMap) {
             if (!modelToExport.models)
                 return;
@@ -6446,6 +6479,7 @@ var MakerJs;
             return result.join(' ');
         }
         /**
+         * DEPRECATED - use .toJscadSTL() instead.
          * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
          *
          * @param modelToExport Model object to export.
@@ -6485,6 +6519,14 @@ var MakerJs;
         }
         exporter.toSTL = toSTL;
         /**
+         * @private
+         */
+        function makePhasedCallback(originalCb, phaseStart, phaseSpan) {
+            return function statusCallback(status) {
+                originalCb && originalCb({ progress: phaseStart + status.progress * phaseSpan / 100 });
+            };
+        }
+        /**
          * Converts a model to a @jscad/csg object - 2D to 2D.
          *
          * Example:
@@ -6493,91 +6535,261 @@ var MakerJs;
          * //Create a CAG instance from a model.
          * var { CAG } = require('@jscad/csg');
          * var model = new makerjs.models.Ellipse(70, 40);
-         * var cag = makerjs.exporter.toJscadCAG(CAG, model, 1);
+         * var cag = makerjs.exporter.toJscadCAG(CAG, model, {maxArcFacet: 1});
          * ```
          *
          * @param jscadCAG @jscad/csg CAG engine.
          * @param modelToExport Model object to export.
-         * @param maxArcFacet The maximum length between points on an arc or circle.
-         * @param options Optional IFindChainsOptions options object.
+         * @param options Optional options object.
          * @param options.byLayers Optional flag to separate chains by layers.
          * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+         * @param options.maxArcFacet The maximum length between points on an arc or circle.
          * @param options.statusCallback Optional callback function to get the percentage complete.
-         * @returns jscad CAG object in 2D.
+         * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
          */
-        function toJscadCAG(jscadCAG, modelToExport, maxArcFacet, jsCadCagOptions) {
-            var adds = [];
-            var status = { total: 0, complete: 0 };
-            function unionize(phaseStart, phaseSpan, arr) {
-                var result = arr.shift();
-                arr.forEach(function (el) { return result = result.union(el); });
-                status.complete++;
-                jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: phaseStart + phaseSpan * status.complete / status.total });
-                return result;
-            }
-            function chainToCag(c) {
+        function toJscadCAG(jscadCAG, modelToExport, jsCadCagOptions) {
+            function chainToJscadCag(c, maxArcFacet) {
                 var keyPoints = MakerJs.chain.toKeyPoints(c, maxArcFacet);
                 keyPoints.push(keyPoints[0]);
                 return jscadCAG.fromPoints(keyPoints);
             }
-            function subtractChains(cs) {
+            function jscadCagUnion(augend, addend) {
+                return augend.union(addend);
+            }
+            function jscadCagSubtraction(minuend, subtrahend) {
+                return minuend.subtract(subtrahend);
+            }
+            return convertChainsTo2D(chainToJscadCag, jscadCagUnion, jscadCagSubtraction, modelToExport, jsCadCagOptions);
+        }
+        exporter.toJscadCAG = toJscadCAG;
+        /**
+         * @private
+         */
+        function convertChainsTo2D(convertToT, union, subtraction, modelToExport, jsCadCagOptions) {
+            if (jsCadCagOptions === void 0) { jsCadCagOptions = {}; }
+            var adds = {};
+            var status = { total: 0, complete: 0 };
+            function unionize(phaseStart, phaseSpan, arr) {
+                var result = arr.shift();
+                arr.forEach(function (el) { return result = union(result, el); });
+                status.complete++;
+                jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: phaseStart + phaseSpan * status.complete / status.total });
+                return result;
+            }
+            function subtractChains(layerId, cs) {
                 var subtracts = [];
                 cs.forEach(function (c) {
                     if (!c.endless)
                         return;
                     if (c.contains) {
-                        addChains(c.contains);
+                        addChains(layerId, c.contains);
                     }
                     status.total++;
-                    subtracts.unshift(chainToCag(c));
+                    subtracts.unshift(convertToT(c, jsCadCagOptions.maxArcFacet));
                 });
                 return subtracts;
             }
-            function addChains(cs) {
+            function addChains(layerId, cs) {
                 cs.forEach(function (c) {
                     if (!c.endless)
                         return;
-                    var add = { cag: chainToCag(c), subtracts: [] };
+                    var add = { cag: convertToT(c, jsCadCagOptions.maxArcFacet), subtracts: [] };
                     if (c.contains) {
-                        var subtracts = subtractChains(c.contains);
+                        var subtracts = subtractChains(layerId, c.contains);
                         if (subtracts.length > 0) {
                             add.subtracts.push(subtracts);
                         }
                     }
                     status.total++;
-                    adds.unshift(add);
+                    if (!(layerId in adds)) {
+                        adds[layerId] = [];
+                    }
+                    adds[layerId].unshift(add);
                 });
             }
-            var options = jsCadCagOptions ? MakerJs.cloneObject(jsCadCagOptions) : {};
-            options.contain = true;
-            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 25 });
+            var options = {
+                pointMatchingDistance: jsCadCagOptions.pointMatchingDistance,
+                byLayers: jsCadCagOptions.byLayers,
+                contain: true
+            };
+            jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 25 });
             var chainsResult = MakerJs.model.findChains(modelToExport, options);
             if (Array.isArray(chainsResult)) {
-                addChains(chainsResult);
+                addChains('', chainsResult);
             }
             else {
-                for (var layer in chainsResult) {
-                    addChains(chainsResult[layer]);
+                for (var layerId in chainsResult) {
+                    addChains(layerId, chainsResult[layerId]);
                 }
             }
-            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 50 });
-            if (adds.length === 0) {
-                jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
+            jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 50 });
+            var closedCount = 0;
+            for (var layerId in adds) {
+                closedCount += adds[layerId].length;
+            }
+            if (closedCount === 0) {
+                jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
                 throw ('No closed geometries found.');
             }
-            var flatAdds = adds.map(function (add) {
-                var result = add.cag;
-                add.subtracts.forEach(function (subtract) {
-                    var union = unionize(50, 50, subtract);
-                    result = result.subtract(union);
+            var resultMap = {};
+            for (var layerId in adds) {
+                var flatAdds = adds[layerId].map(function (add) {
+                    var result = add.cag;
+                    add.subtracts.forEach(function (subtract) {
+                        var union = unionize(50, 50, subtract);
+                        result = subtraction(result, union);
+                    });
+                    return result;
                 });
-                return result;
+                resultMap[layerId] = unionize(50, 50, flatAdds);
+            }
+            jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
+            return options.byLayers ? resultMap : resultMap[''];
+        }
+        /**
+         * Converts a model to a @jscad/csg object - 2D to 3D.
+         *
+         * Example:
+         * ```
+         * //First, use npm install @jscad/csg from the command line in your jscad project
+         * //Create a CSG instance from a model.
+         * var { CAG } = require('@jscad/csg');
+         * var model = new makerjs.models.Ellipse(70, 40);
+         * var csg = makerjs.exporter.toJscadCSG(CAG, model, {maxArcFacet: 1, extrude: 10});
+         * ```
+         *
+         * @param jscadCAG @jscad/csg CAG engine.
+         * @param modelToExport Model object to export.
+         * @param options Optional options object.
+         * @param options.byLayers Optional flag to separate chains by layers.
+         * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+         * @param options.maxArcFacet The maximum length between points on an arc or circle.
+         * @param options.statusCallback Optional callback function to get the percentage complete.
+         * @param options.extrude Optional default extrusion distance.
+         * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+         * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
+         */
+        function toJscadCSG(jscadCAG, modelToExport, options) {
+            function to2D(opts) {
+                return toJscadCAG(jscadCAG, modelToExport, opts);
+            }
+            function to3D(cag, extrude, z) {
+                var csg = cag.extrude({ offset: [0, 0, extrude] });
+                if (z) {
+                    csg = csg.translate([0, 0, z]);
+                }
+                return csg;
+            }
+            function union3D(augend, addend) {
+                return augend.union(addend);
+            }
+            return convert2Dto3D(to2D, to3D, union3D, modelToExport, options);
+        }
+        exporter.toJscadCSG = toJscadCSG;
+        /**
+         * @private
+         */
+        function convert2Dto3D(to2D, to3D, union3D, modelToExport, options) {
+            if (options === void 0) { options = {}; }
+            var originalCb = options.statusCallback;
+            function getDefinedNumber(a, b) {
+                if (MakerJs.isNumber(a))
+                    return a;
+                return b;
+            }
+            if (modelToExport.exporterOptions) {
+                MakerJs.extendObject(options, modelToExport.exporterOptions['toJscadCSG']);
+            }
+            options.byLayers = options.byLayers || (options.layerOptions && true);
+            options.statusCallback = makePhasedCallback(originalCb, 0, 50);
+            var result2D = to2D(options);
+            var csgs = [];
+            if (options.byLayers) {
+                for (var layerId in result2D) {
+                    var layerOptions = options.layerOptions[layerId];
+                    var csg = to3D(result2D[layerId], layerOptions.extrude || options.extrude, getDefinedNumber(layerOptions.z, options.z));
+                    csgs.push(csg);
+                }
+            }
+            else {
+                var csg = to3D(result2D, options.extrude, options.z);
+                csgs.push(csg);
+            }
+            options.statusCallback = makePhasedCallback(originalCb, 50, 100);
+            var status = { total: csgs.length - 1, complete: 0 };
+            var result = csgs.shift();
+            csgs.forEach(function (el, i) {
+                result = union3D(result, el);
+                status.complete++;
+                options.statusCallback({ progress: status.complete / status.total });
             });
-            var result = unionize(50, 50, flatAdds);
-            jsCadCagOptions && jsCadCagOptions.statusCallback && jsCadCagOptions.statusCallback({ progress: 100 });
             return result;
         }
-        exporter.toJscadCAG = toJscadCAG;
+        /**
+         * Creates a string of JavaScript code for execution with a Jscad environment.
+         *
+         * @param modelToExport Model object to export.
+         * @param options Export options object.
+         * @param options.byLayers Optional flag to separate chains by layers.
+         * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+         * @param options.maxArcFacet The maximum length between points on an arc or circle.
+         * @param options.statusCallback Optional callback function to get the percentage complete.
+         * @param options.extrude Optional default extrusion distance.
+         * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+         * @returns String of JavaScript containing a main() function for Jscad.
+         */
+        function toJscadScript(modelToExport, options) {
+            if (options === void 0) { options = {}; }
+            function _chainToJscadScript(c, maxArcFacet) {
+                return wrap(chainToJscadScript(c, maxArcFacet, options.accuracy));
+            }
+            function scriptUnion(augend, addend) {
+                return augend + (".union(" + addend + ")");
+            }
+            function scriptSubtraction(minuend, subtrahend) {
+                return minuend + (".subtract(" + subtrahend + ")");
+            }
+            function to2D(opts) {
+                return convertChainsTo2D(_chainToJscadScript, scriptUnion, scriptSubtraction, modelToExport, options);
+            }
+            function to3D(cag, extrude, z) {
+                var csg = cag + (".extrude({ offset: [0, 0, " + extrude + "] })");
+                if (z) {
+                    csg = csg + (".translate([0, 0, " + z + "])");
+                }
+                return csg;
+            }
+            function wrap(s) {
+                return "" + nl + indent + s + nl;
+            }
+            var indent = new Array((options.indent || 0) + 1).join(' ');
+            var nl = options.indent ? '\n' : '';
+            var result = convert2Dto3D(to2D, to3D, scriptUnion, modelToExport, options);
+            return "function " + (options.functionName || 'main') + "(){" + wrap("return " + result + ";") + "}" + nl;
+        }
+        exporter.toJscadScript = toJscadScript;
+        /**
+         * Exports a model in STL format - 2D to 3D.
+         *
+         * @param jscadCAG @jscad/csg CAG engine.
+         * @param stlSerializer @jscad/stl-serializer (require('@jscad/stl-serializer')).
+         * @param modelToExport Model object to export.
+         * @param options Optional options object.
+         * @param options.byLayers Optional flag to separate chains by layers.
+         * @param options.pointMatchingDistance Optional max distance to consider two points as the same.
+         * @param options.maxArcFacet The maximum length between points on an arc or circle.
+         * @param options.statusCallback Optional callback function to get the percentage complete.
+         * @param options.extrude Optional default extrusion distance.
+         * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
+         * @returns String in STL ASCII format.
+         */
+        function toJscadSTL(CAG, stlSerializer, modelToExport, options) {
+            var originalCb = options.statusCallback;
+            options.statusCallback = makePhasedCallback(originalCb, 0, 50);
+            var csg = toJscadCSG(CAG, modelToExport, options);
+            return stlSerializer.serialize(csg, { binary: false, statusCallback: makePhasedCallback(originalCb, 50, 50) });
+        }
+        exporter.toJscadSTL = toJscadSTL;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
