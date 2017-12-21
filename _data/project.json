@@ -3101,7 +3101,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 436,
+              "line": 427,
               "character": 24
             }
           ]
@@ -3137,7 +3137,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 412,
+              "line": 403,
               "character": 29
             }
           ]
@@ -3182,7 +3182,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 507,
+              "line": 498,
               "character": 24
             }
           ]
@@ -3379,7 +3379,7 @@
                 "isOptional": true
               },
               "comment": {
-                "shortText": "Optional unit system to embed in exported file."
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
               },
               "sources": [
                 {
@@ -3399,6 +3399,940 @@
             }
           }
         },
+        "IJsonExportOptions": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Options for JSON export."
+          },
+          "sources": [
+            {
+              "fileName": "core/exporter.ts",
+              "line": 22,
+              "character": 39
+            }
+          ],
+          "extendedTypes": [
+            {
+              "type": "reference",
+              "name": "IExportOptions"
+            }
+          ],
+          "Property": {
+            "accuracy": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional exemplar of number of decimal places."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 11,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.accuracy"
+              }
+            },
+            "indentation": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional number of characters to indent after a newline."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 27,
+                  "character": 19
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              }
+            },
+            "units": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 16,
+                  "character": 13
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "string"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.units"
+              }
+            }
+          }
+        },
+        "IStatusCallback": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "__call",
+              "kindString": "Call signature",
+              "parameters": [
+                {
+                  "name": "status",
+                  "flags": {}
+                }
+              ],
+              "type": "void"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/exporter.ts",
+              "line": 88,
+              "character": 36
+            }
+          ]
+        },
+        "IJscadCagOptions": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Jscad CAG export options."
+          },
+          "sources": [
+            {
+              "fileName": "core/openjscad.ts",
+              "line": 686,
+              "character": 37
+            }
+          ],
+          "extendedTypes": [
+            {
+              "type": "reference",
+              "name": "IExportOptions"
+            },
+            {
+              "type": "reference",
+              "name": "IPointMatchOptions"
+            }
+          ],
+          "extendedBy": [
+            {
+              "type": "reference",
+              "name": "IJscadCsgOptions"
+            }
+          ],
+          "Property": {
+            "accuracy": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional exemplar of number of decimal places."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 11,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.accuracy"
+              }
+            },
+            "byLayers": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Flag to separate chains by layers."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 691,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "boolean"
+              }
+            },
+            "maxArcFacet": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "The maximum length between points on an arc or circle."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 696,
+                  "character": 19
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              }
+            },
+            "pointMatchingDistance": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Max distance to consider two points as the same."
+              },
+              "sources": [
+                {
+                  "fileName": "core/maker.ts",
+                  "line": 494,
+                  "character": 29
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IPointMatchOptions.pointMatchingDistance"
+              }
+            },
+            "statusCallback": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional callback to get status during the export."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 701,
+                  "character": 22
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "IStatusCallback"
+              }
+            },
+            "units": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 16,
+                  "character": 13
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "string"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.units"
+              }
+            }
+          }
+        },
+        "IJscadCsgOptions": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Jscad CSG export options."
+          },
+          "sources": [
+            {
+              "fileName": "core/openjscad.ts",
+              "line": 723,
+              "character": 37
+            }
+          ],
+          "extendedTypes": [
+            {
+              "type": "reference",
+              "name": "IJscadCagOptions"
+            },
+            {
+              "type": "reference",
+              "name": "IJscadExtrudeOptions"
+            }
+          ],
+          "extendedBy": [
+            {
+              "type": "reference",
+              "name": "IJscadScriptOptions"
+            }
+          ],
+          "Property": {
+            "accuracy": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional exemplar of number of decimal places."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 11,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.accuracy"
+              }
+            },
+            "byLayers": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Flag to separate chains by layers."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 691,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "boolean"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadCagOptions.byLayers"
+              }
+            },
+            "extrude": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional depth of 3D extrusion."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 712,
+                  "character": 15
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadExtrudeOptions.extrude"
+              }
+            },
+            "layerOptions": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "SVG options per layer."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 728,
+                  "character": 20
+                }
+              ],
+              "type": {
+                "type": "reflection",
+                "declaration": {
+                  "name": "__type",
+                  "kindString": "Type literal",
+                  "flags": {},
+                  "indexSignature": [
+                    {
+                      "name": "__index",
+                      "kindString": "Index signature",
+                      "flags": {},
+                      "parameters": [
+                        {
+                          "name": "layerId",
+                          "kindString": "Parameter",
+                          "flags": {},
+                          "type": {
+                            "type": "instrinct",
+                            "name": "string"
+                          }
+                        }
+                      ],
+                      "type": {
+                        "type": "reference",
+                        "name": "IJscadExtrudeOptions"
+                      }
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "fileName": "core/openjscad.ts",
+                      "line": 728,
+                      "character": 22
+                    }
+                  ]
+                }
+              }
+            },
+            "maxArcFacet": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "The maximum length between points on an arc or circle."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 696,
+                  "character": 19
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadCagOptions.maxArcFacet"
+              }
+            },
+            "pointMatchingDistance": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Max distance to consider two points as the same."
+              },
+              "sources": [
+                {
+                  "fileName": "core/maker.ts",
+                  "line": 494,
+                  "character": 29
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IPointMatchOptions.pointMatchingDistance"
+              }
+            },
+            "statusCallback": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional callback to get status during the export."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 701,
+                  "character": 22
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "IStatusCallback"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadCagOptions.statusCallback"
+              }
+            },
+            "units": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 16,
+                  "character": 13
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "string"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.units"
+              }
+            },
+            "z": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional depth of 3D extrusion."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 717,
+                  "character": 9
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadExtrudeOptions.z"
+              }
+            }
+          }
+        },
+        "IJscadExtrudeOptions": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Jscad CAG extrusion options."
+          },
+          "sources": [
+            {
+              "fileName": "core/openjscad.ts",
+              "line": 707,
+              "character": 41
+            }
+          ],
+          "extendedBy": [
+            {
+              "type": "reference",
+              "name": "IJscadCsgOptions"
+            }
+          ],
+          "Property": {
+            "extrude": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional depth of 3D extrusion."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 712,
+                  "character": 15
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              }
+            },
+            "z": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional depth of 3D extrusion."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 717,
+                  "character": 9
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              }
+            }
+          }
+        },
+        "IJscadScriptOptions": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Jscad Script export options."
+          },
+          "sources": [
+            {
+              "fileName": "core/openjscad.ts",
+              "line": 734,
+              "character": 40
+            }
+          ],
+          "extendedTypes": [
+            {
+              "type": "reference",
+              "name": "IJscadCsgOptions"
+            }
+          ],
+          "Property": {
+            "accuracy": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional exemplar of number of decimal places."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 11,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.accuracy"
+              }
+            },
+            "byLayers": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Flag to separate chains by layers."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 691,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "boolean"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadCagOptions.byLayers"
+              }
+            },
+            "extrude": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional depth of 3D extrusion."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 712,
+                  "character": 15
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadExtrudeOptions.extrude"
+              }
+            },
+            "functionName": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional override of function name, default is \"main\"."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 739,
+                  "character": 20
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "string"
+              }
+            },
+            "indent": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional number of spaces to indent."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 744,
+                  "character": 14
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              }
+            },
+            "layerOptions": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "SVG options per layer."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 728,
+                  "character": 20
+                }
+              ],
+              "type": {
+                "type": "reflection",
+                "declaration": {
+                  "name": "__type",
+                  "kindString": "Type literal",
+                  "flags": {},
+                  "indexSignature": [
+                    {
+                      "name": "__index",
+                      "kindString": "Index signature",
+                      "flags": {},
+                      "parameters": [
+                        {
+                          "name": "layerId",
+                          "kindString": "Parameter",
+                          "flags": {},
+                          "type": {
+                            "type": "instrinct",
+                            "name": "string"
+                          }
+                        }
+                      ],
+                      "type": {
+                        "type": "reference",
+                        "name": "IJscadExtrudeOptions"
+                      }
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "fileName": "core/openjscad.ts",
+                      "line": 728,
+                      "character": 22
+                    }
+                  ]
+                }
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadCsgOptions.layerOptions"
+              }
+            },
+            "maxArcFacet": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "The maximum length between points on an arc or circle."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 696,
+                  "character": 19
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadCagOptions.maxArcFacet"
+              }
+            },
+            "pointMatchingDistance": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Max distance to consider two points as the same."
+              },
+              "sources": [
+                {
+                  "fileName": "core/maker.ts",
+                  "line": 494,
+                  "character": 29
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IPointMatchOptions.pointMatchingDistance"
+              }
+            },
+            "statusCallback": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional callback to get status during the export."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 701,
+                  "character": 22
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "IStatusCallback"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadCagOptions.statusCallback"
+              }
+            },
+            "units": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 16,
+                  "character": 13
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "string"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.units"
+              }
+            },
+            "z": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional depth of 3D extrusion."
+              },
+              "sources": [
+                {
+                  "fileName": "core/openjscad.ts",
+                  "line": 717,
+                  "character": 9
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IJscadExtrudeOptions.z"
+              }
+            }
+          }
+        },
         "IOpenJsCadOptions": {
           "flags": {
             "isExported": true
@@ -3409,7 +4343,7 @@
           "sources": [
             {
               "fileName": "core/openjscad.ts",
-              "line": 372,
+              "line": 653,
               "character": 38
             }
           ],
@@ -3459,7 +4393,7 @@
               "sources": [
                 {
                   "fileName": "core/openjscad.ts",
-                  "line": 377,
+                  "line": 658,
                   "character": 17
                 }
               ],
@@ -3479,7 +4413,7 @@
               "sources": [
                 {
                   "fileName": "core/openjscad.ts",
-                  "line": 382,
+                  "line": 663,
                   "character": 17
                 }
               ],
@@ -3499,7 +4433,7 @@
               "sources": [
                 {
                   "fileName": "core/openjscad.ts",
-                  "line": 387,
+                  "line": 668,
                   "character": 20
                 }
               ],
@@ -3519,7 +4453,7 @@
               "sources": [
                 {
                   "fileName": "core/openjscad.ts",
-                  "line": 392,
+                  "line": 673,
                   "character": 16
                 }
               ],
@@ -3582,7 +4516,7 @@
                 "isOptional": true
               },
               "comment": {
-                "shortText": "Optional unit system to embed in exported file."
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
               },
               "sources": [
                 {
@@ -3606,11 +4540,17 @@
           "flags": {
             "isExported": true
           },
+          "comment": {
+            "shortText": "Map of OpenJsCad export options."
+          },
           "indexSignature": [
             {
               "name": "__index",
               "kindString": "Index signature",
               "flags": {},
+              "comment": {
+                "shortText": "Map of OpenJsCad export options."
+              },
               "parameters": [
                 {
                   "name": "modelId",
@@ -3631,7 +4571,7 @@
           "sources": [
             {
               "fileName": "core/openjscad.ts",
-              "line": 395,
+              "line": 679,
               "character": 41
             }
           ]
@@ -3727,7 +4667,7 @@
                 "isOptional": true
               },
               "comment": {
-                "shortText": "Optional unit system to embed in exported file."
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
               },
               "sources": [
                 {
@@ -4283,7 +5223,7 @@
                 "isOptional": true
               },
               "comment": {
-                "shortText": "Optional unit system to embed in exported file."
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
               },
               "sources": [
                 {
@@ -4532,22 +5472,31 @@
             }
           ]
         },
-        "exportFromOptionsMap": {
-          "flags": {},
+        "toJson": {
+          "flags": {
+            "isExported": true
+          },
           "signatures": [
             {
-              "name": "exportFromOptionsMap",
+              "name": "toJson",
               "kindString": "Call signature",
+              "comment": {
+                "shortText": "Renders an item in JSON.",
+                "returns": "String of DXF content.\n"
+              },
               "parameters": [
                 {
-                  "name": "modelToExport",
+                  "name": "itemToExport",
                   "flags": {},
-                  "type": "IModel"
+                  "comment": "Item to render: may be a path, an array of paths, or a model object.",
+                  "type": "any"
                 },
                 {
-                  "name": "optionsMap",
+                  "name": "options",
                   "flags": {},
-                  "type": "IOpenJsCadOptionsMap"
+                  "comment": "Rendering options object.",
+                  "type": "IJsonExportOptions",
+                  "defaultValue": " {}"
                 }
               ],
               "type": "string"
@@ -4555,9 +5504,33 @@
           ],
           "sources": [
             {
+              "fileName": "core/exporter.ts",
+              "line": 39,
+              "character": 26
+            }
+          ]
+        },
+        "makeFakeChainFromLoop": {
+          "flags": {},
+          "signatures": [
+            {
+              "name": "makeFakeChainFromLoop",
+              "kindString": "Call signature",
+              "parameters": [
+                {
+                  "name": "modelContext",
+                  "flags": {},
+                  "type": "IModel"
+                }
+              ],
+              "type": "IChain"
+            }
+          ],
+          "sources": [
+            {
               "fileName": "core/openjscad.ts",
-              "line": 212,
-              "character": 33
+              "line": 138,
+              "character": 34
             }
           ]
         },
@@ -4571,8 +5544,8 @@
               "kindString": "Call signature",
               "comment": {
                 "shortText": "Converts a model to a @jscad/csg object - 2D to 2D.",
-                "text": "Example:\n```\n//First, use npm install @jscad/csg from the command line in your jscad project\n//Create a CAG instance from a model.\nvar { CAG } = require('@jscad/csg');\nvar model = new makerjs.models.Ellipse(70, 40);\nvar cag = makerjs.exporter.toJscadCAG(CAG, model, 1);\n```\n",
-                "returns": "jscad CAG object in 2D.\n"
+                "text": "Example:\n```\n//First, use npm install @jscad/csg from the command line in your jscad project\n//Create a CAG instance from a model.\nvar { CAG } = require('@jscad/csg');\nvar model = new makerjs.models.Ellipse(70, 40);\nvar cag = makerjs.exporter.toJscadCAG(CAG, model, {maxArcFacet: 1});\n```\n",
+                "returns": "jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.\n"
               },
               "parameters": [
                 {
@@ -4588,28 +5561,153 @@
                   "type": "IModel"
                 },
                 {
-                  "name": "maxArcFacet",
-                  "flags": {},
-                  "comment": "The maximum length between points on an arc or circle.",
-                  "type": "number"
-                },
-                {
-                  "name": "findChainsOptions",
+                  "name": "jsCadCagOptions",
                   "flags": {
                     "isOptional": true
                   },
-                  "comment": "Optional IFindChainsOptions options object.",
-                  "type": "IFindChainsOptions"
+                  "type": "IJscadCagOptions"
                 }
-              ],
-              "type": "CAG"
+              ]
             }
           ],
           "sources": [
             {
               "fileName": "core/openjscad.ts",
-              "line": 316,
+              "line": 368,
               "character": 30
+            }
+          ]
+        },
+        "toJscadCSG": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "toJscadCSG",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Converts a model to a @jscad/csg object - 2D to 3D.",
+                "text": "Example:\n```\n//First, use npm install @jscad/csg from the command line in your jscad project\n//Create a CSG instance from a model.\nvar { CAG } = require('@jscad/csg');\nvar model = new makerjs.models.Ellipse(70, 40);\nvar csg = makerjs.exporter.toJscadCSG(CAG, model, {maxArcFacet: 1, extrude: 10});\n```\n",
+                "returns": "jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.\n"
+              },
+              "parameters": [
+                {
+                  "name": "jscadCAG",
+                  "flags": {},
+                  "comment": "@jscad/csg CAG engine.",
+                  "type": "CAG"
+                },
+                {
+                  "name": "modelToExport",
+                  "flags": {},
+                  "comment": "Model object to export.",
+                  "type": "IModel"
+                },
+                {
+                  "name": "options",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional options object.",
+                  "type": "IJscadCsgOptions"
+                }
+              ],
+              "type": "CSG"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/openjscad.ts",
+              "line": 505,
+              "character": 30
+            }
+          ]
+        },
+        "toJscadSTL": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "toJscadSTL",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Exports a model in STL format - 2D to 3D.",
+                "returns": "String in STL ASCII format.\n"
+              },
+              "parameters": [
+                {
+                  "name": "CAG",
+                  "flags": {},
+                  "type": "CAG"
+                },
+                {
+                  "name": "stlSerializer",
+                  "flags": {},
+                  "comment": "@jscad/stl-serializer (require('@jscad/stl-serializer')).",
+                  "type": "StlSerializer"
+                },
+                {
+                  "name": "modelToExport",
+                  "flags": {},
+                  "comment": "Model object to export.",
+                  "type": "IModel"
+                },
+                {
+                  "name": "options",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional options object.",
+                  "type": "IJscadCsgOptions"
+                }
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/openjscad.ts",
+              "line": 643,
+              "character": 30
+            }
+          ]
+        },
+        "toJscadScript": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "toJscadScript",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Creates a string of JavaScript code for execution with a Jscad environment.",
+                "returns": "String of JavaScript containing a main() function for Jscad.\n"
+              },
+              "parameters": [
+                {
+                  "name": "modelToExport",
+                  "flags": {},
+                  "comment": "Model object to export.",
+                  "type": "IModel"
+                },
+                {
+                  "name": "options",
+                  "flags": {},
+                  "comment": "Export options object.",
+                  "type": "IJscadScriptOptions",
+                  "defaultValue": " {}"
+                }
+              ],
+              "type": "string"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/openjscad.ts",
+              "line": 590,
+              "character": 33
             }
           ]
         },
@@ -4618,7 +5716,7 @@
             "isExported": true
           },
           "comment": {
-            "shortText": "Creates a string of JavaScript code for execution with the OpenJsCad engine.",
+            "shortText": "DEPRECATED - use .toJscadScript() instead.\nCreates a string of JavaScript code for execution with the OpenJsCad engine.",
             "returns": "String of JavaScript containing a main() function for OpenJsCad.\n"
           },
           "signatures": [
@@ -4626,7 +5724,7 @@
               "name": "toOpenJsCad",
               "kindString": "Call signature",
               "comment": {
-                "shortText": "Creates a string of JavaScript code for execution with the OpenJsCad engine.",
+                "shortText": "DEPRECATED - use .toJscadScript() instead.\nCreates a string of JavaScript code for execution with the OpenJsCad engine.",
                 "returns": "String of JavaScript containing a main() function for OpenJsCad.\n"
               },
               "parameters": [
@@ -4649,7 +5747,7 @@
               "name": "toOpenJsCad",
               "kindString": "Call signature",
               "comment": {
-                "shortText": "Creates a string of JavaScript code for execution with the OpenJsCad engine.",
+                "shortText": "DEPRECATED - use .toJscadScript() instead.\nCreates a string of JavaScript code for execution with the OpenJsCad engine.",
                 "returns": "String of JavaScript containing a main() function for OpenJsCad.\n"
               },
               "parameters": [
@@ -4672,7 +5770,7 @@
               "name": "toOpenJsCad",
               "kindString": "Call signature",
               "comment": {
-                "shortText": "Creates a string of JavaScript code for execution with the OpenJsCad engine.",
+                "shortText": "DEPRECATED - use .toJscadScript() instead.\nCreates a string of JavaScript code for execution with the OpenJsCad engine.",
                 "returns": "String of JavaScript containing a main() function for OpenJsCad.\n"
               },
               "parameters": [
@@ -4695,22 +5793,22 @@
           "sources": [
             {
               "fileName": "core/openjscad.ts",
-              "line": 132,
+              "line": 162,
               "character": 31
             },
             {
               "fileName": "core/openjscad.ts",
-              "line": 133,
+              "line": 163,
               "character": 31
             },
             {
               "fileName": "core/openjscad.ts",
-              "line": 134,
+              "line": 164,
               "character": 31
             },
             {
               "fileName": "core/openjscad.ts",
-              "line": 145,
+              "line": 176,
               "character": 31
             }
           ]
@@ -4724,7 +5822,7 @@
               "name": "toSTL",
               "kindString": "Call signature",
               "comment": {
-                "shortText": "Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.",
+                "shortText": "DEPRECATED - use .toJscadSTL() instead.\nExecutes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.",
                 "returns": "String of STL format of 3D object.\n"
               },
               "parameters": [
@@ -4748,7 +5846,7 @@
           "sources": [
             {
               "fileName": "core/openjscad.ts",
-              "line": 250,
+              "line": 286,
               "character": 25
             }
           ]
@@ -5068,7 +6166,7 @@
           "sources": [
             {
               "fileName": "core/exporter.ts",
-              "line": 33,
+              "line": 68,
               "character": 21
             }
           ],
@@ -5084,7 +6182,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 38,
+                  "line": 73,
                   "character": 12
                 }
               ],
@@ -5101,7 +6199,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 34,
+                  "line": 69,
                   "character": 13
                 }
               ],
@@ -5118,7 +6216,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 39,
+                  "line": 74,
                   "character": 12
                 }
               ],
@@ -5135,7 +6233,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 40,
+                  "line": 75,
                   "character": 15
                 }
               ],
@@ -5152,7 +6250,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 42,
+                  "line": 77,
                   "character": 12
                 }
               ],
@@ -5169,7 +6267,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 46,
+                  "line": 81,
                   "character": 13
                 }
               ],
@@ -5186,7 +6284,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 37,
+                  "line": 72,
                   "character": 12
                 }
               ],
@@ -5203,7 +6301,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 43,
+                  "line": 78,
                   "character": 14
                 }
               ],
@@ -5220,7 +6318,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 48,
+                  "line": 83,
                   "character": 12
                 }
               ],
@@ -5237,7 +6335,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 45,
+                  "line": 80,
                   "character": 13
                 }
               ],
@@ -5254,7 +6352,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 44,
+                  "line": 79,
                   "character": 14
                 }
               ],
@@ -5271,7 +6369,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 49,
+                  "line": 84,
                   "character": 14
                 }
               ],
@@ -5288,7 +6386,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 35,
+                  "line": 70,
                   "character": 11
                 }
               ],
@@ -5305,7 +6403,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 50,
+                  "line": 85,
                   "character": 14
                 }
               ],
@@ -5322,7 +6420,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 47,
+                  "line": 82,
                   "character": 12
                 }
               ],
@@ -5339,7 +6437,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 41,
+                  "line": 76,
                   "character": 13
                 }
               ],
@@ -5356,7 +6454,7 @@
               "sources": [
                 {
                   "fileName": "core/exporter.ts",
-                  "line": 36,
+                  "line": 71,
                   "character": 14
                 }
               ],
@@ -8899,6 +9997,37 @@
               "fileName": "core/units.ts",
               "line": 58,
               "character": 35
+            }
+          ]
+        },
+        "isValidUnit": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "isValidUnit",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Check to see if unit type is a valid Maker.js unit.",
+                "returns": "Boolean true if unit type is valid.\n"
+              },
+              "parameters": [
+                {
+                  "name": "tryUnit",
+                  "flags": {},
+                  "comment": "unit type to check.",
+                  "type": "string"
+                }
+              ],
+              "type": "boolean"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/units.ts",
+              "line": 86,
+              "character": 31
             }
           ]
         }
@@ -15567,6 +16696,10 @@
         {
           "type": "reference",
           "name": "IFindChainsOptions"
+        },
+        {
+          "type": "reference",
+          "name": "IJscadCagOptions"
         }
       ],
       "Property": {

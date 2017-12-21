@@ -21,6 +21,7 @@ title: Api - units Module
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.units.html#addconversion" class="tsd-kind-icon">add<wbr>Conversion</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.units.html#conversionscale" class="tsd-kind-icon">conversion<wbr>Scale</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.units.html#init" class="tsd-kind-icon">init</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.units.html#isvalidunit" class="tsd-kind-icon">is<wbr>Valid<wbr>Unit</a></li>
 				</ul>
 			</section>
 		</div>
@@ -34,7 +35,7 @@ title: Api - units Module
 		<div class="tsd-signature tsd-kind-icon">base<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1257bff4/src/core/units.ts#L7">core/units.ts:7</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/units.ts#L7">core/units.ts:7</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -49,7 +50,7 @@ title: Api - units Module
 		<div class="tsd-signature tsd-kind-icon">table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1257bff4/src/core/units.ts#L24">core/units.ts:24</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/units.ts#L24">core/units.ts:24</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -84,7 +85,7 @@ title: Api - units Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1257bff4/src/core/units.ts#L47">core/units.ts:47</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/units.ts#L47">core/units.ts:47</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -115,7 +116,7 @@ title: Api - units Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1257bff4/src/core/units.ts#L30">core/units.ts:30</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/units.ts#L30">core/units.ts:30</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -149,7 +150,7 @@ title: Api - units Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1257bff4/src/core/units.ts#L58">core/units.ts:58</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/units.ts#L58">core/units.ts:58</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -187,7 +188,7 @@ title: Api - units Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1257bff4/src/core/units.ts#L13">core/units.ts:13</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/units.ts#L13">core/units.ts:13</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -196,6 +197,38 @@ title: Api - units Module
 					</div>
 				</div>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isvalidunit" class="tsd-anchor"></a>
+		<h3>is<wbr>Valid<wbr>Unit</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<wbr>Unit<span class="tsd-signature-symbol">(</span>tryUnit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/units.ts#L86">core/units.ts:86</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Check to see if unit type is a valid Maker.js unit.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>tryUnit: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>unit type to check.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>Boolean true if unit type is valid.</p>
 			</li>
 		</ul>
 	</section>

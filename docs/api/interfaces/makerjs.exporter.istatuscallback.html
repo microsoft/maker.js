@@ -1,39 +1,37 @@
 ---
 layout: posts
-title: Api - IPathDirectionalFunction Interface
+title: Api - IStatusCallback Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
-<section class="tsd-panel tsd-comment">
-	<div class="tsd-comment tsd-typography">
-	</div>
-</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IPathDirectionalFunction</span>
+			<span class="target">IStatusCallback</span>
 		</li>
 	</ul>
 </section>
 <section class="tsd-panel">
 	<h3 class="tsd-before-signature">Callable</h3>
-	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
-		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>pathValue<span class="tsd-signature-symbol">: </span><a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a>, pathDirectional<span class="tsd-signature-symbol">: </span><a href="makerjs.ipathdirectional.html" class="tsd-signature-type">IPathDirectional</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module">
+		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>status<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 	</ul>
 	<ul class="tsd-descriptions">
 		<li class="tsd-description">
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/1257bff4/src/core/openjscad.ts#L6">core/openjscad.ts:6</a></li>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/exporter.ts#L88">core/exporter.ts:88</a></li>
 				</ul>
 			</aside>
 			<h4 class="tsd-parameters-title">Parameters</h4>
 			<ul class="tsd-parameters">
 				<li>
-					<h5>pathValue: <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
-				</li>
-				<li>
-					<h5>pathDirectional: <a href="makerjs.ipathdirectional.html" class="tsd-signature-type">IPathDirectional</a></h5>
+					<h5>status: <span class="tsd-signature-type">object</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter">
+							<h5><span class="tsd-flag ts-flagOptional">Optional</span> progress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+						</li>
+					</ul>
 				</li>
 			</ul>
 			<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

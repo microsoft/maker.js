@@ -1,43 +1,34 @@
 ---
 layout: posts
-title: Api - IPathLine Interface
+title: Api - IJscadCagOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>A line path.</p>
+			<p>Jscad CAG export options.</p>
 		</div>
-		<p>Examples:</p>
-		<pre><code>var <span class="hljs-string">line:</span> IPathLine = { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] };   <span class="hljs-comment">//typescript</span>
-var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'line'</span>, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">end:</span> [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>] };   <span class="hljs-comment">//javascript</span>
-</code></pre>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a>
+			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
+		</li>
+		<li>
+			<a href="makerjs.ipointmatchoptions.html" class="tsd-signature-type">IPointMatchOptions</a>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">IPathLine</span>
+					<span class="target">IJscadCagOptions</span>
 					<ul class="tsd-hierarchy">
 						<li>
-							<a href="makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a>
+							<a href="makerjs.exporter.ijscadcsgoptions.html" class="tsd-signature-type">IJscadCsgOptions</a>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</li>
-	</ul>
-</section>
-<section class="tsd-panel">
-	<h3>Implemented by</h3>
-	<ul class="tsd-hierarchy">
-		<li><a href="../classes/makerjs.paths.chord.html" class="tsd-signature-type">Chord</a></li>
-		<li><a href="../classes/makerjs.paths.line.html" class="tsd-signature-type">Line</a></li>
-		<li><a href="../classes/makerjs.paths.parallel.html" class="tsd-signature-type">Parallel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -47,10 +38,12 @@ var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'l
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipathline.html#end" class="tsd-kind-icon">end</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathline.html#layer" class="tsd-kind-icon">layer</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathline.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.ipathline.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcagoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ijscadcagoptions.html#bylayers" class="tsd-kind-icon">by<wbr>Layers</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ijscadcagoptions.html#maxarcfacet" class="tsd-kind-icon">max<wbr>Arc<wbr>Facet</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcagoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ijscadcagoptions.html#statuscallback" class="tsd-kind-icon">status<wbr>Callback</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcagoptions.html#units" class="tsd-kind-icon">units</a></li>
 				</ul>
 			</section>
 		</div>
@@ -58,66 +51,96 @@ var line = { <span class="hljs-string">type:</span> <span class="hljs-string">'l
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="accuracy" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> accuracy</h3>
+		<div class="tsd-signature tsd-kind-icon">accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#accuracy">accuracy</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/exporter.ts#L11">core/exporter.ts:11</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional exemplar of number of decimal places.</p>
+			</div>
+		</div>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="end" class="tsd-anchor"></a>
-		<h3>end</h3>
-		<div class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<a name="bylayers" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> by<wbr>Layers</h3>
+		<div class="tsd-signature tsd-kind-icon">by<wbr>Layers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/schema.ts#L60">core/schema.ts:60</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L691">core/openjscad.ts:691</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The end point defining the line. The start point is the origin.</p>
+				<p>Flag to separate chains by layers.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="maxarcfacet" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> max<wbr>Arc<wbr>Facet</h3>
+		<div class="tsd-signature tsd-kind-icon">max<wbr>Arc<wbr>Facet<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L696">core/openjscad.ts:696</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The maximum length between points on an arc or circle.</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="layer" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> layer</h3>
-		<div class="tsd-signature tsd-kind-icon">layer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<a name="pointmatchingdistance" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
+		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#layer">layer</a></p>
+			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/schema.ts#L43">core/schema.ts:43</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/maker.ts#L494">core/maker.ts:494</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional layer of this path.</p>
+				<p>Max distance to consider two points as the same.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="statuscallback" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> status<wbr>Callback</h3>
+		<div class="tsd-signature tsd-kind-icon">status<wbr>Callback<span class="tsd-signature-symbol">:</span> <a href="makerjs.exporter.istatuscallback.html" class="tsd-signature-type">IStatusCallback</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L701">core/openjscad.ts:701</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional callback to get status during the export.</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="origin" class="tsd-anchor"></a>
-		<h3>origin</h3>
-		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<a name="units" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
+		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#origin">origin</a></p>
+			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#units">units</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/schema.ts#L38">core/schema.ts:38</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/exporter.ts#L16">core/exporter.ts:16</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The main point of reference for this path.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="type" class="tsd-anchor"></a>
-		<h3>type</h3>
-		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ipath.html">IPath</a>.<a href="makerjs.ipath.html#type">type</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/schema.ts#L33">core/schema.ts:33</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>The type of the path, e.g. &quot;line&quot;, &quot;circle&quot;, or &quot;arc&quot;. These strings are enumerated in pathType.</p>
+				<p>Optional unit system to embed in exported file, if the export format allows alternate unit systems.</p>
 			</div>
 		</div>
 	</section>

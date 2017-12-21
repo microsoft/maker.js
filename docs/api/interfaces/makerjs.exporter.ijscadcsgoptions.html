@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IOpenJsCadOptions Interface
+title: Api - IJscadCsgOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>OpenJsCad export options.</p>
+			<p>Jscad CSG export options.</p>
 		</div>
 	</div>
 </section>
@@ -14,13 +14,18 @@ title: Api - IOpenJsCadOptions Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<a href="makerjs.ifindloopsoptions.html" class="tsd-signature-type">IFindLoopsOptions</a>
+			<a href="makerjs.exporter.ijscadcagoptions.html" class="tsd-signature-type">IJscadCagOptions</a>
 		</li>
 		<li>
-			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
+			<a href="makerjs.exporter.ijscadextrudeoptions.html" class="tsd-signature-type">IJscadExtrudeOptions</a>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">IOpenJsCadOptions</span>
+					<span class="target">IJscadCsgOptions</span>
+					<ul class="tsd-hierarchy">
+						<li>
+							<a href="makerjs.exporter.ijscadscriptoptions.html" class="tsd-signature-type">IJscadScriptOptions</a>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</li>
@@ -33,14 +38,15 @@ title: Api - IOpenJsCadOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#extrusion" class="tsd-kind-icon">extrusion</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#facetsize" class="tsd-kind-icon">facet<wbr>Size</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#functionname" class="tsd-kind-icon">function<wbr>Name</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.iopenjscadoptions.html#modelmap" class="tsd-kind-icon">model<wbr>Map</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#removefromoriginal" class="tsd-kind-icon">remove<wbr>From<wbr>Original</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.iopenjscadoptions.html#units" class="tsd-kind-icon">units</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#bylayers" class="tsd-kind-icon">by<wbr>Layers</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#extrude" class="tsd-kind-icon">extrude</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ijscadcsgoptions.html#layeroptions" class="tsd-kind-icon">layer<wbr>Options</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#maxarcfacet" class="tsd-kind-icon">max<wbr>Arc<wbr>Facet</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#statuscallback" class="tsd-kind-icon">status<wbr>Callback</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#units" class="tsd-kind-icon">units</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcsgoptions.html#z" class="tsd-kind-icon">z</a></li>
 				</ul>
 			</section>
 		</div>
@@ -64,13 +70,30 @@ title: Api - IOpenJsCadOptions Interface
 			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="extrusion" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> extrusion</h3>
-		<div class="tsd-signature tsd-kind-icon">extrusion<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="bylayers" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> by<wbr>Layers</h3>
+		<div class="tsd-signature tsd-kind-icon">by<wbr>Layers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.ijscadcagoptions.html">IJscadCagOptions</a>.<a href="makerjs.exporter.ijscadcagoptions.html#bylayers">byLayers</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L658">core/openjscad.ts:658</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L691">core/openjscad.ts:691</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Flag to separate chains by layers.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="extrude" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> extrude</h3>
+		<div class="tsd-signature tsd-kind-icon">extrude<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.ijscadextrudeoptions.html">IJscadExtrudeOptions</a>.<a href="makerjs.exporter.ijscadextrudeoptions.html#extrude">extrude</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L712">core/openjscad.ts:712</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -80,47 +103,41 @@ title: Api - IOpenJsCadOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="facetsize" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> facet<wbr>Size</h3>
-		<div class="tsd-signature tsd-kind-icon">facet<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<a name="layeroptions" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> layer<wbr>Options</h3>
+		<div class="tsd-signature tsd-kind-icon">layer<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L663">core/openjscad.ts:663</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L728">core/openjscad.ts:728</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional size of curve facets.</p>
+				<p>SVG options per layer.</p>
 			</div>
 		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="functionname" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> function<wbr>Name</h3>
-		<div class="tsd-signature tsd-kind-icon">function<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L668">core/openjscad.ts:668</a></li>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>layerId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="makerjs.exporter.ijscadextrudeoptions.html" class="tsd-signature-type">IJscadExtrudeOptions</a></h5>
+				</li>
 			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Optional override of function name, default is &quot;main&quot;.</p>
-			</div>
 		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="modelmap" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> model<wbr>Map</h3>
-		<div class="tsd-signature tsd-kind-icon">model<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="makerjs.exporter.iopenjscadoptionsmap.html" class="tsd-signature-type">IOpenJsCadOptionsMap</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="maxarcfacet" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> max<wbr>Arc<wbr>Facet</h3>
+		<div class="tsd-signature tsd-kind-icon">max<wbr>Arc<wbr>Facet<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.ijscadcagoptions.html">IJscadCagOptions</a>.<a href="makerjs.exporter.ijscadcagoptions.html#maxarcfacet">maxArcFacet</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L673">core/openjscad.ts:673</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L696">core/openjscad.ts:696</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional options applied to specific first-child models by model id.</p>
+				<p>The maximum length between points on an arc or circle.</p>
 			</div>
 		</div>
 	</section>
@@ -141,18 +158,18 @@ title: Api - IOpenJsCadOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="removefromoriginal" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> remove<wbr>From<wbr>Original</h3>
-		<div class="tsd-signature tsd-kind-icon">remove<wbr>From<wbr>Original<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<a name="statuscallback" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> status<wbr>Callback</h3>
+		<div class="tsd-signature tsd-kind-icon">status<wbr>Callback<span class="tsd-signature-symbol">:</span> <a href="makerjs.exporter.istatuscallback.html" class="tsd-signature-type">IStatusCallback</a></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.ifindloopsoptions.html">IFindLoopsOptions</a>.<a href="makerjs.ifindloopsoptions.html#removefromoriginal">removeFromOriginal</a></p>
+			<p>Inherited from <a href="makerjs.exporter.ijscadcagoptions.html">IJscadCagOptions</a>.<a href="makerjs.exporter.ijscadcagoptions.html#statuscallback">statusCallback</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/maker.ts#L537">core/maker.ts:537</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L701">core/openjscad.ts:701</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Flag to remove looped paths from the original model.</p>
+				<p>Optional callback to get status during the export.</p>
 			</div>
 		</div>
 	</section>
@@ -169,6 +186,22 @@ title: Api - IOpenJsCadOptions Interface
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
 				<p>Optional unit system to embed in exported file, if the export format allows alternate unit systems.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="z" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> z</h3>
+		<div class="tsd-signature tsd-kind-icon">z<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.ijscadextrudeoptions.html">IJscadExtrudeOptions</a>.<a href="makerjs.exporter.ijscadextrudeoptions.html#z">z</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/90536468/src/core/openjscad.ts#L717">core/openjscad.ts:717</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional depth of 3D extrusion.</p>
 			</div>
 		</div>
 	</section>
