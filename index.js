@@ -1926,6 +1926,9 @@ var MakerJs;
             if (modelToMirror.type) {
                 newModel.type = modelToMirror.type;
             }
+            if ('layer' in modelToMirror) {
+                newModel.layer = modelToMirror.layer;
+            }
             if (modelToMirror.units) {
                 newModel.units = modelToMirror.units;
             }
@@ -9290,5 +9293,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.77";
+MakerJs.version = "0.9.78";
 ﻿var Bezier = require('bezier-js');

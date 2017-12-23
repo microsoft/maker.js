@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.77
+// Type definitions for Maker.js 0.9.78
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped

@@ -215,6 +215,10 @@ namespace MakerJs.model {
             newModel.type = modelToMirror.type;
         }
 
+        if ('layer' in modelToMirror) {
+            newModel.layer = modelToMirror.layer;
+        }
+
         if (modelToMirror.units) {
             newModel.units = modelToMirror.units;
         }
