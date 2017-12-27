@@ -5,108 +5,108 @@ Your compass and straightedge, in JavaScript.
 Create line drawings using familiar constructs from geometry and drafting. Initially designated for CNC and laser cutters, Maker.js can also help you programmatically draw shapes for any purpose. It runs in both Node.js and web browsers.
 
 2D Export formats: 
-[DXF](http://maker.js.org/docs/api/modules/makerjs.exporter.html#todxf), 
-[SVG](http://maker.js.org/docs/api/modules/makerjs.exporter.html#tosvg),
-[PDF](http://maker.js.org/docs/api/modules/makerjs.exporter.html#topdf) (Requires [PDFKit](https://pdfkit.org/)),
-[Jscad CAG object](http://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcag) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg))
+[DXF](https://maker.js.org/docs/api/modules/makerjs.exporter.html#todxf), 
+[SVG](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tosvg),
+[PDF](https://maker.js.org/docs/api/modules/makerjs.exporter.html#topdf) (Requires [PDFKit](https://pdfkit.org/)),
+[Jscad CAG object](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcag) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg))
 
 3D Export formats:
-[Jscad Script](http://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadscript),
-[Jscad CSG object](http://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcsg) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg)),
-[STL](http://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadstl) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg) & [@jscad/stl-serializer](https://www.npmjs.com/package/@jscad/stl-serializer))
+[Jscad Script](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadscript),
+[Jscad CSG object](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcsg) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg)),
+[STL](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadstl) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg) & [@jscad/stl-serializer](https://www.npmjs.com/package/@jscad/stl-serializer))
 
-[Demos](http://maker.js.org/demos/) - [Documentation](http://maker.js.org/docs/)
+[Demos](https://maker.js.org/demos/) - [Documentation](http://maker.js.org/docs/)
 
-![Sample animation](http://maker.js.org/images/anim-wheel.gif)
+![Sample animation](https://maker.js.org/images/anim-wheel.gif)
 
 ## Core concepts
 
-* [paths](http://maker.js.org/docs/basic-drawing/#Paths) - The primitive elements of a drawing are lines, arcs, and circles.
-* [models](http://maker.js.org/docs/basic-drawing/#Models) - Groups of paths to compose a shape.
-* [layers](http://maker.js.org/docs/advanced-drawing/#Layers) - Organization of models, such as by color or tool type.
-* [chains](http://maker.js.org/docs/working-with-chains/#content) - A series of lines and arcs that connect end-to-end continuously.
+* [paths](https://maker.js.org/docs/basic-drawing/#Paths) - The primitive elements of a drawing are lines, arcs, and circles.
+* [models](https://maker.js.org/docs/basic-drawing/#Models) - Groups of paths to compose a shape.
+* [layers](https://maker.js.org/docs/advanced-drawing/#Layers) - Organization of models, such as by color or tool type.
+* [chains](https://maker.js.org/docs/working-with-chains/#content) - A series of lines and arcs that connect end-to-end continuously.
 
-Learn more in [the tutorial](http://maker.js.org/docs/basic-drawing/) or [API documentation](http://maker.js.org/docs/api/).
+Learn more in [the tutorial](https://maker.js.org/docs/basic-drawing/) or [API documentation](https://maker.js.org/docs/api/).
 
 ## Features
 
-* Drawings are a [simple JavaScript object](http://maker.js.org/docs/basic-drawing/#It%27s%20Just%20JSON) which can be serialized / deserialized conventionally with JSON. This also makes a drawing easy to [clone](http://maker.js.org/docs/intermediate-drawing/#Cloning).
+* Drawings are a [simple JavaScript object](https://maker.js.org/docs/basic-drawing/#It%27s%20Just%20JSON) which can be serialized / deserialized conventionally with JSON. This also makes a drawing easy to [clone](https://maker.js.org/docs/intermediate-drawing/#Cloning).
 
-* Other people's Models can be required the Node.js way, [modified](http://maker.js.org/docs/intermediate-drawing/#Modifying%20models), and re-exported.
+* Other people's Models can be required the Node.js way, [modified](https://maker.js.org/docs/intermediate-drawing/#Modifying%20models), and re-exported.
 
-* Models can be [scaled](http://maker.js.org/docs/intermediate-drawing/#Scaling), [measured](http://maker.js.org/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](http://maker.js.org/docs/basic-drawing/#Units).
+* Models can be [scaled](https://maker.js.org/docs/intermediate-drawing/#Scaling), [measured](https://maker.js.org/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](https://maker.js.org/docs/basic-drawing/#Units).
 
-* Paths can be [distorted](http://maker.js.org/docs/api/modules/makerjs.path.html#distort).
+* Paths can be [distorted](https://maker.js.org/docs/api/modules/makerjs.path.html#distort).
 
-* Models can be [rotated](http://maker.js.org/docs/intermediate-drawing/#Rotating) or [mirrored](http://maker.js.org/docs/intermediate-drawing/#Mirroring).
+* Models can be [rotated](https://maker.js.org/docs/intermediate-drawing/#Rotating) or [mirrored](https://maker.js.org/docs/intermediate-drawing/#Mirroring).
 
-* Find [intersection points or intersection angles](http://maker.js.org/docs/intermediate-drawing/#Intersection) of paths.
+* Find [intersection points or intersection angles](https://maker.js.org/docs/intermediate-drawing/#Intersection) of paths.
 
-* [Traverse a model tree](http://maker.js.org/docs/model-trees/#content) to reason over its children.
+* [Traverse a model tree](https://maker.js.org/docs/model-trees/#content) to reason over its children.
 
-* Detect [chains](http://maker.js.org/docs/api/modules/makerjs.model.html#findchains) formed by paths connecting end to end.
+* Detect [chains](https://maker.js.org/docs/api/modules/makerjs.model.html#findchains) formed by paths connecting end to end.
 
-* Get the [points along a path](http://maker.js.org/docs/api/modules/makerjs.path.html#topoints) or along a [chain of paths](http://maker.js.org/docs/api/modules/makerjs.chain.html#topoints).
+* Get the [points along a path](https://maker.js.org/docs/api/modules/makerjs.path.html#topoints) or along a [chain of paths](https://maker.js.org/docs/api/modules/makerjs.chain.html#topoints).
 
-* Easily add a curvature at the joint between any 2 paths, using a [traditional or a dogbone fillet](http://maker.js.org/docs/intermediate-drawing/#Fillets).
+* Easily add a curvature at the joint between any 2 paths, using a [traditional or a dogbone fillet](https://maker.js.org/docs/intermediate-drawing/#Fillets).
 
-* [Combine models](http://maker.js.org/docs/advanced-drawing/#Combining%20with%20Boolean%20operations) with boolean operations to get unions, intersections, or punches.
+* [Combine models](https://maker.js.org/docs/advanced-drawing/#Combining%20with%20Boolean%20operations) with boolean operations to get unions, intersections, or punches.
 
-* [Expand paths](http://maker.js.org/docs/advanced-drawing/#Expanding%20paths) to simulate a stroke thickness, with the option to bevel joints.
+* [Expand paths](https://maker.js.org/docs/advanced-drawing/#Expanding%20paths) to simulate a stroke thickness, with the option to bevel joints.
 
-* [Outline model](http://maker.js.org/docs/advanced-drawing/#Outlining%20a%20model) to create a surrounding outline, with the option to bevel joints.
+* [Outline model](https://maker.js.org/docs/advanced-drawing/#Outlining%20a%20model) to create a surrounding outline, with the option to bevel joints.
 
-* Layout clones into [rows](http://maker.js.org/docs/api/modules/makerjs.layout.html#clonetorow), [columns](http://maker.js.org/docs/api/modules/makerjs.layout.html#clonetocolumn), [grids](http://maker.js.org/docs/api/modules/makerjs.layout.html#clonetogrid), [bricks](http://maker.js.org/docs/api/modules/makerjs.layout.html#clonetobrick), or [honeycombs](http://maker.js.org/docs/api/modules/makerjs.layout.html#clonetohoneycomb)
+* Layout clones into [rows](http://maker.js.org/docs/api/modules/makerjs.layout.html#clonetorow), [columns](https://maker.js.org/docs/api/modules/makerjs.layout.html#clonetocolumn), [grids](https://maker.js.org/docs/api/modules/makerjs.layout.html#clonetogrid), [bricks](https://maker.js.org/docs/api/modules/makerjs.layout.html#clonetobrick), or [honeycombs](https://maker.js.org/docs/api/modules/makerjs.layout.html#clonetohoneycomb)
 
 #### Built-in models
 
-* [Belt](http://maker.js.org/playground/?script=Belt)
-* [Bezier Curve](http://maker.js.org/playground/?script=BezierCurve)
-* [Bolt Circle](http://maker.js.org/playground/?script=BoltCircle)
-* [Bolt Rectangle](http://maker.js.org/playground/?script=BoltRectangle)
-* [Connect the dots](http://maker.js.org/playground/?script=ConnectTheDots)
-* [Dogbone](http://maker.js.org/playground/?script=Dogbone)
-* [Dome](http://maker.js.org/playground/?script=Dome)
-* [Ellipse](http://maker.js.org/playground/?script=Ellipse)
-* [Elliptic Arc](http://maker.js.org/playground/?script=EllipticArc)
-* [Holes](http://maker.js.org/playground/?script=Holes)
-* [Oval](http://maker.js.org/playground/?script=Oval)
-* [OvalArc](http://maker.js.org/playground/?script=OvalArc)
-* [Polygon](http://maker.js.org/playground/?script=Polygon)
-* [Rectangle](http://maker.js.org/playground/?script=Rectangle)
-* [Ring](http://maker.js.org/playground/?script=Ring)
-* [RoundRectangle](http://maker.js.org/playground/?script=RoundRectangle)
-* [S curve](http://maker.js.org/playground/?script=SCurve)
-* [Slot](http://maker.js.org/playground/?script=Slot)
-* [Square](http://maker.js.org/playground/?script=Square)
-* [Star](http://maker.js.org/playground/?script=Star)
-* [Text](http://maker.js.org/playground/?script=Text)
+* [Belt](https://maker.js.org/playground/?script=Belt)
+* [Bezier Curve](https://maker.js.org/playground/?script=BezierCurve)
+* [Bolt Circle](https://maker.js.org/playground/?script=BoltCircle)
+* [Bolt Rectangle](https://maker.js.org/playground/?script=BoltRectangle)
+* [Connect the dots](https://maker.js.org/playground/?script=ConnectTheDots)
+* [Dogbone](https://maker.js.org/playground/?script=Dogbone)
+* [Dome](https://maker.js.org/playground/?script=Dome)
+* [Ellipse](https://maker.js.org/playground/?script=Ellipse)
+* [Elliptic Arc](https://maker.js.org/playground/?script=EllipticArc)
+* [Holes](https://maker.js.org/playground/?script=Holes)
+* [Oval](https://maker.js.org/playground/?script=Oval)
+* [OvalArc](https://maker.js.org/playground/?script=OvalArc)
+* [Polygon](https://maker.js.org/playground/?script=Polygon)
+* [Rectangle](https://maker.js.org/playground/?script=Rectangle)
+* [Ring](https://maker.js.org/playground/?script=Ring)
+* [RoundRectangle](https://maker.js.org/playground/?script=RoundRectangle)
+* [S curve](https://maker.js.org/playground/?script=SCurve)
+* [Slot](https://maker.js.org/playground/?script=Slot)
+* [Square](https://maker.js.org/playground/?script=Square)
+* [Star](https://maker.js.org/playground/?script=Star)
+* [Text](https://maker.js.org/playground/?script=Text)
 
 #### Import formats
 
-* [Fonts](http://maker.js.org/playground/?script=Text) (Requires [opentype.js](http://opentype.js.org/))
-* [SVG Path Data](http://maker.js.org/docs/importing/#SVG+path+data)
-* [SVG Points](http://maker.js.org/docs/importing/#SVG+points)
+* [Fonts](https://maker.js.org/playground/?script=Text) (Requires [opentype.js](https://opentype.js.org/))
+* [SVG Path Data](https://maker.js.org/docs/importing/#SVG+path+data)
+* [SVG Points](https://maker.js.org/docs/importing/#SVG+points)
 
 ## Getting Started
 
 ### Try it now
 
-Visit the [Maker.js Playground](http://maker.js.org/playground/) a sample app to edit and run JavaScript from your browser.
+Visit the [Maker.js Playground](https://maker.js.org/playground/) a sample app to edit and run JavaScript from your browser.
 
-Each of the [demos](http://maker.js.org/demos/#content) will also open in the playground so that you can explore and modify their code.
+Each of the [demos](https://maker.js.org/demos/#content) will also open in the playground so that you can explore and modify their code.
 
 ### To use in a web browser
 
 Download the browser-based version of Maker.js, then upload it to your website:
-[http://maker.js.org/target/js/browser.maker.js](http://maker.js.org/target/js/browser.maker.js)
+[https://maker.js.org/target/js/browser.maker.js](https://maker.js.org/target/js/browser.maker.js)
 
 Add a script tag in your HTML:
 ```html
-<script src="http://maker.js.org/target/js/browser.maker.js" type="text/javascript"></script>
+<script src="https://maker.js.org/target/js/browser.maker.js" type="text/javascript"></script>
 ```
 
-*Note: You may also need [additional libraries](http://maker.js.org/docs/getting-started/#For+the+browser)*
+*Note: You may also need [additional libraries](https://maker.js.org/docs/getting-started/#For+the+browser)*
 
 In your JavaScript, use the require function to get a reference:
  
@@ -129,7 +129,7 @@ To work with fonts, you will need both Bezier.js(above) and a copy of [Opentype.
 <script src="https://cdn.jsdelivr.net/npm/opentype.js@0/dist/opentype.js"></script>
 ```
 
-In your JavaScript, use the require function to get a reference:
+In your JavaScript, use the `require` function to get a reference:
 ```
 var makerjs = require('makerjs');
 ```
@@ -141,7 +141,7 @@ To depend on Maker.js, run this from the command line:
 npm install makerjs --save
 ```
 
-In your JavaScript, use the require function to get a reference:
+In your JavaScript, use the `require` function to get a reference:
  
 ```javascript
 var makerjs = require('makerjs');
