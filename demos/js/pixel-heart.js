@@ -1,24 +1,24 @@
 var makerjs = require('makerjs');
 
 /**
-	 _______ _________          _______  _       
-	(  ____ )\__   __/|\     /|(  ____ \( \      
-	| (    )|   ) (   ( \   / )| (    \/| (      
-	| (____)|   | |    \ (_) / | (__    | |      
-	|  _____)   | |     ) _ (  |  __)   | |      
-	| (         | |    / ( ) \ | (      | |      
-	| )      ___) (___( /   \ )| (____/\| (____/\
-	|/       \_______/|/     \|(_______/(_______/
-	                                             
-	          _______  _______  _______ _________
-	|\     /|(  ____ \(  ___  )(  ____ )\__   __/
-	| )   ( || (    \/| (   ) || (    )|   ) (   
-	| (___) || (__    | (___) || (____)|   | |   
-	|  ___  ||  __)   |  ___  ||     __)   | |   
-	| (   ) || (      | (   ) || (\ (      | |   
-	| )   ( || (____/\| )   ( || ) \ \__   | |   
-	|/     \|(_______/|/     \||/   \__/   )_(   
-                                           
+     _______ _________          _______  _       
+    (  ____ )\__   __/|\     /|(  ____ \( \      
+    | (    )|   ) (   ( \   / )| (    \/| (      
+    | (____)|   | |    \ (_) / | (__    | |      
+    |  _____)   | |     ) _ (  |  __)   | |      
+    | (         | |    / ( ) \ | (      | |      
+    | )      ___) (___( /   \ )| (____/\| (____/\
+    |/       \_______/|/     \|(_______/(_______/
+
+              _______  _______  _______ _________
+    |\     /|(  ____ \(  ___  )(  ____ )\__   __/
+    | )   ( || (    \/| (   ) || (    )|   ) (   
+    | (___) || (__    | (___) || (____)|   | |   
+    |  ___  ||  __)   |  ___  ||     __)   | |   
+    | (   ) || (      | (   ) || (\ (      | |   
+    | )   ( || (____/\| )   ( || ) \ \__   | |   
+    |/     \|(_______/|/     \||/   \__/   )_(   
+                                            
 */
 
 // "path" is an array of movements needed to make the heart. It alternates horizontal and vertical
@@ -36,30 +36,30 @@ var STARTING_POINT = [0, 9];	// starting point so the heart is located properly 
  */
 function PixelWalker(firstPoint, pixel_path) {
 
-	// go clockwise starting first point
-	var points = [];
-	points.push(firstPoint);
+    // go clockwise starting first point
+    var points = [];
+    points.push(firstPoint);
 
-	var moveHorizontal = true;	// alternate horizontal and vertical movements to form pixel heart
+    var moveHorizontal = true;	// alternate horizontal and vertical movements to form pixel heart
 
-	pixel_path.forEach(function (p) {
+    pixel_path.forEach(function (p) {
 
-		var previous_point = points[points.length - 1];
-		var point_to_add;
+        var previous_point = points[points.length - 1];
+        var point_to_add;
 
-		if (moveHorizontal) {
-			point_to_add = [p, 0];
-		} else {
-			point_to_add = [0, p];
-		}
-		var e = makerjs.point.add(previous_point, point_to_add);
-		points.push(e);
+        if (moveHorizontal) {
+            point_to_add = [p, 0];
+        } else {
+            point_to_add = [0, p];
+        }
+        var e = makerjs.point.add(previous_point, point_to_add);
+        points.push(e);
 
-		// flip direction each time
-		moveHorizontal = !moveHorizontal;
-	});
+        // flip direction each time
+        moveHorizontal = !moveHorizontal;
+    });
 
-	return points;
+    return points;
 }
 
 /** 
@@ -67,13 +67,13 @@ function PixelWalker(firstPoint, pixel_path) {
  */
 function Heart(desired_width) {
 
-	var points = PixelWalker(STARTING_POINT, path);
-	var pathModel = new makerjs.models.ConnectTheDots(true, points);
-	if (typeof desired_width != 'undefined') {
-		var scale = desired_width / HEART_WIDTH;
-		makerjs.model.scale(pathModel, scale);
-	}
-	return pathModel;
+    var points = PixelWalker(STARTING_POINT, path);
+    var pathModel = new makerjs.models.ConnectTheDots(true, points);
+    if (typeof desired_width != 'undefined') {
+        var scale = desired_width / HEART_WIDTH;
+        makerjs.model.scale(pathModel, scale);
+    }
+    return pathModel;
 }
 
 /**
@@ -81,7 +81,7 @@ function Heart(desired_width) {
  * See http://maker.js.org/playground
  */
 Heart.metaParameters = [
-	{ title: "Width", type: "range", min: 1, max: 130, value: 13 }
+    { title: "Width", type: "range", min: 1, max: 130, value: 13 }
 ];
 
 module.exports = Heart;
