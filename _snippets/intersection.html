@@ -51,14 +51,14 @@ var model = {
         circle1: new makerjs.paths.Circle([0, 10], 20),
         circle2: new makerjs.paths.Circle([20, 0], 20)
     }
-}
+};
 
 var int = makerjs.path.intersection(model.paths.circle1, model.paths.circle2);
 
 if (int) {
     int.intersectionPoints.forEach(
         function(p, i) {
-            var id = JSON.stringify(makerjs.point.rounded(p, .01)) + ' intersects circle1 at ' + makerjs.round(int.path1Angles[i], .01) + ' circle2 at ' + makerjs.round(int.path2Angles[i], .01);
+            var id = JSON.stringify(makerjs.point.rounded(p, 0.01)) + ' intersects circle1 at ' + makerjs.round(int.path1Angles[i], .01) + ' circle2 at ' + makerjs.round(int.path2Angles[i], .01);
             model.paths[id] = new makerjs.paths.Circle(p, 1);
         }
     );
@@ -83,14 +83,14 @@ var model = {
         line1: new makerjs.paths.Line([0, 0], [20, 10]),
         arc1: new makerjs.paths.Arc([12, 0], 10, 45,215)
     }
-}
+};
 
 var int = makerjs.path.intersection(model.paths.line1, model.paths.arc1);
 
 if (int) {
     int.intersectionPoints.forEach(
         function(p, i) {
-            var id = JSON.stringify(makerjs.point.rounded(p, .01)) + ' arc1 at ' + makerjs.round(int.path2Angles[i], .01);
+            var id = JSON.stringify(makerjs.point.rounded(p, 0.01)) + ' arc1 at ' + makerjs.round(int.path2Angles[i], .01);
             model.paths[id] = new makerjs.paths.Circle(p, 1);
         }
     );
