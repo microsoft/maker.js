@@ -14,7 +14,7 @@ var model = {
   paths: {
     arc: new makerjs.paths.Arc([0, 0], 50, 0, 180)
   }
-}
+};
 
 var arc2 = makerjs.path.breakAtPoint(model.paths.arc, [0, 50]);
 makerjs.model.moveRelative(arc2, [-10, 0]);
