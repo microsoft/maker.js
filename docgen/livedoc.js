@@ -39,7 +39,7 @@ var LiveDoc;
                 svg.style.display = 'none';
             }
             iframe.style.display = '';
-            return code.innerText;
+            return codeText;
         };
     }
     LiveDoc.tryIt = tryIt;

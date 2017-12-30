@@ -51,7 +51,7 @@ namespace LiveDoc {
 
             iframe.style.display = '';
 
-            return code.innerText;
+            return codeText;
         };
 
     }
