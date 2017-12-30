@@ -25,7 +25,7 @@ var model = {
     line1: new makerjs.paths.Line([0, 20], [30, 10]),
     line2: new makerjs.paths.Line([10, 0], [30, 10])
   }
-}
+};
 
 //create a fillet
 var arc = makerjs.path.fillet(model.paths.line1, model.paths.line2, 2);
@@ -52,7 +52,7 @@ var model = {
     arc1: new makerjs.paths.Arc([0, 50], 50, 270, 0),
     arc2: new makerjs.paths.Arc([100, 50], 50, 180, 270)
   }
-}
+};
 
 //create a fillet
 var arc = makerjs.path.fillet(model.paths.arc1, model.paths.arc2, 2);
@@ -79,7 +79,7 @@ var model = {
     arc: new makerjs.paths.Arc([0, 50], 50, 270, 0),
     line: new makerjs.paths.Line([50, 50], [50, 0])
   }
-}
+};
 
 //create a fillet
 var arc2 = makerjs.path.fillet(model.paths.arc, model.paths.line, 2);
@@ -118,7 +118,7 @@ var model = {
     line2: new makerjs.paths.Line([0, 5], [10, 5]),
     line3: new makerjs.paths.Line([10, 5], [10, 0])
   }
-}
+};
 
 //create dogbone fillets
 var arc1 = makerjs.path.dogbone(model.paths.line1, model.paths.line2, 1);
