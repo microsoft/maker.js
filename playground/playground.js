@@ -819,6 +819,8 @@ var MakerJsPlayground;
             "Ctrl-I": function () { toggleClass('collapse-insert-menu'); }
         },
         lineNumbers: true,
+        gutters: ["CodeMirror-lint-markers"],
+        lint: true,
         theme: 'twilight',
         viewportMargin: Infinity
     };

@@ -1067,7 +1067,9 @@
             "Ctrl-Enter": () => { runCodeFromEditor() },
             "Ctrl-I": () => { toggleClass('collapse-insert-menu') }
         },
-        lineNumbers: true,
+        lineNumbers: true,    
+        gutters: ["CodeMirror-lint-markers"],
+        lint: true,
         theme: 'twilight',
         viewportMargin: Infinity
     };
