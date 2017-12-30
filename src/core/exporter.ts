@@ -72,7 +72,7 @@ namespace MakerJs.exporter {
         lime: 3,
         aqua: 4,
         blue: 5,
-        fuschia: 6,
+        fuchsia: 6,
         white: 7,
         gray: 9,
         maroon: 14,
