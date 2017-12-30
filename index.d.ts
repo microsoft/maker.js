@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.78
+// Type definitions for Maker.js 0.9.79
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2434,7 +2434,7 @@ declare namespace MakerJs.exporter {
         lime: number;
         aqua: number;
         blue: number;
-        fuschia: number;
+        fuchsia: number;
         white: number;
         gray: number;
         maroon: number;
