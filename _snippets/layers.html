@@ -15,10 +15,10 @@ var makerjs = require('makerjs');
 var roundRect = new makerjs.models.RoundRectangle(100, 50, 10);
 roundRect.layer = "layer1";
 
-roundRect.paths["BottomLeft"].layer = "layer2";
-roundRect.paths["BottomRight"].layer = "layer2";
-roundRect.paths["TopRight"].layer = "layer2";
-roundRect.paths["TopLeft"].layer = "layer2";
+roundRect.paths.BottomLeft.layer = "layer2";
+roundRect.paths.BottomRight.layer = "layer2";
+roundRect.paths.TopRight.layer = "layer2";
+roundRect.paths.TopLeft.layer = "layer2";
 
 var svg = makerjs.exporter.toSVG(roundRect);
 
@@ -46,10 +46,10 @@ var makerjs = require('makerjs');
 var roundRect = new makerjs.models.RoundRectangle(100, 50, 10);
 roundRect.layer = "layer1";
 
-roundRect.paths["BottomLeft"].layer = "red";
-roundRect.paths["BottomRight"].layer = "red";
-roundRect.paths["TopRight"].layer = "blue";
-roundRect.paths["TopLeft"].layer = "blue";
+roundRect.paths.BottomLeft.layer = "red";
+roundRect.paths.BottomRight.layer = "red";
+roundRect.paths.TopRight.layer = "blue";
+roundRect.paths.TopLeft.layer = "blue";
 
 var svg = makerjs.exporter.toSVG(roundRect);
 
