@@ -22,13 +22,13 @@ var model = {
         line1: new makerjs.paths.Line([0, 0], [20, 10]),
         line2: new makerjs.paths.Line([2, 10], [50, 2])
     }
-}
+};
 
 var int = makerjs.path.intersection(model.paths.line1, model.paths.line2);
 
 if (int) {
     var p = int.intersectionPoints[0];
-    var id = JSON.stringify(makerjs.point.rounded(p, .01));
+    var id = JSON.stringify(makerjs.point.rounded(p, 0.01));
     model.paths[id] = new makerjs.paths.Circle(p, 1);
 }
 
