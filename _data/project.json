@@ -2643,7 +2643,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 380,
+              "line": 384,
               "character": 32
             }
           ]
@@ -2863,7 +2863,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 259,
+              "line": 263,
               "character": 24
             }
           ]
@@ -2900,7 +2900,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 271,
+              "line": 275,
               "character": 32
             }
           ]
@@ -2976,7 +2976,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 287,
+              "line": 291,
               "character": 33
             }
           ]
@@ -3020,7 +3020,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 316,
+              "line": 320,
               "character": 26
             }
           ]
@@ -3064,7 +3064,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 348,
+              "line": 352,
               "character": 25
             }
           ]
@@ -3101,7 +3101,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 427,
+              "line": 431,
               "character": 24
             }
           ]
@@ -3137,7 +3137,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 403,
+              "line": 407,
               "character": 29
             }
           ]
@@ -3182,7 +3182,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 498,
+              "line": 502,
               "character": 24
             }
           ]
@@ -6226,7 +6226,7 @@
               },
               "defaultValue": "5"
             },
-            "fuschia": {
+            "fuchsia": {
               "flags": {
                 "isExported": true
               },
