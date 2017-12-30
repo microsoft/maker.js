@@ -3999,7 +3999,7 @@ var MakerJs;
             lime: 3,
             aqua: 4,
             blue: 5,
-            fuschia: 6,
+            fuchsia: 6,
             white: 7,
             gray: 9,
             maroon: 14,
@@ -9293,5 +9293,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.78";
+MakerJs.version = "0.9.79";
 ﻿var Bezier = require('bezier-js');
