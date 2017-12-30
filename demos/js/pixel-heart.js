@@ -1,4 +1,4 @@
-var makerjs 			= require('makerjs')
+var makerjs = require('makerjs');
 
 /**
 	 _______ _________          _______  _       
@@ -25,10 +25,10 @@ var makerjs 			= require('makerjs')
 // movements. Each movement is the amount specified in the array, for example `-3` would be moving
 // 3 units in the negative direction. The starting point of the heart is the leftmost edge at the
 // top of the vertical 3 side (see `STARTING_POINT`).
-var path = [1,1,1,1,3,-1,3,1,3,-1,1,-1,1,-3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,3]	
+var path = [1, 1, 1, 1, 3, -1, 3, 1, 3, -1, 1, -1, 1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 3];
 
-var HEART_WIDTH = 13	// corresponds to the width of the model when built from `path` above
-var STARTING_POINT = [0,9]	// starting point so the heart is located properly in space
+var HEART_WIDTH = 13;	// corresponds to the width of the model when built from `path` above
+var STARTING_POINT = [0, 9];	// starting point so the heart is located properly in space
 
 /**
  * Builds an array of points that define a model by generating points 
@@ -37,43 +37,43 @@ var STARTING_POINT = [0,9]	// starting point so the heart is located properly in
 function PixelWalker(firstPoint, pixel_path) {
 
 	// go clockwise starting first point
-	var points = []
-	points.push(firstPoint)
+	var points = [];
+	points.push(firstPoint);
 
-	var moveHorizontal = true	// alternate horizontal and vertical movements to form pixel heart
+	var moveHorizontal = true;	// alternate horizontal and vertical movements to form pixel heart
 
-	pixel_path.forEach(function(p) {
+	pixel_path.forEach(function (p) {
 
-		var previous_point = points[points.length-1]
+		var previous_point = points[points.length - 1];
 		var point_to_add;
 
-		if ( moveHorizontal ) {
-			point_to_add = [p,0]					
+		if (moveHorizontal) {
+			point_to_add = [p, 0];
 		} else {
-			point_to_add = [0,p]
+			point_to_add = [0, p];
 		}
-		var e = makerjs.point.add(previous_point, point_to_add)
-		points.push(e)	
-		
-		// flip direction each time
-		moveHorizontal = !moveHorizontal
-	})
+		var e = makerjs.point.add(previous_point, point_to_add);
+		points.push(e);
 
-	return points
+		// flip direction each time
+		moveHorizontal = !moveHorizontal;
+	});
+
+	return points;
 }
 
 /** 
  * Builds a pixel heart model and scale it to the specified input width.
  */
 function Heart(desired_width) {
-  
-	var points = PixelWalker(STARTING_POINT,path)
-	var pathModel = new makerjs.models.ConnectTheDots(true, points)
-	if ( typeof desired_width != 'undefined' ) {
-	  	var scale = desired_width/HEART_WIDTH
-		makerjs.model.scale(pathModel, scale)
+
+	var points = PixelWalker(STARTING_POINT, path);
+	var pathModel = new makerjs.models.ConnectTheDots(true, points);
+	if (typeof desired_width != 'undefined') {
+		var scale = desired_width / HEART_WIDTH;
+		makerjs.model.scale(pathModel, scale);
 	}
-	return pathModel
+	return pathModel;
 }
 
 /**
@@ -81,7 +81,7 @@ function Heart(desired_width) {
  * See http://maker.js.org/playground
  */
 Heart.metaParameters = [
-    { title: "Width", type: "range", min: 1, max: 130, value: 13 }
-]
+	{ title: "Width", type: "range", min: 1, max: 130, value: 13 }
+];
 
-module.exports = Heart
+module.exports = Heart;

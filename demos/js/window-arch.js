@@ -26,10 +26,10 @@ function Wireframe(columns, column, extra, radius, split) {
     };
     this.models = {
         bows: new Bows(columns, column),
-        spines: new Spines(columns + +extra, columns % 2 ? column / 2 : column, radius)
+        spines: new Spines(columns + (+extra), columns % 2 ? column / 2 : column, radius)
     };
     if (split && columns > 3 && columns % 2 === 0) {
-        this.paths["split"] = new makerjs.paths.Line([0, 0], [0, column]);
+        this.paths.split = new makerjs.paths.Line([0, 0], [0, column]);
     }
 }
 

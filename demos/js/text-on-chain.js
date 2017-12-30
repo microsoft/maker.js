@@ -5,7 +5,7 @@ function TextOnChain(font, text, fontSize, baseline, reversed, contain, rotate, 
     var textModel = new makerjs.models.Text(font, text, fontSize);
 
     var svgPath = makerjs.importer.fromSVGPathData(svgPathData);
-    
+
     var chain = makerjs.model.findSingleChain(svgPath);
 
     makerjs.layout.childrenOnChain(textModel, chain, baseline, reversed, contain, rotate);
@@ -28,7 +28,7 @@ TextOnChain.metaParameters = [
     { title: "contain", type: "bool", value: false },
     { title: "rotate", type: "bool", value: true },
     { title: "svg path data", type: "text", value: 'M 100 200 C 200 100 300 0 400 100 C 500 200 600 300 700 200 C 800 100 900 100 900 100' },
-    { title: "show path", type: "bool", value: true },
+    { title: "show path", type: "bool", value: true }
 ];
 
 module.exports = TextOnChain;

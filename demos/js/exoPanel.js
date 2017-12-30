@@ -3,38 +3,38 @@ var makerjs = require('makerjs');
 function exoPanel(width, height, holeRadius, rim, fillet) {
 
   var domeRadius = rim + holeRadius;
-  
+
   makerjs.$(new makerjs.models.Dome(2 * domeRadius, 2 * domeRadius, domeRadius))
     .moveRelative([0, - domeRadius])
     .rotate(135)
     .addTo(this, 'dome1')
-  	.clone()
+    .clone()
     .rotate(90)
     .addTo(this, 'dome2')
     .moveRelative([width, 0])
-  	.$reset()
-  	.clone()
+    .$reset()
+    .clone()
     .rotate(270)
     .addTo(this, 'dome3')
     .moveRelative([0, height])
-  	.$reset()
-  	.clone()
+    .$reset()
+    .clone()
     .rotate(180)
     .addTo(this, 'dome4')
     .moveRelative([width, height])
-  ;
+    ;
 
   var outer = new makerjs.models.Rectangle(width, height);
 
   makerjs.model.combineUnion(this, outer);
-  
+
   this.models.outer = outer;
 
   var c = makerjs.model.findSingleChain(this);
   var fillets = makerjs.chain.fillet(c, fillet);
   this.models.fillets = fillets;
-  
-  this.models.bolts = new makerjs.models.BoltRectangle(width, height, holeRadius);    
+
+  this.models.bolts = new makerjs.models.BoltRectangle(width, height, holeRadius);
 }
 
 exoPanel.metaParameters = [

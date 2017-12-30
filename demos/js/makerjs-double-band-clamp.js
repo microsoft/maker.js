@@ -44,13 +44,13 @@ function DoubleBandClamp(radius1, radius2, band, tabWidth, tabHeight, gap, round
 DoubleBandClamp.metaParameters = [
     { title: "radius1", type: "range", min: 2, max: 100, step: 1, value: 12.7 },
     { title: "radius2", type: "range", min: 2, max: 100, step: 1, value: 25.4 },
-    { title: "band", type: "range", min: 1, max: 20, step: .5, value: 3 },
+    { title: "band", type: "range", min: 1, max: 20, step: 0.5, value: 3 },
     { title: "tab width", type: "range", min: 1, max: 25, value: 14 },
     { title: "tab height", type: "range", min: 1, max: 10, step: 1, value: 6 },
-    { title: "gap", type: "range", min: 0, max: 5, step: .5, value: 0 },
-    { title: "round fillet", type: "range", min: 0, max: 10, step: .1, value: 2 },
-    { title: "cap fillet", type: "range", min: 0, max: 10, step: .1, value: .7 },
-    { title: "between fillet", type: "range", min: 1, max: 10, step: .1, value: 5 },
+    { title: "gap", type: "range", min: 0, max: 5, step: 0.5, value: 0 },
+    { title: "round fillet", type: "range", min: 0, max: 10, step: 0.1, value: 2 },
+    { title: "cap fillet", type: "range", min: 0, max: 10, step: 0.1, value: 0.7 },
+    { title: "between fillet", type: "range", min: 1, max: 10, step: 0.1, value: 5 }
 ];
 
 module.exports = DoubleBandClamp;
