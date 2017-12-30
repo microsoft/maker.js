@@ -38,10 +38,10 @@ ArchBridge.metaParameters = [
   { title: "height", type: "range", min: 10, max: 500, value: 125 },
   { title: "count", type: "range", min: 2, max: 40, value: 15 },
   { title: "side", type: "range", min: 0, max: 20, value: 13 },
-  { title: "top rim", type: "range", min: .1, max: 20, value: 12 },
-  { title: "bottom rim", type: "range", min: .1, max: 20, value: 7 },
-  { title: "drop", type: "range", min: .1, max: 1, value: .8, step: .1 },
-  { title: "baluster", type: "range", min: .1, max: 20, value: 4, step: .1 }
+  { title: "top rim", type: "range", min: 0.1, max: 20, value: 12 },
+  { title: "bottom rim", type: "range", min: 0.1, max: 20, value: 7 },
+  { title: "drop", type: "range", min: 0.1, max: 1, value: 0.8, step: 0.1 },
+  { title: "baluster", type: "range", min: 0.1, max: 20, value: 4, step: 0.1 }
 ];
 
 module.exports = ArchBridge;
