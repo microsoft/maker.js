@@ -4,6 +4,7 @@
         Json,
         Dxf,
         Svg,
+        SvgPathData,
         OpenJsCad,
         Stl,
         Pdf
@@ -49,6 +50,11 @@
     formatMap[ExportFormat.Svg] = {
         mediaType: 'image/svg+xml',
         fileExtension: 'svg'
+    };
+
+    formatMap[ExportFormat.SvgPathData] = {
+        mediaType: 'text/plain',
+        fileExtension: 'txt'
     };
 
     formatMap[ExportFormat.OpenJsCad] = {

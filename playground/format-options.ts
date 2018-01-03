@@ -61,6 +61,14 @@ namespace MakerJsPlayground.FormatOptions {
         }
     }
 
+    class SvgPathDataOptions extends BaseOptions {
+        getOptionObject() {
+            const options: MakerJs.exporter.IExportOptions = {};
+            this.addAccuracy('#svgpathdata-accuracy', options);
+            return options;
+        }
+    }
+
     class JsonOptions extends BaseOptions {
         getOptionObject() {
             const options: MakerJs.exporter.IJsonExportOptions = {
@@ -129,6 +137,7 @@ namespace MakerJsPlayground.FormatOptions {
     classes[MakerJsPlaygroundExport.ExportFormat.Pdf] = PdfOptions;
     classes[MakerJsPlaygroundExport.ExportFormat.Stl] = StlOptions;
     classes[MakerJsPlaygroundExport.ExportFormat.Svg] = SvgOptions;
+    classes[MakerJsPlaygroundExport.ExportFormat.SvgPathData] = SvgPathDataOptions;
 
     export var current: BaseOptions;
 
