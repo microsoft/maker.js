@@ -33,6 +33,11 @@ function getExporter(format, result) {
             return toDXF;
         case f.Svg:
             return makerjs.exporter.toSVG;
+        case f.SvgPathData:
+            function toSVGPathData(model, options) {
+                return makerjs.exporter.toSVGPathData(model, false, null, options.accuracy);
+            }
+            return toSVGPathData;
         case f.OpenJsCad:
             return makerjs.exporter.toJscadScript;
         case f.Stl:

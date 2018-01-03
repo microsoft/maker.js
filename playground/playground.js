@@ -1233,6 +1233,9 @@ var MakerJsPlayground;
                 case MakerJsPlaygroundExport.ExportFormat.Svg:
                     text = makerjs.exporter.toSVG(processed.model, request.options);
                     break;
+                case MakerJsPlaygroundExport.ExportFormat.SvgPathData:
+                    text = makerjs.exporter.toSVGPathData(processed.model, false, null, request.options.accuracy);
+                    break;
                 default:
                     return false;
             }

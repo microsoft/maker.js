@@ -5,9 +5,10 @@ var MakerJsPlaygroundExport;
         ExportFormat[ExportFormat["Json"] = 0] = "Json";
         ExportFormat[ExportFormat["Dxf"] = 1] = "Dxf";
         ExportFormat[ExportFormat["Svg"] = 2] = "Svg";
-        ExportFormat[ExportFormat["OpenJsCad"] = 3] = "OpenJsCad";
-        ExportFormat[ExportFormat["Stl"] = 4] = "Stl";
-        ExportFormat[ExportFormat["Pdf"] = 5] = "Pdf";
+        ExportFormat[ExportFormat["SvgPathData"] = 3] = "SvgPathData";
+        ExportFormat[ExportFormat["OpenJsCad"] = 4] = "OpenJsCad";
+        ExportFormat[ExportFormat["Stl"] = 5] = "Stl";
+        ExportFormat[ExportFormat["Pdf"] = 6] = "Pdf";
     })(ExportFormat = MakerJsPlaygroundExport.ExportFormat || (MakerJsPlaygroundExport.ExportFormat = {}));
     MakerJsPlaygroundExport.formatMap = {};
     MakerJsPlaygroundExport.formatMap[ExportFormat.Json] = {
@@ -21,6 +22,10 @@ var MakerJsPlaygroundExport;
     MakerJsPlaygroundExport.formatMap[ExportFormat.Svg] = {
         mediaType: 'image/svg+xml',
         fileExtension: 'svg'
+    };
+    MakerJsPlaygroundExport.formatMap[ExportFormat.SvgPathData] = {
+        mediaType: 'text/plain',
+        fileExtension: 'txt'
     };
     MakerJsPlaygroundExport.formatMap[ExportFormat.OpenJsCad] = {
         mediaType: 'text/plain',

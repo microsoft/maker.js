@@ -74,6 +74,18 @@ var MakerJsPlayground;
             };
             return SvgOptions;
         }(BaseOptions));
+        var SvgPathDataOptions = (function (_super) {
+            __extends(SvgPathDataOptions, _super);
+            function SvgPathDataOptions() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            SvgPathDataOptions.prototype.getOptionObject = function () {
+                var options = {};
+                this.addAccuracy('#svgpathdata-accuracy', options);
+                return options;
+            };
+            return SvgPathDataOptions;
+        }(BaseOptions));
         var JsonOptions = (function (_super) {
             __extends(JsonOptions, _super);
             function JsonOptions() {
@@ -154,6 +166,7 @@ var MakerJsPlayground;
         classes[MakerJsPlaygroundExport.ExportFormat.Pdf] = PdfOptions;
         classes[MakerJsPlaygroundExport.ExportFormat.Stl] = StlOptions;
         classes[MakerJsPlaygroundExport.ExportFormat.Svg] = SvgOptions;
+        classes[MakerJsPlaygroundExport.ExportFormat.SvgPathData] = SvgPathDataOptions;
         function activateOption(format, formatTitle, model) {
             var formatId = MakerJsPlaygroundExport.ExportFormat[format];
             //deselect all

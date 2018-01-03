@@ -6560,7 +6560,7 @@ var MakerJs;
             }
             var indent = new Array((options.indent || 0) + 1).join(' ');
             var nl = options.indent ? '\n' : '';
-            var result = convert2Dto3D(to2D, to3D, scriptUnion, modelToExport, options);
+            var result = convert2Dto3D(to2D, to3D, scriptUnion, modelToExport, options).trim();
             return "function " + (options.functionName || 'main') + "(){" + wrap("return " + result + ";") + "}" + nl;
         }
         exporter.toJscadScript = toJscadScript;
@@ -9293,5 +9293,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.79";
+MakerJs.version = "0.9.80";
 ﻿var Bezier = require('bezier-js');
