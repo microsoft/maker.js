@@ -184,6 +184,7 @@
 
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Dxf);">.dxf</button>
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Svg);">.svg</button>
+                <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.SvgPathData);">svg path data</button>
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Json);">json</button>
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.OpenJsCad);">openjscad</button>
                 <button href="#" onclick="MakerJsPlayground.downloadClick(this, MakerJsPlaygroundExport.ExportFormat.Stl);">.stl</button>
@@ -233,9 +234,23 @@
                     -->
                 </div>
 
-                <!--
-                    TODO: SVG Path data
-                -->
+                <div data-format="SvgPathData" class="download-option">
+                    <h2>Svg options</h2>
+                    <div class="option-block">
+                        <label for="svgpathdata-accuracy">Accuracy</label>
+                        <select id="svgpathdata-accuracy">
+                            <option value="1">Integer</option>
+                            <option value=".1">.1</option>
+                            <option value=".01">.01</option>
+                            <option value=".001">.001</option>
+                            <option value=".0001" selected>.0001</option>
+                            <option value=".00001">.00001</option>
+                            <option value=".000001">.000001</option>
+                            <option value="-1">Max</option>
+                        </select>
+                    </div>
+                </div>
+
                 
                 <div data-format="Json" class="download-option">
                     <h2>Json options</h2>

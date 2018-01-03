@@ -620,7 +620,7 @@
         const indent = new Array((options.indent || 0) + 1).join(' ');
         const nl = options.indent ? '\n' : '';
 
-        const result = convert2Dto3D<string, string>(to2D, to3D, scriptUnion, modelToExport, options);
+        const result = convert2Dto3D<string, string>(to2D, to3D, scriptUnion, modelToExport, options).trim();
 
         return `function ${options.functionName || 'main'}(){${wrap(`return ${result};`)}}${nl}`;
     }

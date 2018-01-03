@@ -1067,7 +1067,7 @@
             "Ctrl-Enter": () => { runCodeFromEditor() },
             "Ctrl-I": () => { toggleClass('collapse-insert-menu') }
         },
-        lineNumbers: true,    
+        lineNumbers: true,
         gutters: ["CodeMirror-lint-markers"],
         lint: true,
         theme: 'twilight',
@@ -1597,6 +1597,10 @@
 
                 case MakerJsPlaygroundExport.ExportFormat.Svg:
                     text = makerjs.exporter.toSVG(processed.model, request.options);
+                    break;
+
+                case MakerJsPlaygroundExport.ExportFormat.SvgPathData:
+                    text = makerjs.exporter.toSVGPathData(processed.model, false, null, request.options.accuracy) as string;
                     break;
 
                 default:
