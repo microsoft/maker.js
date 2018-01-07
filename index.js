@@ -6804,32 +6804,36 @@ var MakerJs;
             }, options);
             return pathDataByLayer;
         }
-        /**
-         * Convert a model to SVG path data.
-         *
-         * @param modelToExport Model to export.
-         * @param byLayers_orFindChainsOptions Boolean flag (default true) to return a map of path data by layer, or an IFindChainsOptions object
-         * @param origin Optional reference origin.
-         * @param accuracy Optional accuracy of SVG decimals.
-         * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
-         */
-        function toSVGPathData(modelToExport, byLayers_orFindChainsOptions, origin, accuracy) {
-            var findChainsOptions;
-            if (byLayers_orFindChainsOptions == undefined) {
-                findChainsOptions = {
-                    byLayers: true
-                };
+        function toSVGPathData(modelToExport) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
             }
-            else if (typeof byLayers_orFindChainsOptions === 'boolean') {
-                findChainsOptions = {
-                    byLayers: byLayers_orFindChainsOptions
+            var options = {
+                fillRule: 'evenodd'
+            };
+            if (typeof args[0] === 'boolean') {
+                options.byLayers = args[0];
+                options.origin = args[1];
+                options.accuracy = args[2];
+            }
+            else if (MakerJs.isObject(args[0])) {
+                MakerJs.extendObject(options, args[0]);
+            }
+            var findChainsOptions = {
+                byLayers: options.byLayers,
+                contain: false
+            };
+            if (options.fillRule === 'nonzero') {
+                findChainsOptions.contain = {
+                    alternateDirection: true
                 };
             }
             var size = MakerJs.measure.modelExtents(modelToExport);
-            if (!origin) {
-                origin = [-size.low[0], size.high[1]];
+            if (!options.origin) {
+                options.origin = [-size.low[0], size.high[1]];
             }
-            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, findChainsOptions, accuracy);
+            var pathDataArrayByLayer = getPathDataByLayer(modelToExport, options.origin, findChainsOptions, options.accuracy);
             var pathDataStringByLayer = {};
             for (var layer in pathDataArrayByLayer) {
                 pathDataStringByLayer[layer] = pathDataArrayByLayer[layer].join(' ');
@@ -9293,5 +9297,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.80";
+MakerJs.version = "0.9.81";
 ﻿var Bezier = require('bezier-js');

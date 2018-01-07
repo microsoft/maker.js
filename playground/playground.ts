@@ -1591,7 +1591,6 @@
                     break;
 
                 case MakerJsPlaygroundExport.ExportFormat.OpenJsCad:
-                    //text = makerjs.exporter.toOpenJsCad(processed.model);
                     text = makerjs.exporter.toJscadScript(processed.model, request.options);
                     break;
 
@@ -1600,7 +1599,7 @@
                     break;
 
                 case MakerJsPlaygroundExport.ExportFormat.SvgPathData:
-                    text = makerjs.exporter.toSVGPathData(processed.model, false, null, request.options.accuracy) as string;
+                    text = makerjs.exporter.toSVGPathData(processed.model, request.options) as string;
                     break;
 
                 default:
