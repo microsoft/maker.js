@@ -1,38 +1,26 @@
 ---
 layout: posts
-title: Api - Parallel Class
+title: Api - ISVGPathDataRenderOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Class for a parallel line path.</p>
+			<p>SVG Path Data rendering options.</p>
 		</div>
-		<dl class="tsd-comment-tags">
-			<dt>param</dt>
-			<dd><p>A line to be parallel to.</p>
-			</dd>
-			<dt>param</dt>
-			<dd><p>Distance between parallel and original line.</p>
-			</dd>
-			<dt>param</dt>
-			<dd><p>Any point to determine which side of the line to place the parallel.</p>
-			</dd>
-		</dl>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">Parallel</span>
+			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">ISVGPathDataRenderOptions</span>
+				</li>
+			</ul>
 		</li>
-	</ul>
-</section>
-<section class="tsd-panel">
-	<h3>Implements</h3>
-	<ul class="tsd-hierarchy">
-		<li><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -40,85 +28,96 @@ title: Api - Parallel Class
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
-				<h3>Constructors</h3>
-				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.paths.parallel.html#constructor" class="tsd-kind-icon">constructor</a></li>
-				</ul>
-			</section>
-			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.paths.parallel.html#end" class="tsd-kind-icon">end</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.paths.parallel.html#origin" class="tsd-kind-icon">origin</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.paths.parallel.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.isvgpathdatarenderoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgpathdatarenderoptions.html#bylayers" class="tsd-kind-icon">by<wbr>Layers</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgpathdatarenderoptions.html#fillrule" class="tsd-kind-icon">fill<wbr>Rule</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.isvgpathdatarenderoptions.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.isvgpathdatarenderoptions.html#units" class="tsd-kind-icon">units</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
-	<h2>Constructors</h2>
-	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-		<a name="constructor" class="tsd-anchor"></a>
-		<h3>constructor</h3>
-		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Parallel<span class="tsd-signature-symbol">(</span>toLine<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a>, distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, nearPoint<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.paths.parallel.html" class="tsd-signature-type">Parallel</a></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/paths.ts#L368">core/paths.ts:368</a></li>
-					</ul>
-				</aside>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>toLine: <a href="../interfaces/makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></h5>
-					</li>
-					<li>
-						<h5>distance: <span class="tsd-signature-type">number</span></h5>
-					</li>
-					<li>
-						<h5>nearPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.paths.parallel.html" class="tsd-signature-type">Parallel</a></h4>
-			</li>
-		</ul>
-	</section>
-</section>
-<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="end" class="tsd-anchor"></a>
-		<h3>end</h3>
-		<div class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="accuracy" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> accuracy</h3>
+		<div class="tsd-signature tsd-kind-icon">accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#accuracy">accuracy</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/paths.ts#L368">core/paths.ts:368</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/exporter.ts#L11">core/exporter.ts:11</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional exemplar of number of decimal places.</p>
+			</div>
+		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="bylayers" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> by<wbr>Layers</h3>
+		<div class="tsd-signature tsd-kind-icon">by<wbr>Layers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/svg.ts#L854">core/svg.ts:854</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional boolean flag to return a map of path data by layer.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="fillrule" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> fill<wbr>Rule</h3>
+		<div class="tsd-signature tsd-kind-icon">fill<wbr>Rule<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"nonzero"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"evenodd"</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/svg.ts#L859">core/svg.ts:859</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>SVG fill-rule.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 		<a name="origin" class="tsd-anchor"></a>
-		<h3>origin</h3>
-		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> origin</h3>
+		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/paths.ts#L367">core/paths.ts:367</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/svg.ts#L864">core/svg.ts:864</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional origin. Default x = 0, y = topmost y point in the model. Use [0, 0] to use the same origin as Maker.js, which will translate to negative Y values in SVG.</p>
+			</div>
+		</div>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="type" class="tsd-anchor"></a>
-		<h3>type</h3>
-		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="units" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
+		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#units">units</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/paths.ts#L366">core/paths.ts:366</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d3daea49/src/core/exporter.ts#L16">core/exporter.ts:16</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional unit system to embed in exported file, if the export format allows alternate unit systems.</p>
+			</div>
+		</div>
 	</section>
 </section>
 </div>

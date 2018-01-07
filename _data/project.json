@@ -4737,7 +4737,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 732,
+              "line": 757,
               "character": 45
             }
           ],
@@ -4759,7 +4759,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 752,
+                  "line": 777,
                   "character": 16
                 }
               ],
@@ -4779,7 +4779,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 737,
+                  "line": 762,
                   "character": 12
                 }
               ],
@@ -4799,7 +4799,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 742,
+                  "line": 767,
                   "character": 14
                 }
               ],
@@ -4819,13 +4819,153 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 747,
+                  "line": 772,
                   "character": 19
                 }
               ],
               "type": {
                 "type": "instrinct",
                 "name": "string"
+              }
+            }
+          }
+        },
+        "ISVGPathDataRenderOptions": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "SVG Path Data rendering options."
+          },
+          "sources": [
+            {
+              "fileName": "core/svg.ts",
+              "line": 849,
+              "character": 46
+            }
+          ],
+          "extendedTypes": [
+            {
+              "type": "reference",
+              "name": "IExportOptions"
+            }
+          ],
+          "Property": {
+            "accuracy": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional exemplar of number of decimal places."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 11,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.accuracy"
+              }
+            },
+            "byLayers": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional boolean flag to return a map of path data by layer."
+              },
+              "sources": [
+                {
+                  "fileName": "core/svg.ts",
+                  "line": 854,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "boolean"
+              }
+            },
+            "fillRule": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "SVG fill-rule."
+              },
+              "sources": [
+                {
+                  "fileName": "core/svg.ts",
+                  "line": 859,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "union",
+                "types": [
+                  {
+                    "type": "stringLiteral",
+                    "value": "nonzero"
+                  },
+                  {
+                    "type": "stringLiteral",
+                    "value": "evenodd"
+                  }
+                ]
+              }
+            },
+            "origin": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional origin. Default x = 0, y = topmost y point in the model. Use [0, 0] to use the same origin as Maker.js, which will translate to negative Y values in SVG."
+              },
+              "sources": [
+                {
+                  "fileName": "core/svg.ts",
+                  "line": 864,
+                  "character": 14
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "IPoint"
+              }
+            },
+            "units": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Optional unit system to embed in exported file, if the export format allows alternate unit systems."
+              },
+              "sources": [
+                {
+                  "fileName": "core/exporter.ts",
+                  "line": 16,
+                  "character": 13
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "string"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IExportOptions.units"
               }
             }
           }
@@ -4840,7 +4980,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 758,
+              "line": 783,
               "character": 38
             }
           ],
@@ -4890,7 +5030,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 778,
+                  "line": 803,
                   "character": 16
                 }
               ],
@@ -4910,7 +5050,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 818,
+                  "line": 843,
                   "character": 19
                 }
               ],
@@ -4930,7 +5070,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 752,
+                  "line": 777,
                   "character": 16
                 }
               ],
@@ -4954,7 +5094,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 737,
+                  "line": 762,
                   "character": 12
                 }
               ],
@@ -4978,7 +5118,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 798,
+                  "line": 823,
                   "character": 16
                 }
               ],
@@ -5007,7 +5147,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 768,
+                  "line": 793,
                   "character": 16
                 }
               ],
@@ -5027,7 +5167,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 808,
+                  "line": 833,
                   "character": 20
                 }
               ],
@@ -5062,7 +5202,7 @@
                   "sources": [
                     {
                       "fileName": "core/svg.ts",
-                      "line": 808,
+                      "line": 833,
                       "character": 22
                     }
                   ]
@@ -5080,7 +5220,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 783,
+                  "line": 808,
                   "character": 14
                 }
               ],
@@ -5100,7 +5240,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 773,
+                  "line": 798,
                   "character": 13
                 }
               ],
@@ -5120,7 +5260,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 813,
+                  "line": 838,
                   "character": 21
                 }
               ],
@@ -5140,7 +5280,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 742,
+                  "line": 767,
                   "character": 14
                 }
               ],
@@ -5164,7 +5304,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 803,
+                  "line": 828,
                   "character": 21
                 }
               ],
@@ -5184,7 +5324,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 747,
+                  "line": 772,
                   "character": 19
                 }
               ],
@@ -5208,7 +5348,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 763,
+                  "line": 788,
                   "character": 16
                 }
               ],
@@ -5252,7 +5392,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 788,
+                  "line": 813,
                   "character": 22
                 }
               ],
@@ -5272,7 +5412,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 793,
+                  "line": 818,
                   "character": 15
                 }
               ],
@@ -5323,7 +5463,7 @@
                       "sources": [
                         {
                           "fileName": "core/svg.ts",
-                          "line": 709,
+                          "line": 734,
                           "character": 66
                         }
                       ],
@@ -5339,7 +5479,7 @@
                       "sources": [
                         {
                           "fileName": "core/svg.ts",
-                          "line": 709,
+                          "line": 734,
                           "character": 41
                         }
                       ],
@@ -5352,7 +5492,7 @@
                   "sources": [
                     {
                       "fileName": "core/svg.ts",
-                      "line": 709,
+                      "line": 734,
                       "character": 27
                     }
                   ]
@@ -5363,7 +5503,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 708,
+              "line": 733,
               "character": 38
             }
           ]
@@ -6081,22 +6221,22 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 266,
+              "line": 291,
               "character": 25
             },
             {
               "fileName": "core/svg.ts",
-              "line": 267,
+              "line": 292,
               "character": 25
             },
             {
               "fileName": "core/svg.ts",
-              "line": 268,
+              "line": 293,
               "character": 25
             },
             {
               "fileName": "core/svg.ts",
-              "line": 284,
+              "line": 309,
               "character": 25
             }
           ]
@@ -6106,6 +6246,30 @@
             "isExported": true
           },
           "signatures": [
+            {
+              "name": "toSVGPathData",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Convert a model to SVG path data.",
+                "returns": "String of SVG path data (if options.byLayers is false) or an object map of path data by layer .\n"
+              },
+              "parameters": [
+                {
+                  "name": "modelToExport",
+                  "flags": {},
+                  "comment": "Model to export.",
+                  "type": "IModel"
+                },
+                {
+                  "name": "options",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional ISVGPathDataRenderOptions object.",
+                  "type": "ISVGPathDataRenderOptions"
+                }
+              ]
+            },
             {
               "name": "toSVGPathData",
               "kindString": "Call signature",
@@ -6121,18 +6285,19 @@
                   "type": "IModel"
                 },
                 {
-                  "name": "byLayers_orFindChainsOptions",
+                  "name": "byLayers",
                   "flags": {
                     "isOptional": true
                   },
-                  "comment": "Boolean flag (default true) to return a map of path data by layer, or an IFindChainsOptions object"
+                  "comment": "Optional boolean flag to return a map of path data by layer.",
+                  "type": "boolean"
                 },
                 {
                   "name": "origin",
                   "flags": {
                     "isOptional": true
                   },
-                  "comment": "Optional reference origin.",
+                  "comment": "Optional origin. Default x = 0, y = topmost y point in the model. Use [0, 0] to use the same origin as Maker.js, which will translate to negative Y values in SVG.",
                   "type": "IPoint"
                 },
                 {
@@ -6149,7 +6314,17 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 236,
+              "line": 238,
+              "character": 33
+            },
+            {
+              "fileName": "core/svg.ts",
+              "line": 249,
+              "character": 33
+            },
+            {
+              "fileName": "core/svg.ts",
+              "line": 251,
               "character": 33
             }
           ]
@@ -6478,7 +6653,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 715,
+              "line": 740,
               "character": 22
             }
           ],
@@ -7667,7 +7842,7 @@
       "sources": [
         {
           "fileName": "core/svg.ts",
-          "line": 823,
+          "line": 868,
           "character": 26
         }
       ],
@@ -7737,7 +7912,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 855,
+              "line": 900,
               "character": 35
             }
           ]
@@ -7754,7 +7929,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 839,
+              "line": 884,
               "character": 38
             }
           ],
@@ -7770,7 +7945,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 844,
+                  "line": 889,
                   "character": 22
                 }
               ],
