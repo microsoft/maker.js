@@ -188,8 +188,22 @@
                             <option value="-1">Max</option>
                         </select>
                     </div>
+                    <div class="option-block">
+                        <label for="svgpathdata-origin">Origin</label>
+                        <select id="svgpathdata-origin">
+                            <option value="top" selected>Topmost Y of drawing</option>
+                            <option value="zero">Same as playground</option>
+                        </select>
+                    </div>
+                    <div class="option-block">
+                        <label for="svgpathdata-fillrule">Fill-rule</label>
+                        <select id="svgpathdata-fillrule">
+                            <option value="evenodd" selected>evenodd</option>
+                            <option value="nonzero">nonzero</option>
+                        </select>
+                    </div>
+                    <!-- TODO: Layer order -->
                 </div>
-
                 
                 <div data-format="Json" class="download-option">
                     <h2>Json options</h2>

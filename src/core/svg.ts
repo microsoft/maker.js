@@ -228,32 +228,57 @@ namespace MakerJs.exporter {
      * Convert a model to SVG path data.
      *
      * @param modelToExport Model to export.
-     * @param byLayers_orFindChainsOptions Boolean flag (default true) to return a map of path data by layer, or an IFindChainsOptions object
-     * @param origin Optional reference origin.
+     * @param options Optional ISVGPathDataRenderOptions object.
+     * @param options.accuracy Optional accuracy of SVG decimals.
+     * @param options.byLayers Optional boolean flag (default false) to return a map of path data by layer.
+     * @param options.fillRule Optional SVG fill rule: 'evenodd' (default) or 'nonzero'.
+     * @param options.origin Optional origin. Default x = 0, y = topmost y point in the model. Use [0, 0] to use the same origin as Maker.js, which will translate to negative Y values in SVG.
+     * @returns String of SVG path data (if options.byLayers is false) or an object map of path data by layer .
+     */
+    export function toSVGPathData(modelToExport: IModel, options?: ISVGPathDataRenderOptions): IPathDataByLayerMap | string;
+
+    /**
+     * Convert a model to SVG path data.
+     *
+     * @param modelToExport Model to export.
+     * @param byLayers Optional boolean flag to return a map of path data by layer.
+     * @param origin Optional origin. Default x = 0, y = topmost y point in the model. Use [0, 0] to use the same origin as Maker.js, which will translate to negative Y values in SVG.
      * @param accuracy Optional accuracy of SVG decimals.
      * @returns String of SVG path data (if byLayers is false) or an object map of path data by layer .
      */
-    export function toSVGPathData(modelToExport: IModel, byLayers_orFindChainsOptions?: boolean | IFindChainsOptions, origin?: IPoint, accuracy?: number): IPathDataByLayerMap | string {
+    export function toSVGPathData(modelToExport: IModel, byLayers?: boolean, origin?: IPoint, accuracy?: number): IPathDataByLayerMap | string;
 
-        var findChainsOptions: IFindChainsOptions;
+    export function toSVGPathData(modelToExport: IModel, ...args: any[]): IPathDataByLayerMap | string {
 
-        if (byLayers_orFindChainsOptions == undefined) {
-            findChainsOptions = {
-                byLayers: true
-            }
-        } else if (typeof byLayers_orFindChainsOptions === 'boolean') {
-            findChainsOptions = {
-                byLayers: byLayers_orFindChainsOptions
-            }
+        var options: ISVGPathDataRenderOptions = {
+            fillRule: 'evenodd'
+        };
+
+        if (typeof args[0] === 'boolean') {
+            options.byLayers = args[0];
+            options.origin = args[1];
+            options.accuracy = args[2];
+        } else if (isObject(args[0])) {
+            extendObject(options, args[0]);
+        }
+
+        var findChainsOptions: IFindChainsOptions = {
+            byLayers: options.byLayers,
+            contain: false
+        };
+
+        if (options.fillRule === 'nonzero') {
+            findChainsOptions.contain = <IContainChainsOptions>{
+                alternateDirection: true
+            };
         }
 
         var size = measure.modelExtents(modelToExport);
-
-        if (!origin) {
-            origin = [-size.low[0], size.high[1]];
+        if (!options.origin) {
+            options.origin = [-size.low[0], size.high[1]];
         }
 
-        var pathDataArrayByLayer = getPathDataByLayer(modelToExport, origin, findChainsOptions, accuracy);
+        var pathDataArrayByLayer = getPathDataByLayer(modelToExport, options.origin, findChainsOptions, options.accuracy);
         var pathDataStringByLayer: IPathDataByLayerMap = {};
 
         for (var layer in pathDataArrayByLayer) {
@@ -818,6 +843,26 @@ namespace MakerJs.exporter {
         closingTags?: boolean;
     }
 
+    /**
+     * SVG Path Data rendering options.
+     */
+    export interface ISVGPathDataRenderOptions extends IExportOptions {
+
+        /**
+         * Optional boolean flag to return a map of path data by layer.
+         */
+        byLayers?: boolean;
+
+        /**
+         * SVG fill-rule.
+         */
+        fillRule?: 'nonzero' | 'evenodd';
+
+        /**
+         * Optional origin. Default x = 0, y = topmost y point in the model. Use [0, 0] to use the same origin as Maker.js, which will translate to negative Y values in SVG.
+         */
+        origin?: IPoint;
+    }
 }
 
 namespace MakerJs.importer {
