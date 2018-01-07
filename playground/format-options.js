@@ -27,7 +27,7 @@ var MakerJsPlayground;
                 if (makerjs.isNumber(select.valueAsNumber)) {
                     return select.valueAsNumber;
                 }
-                return parseInt(select.value);
+                return +select.value;
             };
             BaseOptions.prototype.$selectValue = function (selector) {
                 var select = this.$(selector);
@@ -80,7 +80,12 @@ var MakerJsPlayground;
                 return _super !== null && _super.apply(this, arguments) || this;
             }
             SvgPathDataOptions.prototype.getOptionObject = function () {
-                var options = {};
+                var options = {
+                    byLayers: false,
+                    fillRule: this.$selectValue('#svgpathdata-fillrule'),
+                    origin: this.$selectValue('#svgpathdata-origin') === 'zero' ? [0, 0] : undefined
+                    // TODO: Layer order
+                };
                 this.addAccuracy('#svgpathdata-accuracy', options);
                 return options;
             };
