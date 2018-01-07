@@ -60,10 +60,7 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
             return makerjs.exporter.toSVG;
 
         case f.SvgPathData:
-            function toSVGPathData(model: MakerJs.IModel, options: MakerJs.exporter.IJscadCsgOptions) {
-                return makerjs.exporter.toSVGPathData(model, false, null, options.accuracy);
-            }
-            return toSVGPathData;
+            return makerjs.exporter.toSVGPathData;
 
         case f.OpenJsCad:
             return makerjs.exporter.toJscadScript;

@@ -13,7 +13,7 @@ namespace MakerJsPlayground.FormatOptions {
             if (makerjs.isNumber(select.valueAsNumber)) {
                 return select.valueAsNumber;
             }
-            return parseInt(select.value);
+            return +select.value;
         }
 
         $selectValue(selector: string) {
@@ -63,7 +63,12 @@ namespace MakerJsPlayground.FormatOptions {
 
     class SvgPathDataOptions extends BaseOptions {
         getOptionObject() {
-            const options: MakerJs.exporter.IExportOptions = {};
+            const options: MakerJs.exporter.ISVGPathDataRenderOptions = {
+                byLayers: false,
+                fillRule: this.$selectValue('#svgpathdata-fillrule') as 'evenodd' | 'nonzero',
+                origin: this.$selectValue('#svgpathdata-origin') === 'zero' ? [0, 0] : undefined
+                // TODO: Layer order
+            };
             this.addAccuracy('#svgpathdata-accuracy', options);
             return options;
         }
