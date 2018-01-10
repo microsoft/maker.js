@@ -1,6 +1,6 @@
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
-    var FontLoader = (function () {
+    var FontLoader = /** @class */ (function () {
         function FontLoader(baseUrl, opentypeLib, metaParameters, paramValues) {
             var _this = this;
             this.baseUrl = baseUrl;

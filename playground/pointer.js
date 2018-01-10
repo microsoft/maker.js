@@ -18,7 +18,7 @@ var Pointer;
         }
         return [x / all.length, y / all.length];
     }
-    var Manager = (function () {
+    var Manager = /** @class */ (function () {
         function Manager(view, pointersSelector, margin, getZoom, setZoom, onClick, onReset) {
             var _this = this;
             this.view = view;
