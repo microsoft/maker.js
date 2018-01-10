@@ -12,7 +12,7 @@ var MakerJsPlayground;
 (function (MakerJsPlayground) {
     var FormatOptions;
     (function (FormatOptions) {
-        var BaseOptions = (function () {
+        var BaseOptions = /** @class */ (function () {
             function BaseOptions(format, formatTitle, div, model) {
                 this.format = format;
                 this.formatTitle = formatTitle;
@@ -21,6 +21,10 @@ var MakerJsPlayground;
             }
             BaseOptions.prototype.$ = function (selector) {
                 return this.div.querySelector(selector);
+            };
+            BaseOptions.prototype.$checked = function (selector) {
+                var select = this.$(selector);
+                return select.checked;
             };
             BaseOptions.prototype.$number = function (selector) {
                 var select = this.$(selector);
@@ -47,7 +51,7 @@ var MakerJsPlayground;
             };
             return BaseOptions;
         }());
-        var DxfOptions = (function (_super) {
+        var DxfOptions = /** @class */ (function (_super) {
             __extends(DxfOptions, _super);
             function DxfOptions(format, formatTitle, div, model) {
                 return _super.call(this, format, formatTitle, div, model) || this;
@@ -56,13 +60,15 @@ var MakerJsPlayground;
                 // show unit picker if it does not
             }
             DxfOptions.prototype.getOptionObject = function () {
-                var options = {};
+                var options = {
+                    usePOLYLINE: this.$checked('#dxf-usepolyline')
+                };
                 this.addAccuracy('#dxf-accuracy', options);
                 return options;
             };
             return DxfOptions;
         }(BaseOptions));
-        var SvgOptions = (function (_super) {
+        var SvgOptions = /** @class */ (function (_super) {
             __extends(SvgOptions, _super);
             function SvgOptions() {
                 return _super !== null && _super.apply(this, arguments) || this;
@@ -74,7 +80,7 @@ var MakerJsPlayground;
             };
             return SvgOptions;
         }(BaseOptions));
-        var SvgPathDataOptions = (function (_super) {
+        var SvgPathDataOptions = /** @class */ (function (_super) {
             __extends(SvgPathDataOptions, _super);
             function SvgPathDataOptions() {
                 return _super !== null && _super.apply(this, arguments) || this;
@@ -91,7 +97,7 @@ var MakerJsPlayground;
             };
             return SvgPathDataOptions;
         }(BaseOptions));
-        var JsonOptions = (function (_super) {
+        var JsonOptions = /** @class */ (function (_super) {
             __extends(JsonOptions, _super);
             function JsonOptions() {
                 return _super !== null && _super.apply(this, arguments) || this;
@@ -105,7 +111,7 @@ var MakerJsPlayground;
             };
             return JsonOptions;
         }(BaseOptions));
-        var JscadScriptOptions = (function (_super) {
+        var JscadScriptOptions = /** @class */ (function (_super) {
             __extends(JscadScriptOptions, _super);
             function JscadScriptOptions() {
                 return _super !== null && _super.apply(this, arguments) || this;
@@ -130,7 +136,7 @@ var MakerJsPlayground;
             };
             return JscadScriptOptions;
         }(BaseOptions));
-        var StlOptions = (function (_super) {
+        var StlOptions = /** @class */ (function (_super) {
             __extends(StlOptions, _super);
             function StlOptions(format, formatTitle, div, model) {
                 return _super.call(this, format, formatTitle, div, model) || this;
@@ -148,7 +154,7 @@ var MakerJsPlayground;
             };
             return StlOptions;
         }(BaseOptions));
-        var PdfOptions = (function (_super) {
+        var PdfOptions = /** @class */ (function (_super) {
             __extends(PdfOptions, _super);
             function PdfOptions() {
                 return _super !== null && _super.apply(this, arguments) || this;

@@ -8,6 +8,11 @@ namespace MakerJsPlayground.FormatOptions {
             return this.div.querySelector(selector);
         }
 
+        $checked(selector: string) {
+            const select = this.$(selector) as HTMLInputElement;
+            return select.checked;
+        }
+
         $number(selector: string) {
             const select = this.$(selector) as HTMLInputElement;
             if (makerjs.isNumber(select.valueAsNumber)) {
@@ -47,7 +52,9 @@ namespace MakerJsPlayground.FormatOptions {
         }
 
         getOptionObject() {
-            const options: MakerJs.exporter.IDXFRenderOptions = {};
+            const options: MakerJs.exporter.IDXFRenderOptions = {
+                usePOLYLINE: this.$checked('#dxf-usepolyline')
+            };
             this.addAccuracy('#dxf-accuracy', options);
             return options;
         }
