@@ -3247,7 +3247,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 336,
+              "line": 334,
               "character": 27
             }
           ],
@@ -3257,7 +3257,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 337,
+                  "line": 335,
                   "character": 13
                 }
               ],
@@ -3271,7 +3271,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 338,
+                  "line": 336,
                   "character": 13
                 }
               ],
@@ -3292,7 +3292,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 309,
+              "line": 307,
               "character": 37
             }
           ],
@@ -3307,7 +3307,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 314,
+                  "line": 312,
                   "character": 13
                 }
               ],
@@ -3328,7 +3328,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 320,
+              "line": 318,
               "character": 38
             }
           ],
@@ -3374,7 +3374,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 325,
+                  "line": 323,
                   "character": 20
                 }
               ],
@@ -3409,7 +3409,7 @@
                   "sources": [
                     {
                       "fileName": "core/dxf.ts",
-                      "line": 325,
+                      "line": 323,
                       "character": 22
                     }
                   ]
@@ -3451,7 +3451,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 330,
+                  "line": 328,
                   "character": 19
                 }
               ],
