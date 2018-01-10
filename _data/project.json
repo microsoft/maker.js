@@ -3239,6 +3239,49 @@
         }
       ],
       "Interface": {
+        "IChainOnLayer": {
+          "flags": {},
+          "comment": {
+            "shortText": "private"
+          },
+          "sources": [
+            {
+              "fileName": "core/dxf.ts",
+              "line": 336,
+              "character": 27
+            }
+          ],
+          "Property": {
+            "chain": {
+              "flags": {},
+              "sources": [
+                {
+                  "fileName": "core/dxf.ts",
+                  "line": 337,
+                  "character": 13
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "IChain"
+              }
+            },
+            "layer": {
+              "flags": {},
+              "sources": [
+                {
+                  "fileName": "core/dxf.ts",
+                  "line": 338,
+                  "character": 13
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "string"
+              }
+            }
+          }
+        },
         "IDXFLayerOptions": {
           "flags": {
             "isExported": true
@@ -3249,7 +3292,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 231,
+              "line": 309,
               "character": 37
             }
           ],
@@ -3264,7 +3307,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 236,
+                  "line": 314,
                   "character": 13
                 }
               ],
@@ -3285,7 +3328,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 242,
+              "line": 320,
               "character": 38
             }
           ],
@@ -3331,7 +3374,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 247,
+                  "line": 325,
                   "character": 20
                 }
               ],
@@ -3366,7 +3409,7 @@
                   "sources": [
                     {
                       "fileName": "core/dxf.ts",
-                      "line": 247,
+                      "line": 325,
                       "character": 22
                     }
                   ]
@@ -3395,6 +3438,26 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "IExportOptions.units"
+              }
+            },
+            "usePOLYLINE": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Flag to use POLYLINE"
+              },
+              "sources": [
+                {
+                  "fileName": "core/dxf.ts",
+                  "line": 330,
+                  "character": 19
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "boolean"
               }
             }
           }
