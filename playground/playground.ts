@@ -1583,7 +1583,7 @@
         try {
             switch (request.format) {
                 case MakerJsPlaygroundExport.ExportFormat.Dxf:
-                    text = makerjs.exporter.toDXF(processed.model);
+                    text = makerjs.exporter.toDXF(processed.model, request.options);
                     break;
 
                 case MakerJsPlaygroundExport.ExportFormat.Json:

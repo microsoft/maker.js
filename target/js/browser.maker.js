@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.9.81
+ *   version: 0.9.82
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -52,7 +52,7 @@ and limitations under the License.
  *   author: Paul Vorbach <paul@vorba.ch>
  *   contributors: Blake Miner <miner.blake@gmail.com>, Tian You <axqd001@gmail.com>, George Stagas <gstagas@gmail.com>, Tobiasz Cudnik <tobiasz.cudnik@gmail.com>, Pavel Lang <langpavel@phpskelet.org>, Dan MacTough, w1nk, Hugh Kennedy, Dustin Diaz, Ilya Shaisultanov, Nathan MacInnes <nathan@macinn.es>, Benjamin E. Coe <ben@npmjs.com>, Nathan Zadoks, Róbert Oroszi <robert+gh@oroszi.net>, Aurélio A. Heckert, Guy Ellis
  *   homepage: https://github.com/pvorb/node-clone#readme
- *   version: 1.0.2
+ *   version: 1.0.3
  *
  * graham_scan:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -558,7 +558,7 @@ var MakerJs;
     /**
      * @private
      */
-    var Cascade = (function () {
+    var Cascade = /** @class */ (function () {
         function Cascade(_module, $initial) {
             this._module = _module;
             this.$initial = $initial;
@@ -1702,7 +1702,7 @@ var MakerJs;
         /**
          * Class for arc path.
          */
-        var Arc = (function () {
+        var Arc = /** @class */ (function () {
             function Arc() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -1799,7 +1799,7 @@ var MakerJs;
         /**
          * Class for circle path.
          */
-        var Circle = (function () {
+        var Circle = /** @class */ (function () {
             function Circle() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -1854,7 +1854,7 @@ var MakerJs;
         /**
          * Class for line path.
          */
-        var Line = (function () {
+        var Line = /** @class */ (function () {
             function Line() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -1881,7 +1881,7 @@ var MakerJs;
          *
          * @param arc Arc to use as the basic for the chord.
          */
-        var Chord = (function () {
+        var Chord = /** @class */ (function () {
             function Chord(arc) {
                 var arcPoints = MakerJs.point.fromArc(arc);
                 this.type = MakerJs.pathType.Line;
@@ -1898,7 +1898,7 @@ var MakerJs;
          * @param distance Distance between parallel and original line.
          * @param nearPoint Any point to determine which side of the line to place the parallel.
          */
-        var Parallel = (function () {
+        var Parallel = /** @class */ (function () {
             function Parallel(toLine, distance, nearPoint) {
                 this.type = MakerJs.pathType.Line;
                 this.origin = MakerJs.point.clone(toLine.origin);
@@ -2761,7 +2761,7 @@ var MakerJs;
     /**
      * Collects items that share a common key.
      */
-    var Collector = (function () {
+    var Collector = /** @class */ (function () {
         function Collector(comparer) {
             this.comparer = comparer;
             this.collections = [];
@@ -3877,7 +3877,7 @@ var MakerJs;
          * @param atlas Optional atlas to save measurements.
          * @returns object with low and high points.
          */
-        var Atlas = (function () {
+        var Atlas = /** @class */ (function () {
             /**
              * Constructor.
              * @param modelContext The model to measure.
@@ -4291,14 +4291,14 @@ var MakerJs;
                 }
             }
             function defaultLayer(pathContext, parentLayer) {
-                var layerId = pathContext.layer || parentLayer || '0';
+                var layerId = (pathContext && pathContext.layer) || parentLayer || '0';
                 if (layerIds.indexOf(layerId) < 0) {
                     layerIds.push(layerId);
                 }
                 return layerId;
             }
             var map = {};
-            map[MakerJs.pathType.Line] = function (id, line, offset, layer) {
+            map[MakerJs.pathType.Line] = function (line, offset, layer) {
                 append("0");
                 append("LINE");
                 append("8");
@@ -4312,7 +4312,7 @@ var MakerJs;
                 append("21");
                 append(MakerJs.round(line.end[1] + offset[1], opts.accuracy));
             };
-            map[MakerJs.pathType.Circle] = function (id, circle, offset, layer) {
+            map[MakerJs.pathType.Circle] = function (circle, offset, layer) {
                 append("0");
                 append("CIRCLE");
                 append("8");
@@ -4324,7 +4324,7 @@ var MakerJs;
                 append("40");
                 append(MakerJs.round(circle.radius, opts.accuracy));
             };
-            map[MakerJs.pathType.Arc] = function (id, arc, offset, layer) {
+            map[MakerJs.pathType.Arc] = function (arc, offset, layer) {
                 append("0");
                 append("ARC");
                 append("8");
@@ -4342,6 +4342,55 @@ var MakerJs;
             };
             //TODO - handle scenario if any bezier seeds get passed
             //map[pathType.BezierSeed]
+            function appendVertex(v, layer, bulge) {
+                append("0");
+                append("VERTEX");
+                append("8");
+                append(defaultLayer(null, layer));
+                append("10");
+                append(MakerJs.round(v[0], opts.accuracy));
+                append("20");
+                append(MakerJs.round(v[1], opts.accuracy));
+                append("30");
+                append(0);
+                if (bulge !== undefined) {
+                    append("42");
+                    append(bulge);
+                }
+            }
+            function polyline(c) {
+                append("0");
+                append("POLYLINE");
+                append("8");
+                append(defaultLayer(null, c.layer));
+                append("10");
+                append(0);
+                append("20");
+                append(0);
+                append("30");
+                append(0);
+                append("70");
+                append(c.chain.endless ? 1 : 0);
+                c.chain.links.forEach(function (link, i) {
+                    var bulge;
+                    if (link.walkedPath.pathContext.type === MakerJs.pathType.Arc) {
+                        var arc = link.walkedPath.pathContext;
+                        bulge = MakerJs.round(Math.tan(MakerJs.angle.toRadians(MakerJs.angle.ofArcSpan(arc)) / 4), opts.accuracy);
+                        if (link.reversed) {
+                            bulge *= -1;
+                        }
+                    }
+                    var vertex = link.endPoints[link.reversed ? 1 : 0];
+                    appendVertex(vertex, c.layer, bulge);
+                });
+                if (!c.chain.endless) {
+                    var lastLink = c.chain.links[c.chain.links.length - 1];
+                    var endPoint = lastLink.endPoints[lastLink.reversed ? 0 : 1];
+                    appendVertex(endPoint, c.layer);
+                }
+                append("0");
+                append("SEQEND");
+            }
             function section(sectionFn) {
                 append("0");
                 append("SECTION");
@@ -4381,26 +4430,26 @@ var MakerJs;
                 });
             }
             function header() {
-                var units = dxfUnit[opts.units];
                 append("2");
                 append("HEADER");
-                append("9");
-                append("$INSUNITS");
-                append("70");
-                append(units);
+                if (opts.units) {
+                    var units = dxfUnit[opts.units];
+                    append("9");
+                    append("$INSUNITS");
+                    append("70");
+                    append(units);
+                }
             }
-            function entities() {
+            function entities(walkedPaths, chains) {
                 append("2");
                 append("ENTITIES");
-                var walkOptions = {
-                    onPath: function (walkedPath) {
-                        var fn = map[walkedPath.pathContext.type];
-                        if (fn) {
-                            fn(walkedPath.pathId, walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
-                        }
+                chains.forEach(function (c) { return polyline(c); });
+                walkedPaths.forEach(function (walkedPath) {
+                    var fn = map[walkedPath.pathContext.type];
+                    if (fn) {
+                        fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
                     }
-                };
-                MakerJs.model.walk(modelToExport, walkOptions);
+                });
             }
             //fixup options
             if (!opts.units) {
@@ -4412,12 +4461,38 @@ var MakerJs;
             //also pass back to options parameter
             MakerJs.extendObject(options, opts);
             //begin dxf output
-            if (opts.units) {
-                section(header);
-            }
             dxfIndex = "bottom";
-            section(entities);
+            section(function () {
+                var chainsOnLayers = [];
+                var walkedPaths = [];
+                opts.usePOLYLINE = true;
+                if (opts.usePOLYLINE) {
+                    var cb = function (chains, loose, layer) {
+                        chains.forEach(function (c) {
+                            if (c.endless && c.links.length === 1 && c.links[0].walkedPath.pathContext.type === MakerJs.pathType.Circle) {
+                                //don't treat circles as lwpolylines
+                                walkedPaths.push(c.links[0].walkedPath);
+                                return;
+                            }
+                            var chainOnLayer = { chain: c, layer: layer };
+                            chainsOnLayers.push(chainOnLayer);
+                        });
+                        walkedPaths.push.apply(walkedPaths, loose);
+                    };
+                    MakerJs.model.findChains(modelToExport, cb, { byLayers: true });
+                }
+                else {
+                    var walkOptions = {
+                        onPath: function (walkedPath) {
+                            walkedPaths.push(walkedPath);
+                        }
+                    };
+                    MakerJs.model.walk(modelToExport, walkOptions);
+                }
+                entities(walkedPaths, chainsOnLayers);
+            });
             dxfIndex = "top";
+            section(header);
             section(function () { return tables(layersOut); });
             dxfIndex = "bottom";
             append("0");
@@ -6073,7 +6148,7 @@ var MakerJs;
         /**
          * @private
          */
-        var DeadEndFinder = (function () {
+        var DeadEndFinder = /** @class */ (function () {
             function DeadEndFinder(pointMatchingDistance, keep, trackDeleted) {
                 this.pointMatchingDistance = pointMatchingDistance;
                 this.keep = keep;
@@ -6171,7 +6246,7 @@ var MakerJs;
          * Class for an XML tag.
          * @private
          */
-        var XmlTag = (function () {
+        var XmlTag = /** @class */ (function () {
             /**
              * @param name Name of the XML tag.
              * @param attrs Optional attributes for the tag.
@@ -8132,7 +8207,7 @@ var MakerJs;
         /**
          * @private
          */
-        var TPoint = (function () {
+        var TPoint = /** @class */ (function () {
             function TPoint(b, t, offset) {
                 this.t = t;
                 this.point = MakerJs.point.add(getIPoint(b.get(t)), offset);
@@ -8234,7 +8309,7 @@ var MakerJs;
          * @private
          * Class for bezier seed.
          */
-        var BezierSeed = (function () {
+        var BezierSeed = /** @class */ (function () {
             function BezierSeed() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -8274,7 +8349,7 @@ var MakerJs;
             }
             return BezierSeed;
         }());
-        var BezierCurve = (function () {
+        var BezierCurve = /** @class */ (function () {
             function BezierCurve() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -8516,7 +8591,7 @@ var MakerJs;
             }
             return null;
         }
-        var Ellipse = (function () {
+        var Ellipse = /** @class */ (function () {
             function Ellipse() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -8614,7 +8689,7 @@ var MakerJs;
             { title: "radiusX", type: "range", min: 1, max: 50, value: 50 },
             { title: "radiusY", type: "range", min: 1, max: 50, value: 25 }
         ];
-        var EllipticArc = (function () {
+        var EllipticArc = /** @class */ (function () {
             function EllipticArc() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -8685,7 +8760,7 @@ var MakerJs;
             }
             return points;
         }
-        var ConnectTheDots = (function () {
+        var ConnectTheDots = /** @class */ (function () {
             function ConnectTheDots() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -8738,7 +8813,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Polygon = (function () {
+        var Polygon = /** @class */ (function () {
             function Polygon(numberOfSides, radius, firstCornerAngleInDegrees, circumscribed) {
                 this.paths = {};
                 this.paths = new models.ConnectTheDots(true, Polygon.getPoints(numberOfSides, radius, firstCornerAngleInDegrees, circumscribed)).paths;
@@ -8775,7 +8850,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Holes = (function () {
+        var Holes = /** @class */ (function () {
             /**
              * Create an array of circles of the same radius from an array of center points.
              *
@@ -8817,7 +8892,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var BoltCircle = (function () {
+        var BoltCircle = /** @class */ (function () {
             function BoltCircle(boltRadius, holeRadius, boltCount, firstBoltAngleInDegrees) {
                 if (firstBoltAngleInDegrees === void 0) { firstBoltAngleInDegrees = 0; }
                 this.paths = {};
@@ -8840,7 +8915,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var BoltRectangle = (function () {
+        var BoltRectangle = /** @class */ (function () {
             function BoltRectangle(width, height, holeRadius) {
                 this.paths = {};
                 var points = [[0, 0], [width, 0], [width, height], [0, height]];
@@ -8861,7 +8936,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Dogbone = (function () {
+        var Dogbone = /** @class */ (function () {
             /**
              * Create a dogbone from width, height, corner radius, style, and bottomless flag.
              *
@@ -8951,7 +9026,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Dome = (function () {
+        var Dome = /** @class */ (function () {
             function Dome(width, height, radius, bottomless) {
                 this.paths = {};
                 var w2 = width / 2;
@@ -8993,7 +9068,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var RoundRectangle = (function () {
+        var RoundRectangle = /** @class */ (function () {
             function RoundRectangle() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -9052,7 +9127,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Oval = (function () {
+        var Oval = /** @class */ (function () {
             function Oval(width, height) {
                 this.paths = {};
                 this.paths = new models.RoundRectangle(width, height, Math.min(height / 2, width / 2)).paths;
@@ -9070,7 +9145,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var OvalArc = (function () {
+        var OvalArc = /** @class */ (function () {
             function OvalArc(startAngle, endAngle, sweepRadius, slotRadius, selfIntersect, isolateCaps) {
                 if (selfIntersect === void 0) { selfIntersect = false; }
                 if (isolateCaps === void 0) { isolateCaps = false; }
@@ -9144,7 +9219,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Rectangle = (function () {
+        var Rectangle = /** @class */ (function () {
             function Rectangle() {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -9189,7 +9264,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Ring = (function () {
+        var Ring = /** @class */ (function () {
             function Ring(outerRadius, innerRadius) {
                 this.paths = {};
                 var radii = {
@@ -9215,7 +9290,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Belt = (function () {
+        var Belt = /** @class */ (function () {
             function Belt(leftRadius, distance, rightRadius) {
                 this.paths = {};
                 var left = new MakerJs.paths.Arc([0, 0], leftRadius, 0, 360);
@@ -9250,7 +9325,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var SCurve = (function () {
+        var SCurve = /** @class */ (function () {
             function SCurve(width, height) {
                 this.paths = {};
                 function findRadius(x, y) {
@@ -9291,7 +9366,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Slot = (function () {
+        var Slot = /** @class */ (function () {
             function Slot(origin, endPoint, radius, isolateCaps) {
                 if (isolateCaps === void 0) { isolateCaps = false; }
                 var _this = this;
@@ -9347,7 +9422,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Square = (function () {
+        var Square = /** @class */ (function () {
             function Square(side) {
                 this.paths = {};
                 this.paths = new models.Rectangle(side, side).paths;
@@ -9364,7 +9439,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Star = (function () {
+        var Star = /** @class */ (function () {
             function Star(numberOfPoints, outerRadius, innerRadius, skipPoints) {
                 if (skipPoints === void 0) { skipPoints = 2; }
                 this.paths = {};
@@ -9405,7 +9480,7 @@ var MakerJs;
 (function (MakerJs) {
     var models;
     (function (models) {
-        var Text = (function () {
+        var Text = /** @class */ (function () {
             function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy, opentypeOptions) {
                 if (combine === void 0) { combine = false; }
                 if (centerCharacterOrigin === void 0) { centerCharacterOrigin = false; }
@@ -9504,6 +9579,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.81";
+MakerJs.version = "0.9.82";
 
 },{"clone":2,"graham_scan":3}]},{},[]);

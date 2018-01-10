@@ -1,7 +1,7 @@
 var MakerJsPlayground;
 (function (MakerJsPlayground) {
     //classes
-    var QueryStringParams = (function () {
+    var QueryStringParams = /** @class */ (function () {
         function QueryStringParams(querystring) {
             if (querystring === void 0) { querystring = document.location.search.substring(1); }
             if (querystring) {
@@ -256,7 +256,7 @@ var MakerJsPlayground;
         document.body.classList.remove('download-error');
         document.body.classList.remove('download-ready');
     }
-    var Frown = (function () {
+    var Frown = /** @class */ (function () {
         function Frown() {
             this.paths = {
                 head: new makerjs.paths.Circle([0, 0], 85),
@@ -267,7 +267,7 @@ var MakerJsPlayground;
         }
         return Frown;
     }());
-    var StraightFace = (function () {
+    var StraightFace = /** @class */ (function () {
         function StraightFace() {
             this.paths = {
                 head: new makerjs.paths.Circle([0, 0], 85),
@@ -278,7 +278,7 @@ var MakerJsPlayground;
         }
         return StraightFace;
     }());
-    var Wait = (function () {
+    var Wait = /** @class */ (function () {
         function Wait() {
             var wireFrame = {
                 paths: {
@@ -293,7 +293,7 @@ var MakerJsPlayground;
         }
         return Wait;
     }());
-    var Warning = (function () {
+    var Warning = /** @class */ (function () {
         function Warning() {
             this.models = {
                 triangle: new makerjs.models.ConnectTheDots(true, [[-200, 0], [200, 0], [0, 346]]),
@@ -1221,7 +1221,7 @@ var MakerJsPlayground;
         try {
             switch (request.format) {
                 case MakerJsPlaygroundExport.ExportFormat.Dxf:
-                    text = makerjs.exporter.toDXF(processed.model);
+                    text = makerjs.exporter.toDXF(processed.model, request.options);
                     break;
                 case MakerJsPlaygroundExport.ExportFormat.Json:
                     text = JSON.stringify(processed.model, null, 2);
