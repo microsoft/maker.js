@@ -1,0 +1,210 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "MakerJs.IModel": {
+            "description": "A model is a composite object which may contain an array of paths, or an array of models recursively.\n\nExample:\n```\nvar m = { \n   paths: { \n     \"line1\": { type: 'line', origin: [0, 0], end: [1, 1] }, \n     \"line2\": { type: 'line', origin: [0, 0], end: [-1, -1] } \n   } \n};\n```",
+            "properties": {
+                "exporterOptions": {
+                    "additionalProperties": {
+                    },
+                    "description": "Optional exporter options for this model.",
+                    "type": "object"
+                },
+                "layer": {
+                    "description": "Optional layer of this model.",
+                    "type": "string"
+                },
+                "models": {
+                    "$ref": "#/definitions/MakerJs.IModelMap",
+                    "description": "Optional array of models within this model."
+                },
+                "notes": {
+                    "description": "An author may wish to add notes to this model instance.",
+                    "type": "string"
+                },
+                "origin": {
+                    "$ref": "#/definitions/MakerJs.IPoint",
+                    "description": "Optional origin location of this model."
+                },
+                "paths": {
+                    "$ref": "#/definitions/MakerJs.IPathMap",
+                    "description": "Optional array of path objects in this model."
+                },
+                "type": {
+                    "description": "A model may want to specify its type, but this value is not employed yet.",
+                    "type": "string"
+                },
+                "units": {
+                    "description": "Optional unit system of this model. See UnitType for possible values.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MakerJs.IModelMap": {
+            "additionalProperties": {
+                "$ref": "#/definitions/MakerJs.IModel"
+            },
+            "description": "Model objects by id.",
+            "type": "object"
+        },
+        "MakerJs.IPath": {
+            "description": "A line, curved line or other simple two dimensional shape.",
+            "properties": {
+                "layer": {
+                    "description": "Optional layer of this path.",
+                    "type": "string"
+                },
+                "origin": {
+                    "$ref": "#/definitions/MakerJs.IPoint",
+                    "description": "The main point of reference for this path."
+                },
+                "type": {
+                    "description": "The type of the path, e.g. \"line\", \"circle\", or \"arc\". These strings are enumerated in pathType.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MakerJs.IPathArc": {
+            "description": "An arc path.\n\nExamples:\n```\nvar arc: IPathArc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //typescript\nvar arc = { type: 'arc', origin: [0, 0], radius: 7, startAngle: 0, endAngle: 45 };   //javascript\n```",
+            "properties": {
+                "endAngle": {
+                    "description": "The angle (in degrees) to end drawing the arc, in polar (counter-clockwise) direction. May be less than start angle if it past 360.",
+                    "type": "number"
+                },
+                "layer": {
+                    "description": "Optional layer of this path.",
+                    "type": "string"
+                },
+                "origin": {
+                    "$ref": "#/definitions/MakerJs.IPoint",
+                    "description": "The main point of reference for this path."
+                },
+                "radius": {
+                    "description": "The radius of the circle.",
+                    "type": "number"
+                },
+                "startAngle": {
+                    "description": "The angle (in degrees) to begin drawing the arc, in polar (counter-clockwise) direction.",
+                    "type": "number"
+                },
+                "type": {
+                    "description": "The type of the path, e.g. \"line\", \"circle\", or \"arc\". These strings are enumerated in pathType.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MakerJs.IPathCircle": {
+            "description": "A circle path.\n\nExamples:\n```\nvar circle: IPathCircle = { type: 'circle', origin: [0, 0], radius: 7 };   //typescript\nvar circle = { type: 'circle', origin: [0, 0], radius: 7 };   //javascript\n```",
+            "properties": {
+                "layer": {
+                    "description": "Optional layer of this path.",
+                    "type": "string"
+                },
+                "origin": {
+                    "$ref": "#/definitions/MakerJs.IPoint",
+                    "description": "The main point of reference for this path."
+                },
+                "radius": {
+                    "description": "The radius of the circle.",
+                    "type": "number"
+                },
+                "type": {
+                    "description": "The type of the path, e.g. \"line\", \"circle\", or \"arc\". These strings are enumerated in pathType.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MakerJs.IPathLine": {
+            "description": "A line path.\n\nExamples:\n```\nvar line: IPathLine = { type: 'line', origin: [0, 0], end: [1, 1] };   //typescript\nvar line = { type: 'line', origin: [0, 0], end: [1, 1] };   //javascript\n```",
+            "properties": {
+                "end": {
+                    "$ref": "#/definitions/MakerJs.IPoint",
+                    "description": "The end point defining the line. The start point is the origin."
+                },
+                "layer": {
+                    "description": "Optional layer of this path.",
+                    "type": "string"
+                },
+                "origin": {
+                    "$ref": "#/definitions/MakerJs.IPoint",
+                    "description": "The main point of reference for this path."
+                },
+                "type": {
+                    "description": "The type of the path, e.g. \"line\", \"circle\", or \"arc\". These strings are enumerated in pathType.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MakerJs.IPathMap": {
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "$ref": "#/definitions/MakerJs.IPath"
+                    },
+                    {
+                        "$ref": "#/definitions/MakerJs.IPathLine"
+                    },
+                    {
+                        "$ref": "#/definitions/MakerJs.IPathCircle"
+                    },
+                    {
+                        "$ref": "#/definitions/MakerJs.IPathArc"
+                    }
+                ]
+            },
+            "description": "Path objects by id.",
+            "type": "object"
+        },
+        "MakerJs.IPoint": {
+            "description": "An x-y point in a two-dimensional space.\nImplemented as an array with 2 elements. The first element is x, the second element is y.\n\nExamples:\n```\nvar p: IPoint = [0, 0];   //typescript\nvar p = [0, 0];   //javascript\n```",
+            "items": {
+                "type": "number"
+            },
+            "type": "array"
+        }
+    },
+    "description": "A model is a composite object which may contain an array of paths, or an array of models recursively.\n\nExample:\n```\nvar m = { \n   paths: { \n     \"line1\": { type: 'line', origin: [0, 0], end: [1, 1] }, \n     \"line2\": { type: 'line', origin: [0, 0], end: [-1, -1] } \n   } \n};\n```",
+    "properties": {
+        "exporterOptions": {
+            "additionalProperties": {
+            },
+            "description": "Optional exporter options for this model.",
+            "type": "object"
+        },
+        "layer": {
+            "description": "Optional layer of this model.",
+            "type": "string"
+        },
+        "models": {
+            "$ref": "#/definitions/MakerJs.IModelMap",
+            "description": "Optional array of models within this model."
+        },
+        "notes": {
+            "description": "An author may wish to add notes to this model instance.",
+            "type": "string"
+        },
+        "origin": {
+            "$ref": "#/definitions/MakerJs.IPoint",
+            "description": "Optional origin location of this model."
+        },
+        "paths": {
+            "$ref": "#/definitions/MakerJs.IPathMap",
+            "description": "Optional array of path objects in this model."
+        },
+        "type": {
+            "description": "A model may want to specify its type, but this value is not employed yet.",
+            "type": "string"
+        },
+        "units": {
+            "description": "Optional unit system of this model. See UnitType for possible values.",
+            "type": "string"
+        }
+    },
+    "type": "object"
+}
+

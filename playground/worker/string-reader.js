@@ -1,4 +1,4 @@
-var StringReader = (function () {
+var StringReader = /** @class */ (function () {
     function StringReader(complete) {
         this.complete = complete;
         this.data = [];

@@ -1,6 +1,6 @@
 var MakerJsRequireIframe;
 (function (MakerJsRequireIframe) {
-    var Counter = (function () {
+    var Counter = /** @class */ (function () {
         function Counter() {
             this.required = 0;
             this.loaded = 0;
@@ -18,7 +18,7 @@ var MakerJsRequireIframe;
         };
         return Counter;
     }());
-    var Temp = (function () {
+    var Temp = /** @class */ (function () {
         function Temp() {
         }
         return Temp;

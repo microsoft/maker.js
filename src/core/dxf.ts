@@ -45,16 +45,16 @@ namespace MakerJs.exporter {
         }
 
         function defaultLayer(pathContext: IPath, parentLayer: string) {
-            var layerId = pathContext.layer || parentLayer || '0';
+            var layerId = (pathContext && pathContext.layer) || parentLayer || '0';
             if (layerIds.indexOf(layerId) < 0) {
                 layerIds.push(layerId);
             }
             return layerId;
         }
 
-        var map: { [type: string]: (id: string, pathValue: IPath, offset: IPoint, layer: string) => void; } = {};
+        var map: { [type: string]: (pathValue: IPath, offset: IPoint, layer: string) => void; } = {};
 
-        map[pathType.Line] = function (id: string, line: IPathLine, offset: IPoint, layer: string) {
+        map[pathType.Line] = function (line: IPathLine, offset: IPoint, layer: string) {
             append("0");
             append("LINE");
             append("8");
@@ -69,7 +69,7 @@ namespace MakerJs.exporter {
             append(round(line.end[1] + offset[1], opts.accuracy));
         };
 
-        map[pathType.Circle] = function (id: string, circle: IPathCircle, offset: IPoint, layer: string) {
+        map[pathType.Circle] = function (circle: IPathCircle, offset: IPoint, layer: string) {
             append("0");
             append("CIRCLE");
             append("8");
@@ -82,7 +82,7 @@ namespace MakerJs.exporter {
             append(round(circle.radius, opts.accuracy));
         };
 
-        map[pathType.Arc] = function (id: string, arc: IPathArc, offset: IPoint, layer: string) {
+        map[pathType.Arc] = function (arc: IPathArc, offset: IPoint, layer: string) {
             append("0");
             append("ARC");
             append("8");
@@ -101,6 +101,61 @@ namespace MakerJs.exporter {
 
         //TODO - handle scenario if any bezier seeds get passed
         //map[pathType.BezierSeed]
+
+        function appendVertex(v: IPoint, layer: string, bulge?: number) {
+            append("0");
+            append("VERTEX");
+            append("8");
+            append(defaultLayer(null, layer));
+            append("10");
+            append(round(v[0], opts.accuracy));
+            append("20");
+            append(round(v[1], opts.accuracy));
+            append("30");
+            append(0);
+
+            if (bulge !== undefined) {
+                append("42");
+                append(bulge);
+            }
+        }
+
+        function polyline(c: IChainOnLayer) {
+            append("0");
+            append("POLYLINE");
+            append("8");
+            append(defaultLayer(null, c.layer));
+            append("10");
+            append(0);
+            append("20");
+            append(0);
+            append("30");
+            append(0);
+            append("70");
+            append(c.chain.endless ? 1 : 0);
+
+            c.chain.links.forEach((link, i) => {
+                let bulge: number;
+                if (link.walkedPath.pathContext.type === pathType.Arc) {
+                    const arc = link.walkedPath.pathContext as IPathArc;
+                    bulge = round(Math.tan(angle.toRadians(angle.ofArcSpan(arc)) / 4), opts.accuracy);
+                    if (link.reversed) {
+                        bulge *= -1;
+                    }
+                }
+                const vertex = link.endPoints[link.reversed ? 1 : 0];
+                appendVertex(vertex, c.layer, bulge);
+            });
+
+            if (!c.chain.endless) {
+                const lastLink = c.chain.links[c.chain.links.length - 1];
+                const endPoint = lastLink.endPoints[lastLink.reversed ? 0 : 1];
+                appendVertex(endPoint, c.layer);
+            }
+
+            append("0");
+            append("SEQEND");
+        }
 
         function section(sectionFn: () => void) {
             append("0");
@@ -150,31 +205,29 @@ namespace MakerJs.exporter {
         }
 
         function header() {
-            var units = dxfUnit[opts.units];
-
             append("2");
             append("HEADER");
 
-            append("9");
-            append("$INSUNITS");
-            append("70");
-            append(units);
+            if (opts.units) {
+                var units = dxfUnit[opts.units];
+                append("9");
+                append("$INSUNITS");
+                append("70");
+                append(units);
+            }
         }
 
-        function entities() {
+        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[]) {
             append("2");
             append("ENTITIES");
 
-            var walkOptions: IWalkOptions = {
-                onPath: (walkedPath: IWalkPath) => {
-                    var fn = map[walkedPath.pathContext.type];
-                    if (fn) {
-                        fn(walkedPath.pathId, walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
-                    }
+            chains.forEach(c => polyline(c))
+            walkedPaths.forEach((walkedPath: IWalkPath) => {
+                var fn = map[walkedPath.pathContext.type];
+                if (fn) {
+                    fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
                 }
-            };
-
-            model.walk(modelToExport, walkOptions);
+            });
         }
 
         //fixup options
@@ -191,14 +244,39 @@ namespace MakerJs.exporter {
 
         //begin dxf output
 
-        if (opts.units) {
-            section(header);
-        }
-
         dxfIndex = "bottom";
-        section(entities);
+        section(() => {
+            const chainsOnLayers: IChainOnLayer[] = [];
+            const walkedPaths: IWalkPath[] = [];
+            opts.usePOLYLINE = true;
+
+            if (opts.usePOLYLINE) {
+                const cb: IChainCallback = function (chains: IChain[], loose: IWalkPath[], layer: string) {
+                    chains.forEach(c => {
+                        if (c.endless && c.links.length === 1 && c.links[0].walkedPath.pathContext.type === pathType.Circle) {
+                            //don't treat circles as lwpolylines
+                            walkedPaths.push(c.links[0].walkedPath);
+                            return;
+                        }
+                        const chainOnLayer: IChainOnLayer = { chain: c, layer };
+                        chainsOnLayers.push(chainOnLayer);
+                    });
+                    walkedPaths.push.apply(walkedPaths, loose);
+                }
+                model.findChains(modelToExport, cb, { byLayers: true });
+            } else {
+                var walkOptions: IWalkOptions = {
+                    onPath: (walkedPath: IWalkPath) => {
+                        walkedPaths.push(walkedPath);
+                    }
+                };
+                model.walk(modelToExport, walkOptions);
+            }
+            entities(walkedPaths, chainsOnLayers);
+        });
 
         dxfIndex = "top";
+        section(header);
         section(() => tables(layersOut));
 
         dxfIndex = "bottom";
@@ -245,6 +323,18 @@ namespace MakerJs.exporter {
          * DXF options per layer.
          */
         layerOptions?: { [layerId: string]: IDXFLayerOptions };
+
+        /**
+         * Flag to use POLYLINE
+         */
+        usePOLYLINE?: boolean;
     }
 
+    /**
+     * private
+     */
+    interface IChainOnLayer {
+        chain: IChain;
+        layer: string;
+    }
 }
