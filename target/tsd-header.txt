@@ -4,3 +4,4 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="external/jscad/csg.d.ts" />
+/// <reference path="external/jscad/stl-serializer.d.ts" />
