@@ -4258,7 +4258,6 @@ var MakerJs;
             section(function () {
                 var chainsOnLayers = [];
                 var walkedPaths = [];
-                opts.usePOLYLINE = true;
                 if (opts.usePOLYLINE) {
                     var cb = function (chains, loose, layer) {
                         chains.forEach(function (c) {
@@ -9372,5 +9371,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.82";
+MakerJs.version = "0.9.83";
 ﻿var Bezier = require('bezier-js');

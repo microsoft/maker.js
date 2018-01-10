@@ -248,8 +248,6 @@ namespace MakerJs.exporter {
         section(() => {
             const chainsOnLayers: IChainOnLayer[] = [];
             const walkedPaths: IWalkPath[] = [];
-            opts.usePOLYLINE = true;
-
             if (opts.usePOLYLINE) {
                 const cb: IChainCallback = function (chains: IChain[], loose: IWalkPath[], layer: string) {
                     chains.forEach(c => {
