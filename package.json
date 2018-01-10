@@ -14,6 +14,8 @@
     "target-browser-platform": "browserify -p licensify --ignore buffer -r ./target/js/node.js:makerjs -o ./target/js/browser.js",
     "version-inside": "node ./target/version-inside.js",
     "build-debug": "tsc",
+    "build-model-schema": "typescript-json-schema \"src/core/schema.ts\" MakerJs.IModel > schemas/makerjs-model.json",
+    "build-schemas": "npm run build-model-schema",
     "project": "typedoc ./src --json ./target/project.json",
     "gen-cascades": "npm run project && node ./target/cascadable.js > ./src/core/cascades.ts",
     "prebuild": "npm run gen-cascades",
@@ -114,7 +116,8 @@
     "shx": "^0.2.2",
     "sort-keys": "^1.1.2",
     "typedoc": "^0.7.1",
-    "typescript": "^2.4.2"
+    "typescript": "^2.4.2",
+    "typescript-json-schema": "^0.20.0"
   },
   "dependencies": {
     "@types/bezier-js": "^0.0.6",
