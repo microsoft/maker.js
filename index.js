@@ -398,6 +398,36 @@ var MakerJs;
     var angle;
     (function (angle) {
         /**
+         * private
+         */
+        function getFractionalPart(n) {
+            var s = n.toString();
+            var split = s.split('.');
+            return split[1];
+        }
+        /**
+         * private
+         */
+        function setFractionalPart(n, fractionalPart) {
+            var s = n.toString();
+            var split = s.split('.');
+            if (fractionalPart) {
+                return +(split[0] + '.' + fractionalPart);
+            }
+            else {
+                return n;
+            }
+        }
+        /**
+         * private
+         */
+        function copyFractionalPart(src, dest) {
+            if ((src < 0 && dest < 0) || (src > 0 && dest > 0)) {
+                return setFractionalPart(dest, getFractionalPart(src));
+            }
+            return dest;
+        }
+        /**
          * Ensures an angle is not greater than 360
          *
          * @param angleInDegrees Angle in degrees.
@@ -406,7 +436,7 @@ var MakerJs;
         function noRevolutions(angleInDegrees) {
             var revolutions = Math.floor(angleInDegrees / 360);
             var a = angleInDegrees - (360 * revolutions);
-            return a < 0 ? a + 360 : a;
+            return copyFractionalPart(angleInDegrees, a);
         }
         angle.noRevolutions = noRevolutions;
         /**
@@ -464,7 +494,7 @@ var MakerJs;
          */
         function ofArcSpan(arc) {
             var endAngle = angle.ofArcEnd(arc);
-            var a = MakerJs.round(endAngle - arc.startAngle);
+            var a = endAngle - arc.startAngle;
             if (a > 360) {
                 return noRevolutions(a);
             }
@@ -4387,7 +4417,7 @@ var MakerJs;
                 //solve for circles on the x axis at the distance
                 var d2 = distance / 2;
                 var between = new MakerJs.paths.Circle([d2, 0], d2);
-                var diff = new MakerJs.paths.Circle(((a.radius > b.radius) ? a : b).origin, inner ? (a.radius + b.radius) : Math.abs(a.radius - b.radius));
+                var diff = new MakerJs.paths.Circle(a.radius > b.radius ? [0, 0] : [distance, 0], inner ? (a.radius + b.radius) : Math.abs(a.radius - b.radius));
                 var int = MakerJs.path.intersection(diff, between);
                 if (!int || !int.path1Angles)
                     return null;
@@ -9371,5 +9401,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.83";
+MakerJs.version = "0.9.84";
 ﻿var Bezier = require('bezier-js');
