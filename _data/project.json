@@ -12,6 +12,65 @@
         }
       ],
       "Function": {
+        "copyFractionalPart": {
+          "flags": {},
+          "signatures": [
+            {
+              "name": "copyFractionalPart",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "private"
+              },
+              "parameters": [
+                {
+                  "name": "src",
+                  "flags": {},
+                  "type": "number"
+                },
+                {
+                  "name": "dest",
+                  "flags": {},
+                  "type": "number"
+                }
+              ],
+              "type": "number"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/angle.ts",
+              "line": 28,
+              "character": 31
+            }
+          ]
+        },
+        "getFractionalPart": {
+          "flags": {},
+          "signatures": [
+            {
+              "name": "getFractionalPart",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "private"
+              },
+              "parameters": [
+                {
+                  "name": "n",
+                  "flags": {},
+                  "type": "number"
+                }
+              ],
+              "type": "string"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/angle.ts",
+              "line": 6,
+              "character": 30
+            }
+          ]
+        },
         "mirror": {
           "flags": {
             "isExported": true
@@ -50,7 +109,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 120,
+              "line": 152,
               "character": 26
             }
           ]
@@ -81,7 +140,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 9,
+              "line": 41,
               "character": 33
             }
           ]
@@ -112,7 +171,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 41,
+              "line": 73,
               "character": 28
             }
           ]
@@ -150,7 +209,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 57,
+              "line": 89,
               "character": 31
             }
           ]
@@ -181,7 +240,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 67,
+              "line": 99,
               "character": 29
             }
           ]
@@ -218,7 +277,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 170,
+              "line": 202,
               "character": 36
             }
           ]
@@ -249,7 +308,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 83,
+              "line": 115,
               "character": 35
             }
           ]
@@ -286,7 +345,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 94,
+              "line": 126,
               "character": 36
             }
           ]
@@ -323,8 +382,40 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 105,
+              "line": 137,
               "character": 36
+            }
+          ]
+        },
+        "setFractionalPart": {
+          "flags": {},
+          "signatures": [
+            {
+              "name": "setFractionalPart",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "private"
+              },
+              "parameters": [
+                {
+                  "name": "n",
+                  "flags": {},
+                  "type": "number"
+                },
+                {
+                  "name": "fractionalPart",
+                  "flags": {},
+                  "type": "string"
+                }
+              ],
+              "type": "number"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/angle.ts",
+              "line": 15,
+              "character": 30
             }
           ]
         },
@@ -354,7 +445,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 31,
+              "line": 63,
               "character": 29
             }
           ]
@@ -385,7 +476,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 21,
+              "line": 53,
               "character": 29
             }
           ]

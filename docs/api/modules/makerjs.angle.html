@@ -16,6 +16,8 @@ title: Api - angle Module
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.angle.html#copyfractionalpart" class="tsd-kind-icon">copy<wbr>Fractional<wbr>Part</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.angle.html#getfractionalpart" class="tsd-kind-icon">get<wbr>Fractional<wbr>Part</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.angle.html#getlinkline" class="tsd-kind-icon">get<wbr>Link<wbr>Line</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#mirror" class="tsd-kind-icon">mirror</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#norevolutions" class="tsd-kind-icon">no<wbr>Revolutions</a></li>
@@ -26,6 +28,7 @@ title: Api - angle Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#oflineindegrees" class="tsd-kind-icon">of<wbr>Line<wbr>InDegrees</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofpointindegrees" class="tsd-kind-icon">of<wbr>Point<wbr>InDegrees</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#ofpointinradians" class="tsd-kind-icon">of<wbr>Point<wbr>InRadians</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.angle.html#setfractionalpart" class="tsd-kind-icon">set<wbr>Fractional<wbr>Part</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#todegrees" class="tsd-kind-icon">to<wbr>Degrees</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.angle.html#toradians" class="tsd-kind-icon">to<wbr>Radians</a></li>
 				</ul>
@@ -41,7 +44,7 @@ title: Api - angle Module
 		<div class="tsd-signature tsd-kind-icon">link<wbr>Line<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L136">core/angle.ts:136</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L168">core/angle.ts:168</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -82,6 +85,65 @@ title: Api - angle Module
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+		<a name="copyfractionalpart" class="tsd-anchor"></a>
+		<h3>copy<wbr>Fractional<wbr>Part</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">copy<wbr>Fractional<wbr>Part<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, dest<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L28">core/angle.ts:28</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>private</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>src: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>dest: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+		<a name="getfractionalpart" class="tsd-anchor"></a>
+		<h3>get<wbr>Fractional<wbr>Part</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Fractional<wbr>Part<span class="tsd-signature-symbol">(</span>n<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L6">core/angle.ts:6</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>private</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>n: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="getlinkline" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Link<wbr>Line</h3>
@@ -92,7 +154,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L153">core/angle.ts:153</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L185">core/angle.ts:185</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -120,7 +182,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L120">core/angle.ts:120</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L152">core/angle.ts:152</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -164,7 +226,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L9">core/angle.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L41">core/angle.ts:41</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -196,7 +258,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L41">core/angle.ts:41</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L73">core/angle.ts:73</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -228,7 +290,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L57">core/angle.ts:57</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L89">core/angle.ts:89</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -266,7 +328,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L67">core/angle.ts:67</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L99">core/angle.ts:99</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -298,7 +360,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L170">core/angle.ts:170</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L202">core/angle.ts:202</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -336,7 +398,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L83">core/angle.ts:83</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L115">core/angle.ts:115</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -368,7 +430,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L94">core/angle.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L126">core/angle.ts:126</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -406,7 +468,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L105">core/angle.ts:105</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L137">core/angle.ts:137</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -434,6 +496,37 @@ title: Api - angle Module
 			</li>
 		</ul>
 	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+		<a name="setfractionalpart" class="tsd-anchor"></a>
+		<h3>set<wbr>Fractional<wbr>Part</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">set<wbr>Fractional<wbr>Part<span class="tsd-signature-symbol">(</span>n<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, fractionalPart<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L15">core/angle.ts:15</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>private</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>n: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>fractionalPart: <span class="tsd-signature-type">string</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="todegrees" class="tsd-anchor"></a>
 		<h3>to<wbr>Degrees</h3>
@@ -444,7 +537,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L31">core/angle.ts:31</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L63">core/angle.ts:63</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -476,7 +569,7 @@ title: Api - angle Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4633c11e/src/core/angle.ts#L21">core/angle.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/660e05a8/src/core/angle.ts#L53">core/angle.ts:53</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
