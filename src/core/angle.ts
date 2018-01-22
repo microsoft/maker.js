@@ -1,6 +1,38 @@
 namespace MakerJs.angle {
 
     /**
+     * private
+     */
+    function getFractionalPart(n: number) {
+        const s = n.toString();
+        const split = s.split('.');
+        return split[1];
+    }
+
+    /**
+     * private
+     */
+    function setFractionalPart(n: number, fractionalPart: string) {
+        const s = n.toString();
+        const split = s.split('.');
+        if (fractionalPart) {
+            return +(split[0] + '.' + fractionalPart);
+        } else {
+            return n;
+        }        
+    }
+
+    /**
+     * private
+     */
+    function copyFractionalPart(src: number, dest: number) {
+        if ((src < 0 && dest < 0) || (src > 0 && dest > 0)) {
+            return setFractionalPart(dest, getFractionalPart(src));
+        }
+        return dest;
+    }
+
+    /**
      * Ensures an angle is not greater than 360
      * 
      * @param angleInDegrees Angle in degrees.
@@ -9,7 +41,7 @@ namespace MakerJs.angle {
     export function noRevolutions(angleInDegrees: number) {
         var revolutions = Math.floor(angleInDegrees / 360);
         var a = angleInDegrees - (360 * revolutions);
-        return a < 0 ? a + 360 : a;
+        return copyFractionalPart(angleInDegrees, a);
     }
 
     /**
@@ -66,7 +98,7 @@ namespace MakerJs.angle {
      */
     export function ofArcSpan(arc: IPathArc): number {
         var endAngle = angle.ofArcEnd(arc);
-        var a = round(endAngle - arc.startAngle);
+        var a = endAngle - arc.startAngle;
         if (a > 360) {
             return noRevolutions(a);
         } else {
