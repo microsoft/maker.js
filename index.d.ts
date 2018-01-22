@@ -4,7 +4,9 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="external/jscad/csg.d.ts" />
+/// <reference path="external/jscad/io.d.ts" />
 /// <reference path="external/jscad/stl-serializer.d.ts" />
+/// <reference types="opentype.js" />
 /// <reference types="pdfkit" />
 /// <reference types="bezier-js" />
 /**
