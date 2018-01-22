@@ -25,7 +25,6 @@ describe('jscad', function () {
 
         function statusCallback(status) {
             progress = status.progress;
-            console.log(progress);
         }
         var cag = makerjs.exporter.toJscadCAG(CAG, model, { statusCallback });
 

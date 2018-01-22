@@ -1,9 +1,12 @@
-// Type definitions for Maker.js 0.9.83
+// Type definitions for Maker.js 0.9.84
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="external/jscad/csg.d.ts" />
+/// <reference path="external/jscad/io.d.ts" />
+/// <reference path="external/jscad/stl-serializer.d.ts" />
+/// <reference types="opentype.js" />
 /// <reference types="pdfkit" />
 /// <reference types="bezier-js" />
 /**
