@@ -52,6 +52,14 @@ namespace MakerJs.exporter {
     };
 
     /**
+     * private
+     */
+    function arrowLines(size: number, angleInDegrees: number, offset: IPoint) {
+        const p: IPoint = [-1 * size, size / 2];
+        return [p, point.mirror(p, false, true)].map(p => new paths.Line(point.add(point.rotate(p, angleInDegrees), offset), offset));
+    }
+
+    /**
      * @private
      */
     function svgCoords(p: IPoint): IPoint {
@@ -428,9 +436,9 @@ namespace MakerJs.exporter {
 
         } else if (Array.isArray(itemToExport)) {
             //issue: this won't handle an array of models
-            var paths: IPathMap = {};
-            (itemToExport as IPath[]).forEach((p, i) => { paths[i] = p });
-            modelToExport = { paths: paths };
+            var pathMap: IPathMap = {};
+            (itemToExport as IPath[]).forEach((p, i) => { pathMap[i] = p });
+            modelToExport = { paths: pathMap };
 
         } else if (isPath(itemToExport)) {
             modelToExport = { paths: { modelToMeasure: <IPath>itemToExport } };
@@ -530,7 +538,7 @@ namespace MakerJs.exporter {
                     id);
             }
 
-            function drawPath(id: string, x: number, y: number, d: ISvgPathData, layer: string, route: string[], textPoint: IPoint) {
+            function drawPath(id: string, x: number, y: number, d: ISvgPathData, layer: string, route: string[], textPoint: IPoint, annotate: boolean, flow: IFlowAnnotation) {
                 createElement(
                     "path",
                     {
@@ -540,20 +548,20 @@ namespace MakerJs.exporter {
                     },
                     layer);
 
-                if (opts.annotate) {
+                if (annotate) {
                     drawText(id, textPoint, layer);
                 }
             }
 
-            function circleInPaths(id: string, center: IPoint, radius: number, layer: string, route: string[]) {
+            function circleInPaths(id: string, center: IPoint, radius: number, layer: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
                 var d = svgCircleData(radius, opts.accuracy);
 
-                drawPath(id, center[0], center[1], d, layer, route, center);
+                drawPath(id, center[0], center[1], d, layer, route, center, annotate, flow);
             }
 
-            var map: { [type: string]: (id: string, pathValue: IPath, origin: IPoint, layer: string, route: string[]) => void; } = {};
+            var map: { [type: string]: (id: string, pathValue: IPath, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) => void; } = {};
 
-            map[pathType.Line] = function (id: string, line: IPathLine, origin: IPoint, layer: string, route: string[]) {
+            map[pathType.Line] = function (id: string, line: IPathLine, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
 
                 var start = line.origin;
                 var end = line.end;
@@ -562,6 +570,7 @@ namespace MakerJs.exporter {
                     "line",
                     {
                         "id": id,
+                        "class": className,
                         "data-route": route,
                         "x1": round(start[0], opts.accuracy),
                         "y1": round(start[1], opts.accuracy),
@@ -570,12 +579,17 @@ namespace MakerJs.exporter {
                     },
                     layer);
 
-                if (opts.annotate) {
+                if (annotate) {
                     drawText(id, point.middle(line), layer);
+                }
+
+                if (flow) {
+                    map[pathType.Circle]('', new paths.Circle(line.origin, flow.size / 2), layer, 'flow', null, false, null);
+                    arrowLines(flow.size, angle.ofLineInDegrees(line), line.end).forEach(l => map[pathType.Line]('', l, layer, 'flow', null, false, null));
                 }
             };
 
-            map[pathType.Circle] = function (id: string, circle: IPathCircle, origin: IPoint, layer: string, route: string[]) {
+            map[pathType.Circle] = function (id: string, circle: IPathCircle, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
 
                 var center = circle.origin;
 
@@ -583,6 +597,7 @@ namespace MakerJs.exporter {
                     "circle",
                     {
                         "id": id,
+                        "class": className,
                         "data-route": route,
                         "r": circle.radius,
                         "cx": round(center[0], opts.accuracy),
@@ -590,17 +605,17 @@ namespace MakerJs.exporter {
                     },
                     layer);
 
-                if (opts.annotate) {
+                if (annotate) {
                     drawText(id, center, layer);
                 }
             };
 
-            map[pathType.Arc] = function (id: string, arc: IPathArc, origin: IPoint, layer: string, route: string[]) {
+            map[pathType.Arc] = function (id: string, arc: IPathArc, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
 
                 var arcPoints = point.fromArc(arc);
 
                 if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-                    circleInPaths(id, arc.origin, arc.radius, layer, route);
+                    circleInPaths(id, arc.origin, arc.radius, layer, route, annotate, flow);
                 } else {
 
                     var d = ['A'];
@@ -613,14 +628,19 @@ namespace MakerJs.exporter {
                         arc.startAngle > arc.endAngle
                     );
 
-                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, point.middle(arc));
+                    drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, point.middle(arc), annotate, flow);
+
+                    if (flow) {
+                        map[pathType.Circle]('', new paths.Circle(arcPoints[0], flow.size / 2), layer, 'flow', null, false, null);
+                        arrowLines(flow.size, arc.endAngle + 90, arcPoints[1]).forEach(l => map[pathType.Line]('', l, layer, 'flow', null, false, null));
+                    }
                 }
             };
 
-            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, origin: IPoint, layer: string, route: string[]) {
+            map[pathType.BezierSeed] = function (id: string, seed: IPathBezierSeed, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
                 var d: ISvgPathData = [];
                 svgBezierData(d, seed, opts.accuracy);
-                drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, point.middle(seed));
+                drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, point.middle(seed), annotate, flow);
             };
 
             function beginModel(id: string, modelContext: IModel) {
@@ -645,7 +665,7 @@ namespace MakerJs.exporter {
                     var fn = map[walkedPath.pathContext.type];
                     if (fn) {
                         var offset = point.add(fixPoint(walkedPath.offset), opts.origin);
-                        fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer, walkedPath.route);
+                        fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), walkedPath.layer, null, walkedPath.route, opts.annotate, opts.flow);
                     }
                 },
 
@@ -778,6 +798,17 @@ namespace MakerJs.exporter {
     }
 
     /**
+     *  Annotate paths with directional flow marks.
+     */
+    export interface IFlowAnnotation {
+
+        /**
+         * Size of flow marks (arrows and circle).
+         */        
+        size: number;
+    }
+
+    /**
      * SVG rendering options.
      */
     export interface ISVGRenderOptions extends IExportOptions, ISVGElementRenderOptions {
@@ -801,6 +832,11 @@ namespace MakerJs.exporter {
          *  Indicate that the id's of paths should be rendered as SVG text elements.
          */
         annotate?: boolean;
+
+        /**
+         *  Options to show direction of path flow.
+         */
+        flow?: IFlowAnnotation;
 
         /**
          * Rendered reference origin. 
