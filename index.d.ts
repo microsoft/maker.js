@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.84
+// Type definitions for Maker.js 0.9.85
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -3078,6 +3078,15 @@ declare namespace MakerJs.exporter {
         cssStyle?: string;
     }
     /**
+     *  Annotate paths with directional flow marks.
+     */
+    interface IFlowAnnotation {
+        /**
+         * Size of flow marks (arrows and circle).
+         */
+        size: number;
+    }
+    /**
      * SVG rendering options.
      */
     interface ISVGRenderOptions extends IExportOptions, ISVGElementRenderOptions {
@@ -3097,6 +3106,10 @@ declare namespace MakerJs.exporter {
          *  Indicate that the id's of paths should be rendered as SVG text elements.
          */
         annotate?: boolean;
+        /**
+         *  Options to show direction of path flow.
+         */
+        flow?: IFlowAnnotation;
         /**
          * Rendered reference origin.
          */
