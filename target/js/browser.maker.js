@@ -6989,13 +6989,6 @@ var MakerJs;
             svgBezierData(d, seed, accuracy, reversed);
         };
         /**
-         * private
-         */
-        function arrowLines(size, angleInDegrees, offset) {
-            var p = [-1 * size, size / 2];
-            return [p, MakerJs.point.mirror(p, false, true)].map(function (p) { return new MakerJs.paths.Line(MakerJs.point.add(MakerJs.point.rotate(p, angleInDegrees), offset), offset); });
-        }
-        /**
          * @private
          */
         function svgCoords(p) {
@@ -7383,8 +7376,7 @@ var MakerJs;
                         drawText(id, MakerJs.point.middle(line), layer);
                     }
                     if (flow) {
-                        map[MakerJs.pathType.Circle]('', new MakerJs.paths.Circle(line.origin, flow.size / 2), layer, 'flow', null, false, null);
-                        arrowLines(flow.size, MakerJs.angle.ofLineInDegrees(line), line.end).forEach(function (l) { return map[MakerJs.pathType.Line]('', l, layer, 'flow', null, false, null); });
+                        addFlowMarks(flow, line.origin, line.end, MakerJs.angle.ofLineInDegrees(line));
                     }
                 };
                 map[MakerJs.pathType.Circle] = function (id, circle, layer, className, route, annotate, flow) {
@@ -7411,8 +7403,7 @@ var MakerJs;
                         svgArcData(d, arc.radius, arcPoints[1], opts.accuracy, MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
                         drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, MakerJs.point.middle(arc), annotate, flow);
                         if (flow) {
-                            map[MakerJs.pathType.Circle]('', new MakerJs.paths.Circle(arcPoints[0], flow.size / 2), layer, 'flow', null, false, null);
-                            arrowLines(flow.size, arc.endAngle + 90, arcPoints[1]).forEach(function (l) { return map[MakerJs.pathType.Line]('', l, layer, 'flow', null, false, null); });
+                            addFlowMarks(flow, arcPoints[0], arcPoints[1], arc.endAngle + 90);
                         }
                     }
                 };
@@ -7421,6 +7412,15 @@ var MakerJs;
                     svgBezierData(d, seed, opts.accuracy);
                     drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, MakerJs.point.middle(seed), annotate, flow);
                 };
+                function addFlowMarks(flow, origin, end, endAngle) {
+                    var className = 'flow';
+                    //origin: add a circle
+                    map[MakerJs.pathType.Circle]('', new MakerJs.paths.Circle(origin, flow.size / 2), layer, className, null, false, null);
+                    //end: add an arrow
+                    var arrowEnd = [-1 * flow.size, flow.size / 2];
+                    var arrowLines = [arrowEnd, MakerJs.point.mirror(arrowEnd, false, true)].map(function (p) { return new MakerJs.paths.Line(MakerJs.point.add(MakerJs.point.rotate(p, endAngle), end), end); });
+                    arrowLines.forEach(function (a) { return map[MakerJs.pathType.Line]('', a, layer, className, null, false, null); });
+                }
                 function beginModel(id, modelContext) {
                     modelGroup.attrs = { id: id };
                     append(modelGroup.getOpeningTag(false), modelContext.layer);
