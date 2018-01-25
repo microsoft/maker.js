@@ -52,14 +52,6 @@ namespace MakerJs.exporter {
     };
 
     /**
-     * private
-     */
-    function arrowLines(size: number, angleInDegrees: number, offset: IPoint) {
-        const p: IPoint = [-1 * size, size / 2];
-        return [p, point.mirror(p, false, true)].map(p => new paths.Line(point.add(point.rotate(p, angleInDegrees), offset), offset));
-    }
-
-    /**
      * @private
      */
     function svgCoords(p: IPoint): IPoint {
@@ -584,8 +576,7 @@ namespace MakerJs.exporter {
                 }
 
                 if (flow) {
-                    map[pathType.Circle]('', new paths.Circle(line.origin, flow.size / 2), layer, 'flow', null, false, null);
-                    arrowLines(flow.size, angle.ofLineInDegrees(line), line.end).forEach(l => map[pathType.Line]('', l, layer, 'flow', null, false, null));
+                    addFlowMarks(flow, line.origin, line.end, angle.ofLineInDegrees(line));
                 }
             };
 
@@ -631,8 +622,7 @@ namespace MakerJs.exporter {
                     drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, point.middle(arc), annotate, flow);
 
                     if (flow) {
-                        map[pathType.Circle]('', new paths.Circle(arcPoints[0], flow.size / 2), layer, 'flow', null, false, null);
-                        arrowLines(flow.size, arc.endAngle + 90, arcPoints[1]).forEach(l => map[pathType.Line]('', l, layer, 'flow', null, false, null));
+                        addFlowMarks(flow, arcPoints[0], arcPoints[1], arc.endAngle + 90);
                     }
                 }
             };
@@ -642,6 +632,18 @@ namespace MakerJs.exporter {
                 svgBezierData(d, seed, opts.accuracy);
                 drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, point.middle(seed), annotate, flow);
             };
+
+            function addFlowMarks(flow: IFlowAnnotation, origin: IPoint, end: IPoint, endAngle: number) {
+                const className = 'flow';
+
+                //origin: add a circle
+                map[pathType.Circle]('', new paths.Circle(origin, flow.size / 2), layer, className, null, false, null);
+
+                //end: add an arrow
+                const arrowEnd: IPoint = [-1 * flow.size, flow.size / 2];
+                const arrowLines = [arrowEnd, point.mirror(arrowEnd, false, true)].map(p => new paths.Line(point.add(point.rotate(p, endAngle), end), end));
+                arrowLines.forEach(a => map[pathType.Line]('', a, layer, className, null, false, null));
+            }
 
             function beginModel(id: string, modelContext: IModel) {
                 modelGroup.attrs = { id: id };
@@ -804,7 +806,7 @@ namespace MakerJs.exporter {
 
         /**
          * Size of flow marks (arrows and circle).
-         */        
+         */
         size: number;
     }
 
