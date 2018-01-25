@@ -22,8 +22,10 @@ describe('Angle', function () {
   });
 
   it('should find end of arc past start', function() {
-    var arc = new makerjs.paths.Arc([0, 1], 1, 315, 135);
-    assert.equal(makerjs.angle.ofArcEnd(arc), 495);
+    var arc1 = new makerjs.paths.Arc([0, 1], 1, 315, 135);
+    assert.equal(makerjs.angle.ofArcEnd(arc1), 495);
+    var arc2 = new makerjs.paths.Arc([0, 1], 1, 450, 0);
+    assert.equal(makerjs.angle.ofArcEnd(arc2), 720);
   });
 
   it('should find end of arc past start - all negative', function() {
