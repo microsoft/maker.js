@@ -516,13 +516,13 @@ namespace MakerJs.exporter {
 
             var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, findChainsOptions, opts.accuracy);
 
-            for (var layer in pathDataByLayer) {
-                var pathData = pathDataByLayer[layer].join(' ');
+            for (var layerId1 in pathDataByLayer) {
+                var pathData = pathDataByLayer[layerId1].join(' ');
                 var attrs = { "d": pathData };
-                if (layer.length > 0) {
-                    attrs["id"] = layer;
+                if (layerId1.length > 0) {
+                    attrs["id"] = layerId1;
                 }
-                createElement("path", attrs, layer, null, true);
+                createElement("path", attrs, layerId1, null, true);
             }
 
         } else {
@@ -584,7 +584,7 @@ namespace MakerJs.exporter {
                 }
 
                 if (flow) {
-                    addFlowMarks(flow, line.origin, line.end, angle.ofLineInDegrees(line));
+                    addFlowMarks(flow, layer, line.origin, line.end, angle.ofLineInDegrees(line));
                 }
             };
 
@@ -629,7 +629,7 @@ namespace MakerJs.exporter {
                     drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, point.middle(arc), annotate, flow);
 
                     if (flow) {
-                        addFlowMarks(flow, arcPoints[1], arcPoints[0], angle.noRevolutions(arc.startAngle - 90));
+                        addFlowMarks(flow, layer, arcPoints[1], arcPoints[0], angle.noRevolutions(arc.startAngle - 90));
                     }
                 }
             };
@@ -640,7 +640,7 @@ namespace MakerJs.exporter {
                 drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, point.middle(seed), annotate, flow);
             };
 
-            function addFlowMarks(flow: IFlowAnnotation, origin: IPoint, end: IPoint, endAngle: number) {
+            function addFlowMarks(flow: IFlowAnnotation, layer: string, origin: IPoint, end: IPoint, endAngle: number) {
                 const className = 'flow';
 
                 //origin: add a circle
@@ -688,14 +688,14 @@ namespace MakerJs.exporter {
             model.walk(modelToExport, walkOptions);
 
             //export layers as groups
-            for (var layer in layers) {
+            for (var layerId2 in layers) {
 
-                var layerGroup = new XmlTag('g', { id: layer });
+                var layerGroup = new XmlTag('g', { id: layerId2 });
 
-                addSvgAttrs(layerGroup.attrs, colorLayerOptions(layer));
+                addSvgAttrs(layerGroup.attrs, colorLayerOptions(layerId2));
 
-                for (var i = 0; i < layers[layer].length; i++) {
-                    layerGroup.innerText += layers[layer][i];
+                for (var i = 0; i < layers[layerId2].length; i++) {
+                    layerGroup.innerText += layers[layerId2][i];
                 }
 
                 layerGroup.innerTextEscaped = true;
