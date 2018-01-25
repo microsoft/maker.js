@@ -251,6 +251,10 @@ svg#drawing .locked {
     display: none;
 }
 
+.collapse-flow #view svg#drawing .flow {
+    display: none;
+}
+
 #view svg#drawing .locked + text {
     fill: yellow;
 }
