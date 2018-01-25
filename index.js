@@ -469,7 +469,8 @@ var MakerJs;
             //compensate for values past zero. This allows easy compute of total angle size.
             //for example 0 = 360
             if (arc.endAngle < arc.startAngle) {
-                return 360 + arc.endAngle;
+                var revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
+                return revolutions * 360 + arc.endAngle;
             }
             return arc.endAngle;
         }
@@ -6788,6 +6789,14 @@ var MakerJs;
             return MakerJs.point.mirror(p, false, true);
         }
         /**
+         * @private
+         */
+        function correctArc(arc) {
+            var arcSpan = MakerJs.angle.ofArcSpan(arc);
+            arc.startAngle = MakerJs.angle.noRevolutions(arc.startAngle);
+            arc.endAngle = arc.startAngle + arcSpan;
+        }
+        /**
          * Convert a chain to SVG path data.
          *
          * @param chain Chain to convert.
@@ -6838,6 +6847,7 @@ var MakerJs;
             return startSvgPathData(circle.origin, svgCircleData(circle.radius, accuracy, clockwiseCircle), accuracy);
         };
         svgPathDataMap[MakerJs.pathType.Arc] = function (arc, accuracy) {
+            correctArc(arc);
             var arcPoints = MakerJs.point.fromArc(arc);
             if (MakerJs.measure.isPointEqual(arcPoints[0], arcPoints[1])) {
                 return svgPathDataMap[MakerJs.pathType.Circle](arc, accuracy);
@@ -7187,6 +7197,7 @@ var MakerJs;
                     }
                 };
                 map[MakerJs.pathType.Arc] = function (id, arc, layer, className, route, annotate, flow) {
+                    correctArc(arc);
                     var arcPoints = MakerJs.point.fromArc(arc);
                     if (MakerJs.measure.isPointEqual(arcPoints[0], arcPoints[1])) {
                         circleInPaths(id, arc.origin, arc.radius, layer, route, annotate, flow);
@@ -7196,7 +7207,7 @@ var MakerJs;
                         svgArcData(d, arc.radius, arcPoints[1], opts.accuracy, MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
                         drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, MakerJs.point.middle(arc), annotate, flow);
                         if (flow) {
-                            addFlowMarks(flow, arcPoints[0], arcPoints[1], arc.endAngle + 90);
+                            addFlowMarks(flow, arcPoints[1], arcPoints[0], MakerJs.angle.noRevolutions(arc.startAngle - 90));
                         }
                     }
                 };

@@ -59,6 +59,15 @@ namespace MakerJs.exporter {
     }
 
     /**
+     * @private
+     */
+    function correctArc(arc: IPathArc) {
+        const arcSpan = angle.ofArcSpan(arc);
+        arc.startAngle = angle.noRevolutions(arc.startAngle);
+        arc.endAngle = arc.startAngle + arcSpan;        
+    }
+
+    /**
      * Convert a chain to SVG path data.
      * 
      * @param chain Chain to convert.
@@ -128,7 +137,7 @@ namespace MakerJs.exporter {
     };
 
     svgPathDataMap[pathType.Arc] = function (arc: IPathArc, accuracy: number) {
-
+        correctArc(arc);
         var arcPoints = point.fromArc(arc);
 
         if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
@@ -554,7 +563,6 @@ namespace MakerJs.exporter {
             var map: { [type: string]: (id: string, pathValue: IPath, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) => void; } = {};
 
             map[pathType.Line] = function (id: string, line: IPathLine, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
-
                 var start = line.origin;
                 var end = line.end;
 
@@ -581,7 +589,6 @@ namespace MakerJs.exporter {
             };
 
             map[pathType.Circle] = function (id: string, circle: IPathCircle, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
-
                 var center = circle.origin;
 
                 createElement(
@@ -602,9 +609,9 @@ namespace MakerJs.exporter {
             };
 
             map[pathType.Arc] = function (id: string, arc: IPathArc, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
-
+                correctArc(arc);
                 var arcPoints = point.fromArc(arc);
-
+        
                 if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
                     circleInPaths(id, arc.origin, arc.radius, layer, route, annotate, flow);
                 } else {
@@ -622,7 +629,7 @@ namespace MakerJs.exporter {
                     drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, point.middle(arc), annotate, flow);
 
                     if (flow) {
-                        addFlowMarks(flow, arcPoints[0], arcPoints[1], arc.endAngle + 90);
+                        addFlowMarks(flow, arcPoints[1], arcPoints[0], angle.noRevolutions(arc.startAngle - 90));
                     }
                 }
             };
