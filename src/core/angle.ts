@@ -19,7 +19,7 @@ namespace MakerJs.angle {
             return +(split[0] + '.' + fractionalPart);
         } else {
             return n;
-        }        
+        }
     }
 
     /**
@@ -74,7 +74,8 @@ namespace MakerJs.angle {
         //compensate for values past zero. This allows easy compute of total angle size.
         //for example 0 = 360
         if (arc.endAngle < arc.startAngle) {
-            return 360 + arc.endAngle;
+            var revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
+            return revolutions * 360 + arc.endAngle;
         }
         return arc.endAngle;
     }
