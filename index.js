@@ -7061,9 +7061,9 @@ var MakerJs;
             }
             else if (Array.isArray(itemToExport)) {
                 //issue: this won't handle an array of models
-                var paths = {};
-                itemToExport.forEach(function (p, i) { paths[i] = p; });
-                modelToExport = { paths: paths };
+                var pathMap = {};
+                itemToExport.forEach(function (p, i) { pathMap[i] = p; });
+                modelToExport = { paths: pathMap };
             }
             else if (MakerJs.isPath(itemToExport)) {
                 modelToExport = { paths: { modelToMeasure: itemToExport } };
@@ -7138,65 +7138,82 @@ var MakerJs;
                         "y": MakerJs.round(textPoint[1], opts.accuracy)
                     }, layer, id);
                 }
-                function drawPath(id, x, y, d, layer, route, textPoint) {
+                function drawPath(id, x, y, d, layer, route, textPoint, annotate, flow) {
                     createElement("path", {
                         "id": id,
                         "data-route": route,
                         "d": ["M", MakerJs.round(x, opts.accuracy), MakerJs.round(y, opts.accuracy)].concat(d).join(" ")
                     }, layer);
-                    if (opts.annotate) {
+                    if (annotate) {
                         drawText(id, textPoint, layer);
                     }
                 }
-                function circleInPaths(id, center, radius, layer, route) {
+                function circleInPaths(id, center, radius, layer, route, annotate, flow) {
                     var d = svgCircleData(radius, opts.accuracy);
-                    drawPath(id, center[0], center[1], d, layer, route, center);
+                    drawPath(id, center[0], center[1], d, layer, route, center, annotate, flow);
                 }
                 var map = {};
-                map[MakerJs.pathType.Line] = function (id, line, origin, layer, route) {
+                map[MakerJs.pathType.Line] = function (id, line, layer, className, route, annotate, flow) {
                     var start = line.origin;
                     var end = line.end;
                     createElement("line", {
                         "id": id,
+                        "class": className,
                         "data-route": route,
                         "x1": MakerJs.round(start[0], opts.accuracy),
                         "y1": MakerJs.round(start[1], opts.accuracy),
                         "x2": MakerJs.round(end[0], opts.accuracy),
                         "y2": MakerJs.round(end[1], opts.accuracy)
                     }, layer);
-                    if (opts.annotate) {
+                    if (annotate) {
                         drawText(id, MakerJs.point.middle(line), layer);
                     }
+                    if (flow) {
+                        addFlowMarks(flow, line.origin, line.end, MakerJs.angle.ofLineInDegrees(line));
+                    }
                 };
-                map[MakerJs.pathType.Circle] = function (id, circle, origin, layer, route) {
+                map[MakerJs.pathType.Circle] = function (id, circle, layer, className, route, annotate, flow) {
                     var center = circle.origin;
                     createElement("circle", {
                         "id": id,
+                        "class": className,
                         "data-route": route,
                         "r": circle.radius,
                         "cx": MakerJs.round(center[0], opts.accuracy),
                         "cy": MakerJs.round(center[1], opts.accuracy)
                     }, layer);
-                    if (opts.annotate) {
+                    if (annotate) {
                         drawText(id, center, layer);
                     }
                 };
-                map[MakerJs.pathType.Arc] = function (id, arc, origin, layer, route) {
+                map[MakerJs.pathType.Arc] = function (id, arc, layer, className, route, annotate, flow) {
                     var arcPoints = MakerJs.point.fromArc(arc);
                     if (MakerJs.measure.isPointEqual(arcPoints[0], arcPoints[1])) {
-                        circleInPaths(id, arc.origin, arc.radius, layer, route);
+                        circleInPaths(id, arc.origin, arc.radius, layer, route, annotate, flow);
                     }
                     else {
                         var d = ['A'];
                         svgArcData(d, arc.radius, arcPoints[1], opts.accuracy, MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
-                        drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, MakerJs.point.middle(arc));
+                        drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, MakerJs.point.middle(arc), annotate, flow);
+                        if (flow) {
+                            addFlowMarks(flow, arcPoints[0], arcPoints[1], arc.endAngle + 90);
+                        }
                     }
                 };
-                map[MakerJs.pathType.BezierSeed] = function (id, seed, origin, layer, route) {
+                map[MakerJs.pathType.BezierSeed] = function (id, seed, layer, className, route, annotate, flow) {
                     var d = [];
                     svgBezierData(d, seed, opts.accuracy);
-                    drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, MakerJs.point.middle(seed));
+                    drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, MakerJs.point.middle(seed), annotate, flow);
                 };
+                function addFlowMarks(flow, origin, end, endAngle) {
+                    var className = 'flow';
+                    //origin: add a circle
+                    map[MakerJs.pathType.Circle]('', new MakerJs.paths.Circle(origin, flow.size / 2), layer, className, null, false, null);
+                    //end: add an arrow
+                    var arrowEnd = [-1 * flow.size, flow.size / 2];
+                    var arrowLines = [arrowEnd, MakerJs.point.mirror(arrowEnd, false, true)].map(function (p) { return new MakerJs.paths.Line(MakerJs.point.add(MakerJs.point.rotate(p, endAngle), end), end); });
+                    arrowLines.forEach(function (a) { return map[MakerJs.pathType.Line]('', a, layer, className, null, false, null); });
+                }
                 function beginModel(id, modelContext) {
                     modelGroup.attrs = { id: id };
                     append(modelGroup.getOpeningTag(false), modelContext.layer);
@@ -7214,7 +7231,7 @@ var MakerJs;
                         var fn = map[walkedPath.pathContext.type];
                         if (fn) {
                             var offset = MakerJs.point.add(fixPoint(walkedPath.offset), opts.origin);
-                            fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), offset, walkedPath.layer, walkedPath.route);
+                            fn(walkedPath.pathId, fixPath(walkedPath.pathContext, offset), walkedPath.layer, null, walkedPath.route, opts.annotate, opts.flow);
                         }
                     },
                     afterChildWalk: function (walkedModel) {
@@ -9401,5 +9418,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.84";
+MakerJs.version = "0.9.85";
 ﻿var Bezier = require('bezier-js');

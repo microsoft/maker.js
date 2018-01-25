@@ -1406,6 +1406,7 @@
             var renderOptions: MakerJs.exporter.ISVGRenderOptions = {
                 origin: viewOrigin,
                 annotate: true,
+                flow: { size: 8 },
                 svgAttrs: {
                     "id": 'drawing',
                     "style": 'margin-left:' + viewPanOffset[0] + 'px; margin-top:' + viewPanOffset[1] + 'px'
