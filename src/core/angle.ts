@@ -198,7 +198,7 @@ namespace MakerJs.angle {
      * 
      * @param linkA First chain link.
      * @param linkB Second chain link.
-     * @returns Mirrored angle.
+     * @returns Angle between chain links.
      */
     export function ofChainLinkJoint(linkA: IChainLink, linkB: IChainLink) {
         if (arguments.length < 2) return null;
