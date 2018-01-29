@@ -13,7 +13,11 @@ namespace MakerJs.angle {
      * private
      */
     function setFractionalPart(n: number, fractionalPart: string) {
-        const s = n.toString();
+        let s = n.toString();
+        if (s.indexOf('e') > 0) {
+            //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
+            s = n.toFixed(20).match(/.*[^(0+$)]/)[0];
+        }
         const split = s.split('.');
         if (fractionalPart) {
             return +(split[0] + '.' + fractionalPart);
@@ -39,8 +43,9 @@ namespace MakerJs.angle {
      * @returns Same polar angle but not greater than 360 degrees.
      */
     export function noRevolutions(angleInDegrees: number) {
-        var revolutions = Math.floor(angleInDegrees / 360);
-        var a = angleInDegrees - (360 * revolutions);
+        const revolutions = Math.floor(angleInDegrees / 360);
+        if (revolutions === 0) return angleInDegrees;
+        const a = angleInDegrees - (360 * revolutions);
         return copyFractionalPart(angleInDegrees, a);
     }
 
@@ -74,8 +79,9 @@ namespace MakerJs.angle {
         //compensate for values past zero. This allows easy compute of total angle size.
         //for example 0 = 360
         if (arc.endAngle < arc.startAngle) {
-            var revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
-            return revolutions * 360 + arc.endAngle;
+            const revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
+            const a = revolutions * 360 + arc.endAngle;
+            return copyFractionalPart(arc.endAngle, a)
         }
         return arc.endAngle;
     }
