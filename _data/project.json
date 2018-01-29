@@ -39,7 +39,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 28,
+              "line": 36,
               "character": 31
             }
           ]
@@ -66,7 +66,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 6,
+              "line": 18,
               "character": 30
             }
           ]
@@ -109,7 +109,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 153,
+              "line": 163,
               "character": 26
             }
           ]
@@ -140,7 +140,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 41,
+              "line": 49,
               "character": 33
             }
           ]
@@ -171,7 +171,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 73,
+              "line": 82,
               "character": 28
             }
           ]
@@ -209,7 +209,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 90,
+              "line": 100,
               "character": 31
             }
           ]
@@ -240,7 +240,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 100,
+              "line": 110,
               "character": 29
             }
           ]
@@ -255,7 +255,7 @@
               "kindString": "Call signature",
               "comment": {
                 "shortText": "Get the angle of a joint between 2 chain links.",
-                "returns": "Mirrored angle.\n"
+                "returns": "Angle between chain links.\n"
               },
               "parameters": [
                 {
@@ -277,7 +277,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 203,
+              "line": 213,
               "character": 36
             }
           ]
@@ -308,7 +308,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 116,
+              "line": 126,
               "character": 35
             }
           ]
@@ -345,7 +345,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 127,
+              "line": 137,
               "character": 36
             }
           ]
@@ -382,7 +382,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 138,
+              "line": 148,
               "character": 36
             }
           ]
@@ -414,8 +414,35 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 15,
+              "line": 25,
               "character": 30
+            }
+          ]
+        },
+        "splitNumber": {
+          "flags": {},
+          "signatures": [
+            {
+              "name": "splitNumber",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "private"
+              },
+              "parameters": [
+                {
+                  "name": "n",
+                  "flags": {},
+                  "type": "number"
+                }
+              ],
+              "type": "Array"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/angle.ts",
+              "line": 6,
+              "character": 24
             }
           ]
         },
@@ -445,7 +472,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 63,
+              "line": 72,
               "character": 29
             }
           ]
@@ -476,7 +503,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 53,
+              "line": 62,
               "character": 29
             }
           ]
@@ -7174,7 +7201,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 524,
+              "line": 536,
               "character": 27
             }
           ]
@@ -7205,7 +7232,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 721,
+              "line": 733,
               "character": 35
             }
           ]
@@ -7577,7 +7604,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 246,
+              "line": 258,
               "character": 37
             }
           ]
@@ -7614,8 +7641,46 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 268,
+              "line": 280,
               "character": 44
+            }
+          ]
+        },
+        "isPointArrayClockwise": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "isPointArrayClockwise",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Check for array of points being clockwise or not.",
+                "returns": "Boolean true if points flow clockwise.\n"
+              },
+              "parameters": [
+                {
+                  "name": "points",
+                  "flags": {},
+                  "comment": "The array of points to test.",
+                  "type": "IPoint"
+                },
+                {
+                  "name": "out_result",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional output object, if provided, will be populated with convex hull results."
+                }
+              ],
+              "type": "boolean"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/measure.ts",
+              "line": 210,
+              "character": 41
             }
           ]
         },
@@ -7658,7 +7723,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 847,
+              "line": 859,
               "character": 38
             }
           ]
@@ -7687,7 +7752,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 279,
+              "line": 291,
               "character": 29
             }
           ]
@@ -7726,7 +7791,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 468,
+              "line": 480,
               "character": 32
             }
           ]
@@ -7757,7 +7822,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 439,
+              "line": 451,
               "character": 35
             }
           ]
@@ -7795,7 +7860,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 372,
+              "line": 384,
               "character": 31
             }
           ]
@@ -7826,7 +7891,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 421,
+              "line": 433,
               "character": 30
             }
           ]
@@ -7863,7 +7928,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 308,
+              "line": 320,
               "character": 33
             }
           ]
@@ -7896,7 +7961,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 542,
+              "line": 554,
               "character": 22
             }
           ],
@@ -7932,7 +7997,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 563,
+                  "line": 575,
                   "character": 39
                 }
               ],
@@ -7952,7 +8017,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 552,
+                  "line": 564,
                   "character": 23
                 }
               ],
@@ -7972,7 +8037,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 547,
+                  "line": 559,
                   "character": 29
                 }
               ],
@@ -7993,7 +8058,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 557,
+                  "line": 569,
                   "character": 22
                 }
               ],
@@ -8019,7 +8084,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 566,
+                  "line": 578,
                   "character": 28
                 }
               ]
