@@ -3,24 +3,28 @@ namespace MakerJs.angle {
     /**
      * private
      */
+    function splitNumber(n: number) {
+        let s = n.toString();
+        if (s.indexOf('e') > 0) {
+            //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
+            s = n.toFixed(20).match(/.*[^(0+$)]/)[0];
+        }
+        return s.split('.');
+    }
+
+    /**
+     * private
+     */
     function getFractionalPart(n: number) {
-        const s = n.toString();
-        const split = s.split('.');
-        return split[1];
+        return splitNumber(n)[1];
     }
 
     /**
      * private
      */
     function setFractionalPart(n: number, fractionalPart: string) {
-        let s = n.toString();
-        if (s.indexOf('e') > 0) {
-            //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
-            s = n.toFixed(20).match(/.*[^(0+$)]/)[0];
-        }
-        const split = s.split('.');
         if (fractionalPart) {
-            return +(split[0] + '.' + fractionalPart);
+            return +(splitNumber(n)[0] + '.' + fractionalPart);
         } else {
             return n;
         }
@@ -106,7 +110,7 @@ namespace MakerJs.angle {
     export function ofArcSpan(arc: IPathArc): number {
         var endAngle = angle.ofArcEnd(arc);
         var a = endAngle - arc.startAngle;
-        if (a > 360) {
+        if (round(a) > 360) {
             return noRevolutions(a);
         } else {
             return a;
