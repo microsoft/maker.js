@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.85
+// Type definitions for Maker.js 0.9.86
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -1367,7 +1367,7 @@ declare namespace MakerJs.angle {
      *
      * @param linkA First chain link.
      * @param linkB Second chain link.
-     * @returns Mirrored angle.
+     * @returns Angle between chain links.
      */
     function ofChainLinkJoint(linkA: IChainLink, linkB: IChainLink): number;
 }
@@ -2275,6 +2275,17 @@ declare namespace MakerJs.measure {
      * @returns Boolean true if paths in the chain flow clockwise.
      */
     function isChainClockwise(chainContext: IChain, out_result?: {
+        hullPoints?: IPoint[];
+        keyPoints?: IPoint[];
+    }): boolean;
+    /**
+     * Check for array of points being clockwise or not.
+     *
+     * @param points The array of points to test.
+     * @param out_result Optional output object, if provided, will be populated with convex hull results.
+     * @returns Boolean true if points flow clockwise.
+     */
+    function isPointArrayClockwise(points: IPoint[], out_result?: {
         hullPoints?: IPoint[];
         keyPoints?: IPoint[];
     }): boolean;
