@@ -400,19 +400,26 @@ var MakerJs;
         /**
          * private
          */
-        function getFractionalPart(n) {
+        function splitNumber(n) {
             var s = n.toString();
-            var split = s.split('.');
-            return split[1];
+            if (s.indexOf('e') > 0) {
+                //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
+                s = n.toFixed(20).match(/.*[^(0+$)]/)[0];
+            }
+            return s.split('.');
+        }
+        /**
+         * private
+         */
+        function getFractionalPart(n) {
+            return splitNumber(n)[1];
         }
         /**
          * private
          */
         function setFractionalPart(n, fractionalPart) {
-            var s = n.toString();
-            var split = s.split('.');
             if (fractionalPart) {
-                return +(split[0] + '.' + fractionalPart);
+                return +(splitNumber(n)[0] + '.' + fractionalPart);
             }
             else {
                 return n;
@@ -435,6 +442,8 @@ var MakerJs;
          */
         function noRevolutions(angleInDegrees) {
             var revolutions = Math.floor(angleInDegrees / 360);
+            if (revolutions === 0)
+                return angleInDegrees;
             var a = angleInDegrees - (360 * revolutions);
             return copyFractionalPart(angleInDegrees, a);
         }
@@ -470,7 +479,8 @@ var MakerJs;
             //for example 0 = 360
             if (arc.endAngle < arc.startAngle) {
                 var revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
-                return revolutions * 360 + arc.endAngle;
+                var a = revolutions * 360 + arc.endAngle;
+                return copyFractionalPart(arc.endAngle, a);
             }
             return arc.endAngle;
         }
@@ -496,7 +506,7 @@ var MakerJs;
         function ofArcSpan(arc) {
             var endAngle = angle.ofArcEnd(arc);
             var a = endAngle - arc.startAngle;
-            if (a > 360) {
+            if (MakerJs.round(a) > 360) {
                 return noRevolutions(a);
             }
             else {
@@ -588,7 +598,7 @@ var MakerJs;
          *
          * @param linkA First chain link.
          * @param linkB Second chain link.
-         * @returns Mirrored angle.
+         * @returns Angle between chain links.
          */
         function ofChainLinkJoint(linkA, linkB) {
             if (arguments.length < 2)
@@ -3406,19 +3416,30 @@ var MakerJs;
             if (!chainContext.endless || chainContext.links.length === 1) {
                 return null;
             }
+            var keyPoints = MakerJs.chain.toKeyPoints(chainContext);
+            return isPointArrayClockwise(keyPoints, out_result);
+        }
+        measure.isChainClockwise = isChainClockwise;
+        /**
+         * Check for array of points being clockwise or not.
+         *
+         * @param points The array of points to test.
+         * @param out_result Optional output object, if provided, will be populated with convex hull results.
+         * @returns Boolean true if points flow clockwise.
+         */
+        function isPointArrayClockwise(points, out_result) {
             var convexHull = new graham_scan();
-            var pointsInChainOrder = [];
+            var pointsInOrder = [];
             function add(endPoint) {
                 convexHull.addPoint(endPoint[0], endPoint[1]);
-                pointsInChainOrder.push(serializePoint(endPoint));
+                pointsInOrder.push(serializePoint(endPoint));
             }
-            var keyPoints = MakerJs.chain.toKeyPoints(chainContext);
-            keyPoints.forEach(add);
+            points.forEach(add);
             //we only need to deal with 3 points
             var hull = convexHull.getHull();
             var hullPoints = hull.slice(0, 3).map(function (p) { return serializePoint([p.x, p.y]); });
             var ordered = [];
-            pointsInChainOrder.forEach(function (p) {
+            pointsInOrder.forEach(function (p) {
                 if (~hullPoints.indexOf(p))
                     ordered.push(p);
             });
@@ -3435,12 +3456,12 @@ var MakerJs;
             }
             if (out_result) {
                 out_result.hullPoints = hull.map(function (p) { return [p.x, p.y]; });
-                out_result.keyPoints = keyPoints;
+                out_result.keyPoints = points;
             }
             //the hull is counterclockwise, so the result is clockwise if the first elements do not match
             return hullPoints[0] != ordered[0];
         }
-        measure.isChainClockwise = isChainClockwise;
+        measure.isPointArrayClockwise = isPointArrayClockwise;
         /**
          * Check for line overlapping another line.
          *
@@ -9429,5 +9450,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.85";
+MakerJs.version = "0.9.86";
 ﻿var Bezier = require('bezier-js');

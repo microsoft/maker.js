@@ -195,22 +195,34 @@ namespace MakerJs.measure {
             return null;
         }
 
+        var keyPoints = chain.toKeyPoints(chainContext);
+
+        return isPointArrayClockwise(keyPoints, out_result);
+    }
+
+    /**
+     * Check for array of points being clockwise or not.
+     * 
+     * @param points The array of points to test.
+     * @param out_result Optional output object, if provided, will be populated with convex hull results.
+     * @returns Boolean true if points flow clockwise.
+     */
+    export function isPointArrayClockwise(points: IPoint[], out_result?: { hullPoints?: IPoint[], keyPoints?: IPoint[] }) {
         var convexHull = new graham_scan();
-        var pointsInChainOrder: string[] = [];
+        var pointsInOrder: string[] = [];
 
         function add(endPoint: IPoint) {
             convexHull.addPoint(endPoint[0], endPoint[1]);
-            pointsInChainOrder.push(serializePoint(endPoint as number[]));
+            pointsInOrder.push(serializePoint(endPoint as number[]));
         }
 
-        var keyPoints = chain.toKeyPoints(chainContext);
-        keyPoints.forEach(add);
+        points.forEach(add);
 
         //we only need to deal with 3 points
         var hull = convexHull.getHull();
         var hullPoints = hull.slice(0, 3).map((p): string => serializePoint([p.x, p.y]));
         var ordered: string[] = [];
-        pointsInChainOrder.forEach(p => {
+        pointsInOrder.forEach(p => {
             if (~hullPoints.indexOf(p)) ordered.push(p);
         });
 
@@ -228,7 +240,7 @@ namespace MakerJs.measure {
 
         if (out_result) {
             out_result.hullPoints = hull.map(p => [p.x, p.y]);
-            out_result.keyPoints = keyPoints;
+            out_result.keyPoints = points;
         }
 
         //the hull is counterclockwise, so the result is clockwise if the first elements do not match

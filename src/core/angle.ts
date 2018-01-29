@@ -3,20 +3,28 @@ namespace MakerJs.angle {
     /**
      * private
      */
+    function splitNumber(n: number) {
+        let s = n.toString();
+        if (s.indexOf('e') > 0) {
+            //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
+            s = n.toFixed(20).match(/.*[^(0+$)]/)[0];
+        }
+        return s.split('.');
+    }
+
+    /**
+     * private
+     */
     function getFractionalPart(n: number) {
-        const s = n.toString();
-        const split = s.split('.');
-        return split[1];
+        return splitNumber(n)[1];
     }
 
     /**
      * private
      */
     function setFractionalPart(n: number, fractionalPart: string) {
-        const s = n.toString();
-        const split = s.split('.');
         if (fractionalPart) {
-            return +(split[0] + '.' + fractionalPart);
+            return +(splitNumber(n)[0] + '.' + fractionalPart);
         } else {
             return n;
         }
@@ -39,8 +47,9 @@ namespace MakerJs.angle {
      * @returns Same polar angle but not greater than 360 degrees.
      */
     export function noRevolutions(angleInDegrees: number) {
-        var revolutions = Math.floor(angleInDegrees / 360);
-        var a = angleInDegrees - (360 * revolutions);
+        const revolutions = Math.floor(angleInDegrees / 360);
+        if (revolutions === 0) return angleInDegrees;
+        const a = angleInDegrees - (360 * revolutions);
         return copyFractionalPart(angleInDegrees, a);
     }
 
@@ -74,8 +83,9 @@ namespace MakerJs.angle {
         //compensate for values past zero. This allows easy compute of total angle size.
         //for example 0 = 360
         if (arc.endAngle < arc.startAngle) {
-            var revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
-            return revolutions * 360 + arc.endAngle;
+            const revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
+            const a = revolutions * 360 + arc.endAngle;
+            return copyFractionalPart(arc.endAngle, a)
         }
         return arc.endAngle;
     }
@@ -100,7 +110,7 @@ namespace MakerJs.angle {
     export function ofArcSpan(arc: IPathArc): number {
         var endAngle = angle.ofArcEnd(arc);
         var a = endAngle - arc.startAngle;
-        if (a > 360) {
+        if (round(a) > 360) {
             return noRevolutions(a);
         } else {
             return a;
@@ -198,7 +208,7 @@ namespace MakerJs.angle {
      * 
      * @param linkA First chain link.
      * @param linkB Second chain link.
-     * @returns Mirrored angle.
+     * @returns Angle between chain links.
      */
     export function ofChainLinkJoint(linkA: IChainLink, linkB: IChainLink) {
         if (arguments.length < 2) return null;
