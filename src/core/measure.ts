@@ -731,18 +731,19 @@ namespace MakerJs.measure {
      * @returns IBoundingHex object which is a hexagon model, with an additional radius property.
      */
     export function boundingHexagon(modelToMeasure: IModel): IBoundingHex {
-        var originalMeasure = modelExtents(modelToMeasure);
         var clone = cloneObject(modelToMeasure) as IModel;
+        model.originate(clone);
+        var originalMeasure = modelExtents(clone);
         var bounds: IAngledBoundary[] = [];
         var scratch: IModel = { paths: {} };
 
         model.center(clone);
 
-        function result(radius: number, origin1: IPoint, notes: string): IBoundingHex {
+        function result(radius: number, origin: IPoint, notes: string): IBoundingHex {
             return {
                 radius: radius,
                 paths: new models.Polygon(6, radius, 30).paths,
-                origin: point.add(origin1, point.subtract(originalMeasure.center, modelToMeasure.origin)),
+                origin: point.add(origin, originalMeasure.center),
                 //models: { scratch: scratch },
                 notes: notes
             };
