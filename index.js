@@ -3862,16 +3862,17 @@ var MakerJs;
          * @returns IBoundingHex object which is a hexagon model, with an additional radius property.
          */
         function boundingHexagon(modelToMeasure) {
-            var originalMeasure = modelExtents(modelToMeasure);
             var clone = MakerJs.cloneObject(modelToMeasure);
+            MakerJs.model.originate(clone);
+            var originalMeasure = modelExtents(clone);
             var bounds = [];
             var scratch = { paths: {} };
             MakerJs.model.center(clone);
-            function result(radius, origin1, notes) {
+            function result(radius, origin, notes) {
                 return {
                     radius: radius,
                     paths: new MakerJs.models.Polygon(6, radius, 30).paths,
-                    origin: MakerJs.point.add(origin1, MakerJs.point.subtract(originalMeasure.center, modelToMeasure.origin)),
+                    origin: MakerJs.point.add(origin, originalMeasure.center),
                     //models: { scratch: scratch },
                     notes: notes
                 };
@@ -7152,13 +7153,13 @@ var MakerJs;
                     };
                 }
                 var pathDataByLayer = getPathDataByLayer(modelToExport, opts.origin, findChainsOptions, opts.accuracy);
-                for (var layer in pathDataByLayer) {
-                    var pathData = pathDataByLayer[layer].join(' ');
+                for (var layerId1 in pathDataByLayer) {
+                    var pathData = pathDataByLayer[layerId1].join(' ');
                     var attrs = { "d": pathData };
-                    if (layer.length > 0) {
-                        attrs["id"] = layer;
+                    if (layerId1.length > 0) {
+                        attrs["id"] = layerId1;
                     }
-                    createElement("path", attrs, layer, null, true);
+                    createElement("path", attrs, layerId1, null, true);
                 }
             }
             else {
@@ -7200,7 +7201,7 @@ var MakerJs;
                         drawText(id, MakerJs.point.middle(line), layer);
                     }
                     if (flow) {
-                        addFlowMarks(flow, line.origin, line.end, MakerJs.angle.ofLineInDegrees(line));
+                        addFlowMarks(flow, layer, line.origin, line.end, MakerJs.angle.ofLineInDegrees(line));
                     }
                 };
                 map[MakerJs.pathType.Circle] = function (id, circle, layer, className, route, annotate, flow) {
@@ -7228,7 +7229,7 @@ var MakerJs;
                         svgArcData(d, arc.radius, arcPoints[1], opts.accuracy, MakerJs.angle.ofArcSpan(arc) > 180, arc.startAngle > arc.endAngle);
                         drawPath(id, arcPoints[0][0], arcPoints[0][1], d, layer, route, MakerJs.point.middle(arc), annotate, flow);
                         if (flow) {
-                            addFlowMarks(flow, arcPoints[1], arcPoints[0], MakerJs.angle.noRevolutions(arc.startAngle - 90));
+                            addFlowMarks(flow, layer, arcPoints[1], arcPoints[0], MakerJs.angle.noRevolutions(arc.startAngle - 90));
                         }
                     }
                 };
@@ -7237,7 +7238,7 @@ var MakerJs;
                     svgBezierData(d, seed, opts.accuracy);
                     drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, MakerJs.point.middle(seed), annotate, flow);
                 };
-                function addFlowMarks(flow, origin, end, endAngle) {
+                function addFlowMarks(flow, layer, origin, end, endAngle) {
                     var className = 'flow';
                     //origin: add a circle
                     map[MakerJs.pathType.Circle]('', new MakerJs.paths.Circle(origin, flow.size / 2), layer, className, null, false, null);
@@ -7273,11 +7274,11 @@ var MakerJs;
                 beginModel('0', modelToExport);
                 MakerJs.model.walk(modelToExport, walkOptions);
                 //export layers as groups
-                for (var layer in layers) {
-                    var layerGroup = new exporter.XmlTag('g', { id: layer });
-                    addSvgAttrs(layerGroup.attrs, colorLayerOptions(layer));
-                    for (var i = 0; i < layers[layer].length; i++) {
-                        layerGroup.innerText += layers[layer][i];
+                for (var layerId2 in layers) {
+                    var layerGroup = new exporter.XmlTag('g', { id: layerId2 });
+                    addSvgAttrs(layerGroup.attrs, colorLayerOptions(layerId2));
+                    for (var i = 0; i < layers[layerId2].length; i++) {
+                        layerGroup.innerText += layers[layerId2][i];
                     }
                     layerGroup.innerTextEscaped = true;
                     append(layerGroup.toString());
@@ -9450,5 +9451,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.86";
+MakerJs.version = "0.9.87";
 ﻿var Bezier = require('bezier-js');
