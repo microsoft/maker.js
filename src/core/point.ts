@@ -71,6 +71,20 @@ namespace MakerJs.point {
     }
 
     /**
+     * private
+     */
+    const zero_cos: { [index: number]: boolean } = {};
+    zero_cos[Math.PI / 2] = true;
+    zero_cos[3 * Math.PI / 2] = true;
+
+    /**
+     * private
+     */
+    const zero_sin: { [index: number]: boolean } = {};
+    zero_sin[Math.PI] = true;
+    zero_sin[2 * Math.PI] = true;
+
+    /**
      * Get a point from its polar coordinates.
      * 
      * @param angleInRadians The angle of the polar coordinate, in radians.
@@ -79,8 +93,8 @@ namespace MakerJs.point {
      */
     export function fromPolar(angleInRadians: number, radius: number): IPoint {
         return [
-            radius * Math.cos(angleInRadians),
-            radius * Math.sin(angleInRadians)
+            (angleInRadians in zero_cos) ? 0 : round(radius * Math.cos(angleInRadians)),
+            (angleInRadians in zero_sin) ? 0 : round(radius * Math.sin(angleInRadians))
         ];
     }
 
