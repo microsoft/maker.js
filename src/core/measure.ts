@@ -818,19 +818,11 @@ namespace MakerJs.measure {
 
         var added = 0;
 
-        function addUniquePoint(pointToAdd: IPoint) {
-            for (var i = 0; i < pointArray.length; i++) {
-                if (measure.isPointEqual(pointArray[i], pointToAdd, .000000001)) {
-                    return;
-                }
-            }
-            pointArray.push(pointToAdd);
+        pointsToAdd.forEach(p => {
+            if (!isPointDistinct(p, pointArray, .000000001)) return;
+            pointArray.push(p);
             added++;
-        }
-
-        for (var i = 0; i < pointsToAdd.length; i++) {
-            addUniquePoint(pointsToAdd[i]);
-        }
+        });
 
         return added;
     }
