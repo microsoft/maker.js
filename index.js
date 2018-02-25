@@ -688,6 +688,18 @@ var MakerJs;
         }
         point.closest = closest;
         /**
+         * private
+         */
+        var zero_cos = {};
+        zero_cos[Math.PI / 2] = true;
+        zero_cos[3 * Math.PI / 2] = true;
+        /**
+         * private
+         */
+        var zero_sin = {};
+        zero_sin[Math.PI] = true;
+        zero_sin[2 * Math.PI] = true;
+        /**
          * Get a point from its polar coordinates.
          *
          * @param angleInRadians The angle of the polar coordinate, in radians.
@@ -696,8 +708,8 @@ var MakerJs;
          */
         function fromPolar(angleInRadians, radius) {
             return [
-                radius * Math.cos(angleInRadians),
-                radius * Math.sin(angleInRadians)
+                (angleInRadians in zero_cos) ? 0 : MakerJs.round(radius * Math.cos(angleInRadians)),
+                (angleInRadians in zero_sin) ? 0 : MakerJs.round(radius * Math.sin(angleInRadians))
             ];
         }
         point.fromPolar = fromPolar;
@@ -9451,5 +9463,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.87";
+MakerJs.version = "0.9.88";
 ﻿var Bezier = require('bezier-js');
