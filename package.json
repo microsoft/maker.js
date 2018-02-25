@@ -116,6 +116,7 @@
     "typescript": "^2.4.2"
   },
   "dependencies": {
+    "@types/handlebars": "4.0.33",
     "makerjs-band-clamp": "^1.0.0",
     "makerjs-double-band-clamp": "^1.0.0",
     "makerjs-heart": "^1.0.0",
