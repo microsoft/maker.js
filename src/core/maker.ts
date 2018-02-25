@@ -524,6 +524,11 @@ namespace MakerJs {
          * Each path will be of type IPathRemoved, which has a .reason property describing why it was removed.
          */
         out_deleted?: IModel[];
+
+        /**
+         * Output model of lines which were used for intersection calculation to determine if segments are inside of other models.
+         */
+        out_insideIntersections?: IModel;
     }
 
     /**
