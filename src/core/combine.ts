@@ -601,12 +601,15 @@
         //sweep through the heap
         let x = q.findMinimum().key;
 
+        //create a reusable collector for intersection points
+        const pointCollector = new Collector<IPoint, IQueuedSweepPath>(compareIntersectionPoint);
+        
         while (!q.isEmpty()) {
             let curr = q.extractMinimum();
             if (curr.key > x) {
 
                 //process the sweep line
-                checkInsideSweepLine(active, checks, extents, out_insideIntersections);
+                checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector);
             }
 
             //add to the sweep line, at Y. 
@@ -616,7 +619,7 @@
         }
 
         //process the final sweep line
-        checkInsideSweepLine(active, checks, extents, out_insideIntersections);
+        checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector);
     }
 
     /**
@@ -635,7 +638,7 @@
     /**
      * @private
      */
-    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, out_insideIntersections: IModel) {
+    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>) {
 
         if (checks.length > 0) {
             let byModel: { [modelIndex: number]: IQueuedSweepPath[] };
@@ -649,7 +652,7 @@
                 for (let modelIndex in byModel) {
                     if (+modelIndex === segment.qpath.modelIndex) continue;
 
-                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, out_insideIntersections);
+                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, out_insideIntersections, pointCollector);
 
                     //if number of intersections is an odd number, segment is inside the model
                     if (intersectionPoints && intersectionPoints.length % 2 === 1) {
@@ -736,7 +739,7 @@
     /**
      * @private
      */
-    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, out_insideIntersections: IModel) {
+    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>) {
         const midY = segment.midpoint[1];
 
         if (!anyAbove(overlaps, midY) || !anyBelow(overlaps, midY)) {
@@ -755,8 +758,6 @@
         const line = new paths.Line(segment.midpoint, [segment.midpoint[0], outY]);
         let lineAddedToOut_insideIntersections = false;
 
-        const pointCollector = new Collector<IPoint, IQueuedSweepPath>(compareIntersectionPoint);
-
         for (let qpath of overlaps) {
 
             //lazy compute to see if segment is vertically tangent on enter/exit
@@ -770,6 +771,9 @@
             if (!lineAddedToOut_insideIntersections) {
                 model.addPath(out_insideIntersections, line, `check_${segment.qpath.pathId}_${segment.segmentIndex}`);
                 lineAddedToOut_insideIntersections = true;
+
+                //reset the point collector
+                pointCollector.collections.length = 0;
             }
 
             let intersectOptions: IPathIntersectionOptions = { path2Offset: qpath.offset };
