@@ -47,12 +47,14 @@
 
         function require(id) {
             if (id == 'graham_scan') return ConvexHullGrahamScan;
+            if (id == '@tyriar/binary-heap') return BinaryHeap;
             return window[id];
         }
     </script>
 
     <script src="../node_modules/clone/clone.js"></script>
     <script src="../node_modules/graham_scan/graham_scan.min.js"></script>
+    <script src="../node_modules/@tyriar/binary-heap/index.js"></script>
     <script src="../debug/core/maker.js"></script>
     <script src="../debug/core/angle.js"></script>
     <script src="../debug/core/point.js"></script>

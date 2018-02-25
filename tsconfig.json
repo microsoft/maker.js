@@ -14,6 +14,7 @@
     "src/core/break.ts",
     "src/core/paths.ts",
     "src/core/model.ts",
+    "external/binary-heap/index.d.ts",
     "src/core/combine.ts",
     "src/core/collect.ts",
     "src/core/simplify.ts",

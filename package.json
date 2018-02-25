@@ -124,11 +124,13 @@
     "@types/node": "^7.0.5",
     "@types/opentype.js": "^0.0.0",
     "@types/pdfkit": "^0.7.34",
+    "@tyriar/binary-heap": "^1.0.5",
     "bezier-js": "^2.1.0",
     "clone": "^1.0.2",
     "graham_scan": "^1.0.4"
   },
   "files": [
+    "external/binary-heap/index.d.ts",
     "external/jscad/csg.d.ts",
     "external/jscad/io.d.ts",
     "external/jscad/stl-serializer.d.ts",

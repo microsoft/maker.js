@@ -163,8 +163,9 @@ Some of these may require a [contributor agreement](https://github.com/Microsoft
 
 ### Credits
 Maker.js depends on:
-* [Clone](https://github.com/pvorb/node-clone) by Paul Vorbach
 * [Bezier-js](https://github.com/Pomax/bezierjs) by Pomax
+* [Binary Heap](https://github.com/gwtw/js-binary-heap) by Daniel Imms
+* [Clone](https://github.com/pvorb/node-clone) by Paul Vorbach
 * [Graham_scan](https://github.com/brian3kb/graham_scan_js) by Brian Barnett
 ---
 
