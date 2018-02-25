@@ -39,8 +39,8 @@ describe('Path Intersection', function () {
         assert.equal(int.path2Angles, 242.4729147);
         assert.ok(int.intersectionPoints);
         assert.equal(int.intersectionPoints.length, 1);
-        assert.equal(int.intersectionPoints[0][0], -24.494897437784694);
-        assert.equal(int.intersectionPoints[0][1], 3.0000000051871396);
+        assert.equal(int.intersectionPoints[0][0], -24.4948974);
+        assert.equal(int.intersectionPoints[0][1], 3);
     })
 
 });
