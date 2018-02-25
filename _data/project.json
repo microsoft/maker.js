@@ -9551,6 +9551,108 @@
           "character": 23
         }
       ],
+      "Variable": {
+        "zero_cos": {
+          "flags": {},
+          "comment": {
+            "shortText": "private"
+          },
+          "sources": [
+            {
+              "fileName": "core/point.ts",
+              "line": 76,
+              "character": 18
+            }
+          ],
+          "type": {
+            "type": "reflection",
+            "declaration": {
+              "name": "__type",
+              "kindString": "Type literal",
+              "flags": {},
+              "indexSignature": [
+                {
+                  "name": "__index",
+                  "kindString": "Index signature",
+                  "flags": {},
+                  "parameters": [
+                    {
+                      "name": "index",
+                      "kindString": "Parameter",
+                      "flags": {},
+                      "type": {
+                        "type": "instrinct",
+                        "name": "number"
+                      }
+                    }
+                  ],
+                  "type": {
+                    "type": "instrinct",
+                    "name": "boolean"
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "fileName": "core/point.ts",
+                  "line": 76,
+                  "character": 19
+                }
+              ]
+            }
+          }
+        },
+        "zero_sin": {
+          "flags": {},
+          "comment": {
+            "shortText": "private"
+          },
+          "sources": [
+            {
+              "fileName": "core/point.ts",
+              "line": 83,
+              "character": 18
+            }
+          ],
+          "type": {
+            "type": "reflection",
+            "declaration": {
+              "name": "__type",
+              "kindString": "Type literal",
+              "flags": {},
+              "indexSignature": [
+                {
+                  "name": "__index",
+                  "kindString": "Index signature",
+                  "flags": {},
+                  "parameters": [
+                    {
+                      "name": "index",
+                      "kindString": "Parameter",
+                      "flags": {},
+                      "type": {
+                        "type": "instrinct",
+                        "name": "number"
+                      }
+                    }
+                  ],
+                  "type": {
+                    "type": "instrinct",
+                    "name": "boolean"
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "fileName": "core/point.ts",
+                  "line": 83,
+                  "character": 19
+                }
+              ]
+            }
+          }
+        }
+      },
       "Function": {
         "add": {
           "flags": {
@@ -9740,7 +9842,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 320,
+              "line": 334,
               "character": 27
             }
           ]
@@ -9777,7 +9879,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 93,
+              "line": 107,
               "character": 37
             }
           ]
@@ -9808,7 +9910,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 103,
+              "line": 117,
               "character": 27
             }
           ]
@@ -9846,7 +9948,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 128,
+              "line": 142,
               "character": 32
             }
           ]
@@ -9883,7 +9985,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 80,
+              "line": 94,
               "character": 29
             }
           ]
@@ -9927,7 +10029,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 161,
+              "line": 175,
               "character": 41
             }
           ]
@@ -9965,7 +10067,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 237,
+              "line": 251,
               "character": 26
             }
           ]
@@ -10008,7 +10110,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 256,
+              "line": 270,
               "character": 26
             }
           ]
@@ -10052,7 +10154,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 289,
+              "line": 303,
               "character": 26
             }
           ]
@@ -10091,7 +10193,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 277,
+              "line": 291,
               "character": 27
             }
           ]
@@ -10128,7 +10230,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 304,
+              "line": 318,
               "character": 25
             }
           ]
@@ -10165,7 +10267,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 331,
+              "line": 345,
               "character": 28
             }
           ]
@@ -10188,7 +10290,7 @@
           "sources": [
             {
               "fileName": "core/point.ts",
-              "line": 341,
+              "line": 355,
               "character": 24
             }
           ]
