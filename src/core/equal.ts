@@ -74,6 +74,7 @@
      * 
      * @param a First point.
      * @param b Second point.
+     * @param withinDistance Optional distance to consider points equal.
      * @returns true if points are the same, false if they are not
      */
     export function isPointEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean {
@@ -84,6 +85,23 @@
             var distance = measure.pointDistance(a, b);
             return distance <= withinDistance;
         }
+    }
+
+    /**
+     * Find out if a point is distinct among an array of points.
+     * 
+     * @param pointToCheck point to check.
+     * @param pointArray array of points.
+     * @param withinDistance Optional distance to consider points equal.
+     * @returns false if point is equal to any point in the array.
+     */
+    export function isPointDistinct(pointToCheck: IPoint, pointArray: IPoint[], withinDistance?: number) {
+        for (var i = 0; i < pointArray.length; i++) {
+            if (measure.isPointEqual(pointArray[i], pointToCheck, withinDistance)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
