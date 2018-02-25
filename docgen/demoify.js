@@ -8,7 +8,7 @@ var makerjs = require('../index.js');
 var marked = require('marked');
 var detective = require('detective');
 var opentypeLib = require("opentype.js");
-var QueryStringParams = (function () {
+var QueryStringParams = /** @class */ (function () {
     function QueryStringParams(querystring) {
         if (querystring === void 0) { querystring = document.location.search.substring(1); }
         if (querystring) {
