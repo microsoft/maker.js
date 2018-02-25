@@ -98,6 +98,7 @@
     "@types/bezier-js": "^0.0.6",
     "@types/codemirror": "0.0.38",
     "@types/graham_scan": "^1.0.28",
+    "@types/handlebars": "4.0.33",
     "@types/marked": "^0.0.28",
     "@types/node": "^7.0.8",
     "@types/opentype.js": "^0.0.0",
@@ -116,7 +117,6 @@
     "typescript": "^2.4.2"
   },
   "dependencies": {
-    "@types/handlebars": "4.0.33",
     "makerjs-band-clamp": "^1.0.0",
     "makerjs-double-band-clamp": "^1.0.0",
     "makerjs-heart": "^1.0.0",
