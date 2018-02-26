@@ -3,21 +3,21 @@
     /**
      * @private
      */
-    var BinaryHeap = require('@tyriar/binary-heap') as typeof BinaryHeapClass;
+    const BinaryHeap = require('@tyriar/binary-heap') as typeof BinaryHeapClass;
 
     /**
      * @private
      */
     function getNonZeroSegments(pathToSegment: IPath, breakPoint: IPoint): IPath[] {
-        var segment1 = cloneObject(pathToSegment);
+        const segment1 = cloneObject(pathToSegment);
 
         if (!segment1) return null;
 
-        var segment2 = path.breakAtPoint(segment1, breakPoint);
+        const segment2 = path.breakAtPoint(segment1, breakPoint);
 
         if (segment2) {
-            var segments: IPath[] = [segment1, segment2];
-            for (var i = 2; i--;) {
+            const segments: IPath[] = [segment1, segment2];
+            for (let i = 2; i--;) {
                 if (round(measure.pathLength(segments[i]), .0001) == 0) {
                     return null;
                 }
@@ -35,20 +35,20 @@
      * @private
      */
     function breakAlongForeignPath(qpath: IQueuedSweepPath, foreignWalkedPath: IWalkPath) {
-        var foreignPath = foreignWalkedPath.pathContext;
-        var segments = qpath.segments;
+        const foreignPath = foreignWalkedPath.pathContext;
+        const segments = qpath.segments;
 
         if (measure.isPathEqual(segments[0].path, foreignPath, .0001, qpath.offset, foreignWalkedPath.offset)) {
             return;
         }
 
-        var foreignPathEndPoints: IPoint[];
+        let foreignPathEndPoints: IPoint[];
 
-        for (var i = 0; i < segments.length; i++) {
+        for (let i = 0; i < segments.length; i++) {
 
-            var pointsToCheck: IPoint[];
-            var options: IPathIntersectionOptions = { path1Offset: qpath.offset, path2Offset: foreignWalkedPath.offset };
-            var foreignIntersection = path.intersection(segments[i].path, foreignPath, options);
+            let pointsToCheck: IPoint[];
+            let options: IPathIntersectionOptions = { path1Offset: qpath.offset, path2Offset: foreignWalkedPath.offset };
+            let foreignIntersection = path.intersection(segments[i].path, foreignPath, options);
 
             if (foreignIntersection) {
                 pointsToCheck = foreignIntersection.intersectionPoints;
@@ -66,8 +66,8 @@
             if (pointsToCheck) {
 
                 //break the path which intersected, and add the shard to the end of the array so it can also be checked in this loop for further sharding.
-                var subSegments: IPath[] = null;
-                var p = 0;
+                let subSegments: IPath[] = null;
+                let p = 0;
                 while (!subSegments && p < pointsToCheck.length) {
                     //cast absolute points to path relative space
                     subSegments = getNonZeroSegments(segments[i].path, point.subtract(pointsToCheck[p], qpath.offset));
@@ -79,7 +79,7 @@
 
                     if (subSegments[1]) {
                         const extents = measure.pathExtents(subSegments[1]);
-                        var newSegment: IQueuedSweepPathSegment = {
+                        let newSegment: IQueuedSweepPathSegment = {
                             path: subSegments[1],
                             uniqueForeignIntersectionPoints: [],
                             extents,
@@ -184,8 +184,8 @@
     function addOrDeleteSegments(qpath: IQueuedSweepPath, includeInside: boolean, includeOutside: boolean, trackDeleted: ITrackDeleted) {
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: IQueuedSweepPathSegment) {
-            var id = getSimilarPathId(modelContext, pathIdBase);
-            var newRouteKey = (id == pathIdBase) ? qpath.routeKey : createRouteKey(qpath.route.slice(0, -1).concat([id]));
+            const id = getSimilarPathId(modelContext, pathIdBase);
+            const newRouteKey = (id == pathIdBase) ? qpath.routeKey : createRouteKey(qpath.route.slice(0, -1).concat([id]));
 
             modelContext.paths[id] = segment.path;
         }
@@ -238,7 +238,7 @@
 
         combineArray(modelArray, flags, options);
 
-        var result: IModel = { models: { a: modelArray[0], b: modelArray[1] } };
+        const result: IModel = { models: { a: modelArray[0], b: modelArray[1] } };
         return result;
     }
 
@@ -253,7 +253,7 @@
         const result: IModel = { models: {} };
         modelArray.forEach((m, i) => result.models[i] = m);
 
-        var opts: ICombineOptions = {
+        const opts: ICombineOptions = {
             trimDeadEnds: true,
             pointMatchingDistance: .005,
             out_deleted,
@@ -264,13 +264,13 @@
         const trackDeleted: ITrackDeleted = (modelIndex: number, deletedSegment: IPath, routeKey: string, offset: IPoint, reason: string) => {
             addPath(opts.out_deleted[modelIndex], deletedSegment, 'deleted');
             path.moveRelative(deletedSegment, offset);
-            var p = deletedSegment as IPathRemoved;
+            const p = deletedSegment as IPathRemoved;
             p.reason = reason;
             p.routeKey = routeKey;
         }
 
         function comparePoint(pointA: IPoint, pointB: IPoint) {
-            var distance = measure.pointDistance(pointA, pointB);
+            const distance = measure.pointDistance(pointA, pointB);
             return distance <= opts.pointMatchingDistance;
         }
 
@@ -285,7 +285,7 @@
         insideQueue.list = queue.list.slice(0);
 
         //sweep and break paths
-        var broken = sweepAndBreak(queue, insideQueue, midPointCollector, extents);
+        const broken = sweepAndBreak(queue, insideQueue, midPointCollector, extents);
 
         //mark the duplicates
         midPointCollector.getCollectionsOfMultiple((midpoint, segments) => {
@@ -313,7 +313,7 @@
 
         if (opts.trimDeadEnds) {
 
-            var shouldKeep: IWalkPathBooleanCallback;
+            let shouldKeep: IWalkPathBooleanCallback;
 
             //union
             if (!flags[0][0] && !flags[1][0]) {             //if (!includeAInsideB && !includeBInsideA) {
@@ -409,7 +409,7 @@
                 qpath.overlaps = {};
 
                 //clone this path and make it the first segment
-                var segment: IQueuedSweepPathSegment = {
+                const segment: IQueuedSweepPathSegment = {
                     path: cloneObject(walkedPath.pathContext),
                     uniqueForeignIntersectionPoints: [],
                     extents: pathExtents,
@@ -644,7 +644,7 @@
             let byModel: { [modelIndex: number]: IQueuedSweepPath[] };
 
             checks.forEach(check => {
-                let segment = check.segment;
+                const segment = check.segment;
                 //if (segment.duplicate) return;
 
                 if (!byModel) byModel = organizeByModel(active);
@@ -732,7 +732,7 @@
      * @private
      */
     function compareIntersectionPoint(pointA: IPoint, pointB: IPoint) {
-        var distance = measure.pointDistance(pointA, pointB);
+        const distance = measure.pointDistance(pointA, pointB);
         return distance <= intersectionDelta;
     }
 
