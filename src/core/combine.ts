@@ -130,6 +130,7 @@
         uniqueForeignIntersectionPoints: IPoint[];
         path: IPath;
         duplicate?: boolean;
+        duplicateGroup?: number;
         deleted?: boolean;
         extents: IMeasure;
         offset: IPoint;
@@ -173,6 +174,13 @@
     /**
      * @private
      */
+    interface IDuplicateGroups {
+        [duplicateGroup: number]: { [modelIndex: number]: boolean }
+    }
+
+    /**
+     * @private
+     */
     interface ITrackDeleted {
         //        (pathToDelete: IPath, routeKey: string, offset: IPoint, reason: string): void;
         (modelIndex: number, deletedSegment: IPath, routeKey: string, offset: IPoint, reason: string): void;
@@ -203,12 +211,8 @@
         delete qpath.modelContext.paths[qpath.pathId];
 
         qpath.segments.forEach(segment => {
-            if (segment.duplicate) {
-                if (segment.deleted) {
-                    trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, segment.offset, `segment is a duplicate`);
-                } else {
-                    addSegment(qpath.modelContext, qpath.pathId, segment);
-                }
+            if (segment.deleted) {
+                trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, segment.offset, `segment is a duplicate`);
             } else {
                 checkAddSegment(qpath.modelContext, qpath.pathId, segment);
             }
@@ -247,7 +251,7 @@
      */
     function combineArray(modelArray: IModel[], flags: boolean[][], options: ICombineOptions) {
 
-        const out_deleted = [{ paths: {} }, { paths: {} }];
+        const out_deleted = [];
         const out_insideIntersections: IModel = { paths: {} };
 
         const result: IModel = { models: {} };
@@ -255,13 +259,14 @@
 
         const opts: ICombineOptions = {
             trimDeadEnds: true,
-            pointMatchingDistance: .005,
+            pointMatchingDistance: .001,
             out_deleted,
             out_insideIntersections
         };
         extendObject(opts, options);
 
         const trackDeleted: ITrackDeleted = (modelIndex: number, deletedSegment: IPath, routeKey: string, offset: IPoint, reason: string) => {
+            if (!out_deleted[modelIndex]) out_deleted[modelIndex] = {};
             addPath(opts.out_deleted[modelIndex], deletedSegment, 'deleted');
             path.moveRelative(deletedSegment, offset);
             const p = deletedSegment as IPathRemoved;
@@ -288,9 +293,18 @@
         const broken = sweepAndBreak(queue, insideQueue, midPointCollector, extents);
 
         //mark the duplicates
+        const duplicateGroups: IDuplicateGroups = {};
+        let duplicateGroup = 0;
         midPointCollector.getCollectionsOfMultiple((midpoint, segments) => {
+
+            duplicateGroup++;
+            duplicateGroups[duplicateGroup] = {};
+
             segments.forEach((segment, i) => {
+                duplicateGroups[duplicateGroup][segment.qpath.modelIndex] = true;
+
                 segment.duplicate = true;
+                segment.duplicateGroup = duplicateGroup;
 
                 if (i === 0) {
                     //mark the duplicate for the dead end finder
@@ -303,7 +317,7 @@
         });
 
         //check if segments are inside
-        sweepInsideLines(insideQueue, extents, out_insideIntersections);
+        sweepInsideLines(insideQueue, extents, out_insideIntersections, duplicateGroups);
 
         //now modify the models with the new segments
         broken.forEach(qpath => {
@@ -375,15 +389,37 @@
     /**
      * Combine 2 models, resulting in a union. Each model will be modified accordingly.
      *
-     * @param modelA First model to combine.
-     * @param modelB Second model to combine.
+     * @param modelArray Array of models to combine.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
-    export function combineUnion(modelA: IModel, modelB: IModel, options?: ICombineOptions) {
+    export function combineUnion(modelArray: IModel[], options?: ICombineOptions);
 
-        //TODO: add signature for array, call combineArray
+    /**
+     * Combine 2 models, resulting in a union. Each model will be modified accordingly.
+     *
+     * @param modelA First model to combine.
+     * @param modelB Second model to combine.
+     * @param options Optional ICombineOptions object.
+     * @returns A new model containing both of the input models as "a" and "b".
+     */
+    export function combineUnion(modelA: IModel, modelB: IModel, options?: ICombineOptions);
 
-        return combine(modelA, modelB, false, true, false, true);
+    export function combineUnion(...args: any[]) {
+        let modelArray: IModel[];
+        let options: ICombineOptions;
+
+        if (Array.isArray(args[0])) {
+            modelArray = args[0];
+            options = args[1];
+        } else {
+            modelArray = [args[0], args[1]];
+            options = args[2];
+        }
+
+        const flags: boolean[][] = [[false, true], [false, true]];
+
+        return combineArray(modelArray, flags, options);
     }
 
     /**
@@ -592,7 +628,7 @@
     /**
      * @private
      */
-    function sweepInsideLines(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, extents: IMeasureWithCenter, out_insideIntersections: IModel) {
+    function sweepInsideLines(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, extents: IMeasureWithCenter, out_insideIntersections: IModel, duplicateGroups: IDuplicateGroups) {
 
         //establish a sweep line
         const active: ISweepPaths = {};
@@ -603,13 +639,13 @@
 
         //create a reusable collector for intersection points
         const pointCollector = new Collector<IPoint, IQueuedSweepPath>(compareIntersectionPoint);
-        
+
         while (!q.isEmpty()) {
             let curr = q.extractMinimum();
             if (curr.key > x) {
 
                 //process the sweep line
-                checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector);
+                checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector, duplicateGroups);
             }
 
             //add to the sweep line, at Y. 
@@ -619,7 +655,7 @@
         }
 
         //process the final sweep line
-        checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector);
+        checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector, duplicateGroups);
     }
 
     /**
@@ -638,7 +674,7 @@
     /**
      * @private
      */
-    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>) {
+    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>, duplicateGroups: IDuplicateGroups) {
 
         if (checks.length > 0) {
             let byModel: { [modelIndex: number]: IQueuedSweepPath[] };
@@ -652,7 +688,7 @@
                 for (let modelIndex in byModel) {
                     if (+modelIndex === segment.qpath.modelIndex) continue;
 
-                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, out_insideIntersections, pointCollector);
+                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, out_insideIntersections, pointCollector, duplicateGroups);
 
                     //if number of intersections is an odd number, segment is inside the model
                     if (intersectionPoints && intersectionPoints.length % 2 === 1) {
@@ -739,7 +775,7 @@
     /**
      * @private
      */
-    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>) {
+    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>, duplicateGroups: IDuplicateGroups) {
         const midY = segment.midpoint[1];
 
         if (!anyAbove(overlaps, midY) || !anyBelow(overlaps, midY)) {
@@ -755,10 +791,16 @@
             outY = extents.low[1] - 1;
         }
 
+        //reset the point collector
+        pointCollector.collections.length = 0;
+
         const line = new paths.Line(segment.midpoint, [segment.midpoint[0], outY]);
         let lineAddedToOut_insideIntersections = false;
 
         for (let qpath of overlaps) {
+
+            //don't check against models which are marked duplicate with this segment
+            if (segment.duplicateGroup && qpath.modelIndex in duplicateGroups[segment.duplicateGroup]) continue;
 
             //lazy compute to see if segment is vertically tangent on enter/exit
             if (!qpath.verticalTangents) {
@@ -769,11 +811,8 @@
             if (qpath.verticalTangents[x]) continue;
 
             if (!lineAddedToOut_insideIntersections) {
-                model.addPath(out_insideIntersections, line, `check_${segment.qpath.pathId}_${segment.segmentIndex}`);
+                addPath(out_insideIntersections, line, `check_${segment.qpath.pathId}_${segment.segmentIndex}`);
                 lineAddedToOut_insideIntersections = true;
-
-                //reset the point collector
-                pointCollector.collections.length = 0;
             }
 
             let intersectOptions: IPathIntersectionOptions = { path2Offset: qpath.offset };
