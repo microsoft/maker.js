@@ -98,7 +98,7 @@ namespace MakerJs.model {
      * @param combineOptions Optional object containing combine options.
      * @returns Model which surrounds the paths of the original model.
      */
-    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions: ICombineOptions): IModel {
+    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions?: ICombineOptions): IModel {
 
         if (distance <= 0) return null;
 
