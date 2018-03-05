@@ -537,7 +537,15 @@
         if (processed.model && processed.lockedPath) {
             var pathAndOffset = getLockedPathAndOffset();
             if (pathAndOffset) {
-                setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.result) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
+                const path = pathAndOffset.result as MakerJs.IPath;
+                const notes: string[] = [processed.lockedPath.notes];
+                notes.push("``` " + JSON.stringify(pathAndOffset.result) + "```");
+                notes.push("\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
+                notes.push("\nLength|```" + makerjs.measure.pathLength(path) + "```");
+                if (path.type !== makerjs.pathType.Circle) {
+                    notes.push("\nEndpoints|```" + JSON.stringify(makerjs.point.fromPathEnds(path, pathAndOffset.offset)) + "```");
+                }
+                setNotes(notes.join(''));
             } else {
                 setNotesFromModelOrKit();
             }
@@ -817,34 +825,34 @@
 
         try {
 
-            var result = mainThreadConstructor(processed.kit, realValues);
+        var result = mainThreadConstructor(processed.kit, realValues);
 
-            processed.html = result.html;
-            setProcessedModel(result.model);
+        processed.html = result.html;
+        setProcessedModel(result.model);
 
-            if (successCb) {
-                successCb();
-            }
+        if (successCb) {
+            successCb();
+        }
 
         } catch (e) {
-            var error = e as RuntimeError;
+        var error = e as RuntimeError;
 
-            var errorDetails: MakerJsPlayground.IJavaScriptErrorDetails = {
-                colno: 0,
-                lineno: 0,
-                message: 'Parameters=' + JSON.stringify(processed.paramValues),
-                name: e.toString()
-            };
+        var errorDetails: MakerJsPlayground.IJavaScriptErrorDetails = {
+            colno: 0,
+            lineno: 0,
+            message: 'Parameters=' + JSON.stringify(processed.paramValues),
+            name: e.toString()
+        };
 
-            //try to get column number and line number from stack
-            var re = /([0-9]{1,9999})\:([0-9]{1,9999})/;
-            var matches = re.exec(error.stack);
-            if (matches && matches.length == 3) {
-                errorDetails.lineno = parseInt(matches[1]);
-                errorDetails.colno = parseInt(matches[2]);
-            }
+        //try to get column number and line number from stack
+        var re = /([0-9]{1,9999})\:([0-9]{1,9999})/;
+        var matches = re.exec(error.stack);
+        if (matches && matches.length == 3) {
+            errorDetails.lineno = parseInt(matches[1]);
+            errorDetails.colno = parseInt(matches[2]);
+        }
 
-            processResult({ result: errorDetails });
+        processResult({ result: errorDetails });
         }
     }
 
