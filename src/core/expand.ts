@@ -98,77 +98,57 @@ namespace MakerJs.model {
      * @param combineOptions Optional object containing combine options.
      * @returns Model which surrounds the paths of the original model.
      */
-    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions: ICombineOptions = {}): IModel {
+    export function expandPaths(modelToExpand: IModel, distance: number, joints = 0, combineOptions: ICombineOptions): IModel {
 
         if (distance <= 0) return null;
 
-        var result: IModel = {
-            models: {
-                expansions: { models: {} },
-                caps: { models: {} }
-            }
-        };
+        if (!combineOptions) {
+            combineOptions = {};
+        }
 
-        var first = true;
-        var lastFarPoint = combineOptions.farPoint;
+        if (!combineOptions.pointMatchingDistance) {
+            combineOptions.pointMatchingDistance = .002;
+        }
+
+        const expandedPathModels: IModel[] = [];
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
 
                 //don't expand paths shorter than the tolerance for combine operations
-                if (combineOptions.pointMatchingDistance && measure.pathLength(walkedPath.pathContext) < combineOptions.pointMatchingDistance) return;
+                //                if (combineOptions.pointMatchingDistance && measure.pathLength(walkedPath.pathContext) < combineOptions.pointMatchingDistance) return;
 
                 var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
 
                 if (expandedPathModel) {
                     moveRelative(expandedPathModel, walkedPath.offset);
 
-                    var newId = getSimilarModelId(result.models['expansions'], walkedPath.pathId);
-
                     prefixPathIds(expandedPathModel, walkedPath.pathId + '_');
                     originate(expandedPathModel);
 
-                    if (!first) {
-                        combine(result, expandedPathModel, false, true, false, true, combineOptions);
-                        combineOptions.measureA.modelsMeasured = false;
-
-                        lastFarPoint = combineOptions.farPoint;
-                        delete combineOptions.farPoint;
-                        delete combineOptions.measureB;
-                    }
-
-                    result.models['expansions'].models[newId] = expandedPathModel;
-
-                    if (expandedPathModel.models) {
-                        var caps = expandedPathModel.models['Caps'];
-
-                        if (caps) {
-                            delete expandedPathModel.models['Caps'];
-
-                            result.models['caps'].models[newId] = caps;
-                        }
-                    }
-
-                    first = false;
+                    expandedPathModels.push(expandedPathModel);
                 }
             }
         };
 
         walk(modelToExpand, walkOptions);
 
+        let union = combineUnion(expandedPathModels, combineOptions);
+
         if (joints) {
 
-            var roundCaps = result.models['caps'];
-            var straightCaps: IModel = { models: {} };
-            result.models['straightcaps'] = straightCaps;
+            var roundCaps: IModel = { models: {} };
+
+            expandedPathModels.forEach((expandedPathModel, i) => {
+                roundCaps.models[i] = expandedPathModel.models['Caps'];
+            });
 
             simplify(roundCaps);
 
+            const straighteneds: IModel[] = [union];
+
             //straighten each cap, optionally beveling
             for (var id in roundCaps.models) {
-
-                //add a model container to the straight caps
-                straightCaps.models[id] = { models: {} };
 
                 walk(roundCaps.models[id], {
 
@@ -178,32 +158,15 @@ namespace MakerJs.model {
 
                         //make a small closed shape using the straightened arc
                         var straightened = path.straighten(arc, joints == 2, walkedPath.pathId + '_', true);
-
-                        //union this little pointy shape with the rest of the result
-                        combine(result, straightened, false, true, false, true, combineOptions);
-                        combineOptions.measureA.modelsMeasured = false;
-
-                        lastFarPoint = combineOptions.farPoint;
-
-                        delete combineOptions.farPoint;
-                        delete combineOptions.measureB;
-
-                        //replace the rounded path with the straightened model
-                        straightCaps.models[id].models[walkedPath.pathId] = straightened;
-
-                        //delete all the paths in the model containing this path
-                        delete walkedPath.modelContext.paths;
+                        straighteneds.push(straightened);
                     }
                 });
             }
 
-            //delete the round caps
-            delete result.models['caps'];
+            union = combineUnion(straighteneds, combineOptions)
         }
 
-        combineOptions.farPoint = lastFarPoint;
-
-        return result;
+        return union;
     }
 
     /**

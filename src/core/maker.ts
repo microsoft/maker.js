@@ -505,21 +505,6 @@ namespace MakerJs {
         trimDeadEnds?: boolean;
 
         /**
-         * Point which is known to be outside of the model.
-         */
-        farPoint?: IPoint;
-
-        /**
-         * Cached measurements for model A.
-         */
-        measureA?: measure.Atlas;
-
-        /**
-         * Cached measurements for model B.
-         */
-        measureB?: measure.Atlas;
-
-        /**
          * Output array of 2 models (corresponding to the input models) containing paths that were deleted in the combination.
          * Each path will be of type IPathRemoved, which has a .reason property describing why it was removed.
          */

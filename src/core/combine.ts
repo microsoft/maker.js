@@ -107,6 +107,18 @@
     /**
      * @private
      */
+    enum SegmentDeletedReason {
+        NotDeleted = 0,
+        Duplicate,
+        DeadEnd,
+        Inside,
+        Outside,
+        Tiny
+    }
+
+    /**
+     * @private
+     */
     interface IQueuedSweepItem {
         modelIndex: number;
         leftX: number;
@@ -127,15 +139,20 @@
     interface IQueuedSweepPathSegment {
         segmentIndex?: number;
         isInside?: boolean;
+        isInsideNotes?: string;
         uniqueForeignIntersectionPoints: IPoint[];
         path: IPath;
         duplicate?: boolean;
         duplicateGroup?: number;
         deleted?: boolean;
+        reasonDeleted?: SegmentDeletedReason;
         extents: IMeasure;
         offset: IPoint;
         midpoint?: IPoint;
+        pathLength?: number;
         qpath: IQueuedSweepPath;
+        newId?: string;
+        pointIndexes?: number[];
     }
 
     /**
@@ -175,7 +192,10 @@
      * @private
      */
     interface IDuplicateGroups {
-        [duplicateGroup: number]: { [modelIndex: number]: boolean }
+        [duplicateGroup: number]: {
+            [modelIndex: number]: boolean;
+            segments: IQueuedSweepPathSegment[];
+        }
     }
 
     /**
@@ -189,20 +209,27 @@
     /**
      * @private
      */
-    function addOrDeleteSegments(qpath: IQueuedSweepPath, includeInside: boolean, includeOutside: boolean, trackDeleted: ITrackDeleted) {
+    function addOrDeleteSegments(qpath: IQueuedSweepPath, includeInside: boolean, includeOutside: boolean, trackDeleted: ITrackDeleted, deadEndPointGraph: PointGraph<IQueuedSweepPathSegment>) {
 
-        function addSegment(modelContext: IModel, pathIdBase: string, segment: IQueuedSweepPathSegment) {
-            const id = getSimilarPathId(modelContext, pathIdBase);
-            const newRouteKey = (id == pathIdBase) ? qpath.routeKey : createRouteKey(qpath.route.slice(0, -1).concat([id]));
-
-            modelContext.paths[id] = segment.path;
-        }
-
-        function checkAddSegment(modelContext: IModel, pathIdBase: string, segment: IQueuedSweepPathSegment) {
+        function checkAddSegment(segment: IQueuedSweepPathSegment) {
             if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
-                addSegment(modelContext, pathIdBase, segment);
+                segment.newId = getSimilarPathId(qpath.modelContext, qpath.pathId);
+                qpath.modelContext.paths[segment.newId] = segment.path;
+
+                //compute now for pointgraph
+                if (deadEndPointGraph) {
+
+                    const endpoints = point.fromPathEnds(segment.path, segment.offset);
+                    segment.pointIndexes = [];
+
+                    endpoints.forEach(p => {
+                        const pr = point.rounded(p);
+                        const pointIndex = deadEndPointGraph.insertValue(pr, segment, .001);
+                        segment.pointIndexes.push(pointIndex);
+                    });
+                }
             } else {
-                const reason = 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints);
+                const reason = 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints) + ' ' + segment.isInsideNotes;
                 trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, segment.offset, reason);
             }
         }
@@ -212,12 +239,11 @@
 
         qpath.segments.forEach(segment => {
             if (segment.deleted) {
-                trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, segment.offset, `segment is a duplicate`);
+                trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, segment.offset, `segment is a duplicate ${segment.duplicateGroup}`);
             } else {
-                checkAddSegment(qpath.modelContext, qpath.pathId, segment);
+                checkAddSegment(segment);
             }
         });
-
     }
 
     /**
@@ -250,23 +276,19 @@
      * @private
      */
     function combineArray(modelArray: IModel[], flags: boolean[][], options: ICombineOptions) {
-
-        const out_deleted = [];
-        const out_insideIntersections: IModel = { paths: {} };
-
         const result: IModel = { models: {} };
         modelArray.forEach((m, i) => result.models[i] = m);
 
         const opts: ICombineOptions = {
             trimDeadEnds: true,
-            pointMatchingDistance: .001,
-            out_deleted,
-            out_insideIntersections
+            pointMatchingDistance: .002,
+            out_deleted: [],
+            out_insideIntersections: { paths: {} }
         };
         extendObject(opts, options);
 
         const trackDeleted: ITrackDeleted = (modelIndex: number, deletedSegment: IPath, routeKey: string, offset: IPoint, reason: string) => {
-            if (!out_deleted[modelIndex]) out_deleted[modelIndex] = {};
+            if (!opts.out_deleted[modelIndex]) opts.out_deleted[modelIndex] = {};
             addPath(opts.out_deleted[modelIndex], deletedSegment, 'deleted');
             path.moveRelative(deletedSegment, offset);
             const p = deletedSegment as IPathRemoved;
@@ -274,13 +296,13 @@
             p.routeKey = routeKey;
         }
 
-        function comparePoint(pointA: IPoint, pointB: IPoint) {
-            const distance = measure.pointDistance(pointA, pointB);
-            return distance <= opts.pointMatchingDistance;
-        }
+        // function comparePoint(pointA: IPoint, pointB: IPoint) {
+        //     const distance = measure.pointDistance(pointA, pointB);
+        //     return distance <= .0001;// opts.pointMatchingDistance;
+        // }
 
         //collect midPoints of broken segments to find duplicates
-        const midPointCollector = new Collector<IPoint, IQueuedSweepPathSegment>(comparePoint);
+        const midPointCollector = new PointGraph<IQueuedSweepPathSegment>(); //new Collector<IPoint, IQueuedSweepPathSegment>(comparePoint);
 
         //gather all paths from the array of models into a heap queue
         const { extents, queue } = gather(modelArray);
@@ -290,18 +312,22 @@
         insideQueue.list = queue.list.slice(0);
 
         //sweep and break paths
-        const broken = sweepAndBreak(queue, insideQueue, midPointCollector, extents);
+        const broken = sweepAndBreak(queue, insideQueue, midPointCollector, extents, opts.pointMatchingDistance);
 
         //mark the duplicates
         const duplicateGroups: IDuplicateGroups = {};
         let duplicateGroup = 0;
-        midPointCollector.getCollectionsOfMultiple((midpoint, segments) => {
+
+        midPointCollector.forEachPoint((midpoint, segments) => {
+            if (segments.length < 2) return;
 
             duplicateGroup++;
-            duplicateGroups[duplicateGroup] = {};
+            duplicateGroups[duplicateGroup] = { segments: [] };
 
-            segments.forEach((segment, i) => {
+            //TODO: make sure origins are the same
+            segments.sort((a, b) => b.pathLength - a.pathLength).forEach((segment, i) => {
                 duplicateGroups[duplicateGroup][segment.qpath.modelIndex] = true;
+                duplicateGroups[duplicateGroup].segments.push(segment);
 
                 segment.duplicate = true;
                 segment.duplicateGroup = duplicateGroup;
@@ -317,12 +343,17 @@
         });
 
         //check if segments are inside
-        sweepInsideLines(insideQueue, extents, out_insideIntersections, duplicateGroups);
+        sweepInsideLines(insideQueue, extents, opts.out_insideIntersections, duplicateGroups, opts.pointMatchingDistance);
+
+        let deadEndPointGraph: PointGraph<IQueuedSweepPathSegment>;
+        if (opts.trimDeadEnds) {
+            deadEndPointGraph = new PointGraph<IQueuedSweepPathSegment>();
+        }
 
         //now modify the models with the new segments
         broken.forEach(qpath => {
             const includes = flags[qpath.modelIndex] || flags[0];
-            addOrDeleteSegments(qpath, includes[0], includes[1], trackDeleted);
+            addOrDeleteSegments(qpath, includes[0], includes[1], trackDeleted, deadEndPointGraph);
         });
 
         if (opts.trimDeadEnds) {
@@ -332,6 +363,11 @@
             //union
             if (!flags[0][0] && !flags[1][0]) {             //if (!includeAInsideB && !includeBInsideA) {
                 shouldKeep = function (walkedPath: IWalkPath): boolean {
+
+                    var pl = round(measure.pathLength(walkedPath.pathContext), opts.pointMatchingDistance);
+                    if (pl <= opts.pointMatchingDistance) {
+                        return false;
+                    }
 
                     //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
                     //Duplicates were discarded from B but kept in A
@@ -344,10 +380,12 @@
                 }
             }
 
-            removeDeadEnds(result, null, shouldKeep, (wp, reason) => {
-                const modelIndex = +wp.route[1];
-                trackDeleted(modelIndex, wp.pathContext, wp.routeKey, wp.offset, reason)
-            });
+            removeDeadEnds2(deadEndPointGraph, .001, .001);
+
+            // removeDeadEnds(result, opts.pointMatchingDistance, shouldKeep, (wp, reason) => {
+            //     const modelIndex = +wp.route[1];
+            //     trackDeleted(modelIndex, wp.pathContext, wp.routeKey, wp.offset, reason)
+            // });
         }
 
         //pass options back to caller
@@ -362,17 +400,51 @@
     }
 
     /**
+     * @private
+     */
+    function combineOverload(includeAinsideB: boolean, includeBinsideA: boolean, args: any[]) {
+        let modelArray: IModel[];
+        let options: ICombineOptions;
+        let ab = false;
+
+        if (Array.isArray(args[0])) {
+            modelArray = args[0];
+            options = args[1];
+        } else {
+            ab = true;
+            modelArray = [args[0], args[1]];
+            options = args[2];
+        }
+
+        let result = combineArray(modelArray, [[includeAinsideB, includeBinsideA], [includeAinsideB, includeBinsideA]], options);
+
+        if (ab) {
+            result = { models: { a: modelArray[0], b: modelArray[1] } };
+        }
+        return result;
+    }
+
+    /**
+     * Combine an array of models, resulting in a intersection. Each model will be modified accordingly.
+     *
+     * @param modelArray Array of models to combine.
+     * @param options Optional ICombineOptions object.
+     * @returns A new model containing all of the input models.
+     */
+    export function combineIntersection(modelA: IModel, modelB: IModel, options?: ICombineOptions);
+
+    /**
      * Combine 2 models, resulting in a intersection. Each model will be modified accordingly.
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
-    export function combineIntersection(modelA: IModel, modelB: IModel) {
+    export function combineIntersection(modelA: IModel, modelB: IModel, options?: ICombineOptions);
 
-        //TODO: add signature for array, call combineArray
-
-        return combine(modelA, modelB, true, false, true, false);
+    export function combineIntersection(...args: any[]) {
+        return combineOverload(true, false, args);
     }
 
     /**
@@ -387,13 +459,13 @@
     }
 
     /**
-     * Combine 2 models, resulting in a union. Each model will be modified accordingly.
+     * Combine an array of models, resulting in a union. Each model will be modified accordingly.
      *
      * @param modelArray Array of models to combine.
      * @param options Optional ICombineOptions object.
-     * @returns A new model containing both of the input models as "a" and "b".
+     * @returns A new model containing both of the input models.
      */
-    export function combineUnion(modelArray: IModel[], options?: ICombineOptions);
+    export function combineUnion(modelArray: IModel[], options?: ICombineOptions): IModel;
 
     /**
      * Combine 2 models, resulting in a union. Each model will be modified accordingly.
@@ -403,23 +475,14 @@
      * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
-    export function combineUnion(modelA: IModel, modelB: IModel, options?: ICombineOptions);
+    export function combineUnion(modelA: IModel, modelB: IModel, options?: ICombineOptions): IModel;
 
     export function combineUnion(...args: any[]) {
-        let modelArray: IModel[];
-        let options: ICombineOptions;
+        return combineOverload(false, true, args);
+    }
 
-        if (Array.isArray(args[0])) {
-            modelArray = args[0];
-            options = args[1];
-        } else {
-            modelArray = [args[0], args[1]];
-            options = args[2];
-        }
-
-        const flags: boolean[][] = [[false, true], [false, true]];
-
-        return combineArray(modelArray, flags, options);
+    export function combineBreak(modelArray: IModel[]) {
+        return combineArray(modelArray, [[true, true], [true, true]], { trimDeadEnds: false });
     }
 
     /**
@@ -513,8 +576,9 @@
     function sweepAndBreak(
         q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepPath>>,
         q2: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>,
-        midPointCollector: Collector<IPoint, IQueuedSweepPathSegment>,
-        extents: IMeasureWithCenter) {
+        midPointCollector: PointGraph<IQueuedSweepPathSegment>,
+        extents: IMeasureWithCenter,
+        pointMatchingDistance: number) {
 
         const broken: IQueuedSweepPath[] = [];
 
@@ -529,7 +593,7 @@
             if (curr.key > x) {
 
                 //process the sweep line
-                breakSweepLine(active, broken, midPointCollector, q2, extents, false);
+                breakSweepLine(active, broken, midPointCollector, q2, extents, false, pointMatchingDistance);
             }
 
             //add to the sweep line, at Y. 
@@ -539,7 +603,7 @@
         }
 
         //process the final sweep line
-        breakSweepLine(active, broken, midPointCollector, q2, extents, true);
+        breakSweepLine(active, broken, midPointCollector, q2, extents, true, pointMatchingDistance);
 
         return broken;
     }
@@ -550,10 +614,11 @@
     function breakSweepLine(
         active: ISweepPaths,
         broken: IQueuedSweepPath[],
-        midPointCollector: Collector<IPoint, IQueuedSweepPathSegment>,
+        midPointCollector: PointGraph<IQueuedSweepPathSegment>,
         q2: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>,
         extents: IMeasureWithCenter,
-        exiting: boolean) {
+        exiting: boolean,
+        pointMatchingDistance: number) {
 
         //look at everything in the sweep line
         for (let outerPathIndex in active) {
@@ -582,25 +647,34 @@
                 qpath.segments.forEach((segment, i) => {
                     segment.segmentIndex = i;
 
-                    //collect segments by common midpoint
-                    const midpoint = point.add(point.middle(segment.path), qpath.offset);
-                    segment.midpoint = midpoint;
-                    midPointCollector.addItemToCollection(midpoint, segment);
+                    segment.pathLength = measure.pathLength(segment.path);
 
-                    //insert check into 2nd queue
-                    const x = midpoint[0];
-                    const item: IQueuedSweepCheckInside = {
-                        leftX: x,
-                        rightX: x,
-                        modelIndex: qpath.modelIndex,
-                        segment: segment
-                    };
+                    if (segment.pathLength <= pointMatchingDistance) {
+                        segment.reasonDeleted = SegmentDeletedReason.Tiny;
+                        segment.deleted = true;
+                        //TODO - reason:too short
+                    } else {
 
-                    const check: IQueuedSweepEvent<IQueuedSweepCheckInside> = {
-                        motion: SweepMotion.checkInside,
-                        item
+                        //collect segments by common midpoint
+                        const midpoint = point.add(point.middle(segment.path), qpath.offset);
+                        segment.midpoint = midpoint;
+                        midPointCollector.insertValue(midpoint, segment, .0001);
+
+                        //insert check into 2nd queue
+                        const x = midpoint[0];
+                        const item: IQueuedSweepCheckInside = {
+                            leftX: x,
+                            rightX: x,
+                            modelIndex: qpath.modelIndex,
+                            segment: segment
+                        };
+
+                        const check: IQueuedSweepEvent<IQueuedSweepCheckInside> = {
+                            motion: SweepMotion.checkInside,
+                            item
+                        }
+                        q2.insert(x, check);
                     }
-                    q2.insert(x, check);
                 });
 
                 broken.push(qpath);
@@ -628,7 +702,7 @@
     /**
      * @private
      */
-    function sweepInsideLines(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, extents: IMeasureWithCenter, out_insideIntersections: IModel, duplicateGroups: IDuplicateGroups) {
+    function sweepInsideLines(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, extents: IMeasureWithCenter, out_insideIntersections: IModel, duplicateGroups: IDuplicateGroups, pointMatchingDistance: number) {
 
         //establish a sweep line
         const active: ISweepPaths = {};
@@ -637,15 +711,12 @@
         //sweep through the heap
         let x = q.findMinimum().key;
 
-        //create a reusable collector for intersection points
-        const pointCollector = new Collector<IPoint, IQueuedSweepPath>(compareIntersectionPoint);
-
         while (!q.isEmpty()) {
             let curr = q.extractMinimum();
             if (curr.key > x) {
 
                 //process the sweep line
-                checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector, duplicateGroups);
+                checkInsideSweepLine(active, checks, extents, out_insideIntersections, duplicateGroups, pointMatchingDistance);
             }
 
             //add to the sweep line, at Y. 
@@ -655,7 +726,7 @@
         }
 
         //process the final sweep line
-        checkInsideSweepLine(active, checks, extents, out_insideIntersections, pointCollector, duplicateGroups);
+        checkInsideSweepLine(active, checks, extents, out_insideIntersections, duplicateGroups, pointMatchingDistance);
     }
 
     /**
@@ -674,27 +745,57 @@
     /**
      * @private
      */
-    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>, duplicateGroups: IDuplicateGroups) {
+    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, out_insideIntersections: IModel, duplicateGroups: IDuplicateGroups, pointMatchingDistance: number) {
 
         if (checks.length > 0) {
             let byModel: { [modelIndex: number]: IQueuedSweepPath[] };
 
             checks.forEach(check => {
                 const segment = check.segment;
-                //if (segment.duplicate) return;
+
+                if (segment.deleted) return;
+
+                //for each check, draw a line to nearest boundary
+                const midY = segment.midpoint[1];
+                const x = round(segment.midpoint[0], tangentAccuracy);
+                let outY: number;
+                if (midY > extents.center[1]) {
+                    outY = extents.high[1] + 1;
+                } else {
+                    outY = extents.low[1] - 1;
+                }
+
+                const line = new paths.Line(segment.midpoint, [segment.midpoint[0], outY]);
+
+                const notes: string[] = [];
 
                 if (!byModel) byModel = organizeByModel(active);
 
                 for (let modelIndex in byModel) {
                     if (+modelIndex === segment.qpath.modelIndex) continue;
 
-                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, out_insideIntersections, pointCollector, duplicateGroups);
+                    //don't check against models which are marked duplicate with this segment
+                    if (segment.duplicateGroup && modelIndex in duplicateGroups[segment.duplicateGroup]) {
+                        //duplicates will be managed by the deadend finder
+                        notes.push(`shares contour with ${modelIndex}`);
+                        continue;
+                    }
+
+                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, out_insideIntersections, duplicateGroups, line, notes, x, midY);
 
                     //if number of intersections is an odd number, segment is inside the model
-                    if (intersectionPoints && intersectionPoints.length % 2 === 1) {
-                        segment.isInside = true;
-                        segment.uniqueForeignIntersectionPoints = intersectionPoints;
-                        break;
+                    if (intersectionPoints) {
+
+                        addPath(out_insideIntersections, line, `check_${segment.qpath.pathId} s-${segment.segmentIndex}`);
+                        line['notes'] = notes.join('\n');
+
+                        if (intersectionPoints.length % 2 === 1) {
+                            line['notes'] += `\nINSIDE: ${JSON.stringify(intersectionPoints)}`;
+                            segment.isInside = true;
+                            segment.isInsideNotes = `modelIndex: ${modelIndex} midpoint:${JSON.stringify(segment.midpoint)} ${line['notes']}`;
+                            segment.uniqueForeignIntersectionPoints = intersectionPoints;
+                            return;
+                        }
                     }
                 }
             });
@@ -715,24 +816,31 @@
     /**
      * @private
      */
+    const tangentAccuracy = .00001;
+
+    /**
+     * @private
+     */
     function getVerticalTangents(qpath: IQueuedSweepPath): { [x: number]: boolean } {
         const map: { [x: number]: boolean } = {};
+        const lx = round(qpath.leftX, tangentAccuracy);
+        const rx = round(qpath.rightX, tangentAccuracy);
 
         switch (qpath.pathContext.type) {
             case pathType.Circle:
-                map[qpath.leftX] = true;
-                map[qpath.rightX] = true;
+                map[lx] = true;
+                map[rx] = true;
                 break;
 
             case pathType.Arc:
                 const arc = qpath.pathContext as IPathArc;
-                map[qpath.leftX] = measure.isBetweenArcAngles(180, arc, true);
-                map[qpath.rightX] = measure.isBetweenArcAngles(0, arc, true);
+                map[lx] = measure.isBetweenArcAngles(180, arc, true);
+                map[rx] = measure.isBetweenArcAngles(0, arc, true);
                 break;
 
             case pathType.Line:
                 const line = qpath.pathContext as IPathLine;
-                map[qpath.leftX] = map[qpath.rightX] = line.origin[0] === line.end[0];
+                map[lx] = map[rx] = (round(line.origin[0] - line.end[0]) === 0);
                 break;
         }
 
@@ -775,32 +883,20 @@
     /**
      * @private
      */
-    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, out_insideIntersections: IModel, pointCollector: Collector<IPoint, IQueuedSweepPath>, duplicateGroups: IDuplicateGroups) {
-        const midY = segment.midpoint[1];
+    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, out_insideIntersections: IModel, duplicateGroups: IDuplicateGroups, line: IPathLine, notes: string[], x: number, midY: number) {
+
+        for (let qpath of overlaps) {
+            notes.push(`overlaps with ${qpath.routeKey}`);
+        }
 
         if (!anyAbove(overlaps, midY) || !anyBelow(overlaps, midY)) {
+            notes.push(`escaped`);
             return null;
         }
 
-        //for each check, draw a line to nearest boundary
-        const x = segment.midpoint[0];
-        let outY: number;
-        if (midY > extents.center[1]) {
-            outY = extents.high[1] + 1;
-        } else {
-            outY = extents.low[1] - 1;
-        }
-
-        //reset the point collector
-        pointCollector.collections.length = 0;
-
-        const line = new paths.Line(segment.midpoint, [segment.midpoint[0], outY]);
-        let lineAddedToOut_insideIntersections = false;
+        const pointCollector = new PointGraph<IQueuedSweepPath>() //new Collector<IPoint, IQueuedSweepPath>(compareIntersectionPoint);
 
         for (let qpath of overlaps) {
-
-            //don't check against models which are marked duplicate with this segment
-            if (segment.duplicateGroup && qpath.modelIndex in duplicateGroups[segment.duplicateGroup]) continue;
 
             //lazy compute to see if segment is vertically tangent on enter/exit
             if (!qpath.verticalTangents) {
@@ -808,11 +904,9 @@
             }
 
             //skip if the path is vertically tangent at this x
-            if (qpath.verticalTangents[x]) continue;
-
-            if (!lineAddedToOut_insideIntersections) {
-                addPath(out_insideIntersections, line, `check_${segment.qpath.pathId}_${segment.segmentIndex}`);
-                lineAddedToOut_insideIntersections = true;
+            if (qpath.verticalTangents[x]) {
+                notes.push(`tangent of ${qpath.routeKey}`);
+                continue;
             }
 
             let intersectOptions: IPathIntersectionOptions = { path2Offset: qpath.offset };
@@ -820,31 +914,298 @@
             let farInt = path.intersection(line, qpath.pathContext, intersectOptions);
 
             if (farInt) {
+                let valid = true;
+
                 farInt.intersectionPoints.forEach(p => {
-                    pointCollector.addItemToCollection(p, qpath);
+
+                    //a duplicate will intersect at the line's endpoint
+                    // if (segment.duplicate && measure.isPointEqual(p, line.origin, intersectionDelta)) {
+                    //     if (segment.duplicateGroup && (qpath.modelIndex in duplicateGroups[segment.duplicateGroup])) {
+                    //         valid = false;
+                    //         console.log(9);
+                    //     }
+                    // }
+
+
+                    pointCollector.insertValue(p, qpath);
                 });
+
+                // if (valid) {
+                //     farInt.intersectionPoints.forEach(p => pointCollector.addItemToCollection(p, qpath));
+                // }
+
+                notes.push(`intersects with ${qpath.routeKey}: ${JSON.stringify(farInt)} x=${x} verticalTangents=${JSON.stringify(qpath.verticalTangents)}`);
+            } else if (intersectOptions.out_AreOverlapped) {
+                console.log(9);
+
             }
         }
 
         //flatten to single array of points
         const intersectionPoints: IPoint[] = [];
 
-        pointCollector.collections.forEach(collection => {
+        pointCollector.forEachPoint((p, values) => {
 
             //for multiple points, reconcile if this was a tangent
-            if (collection.items.length > 1) {
+            if (values.length > 1) {
 
                 //see if joint is extreme at this point
-                const leftX = collection.items.reduce((a, b) => a.leftX < b.leftX ? a : b).leftX;
-                const rightX = collection.items.reduce((a, b) => a.rightX > b.rightX ? a : b).rightX;
-                const x = collection.key[0];
+                const leftX = values.reduce((a, b) => a.leftX < b.leftX ? a : b).leftX;
+                const rightX = values.reduce((a, b) => a.rightX > b.rightX ? a : b).rightX;
+                const x = p[0];
                 const isExtreme = Math.abs(x - leftX) < intersectionDelta || Math.abs(x - rightX) < intersectionDelta;
+                const keys = values.map(qpath => qpath.routeKey);
+
+                notes.push(`extreme of ${keys.join(' + ')}`);
 
                 if (isExtreme) return;
             }
-            intersectionPoints.push(collection.key);
+            intersectionPoints.push(p);
         });
 
         return intersectionPoints;
     }
+
+    function removeDeadEnds2(pg: PointGraph<IQueuedSweepPathSegment>, withinDistance: number, incrementDistance: number) {
+        console.log(pg);
+
+        // for (let pointIndex in pg.index) {
+        //     pg.calculatePointDistance(+pointIndex);
+        // }
+
+        for (let i = 0; i < 50; i++) {
+            let byLength = pg.byValueIndexesLength();
+            if (!byLength[1]) {
+                console.log(`no singles at ${i} iterations`);
+                break;
+            }
+            let singles = byLength[1];
+            let d = withinDistance + i * incrementDistance;
+            let anyMerged = tryMergeSingles(pg, singles, d);
+            console.log(`iteration ${i} d:${d} merged: ${anyMerged}`);
+        }
+        console.log(pg.byValueIndexesLength());
+    }
+
+    function tryMergeSingles(pg: PointGraph<IQueuedSweepPathSegment>, singles: IPointGraphIndexCard[], withinDistance: number) {
+        let anyMerged = false;
+        singles.forEach(single => {
+            if (single.merged || pg.merged[single.pointIndex]) return;
+            for (var i = 0; i < singles.length; i++) {
+                let otherSingle = singles[i];
+                if (otherSingle.merged || pg.merged[otherSingle.pointIndex]) break;
+                let d: number;
+                if (otherSingle.pointIndex in single.distances) {
+                    d = measure.pointDistance(single.point, otherSingle.point);
+                    single.distances[otherSingle.pointIndex] = d;
+                    otherSingle.distances[single.pointIndex] = d;
+                }
+                if (d <= withinDistance) {
+                    pg.mergeCard(single, otherSingle);
+                    anyMerged = true;
+                    return;
+                }
+            }
+        });
+        return anyMerged;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    interface IPointGraphIndexCard {
+        pointIndex: number;
+        point: IPoint;
+        merged?: number[];
+        distances: { [pointIndex: number]: number };
+        shortest?: number[];
+        valueIndexes: number[];
+    }
+
+    class PointGraph<T> {
+        private pointCount: number;
+        public graph: { [x: number]: { [y: number]: number } };
+        public index: { [pointIndex: number]: IPointGraphIndexCard };
+        public merged: { [pointIndex: number]: number };
+        public values: T[];
+
+        constructor() {
+            this.pointCount = 0;
+            this.graph = {};
+            this.index = {};
+            this.merged = {};
+            this.values = [];
+        }
+
+        public insertValue(p: IPoint, value: T, mergeWithinDistance?: number) {
+            const x = p[0], y = p[1];
+            if (!this.graph[x]) this.graph[x] = {};
+            const pgx = this.graph[x];
+            if (!(y in pgx)) pgx[y] = this.pointCount++;
+            let pointIndex = pgx[y];
+
+            if (pointIndex in this.merged) {
+                pointIndex = this.merged[pointIndex];
+            }
+
+            //get existing point or create a new one
+            let card: IPointGraphIndexCard;
+            const cardExisted = (pointIndex in this.index);
+            if (cardExisted) {
+                card = this.index[pointIndex];
+                card.valueIndexes.push(this.values.length);
+            } else {
+                card = {
+                    pointIndex,
+                    point: p,
+                    distances: {},
+                    valueIndexes: [this.values.length]
+                };
+                this.index[pointIndex] = card;
+            }
+
+            this.values.push(value);
+
+            if (!cardExisted && mergeWithinDistance) {
+                return this.tryMergePoint(pointIndex, mergeWithinDistance, card);
+            }
+
+            return pointIndex;
+        }
+
+        public calculatePointDistance(pointIndex: number, card?: IPointGraphIndexCard) {
+            const shortHeap = new BinaryHeap<number, number>();
+            card = card || this.index[pointIndex];
+            for (let _otherPointIndex in this.index) {
+                let otherPointIndex = +_otherPointIndex;
+                if (otherPointIndex === pointIndex) continue;
+                let otherCard = this.index[otherPointIndex];
+                let d: number;
+                if (otherPointIndex in card.distances) {
+                    d = card.distances[otherPointIndex];
+                } else {
+                    d = measure.pointDistance(card.point, otherCard.point);
+                    card.distances[otherPointIndex] = d;
+                    otherCard.distances[pointIndex] = d;
+                }
+                shortHeap.insert(d, otherPointIndex);
+            }
+            const shortest: number[] = [];
+            while (!shortHeap.isEmpty()) {
+                shortest.push(shortHeap.extractMinimum().value);
+            }
+            card.shortest = shortest;
+        }
+
+        public forEachPoint(cb: (p: IPoint, values: T[], pointIndex?: number, card?: IPointGraphIndexCard) => void) {
+            for (let pointIndex = 0; pointIndex < this.pointCount; pointIndex++) {
+                let card = this.index[pointIndex];
+                if (!card) continue;
+                let length = card.valueIndexes.length;
+                if (length > 0) {
+                    cb(card.point, card.valueIndexes.map(i => this.values[i]), pointIndex, card);
+                }
+            }
+        }
+
+        private tryMergePoint(pointIndex: number, withinDistance: number, card?: IPointGraphIndexCard) {
+            card = card || this.index[pointIndex];
+            //this.calculatePointDistance(pointIndex, card);
+            for (let _otherPointIndex in this.index) {
+                if (_otherPointIndex in this.merged) continue;
+                let otherPointIndex = +_otherPointIndex;
+                if (otherPointIndex === pointIndex) continue;
+                //let d = card.distances[otherPointIndex];
+                let otherCard = this.index[otherPointIndex];
+                let d = measure.pointDistance(card.point, otherCard.point);
+                if (d <= withinDistance) {
+                    this.mergeCard(otherCard, card);
+                    return otherPointIndex;
+                } else {
+                    card.distances[otherPointIndex] = d;
+                    otherCard.distances[pointIndex] = d;
+                }
+            }
+            return pointIndex;
+        }
+
+        public mergeCard(keepCard: IPointGraphIndexCard, deleteCard: IPointGraphIndexCard) {
+            keepCard.merged = keepCard.merged || [];
+            keepCard.merged.push(deleteCard.pointIndex);
+            this.merged[deleteCard.pointIndex] = keepCard.pointIndex;
+            keepCard.valueIndexes.push.apply(keepCard.valueIndexes, deleteCard.valueIndexes);
+            delete this.index[deleteCard.pointIndex];
+            return keepCard.pointIndex;
+        }
+
+        public byValueIndexesLength() {
+            const cardsByLength: { [length: number]: IPointGraphIndexCard[] } = {};
+            this.forEachPoint((p, values, pointIndex, card) => {
+                let length = card.valueIndexes.length;
+                if (!(length in cardsByLength)) cardsByLength[length] = [];
+                cardsByLength[length].push(card);
+            });
+            return cardsByLength;
+        }
+
+        // public mergePoints(withinDistance: number) {
+        //     this.forEachPoint((p, values, pointIndex, card) => {
+        //         this.tryMergePoint(pointIndex, withinDistance, card);
+        //     });
+        // }
+
+        //call with .002
+        // public findSinglesAndTriples(withinDistance: number) {
+        //     const singlePointIndexes: number[] = [];
+        //     const triplePointIndexes: number[] = [];
+
+        //     this.forEachPoint((p, values, pointIndex, card) => {
+        //         if (card.merged) return;
+        //         let length = card.valueIndexes.length;
+        //         if (length === 1) {
+        //             let itemIndex = card.valueIndexes[0];
+        //             if (!card.shortest) this.calculatePointDistance(pointIndex);
+        //             if (card.shortest.distance <= withinDistance) {
+        //                 let otherPointIndex = card.shortest.pointIndex;
+        //                 let otherCard = this.index[otherPointIndex];
+        //                 if (otherCard.valueIndexes.length === 1) {
+        //                     let otherItemIndex = otherCard.valueIndexes[0];
+        //                     if (itemIndex !== otherItemIndex) {
+        //                         if (!otherCard.shortest) this.calculatePointDistance(otherPointIndex);
+        //                         if (otherCard.shortest.pointIndex === pointIndex) {
+        //                             card.merged = otherPointIndex;
+        //                             card.valueIndexes.push(otherCard.valueIndexes[0]);
+        //                             delete this.index[otherPointIndex];
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             if (!card.merged) {
+        //                 singlePointIndexes.push(pointIndex);
+        //             }
+        //         } else if (length === 3) {
+        //             triplePointIndexes.push(pointIndex);
+        //         }
+        //     });
+        //     console.log(singlePointIndexes);
+        // }
+
+        // singlePointIndexes.forEach(pointIndex => {
+        //     const shortest: IShortest = {
+        //         distance: null,
+        //         pointIndex: null
+        //     };
+        //     const single = pg.index[pointIndex];
+        //     singlePointIndexes.forEach(otherPointIndex => {
+        //         if (otherPointIndex === pointIndex) return;
+        //         const d = single.distances[otherPointIndex];
+        //         if (shortest.distance === null || d < shortest.distance) {
+        //             shortest.distance = d;
+        //             shortest.pointIndex = otherPointIndex;
+        //         }
+        //     });
+        //     console.log(`shortest from ${single.pointIndex} is ${shortest.pointIndex} (${shortest.distance})`);
+        // });
+
+    }
+
 }
