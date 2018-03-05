@@ -85,6 +85,10 @@ namespace MakerJs.angle {
         if (arc.endAngle < arc.startAngle) {
             const revolutions = Math.ceil((arc.startAngle - arc.endAngle) / 360);
             const a = revolutions * 360 + arc.endAngle;
+
+            //math bug? sometimes decimals get dropped when adding 360: ex: 134.99999999999997
+            if (!getFractionalPart(a)) return a;
+
             return copyFractionalPart(arc.endAngle, a)
         }
         return arc.endAngle;

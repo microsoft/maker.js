@@ -68,4 +68,11 @@ describe('Angle', function () {
     assert.equal(makerjs.angle.ofArcSpan(arc), 45);
   });
 
+  it ('should find same arcSpan when start is revolved', function(){
+    var arc = {"origin":[39.096000000000004,43.2],"radius":2,"startAngle":90,"endAngle":134.99999999999997,"type":"arc"};
+    var span1 = makerjs.round(makerjs.angle.ofArcSpan(arc));
+    arc.startAngle += 360;
+    var span2 = makerjs.round(makerjs.angle.ofArcSpan(arc));
+    assert.equal(span1, span2);
+  });
 });
