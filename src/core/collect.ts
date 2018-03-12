@@ -83,120 +83,96 @@
         }
     }
 
+    interface kdbush {
+        (points: IPoint[]): KDBush;
+    }
+
+    declare class KDBush {
+        range(minX: number, minY: number, maxX: number, maxY: number): number[];
+        within(x: number, y: number, r: number): number[];
+    }
+
+    /**
+     * @private
+     */
+    const kdbush = require('kdbush') as kdbush;
+
     export interface IPointGraphIndexCard {
         pointIndex: number;
         point: IPoint;
         merged?: number[];
-        distances: { [pointIndex: number]: number };
-        shortest?: number[];
         valueIndexes: number[];
+        kdIndex?: number;
     }
 
     export class PointGraph<T> {
-        private pointCount: number;
+        public insertedCount: number;
         public graph: { [x: number]: { [y: number]: number } };
         public index: { [pointIndex: number]: IPointGraphIndexCard };
         public merged: { [pointIndex: number]: number };
         public values: T[];
 
         constructor() {
-            this.pointCount = 0;
+            this.reset();
+        }
+
+        public reset() {
+            this.insertedCount = 0;
             this.graph = {};
             this.index = {};
             this.merged = {};
             this.values = [];
         }
 
-        public insertValue(p: IPoint, value: T, mergeWithinDistance?: number) {
+        public insertValue(p: IPoint, value: T) {
             const x = p[0], y = p[1];
-            if (!this.graph[x]) this.graph[x] = {};
-            const pgx = this.graph[x];
-            if (!(y in pgx)) pgx[y] = this.pointCount++;
-            let pointIndex = pgx[y];
-
-            if (pointIndex in this.merged) {
-                pointIndex = this.merged[pointIndex];
+            if (!this.graph[x]) {
+                this.graph[x] = {};
             }
-
-            //get existing point or create a new one
+            const pgx = this.graph[x];
+            const existed = (y in pgx);
             let card: IPointGraphIndexCard;
-            const cardExisted = (pointIndex in this.index);
-            if (cardExisted) {
-                card = this.index[pointIndex];
-                card.valueIndexes.push(this.values.length);
-            } else {
+            let pointIndex: number;
+            if (!existed) {
+                pgx[y] = pointIndex = this.insertedCount++;
                 card = {
                     pointIndex,
                     point: p,
-                    distances: {},
                     valueIndexes: [this.values.length]
                 };
                 this.index[pointIndex] = card;
+            } else {
+                pointIndex = pgx[y];
+                if (pointIndex in this.merged) {
+                    pointIndex = this.merged[pointIndex];
+                }
+                card = this.index[pointIndex];
+                card.valueIndexes.push(this.values.length);
             }
-
             this.values.push(value);
-
-            if (!cardExisted && mergeWithinDistance) {
-                return this.tryMergePoint(pointIndex, mergeWithinDistance, card);
-            }
-
-            return pointIndex;
+            return { existed, pointIndex};
         }
 
-        public calculatePointDistance(pointIndex: number, card?: IPointGraphIndexCard) {
-//            const shortHeap = new BinaryHeap<number, number>();
-            card = card || this.index[pointIndex];
-            for (let _otherPointIndex in this.index) {
-                let otherPointIndex = +_otherPointIndex;
-                if (otherPointIndex === pointIndex) continue;
-                let otherCard = this.index[otherPointIndex];
-                let d: number;
-                if (otherPointIndex in card.distances) {
-                    d = card.distances[otherPointIndex];
-                } else {
-                    d = measure.pointDistance(card.point, otherCard.point);
-                    card.distances[otherPointIndex] = d;
-                    otherCard.distances[pointIndex] = d;
-                }
-  //              shortHeap.insert(d, otherPointIndex);
-            }
-            // const shortest: number[] = [];
-            // while (!shortHeap.isEmpty()) {
-            //     shortest.push(shortHeap.extractMinimum().value);
-            // }
-            // card.shortest = shortest;
-        }
-
-        public forEachPoint(cb: (p: IPoint, values: T[], pointIndex?: number, card?: IPointGraphIndexCard) => void) {
-            for (let pointIndex = 0; pointIndex < this.pointCount; pointIndex++) {
+        public mergePoints(withinDistance: number) {
+            const points: IPoint[] = [];
+            const kCards: IPointGraphIndexCard[] = [];
+            for(let pointIndex in this.index) {
                 let card = this.index[pointIndex];
-                if (!card) continue;
-                let length = card.valueIndexes.length;
-                if (length > 0) {
-                    cb(card.point, card.valueIndexes.map(i => this.values[i]), pointIndex, card);
-                }
+                let p = card.point;
+                card.kdIndex = points.length;
+                points.push(p);
+                kCards.push(card);
             }
-        }
-
-        private tryMergePoint(pointIndex: number, withinDistance: number, card?: IPointGraphIndexCard) {
-            card = card || this.index[pointIndex];
-            //this.calculatePointDistance(pointIndex, card);
-            for (let _otherPointIndex in this.index) {
-                if (_otherPointIndex in this.merged) continue;
-                let otherPointIndex = +_otherPointIndex;
-                if (otherPointIndex === pointIndex) continue;
-                //let d = card.distances[otherPointIndex];
-                let otherCard = this.index[otherPointIndex];
-                let d = measure.pointDistance(card.point, otherCard.point);
-                if (d <= withinDistance) {
-                    this.mergeCard(otherCard, card);
-                    return otherPointIndex;
-                } else {
-                    card.distances[otherPointIndex] = d;
-                    otherCard.distances[pointIndex] = d;
-                }
+            const k = kdbush(points);
+            for (let pointIndex in this.index) {
+                if (pointIndex in this.merged) continue;
+                let card = this.index[pointIndex];
+                let mergeIds = k.within(card.point[0], card.point[1], withinDistance);
+                mergeIds.forEach(kdIndex => {
+                    if (kdIndex === card.kdIndex) return;
+                    this.mergeCard(card, kCards[kdIndex]);
+                });
             }
-            return pointIndex;
         }
 
         public mergeCard(keepCard: IPointGraphIndexCard, deleteCard: IPointGraphIndexCard) {
@@ -208,6 +184,17 @@
             return keepCard.pointIndex;
         }
 
+        public forEachPoint(cb: (p: IPoint, values: T[], pointIndex?: number, card?: IPointGraphIndexCard) => void) {
+            for (let pointIndex = 0; pointIndex < this.insertedCount; pointIndex++) {
+                let card = this.index[pointIndex];
+                if (!card) continue;
+                let length = card.valueIndexes.length;
+                if (length > 0) {
+                    cb(card.point, card.valueIndexes.map(i => this.values[i]), pointIndex, card);
+                }
+            }
+        }
+
         public byValueIndexesLength() {
             const cardsByLength: { [length: number]: IPointGraphIndexCard[] } = {};
             this.forEachPoint((p, values, pointIndex, card) => {
@@ -217,66 +204,5 @@
             });
             return cardsByLength;
         }
-
-        // public mergePoints(withinDistance: number) {
-        //     this.forEachPoint((p, values, pointIndex, card) => {
-        //         this.tryMergePoint(pointIndex, withinDistance, card);
-        //     });
-        // }
-
-        //call with .002
-        // public findSinglesAndTriples(withinDistance: number) {
-        //     const singlePointIndexes: number[] = [];
-        //     const triplePointIndexes: number[] = [];
-
-        //     this.forEachPoint((p, values, pointIndex, card) => {
-        //         if (card.merged) return;
-        //         let length = card.valueIndexes.length;
-        //         if (length === 1) {
-        //             let itemIndex = card.valueIndexes[0];
-        //             if (!card.shortest) this.calculatePointDistance(pointIndex);
-        //             if (card.shortest.distance <= withinDistance) {
-        //                 let otherPointIndex = card.shortest.pointIndex;
-        //                 let otherCard = this.index[otherPointIndex];
-        //                 if (otherCard.valueIndexes.length === 1) {
-        //                     let otherItemIndex = otherCard.valueIndexes[0];
-        //                     if (itemIndex !== otherItemIndex) {
-        //                         if (!otherCard.shortest) this.calculatePointDistance(otherPointIndex);
-        //                         if (otherCard.shortest.pointIndex === pointIndex) {
-        //                             card.merged = otherPointIndex;
-        //                             card.valueIndexes.push(otherCard.valueIndexes[0]);
-        //                             delete this.index[otherPointIndex];
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //             if (!card.merged) {
-        //                 singlePointIndexes.push(pointIndex);
-        //             }
-        //         } else if (length === 3) {
-        //             triplePointIndexes.push(pointIndex);
-        //         }
-        //     });
-        //     console.log(singlePointIndexes);
-        // }
-
-        // singlePointIndexes.forEach(pointIndex => {
-        //     const shortest: IShortest = {
-        //         distance: null,
-        //         pointIndex: null
-        //     };
-        //     const single = pg.index[pointIndex];
-        //     singlePointIndexes.forEach(otherPointIndex => {
-        //         if (otherPointIndex === pointIndex) return;
-        //         const d = single.distances[otherPointIndex];
-        //         if (shortest.distance === null || d < shortest.distance) {
-        //             shortest.distance = d;
-        //             shortest.pointIndex = otherPointIndex;
-        //         }
-        //     });
-        //     console.log(`shortest from ${single.pointIndex} is ${shortest.pointIndex} (${shortest.distance})`);
-        // });
-
     }
-    
 }
