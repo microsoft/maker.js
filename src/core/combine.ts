@@ -172,7 +172,6 @@
      * @private
      */
     interface IQueuedSweepPath extends IQueuedSweepItem, IWalkPath {
-        verticalTangents?: { [x: number]: IPoint };
         pathIndex: number;
         segments: IQueuedSweepPathSegment[];
         overlaps: { [pathIndex: number]: IQueuedSweepPath };
@@ -336,7 +335,6 @@
             trimDeadEnds: true,
             pointMatchingDistance: .002,
             out_deleted: [],
-            out_insideIntersections: { paths: {} }
         };
         extendObject(opts, options);
 
@@ -366,7 +364,7 @@
         checkForEqualOverlaps(overlappedSegments, .0001, duplicateGroups);
 
         //check if segments are inside
-        sweepInsideLines(insideQueue, extents, opts.out_insideIntersections, duplicateGroups, opts.pointMatchingDistance);
+        sweepInsideLines(insideQueue, extents, duplicateGroups, opts.pointMatchingDistance);
 
         let deadEndPointGraph: PointGraph<IQueuedSweepPathSegment>;
         if (opts.trimDeadEnds) {
@@ -508,6 +506,8 @@
         return combineArray(modelArray, [[true, true], [true, true]], { trimDeadEnds: false });
     }
 
+    const widenActivation = .0000001;
+
     /**
      * @private
      */
@@ -547,14 +547,14 @@
                         motion: SweepMotion.enter,
                         item: qpath
                     }
-                    queue.insert(qpath.leftX, enter);
+                    queue.insert(qpath.leftX - widenActivation, enter);
                 }
 
                 const exit: IQueuedSweepEvent<IQueuedSweepPath> = {
                     motion: SweepMotion.exit,
                     item: qpath
                 }
-                queue.insert(qpath.rightX, exit);
+                queue.insert(qpath.rightX + widenActivation, exit);
                 pathIndex++;
             }
         };
@@ -724,11 +724,14 @@
     /**
      * @private
      */
-    function sweepInsideLines(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, extents: IMeasureWithCenter, out_insideIntersections: IModel, duplicateGroups: IDuplicateGroups, pointMatchingDistance: number) {
+    function sweepInsideLines(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, extents: IMeasureWithCenter, /*out_insideIntersections: IModel,*/ duplicateGroups: IDuplicateGroups, pointMatchingDistance: number) {
 
         //establish a sweep line
         const active: ISweepPaths = {};
         const checks: IQueuedSweepCheckInside[] = [];
+
+        const pointCollector = new PointGraph<IQueuedSweepPath[]>();
+        const tangentCollector = new PointGraph<IQueuedSweepPath>();
 
         //sweep through the heap
         let x = q.findMinimum().key;
@@ -738,7 +741,7 @@
             if (curr.key > x) {
 
                 //process the sweep line
-                checkInsideSweepLine(active, checks, extents, out_insideIntersections, duplicateGroups, pointMatchingDistance);
+                checkInsideSweepLine(active, checks, extents, duplicateGroups, pointMatchingDistance, pointCollector, tangentCollector);
             }
 
             //add to the sweep line, at Y. 
@@ -748,7 +751,7 @@
         }
 
         //process the final sweep line
-        checkInsideSweepLine(active, checks, extents, out_insideIntersections, duplicateGroups, pointMatchingDistance);
+        checkInsideSweepLine(active, checks, extents, duplicateGroups, pointMatchingDistance, pointCollector, tangentCollector);
     }
 
     /**
@@ -767,7 +770,7 @@
     /**
      * @private
      */
-    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, out_insideIntersections: IModel, duplicateGroups: IDuplicateGroups, pointMatchingDistance: number) {
+    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, duplicateGroups: IDuplicateGroups, pointMatchingDistance: number, pointCollector: PointGraph<IQueuedSweepPath[]>, tangentCollector: PointGraph<IQueuedSweepPath>) {
 
         if (checks.length > 0) {
             let byModel: { [modelIndex: number]: IQueuedSweepPath[] };
@@ -779,15 +782,10 @@
 
                 //for each check, draw a line to nearest boundary
                 const midY = segment.midpoint[1];
-                const x = round(segment.midpoint[0], tangentAccuracy);
-                let outY: number;
-                if (midY > extents.center[1]) {
-                    outY = extents.high[1] + 1;
-                } else {
-                    outY = extents.low[1] - 1;
-                }
+                const x = segment.midpoint[0];
 
-                const line = new paths.Line(segment.midpoint, [segment.midpoint[0], outY]);
+                const highLine = new paths.Line(segment.midpoint, [x, extents.high[1] + 1]);
+                const lowLine = new paths.Line(segment.midpoint, [x, extents.low[1] - 1]);
 
                 const notes: string[] = [];
 
@@ -803,18 +801,14 @@
                         continue;
                     }
 
-                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, out_insideIntersections, line, notes, x, midY);
+                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, lowLine, highLine, notes, midY, pointCollector, tangentCollector);
 
                     //if number of intersections is an odd number, segment is inside the model
                     if (intersectionPoints) {
 
-                        addPath(out_insideIntersections, line, `check_${segment.qpath.pathId} s-${segment.segmentIndex}`);
-                        line['notes'] = notes.join('\n');
-
                         if (intersectionPoints.length % 2 === 1) {
-                            line['notes'] += `\nINSIDE: ${JSON.stringify(intersectionPoints)}`;
                             segment.isInside = true;
-                            segment.isInsideNotes = `modelIndex: ${modelIndex} midpoint:${JSON.stringify(segment.midpoint)} ${line['notes']}`;
+                            segment.isInsideNotes = `modelIndex: ${modelIndex} midpoint:${JSON.stringify(segment.midpoint)}`;
                             segment.uniqueForeignIntersectionPoints = intersectionPoints;
                             return;
                         }
@@ -835,51 +829,50 @@
         checks.length = 0;
     }
 
-    interface ITangent {
-        [x: number]: IPoint;
+    /**
+     * @private
+     */
+    function tangentOnXCircle(circle: IPathCircle, offset: IPoint, x: number) {
+        const rightX = circle.origin[0] + circle.radius + offset[0];
+        const leftX = circle.origin[0] - circle.radius + offset[0];
+        return {
+            left: round(leftX - x) === 0,
+            right: round(rightX - x) === 0
+        };
     }
 
     /**
      * @private
      */
-    const tangentAccuracy = .000001;
+    const tangentOnXMap: { [pathType: string]: (pathContext: IPath, offset: IPoint, x: number) => boolean } = {};
 
-    const tangentPointMap: { [pathType: string]: (pathContext: IPath) => IPoint[] } = {};
-    tangentPointMap[pathType.Circle] = function (circle: IPathCircle) {
-        return [
-            point.add(circle.origin, [-circle.radius, 0]),
-            point.add(circle.origin, [circle.radius, 0]),
-        ];
+    tangentOnXMap[pathType.Circle] = function (circle: IPathCircle, offset: IPoint, x: number) {
+        const t = tangentOnXCircle(circle, offset, x);
+        return t.left || t.right;
     };
-    tangentPointMap[pathType.Arc] = function (arc: IPathArc) {
-        return [
-            measure.isBetweenArcAngles(180, arc, true) ? point.add(arc.origin, [-arc.radius, 0]) : null,
-            measure.isBetweenArcAngles(0, arc, true) ? point.add(arc.origin, [arc.radius, 0]) : null
-        ];
+
+    tangentOnXMap[pathType.Arc] = function (arc: IPathArc, offset: IPoint, x: number) {
+        const t = tangentOnXCircle(arc, offset, x);
+        if (t.left) {
+            t.left = measure.isBetweenArcAngles(180, arc, true);
+        }
+        if (t.right) {
+            t.right = measure.isBetweenArcAngles(0, arc, true);
+        }
+        return t.left || t.right;
+    };
+
+    tangentOnXMap[pathType.Line] = function (line: IPathLine, offset: IPoint, x: number) {
+        return round(line.origin[0] + offset[0] - x) === 0 || round(line.end[0] + offset[0] - x) === 0;
     };
 
     /**
      * @private
      */
-    function getVerticalTangents(qpath: IQueuedSweepPath) {
-        const map: { [x: number]: IPoint } = {};
-        const lx = round(qpath.leftX, tangentAccuracy);
-        const rx = round(qpath.rightX, tangentAccuracy);
-        const fn = tangentPointMap[qpath.pathContext.type];
+    function isTangentOnX(p: IPath, offset: IPoint, x: number) {
+        const fn = tangentOnXMap[p.type];
         if (fn) {
-            const results = fn(qpath.pathContext);
-            map[lx] = results[0];
-            map[rx] = results[1];
-        }
-        return map;
-    }
-
-    /**
-     * @private
-     */
-    function anyAbove(overlaps: IQueuedSweepPath[], midY: number) {
-        for (let i = 0; i < overlaps.length; i++) {
-            if (overlaps[i].topY >= midY) return true;
+            return fn(p, offset, x);
         }
         return false;
     }
@@ -887,11 +880,11 @@
     /**
      * @private
      */
-    function anyBelow(overlaps: IQueuedSweepPath[], midY: number) {
-        for (let i = 0; i < overlaps.length; i++) {
-            if (midY >= overlaps[i].bottomY) return true;
-        }
-        return false;
+    function isPointBetween(p: IPoint, qpaths: IQueuedSweepPath[]) {
+        var m: IMeasure = { high: [null, null], low: [null, null] };
+        qpaths.forEach(qpath => measure.increase(m, measure.pathExtents(qpath.pathContext, qpath.offset)));
+        //return round(m.low[0] - p[0]) === 0 || round(m.high[0] - p[0]) === 0;
+        return measure.isBetween(p[0], m.low[0], m.high[0], true);
     }
 
     /**
@@ -902,42 +895,44 @@
     /**
      * @private
      */
-    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, out_insideIntersections: IModel, line: IPathLine, notes: string[], x: number, midY: number) {
+    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, lowLine: IPathLine, highLine: IPathLine, notes: string[], midY: number, pointCollector: PointGraph<IQueuedSweepPath[]>, tangentCollector: PointGraph<IQueuedSweepPath>) {
 
-        for (let qpath of overlaps) {
-            //notes.push(`overlaps with ${qpath.routeKey}`);
+        let aboveCount = 0;
+        let belowCount = 0;
+        for (let i = 0; i < overlaps.length; i++) {
+            if (overlaps[i].topY >= midY) aboveCount++;
+            if (midY >= overlaps[i].bottomY) belowCount++;
         }
 
-        if (!anyAbove(overlaps, midY) || !anyBelow(overlaps, midY)) {
+        if (aboveCount === 0 || belowCount === 0) {
             //notes.push(`escaped`);
             return null;
         }
 
-        const pointCollector = new PointGraph<IQueuedSweepPath>();
-        const tangentCollector = new PointGraph<IQueuedSweepPath>();
+        const line = (aboveCount < belowCount ? highLine : lowLine);
+
+        pointCollector.reset();
+        tangentCollector.reset();
 
         for (let qpath of overlaps) {
-
-            //lazy compute to see if segment is vertically tangent on enter/exit
-            if (!qpath.verticalTangents) {
-                qpath.verticalTangents = getVerticalTangents(qpath);
-            }
-
-            //skip if the path is vertically tangent at this x
-            if (qpath.verticalTangents[x]) {
-                notes.push(`tangent of ${qpath.modelIndex} ${qpath.routeKey}`);
-                tangentCollector.insertValue(qpath.verticalTangents[x], qpath);
-                continue;
-            }
 
             let intersectOptions: IPathIntersectionOptions = { path2Offset: qpath.offset };
             let farInt = path.intersection(line, qpath.pathContext, intersectOptions);
             if (farInt) {
-                farInt.intersectionPoints.forEach(p => pointCollector.insertValue(p, qpath));
-                notes.push(`intersects with ${qpath.modelIndex} ${qpath.routeKey}: ${JSON.stringify(farInt)} x=${x} verticalTangents=${JSON.stringify(qpath.verticalTangents)}`);
+                farInt.intersectionPoints.forEach(p => {
+
+                    //check for tangent, insert into either tangentcollector or pointcollector
+                    if (isTangentOnX(qpath.pathContext, qpath.offset, line.origin[0])) {
+                        tangentCollector.insertValue(p, qpath);
+                    } else {
+                        pointCollector.insertValue(p, [qpath]);
+                    }
+                });
+                notes.push(`intersects with ${qpath.modelIndex} ${qpath.routeKey}: ${JSON.stringify(farInt)} line: ${JSON.stringify(new paths.Line(line.origin, line.end))} model: ${JSON.stringify(qpath.modelContext)}`);
             }
         }
 
+        //merge similar tangent points
         if (tangentCollector.insertedCount > 1) {
             tangentCollector.mergePoints(0.0005);
         }
@@ -946,9 +941,10 @@
         for (let i in tangentCollector.merged) {
             let pointIndex = tangentCollector.merged[i];
             let card = tangentCollector.index[pointIndex];
-            card.valueIndexes.forEach(valueIndex => {
-                pointCollector.insertValue(card.point, tangentCollector.values[valueIndex]);
-            });
+            let qpaths = card.valueIndexes.map(valueIndex => tangentCollector.values[valueIndex]);
+            if (!isPointBetween(card.point, qpaths)) {
+                pointCollector.insertValue(card.point, qpaths);
+            }
         }
 
         //flatten to single array of points
@@ -958,24 +954,7 @@
             pointCollector.mergePoints(0.0005);
         }
 
-        pointCollector.forEachPoint((p, values) => {
-
-            //for multiple points, reconcile if this was a tangent
-            if (values.length > 1) {
-
-                //see if joint is extreme at this point
-                const leftX = values.reduce((a, b) => a.leftX < b.leftX ? a : b).leftX;
-                const rightX = values.reduce((a, b) => a.rightX > b.rightX ? a : b).rightX;
-                const x = p[0];
-                const isExtreme = Math.abs(x - leftX) < intersectionDelta || Math.abs(x - rightX) < intersectionDelta;
-                const keys = values.map(qpath => qpath.routeKey);
-
-                notes.push(`extreme of ${keys.join(' + ')}`);
-
-                if (isExtreme) return;
-            }
-            intersectionPoints.push(p);
-        });
+        pointCollector.forEachPoint((p, values) => intersectionPoints.push(p));
 
         return intersectionPoints;
     }
