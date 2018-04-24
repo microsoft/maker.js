@@ -174,9 +174,23 @@
     interface IQueuedSweepPath extends IQueuedSweepItem, IWalkPath {
         pathIndex: number;
         segments: IQueuedSweepPathSegment[];
-        overlaps: { [pathIndex: number]: IQueuedSweepPath };
+        //overlaps: IQueuedSweepPathMap;
         topY: number;
         bottomY: number;
+    }
+
+    /**
+     * @private
+     */
+    interface IQueuedSweepPathMap {
+        [pathIndex: number]: IQueuedSweepPath;
+    }
+
+    /**
+     * @private
+     */
+    interface IOneToManyMap {
+        [pathIndex: number]: number[];
     }
 
     /**
@@ -347,24 +361,45 @@
             p.routeKey = routeKey;
         }
 
+        now = new Date();
+        elapse('start');
+
         //gather all paths from the array of models into a heap queue
-        const { extents, queue } = gather(modelArray);
+        const { extents, queue, qpaths } = gather(modelArray);
+
+        elapse('gathered');
 
         //make a copy of the queue for a 2nd pass
         const insideQueue = new BinaryHeap<number, IQueuedSweepEvent<IQueuedSweepItem>>();
         insideQueue.list = queue.list.slice(0);
 
+        elapse('heaped');
+
         //sweep and break paths
         const overlappedSegments: IQueuedSweepPathSegment[] = [];
-        const broken = sweepAndBreak(queue, insideQueue, overlappedSegments, extents, opts.pointMatchingDistance);
+        const boxes = sweepBoxes(queue);
+
+        elapse('swept boxes');
+
+        breakOverlaps(qpaths, boxes, overlappedSegments);
+
+        elapse('broke overlaps');
+
+        const broken = cleanBroken(qpaths, insideQueue, opts.pointMatchingDistance);
+
+        elapse('cleaned broken');
 
         //mark the duplicates
         const duplicateGroups: IDuplicateGroups = {};
 
         checkForEqualOverlaps(overlappedSegments, .0001, duplicateGroups);
 
+        elapse('checked for overlaps');
+
         //check if segments are inside
         sweepInsideLines(insideQueue, extents, duplicateGroups, opts.pointMatchingDistance);
+
+        elapse('swept inside');
 
         let deadEndPointGraph: PointGraph<IQueuedSweepPathSegment>;
         if (opts.trimDeadEnds) {
@@ -376,6 +411,8 @@
             const includes = flags[qpath.modelIndex] || flags[0];
             addOrDeleteSegments(qpath, includes[0], includes[1], trackDeleted, deadEndPointGraph);
         });
+
+        elapse('added or deleted');
 
         if (opts.trimDeadEnds) {
 
@@ -403,6 +440,8 @@
 
             removeDeadEnds2(deadEndPointGraph, .001, .001);
 
+            elapse('removed dead ends');
+
             // removeDeadEnds(result, opts.pointMatchingDistance, shouldKeep, (wp, reason) => {
             //     const modelIndex = +wp.route[1];
             //     trackDeleted(modelIndex, wp.pathContext, wp.routeKey, wp.offset, reason)
@@ -416,6 +455,8 @@
         // duplicates.forEach(d => {
         //     delete d.duplicate;
         // });
+
+        elapse('done');
 
         return result;
     }
@@ -513,6 +554,7 @@
      */
     function gather(modelsToGather: IModel[]) {
         const queue = new BinaryHeap<number, IQueuedSweepEvent<IQueuedSweepPath>>();
+        const qpaths: IQueuedSweepPathMap = {}
         const _extents: IMeasure = { high: [null, null], low: [null, null] };
         let modelIndex: number;
         let pathIndex = 0;
@@ -528,7 +570,9 @@
                 qpath.rightX = pathExtents.high[0];
                 qpath.topY = pathExtents.high[1];
                 qpath.bottomY = pathExtents.low[1];
-                qpath.overlaps = {};
+                //qpath.overlaps = {};
+
+                qpaths[pathIndex] = qpath;
 
                 //clone this path and make it the first segment
                 const segment: IQueuedSweepPathSegment = {
@@ -541,14 +585,11 @@
 
                 qpath.segments = [segment];
 
-                //when enter and exit are on the same vertical line X, no need to enter.
-                if (qpath.leftX < qpath.rightX) {
-                    const enter: IQueuedSweepEvent<IQueuedSweepPath> = {
-                        motion: SweepMotion.enter,
-                        item: qpath
-                    }
-                    queue.insert(qpath.leftX - widenActivation, enter);
+                const enter: IQueuedSweepEvent<IQueuedSweepPath> = {
+                    motion: SweepMotion.enter,
+                    item: qpath
                 }
+                queue.insert(qpath.leftX - widenActivation, enter);
 
                 const exit: IQueuedSweepEvent<IQueuedSweepPath> = {
                     motion: SweepMotion.exit,
@@ -566,13 +607,25 @@
 
         const extents = measure.augment(_extents);
 
-        return { queue, extents };
+        return { queue, extents, qpaths };
+    }
+
+    let now: Date;
+
+    function elapse(place: string) {
+        const last = now;
+        now = new Date();
+        if (last) {
+            console.log(`elapsed at ${place}: ${now.valueOf() - last.valueOf()}`);
+        } else {
+            console.log(`started at ${place}`);
+        }
     }
 
     /**
      * @private
      */
-    function insertIntoSweepLine(active: ISweepPaths, curr: IQueuedSweepEvent<IQueuedSweepPath>) {
+    function insertIntoSweepLine(active: ISweepPaths, boxOverlaps: IOneToManyMap, curr: IQueuedSweepEvent<IQueuedSweepPath>) {
 
         const qpath = curr.item;
 
@@ -584,88 +637,67 @@
             if (measure.isBetween(qpath.topY, otherPath.topY, otherPath.bottomY, false) ||
                 measure.isBetween(otherPath.topY, qpath.topY, qpath.bottomY, false)) {
 
-                //set both to be overlaps of each other
-                qpath.overlaps[otherPath.pathIndex] = otherPath;
-                otherPath.overlaps[qpath.pathIndex] = qpath;
+                //mark as overlap
+                if (!boxOverlaps[qpath.pathIndex]) {
+                    boxOverlaps[qpath.pathIndex] = [];
+                }
+                boxOverlaps[qpath.pathIndex].push(otherPath.pathIndex);
             }
         }
 
-        active[curr.item.pathIndex] = curr;
+        active[qpath.pathIndex] = curr;
     }
 
     /**
      * @private
      */
-    function sweepAndBreak(
-        q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepPath>>,
-        q2: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>,
-        overlappedSegments: IQueuedSweepPathSegment[],
-        extents: IMeasureWithCenter,
-        pointMatchingDistance: number) {
-
-        const broken: IQueuedSweepPath[] = [];
+    function sweepBoxes(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepPath>>) {
 
         //establish a sweep line
         const active: ISweepPaths = {};
 
-        //sweep through the heap
-        let x = q.findMinimum().key;
+        const boxOverlaps: IOneToManyMap = {};
 
         while (!q.isEmpty()) {
             let curr = q.extractMinimum();
-            if (curr.key > x) {
-
-                //process the sweep line
-                breakSweepLine(active, broken, overlappedSegments, q2, extents, false, pointMatchingDistance);
+            let qpath = curr.value.item;
+            if (curr.value.motion === SweepMotion.exit) {
+                delete active[qpath.pathIndex];
+            } else if (curr.value.motion === SweepMotion.enter) {
+                insertIntoSweepLine(active, boxOverlaps, curr.value);
             }
-
-            //add to the sweep line, at Y. 
-            insertIntoSweepLine(active, curr.value);
-
-            x = curr.key;
         }
 
-        //process the final sweep line
-        breakSweepLine(active, broken, overlappedSegments, q2, extents, true, pointMatchingDistance);
+        return boxOverlaps;
+    }
 
+    function breakOverlaps(qpaths: IQueuedSweepPathMap, boxOverlaps: IOneToManyMap, overlappedSegments: IQueuedSweepPathSegment[]) {
+        const broken: number[] = [];
+        for (let _outerIndex in boxOverlaps) {
+            let outerIndex = +_outerIndex;
+            let outer = qpaths[outerIndex];
+            broken.push(outerIndex);
+
+            //check against overlaps
+            const innerIndexes = boxOverlaps[outerIndex];
+            innerIndexes.forEach(innerIndex => {
+                const inner = qpaths[innerIndex];
+                breakAlongForeignPath(outer, inner, overlappedSegments);
+                breakAlongForeignPath(inner, outer, overlappedSegments);
+
+                broken.push(innerIndex);
+            });
+        }
         return broken;
     }
 
-    /**
-     * @private
-     */
-    function breakSweepLine(
-        active: ISweepPaths,
-        broken: IQueuedSweepPath[],
-        overlappedSegments: IQueuedSweepPathSegment[],
-        q2: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>,
-        extents: IMeasureWithCenter,
-        exiting: boolean,
-        pointMatchingDistance: number) {
+    function cleanBroken(qpaths: IQueuedSweepPathMap, q2: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, pointMatchingDistance: number) {
+        const broken: IQueuedSweepPath[] = [];
+        for (let pathIndex in qpaths) {
+            let qpath = qpaths[pathIndex];
 
-        //look at everything in the sweep line
-        for (let outerPathIndex in active) {
-            let outer = active[outerPathIndex].item;
-
-            //check against overlaps
-            const innerIndexes = Object.keys(outer.overlaps);
-            innerIndexes.forEach(_innerIndex => {
-                const innerIndex = +_innerIndex;
-                const inner = outer.overlaps[innerIndex];
-
-                breakAlongForeignPath(outer, inner, overlappedSegments);
-
-                //mark as completed, by removing from overlaps
-                delete outer.overlaps[innerIndex];
-            });
-        }
-
-        //remove each exiting item in the active sweep
-        const pathIndexes = Object.keys(active);
-        pathIndexes.forEach(_pathIndex => {
-            const pathIndex = +_pathIndex;
-            if (exiting || active[pathIndex].motion === SweepMotion.exit) {
-                let qpath = active[pathIndex].item;
+            if (qpath.segments.length > 0) {
+                broken.push(qpath);
 
                 qpath.segments.forEach((segment, i) => {
                     segment.segmentIndex = i;
@@ -698,11 +730,9 @@
                         q2.insert(x, check);
                     }
                 });
-
-                broken.push(qpath);
-                delete active[pathIndex];
             }
-        });
+        }
+        return broken;
     }
 
     /**
