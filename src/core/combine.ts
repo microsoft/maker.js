@@ -377,7 +377,7 @@
 
         //sweep and break paths
         const overlappedSegments: IQueuedSweepPathSegment[] = [];
-        const boxes = sweepBoxes(queue);
+        const boxes = getOverlappingBoxes(queue);
 
         elapse('swept boxes');
 
@@ -651,7 +651,7 @@
     /**
      * @private
      */
-    function sweepBoxes(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepPath>>) {
+    function getOverlappingBoxes(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepPath>>) {
 
         //establish a sweep line
         const active: ISweepPaths = {};
@@ -738,27 +738,10 @@
     /**
      * @private
      */
-    function insertIntoInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], curr: IQueuedSweepEvent<IQueuedSweepItem>) {
-        if (curr.motion === SweepMotion.checkInside) {
-            const check = (curr as IQueuedSweepEvent<IQueuedSweepCheckInside>).item;
-
-            //don't bother for segments that are already marked as deleted
-            if (!check.segment.deleted) checks.push(check);
-
-        } else {
-            const queuedItemPath = curr as IQueuedSweepEvent<IQueuedSweepPath>;
-            active[queuedItemPath.item.pathIndex] = queuedItemPath;
-        }
-    }
-
-    /**
-     * @private
-     */
     function sweepInsideLines(q: BinaryHeapClass<number, IQueuedSweepEvent<IQueuedSweepItem>>, extents: IMeasureWithCenter, /*out_insideIntersections: IModel,*/ duplicateGroups: IDuplicateGroups, pointMatchingDistance: number) {
 
         //establish a sweep line
-        const active: ISweepPaths = {};
-        const checks: IQueuedSweepCheckInside[] = [];
+        const active: { [modelIndex: number]: ISweepPaths } = {};
 
         const pointCollector = new PointGraph<IQueuedSweepPath[]>();
         const tangentCollector = new PointGraph<IQueuedSweepPath>();
@@ -768,95 +751,78 @@
 
         while (!q.isEmpty()) {
             let curr = q.extractMinimum();
-            if (curr.key > x) {
+            if (curr.value.motion === SweepMotion.checkInside) {
+                const check = (curr.value as IQueuedSweepEvent<IQueuedSweepCheckInside>).item;
 
-                //process the sweep line
-                checkInsideSweepLine(active, checks, extents, duplicateGroups, pointMatchingDistance, pointCollector, tangentCollector);
+                //don't bother for segments that are already marked as deleted
+                if (!check.segment.deleted) {
+                    //process the sweep line
+                    checkInsideSweepLine(active, check, extents, duplicateGroups, pointMatchingDistance, pointCollector, tangentCollector);
+                }
+
+            } else {
+                const queuedItemPath = curr.value as IQueuedSweepEvent<IQueuedSweepPath>;
+                if (queuedItemPath.motion === SweepMotion.exit) {
+                    delete active[queuedItemPath.item.modelIndex][queuedItemPath.item.pathIndex];
+                    if (Object.keys(active[queuedItemPath.item.modelIndex]).length === 0) {
+                        delete active[queuedItemPath.item.modelIndex];
+                    }
+                } else {
+                    if (!active[queuedItemPath.item.modelIndex]) {
+                        active[queuedItemPath.item.modelIndex] = {};
+                    }
+                    active[queuedItemPath.item.modelIndex][queuedItemPath.item.pathIndex] = queuedItemPath;
+                }
             }
-
-            //add to the sweep line, at Y. 
-            insertIntoInsideSweepLine(active, checks, curr.value);
 
             x = curr.key;
         }
-
-        //process the final sweep line
-        checkInsideSweepLine(active, checks, extents, duplicateGroups, pointMatchingDistance, pointCollector, tangentCollector);
     }
 
     /**
      * @private
      */
-    function organizeByModel(active: ISweepPaths) {
-        const byModel: { [modelIndex: number]: IQueuedSweepPath[] } = {};
-        for (let pathIndex in active) {
-            let qpath = active[pathIndex].item;
-            if (!byModel[qpath.modelIndex]) byModel[qpath.modelIndex] = [];
-            byModel[qpath.modelIndex].push(qpath);
-        }
-        return byModel;
-    }
+    function checkInsideSweepLine(active: { [modelIndex: number]: ISweepPaths }, check: IQueuedSweepCheckInside, extents: IMeasureWithCenter, duplicateGroups: IDuplicateGroups, pointMatchingDistance: number, pointCollector: PointGraph<IQueuedSweepPath[]>, tangentCollector: PointGraph<IQueuedSweepPath>) {
 
-    /**
-     * @private
-     */
-    function checkInsideSweepLine(active: ISweepPaths, checks: IQueuedSweepCheckInside[], extents: IMeasureWithCenter, duplicateGroups: IDuplicateGroups, pointMatchingDistance: number, pointCollector: PointGraph<IQueuedSweepPath[]>, tangentCollector: PointGraph<IQueuedSweepPath>) {
+        const segment = check.segment;
 
-        if (checks.length > 0) {
-            let byModel: { [modelIndex: number]: IQueuedSweepPath[] };
+        //for each check, draw a line to nearest boundary
+        const midY = segment.midpoint[1];
+        const x = segment.midpoint[0];
 
-            checks.forEach(check => {
-                const segment = check.segment;
+        const highLine = new paths.Line(segment.midpoint, [x, extents.high[1] + 1]);
+        const lowLine = new paths.Line(segment.midpoint, [x, extents.low[1] - 1]);
 
-                if (segment.deleted) return;
+        const notes: string[] = [];
 
-                //for each check, draw a line to nearest boundary
-                const midY = segment.midpoint[1];
-                const x = segment.midpoint[0];
+        for (let modelIndex in active) {
+            if (+modelIndex === segment.qpath.modelIndex) continue;
 
-                const highLine = new paths.Line(segment.midpoint, [x, extents.high[1] + 1]);
-                const lowLine = new paths.Line(segment.midpoint, [x, extents.low[1] - 1]);
-
-                const notes: string[] = [];
-
-                if (!byModel) byModel = organizeByModel(active);
-
-                for (let modelIndex in byModel) {
-                    if (+modelIndex === segment.qpath.modelIndex) continue;
-
-                    //don't check against models which are marked duplicate with this segment
-                    if (segment.duplicateGroup && modelIndex in duplicateGroups[segment.duplicateGroup]) {
-                        //duplicates will be managed by the deadend finder
-                        notes.push(`shares contour with ${modelIndex}`);
-                        continue;
-                    }
-
-                    let intersectionPoints = getModelIntersectionPoints(segment, byModel[modelIndex], extents, lowLine, highLine, notes, midY, pointCollector, tangentCollector);
-
-                    //if number of intersections is an odd number, segment is inside the model
-                    if (intersectionPoints) {
-
-                        if (intersectionPoints.length % 2 === 1) {
-                            segment.isInside = true;
-                            segment.isInsideNotes = `modelIndex: ${modelIndex} midpoint:${JSON.stringify(segment.midpoint)}`;
-                            segment.uniqueForeignIntersectionPoints = intersectionPoints;
-                            return;
-                        }
-                    }
-                }
-            });
-        }
-
-        //remove each exiting item in the active sweep
-        const pathIndexes = Object.keys(active);
-        pathIndexes.forEach(_pathIndex => {
-            const pathIndex = +_pathIndex;
-            if (active[pathIndex].motion === SweepMotion.exit) {
-                delete active[pathIndex];
+            //don't check against models which are marked duplicate with this segment
+            if (segment.duplicateGroup && modelIndex in duplicateGroups[segment.duplicateGroup]) {
+                //duplicates will be managed by the deadend finder
+                notes.push(`shares contour with ${modelIndex}`);
+                continue;
             }
-        });
 
-        checks.length = 0;
+            let qpaths: IQueuedSweepPath[] = [];
+            for (let pathIndex in active[modelIndex]) {
+                qpaths.push(active[modelIndex][pathIndex].item);
+            }
+
+            let intersectionPoints = getModelIntersectionPoints(segment, qpaths, extents, lowLine, highLine, notes, midY, pointCollector, tangentCollector);
+
+            //if number of intersections is an odd number, segment is inside the model
+            if (intersectionPoints) {
+
+                if (intersectionPoints.length % 2 === 1) {
+                    segment.isInside = true;
+                    segment.isInsideNotes = `modelIndex: ${modelIndex} midpoint:${JSON.stringify(segment.midpoint)}`;
+                    segment.uniqueForeignIntersectionPoints = intersectionPoints;
+                    return;
+                }
+            }
+        }
     }
 
     /**
@@ -925,13 +891,13 @@
     /**
      * @private
      */
-    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, overlaps: IQueuedSweepPath[], extents: IMeasureWithCenter, lowLine: IPathLine, highLine: IPathLine, notes: string[], midY: number, pointCollector: PointGraph<IQueuedSweepPath[]>, tangentCollector: PointGraph<IQueuedSweepPath>) {
+    function getModelIntersectionPoints(segment: IQueuedSweepPathSegment, modelsPaths: IQueuedSweepPath[], extents: IMeasureWithCenter, lowLine: IPathLine, highLine: IPathLine, notes: string[], midY: number, pointCollector: PointGraph<IQueuedSweepPath[]>, tangentCollector: PointGraph<IQueuedSweepPath>) {
 
         let aboveCount = 0;
         let belowCount = 0;
-        for (let i = 0; i < overlaps.length; i++) {
-            if (overlaps[i].topY >= midY) aboveCount++;
-            if (midY >= overlaps[i].bottomY) belowCount++;
+        for (let i = 0; i < modelsPaths.length; i++) {
+            if (modelsPaths[i].topY >= midY) aboveCount++;
+            if (midY >= modelsPaths[i].bottomY) belowCount++;
         }
 
         if (aboveCount === 0 || belowCount === 0) {
@@ -944,7 +910,10 @@
         pointCollector.reset();
         tangentCollector.reset();
 
-        for (let qpath of overlaps) {
+        for (let qpath of modelsPaths) {
+
+            //vertical line must be within bounding box if it intersects
+            if (!measure.isBetween(line.origin[0], qpath.leftX, qpath.rightX, false)) continue;
 
             let intersectOptions: IPathIntersectionOptions = { path2Offset: qpath.offset };
             let farInt = path.intersection(line, qpath.pathContext, intersectOptions);
