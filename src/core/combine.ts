@@ -34,8 +34,8 @@
     /**
      * @private
      */
-    function breakAlongForeignPath(qpath: IQueuedSweepPath, foreignWalkedPath: IWalkPath, overlappedSegments: IQueuedSweepPathSegment[]) {
-        const foreignPath = foreignWalkedPath.pathContext;
+    function breakAlongForeignPath(qpath: IQueuedSweepPath, foreignWalkedPath: IQueuedSweepPath, overlappedSegments: IQueuedSweepPathSegment[]) {
+        const foreignPath = foreignWalkedPath.absolute;
         const segments = qpath.segments;
 
         function trackOverlap(segment: IQueuedSweepPathSegment) {
@@ -45,7 +45,7 @@
             }
         }
 
-        if (measure.isPathEqual(segments[0].path, foreignPath, .0001, qpath.offset, foreignWalkedPath.offset)) {
+        if (measure.isPathEqual(segments[0].path, foreignPath, .0001)) {
             trackOverlap(segments[0]);
             return;
         }
@@ -53,8 +53,9 @@
         let foreignPathEndPoints: IPoint[];
 
         for (let i = 0; i < segments.length; i++) {
+            //if (!measure.isMeasurementOverlapping(foreignWalkedPath.extents, segments[i].extents)) continue;
             let pointsToCheck: IPoint[];
-            let options: IPathIntersectionOptions = { path1Offset: qpath.offset, path2Offset: foreignWalkedPath.offset };
+            let options: IPathIntersectionOptions = {};
             let foreignIntersection = path.intersection(segments[i].path, foreignPath, options);
 
             if (foreignIntersection) {
@@ -65,7 +66,7 @@
 
                 if (!foreignPathEndPoints) {
                     //make sure endpoints are in absolute coords
-                    foreignPathEndPoints = point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
+                    foreignPathEndPoints = point.fromPathEnds(foreignPath);
                 }
 
                 pointsToCheck = foreignPathEndPoints;
@@ -78,7 +79,7 @@
                 let p = 0;
                 while (!subSegments && p < pointsToCheck.length) {
                     //cast absolute points to path relative space
-                    subSegments = getNonZeroSegments(segments[i].path, point.subtract(pointsToCheck[p], qpath.offset));
+                    subSegments = getNonZeroSegments(segments[i].path, pointsToCheck[p]);
                     p++;
                 }
 
@@ -91,8 +92,7 @@
                             path: subSegments[1],
                             uniqueForeignIntersectionPoints: [],
                             extents,
-                            qpath,
-                            offset: qpath.offset
+                            qpath
                         };
 
                         if (segments[i].overlapTracked) {
@@ -160,7 +160,6 @@
         deleted?: boolean;
         reasonDeleted?: SegmentDeletedReason;
         extents: IMeasure;
-        offset: IPoint;
         midpoint?: IPoint;
         pathLength?: number;
         qpath: IQueuedSweepPath;
@@ -173,8 +172,9 @@
      */
     interface IQueuedSweepPath extends IQueuedSweepItem, IWalkPath {
         pathIndex: number;
+        absolute: IPath;
         segments: IQueuedSweepPathSegment[];
-        //overlaps: IQueuedSweepPathMap;
+        extents: IMeasure;
         topY: number;
         bottomY: number;
     }
@@ -234,7 +234,7 @@
 
         overlappedSegments.forEach(overlappedSegment => {
             if (!overlappedSegment.midpoint) {
-                overlappedSegment.midpoint = point.add(point.middle(overlappedSegment.path), overlappedSegment.qpath.offset);
+                overlappedSegment.midpoint = point.middle(overlappedSegment.path);
             }
             midPointCollector.insertValue(overlappedSegment.midpoint, overlappedSegment);
         });
@@ -268,8 +268,7 @@
      * @private
      */
     interface ITrackDeleted {
-        //        (pathToDelete: IPath, routeKey: string, offset: IPoint, reason: string): void;
-        (modelIndex: number, deletedSegment: IPath, routeKey: string, offset: IPoint, reason: string): void;
+        (modelIndex: number, deletedSegment: IPath, routeKey: string, reason: string): void;
     }
 
     /**
@@ -282,10 +281,13 @@
                 segment.newId = getSimilarPathId(qpath.modelContext, qpath.pathId);
                 qpath.modelContext.paths[segment.newId] = segment.path;
 
+                //convert from absolute to relative
+                path.moveRelative(segment.path, qpath.offset, true);
+
                 //compute now for pointgraph
                 if (deadEndPointGraph) {
 
-                    const endpoints = point.fromPathEnds(segment.path, segment.offset);
+                    const endpoints = point.fromPathEnds(segment.path);
                     segment.pointIndexes = [];
 
                     endpoints.forEach(p => {
@@ -296,7 +298,7 @@
                 }
             } else {
                 const reason = `segment ${segment.segmentIndex} of qpath ${qpath.pathIndex} is ${segment.isInside ? 'inside' : 'outside'} intersectionPoints=${JSON.stringify(segment.uniqueForeignIntersectionPoints)} ${segment.isInsideNotes}`;
-                trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, segment.offset, reason);
+                trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, reason);
             }
         }
 
@@ -305,7 +307,7 @@
 
         qpath.segments.forEach(segment => {
             if (segment.deleted) {
-                trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, segment.offset, `segment is a duplicate ${segment.duplicateGroup}`);
+                trackDeleted(segment.qpath.modelIndex, segment.path, qpath.routeKey, `segment is a duplicate ${segment.duplicateGroup}`);
             } else {
                 checkAddSegment(segment);
             }
@@ -352,10 +354,9 @@
         };
         extendObject(opts, options);
 
-        const trackDeleted: ITrackDeleted = (modelIndex: number, deletedSegment: IPath, routeKey: string, offset: IPoint, reason: string) => {
+        const trackDeleted: ITrackDeleted = (modelIndex: number, deletedSegment: IPath, routeKey: string, reason: string) => {
             if (!opts.out_deleted[modelIndex]) opts.out_deleted[modelIndex] = {};
             addPath(opts.out_deleted[modelIndex], deletedSegment, 'deleted');
-            path.moveRelative(deletedSegment, offset);
             const p = deletedSegment as IPathRemoved;
             p.reason = reason;
             p.routeKey = routeKey;
@@ -444,7 +445,7 @@
 
             // removeDeadEnds(result, opts.pointMatchingDistance, shouldKeep, (wp, reason) => {
             //     const modelIndex = +wp.route[1];
-            //     trackDeleted(modelIndex, wp.pathContext, wp.routeKey, wp.offset, reason)
+            //     trackDeleted(modelIndex, wp.pathContext, wp.routeKey, reason)
             // });
         }
 
@@ -560,7 +561,8 @@
         let pathIndex = 0;
         const walkOptions: IWalkOptions = {
             onPath: (walkedPath: IWalkPath) => {
-                const pathExtents = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
+                const absolutePath = path.clone(walkedPath.pathContext, walkedPath.offset);
+                const pathExtents = measure.pathExtents(absolutePath);
                 measure.increase(_extents, pathExtents);
 
                 const qpath = walkedPath as IQueuedSweepPath;
@@ -570,7 +572,8 @@
                 qpath.rightX = pathExtents.high[0];
                 qpath.topY = pathExtents.high[1];
                 qpath.bottomY = pathExtents.low[1];
-                //qpath.overlaps = {};
+                qpath.extents = pathExtents;
+                qpath.absolute = absolutePath;
 
                 qpaths[pathIndex] = qpath;
 
@@ -579,8 +582,7 @@
                     path: cloneObject(walkedPath.pathContext),
                     uniqueForeignIntersectionPoints: [],
                     extents: pathExtents,
-                    qpath,
-                    offset: walkedPath.offset
+                    qpath
                 };
 
                 qpath.segments = [segment];
@@ -711,7 +713,7 @@
                     } else {
 
                         //collect segments by common midpoint
-                        const midpoint = point.add(point.middle(segment.path), qpath.offset);
+                        const midpoint = point.middle(segment.path);
                         segment.midpoint = midpoint;
 
                         //insert check into 2nd queue
@@ -828,9 +830,9 @@
     /**
      * @private
      */
-    function tangentOnXCircle(circle: IPathCircle, offset: IPoint, x: number) {
-        const rightX = circle.origin[0] + circle.radius + offset[0];
-        const leftX = circle.origin[0] - circle.radius + offset[0];
+    function tangentOnXCircle(circle: IPathCircle, x: number) {
+        const rightX = circle.origin[0] + circle.radius;
+        const leftX = circle.origin[0] - circle.radius;
         return {
             left: round(leftX - x) === 0,
             right: round(rightX - x) === 0
@@ -840,15 +842,15 @@
     /**
      * @private
      */
-    const tangentOnXMap: { [pathType: string]: (pathContext: IPath, offset: IPoint, x: number) => boolean } = {};
+    const tangentOnXMap: { [pathType: string]: (pathContext: IPath, x: number) => boolean } = {};
 
-    tangentOnXMap[pathType.Circle] = function (circle: IPathCircle, offset: IPoint, x: number) {
-        const t = tangentOnXCircle(circle, offset, x);
+    tangentOnXMap[pathType.Circle] = function (circle: IPathCircle, x: number) {
+        const t = tangentOnXCircle(circle, x);
         return t.left || t.right;
     };
 
-    tangentOnXMap[pathType.Arc] = function (arc: IPathArc, offset: IPoint, x: number) {
-        const t = tangentOnXCircle(arc, offset, x);
+    tangentOnXMap[pathType.Arc] = function (arc: IPathArc, x: number) {
+        const t = tangentOnXCircle(arc, x);
         if (t.left) {
             t.left = measure.isBetweenArcAngles(180, arc, true);
         }
@@ -858,17 +860,17 @@
         return t.left || t.right;
     };
 
-    tangentOnXMap[pathType.Line] = function (line: IPathLine, offset: IPoint, x: number) {
-        return round(line.origin[0] + offset[0] - x) === 0 || round(line.end[0] + offset[0] - x) === 0;
+    tangentOnXMap[pathType.Line] = function (line: IPathLine, x: number) {
+        return round(line.origin[0] - x) === 0 || round(line.end[0] - x) === 0;
     };
 
     /**
      * @private
      */
-    function isTangentOnX(p: IPath, offset: IPoint, x: number) {
+    function isTangentOnX(p: IPath, x: number) {
         const fn = tangentOnXMap[p.type];
         if (fn) {
-            return fn(p, offset, x);
+            return fn(p, x);
         }
         return false;
     }
@@ -878,7 +880,7 @@
      */
     function isPointBetween(p: IPoint, qpaths: IQueuedSweepPath[]) {
         var m: IMeasure = { high: [null, null], low: [null, null] };
-        qpaths.forEach(qpath => measure.increase(m, measure.pathExtents(qpath.pathContext, qpath.offset)));
+        qpaths.forEach(qpath => measure.increase(m, measure.pathExtents(qpath.absolute)));
         //return round(m.low[0] - p[0]) === 0 || round(m.high[0] - p[0]) === 0;
         return measure.isBetween(p[0], m.low[0], m.high[0], true);
     }
@@ -915,13 +917,12 @@
             //vertical line must be within bounding box if it intersects
             if (!measure.isBetween(line.origin[0], qpath.leftX, qpath.rightX, false)) continue;
 
-            let intersectOptions: IPathIntersectionOptions = { path2Offset: qpath.offset };
-            let farInt = path.intersection(line, qpath.pathContext, intersectOptions);
+            let farInt = path.intersection(line, qpath.absolute);
             if (farInt) {
                 farInt.intersectionPoints.forEach(p => {
 
                     //check for tangent, insert into either tangentcollector or pointcollector
-                    if (isTangentOnX(qpath.pathContext, qpath.offset, line.origin[0])) {
+                    if (isTangentOnX(qpath.absolute, line.origin[0])) {
                         tangentCollector.insertValue(p, qpath);
                     } else {
                         pointCollector.insertValue(p, [qpath]);
