@@ -39,7 +39,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 36,
+              "line": 24,
               "character": 31
             }
           ]
@@ -66,7 +66,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 18,
+              "line": 6,
               "character": 30
             }
           ]
@@ -109,7 +109,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 163,
+              "line": 151,
               "character": 26
             }
           ]
@@ -140,7 +140,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 49,
+              "line": 37,
               "character": 33
             }
           ]
@@ -171,7 +171,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 82,
+              "line": 70,
               "character": 28
             }
           ]
@@ -209,7 +209,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 100,
+              "line": 88,
               "character": 31
             }
           ]
@@ -240,7 +240,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 110,
+              "line": 98,
               "character": 29
             }
           ]
@@ -277,7 +277,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 213,
+              "line": 201,
               "character": 36
             }
           ]
@@ -308,7 +308,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 126,
+              "line": 114,
               "character": 35
             }
           ]
@@ -345,7 +345,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 137,
+              "line": 125,
               "character": 36
             }
           ]
@@ -382,7 +382,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 148,
+              "line": 136,
               "character": 36
             }
           ]
@@ -414,35 +414,8 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 25,
+              "line": 13,
               "character": 30
-            }
-          ]
-        },
-        "splitNumber": {
-          "flags": {},
-          "signatures": [
-            {
-              "name": "splitNumber",
-              "kindString": "Call signature",
-              "comment": {
-                "shortText": "private"
-              },
-              "parameters": [
-                {
-                  "name": "n",
-                  "flags": {},
-                  "type": "number"
-                }
-              ],
-              "type": "Array"
-            }
-          ],
-          "sources": [
-            {
-              "fileName": "core/angle.ts",
-              "line": 6,
-              "character": 24
             }
           ]
         },
@@ -472,7 +445,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 72,
+              "line": 60,
               "character": 29
             }
           ]
@@ -503,7 +476,7 @@
           "sources": [
             {
               "fileName": "core/angle.ts",
-              "line": 62,
+              "line": 50,
               "character": 29
             }
           ]
@@ -3802,7 +3775,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 494,
+                  "line": 532,
                   "character": 29
                 }
               ],
@@ -4052,7 +4025,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 494,
+                  "line": 532,
                   "character": 29
                 }
               ],
@@ -4427,7 +4400,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 494,
+                  "line": 532,
                   "character": 29
                 }
               ],
@@ -4654,7 +4627,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 494,
+                  "line": 532,
                   "character": 29
                 }
               ],
@@ -4678,7 +4651,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 537,
+                  "line": 575,
                   "character": 26
                 }
               ],
@@ -7014,6 +6987,51 @@
             }
           ]
         },
+        "isPointDistinct": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "isPointDistinct",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Find out if a point is distinct among an array of points.",
+                "returns": "false if point is equal to any point in the array.\n"
+              },
+              "parameters": [
+                {
+                  "name": "pointToCheck",
+                  "flags": {},
+                  "comment": "point to check.",
+                  "type": "IPoint"
+                },
+                {
+                  "name": "pointArray",
+                  "flags": {},
+                  "comment": "array of points.",
+                  "type": "IPoint"
+                },
+                {
+                  "name": "withinDistance",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional distance to consider points equal.",
+                  "type": "number"
+                }
+              ],
+              "type": "boolean"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/equal.ts",
+              "line": 98,
+              "character": 35
+            }
+          ]
+        },
         "isPointEqual": {
           "flags": {
             "isExported": true
@@ -7044,6 +7062,7 @@
                   "flags": {
                     "isOptional": true
                   },
+                  "comment": "Optional distance to consider points equal.",
                   "type": "number"
                 }
               ],
@@ -7053,7 +7072,7 @@
           "sources": [
             {
               "fileName": "core/equal.ts",
-              "line": 79,
+              "line": 80,
               "character": 32
             }
           ]
@@ -7096,7 +7115,7 @@
           "sources": [
             {
               "fileName": "core/equal.ts",
-              "line": 96,
+              "line": 114,
               "character": 34
             }
           ]
@@ -7133,7 +7152,7 @@
           "sources": [
             {
               "fileName": "core/equal.ts",
-              "line": 115,
+              "line": 133,
               "character": 32
             }
           ]
@@ -7170,7 +7189,7 @@
           "sources": [
             {
               "fileName": "core/equal.ts",
-              "line": 136,
+              "line": 154,
               "character": 35
             }
           ]
@@ -7723,7 +7742,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 860,
+              "line": 852,
               "character": 38
             }
           ]
@@ -12935,7 +12954,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 867,
+              "line": 905,
               "character": 16
             }
           ],
@@ -12958,7 +12977,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 877,
+              "line": 915,
               "character": 14
             }
           ],
@@ -12982,7 +13001,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 877,
+                  "line": 915,
                   "character": 15
                 }
               ]
@@ -13003,7 +13022,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 872,
+              "line": 910,
               "character": 15
             }
           ],
@@ -14036,7 +14055,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 867,
+              "line": 905,
               "character": 16
             }
           ],
@@ -14059,7 +14078,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 877,
+              "line": 915,
               "character": 14
             }
           ],
@@ -14083,7 +14102,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 877,
+                  "line": 915,
                   "character": 15
                 }
               ]
@@ -14104,7 +14123,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 872,
+              "line": 910,
               "character": 15
             }
           ],
@@ -14551,7 +14570,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 867,
+              "line": 905,
               "character": 16
             }
           ],
@@ -14574,7 +14593,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 877,
+              "line": 915,
               "character": 14
             }
           ],
@@ -14598,7 +14617,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 877,
+                  "line": 915,
                   "character": 15
                 }
               ]
@@ -14619,7 +14638,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 872,
+              "line": 910,
               "character": 15
             }
           ],
@@ -15084,7 +15103,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 789,
+          "line": 827,
           "character": 33
         }
       ],
@@ -15284,7 +15303,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 794,
+              "line": 832,
               "character": 14
             }
           ],
@@ -15353,7 +15372,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 862,
+          "line": 900,
           "character": 29
         }
       ],
@@ -15388,7 +15407,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 867,
+              "line": 905,
               "character": 16
             }
           ],
@@ -15407,7 +15426,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 877,
+              "line": 915,
               "character": 14
             }
           ],
@@ -15433,7 +15452,7 @@
               "sources": [
                 {
                   "fileName": "core/maker.ts",
-                  "line": 877,
+                  "line": 915,
                   "character": 15
                 }
               ]
@@ -15450,7 +15469,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 872,
+              "line": 910,
               "character": 15
             }
           ],
@@ -15471,7 +15490,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 652,
+          "line": 690,
           "character": 27
         }
       ],
@@ -15487,7 +15506,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 672,
+              "line": 710,
               "character": 16
             }
           ],
@@ -15507,7 +15526,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 662,
+              "line": 700,
               "character": 15
             }
           ],
@@ -15526,7 +15545,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 657,
+              "line": 695,
               "character": 13
             }
           ],
@@ -15546,7 +15565,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 667,
+              "line": 705,
               "character": 18
             }
           ],
@@ -15601,7 +15620,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 695,
+          "line": 733,
           "character": 35
         }
       ]
@@ -15616,7 +15635,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 626,
+          "line": 664,
           "character": 31
         }
       ],
@@ -15631,7 +15650,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 641,
+              "line": 679,
               "character": 17
             }
           ],
@@ -15651,7 +15670,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 646,
+              "line": 684,
               "character": 18
             }
           ],
@@ -15670,7 +15689,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 636,
+              "line": 674,
               "character": 16
             }
           ],
@@ -15689,7 +15708,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 631,
+              "line": 669,
               "character": 18
             }
           ],
@@ -15736,7 +15755,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 678,
+          "line": 716,
           "character": 31
         }
       ]
@@ -15751,7 +15770,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 500,
+          "line": 538,
           "character": 36
         }
       ],
@@ -15773,7 +15792,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 510,
+              "line": 548,
               "character": 16
             }
           ],
@@ -15793,7 +15812,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 515,
+              "line": 553,
               "character": 16
             }
           ],
@@ -15813,7 +15832,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 520,
+              "line": 558,
               "character": 16
             }
           ],
@@ -15833,7 +15852,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 526,
+              "line": 564,
               "character": 19
             }
           ],
@@ -15854,7 +15873,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 494,
+              "line": 532,
               "character": 29
             }
           ],
@@ -15878,7 +15897,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 505,
+              "line": 543,
               "character": 20
             }
           ],
@@ -15899,7 +15918,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 728,
+          "line": 766,
           "character": 42
         }
       ],
@@ -15915,7 +15934,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 733,
+              "line": 771,
               "character": 26
             }
           ],
@@ -15936,7 +15955,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 702,
+          "line": 740,
           "character": 39
         }
       ],
@@ -15958,7 +15977,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 707,
+              "line": 745,
               "character": 16
             }
           ],
@@ -15978,7 +15997,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 717,
+              "line": 755,
               "character": 15
             }
           ],
@@ -16007,7 +16026,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 494,
+              "line": 532,
               "character": 29
             }
           ],
@@ -16031,7 +16050,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 712,
+              "line": 750,
               "character": 15
             }
           ],
@@ -16051,7 +16070,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 722,
+              "line": 760,
               "character": 20
             }
           ],
@@ -16072,7 +16091,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 532,
+          "line": 570,
           "character": 38
         }
       ],
@@ -16100,7 +16119,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 494,
+              "line": 532,
               "character": 29
             }
           ],
@@ -16124,7 +16143,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 537,
+              "line": 575,
               "character": 26
             }
           ],
@@ -16145,7 +16164,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 838,
+          "line": 876,
           "character": 25
         }
       ],
@@ -16182,7 +16201,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 850,
+              "line": 888,
               "character": 22
             }
           ],
@@ -16203,7 +16222,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 855,
+              "line": 893,
               "character": 13
             }
           ],
@@ -16224,7 +16243,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 262,
+          "line": 300,
           "character": 29
         }
       ],
@@ -16245,7 +16264,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 272,
+              "line": 310,
               "character": 12
             }
           ],
@@ -16264,7 +16283,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 267,
+              "line": 305,
               "character": 11
             }
           ],
@@ -16310,7 +16329,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 299,
+          "line": 337,
           "character": 32
         }
       ]
@@ -16325,7 +16344,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 324,
+          "line": 362,
           "character": 47
         }
       ],
@@ -16341,7 +16360,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 329,
+              "line": 367,
               "character": 16
             }
           ],
@@ -16361,7 +16380,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 334,
+              "line": 372,
               "character": 20
             }
           ],
@@ -16381,7 +16400,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 339,
+              "line": 377,
               "character": 30
             }
           ],
@@ -16403,7 +16422,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 278,
+          "line": 316,
           "character": 39
         }
       ],
@@ -16424,7 +16443,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 283,
+              "line": 321,
               "character": 14
             }
           ],
@@ -16443,7 +16462,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 293,
+              "line": 331,
               "character": 14
             }
           ],
@@ -16462,7 +16481,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 272,
+              "line": 310,
               "character": 12
             }
           ],
@@ -16485,7 +16504,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 267,
+              "line": 305,
               "character": 11
             }
           ],
@@ -16508,7 +16527,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 288,
+              "line": 326,
               "character": 13
             }
           ],
@@ -16529,7 +16548,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 802,
+          "line": 840,
           "character": 35
         }
       ],
@@ -16545,7 +16564,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 822,
+              "line": 860,
               "character": 11
             }
           ],
@@ -16565,7 +16584,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 817,
+              "line": 855,
               "character": 11
             }
           ],
@@ -16585,7 +16604,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 827,
+              "line": 865,
               "character": 12
             }
           ],
@@ -16604,7 +16623,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 807,
+              "line": 845,
               "character": 13
             }
           ],
@@ -16623,7 +16642,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 812,
+              "line": 850,
               "character": 12
             }
           ],
@@ -16642,7 +16661,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 832,
+              "line": 870,
               "character": 13
             }
           ],
@@ -16690,7 +16709,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 573,
+          "line": 611,
           "character": 39
         }
       ]
@@ -16705,7 +16724,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 555,
+          "line": 593,
           "character": 37
         }
       ],
@@ -16732,7 +16751,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 560,
+              "line": 598,
               "character": 17
             }
           ],
@@ -16800,7 +16819,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 565,
+              "line": 603,
               "character": 16
             }
           ],
@@ -16844,7 +16863,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 464,
+          "line": 502,
           "character": 38
         }
       ],
@@ -16859,7 +16878,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 469,
+              "line": 507,
               "character": 26
             }
           ],
@@ -16880,7 +16899,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 476,
+              "line": 514,
               "character": 19
             }
           ],
@@ -16901,7 +16920,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 483,
+              "line": 521,
               "character": 19
             }
           ],
@@ -16923,7 +16942,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 432,
+          "line": 470,
           "character": 49
         }
       ],
@@ -16945,7 +16964,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 437,
+              "line": 475,
               "character": 23
             }
           ],
@@ -16965,7 +16984,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 442,
+              "line": 480,
               "character": 25
             }
           ],
@@ -16986,7 +17005,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 448,
+          "line": 486,
           "character": 45
         }
       ],
@@ -17008,7 +17027,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 437,
+              "line": 475,
               "character": 23
             }
           ],
@@ -17032,7 +17051,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 442,
+              "line": 480,
               "character": 25
             }
           ],
@@ -17056,7 +17075,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 453,
+              "line": 491,
               "character": 19
             }
           ],
@@ -17076,7 +17095,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 458,
+              "line": 496,
               "character": 19
             }
           ],
@@ -17097,7 +17116,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 308,
+          "line": 346,
           "character": 33
         }
       ],
@@ -17165,7 +17184,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 313,
+              "line": 351,
               "character": 14
             }
           ],
@@ -17184,7 +17203,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 318,
+              "line": 356,
               "character": 16
             }
           ],
@@ -17228,7 +17247,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 489,
+          "line": 527,
           "character": 39
         }
       ],
@@ -17266,7 +17285,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 494,
+              "line": 532,
               "character": 29
             }
           ],
@@ -17287,7 +17306,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 739,
+          "line": 777,
           "character": 37
         }
       ],
@@ -17305,7 +17324,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 741,
+              "line": 779,
               "character": 15
             }
           ],
@@ -17321,7 +17340,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 742,
+              "line": 780,
               "character": 18
             }
           ],
@@ -17337,7 +17356,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 740,
+              "line": 778,
               "character": 19
             }
           ],
@@ -17358,7 +17377,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 587,
+          "line": 625,
           "character": 38
         }
       ],
@@ -17380,7 +17399,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 588,
+              "line": 626,
               "character": 20
             }
           ],
@@ -17396,7 +17415,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 589,
+              "line": 627,
               "character": 14
             }
           ],
@@ -17417,7 +17436,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 595,
+          "line": 633,
           "character": 33
         }
       ],
@@ -17439,7 +17458,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 596,
+              "line": 634,
               "character": 13
             }
           ],
@@ -17455,7 +17474,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 597,
+              "line": 635,
               "character": 14
             }
           ],
@@ -17471,7 +17490,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 598,
+              "line": 636,
               "character": 13
             }
           ],
@@ -17488,7 +17507,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 599,
+              "line": 637,
               "character": 16
             }
           ],
@@ -17509,7 +17528,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 543,
+          "line": 581,
           "character": 37
         }
       ],
@@ -17531,7 +17550,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 494,
+              "line": 532,
               "character": 29
             }
           ],
@@ -17555,7 +17574,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 548,
+              "line": 586,
               "character": 30
             }
           ],
@@ -17576,7 +17595,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 406,
+          "line": 444,
           "character": 27
         }
       ],
@@ -17591,7 +17610,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 411,
+              "line": 449,
               "character": 16
             }
           ],
@@ -17610,7 +17629,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 421,
+              "line": 459,
               "character": 12
             }
           ],
@@ -17630,7 +17649,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 416,
+              "line": 454,
               "character": 13
             }
           ],
@@ -17650,7 +17669,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 426,
+              "line": 464,
               "character": 18
             }
           ],
@@ -17671,7 +17690,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 748,
+          "line": 786,
           "character": 31
         }
       ],
@@ -17693,7 +17712,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 741,
+              "line": 779,
               "character": 15
             }
           ],
@@ -17713,7 +17732,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 742,
+              "line": 780,
               "character": 18
             }
           ],
@@ -17733,7 +17752,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 596,
+              "line": 634,
               "character": 13
             }
           ],
@@ -17753,7 +17772,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 597,
+              "line": 635,
               "character": 14
             }
           ],
@@ -17773,7 +17792,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 740,
+              "line": 778,
               "character": 19
             }
           ],
@@ -17793,7 +17812,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 598,
+              "line": 636,
               "character": 13
             }
           ],
@@ -17814,7 +17833,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 599,
+              "line": 637,
               "character": 16
             }
           ],
@@ -17856,7 +17875,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 754,
+          "line": 792,
           "character": 39
         }
       ]
@@ -17888,7 +17907,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 761,
+          "line": 799,
           "character": 50
         }
       ]
@@ -17903,7 +17922,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 768,
+          "line": 806,
           "character": 33
         }
       ],
@@ -17919,7 +17938,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 783,
+              "line": 821,
               "character": 22
             }
           ],
@@ -17939,7 +17958,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 778,
+              "line": 816,
               "character": 23
             }
           ],
@@ -17959,7 +17978,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 773,
+              "line": 811,
               "character": 14
             }
           ],
@@ -17980,7 +17999,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 605,
+          "line": 643,
           "character": 30
         }
       ],
@@ -18012,7 +18031,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 596,
+              "line": 634,
               "character": 13
             }
           ],
@@ -18032,7 +18051,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 588,
+              "line": 626,
               "character": 20
             }
           ],
@@ -18052,7 +18071,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 597,
+              "line": 635,
               "character": 14
             }
           ],
@@ -18072,7 +18091,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 606,
+              "line": 644,
               "character": 19
             }
           ],
@@ -18088,7 +18107,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 589,
+              "line": 627,
               "character": 14
             }
           ],
@@ -18108,7 +18127,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 598,
+              "line": 636,
               "character": 13
             }
           ],
@@ -18129,7 +18148,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 599,
+              "line": 637,
               "character": 16
             }
           ],
@@ -18171,7 +18190,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 619,
+          "line": 657,
           "character": 45
         }
       ]
@@ -18203,7 +18222,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 612,
+          "line": 650,
           "character": 38
         }
       ]
@@ -19832,22 +19851,22 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 922,
+          "line": 960,
           "character": 21
         },
         {
           "fileName": "core/maker.ts",
-          "line": 935,
+          "line": 973,
           "character": 21
         },
         {
           "fileName": "core/maker.ts",
-          "line": 948,
+          "line": 986,
           "character": 21
         },
         {
           "fileName": "core/maker.ts",
-          "line": 950,
+          "line": 988,
           "character": 21
         }
       ]
@@ -19885,7 +19904,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 191,
+          "line": 229,
           "character": 31
         }
       ]
@@ -19916,7 +19935,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 126,
+          "line": 164,
           "character": 34
         }
       ]
@@ -19954,7 +19973,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 207,
+          "line": 245,
           "character": 32
         }
       ]
@@ -19984,7 +20003,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 687,
+          "line": 725,
           "character": 27
         }
       ]
@@ -20015,7 +20034,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 224,
+          "line": 262,
           "character": 30
         }
       ]
@@ -20044,7 +20063,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 580,
+          "line": 618,
           "character": 27
         }
       ]
@@ -20075,7 +20094,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 234,
+          "line": 272,
           "character": 28
         }
       ]
@@ -20106,7 +20125,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 244,
+          "line": 282,
           "character": 28
         }
       ]
@@ -20136,7 +20155,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 347,
+          "line": 385,
           "character": 26
         }
       ]
@@ -20166,7 +20185,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 374,
+          "line": 412,
           "character": 29
         }
       ]
@@ -20196,7 +20215,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 383,
+          "line": 421,
           "character": 42
         }
       ]
@@ -20226,7 +20245,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 365,
+          "line": 403,
           "character": 32
         }
       ]
@@ -20256,7 +20275,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 356,
+          "line": 394,
           "character": 30
         }
       ]
@@ -20286,7 +20305,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 255,
+          "line": 293,
           "character": 27
         }
       ]
@@ -20325,8 +20344,74 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 93,
+          "line": 127,
           "character": 25
+        }
+      ]
+    },
+    "split": {
+      "flags": {
+        "isExported": true
+      },
+      "signatures": [
+        {
+          "name": "split",
+          "kindString": "Call signature",
+          "comment": {
+            "shortText": "private"
+          },
+          "parameters": [
+            {
+              "name": "s",
+              "flags": {},
+              "type": "string"
+            },
+            {
+              "name": "char",
+              "flags": {},
+              "type": "string"
+            }
+          ],
+          "type": "Array"
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "core/maker.ts",
+          "line": 84,
+          "character": 18
+        }
+      ]
+    },
+    "splitDecimal": {
+      "flags": {
+        "isExported": true
+      },
+      "signatures": [
+        {
+          "name": "splitDecimal",
+          "kindString": "Call signature",
+          "comment": {
+            "shortText": "Split a decimal into its whole and fractional parts as strings.",
+            "text": "Example: get whole and fractional parts of 42.056\n```\nmakerjs.splitDecimal(42.056); //returns [\"42\", \"056\"]\n```\n",
+            "returns": "Array of 2 strings when n contains a decimal point, or an array of one string when n is an integer.\n"
+          },
+          "parameters": [
+            {
+              "name": "n",
+              "flags": {},
+              "comment": "The number to split.",
+              "type": "number"
+            }
+          ],
+          "type": "Array"
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "core/maker.ts",
+          "line": 106,
+          "character": 32
         }
       ]
     },
@@ -20360,7 +20445,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 148,
+          "line": 186,
           "character": 26
         }
       ]
@@ -20467,7 +20552,7 @@
       "sources": [
         {
           "fileName": "core/maker.ts",
-          "line": 396,
+          "line": 434,
           "character": 23
         }
       ],
@@ -20483,7 +20568,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 399,
+              "line": 437,
               "character": 11
             }
           ],
@@ -20500,7 +20585,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 400,
+              "line": 438,
               "character": 18
             }
           ],
@@ -20517,7 +20602,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 398,
+              "line": 436,
               "character": 14
             }
           ],
@@ -20534,7 +20619,7 @@
           "sources": [
             {
               "fileName": "core/maker.ts",
-              "line": 397,
+              "line": 435,
               "character": 12
             }
           ],
