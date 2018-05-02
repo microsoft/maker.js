@@ -41,6 +41,21 @@ describe('Path Intersection', function () {
         assert.equal(int.intersectionPoints.length, 1);
         assert.equal(int.intersectionPoints[0][0], -24.4948974);
         assert.equal(int.intersectionPoints[0][1], 3);
-    })
+    });
 
+    it('should intersect a line and a circle in 2 points', function () {
+
+        var line = new makerjs.paths.Line([-50, -50], [50, 50]);
+        var circle = new makerjs.paths.Circle([0, 0], 50);
+
+        var int = makerjs.path.intersection(line, circle);
+
+        assert.ok(int);
+        assert.ok(int.path2Angles);
+        assert.equal(int.path2Angles.length, 2);
+        assert.equal(int.path2Angles.sort((a, b) => b - a)[1], 45);
+        assert.ok(int.intersectionPoints);
+        assert.equal(int.intersectionPoints.length, 2);
+
+    });
 });
