@@ -79,6 +79,40 @@ namespace MakerJs {
     };
 
     /**
+     * private
+     */
+    function split(s: string, char: string) {
+        var p = s.indexOf(char);
+        if (p < 0) {
+            return [s];
+        } else if (p > 0) {
+            return [s.substr(0, p), s.substr(p + 1)];
+        } else {
+            return ['', s];
+        }
+    }
+
+    /**
+     * Split a decimal into its whole and fractional parts as strings.
+     * 
+     * Example: get whole and fractional parts of 42.056
+     * ```
+     * makerjs.splitDecimal(42.056); //returns ["42", "056"]
+     * ```
+     * 
+     * @param n The number to split.
+     * @returns Array of 2 strings when n contains a decimal point, or an array of one string when n is an integer.
+     */
+    export function splitDecimal(n: number) {
+        let s = n.toString();
+        if (s.indexOf('e') > 0) {
+            //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
+            s = n.toFixed(20).match(/.*[^(0+$)]/)[0];   //regex trims trailing zeros
+        }
+        return split(s, '.');
+    }
+
+    /**
      * Numeric rounding
      * 
      * Example: round to 3 decimal places
@@ -91,6 +125,10 @@ namespace MakerJs {
      * @returns Rounded number.
      */
     export function round(n: number, accuracy = .0000001): number {
+
+        //optimize for early exit for integers
+        if (n % 1 === 0) return n;
+
         var exp = 1 - String(Math.ceil(1 / accuracy)).length;
 
         //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
@@ -110,10 +148,10 @@ namespace MakerJs {
             return -round(-n, accuracy);
         }
         // Shift
-        var a = n.toString().split('e');
+        var a = split(n.toString(), 'e');
         n = Math.round(+(a[0] + 'e' + (a[1] ? (+a[1] - exp) : -exp)));
         // Shift back
-        a = n.toString().split('e');
+        a = split(n.toString(), 'e');
         return +(a[0] + 'e' + (a[1] ? (+a[1] + exp) : exp));
     }
 

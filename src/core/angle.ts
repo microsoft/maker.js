@@ -3,20 +3,8 @@ namespace MakerJs.angle {
     /**
      * private
      */
-    function splitNumber(n: number) {
-        let s = n.toString();
-        if (s.indexOf('e') > 0) {
-            //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
-            s = n.toFixed(20).match(/.*[^(0+$)]/)[0];
-        }
-        return s.split('.');
-    }
-
-    /**
-     * private
-     */
     function getFractionalPart(n: number) {
-        return splitNumber(n)[1];
+        return splitDecimal(n)[1];
     }
 
     /**
@@ -24,7 +12,7 @@ namespace MakerJs.angle {
      */
     function setFractionalPart(n: number, fractionalPart: string) {
         if (fractionalPart) {
-            return +(splitNumber(n)[0] + '.' + fractionalPart);
+            return +(splitDecimal(n)[0] + '.' + fractionalPart);
         } else {
             return n;
         }
