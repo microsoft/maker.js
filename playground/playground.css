@@ -724,6 +724,10 @@ body.full-screen {
     opacity: .5;
 }
 
+.full-screen #view-svg-container {
+    margin: 0;
+}
+
 .full-screen #view svg#drawing text {
     fill: #777;
 }
