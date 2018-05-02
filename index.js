@@ -100,6 +100,41 @@ var MakerJs;
         Millimeter: 'mm'
     };
     /**
+     * private
+     */
+    function split(s, char) {
+        var p = s.indexOf(char);
+        if (p < 0) {
+            return [s];
+        }
+        else if (p > 0) {
+            return [s.substr(0, p), s.substr(p + 1)];
+        }
+        else {
+            return ['', s];
+        }
+    }
+    /**
+     * Split a decimal into its whole and fractional parts as strings.
+     *
+     * Example: get whole and fractional parts of 42.056
+     * ```
+     * makerjs.splitDecimal(42.056); //returns ["42", "056"]
+     * ```
+     *
+     * @param n The number to split.
+     * @returns Array of 2 strings when n contains a decimal point, or an array of one string when n is an integer.
+     */
+    function splitDecimal(n) {
+        var s = n.toString();
+        if (s.indexOf('e') > 0) {
+            //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
+            s = n.toFixed(20).match(/.*[^(0+$)]/)[0]; //regex trims trailing zeros
+        }
+        return split(s, '.');
+    }
+    MakerJs.splitDecimal = splitDecimal;
+    /**
      * Numeric rounding
      *
      * Example: round to 3 decimal places
@@ -113,6 +148,9 @@ var MakerJs;
      */
     function round(n, accuracy) {
         if (accuracy === void 0) { accuracy = .0000001; }
+        //optimize for early exit for integers
+        if (n % 1 === 0)
+            return n;
         var exp = 1 - String(Math.ceil(1 / accuracy)).length;
         //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
         // If the exp is undefined or zero...
@@ -130,10 +168,10 @@ var MakerJs;
             return -round(-n, accuracy);
         }
         // Shift
-        var a = n.toString().split('e');
+        var a = split(n.toString(), 'e');
         n = Math.round(+(a[0] + 'e' + (a[1] ? (+a[1] - exp) : -exp)));
         // Shift back
-        a = n.toString().split('e');
+        a = split(n.toString(), 'e');
         return +(a[0] + 'e' + (a[1] ? (+a[1] + exp) : exp));
     }
     MakerJs.round = round;
@@ -400,26 +438,15 @@ var MakerJs;
         /**
          * private
          */
-        function splitNumber(n) {
-            var s = n.toString();
-            if (s.indexOf('e') > 0) {
-                //max digits is 20 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
-                s = n.toFixed(20).match(/.*[^(0+$)]/)[0];
-            }
-            return s.split('.');
-        }
-        /**
-         * private
-         */
         function getFractionalPart(n) {
-            return splitNumber(n)[1];
+            return MakerJs.splitDecimal(n)[1];
         }
         /**
          * private
          */
         function setFractionalPart(n, fractionalPart) {
             if (fractionalPart) {
-                return +(splitNumber(n)[0] + '.' + fractionalPart);
+                return +(MakerJs.splitDecimal(n)[0] + '.' + fractionalPart);
             }
             else {
                 return n;
@@ -3185,6 +3212,7 @@ var MakerJs;
          *
          * @param a First point.
          * @param b Second point.
+         * @param withinDistance Optional distance to consider points equal.
          * @returns true if points are the same, false if they are not
          */
         function isPointEqual(a, b, withinDistance) {
@@ -3199,6 +3227,23 @@ var MakerJs;
             }
         }
         measure.isPointEqual = isPointEqual;
+        /**
+         * Find out if a point is distinct among an array of points.
+         *
+         * @param pointToCheck point to check.
+         * @param pointArray array of points.
+         * @param withinDistance Optional distance to consider points equal.
+         * @returns false if point is equal to any point in the array.
+         */
+        function isPointDistinct(pointToCheck, pointArray, withinDistance) {
+            for (var i = 0; i < pointArray.length; i++) {
+                if (measure.isPointEqual(pointArray[i], pointToCheck, withinDistance)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        measure.isPointDistinct = isPointDistinct;
         /**
          * Find out if point is on a slope.
          *
@@ -3941,18 +3986,12 @@ var MakerJs;
          */
         function addUniquePoints(pointArray, pointsToAdd) {
             var added = 0;
-            function addUniquePoint(pointToAdd) {
-                for (var i = 0; i < pointArray.length; i++) {
-                    if (measure.isPointEqual(pointArray[i], pointToAdd, .000000001)) {
-                        return;
-                    }
-                }
-                pointArray.push(pointToAdd);
+            pointsToAdd.forEach(function (p) {
+                if (!measure.isPointDistinct(p, pointArray, .000000001))
+                    return;
+                pointArray.push(p);
                 added++;
-            }
-            for (var i = 0; i < pointsToAdd.length; i++) {
-                addUniquePoint(pointsToAdd[i]);
-            }
+            });
             return added;
         }
         /**
@@ -9463,5 +9502,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.88";
+MakerJs.version = "0.9.89";
 ﻿var Bezier = require('bezier-js');
