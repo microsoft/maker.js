@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.88
+// Type definitions for Maker.js 0.9.89
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -227,6 +227,18 @@ declare namespace MakerJs {
         Meter: string;
         Millimeter: string;
     };
+    /**
+     * Split a decimal into its whole and fractional parts as strings.
+     *
+     * Example: get whole and fractional parts of 42.056
+     * ```
+     * makerjs.splitDecimal(42.056); //returns ["42", "056"]
+     * ```
+     *
+     * @param n The number to split.
+     * @returns Array of 2 strings when n contains a decimal point, or an array of one string when n is an integer.
+     */
+    function splitDecimal(n: number): string[];
     /**
      * Numeric rounding
      *
@@ -2176,9 +2188,19 @@ declare namespace MakerJs.measure {
      *
      * @param a First point.
      * @param b Second point.
+     * @param withinDistance Optional distance to consider points equal.
      * @returns true if points are the same, false if they are not
      */
     function isPointEqual(a: IPoint, b: IPoint, withinDistance?: number): boolean;
+    /**
+     * Find out if a point is distinct among an array of points.
+     *
+     * @param pointToCheck point to check.
+     * @param pointArray array of points.
+     * @param withinDistance Optional distance to consider points equal.
+     * @returns false if point is equal to any point in the array.
+     */
+    function isPointDistinct(pointToCheck: IPoint, pointArray: IPoint[], withinDistance?: number): boolean;
     /**
      * Find out if point is on a slope.
      *
