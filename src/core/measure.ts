@@ -68,6 +68,13 @@ namespace MakerJs.measure {
     }
 
     /**
+     * DEPRECATED - use isArcSpanOverlapping() instead.
+     */
+    export function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
+        return isArcSpanOverlapping(arcA, arcB, excludeTangents);
+    }
+
+    /**
      * Check for arc overlapping another arc.
      * 
      * @param arcA The arc to test.
@@ -75,7 +82,7 @@ namespace MakerJs.measure {
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
      * @returns Boolean true if arcA is overlapped with arcB.
      */
-    export function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
+    export function isArcSpanOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
 
         function checkAngles(a: IPathArc, b: IPathArc) {
