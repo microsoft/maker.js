@@ -82,7 +82,7 @@
             return round(a[0] - b[0]) == 0 && round(a[1] - b[1]) == 0;
         } else {
             if (!a || !b) return false;
-            var distance = measure.pointDistance(a, b);
+            var distance = pointDistance(a, b);
             return distance <= withinDistance;
         }
     }
@@ -97,7 +97,7 @@
      */
     export function isPointDistinct(pointToCheck: IPoint, pointArray: IPoint[], withinDistance?: number) {
         for (var i = 0; i < pointArray.length; i++) {
-            if (measure.isPointEqual(pointArray[i], pointToCheck, withinDistance)) {
+            if (isPointEqual(pointArray[i], pointToCheck, withinDistance)) {
                 return false;
             }
         }
