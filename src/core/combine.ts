@@ -27,6 +27,19 @@
     }
 
     /**
+     * private
+     */
+    function getPointsOnPath(points: IPoint[], onPath: IPath, pathOffset: IPoint, popOptions: IIsPointOnPathOptions): IPoint[] {
+        const endpointsOnPath: IPoint[] = [];
+        points.forEach(p => {
+            if (measure.isPointOnPath(p, onPath, .000001, pathOffset, popOptions)) {
+                endpointsOnPath.push(p);
+            }
+        });
+        return endpointsOnPath;
+    }
+
+    /**
      * @private
      */
     function breakAlongForeignPath(crossedPath: ICrossedPath, overlappedSegments: ICrossedPathSegment[], foreignWalkedPath: IWalkPath) {
@@ -41,28 +54,21 @@
             return;
         }
 
-        var foreignPathEndPoints: IPoint[];
+        //this will cache the slope, to keep from being recalculated for each segment
+        var popOptions: IIsPointOnPathOptions = {};
+
+        var options: IPathIntersectionOptions = { path1Offset: crossedPath.offset, path2Offset: foreignWalkedPath.offset };
+        var foreignIntersection = path.intersection(crossedPath.pathContext, foreignPath, options);
+        var intersectionPoints = foreignIntersection ? foreignIntersection.intersectionPoints : null;
+        var foreignPathEndPoints = point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
 
         for (var i = 0; i < segments.length; i++) {
+            var pointsOfInterest = intersectionPoints ? foreignPathEndPoints.concat(intersectionPoints) : foreignPathEndPoints;
+            var pointsToCheck = getPointsOnPath(pointsOfInterest, segments[i].path, crossedPath.offset, popOptions);
 
-            var pointsToCheck: IPoint[];
-            var options: IPathIntersectionOptions = { path1Offset: crossedPath.offset, path2Offset: foreignWalkedPath.offset };
-            var foreignIntersection = path.intersection(segments[i].path, foreignPath, options);
-
-            if (foreignIntersection) {
-                pointsToCheck = foreignIntersection.intersectionPoints;
-
-            } else if (options.out_AreOverlapped) {
+            if (options.out_AreOverlapped) {
                 segments[i].overlapped = true;
-
                 overlappedSegments.push(segments[i]);
-
-                if (!foreignPathEndPoints) {
-                    //make sure endpoints are in absolute coords
-                    foreignPathEndPoints = point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
-                }
-
-                pointsToCheck = foreignPathEndPoints;
             }
 
             if (pointsToCheck) {
@@ -352,7 +358,7 @@
 
         if (!opts.farPoint) {
             var measureBoth = measure.increase(measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
-            opts.farPoint = point.add(measureBoth.high, [1, 1]); 
+            opts.farPoint = point.add(measureBoth.high, [1, 1]);
         }
 
         var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
