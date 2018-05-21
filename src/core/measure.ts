@@ -68,6 +68,13 @@ namespace MakerJs.measure {
     }
 
     /**
+     * DEPRECATED - use isArcSpanOverlapping() instead.
+     */
+    export function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
+        return isArcSpanOverlapping(arcA, arcB, excludeTangents);
+    }
+
+    /**
      * Check for arc overlapping another arc.
      * 
      * @param arcA The arc to test.
@@ -75,13 +82,13 @@ namespace MakerJs.measure {
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
      * @returns Boolean true if arcA is overlapped with arcB.
      */
-    export function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
+    export function isArcSpanOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean {
         var pointsOfIntersection: IPoint[] = [];
 
         function checkAngles(a: IPathArc, b: IPathArc) {
 
             function checkAngle(n: number) {
-                return measure.isBetweenArcAngles(n, a, excludeTangents);
+                return isBetweenArcAngles(n, a, excludeTangents);
             }
 
             return checkAngle(b.startAngle) || checkAngle(b.endAngle);
@@ -261,7 +268,7 @@ namespace MakerJs.measure {
         function checkPoints(index: number, a: IPathLine, b: IPathLine) {
 
             function checkPoint(p: IPoint) {
-                return measure.isBetweenPoints(p, a, excludeTangents);
+                return isBetweenPoints(p, a, excludeTangents);
             }
 
             return checkPoint(b.origin) || checkPoint(b.end);
@@ -477,7 +484,7 @@ namespace MakerJs.measure {
      * @param atlas Optional atlas to save measurements.
      * @returns object with low and high points.
      */
-    export function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasureWithCenter {
+    export function modelExtents(modelToMeasure: IModel, atlas?: Atlas): IMeasureWithCenter {
 
         function increaseParentModel(childRoute: string[], childMeasurement: IMeasure) {
 
@@ -491,18 +498,18 @@ namespace MakerJs.measure {
                 //just start with the known size
                 atlas.modelMap[parentRouteKey] = cloneMeasure(childMeasurement);
             } else {
-                measure.increase(atlas.modelMap[parentRouteKey], childMeasurement);
+                increase(atlas.modelMap[parentRouteKey], childMeasurement);
             }
         }
 
-        if (!atlas) atlas = new measure.Atlas(modelToMeasure);
+        if (!atlas) atlas = new Atlas(modelToMeasure);
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
 
                 //trust that the path measurement is good
                 if (!(walkedPath.routeKey in atlas.pathMap)) {
-                    atlas.pathMap[walkedPath.routeKey] = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
+                    atlas.pathMap[walkedPath.routeKey] = pathExtents(walkedPath.pathContext, walkedPath.offset);
                 }
 
                 increaseParentModel(walkedPath.route, atlas.pathMap[walkedPath.routeKey]);
@@ -830,10 +837,10 @@ namespace MakerJs.measure {
     /**
      * @private
      */
-    function getFarPoint(modelContext: IModel, farPoint?: IPoint, measureAtlas?: measure.Atlas) {
+    function getFarPoint(modelContext: IModel, farPoint?: IPoint, measureAtlas?: Atlas) {
         if (farPoint) return farPoint;
 
-        var high = measure.modelExtents(modelContext).high;
+        var high = modelExtents(modelContext).high;
         if (high) {
             return point.add(high, [1, 1]);
         }
@@ -858,12 +865,12 @@ namespace MakerJs.measure {
 
         var isInside: boolean;
         var lineToFarPoint = new paths.Line(pointToCheck, options.farPoint);
-        var measureFarPoint = measure.pathExtents(lineToFarPoint);
+        var measureFarPoint = pathExtents(lineToFarPoint);
 
         var walkOptions: IWalkOptions = {
             onPath: function (walkedPath: IWalkPath) {
 
-                if (options.measureAtlas && !measure.isMeasurementOverlapping(measureFarPoint, options.measureAtlas.pathMap[walkedPath.routeKey])) {
+                if (options.measureAtlas && !isMeasurementOverlapping(measureFarPoint, options.measureAtlas.pathMap[walkedPath.routeKey])) {
                     return;
                 }
 
@@ -888,7 +895,7 @@ namespace MakerJs.measure {
 
                 //see if there is a model measurement. if not, it is because the model does not contain paths.
                 var innerModelMeasurement = options.measureAtlas.modelMap[innerWalkedModel.routeKey];
-                return innerModelMeasurement && measure.isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
+                return innerModelMeasurement && isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
             }
         };
         model.walk(modelContext, walkOptions);

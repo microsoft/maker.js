@@ -3237,7 +3237,7 @@ var MakerJs;
          */
         function isPointDistinct(pointToCheck, pointArray, withinDistance) {
             for (var i = 0; i < pointArray.length; i++) {
-                if (measure.isPointEqual(pointArray[i], pointToCheck, withinDistance)) {
+                if (isPointEqual(pointArray[i], pointToCheck, withinDistance)) {
                     return false;
                 }
             }
@@ -3249,19 +3249,74 @@ var MakerJs;
          *
          * @param p Point to check.
          * @param b Slope.
+         * @param withinDistance Optional distance of tolerance.
          * @returns true if point is on the slope
          */
         function isPointOnSlope(p, slope, withinDistance) {
+            if (withinDistance === void 0) { withinDistance = 0; }
             if (slope.hasSlope) {
                 // y = mx * b
-                return MakerJs.round(p[1] - (slope.slope * p[0] + slope.yIntercept)) === 0;
+                return Math.abs(p[1] - (slope.slope * p[0] + slope.yIntercept)) <= withinDistance;
             }
             else {
                 //vertical slope
-                return MakerJs.round(p[0] - slope.line.origin[0]) === 0;
+                return Math.abs(p[0] - slope.line.origin[0]) <= withinDistance;
             }
         }
         measure.isPointOnSlope = isPointOnSlope;
+        /**
+         * Find out if point is on a circle.
+         *
+         * @param p Point to check.
+         * @param circle Circle.
+         * @param withinDistance Optional distance of tolerance.
+         * @returns true if point is on the circle
+         */
+        function isPointOnCircle(p, circle, withinDistance) {
+            if (withinDistance === void 0) { withinDistance = 0; }
+            var d = Math.abs(measure.pointDistance(p, circle.origin) - circle.radius);
+            return d <= withinDistance;
+        }
+        measure.isPointOnCircle = isPointOnCircle;
+        /**
+         * private
+         */
+        var onPathMap = {};
+        onPathMap[MakerJs.pathType.Circle] = function (p, circle, withinDistance) {
+            return isPointOnCircle(p, circle, withinDistance);
+        };
+        onPathMap[MakerJs.pathType.Arc] = function (p, arc, withinDistance) {
+            if (onPathMap[MakerJs.pathType.Circle](p, arc, withinDistance)) {
+                var a = MakerJs.angle.ofPointInDegrees(arc.origin, p);
+                return measure.isBetweenArcAngles(a, arc, false);
+            }
+            return false;
+        };
+        onPathMap[MakerJs.pathType.Line] = function (p, line, withinDistance, options) {
+            var slope = (options && options.cachedLineSlope) || measure.lineSlope(line);
+            if (options && !options.cachedLineSlope) {
+                options.cachedLineSlope = slope;
+            }
+            return isPointOnSlope(p, slope, withinDistance) && measure.isBetweenPoints(p, line, false);
+        };
+        /**
+         * Find out if a point lies on a path.
+         * @param pointToCheck point to check.
+         * @param onPath path to check against.
+         * @param withinDistance Optional distance to consider point on the path.
+         * @param pathOffset Optional offset of path from [0, 0].
+         * @param options Optional IIsPointOnPathOptions to cache computation.
+         */
+        function isPointOnPath(pointToCheck, onPath, withinDistance, pathOffset, options) {
+            if (withinDistance === void 0) { withinDistance = 0; }
+            var fn = onPathMap[onPath.type];
+            if (fn) {
+                var offsetPath = pathOffset ? MakerJs.path.clone(onPath, pathOffset) : onPath;
+                return fn(pointToCheck, offsetPath, withinDistance, options);
+            }
+            return false;
+        }
+        measure.isPointOnPath = isPointOnPath;
         /**
          * Check for slope equality.
          *
@@ -3355,6 +3410,13 @@ var MakerJs;
         }
         measure.isArcConcaveTowardsPoint = isArcConcaveTowardsPoint;
         /**
+         * DEPRECATED - use isArcSpanOverlapping() instead.
+         */
+        function isArcOverlapping(arcA, arcB, excludeTangents) {
+            return isArcSpanOverlapping(arcA, arcB, excludeTangents);
+        }
+        measure.isArcOverlapping = isArcOverlapping;
+        /**
          * Check for arc overlapping another arc.
          *
          * @param arcA The arc to test.
@@ -3362,17 +3424,17 @@ var MakerJs;
          * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
          * @returns Boolean true if arcA is overlapped with arcB.
          */
-        function isArcOverlapping(arcA, arcB, excludeTangents) {
+        function isArcSpanOverlapping(arcA, arcB, excludeTangents) {
             var pointsOfIntersection = [];
             function checkAngles(a, b) {
                 function checkAngle(n) {
-                    return measure.isBetweenArcAngles(n, a, excludeTangents);
+                    return isBetweenArcAngles(n, a, excludeTangents);
                 }
                 return checkAngle(b.startAngle) || checkAngle(b.endAngle);
             }
             return checkAngles(arcA, arcB) || checkAngles(arcB, arcA) || (arcA.startAngle == arcB.startAngle && arcA.endAngle == arcB.endAngle);
         }
-        measure.isArcOverlapping = isArcOverlapping;
+        measure.isArcSpanOverlapping = isArcSpanOverlapping;
         /**
          * Check if a given number is between two given limits.
          *
@@ -3531,7 +3593,7 @@ var MakerJs;
             var pointsOfIntersection = [];
             function checkPoints(index, a, b) {
                 function checkPoint(p) {
-                    return measure.isBetweenPoints(p, a, excludeTangents);
+                    return isBetweenPoints(p, a, excludeTangents);
                 }
                 return checkPoint(b.origin) || checkPoint(b.end);
             }
@@ -3731,16 +3793,16 @@ var MakerJs;
                     atlas.modelMap[parentRouteKey] = cloneMeasure(childMeasurement);
                 }
                 else {
-                    measure.increase(atlas.modelMap[parentRouteKey], childMeasurement);
+                    increase(atlas.modelMap[parentRouteKey], childMeasurement);
                 }
             }
             if (!atlas)
-                atlas = new measure.Atlas(modelToMeasure);
+                atlas = new Atlas(modelToMeasure);
             var walkOptions = {
                 onPath: function (walkedPath) {
                     //trust that the path measurement is good
                     if (!(walkedPath.routeKey in atlas.pathMap)) {
-                        atlas.pathMap[walkedPath.routeKey] = measure.pathExtents(walkedPath.pathContext, walkedPath.offset);
+                        atlas.pathMap[walkedPath.routeKey] = pathExtents(walkedPath.pathContext, walkedPath.offset);
                     }
                     increaseParentModel(walkedPath.route, atlas.pathMap[walkedPath.routeKey]);
                 },
@@ -4000,7 +4062,7 @@ var MakerJs;
         function getFarPoint(modelContext, farPoint, measureAtlas) {
             if (farPoint)
                 return farPoint;
-            var high = measure.modelExtents(modelContext).high;
+            var high = modelExtents(modelContext).high;
             if (high) {
                 return MakerJs.point.add(high, [1, 1]);
             }
@@ -4022,10 +4084,10 @@ var MakerJs;
             options.out_intersectionPoints = [];
             var isInside;
             var lineToFarPoint = new MakerJs.paths.Line(pointToCheck, options.farPoint);
-            var measureFarPoint = measure.pathExtents(lineToFarPoint);
+            var measureFarPoint = pathExtents(lineToFarPoint);
             var walkOptions = {
                 onPath: function (walkedPath) {
-                    if (options.measureAtlas && !measure.isMeasurementOverlapping(measureFarPoint, options.measureAtlas.pathMap[walkedPath.routeKey])) {
+                    if (options.measureAtlas && !isMeasurementOverlapping(measureFarPoint, options.measureAtlas.pathMap[walkedPath.routeKey])) {
                         return;
                     }
                     var intersectOptions = { path2Offset: walkedPath.offset };
@@ -4044,7 +4106,7 @@ var MakerJs;
                     }
                     //see if there is a model measurement. if not, it is because the model does not contain paths.
                     var innerModelMeasurement = options.measureAtlas.modelMap[innerWalkedModel.routeKey];
-                    return innerModelMeasurement && measure.isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
+                    return innerModelMeasurement && isMeasurementOverlapping(measureFarPoint, innerModelMeasurement);
                 }
             };
             MakerJs.model.walk(modelContext, walkOptions);
@@ -9502,5 +9564,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.89";
+MakerJs.version = "0.9.90";
 ﻿var Bezier = require('bezier-js');
