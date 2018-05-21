@@ -26,6 +26,7 @@ title: Api - measure Module
 				<h3>Variables</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.measure.html#graham_scan" class="tsd-kind-icon">graham_<wbr>scan</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.measure.html#onpathmap" class="tsd-kind-icon">on<wbr>Path<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#pathareequalmap" class="tsd-kind-icon">path<wbr>Are<wbr>Equal<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#pathextentsmap" class="tsd-kind-icon">path<wbr>Extents<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.measure.html#pathlengthmap" class="tsd-kind-icon">path<wbr>Length<wbr>Map</a></li>
@@ -46,6 +47,7 @@ title: Api - measure Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isangleequal" class="tsd-kind-icon">is<wbr>Angle<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcconcavetowardspoint" class="tsd-kind-icon">is<wbr>Arc<wbr>Concave<wbr>Towards<wbr>Point</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcoverlapping" class="tsd-kind-icon">is<wbr>Arc<wbr>Overlapping</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isarcspanoverlapping" class="tsd-kind-icon">is<wbr>Arc<wbr>Span<wbr>Overlapping</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetween" class="tsd-kind-icon">is<wbr>Between</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenarcangles" class="tsd-kind-icon">is<wbr>Between<wbr>Arc<wbr>Angles</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isbetweenpoints" class="tsd-kind-icon">is<wbr>Between<wbr>Points</a></li>
@@ -59,6 +61,8 @@ title: Api - measure Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispointdistinct" class="tsd-kind-icon">is<wbr>Point<wbr>Distinct</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispointequal" class="tsd-kind-icon">is<wbr>Point<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispointinsidemodel" class="tsd-kind-icon">is<wbr>Point<wbr>Inside<wbr>Model</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispointoncircle" class="tsd-kind-icon">is<wbr>Point<wbr>OnCircle</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispointonpath" class="tsd-kind-icon">is<wbr>Point<wbr>OnPath</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#ispointonslope" class="tsd-kind-icon">is<wbr>Point<wbr>OnSlope</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isslopeequal" class="tsd-kind-icon">is<wbr>Slope<wbr>Equal</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.measure.html#isslopeparallel" class="tsd-kind-icon">is<wbr>Slope<wbr>Parallel</a></li>
@@ -85,9 +89,59 @@ title: Api - measure Module
 		<div class="tsd-signature tsd-kind-icon">graham_<wbr>scan<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ConvexHullGrahamScan</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L175">core/measure.ts:175</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L182">core/measure.ts:182</a></li>
 			</ul>
 		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+		<a name="onpathmap" class="tsd-anchor"></a>
+		<h3>on<wbr>Path<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">on<wbr>Path<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L141">core/equal.ts:141</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>private</p>
+			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pathType: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">function</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-siganture">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>point<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, path<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, withinDistance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.iispointonpathoptions.html" class="tsd-signature-type">IIsPointOnPathOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>point: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+										</li>
+										<li>
+											<h5>path: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+										</li>
+										<li>
+											<h5>withinDistance: <span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li>
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/makerjs.iispointonpathoptions.html" class="tsd-signature-type">IIsPointOnPathOptions</a></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="pathareequalmap" class="tsd-anchor"></a>
@@ -95,7 +149,7 @@ title: Api - measure Module
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Are<wbr>Equal<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.measure.ipathareequalmap.html" class="tsd-signature-type">IPathAreEqualMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L27">core/equal.ts:27</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L27">core/equal.ts:27</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -107,7 +161,7 @@ title: Api - measure Module
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Extents<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L339">core/measure.ts:339</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L346">core/measure.ts:346</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -145,7 +199,7 @@ title: Api - measure Module
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Length<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L406">core/measure.ts:406</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L413">core/measure.ts:413</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -190,7 +244,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L817">core/measure.ts:817</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L824">core/measure.ts:824</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -218,7 +272,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L536">core/measure.ts:536</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L543">core/measure.ts:543</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -250,7 +304,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L733">core/measure.ts:733</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L740">core/measure.ts:740</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -282,7 +336,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L466">core/measure.ts:466</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L473">core/measure.ts:473</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -307,7 +361,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L638">core/measure.ts:638</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L645">core/measure.ts:645</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -341,7 +395,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L329">core/measure.ts:329</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L336">core/measure.ts:336</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -372,7 +426,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L833">core/measure.ts:833</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L840">core/measure.ts:840</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -403,7 +457,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L671">core/measure.ts:671</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L678">core/measure.ts:678</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -431,7 +485,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L20">core/measure.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L20">core/measure.ts:20</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -469,7 +523,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L10">core/equal.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L10">core/equal.ts:10</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -510,7 +564,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L53">core/measure.ts:53</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L53">core/measure.ts:53</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -548,7 +602,41 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L78">core/measure.ts:78</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L73">core/measure.ts:73</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>DEPRECATED - use isArcSpanOverlapping() instead.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>arcA: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+					</li>
+					<li>
+						<h5>arcB: <a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a></h5>
+					</li>
+					<li>
+						<h5>excludeTangents: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isarcspanoverlapping" class="tsd-anchor"></a>
+		<h3>is<wbr>Arc<wbr>Span<wbr>Overlapping</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Arc<wbr>Span<wbr>Overlapping<span class="tsd-signature-symbol">(</span>arcA<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, arcB<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipatharc.html" class="tsd-signature-type">IPathArc</a>, excludeTangents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L85">core/measure.ts:85</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -592,7 +680,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L102">core/measure.ts:102</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L109">core/measure.ts:109</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -642,7 +730,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L118">core/measure.ts:118</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L125">core/measure.ts:125</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -686,7 +774,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L138">core/measure.ts:138</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L145">core/measure.ts:145</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -730,7 +818,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L160">core/measure.ts:160</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L167">core/measure.ts:167</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -768,7 +856,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L191">core/measure.ts:191</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L198">core/measure.ts:198</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -814,7 +902,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L626">core/measure.ts:626</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L633">core/measure.ts:633</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -839,7 +927,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L258">core/measure.ts:258</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L265">core/measure.ts:265</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -883,7 +971,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L280">core/measure.ts:280</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L287">core/measure.ts:287</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -921,7 +1009,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L49">core/equal.ts:49</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L49">core/equal.ts:49</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -968,7 +1056,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L210">core/measure.ts:210</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L217">core/measure.ts:217</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1014,7 +1102,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L98">core/equal.ts:98</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L98">core/equal.ts:98</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1058,7 +1146,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L80">core/equal.ts:80</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L80">core/equal.ts:80</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1102,7 +1190,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L852">core/measure.ts:852</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L859">core/measure.ts:859</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1137,6 +1225,105 @@ title: Api - measure Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispointoncircle" class="tsd-anchor"></a>
+		<h3>is<wbr>Point<wbr>OnCircle</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Point<wbr>OnCircle<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, circle<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathcircle.html" class="tsd-signature-type">IPathCircle</a>, withinDistance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L133">core/equal.ts:133</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Find out if point is on a circle.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>p: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Point to check.</p>
+						</div>
+					</li>
+					<li>
+						<h5>circle: <a href="../interfaces/makerjs.ipathcircle.html" class="tsd-signature-type">IPathCircle</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Circle.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> withinDistance: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional distance of tolerance.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>true if point is on the circle</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispointonpath" class="tsd-anchor"></a>
+		<h3>is<wbr>Point<wbr>OnPath</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Point<wbr>OnPath<span class="tsd-signature-symbol">(</span>pointToCheck<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, onPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, withinDistance<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, pathOffset<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.iispointonpathoptions.html" class="tsd-signature-type">IIsPointOnPathOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L171">core/equal.ts:171</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Find out if a point lies on a path.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pointToCheck: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>point to check.</p>
+						</div>
+					</li>
+					<li>
+						<h5>onPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>path to check against.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> withinDistance: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional distance to consider point on the path.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> pathOffset: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional offset of path from [0, 0].</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/makerjs.iispointonpathoptions.html" class="tsd-signature-type">IIsPointOnPathOptions</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional IIsPointOnPathOptions to cache computation.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="ispointonslope" class="tsd-anchor"></a>
 		<h3>is<wbr>Point<wbr>OnSlope</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -1146,7 +1333,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L114">core/equal.ts:114</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L115">core/equal.ts:115</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1166,7 +1353,10 @@ title: Api - measure Module
 						<h5>slope: <a href="../interfaces/makerjs.islope.html" class="tsd-signature-type">ISlope</a></h5>
 					</li>
 					<li>
-						<h5><span class="tsd-flag ts-flagOptional">Optional</span> withinDistance: <span class="tsd-signature-type">number</span></h5>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> withinDistance: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional distance of tolerance.</p>
+						</div>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1184,7 +1374,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L133">core/equal.ts:133</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L187">core/equal.ts:187</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1222,7 +1412,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/equal.ts#L154">core/equal.ts:154</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/equal.ts#L208">core/equal.ts:208</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1260,7 +1450,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L291">core/measure.ts:291</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L298">core/measure.ts:298</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1288,7 +1478,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L588">core/measure.ts:588</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L595">core/measure.ts:595</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1316,7 +1506,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L480">core/measure.ts:480</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L487">core/measure.ts:487</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1354,7 +1544,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L451">core/measure.ts:451</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L458">core/measure.ts:458</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1386,7 +1576,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L384">core/measure.ts:384</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L391">core/measure.ts:391</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1421,7 +1611,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L433">core/measure.ts:433</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L440">core/measure.ts:440</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1453,7 +1643,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L320">core/measure.ts:320</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L327">core/measure.ts:327</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1491,7 +1681,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L604">core/measure.ts:604</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L611">core/measure.ts:611</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1519,7 +1709,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L180">core/measure.ts:180</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L187">core/measure.ts:187</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1544,7 +1734,7 @@ title: Api - measure Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/835b6b1a/src/core/measure.ts#L597">core/measure.ts:597</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/measure.ts#L604">core/measure.ts:604</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
