@@ -66,4 +66,58 @@ describe('Measure', function () {
         assert.ok(makerjs.measure.isPointEqual(hex.origin, center));
     });
 
+    it('should find overlapping arcs', function () {
+        var arc1 = new makerjs.paths.Arc([0, 0], 10, 0, 90);
+        var arc2 = new makerjs.paths.Arc([0, 0], 10, 270, 45);
+        var arc3 = new makerjs.paths.Arc([0, 0], 10, 90, 91);
+        assert.ok(makerjs.measure.isArcSpanOverlapping(arc1, arc2, true));
+        assert.ok(makerjs.measure.isArcSpanOverlapping(arc1, arc3, false));
+        assert.ok(!makerjs.measure.isArcSpanOverlapping(arc1, arc3, true));
+    });
+
+    it('should find overlapping lines', function () {
+        var line1 = new makerjs.paths.Line([0, 0], [5, 5]);
+        var line2 = new makerjs.paths.Line([3, 3], [7, 7]);
+        var line3 = new makerjs.paths.Line([8, 8], [9, 9]);
+        assert.ok(makerjs.measure.isLineOverlapping(line1, line2));
+        assert.ok(!makerjs.measure.isLineOverlapping(line1, line3));
+    });
+
+    it('should find equal slopes', function () {
+        var line1 = new makerjs.paths.Line([0, 0], [5, 5]);
+        var line2 = new makerjs.paths.Line([3, 3], [7, 7]);
+        var line3 = new makerjs.paths.Line([8, 8], [8, 0]);
+        var slope1 = makerjs.measure.lineSlope(line1);
+        var slope2 = makerjs.measure.lineSlope(line2);
+        var slope3 = makerjs.measure.lineSlope(line3);
+        assert.ok(makerjs.measure.isSlopeEqual(slope1, slope2));
+        assert.ok(!makerjs.measure.isSlopeEqual(slope1, slope3));
+    });
+
+    it('should find point on a slope', function () {
+        var line = new makerjs.paths.Line([0, 0], [5, 5]);
+        var slope = makerjs.measure.lineSlope(line);
+        assert.ok(makerjs.measure.isPointOnSlope([3.3, 3.3], slope));
+        assert.ok(!makerjs.measure.isPointOnSlope([0, 1], slope));
+    });
+
+    it('should find point on a circle', function () {
+        var circle = new makerjs.paths.Circle([0, 0], 1);
+        assert.ok(makerjs.measure.isPointOnCircle([0, 1], circle));
+        assert.ok(makerjs.measure.isPointOnCircle([Math.SQRT2 / 2, Math.SQRT2 / 2], circle));
+        assert.ok(!makerjs.measure.isPointOnCircle([1, 1], circle));
+    });
+
+    it('should find point on a path', function () {
+        var circle = new makerjs.paths.Circle([0, 0], 1);
+        var arc = new makerjs.paths.Arc([0, 0], 1, 1, 90);
+        var line = new makerjs.paths.Line([0, 1], [5, 5]);
+        assert.ok(makerjs.measure.isPointOnPath([0, 1], circle));
+        assert.ok(makerjs.measure.isPointOnPath([0, 1], arc));
+        assert.ok(makerjs.measure.isPointOnPath([0, 1], line));
+        assert.ok(!makerjs.measure.isPointOnPath([1, 1], circle));
+        assert.ok(!makerjs.measure.isPointOnPath([1, 0], arc));
+        assert.ok(!makerjs.measure.isPointOnPath([1, 1], line));
+    });
+
 });

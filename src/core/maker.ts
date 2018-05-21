@@ -565,6 +565,17 @@ namespace MakerJs {
     }
 
     /**
+     * Options to pass to measure.isPointOnPath.
+     */
+    export interface IIsPointOnPathOptions {
+
+        /**
+         * The slope of the line, if applicable. This will be added to the options object if it did not exist.
+         */
+        cachedLineSlope?: ISlope;
+    }
+    
+    /**
      * Options to pass to model.findLoops.
      */
     export interface IFindLoopsOptions extends IPointMatchOptions {

@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.89
+// Type definitions for Maker.js 0.9.90
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -530,6 +530,15 @@ declare namespace MakerJs {
          * Each path will be of type IPathRemoved, which has a .reason property describing why it was removed.
          */
         out_deleted?: IModel[];
+    }
+    /**
+     * Options to pass to measure.isPointOnPath.
+     */
+    interface IIsPointOnPathOptions {
+        /**
+         * The slope of the line, if applicable. This will be added to the options object if it did not exist.
+         */
+        cachedLineSlope?: ISlope;
     }
     /**
      * Options to pass to model.findLoops.
@@ -2206,9 +2215,28 @@ declare namespace MakerJs.measure {
      *
      * @param p Point to check.
      * @param b Slope.
+     * @param withinDistance Optional distance of tolerance.
      * @returns true if point is on the slope
      */
     function isPointOnSlope(p: IPoint, slope: ISlope, withinDistance?: number): boolean;
+    /**
+     * Find out if point is on a circle.
+     *
+     * @param p Point to check.
+     * @param circle Circle.
+     * @param withinDistance Optional distance of tolerance.
+     * @returns true if point is on the circle
+     */
+    function isPointOnCircle(p: IPoint, circle: IPathCircle, withinDistance?: number): boolean;
+    /**
+     * Find out if a point lies on a path.
+     * @param pointToCheck point to check.
+     * @param onPath path to check against.
+     * @param withinDistance Optional distance to consider point on the path.
+     * @param pathOffset Optional offset of path from [0, 0].
+     * @param options Optional IIsPointOnPathOptions to cache computation.
+     */
+    function isPointOnPath(pointToCheck: IPoint, onPath: IPath, withinDistance?: number, pathOffset?: IPoint, options?: IIsPointOnPathOptions): boolean;
     /**
      * Check for slope equality.
      *
@@ -2245,6 +2273,10 @@ declare namespace MakerJs.measure {
      */
     function isArcConcaveTowardsPoint(arc: IPathArc, towardsPoint: IPoint): boolean;
     /**
+     * DEPRECATED - use isArcSpanOverlapping() instead.
+     */
+    function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean;
+    /**
      * Check for arc overlapping another arc.
      *
      * @param arcA The arc to test.
@@ -2252,7 +2284,7 @@ declare namespace MakerJs.measure {
      * @param excludeTangents Boolean to exclude exact endpoints and only look for deep overlaps.
      * @returns Boolean true if arcA is overlapped with arcB.
      */
-    function isArcOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean;
+    function isArcSpanOverlapping(arcA: IPathArc, arcB: IPathArc, excludeTangents: boolean): boolean;
     /**
      * Check if a given number is between two given limits.
      *
@@ -2368,7 +2400,7 @@ declare namespace MakerJs.measure {
      * @param atlas Optional atlas to save measurements.
      * @returns object with low and high points.
      */
-    function modelExtents(modelToMeasure: IModel, atlas?: measure.Atlas): IMeasureWithCenter;
+    function modelExtents(modelToMeasure: IModel, atlas?: Atlas): IMeasureWithCenter;
     /**
      * Augment a measurement - add more properties such as center point, height and width.
      *
