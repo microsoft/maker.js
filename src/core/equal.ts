@@ -123,6 +123,61 @@
     }
 
     /**
+     * Find out if point is on a circle.
+     * 
+     * @param p Point to check.
+     * @param circle Circle.
+     * @param withinDistance Optional distance of tolerance.
+     * @returns true if point is on the circle
+     */
+    export function isPointOnCircle(p: IPoint, circle: IPathCircle, withinDistance = 0): boolean {
+        const d = Math.abs(pointDistance(p, circle.origin) - circle.radius);
+        return d <= withinDistance;
+    }
+
+    /**
+     * private
+     */
+    const onPathMap: { [pathType: string]: (point: IPoint, path: IPath, withinDistance: number, options?: IIsPointOnPathOptions) => boolean } = {};
+
+    onPathMap[pathType.Circle] = function (p: IPoint, circle: IPathCircle, withinDistance: number) {
+        return isPointOnCircle(p, circle, withinDistance);
+    };
+
+    onPathMap[pathType.Arc] = function (p: IPoint, arc: IPathArc, withinDistance: number) {
+        if (onPathMap[pathType.Circle](p, arc, withinDistance)) {
+            var a = angle.ofPointInDegrees(arc.origin, p);
+            return isBetweenArcAngles(a, arc, false);
+        }
+        return false;
+    }
+
+    onPathMap[pathType.Line] = function (p: IPoint, line: IPathLine, withinDistance: number, options: IIsPointOnPathOptions) {
+        const slope = (options && options.cachedLineSlope) || lineSlope(line);
+        if (options && !options.cachedLineSlope) {
+            options.cachedLineSlope = slope;
+        }
+        return isPointOnSlope(p, slope, withinDistance) && isBetweenPoints(p, line, false);
+    }
+
+    /**
+     * Find out if a point lies on a path.
+     * @param pointToCheck point to check.
+     * @param onPath path to check against.
+     * @param withinDistance Optional distance to consider point on the path.
+     * @param pathOffset Optional offset of path from [0, 0].
+     * @param options Optional IIsPointOnPathOptions to cache computation.
+     */
+    export function isPointOnPath(pointToCheck: IPoint, onPath: IPath, withinDistance = 0, pathOffset?: IPoint, options?: IIsPointOnPathOptions) {
+        const fn = onPathMap[onPath.type];
+        if (fn) {
+            const offsetPath = pathOffset ? path.clone(onPath, pathOffset) : onPath;
+            return fn(pointToCheck, offsetPath, withinDistance, options);
+        }
+        return false;
+    }
+
+    /**
      * Check for slope equality.
      * 
      * @param slopeA The ISlope to test.
