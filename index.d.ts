@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.90
+// Type definitions for Maker.js 0.9.91
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -1160,6 +1160,14 @@ For Circle, the original path will be converted in place to an Arc, and null is 
          */
         clone(offset?: IPoint): ICascadePath;
         /**
+         * Copy the schema properties of one path to another.
+         *
+         * @param destPath The destination path to copy property values to.
+         * @returns this cascade container, this.$result will be The source path.
+
+         */
+        copyProps(destPath: IPath): ICascadePath;
+        /**
          * Set the layer of a path. This is equivalent to:
 ```
 pathContext.layer = layer;
@@ -1553,6 +1561,14 @@ declare namespace MakerJs.path {
      * @returns Cloned path.
      */
     function clone(pathToClone: IPath, offset?: IPoint): IPath;
+    /**
+     * Copy the schema properties of one path to another.
+     *
+     * @param srcPath The source path to copy property values from.
+     * @param destPath The destination path to copy property values to.
+     * @returns The source path.
+     */
+    function copyProps(srcPath: IPath, destPath: IPath): IPath;
     /**
      * Set the layer of a path. This is equivalent to:
      * ```

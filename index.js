@@ -1012,6 +1012,25 @@ var MakerJs;
             }
         }
         /**
+         * private
+         */
+        var copyPropsMap = {};
+        copyPropsMap[MakerJs.pathType.Circle] = function (srcCircle, destCircle, offset) {
+            destCircle.radius = srcCircle.radius;
+        };
+        copyPropsMap[MakerJs.pathType.Arc] = function (srcArc, destArc, offset) {
+            copyPropsMap[MakerJs.pathType.Circle](srcArc, destArc, offset);
+            destArc.startAngle = srcArc.startAngle;
+            destArc.endAngle = srcArc.endAngle;
+        };
+        copyPropsMap[MakerJs.pathType.Line] = function (srcLine, destLine, offset) {
+            destLine.end = MakerJs.point.add(srcLine.end, offset);
+        };
+        copyPropsMap[MakerJs.pathType.BezierSeed] = function (srcSeed, destSeed, offset) {
+            copyPropsMap[MakerJs.pathType.Line](srcSeed, destSeed, offset);
+            destSeed.controls = srcSeed.controls.map(function (p) { return MakerJs.point.add(p, offset); });
+        };
+        /**
          * Create a clone of a path. This is faster than cloneObject.
          *
          * @param pathToClone The path to clone.
@@ -1020,27 +1039,31 @@ var MakerJs;
          */
         function clone(pathToClone, offset) {
             var result = { type: pathToClone.type, origin: MakerJs.point.add(pathToClone.origin, offset) };
-            switch (pathToClone.type) {
-                case MakerJs.pathType.Arc:
-                    result.radius = pathToClone.radius;
-                    result.startAngle = pathToClone.startAngle;
-                    result.endAngle = pathToClone.endAngle;
-                    break;
-                case MakerJs.pathType.Circle:
-                    result.radius = pathToClone.radius;
-                    break;
-                case MakerJs.pathType.Line:
-                    result.end = MakerJs.point.add(pathToClone.end, offset);
-                    break;
-                case MakerJs.pathType.BezierSeed:
-                    result.end = MakerJs.point.add(pathToClone.end, offset);
-                    result.controls = pathToClone.controls.map(function (p) { return MakerJs.point.add(p, offset); });
-                    break;
+            var fn = copyPropsMap[pathToClone.type];
+            if (fn) {
+                fn(pathToClone, result, offset);
             }
             copyLayer(pathToClone, result);
             return result;
         }
         path.clone = clone;
+        /**
+         * Copy the schema properties of one path to another.
+         *
+         * @param srcPath The source path to copy property values from.
+         * @param destPath The destination path to copy property values to.
+         * @returns The source path.
+         */
+        function copyProps(srcPath, destPath) {
+            var fn = copyPropsMap[srcPath.type];
+            if (fn) {
+                destPath.origin = MakerJs.point.clone(srcPath.origin);
+                fn(srcPath, destPath);
+            }
+            copyLayer(srcPath, destPath);
+            return srcPath;
+        }
+        path.copyProps = copyProps;
         /**
          * @private
          */
@@ -2304,53 +2327,59 @@ var MakerJs;
             return null;
         }
         /**
+         * private
+         */
+        function getPointsOnPath(points, onPath, popOptions) {
+            var endpointsOnPath = [];
+            points.forEach(function (p) {
+                if (MakerJs.measure.isPointOnPath(p, onPath, .000001, null, popOptions)) {
+                    endpointsOnPath.push(p);
+                }
+            });
+            return endpointsOnPath;
+        }
+        /**
          * @private
          */
         function breakAlongForeignPath(crossedPath, overlappedSegments, foreignWalkedPath) {
             var foreignPath = foreignWalkedPath.pathContext;
             var segments = crossedPath.segments;
-            if (MakerJs.measure.isPathEqual(segments[0].path, foreignPath, .0001, crossedPath.offset, foreignWalkedPath.offset)) {
+            if (MakerJs.measure.isPathEqual(segments[0].absolutePath, foreignPath, .0001, null, foreignWalkedPath.offset)) {
                 segments[0].overlapped = true;
                 segments[0].duplicate = true;
                 overlappedSegments.push(segments[0]);
                 return;
             }
-            var foreignPathEndPoints;
+            //this will cache the slope, to keep from being recalculated for each segment
+            var popOptions = {};
+            var options = { path1Offset: crossedPath.offset, path2Offset: foreignWalkedPath.offset };
+            var foreignIntersection = MakerJs.path.intersection(crossedPath.pathContext, foreignPath, options);
+            var intersectionPoints = foreignIntersection ? foreignIntersection.intersectionPoints : null;
+            var foreignPathEndPoints = MakerJs.point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
             for (var i = 0; i < segments.length; i++) {
-                var pointsToCheck;
-                var options = { path1Offset: crossedPath.offset, path2Offset: foreignWalkedPath.offset };
-                var foreignIntersection = MakerJs.path.intersection(segments[i].path, foreignPath, options);
-                if (foreignIntersection) {
-                    pointsToCheck = foreignIntersection.intersectionPoints;
-                }
-                else if (options.out_AreOverlapped) {
+                var pointsOfInterest = intersectionPoints ? foreignPathEndPoints.concat(intersectionPoints) : foreignPathEndPoints;
+                var pointsToCheck = getPointsOnPath(pointsOfInterest, segments[i].absolutePath, popOptions);
+                if (options.out_AreOverlapped) {
                     segments[i].overlapped = true;
                     overlappedSegments.push(segments[i]);
-                    if (!foreignPathEndPoints) {
-                        //make sure endpoints are in absolute coords
-                        foreignPathEndPoints = MakerJs.point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
-                    }
-                    pointsToCheck = foreignPathEndPoints;
                 }
                 if (pointsToCheck) {
                     //break the path which intersected, and add the shard to the end of the array so it can also be checked in this loop for further sharding.
                     var subSegments = null;
                     var p = 0;
                     while (!subSegments && p < pointsToCheck.length) {
-                        //cast absolute points to path relative space
-                        subSegments = getNonZeroSegments(segments[i].path, MakerJs.point.subtract(pointsToCheck[p], crossedPath.offset));
+                        subSegments = getNonZeroSegments(segments[i].absolutePath, pointsToCheck[p]);
                         p++;
                     }
                     if (subSegments) {
                         crossedPath.broken = true;
-                        segments[i].path = subSegments[0];
+                        segments[i].absolutePath = subSegments[0];
                         if (subSegments[1]) {
                             var newSegment = {
-                                path: subSegments[1],
+                                absolutePath: subSegments[1],
                                 pathId: segments[0].pathId,
                                 overlapped: segments[i].overlapped,
-                                uniqueForeignIntersectionPoints: [],
-                                offset: crossedPath.offset
+                                uniqueForeignIntersectionPoints: []
                             };
                             if (segments[i].overlapped) {
                                 overlappedSegments.push(newSegment);
@@ -2416,11 +2445,10 @@ var MakerJs;
                 onPath: function (outerWalkedPath) {
                     //clone this path and make it the first segment
                     var segment = {
-                        path: MakerJs.cloneObject(outerWalkedPath.pathContext),
+                        absolutePath: MakerJs.path.clone(outerWalkedPath.pathContext, outerWalkedPath.offset),
                         pathId: outerWalkedPath.pathId,
                         overlapped: false,
-                        uniqueForeignIntersectionPoints: [],
-                        offset: outerWalkedPath.offset
+                        uniqueForeignIntersectionPoints: []
                     };
                     var thisPath = outerWalkedPath;
                     thisPath.broken = false;
@@ -2442,7 +2470,7 @@ var MakerJs;
                     if (checkIsInside) {
                         //check each segment whether it is inside or outside
                         for (var i = 0; i < thisPath.segments.length; i++) {
-                            var p = MakerJs.point.add(MakerJs.point.middle(thisPath.segments[i].path), thisPath.offset);
+                            var p = MakerJs.point.middle(thisPath.segments[i].absolutePath);
                             var pointInsideOptions = { measureAtlas: modelToIntersectAtlas, farPoint: farPoint };
                             thisPath.segments[i].isInside = MakerJs.measure.isPointInsideModel(p, modelToIntersect, pointInsideOptions);
                             thisPath.segments[i].uniqueForeignIntersectionPoints = pointInsideOptions.out_intersectionPoints;
@@ -2459,7 +2487,7 @@ var MakerJs;
          */
         function checkForEqualOverlaps(crossedPathsA, crossedPathsB, pointMatchingDistance) {
             function compareSegments(segment1, segment2) {
-                if (MakerJs.measure.isPathEqual(segment1.path, segment2.path, pointMatchingDistance, segment1.offset, segment2.offset)) {
+                if (MakerJs.measure.isPathEqual(segment1.absolutePath, segment2.absolutePath, pointMatchingDistance)) {
                     segment1.duplicate = segment2.duplicate = true;
                 }
             }
@@ -2479,10 +2507,13 @@ var MakerJs;
             function addSegment(modelContext, pathIdBase, segment) {
                 var id = model.getSimilarPathId(modelContext, pathIdBase);
                 var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : MakerJs.createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
-                modelContext.paths[id] = segment.path;
+                segment.addedPath = MakerJs.cloneObject(crossedPath.pathContext);
+                MakerJs.path.copyProps(segment.absolutePath, segment.addedPath);
+                MakerJs.path.moveRelative(segment.addedPath, crossedPath.offset, true);
+                modelContext.paths[id] = segment.addedPath;
                 if (crossedPath.broken) {
                     //save the new segment's measurement
-                    var measurement = MakerJs.measure.pathExtents(segment.path, crossedPath.offset);
+                    var measurement = MakerJs.measure.pathExtents(segment.absolutePath);
                     atlas.pathMap[newRouteKey] = measurement;
                     atlas.modelsMeasured = false;
                 }
@@ -2497,7 +2528,7 @@ var MakerJs;
                 }
                 else {
                     atlas.modelsMeasured = false;
-                    trackDeleted(segment.path, crossedPath.routeKey, segment.offset, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
+                    trackDeleted(segment.absolutePath, crossedPath.routeKey, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
                 }
             }
             //save the original measurement
@@ -2511,7 +2542,7 @@ var MakerJs;
                         addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
                     }
                     else {
-                        trackDeleted(crossedPath.segments[i].path, crossedPath.routeKey, crossedPath.offset, 'segment is duplicate');
+                        trackDeleted(crossedPath.segments[i].absolutePath, crossedPath.routeKey, 'segment is duplicate');
                     }
                 }
                 else {
@@ -2554,18 +2585,17 @@ var MakerJs;
             var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
             var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
             checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
-            function trackDeleted(which, deletedPath, routeKey, offset, reason) {
+            function trackDeleted(which, deletedPath, routeKey, reason) {
                 model.addPath(opts.out_deleted[which], deletedPath, 'deleted');
-                MakerJs.path.moveRelative(deletedPath, offset);
                 var p = deletedPath;
                 p.reason = reason;
                 p.routeKey = routeKey;
             }
             for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-                addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, function (p, id, o, reason) { return trackDeleted(0, p, id, o, reason); });
+                addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, function (p, id, reason) { return trackDeleted(0, p, id, reason); });
             }
             for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-                addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, function (p, id, o, reason) { return trackDeleted(1, p, id, o, reason); });
+                addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, function (p, id, reason) { return trackDeleted(1, p, id, reason); });
             }
             var result = { models: { a: modelA, b: modelB } };
             if (opts.trimDeadEnds) {
@@ -2576,7 +2606,7 @@ var MakerJs;
                         //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
                         //Duplicates were discarded from B but kept in A
                         for (var i = 0; i < pathsA.overlappedSegments.length; i++) {
-                            if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].path) {
+                            if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].addedPath) {
                                 return false;
                             }
                         }
@@ -2586,7 +2616,7 @@ var MakerJs;
                 }
                 model.removeDeadEnds(result, null, shouldKeep, function (wp, reason) {
                     var which = wp.route[1] === 'a' ? 0 : 1;
-                    trackDeleted(which, wp.pathContext, wp.routeKey, wp.offset, reason);
+                    trackDeleted(which, wp.pathContext, wp.routeKey, reason);
                 });
             }
             //pass options back to caller
@@ -9564,5 +9594,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.90";
+MakerJs.version = "0.9.91";
 ﻿var Bezier = require('bezier-js');
