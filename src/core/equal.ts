@@ -109,18 +109,17 @@
      * 
      * @param p Point to check.
      * @param b Slope.
+     * @param withinDistance Optional distance of tolerance.
      * @returns true if point is on the slope
      */
-    export function isPointOnSlope(p: IPoint, slope: ISlope, withinDistance?: number): boolean {
-
+    export function isPointOnSlope(p: IPoint, slope: ISlope, withinDistance = 0): boolean {
         if (slope.hasSlope) {
             // y = mx * b
-            return round(p[1] - (slope.slope * p[0] + slope.yIntercept)) === 0;
+            return Math.abs(p[1] - (slope.slope * p[0] + slope.yIntercept)) <= withinDistance;
         } else {
             //vertical slope
-            return round(p[0] - slope.line.origin[0]) === 0;
+            return Math.abs(p[0] - slope.line.origin[0]) <= withinDistance;
         }
-
     }
 
     /**
