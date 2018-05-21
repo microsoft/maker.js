@@ -33,6 +33,30 @@ namespace MakerJs.path {
     }
 
     /**
+     * private
+     */
+    var copyPropsMap: { [pathType: string]: (src: IPath, dest: IPath, offset?: IPoint) => void } = {};
+
+    copyPropsMap[pathType.Circle] = function (srcCircle: IPathCircle, destCircle: IPathCircle, offset?: IPoint) {
+        destCircle.radius = srcCircle.radius;
+    };
+
+    copyPropsMap[pathType.Arc] = function (srcArc: IPathArc, destArc: IPathArc, offset?: IPoint) {
+        copyPropsMap[pathType.Circle](srcArc, destArc, offset);
+        destArc.startAngle = srcArc.startAngle;
+        destArc.endAngle = srcArc.endAngle;
+    };
+
+    copyPropsMap[pathType.Line] = function (srcLine: IPathLine, destLine: IPathLine, offset?: IPoint) {
+        destLine.end = point.add(srcLine.end, offset);
+    };
+
+    copyPropsMap[pathType.BezierSeed] = function (srcSeed: IPathBezierSeed, destSeed: IPathBezierSeed, offset?: IPoint) {
+        copyPropsMap[pathType.Line](srcSeed, destSeed, offset);
+        destSeed.controls = srcSeed.controls.map(p => point.add(p, offset));
+    };
+
+    /**
      * Create a clone of a path. This is faster than cloneObject.
      * 
      * @param pathToClone The path to clone.
@@ -41,31 +65,29 @@ namespace MakerJs.path {
      */
     export function clone(pathToClone: IPath, offset?: IPoint): IPath {
         var result: IPath = { type: pathToClone.type, origin: point.add(pathToClone.origin, offset) };
-
-        switch (pathToClone.type) {
-            case pathType.Arc:
-                (<IPathArc>result).radius = (<IPathArc>pathToClone).radius;
-                (<IPathArc>result).startAngle = (<IPathArc>pathToClone).startAngle;
-                (<IPathArc>result).endAngle = (<IPathArc>pathToClone).endAngle;
-                break;
-
-            case pathType.Circle:
-                (<IPathCircle>result).radius = (<IPathCircle>pathToClone).radius;
-                break;
-
-            case pathType.Line:
-                (<IPathLine>result).end = point.add((<IPathLine>pathToClone).end, offset);
-                break;
-
-            case pathType.BezierSeed:
-                (<IPathBezierSeed>result).end = point.add((<IPathBezierSeed>pathToClone).end, offset);
-                (<IPathBezierSeed>result).controls = (<IPathBezierSeed>pathToClone).controls.map(p => point.add(p, offset));
-                break;
+        var fn = copyPropsMap[pathToClone.type];
+        if (fn) {
+            fn(pathToClone, result, offset);
         }
-
         copyLayer(pathToClone, result);
-
         return result;
+    }
+
+    /**
+     * Copy the schema properties of one path to another.
+     * 
+     * @param srcPath The source path to copy property values from.
+     * @param destPath The destination path to copy property values to.
+     * @returns The source path.
+     */
+    export function copyProps(srcPath: IPath, destPath: IPath): IPath {
+        var fn = copyPropsMap[srcPath.type];
+        if (fn) {
+            destPath.origin = point.clone(srcPath.origin);
+            fn(srcPath, destPath);
+        }
+        copyLayer(srcPath, destPath);
+        return srcPath;
     }
 
     /**
