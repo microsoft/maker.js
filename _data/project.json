@@ -865,7 +865,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 460,
+              "line": 482,
               "character": 31
             }
           ]
@@ -896,7 +896,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 572,
+              "line": 594,
               "character": 26
             }
           ]
@@ -935,7 +935,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 42,
+              "line": 66,
               "character": 25
             }
           ]
@@ -988,8 +988,45 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 385,
+              "line": 407,
               "character": 28
+            }
+          ]
+        },
+        "copyProps": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "copyProps",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Copy the schema properties of one path to another.",
+                "returns": "The source path.\n"
+              },
+              "parameters": [
+                {
+                  "name": "srcPath",
+                  "flags": {},
+                  "comment": "The source path to copy property values from.",
+                  "type": "IPath"
+                },
+                {
+                  "name": "destPath",
+                  "flags": {},
+                  "comment": "The destination path to copy property values to.",
+                  "type": "IPath"
+                }
+              ],
+              "type": "IPath"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/path.ts",
+              "line": 83,
+              "character": 29
             }
           ]
         },
@@ -1030,7 +1067,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 365,
+              "line": 387,
               "character": 27
             }
           ]
@@ -1067,7 +1104,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 127,
+              "line": 149,
               "character": 25
             }
           ]
@@ -1110,7 +1147,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 140,
+              "line": 162,
               "character": 26
             }
           ]
@@ -1147,7 +1184,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 174,
+              "line": 196,
               "character": 24
             }
           ]
@@ -1192,7 +1229,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 210,
+              "line": 232,
               "character": 32
             }
           ]
@@ -1234,7 +1271,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 232,
+              "line": 254,
               "character": 33
             }
           ]
@@ -1278,7 +1315,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 275,
+              "line": 297,
               "character": 26
             }
           ]
@@ -1315,7 +1352,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 315,
+              "line": 337,
               "character": 25
             }
           ]
@@ -1354,7 +1391,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 534,
+              "line": 556,
               "character": 31
             }
           ]
@@ -1391,7 +1428,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 484,
+              "line": 506,
               "character": 28
             }
           ]
@@ -1422,10 +1459,115 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 586,
+              "line": 608,
               "character": 24
             }
           ]
+        }
+      },
+      "Variable": {
+        "copyPropsMap": {
+          "flags": {},
+          "comment": {
+            "shortText": "private"
+          },
+          "sources": [
+            {
+              "fileName": "core/path.ts",
+              "line": 38,
+              "character": 20
+            }
+          ],
+          "type": {
+            "type": "reflection",
+            "declaration": {
+              "name": "__type",
+              "kindString": "Type literal",
+              "flags": {},
+              "indexSignature": [
+                {
+                  "name": "__index",
+                  "kindString": "Index signature",
+                  "flags": {},
+                  "parameters": [
+                    {
+                      "name": "pathType",
+                      "kindString": "Parameter",
+                      "flags": {},
+                      "type": {
+                        "type": "instrinct",
+                        "name": "string"
+                      }
+                    }
+                  ],
+                  "type": {
+                    "type": "reflection",
+                    "declaration": {
+                      "name": "__type",
+                      "kindString": "Type literal",
+                      "flags": {},
+                      "signatures": [
+                        {
+                          "name": "__call",
+                          "kindString": "Call signature",
+                          "flags": {},
+                          "parameters": [
+                            {
+                              "name": "src",
+                              "kindString": "Parameter",
+                              "flags": {},
+                              "type": {
+                                "type": "reference",
+                                "name": "IPath"
+                              }
+                            },
+                            {
+                              "name": "dest",
+                              "kindString": "Parameter",
+                              "flags": {},
+                              "type": {
+                                "type": "reference",
+                                "name": "IPath"
+                              }
+                            },
+                            {
+                              "name": "offset",
+                              "kindString": "Parameter",
+                              "flags": {
+                                "isOptional": true
+                              },
+                              "type": {
+                                "type": "reference",
+                                "name": "IPoint"
+                              }
+                            }
+                          ],
+                          "type": {
+                            "type": "instrinct",
+                            "name": "void"
+                          }
+                        }
+                      ],
+                      "sources": [
+                        {
+                          "fileName": "core/path.ts",
+                          "line": 38,
+                          "character": 43
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "fileName": "core/path.ts",
+                  "line": 38,
+                  "character": 21
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -1996,7 +2138,7 @@
           "sources": [
             {
               "fileName": "core/combine.ts",
-              "line": 164,
+              "line": 168,
               "character": 45
             }
           ]
@@ -2069,7 +2211,7 @@
           "sources": [
             {
               "fileName": "core/combine.ts",
-              "line": 337,
+              "line": 344,
               "character": 27
             }
           ]
@@ -2106,7 +2248,7 @@
           "sources": [
             {
               "fileName": "core/combine.ts",
-              "line": 421,
+              "line": 427,
               "character": 39
             }
           ]
@@ -2143,7 +2285,7 @@
           "sources": [
             {
               "fileName": "core/combine.ts",
-              "line": 432,
+              "line": 438,
               "character": 38
             }
           ]
@@ -2180,8 +2322,45 @@
           "sources": [
             {
               "fileName": "core/combine.ts",
-              "line": 443,
+              "line": 449,
               "character": 32
+            }
+          ]
+        },
+        "getPointsOnPath": {
+          "flags": {},
+          "signatures": [
+            {
+              "name": "getPointsOnPath",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "private"
+              },
+              "parameters": [
+                {
+                  "name": "points",
+                  "flags": {},
+                  "type": "IPoint"
+                },
+                {
+                  "name": "onPath",
+                  "flags": {},
+                  "type": "IPath"
+                },
+                {
+                  "name": "popOptions",
+                  "flags": {},
+                  "type": "IIsPointOnPathOptions"
+                }
+              ],
+              "type": "IPoint"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/combine.ts",
+              "line": 32,
+              "character": 28
             }
           ]
         },
@@ -2239,7 +2418,7 @@
           "sources": [
             {
               "fileName": "core/combine.ts",
-              "line": 116,
+              "line": 120,
               "character": 37
             }
           ]
@@ -14563,6 +14742,37 @@
             }
           ]
         },
+        "copyProps": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "copyProps",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Copy the schema properties of one path to another.",
+                "returns": "this cascade container, this.$result will be The source path.\n\n"
+              },
+              "parameters": [
+                {
+                  "name": "destPath",
+                  "flags": {},
+                  "comment": "The destination path to copy property values to.",
+                  "type": "IPath"
+                }
+              ],
+              "type": "ICascadePath"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/cascades.ts",
+              "line": 342,
+              "character": 17
+            }
+          ]
+        },
         "layer": {
           "flags": {
             "isExported": true
@@ -14589,7 +14799,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 345,
+              "line": 354,
               "character": 13
             }
           ]
@@ -14626,7 +14836,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 355,
+              "line": 364,
               "character": 14
             }
           ]
@@ -14657,7 +14867,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 364,
+              "line": 373,
               "character": 12
             }
           ]
@@ -14696,7 +14906,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 374,
+              "line": 383,
               "character": 20
             }
           ]
@@ -14735,7 +14945,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 384,
+              "line": 393,
               "character": 14
             }
           ]
@@ -14766,7 +14976,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 393,
+              "line": 402,
               "character": 13
             }
           ]
@@ -14789,7 +14999,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 401,
+              "line": 410,
               "character": 12
             }
           ]
@@ -14803,7 +15013,7 @@
       "sources": [
         {
           "fileName": "core/cascades.ts",
-          "line": 404,
+          "line": 413,
           "character": 34
         }
       ],
@@ -14941,7 +15151,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 414,
+              "line": 423,
               "character": 11
             }
           ]
@@ -14972,7 +15182,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 423,
+              "line": 432,
               "character": 15
             }
           ]
@@ -14995,7 +15205,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 431,
+              "line": 440,
               "character": 13
             }
           ]
@@ -15026,7 +15236,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 440,
+              "line": 449,
               "character": 15
             }
           ]
@@ -15063,7 +15273,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 450,
+              "line": 459,
               "character": 15
             }
           ]
@@ -15100,7 +15310,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 460,
+              "line": 469,
               "character": 14
             }
           ]
@@ -15139,7 +15349,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 470,
+              "line": 479,
               "character": 14
             }
           ]
@@ -15172,7 +15382,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 479,
+              "line": 488,
               "character": 15
             }
           ]
@@ -15203,7 +15413,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 488,
+              "line": 497,
               "character": 13
             }
           ]
@@ -15234,7 +15444,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 497,
+              "line": 506,
               "character": 16
             }
           ]

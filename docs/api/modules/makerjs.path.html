@@ -17,11 +17,12 @@ title: Api - path Module
 					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="../interfaces/makerjs.path.ipointproperty.html" class="tsd-kind-icon">IPoint<wbr>Property</a></li>
 				</ul>
 			</section>
-			<section class="tsd-index-section tsd-is-private tsd-is-private-protected tsd-is-not-exported">
+			<section class="tsd-index-section tsd-is-not-exported">
 				<h3>Variables</h3>
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#altermap" class="tsd-kind-icon">alter<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#breakpathfunctionmap" class="tsd-kind-icon">break<wbr>Path<wbr>Function<wbr>Map</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.path.html#copypropsmap" class="tsd-kind-icon">copy<wbr>Props<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#distortmap" class="tsd-kind-icon">distort<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#filletresultmap" class="tsd-kind-icon">fillet<wbr>Result<wbr>Map</a></li>
 					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#guidepathmap" class="tsd-kind-icon">guide<wbr>Path<wbr>Map</a></li>
@@ -47,6 +48,7 @@ title: Api - path Module
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#cloneandbreakpath" class="tsd-kind-icon">clone<wbr>And<wbr>Break<wbr>Path</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#converge" class="tsd-kind-icon">converge</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.path.html#copylayer" class="tsd-kind-icon">copy<wbr>Layer</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#copyprops" class="tsd-kind-icon">copy<wbr>Props</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#distort" class="tsd-kind-icon">distort</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#dogbone" class="tsd-kind-icon">dogbone</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.path.html#expand" class="tsd-kind-icon">expand</a></li>
@@ -82,7 +84,7 @@ title: Api - path Module
 		</div>
 	</section>
 </section>
-<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected tsd-is-not-exported">
+<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 	<h2>Variables</h2>
 	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="altermap" class="tsd-anchor"></a>
@@ -90,7 +92,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">alter<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L425">core/path.ts:425</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L447">core/path.ts:447</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -137,10 +139,57 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">break<wbr>Path<wbr>Function<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.path.ibreakpathfunctionmap.html" class="tsd-signature-type">IBreakPathFunctionMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/break.ts#L13">core/break.ts:13</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/break.ts#L13">core/break.ts:13</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+		<a name="copypropsmap" class="tsd-anchor"></a>
+		<h3>copy<wbr>Props<wbr>Map</h3>
+		<div class="tsd-signature tsd-kind-icon">copy<wbr>Props<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L38">core/path.ts:38</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>private</p>
+			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pathType: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">function</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-siganture">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, dest<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, offset<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>src: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+										</li>
+										<li>
+											<h5>dest: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+										</li>
+										<li>
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> offset: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
@@ -149,7 +198,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">distort<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L331">core/path.ts:331</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L353">core/path.ts:353</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -196,7 +245,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">fillet<wbr>Result<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L182">core/fillet.ts:182</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L182">core/fillet.ts:182</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -243,7 +292,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">guide<wbr>Path<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L139">core/fillet.ts:139</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L139">core/fillet.ts:139</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -293,8 +342,8 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">map<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.path.ipathintersectionmap.html" class="tsd-signature-type">IPathIntersectionMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/expand.ts#L6">core/expand.ts:6</a></li>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L13">core/intersect.ts:13</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/expand.ts#L6">core/expand.ts:6</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L13">core/intersect.ts:13</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -306,7 +355,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">mirror<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L74">core/path.ts:74</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L96">core/path.ts:96</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -353,7 +402,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">move<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L160">core/path.ts:160</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L182">core/path.ts:182</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -394,7 +443,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">move<wbr>Relative<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L191">core/path.ts:191</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L213">core/path.ts:213</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -438,7 +487,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">number<wbr>OfKey<wbr>Points<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L507">core/path.ts:507</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L529">core/path.ts:529</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -479,7 +528,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">property<wbr>Names<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L32">core/fillet.ts:32</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L32">core/fillet.ts:32</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -517,7 +566,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">rotate<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L251">core/path.ts:251</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L273">core/path.ts:273</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -561,7 +610,7 @@ title: Api - path Module
 		<div class="tsd-signature tsd-kind-icon">scale<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L291">core/path.ts:291</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L313">core/path.ts:313</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -609,7 +658,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L16">core/path.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L16">core/path.ts:16</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -661,7 +710,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L460">core/path.ts:460</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L482">core/path.ts:482</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -705,7 +754,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/break.ts#L96">core/break.ts:96</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/break.ts#L96">core/break.ts:96</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -745,7 +794,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L572">core/path.ts:572</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L594">core/path.ts:594</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -777,7 +826,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L369">core/intersect.ts:369</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L369">core/intersect.ts:369</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -808,7 +857,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L42">core/path.ts:42</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L66">core/path.ts:66</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -846,7 +895,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L130">core/fillet.ts:130</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L130">core/fillet.ts:130</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -874,7 +923,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L385">core/path.ts:385</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L407">core/path.ts:407</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -924,7 +973,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L24">core/path.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L24">core/path.ts:24</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -943,6 +992,44 @@ title: Api - path Module
 		</ul>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="copyprops" class="tsd-anchor"></a>
+		<h3>copy<wbr>Props</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">copy<wbr>Props<span class="tsd-signature-symbol">(</span>srcPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a>, destPath<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L83">core/path.ts:83</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Copy the schema properties of one path to another.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>srcPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The source path to copy property values from.</p>
+						</div>
+					</li>
+					<li>
+						<h5>destPath: <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The destination path to copy property values to.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a></h4>
+				<p>The source path.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 		<a name="distort" class="tsd-anchor"></a>
 		<h3>distort</h3>
 		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -952,7 +1039,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L365">core/path.ts:365</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L387">core/path.ts:387</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -999,7 +1086,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L308">core/fillet.ts:308</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L308">core/fillet.ts:308</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1043,7 +1130,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/expand.ts#L28">core/expand.ts:28</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/expand.ts#L28">core/expand.ts:28</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1087,7 +1174,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L375">core/fillet.ts:375</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L375">core/fillet.ts:375</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1137,7 +1224,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L254">core/intersect.ts:254</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L254">core/intersect.ts:254</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1165,7 +1252,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L274">core/intersect.ts:274</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L274">core/intersect.ts:274</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1196,7 +1283,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L246">core/fillet.ts:246</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L246">core/fillet.ts:246</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1224,7 +1311,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L228">core/fillet.ts:228</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L228">core/fillet.ts:228</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1255,7 +1342,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L168">core/fillet.ts:168</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L168">core/fillet.ts:168</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1286,7 +1373,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L288">core/fillet.ts:288</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L288">core/fillet.ts:288</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1311,7 +1398,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L68">core/fillet.ts:68</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L68">core/fillet.ts:68</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1342,7 +1429,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L45">core/fillet.ts:45</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L45">core/fillet.ts:45</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1367,7 +1454,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L240">core/intersect.ts:240</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L240">core/intersect.ts:240</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1411,7 +1498,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L127">core/path.ts:127</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L149">core/path.ts:149</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1451,7 +1538,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L294">core/intersect.ts:294</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L294">core/intersect.ts:294</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1482,7 +1569,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L140">core/path.ts:140</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L162">core/path.ts:162</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1526,7 +1613,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L174">core/path.ts:174</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L196">core/path.ts:196</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1564,7 +1651,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L210">core/path.ts:210</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L232">core/path.ts:232</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1608,7 +1695,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L208">core/intersect.ts:208</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L208">core/intersect.ts:208</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1642,7 +1729,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L232">core/path.ts:232</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L254">core/path.ts:254</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1685,7 +1772,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L263">core/intersect.ts:263</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L263">core/intersect.ts:263</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1713,7 +1800,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L103">core/fillet.ts:103</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L103">core/fillet.ts:103</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1747,7 +1834,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L275">core/path.ts:275</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L297">core/path.ts:297</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1791,7 +1878,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L315">core/path.ts:315</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L337">core/path.ts:337</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1829,7 +1916,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/expand.ts#L52">core/expand.ts:52</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/expand.ts#L52">core/expand.ts:52</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1879,7 +1966,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/intersect.ts#L216">core/intersect.ts:216</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/intersect.ts#L216">core/intersect.ts:216</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1904,7 +1991,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/fillet.ts#L264">core/fillet.ts:264</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/fillet.ts#L264">core/fillet.ts:264</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1932,7 +2019,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L534">core/path.ts:534</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L556">core/path.ts:556</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1970,7 +2057,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L484">core/path.ts:484</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L506">core/path.ts:506</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2008,7 +2095,7 @@ title: Api - path Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/68b1a30b/src/core/path.ts#L586">core/path.ts:586</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6f57799a/src/core/path.ts#L608">core/path.ts:608</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
