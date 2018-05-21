@@ -29,10 +29,10 @@
     /**
      * private
      */
-    function getPointsOnPath(points: IPoint[], onPath: IPath, pathOffset: IPoint, popOptions: IIsPointOnPathOptions): IPoint[] {
+    function getPointsOnPath(points: IPoint[], onPath: IPath, popOptions: IIsPointOnPathOptions): IPoint[] {
         const endpointsOnPath: IPoint[] = [];
         points.forEach(p => {
-            if (measure.isPointOnPath(p, onPath, .000001, pathOffset, popOptions)) {
+            if (measure.isPointOnPath(p, onPath, .000001, null, popOptions)) {
                 endpointsOnPath.push(p);
             }
         });
@@ -46,7 +46,7 @@
         var foreignPath = foreignWalkedPath.pathContext;
         var segments = crossedPath.segments;
 
-        if (measure.isPathEqual(segments[0].path, foreignPath, .0001, crossedPath.offset, foreignWalkedPath.offset)) {
+        if (measure.isPathEqual(segments[0].absolutePath, foreignPath, .0001, null, foreignWalkedPath.offset)) {
             segments[0].overlapped = true;
             segments[0].duplicate = true;
 
@@ -64,7 +64,7 @@
 
         for (var i = 0; i < segments.length; i++) {
             var pointsOfInterest = intersectionPoints ? foreignPathEndPoints.concat(intersectionPoints) : foreignPathEndPoints;
-            var pointsToCheck = getPointsOnPath(pointsOfInterest, segments[i].path, crossedPath.offset, popOptions);
+            var pointsToCheck = getPointsOnPath(pointsOfInterest, segments[i].absolutePath, popOptions);
 
             if (options.out_AreOverlapped) {
                 segments[i].overlapped = true;
@@ -77,23 +77,21 @@
                 var subSegments: IPath[] = null;
                 var p = 0;
                 while (!subSegments && p < pointsToCheck.length) {
-                    //cast absolute points to path relative space
-                    subSegments = getNonZeroSegments(segments[i].path, point.subtract(pointsToCheck[p], crossedPath.offset));
+                    subSegments = getNonZeroSegments(segments[i].absolutePath, pointsToCheck[p]);
                     p++;
                 }
 
                 if (subSegments) {
                     crossedPath.broken = true;
 
-                    segments[i].path = subSegments[0];
+                    segments[i].absolutePath = subSegments[0];
 
                     if (subSegments[1]) {
                         var newSegment: ICrossedPathSegment = {
-                            path: subSegments[1],
+                            absolutePath: subSegments[1],
                             pathId: segments[0].pathId,
                             overlapped: segments[i].overlapped,
-                            uniqueForeignIntersectionPoints: [],
-                            offset: crossedPath.offset
+                            uniqueForeignIntersectionPoints: []
                         };
 
                         if (segments[i].overlapped) {
@@ -136,11 +134,11 @@
     interface ICrossedPathSegment {
         isInside?: boolean;
         uniqueForeignIntersectionPoints: IPoint[];
-        path: IPath;
+        absolutePath: IPath;
+        addedPath?: IPath;
         pathId: string;
         overlapped: boolean;
         duplicate?: boolean;
-        offset: IPoint;
     }
 
     /**
@@ -200,11 +198,10 @@
 
                 //clone this path and make it the first segment
                 var segment: ICrossedPathSegment = {
-                    path: cloneObject(outerWalkedPath.pathContext),
+                    absolutePath: path.clone(outerWalkedPath.pathContext, outerWalkedPath.offset),
                     pathId: outerWalkedPath.pathId,
                     overlapped: false,
-                    uniqueForeignIntersectionPoints: [],
-                    offset: outerWalkedPath.offset
+                    uniqueForeignIntersectionPoints: []
                 };
 
                 var thisPath: ICrossedPath = <ICrossedPath>outerWalkedPath;
@@ -231,7 +228,7 @@
                 if (checkIsInside) {
                     //check each segment whether it is inside or outside
                     for (var i = 0; i < thisPath.segments.length; i++) {
-                        var p = point.add(point.middle(thisPath.segments[i].path), thisPath.offset);
+                        var p = point.middle(thisPath.segments[i].absolutePath);
                         var pointInsideOptions: IMeasurePointInsideOptions = { measureAtlas: modelToIntersectAtlas, farPoint: farPoint };
                         thisPath.segments[i].isInside = measure.isPointInsideModel(p, modelToIntersect, pointInsideOptions);
                         thisPath.segments[i].uniqueForeignIntersectionPoints = pointInsideOptions.out_intersectionPoints;
@@ -253,7 +250,7 @@
     function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[], pointMatchingDistance: number) {
 
         function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
-            if (measure.isPathEqual(segment1.path, segment2.path, pointMatchingDistance, segment1.offset, segment2.offset)) {
+            if (measure.isPathEqual(segment1.absolutePath, segment2.absolutePath, pointMatchingDistance)) {
                 segment1.duplicate = segment2.duplicate = true;
             }
         }
@@ -274,7 +271,7 @@
      * @private
      */
     interface ITrackDeleted {
-        (pathToDelete: IPath, routeKey: string, offset: IPoint, reason: string): void;
+        (pathToDelete: IPath, routeKey: string, reason: string): void;
     }
 
     /**
@@ -286,11 +283,15 @@
             var id = getSimilarPathId(modelContext, pathIdBase);
             var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
 
-            modelContext.paths[id] = segment.path;
+            segment.addedPath = cloneObject(crossedPath.pathContext);
+            path.copyProps(segment.absolutePath, segment.addedPath);
+            path.moveRelative(segment.addedPath, crossedPath.offset, true);
+
+            modelContext.paths[id] = segment.addedPath;
 
             if (crossedPath.broken) {
                 //save the new segment's measurement
-                var measurement = measure.pathExtents(segment.path, crossedPath.offset);
+                var measurement = measure.pathExtents(segment.absolutePath);
                 atlas.pathMap[newRouteKey] = measurement;
                 atlas.modelsMeasured = false;
             } else {
@@ -304,7 +305,7 @@
                 addSegment(modelContext, pathIdBase, segment);
             } else {
                 atlas.modelsMeasured = false;
-                trackDeleted(segment.path, crossedPath.routeKey, segment.offset, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
+                trackDeleted(segment.absolutePath, crossedPath.routeKey, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
             }
         }
 
@@ -320,7 +321,7 @@
                 if (keepDuplicates) {
                     addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
                 } else {
-                    trackDeleted(crossedPath.segments[i].path, crossedPath.routeKey, crossedPath.offset, 'segment is duplicate');
+                    trackDeleted(crossedPath.segments[i].absolutePath, crossedPath.routeKey, 'segment is duplicate');
                 }
             } else {
                 checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
@@ -366,20 +367,19 @@
 
         checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
-        function trackDeleted(which: number, deletedPath: IPath, routeKey: string, offset: IPoint, reason: string) {
+        function trackDeleted(which: number, deletedPath: IPath, routeKey: string, reason: string) {
             addPath(opts.out_deleted[which], deletedPath, 'deleted');
-            path.moveRelative(deletedPath, offset);
             var p = deletedPath as IPathRemoved;
             p.reason = reason;
             p.routeKey = routeKey;
         }
 
         for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, o, reason) => trackDeleted(0, p, id, o, reason));
+            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, reason) => trackDeleted(0, p, id, reason));
         }
 
         for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, o, reason) => trackDeleted(1, p, id, o, reason));
+            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, reason) => trackDeleted(1, p, id, reason));
         }
 
         var result: IModel = { models: { a: modelA, b: modelB } };
@@ -395,7 +395,7 @@
                     //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
                     //Duplicates were discarded from B but kept in A
                     for (var i = 0; i < pathsA.overlappedSegments.length; i++) {
-                        if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].path) {
+                        if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].addedPath) {
                             return false;
                         }
                     }
@@ -407,7 +407,7 @@
 
             removeDeadEnds(result, null, shouldKeep, (wp, reason) => {
                 var which = wp.route[1] === 'a' ? 0 : 1;
-                trackDeleted(which, wp.pathContext, wp.routeKey, wp.offset, reason)
+                trackDeleted(which, wp.pathContext, wp.routeKey, reason)
             });
         }
 
