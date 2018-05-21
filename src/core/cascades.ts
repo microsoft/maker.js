@@ -333,6 +333,15 @@ For Circle, the original path will be converted in place to an Arc, and null is 
         clone(offset?: IPoint): ICascadePath;
 
         /**
+         * Copy the schema properties of one path to another.
+         * 
+         * @param destPath The destination path to copy property values to.
+         * @returns this cascade container, this.$result will be The source path.
+
+         */
+        copyProps(destPath: IPath): ICascadePath;
+
+        /**
          * Set the layer of a path. This is equivalent to:
 ```
 pathContext.layer = layer;
