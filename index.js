@@ -2355,7 +2355,7 @@ var MakerJs;
             var options = { path1Offset: crossedPath.offset, path2Offset: foreignWalkedPath.offset };
             var foreignIntersection = MakerJs.path.intersection(crossedPath.pathContext, foreignPath, options);
             var intersectionPoints = foreignIntersection ? foreignIntersection.intersectionPoints : null;
-            var foreignPathEndPoints = MakerJs.point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
+            var foreignPathEndPoints = MakerJs.point.fromPathEnds(foreignPath, foreignWalkedPath.offset) || [];
             for (var i = 0; i < segments.length; i++) {
                 var pointsOfInterest = intersectionPoints ? foreignPathEndPoints.concat(intersectionPoints) : foreignPathEndPoints;
                 var pointsToCheck = getPointsOnPath(pointsOfInterest, segments[i].absolutePath, popOptions);
@@ -2508,6 +2508,8 @@ var MakerJs;
                 var id = model.getSimilarPathId(modelContext, pathIdBase);
                 var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : MakerJs.createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
                 segment.addedPath = MakerJs.cloneObject(crossedPath.pathContext);
+                //circles may have become arcs
+                segment.addedPath.type = segment.absolutePath.type;
                 MakerJs.path.copyProps(segment.absolutePath, segment.addedPath);
                 MakerJs.path.moveRelative(segment.addedPath, crossedPath.offset, true);
                 modelContext.paths[id] = segment.addedPath;
@@ -4079,7 +4081,7 @@ var MakerJs;
         function addUniquePoints(pointArray, pointsToAdd) {
             var added = 0;
             pointsToAdd.forEach(function (p) {
-                if (!measure.isPointDistinct(p, pointArray, .000000001))
+                if (!measure.isPointDistinct(p, pointArray, .00000001))
                     return;
                 pointArray.push(p);
                 added++;
@@ -9594,5 +9596,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.91";
+MakerJs.version = "0.9.92";
 ﻿var Bezier = require('bezier-js');
