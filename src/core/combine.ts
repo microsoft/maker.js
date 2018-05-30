@@ -284,6 +284,10 @@
             var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
 
             segment.addedPath = cloneObject(crossedPath.pathContext);
+            
+            //circles may have become arcs
+            segment.addedPath.type = segment.absolutePath.type;
+
             path.copyProps(segment.absolutePath, segment.addedPath);
             path.moveRelative(segment.addedPath, crossedPath.offset, true);
 
