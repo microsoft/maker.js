@@ -826,7 +826,7 @@ namespace MakerJs.measure {
         var added = 0;
 
         pointsToAdd.forEach(p => {
-            if (!isPointDistinct(p, pointArray, .000000001)) return;
+            if (!isPointDistinct(p, pointArray, .00000001)) return;
             pointArray.push(p);
             added++;
         });
