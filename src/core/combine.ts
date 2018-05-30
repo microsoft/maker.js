@@ -60,7 +60,7 @@
         var options: IPathIntersectionOptions = { path1Offset: crossedPath.offset, path2Offset: foreignWalkedPath.offset };
         var foreignIntersection = path.intersection(crossedPath.pathContext, foreignPath, options);
         var intersectionPoints = foreignIntersection ? foreignIntersection.intersectionPoints : null;
-        var foreignPathEndPoints = point.fromPathEnds(foreignPath, foreignWalkedPath.offset);
+        var foreignPathEndPoints = point.fromPathEnds(foreignPath, foreignWalkedPath.offset) || [];
 
         for (var i = 0; i < segments.length; i++) {
             var pointsOfInterest = intersectionPoints ? foreignPathEndPoints.concat(intersectionPoints) : foreignPathEndPoints;
