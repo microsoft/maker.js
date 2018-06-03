@@ -297,7 +297,7 @@ namespace MakerJs.measure {
      */
     export function lineSlope(line: IPathLine): ISlope {
         var dx = line.end[0] - line.origin[0];
-        if (round(dx) == 0) {
+        if (round(dx, .000001) == 0) {
             return {
                 line: line,
                 hasSlope: false

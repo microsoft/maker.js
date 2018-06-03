@@ -32,7 +32,7 @@
     function getPointsOnPath(points: IPoint[], onPath: IPath, popOptions: IIsPointOnPathOptions): IPoint[] {
         const endpointsOnPath: IPoint[] = [];
         points.forEach(p => {
-            if (measure.isPointOnPath(p, onPath, .000001, null, popOptions)) {
+            if (measure.isPointOnPath(p, onPath, .00001, null, popOptions)) {
                 endpointsOnPath.push(p);
             }
         });
@@ -71,7 +71,7 @@
                 overlappedSegments.push(segments[i]);
             }
 
-            if (pointsToCheck) {
+            if (pointsToCheck.length > 0) {
 
                 //break the path which intersected, and add the shard to the end of the array so it can also be checked in this loop for further sharding.
                 var subSegments: IPath[] = null;
@@ -284,7 +284,7 @@
             var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
 
             segment.addedPath = cloneObject(crossedPath.pathContext);
-            
+
             //circles may have become arcs
             segment.addedPath.type = segment.absolutePath.type;
 

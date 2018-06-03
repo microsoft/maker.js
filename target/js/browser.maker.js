@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.9.92
+ *   version: 0.9.93
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2539,7 +2539,7 @@ var MakerJs;
         function getPointsOnPath(points, onPath, popOptions) {
             var endpointsOnPath = [];
             points.forEach(function (p) {
-                if (MakerJs.measure.isPointOnPath(p, onPath, .000001, null, popOptions)) {
+                if (MakerJs.measure.isPointOnPath(p, onPath, .00001, null, popOptions)) {
                     endpointsOnPath.push(p);
                 }
             });
@@ -2570,7 +2570,7 @@ var MakerJs;
                     segments[i].overlapped = true;
                     overlappedSegments.push(segments[i]);
                 }
-                if (pointsToCheck) {
+                if (pointsToCheck.length > 0) {
                     //break the path which intersected, and add the shard to the end of the array so it can also be checked in this loop for further sharding.
                     var subSegments = null;
                     var p = 0;
@@ -3859,7 +3859,7 @@ var MakerJs;
          */
         function lineSlope(line) {
             var dx = line.end[0] - line.origin[0];
-            if (MakerJs.round(dx) == 0) {
+            if (MakerJs.round(dx, .000001) == 0) {
                 return {
                     line: line,
                     hasSlope: false
@@ -9803,6 +9803,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.92";
+MakerJs.version = "0.9.93";
 
 },{"clone":2,"graham_scan":3}]},{},[]);
