@@ -111,7 +111,7 @@
     "browserify": "^13.3.0",
     "http-server": "^0.10.0",
     "licensify": "^3.1.2",
-    "mocha": "^3.4.2",
+    "mocha": "^5.2.0",
     "pretty-camel": "0.0.8",
     "shx": "^0.2.2",
     "sort-keys": "^1.1.2",
