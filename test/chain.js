@@ -93,4 +93,15 @@ describe('Chains', function () {
     assert.equal(a, 180);
   });
 
+  it('longest chain should be endless', function () {
+    this.timeout(60000);
+    var pathData = require('./data').rainbow;
+    var model = makerjs.importer.fromSVGPathData(pathData);
+    var expanded = makerjs.model.expandPaths(model, 5);
+    var chains = makerjs.model.findChains(expanded);
+    assert.ok(chains);
+    assert.ok(chains[0]);
+    assert.ok(chains[0].endless);
+  });
+
 });
