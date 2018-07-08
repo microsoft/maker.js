@@ -41,17 +41,36 @@
 
         }
 
-        public static fontMatches(font: IFont, spec: string): boolean {
-            if (!spec || spec === '*') return true;
+        private static getConstraints(spec: string) {
+            const specs = spec.split(' ');
+            const add: string[] = [];
+            const remove: string[] = [];
 
-            var specHashtags = spec.trim().split('#').map(s => s.trim());
+            specs.forEach(s => {
+                if (!s) return;
+                if (s[0] === '!') {
+                    remove.push(s.substring(2));
+                } else if (s === '*') {
+                    add.push(s);
+                } else {
+                    add.push(s.substring(1));
+                }
+            });
 
-            for (var i = 0; i < specHashtags.length; i++) {
-                var specHashtag = specHashtags[i];
-                if (font.tags.indexOf(specHashtag) >= 0) return true;
+            return { add, remove };
+        }
+
+        private static hasTags(font: IFont, tags: string[]) {
+            for (var i = 0; i < tags.length; i++) {
+                if (tags[i] === '*') return true;
+                if (font.tags.indexOf(tags[i]) >= 0) return true;
             }
+        }
 
-            return false;
+        public static fontMatches(font: IFont, spec: string): boolean {
+            const constraints = FontLoader.getConstraints(spec);
+            if (FontLoader.hasTags(font, constraints.remove)) return false;
+            return FontLoader.hasTags(font, constraints.add);
         }
 
         private findFirstFontIdMatching(spec: string) {
