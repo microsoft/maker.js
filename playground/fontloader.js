@@ -26,16 +26,38 @@ var MakerJsPlayground;
                 });
             }
         }
-        FontLoader.fontMatches = function (font, spec) {
-            if (!spec || spec === '*')
-                return true;
-            var specHashtags = spec.trim().split('#').map(function (s) { return s.trim(); });
-            for (var i = 0; i < specHashtags.length; i++) {
-                var specHashtag = specHashtags[i];
-                if (font.tags.indexOf(specHashtag) >= 0)
+        FontLoader.getConstraints = function (spec) {
+            var specs = spec.split(' ');
+            var add = [];
+            var remove = [];
+            specs.forEach(function (s) {
+                if (!s)
+                    return;
+                if (s[0] === '!') {
+                    remove.push(s.substring(2));
+                }
+                else if (s === '*') {
+                    add.push(s);
+                }
+                else {
+                    add.push(s.substring(1));
+                }
+            });
+            return { add: add, remove: remove };
+        };
+        FontLoader.hasTags = function (font, tags) {
+            for (var i = 0; i < tags.length; i++) {
+                if (tags[i] === '*')
+                    return true;
+                if (font.tags.indexOf(tags[i]) >= 0)
                     return true;
             }
-            return false;
+        };
+        FontLoader.fontMatches = function (font, spec) {
+            var constraints = FontLoader.getConstraints(spec);
+            if (FontLoader.hasTags(font, constraints.remove))
+                return false;
+            return FontLoader.hasTags(font, constraints.add);
         };
         FontLoader.prototype.findFirstFontIdMatching = function (spec) {
             for (var fontId in fonts) {
