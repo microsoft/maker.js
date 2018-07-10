@@ -126,7 +126,8 @@
     "@types/pdfkit": "^0.7.34",
     "bezier-js": "^2.1.0",
     "clone": "^1.0.2",
-    "graham_scan": "^1.0.4"
+    "graham_scan": "^1.0.4",
+    "kdbush": "^2.0.1"
   },
   "files": [
     "external/jscad/csg.d.ts",

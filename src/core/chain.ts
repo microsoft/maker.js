@@ -13,7 +13,7 @@
     /**
      * @private
      */
-    function followLinks(connections: Collector<IPoint, IChainLink>, chainFound: { (chain: Partial<IChain>): void; }, chainNotFound?: { (path: IWalkPath): void; }) {
+    function followLinks(pointGraph: PointGraph<IChainLink>, chainFound: { (chain: Partial<IChain>): void; }, chainNotFound?: { (path: IWalkPath): void; }) {
 
         function followLink(currLink: IChainLink, chain: Partial<IChain>, firstLink: IChainLink) {
 
@@ -24,16 +24,16 @@
 
                 var next = currLink.reversed ? 0 : 1;
                 var nextPoint = currLink.endPoints[next];
-
-                var items = connections.findCollection(nextPoint);
-                if (!items || items.length === 0) {
+                let nextEl = pointGraph.getElementAtPoint(nextPoint);
+                if (!nextEl || nextEl.valueIds.length === 0) {
                     break;
                 }
 
+                let items = nextEl.valueIds.map(valueIndex => pointGraph.values[valueIndex]);
                 var nextLink = getOpposedLink(items, currLink.walkedPath.pathContext);
 
                 //remove the first 2 items, which should be currlink and nextlink
-                items.splice(0, 2);
+                nextEl.valueIds.splice(0, 2);
 
                 if (!nextLink) {
                     break;
@@ -49,18 +49,16 @@
 
         }
 
-        for (var i = 0; i < connections.collections.length; i++) {
+        pointGraph.forEachPoint((p, values, id, el) => {
 
-            var linkedPaths = connections.collections[i].items;
-
-            if (linkedPaths && linkedPaths.length > 0) {
+            while (el.valueIds.length > 0) {
 
                 var chain: Partial<IChain> = {
                     links: [],
                     pathLength: 0
                 };
 
-                followLink(linkedPaths[0], chain, linkedPaths[0]);
+                followLink(values[0], chain, values[0]);
 
                 if (chain.endless) {
                     chainFound(chain);
@@ -84,13 +82,8 @@
                         chainNotFound(chain.links[0].walkedPath);
                     }
                 }
-
-                //if there were more than 2 paths on this point, follow those too.
-                if (linkedPaths.length > 0) {
-                    i--;
-                }
             }
-        }
+        });
     }
 
     /**
@@ -156,12 +149,7 @@
         };
         extendObject(opts, options);
 
-        function comparePoint(pointA: IPoint, pointB: IPoint): boolean {
-            var distance = measure.pointDistance(pointA, pointB);
-            return distance <= opts.pointMatchingDistance;
-        }
-
-        var connectionMap: { [layer: string]: Collector<IPoint, IChainLink>; } = {};
+        const pointGraphsByLayer: { [layer: string]: PointGraph<IChainLink>; } = {};
         var chainsByLayer: IChainsMap = {};
         var ignored: { [layer: string]: IWalkPath[]; } = {};
 
@@ -169,11 +157,11 @@
             onPath: function (walkedPath: IWalkPath) {
 
                 var layer = opts.byLayers ? walkedPath.layer : '';
-                if (!connectionMap[layer]) {
-                    connectionMap[layer] = new Collector<IPoint, IChainLink>(comparePoint);
+                if (!pointGraphsByLayer[layer]) {
+                    pointGraphsByLayer[layer] = new PointGraph<IChainLink>();
                 }
 
-                var connections = connectionMap[layer];
+                const pointGraph = pointGraphsByLayer[layer];
                 var pathLength = measure.pathLength(walkedPath.pathContext);
 
                 //circles are loops by nature
@@ -224,8 +212,10 @@
                             pathLength: pathLength
                         };
 
-                        connections.addItemToCollection(endPoints[i], link);
+                        pointGraph.insertValue(endPoints[i], link);
                     }
+
+                    pointGraph.mergePoints(opts.pointMatchingDistance);
                 }
             }
         };
@@ -242,8 +232,8 @@
 
         walk(modelContext, walkOptions);
 
-        for (var layer in connectionMap) {
-            var connections = connectionMap[layer];
+        for (let layer in pointGraphsByLayer) {
+            let pointGraph = pointGraphsByLayer[layer];
             var loose: IWalkPath[] = [];
 
             if (!chainsByLayer[layer]) {
@@ -252,7 +242,7 @@
 
             //follow paths to find endless chains
             followLinks(
-                connections,
+                pointGraph,
                 function (chain: IChain) {
                     chain.endless = !!chain.endless;
                     chainsByLayer[layer].push(chain);
