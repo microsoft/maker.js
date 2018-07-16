@@ -439,6 +439,69 @@
 
     }
 
+    /**
+     * @private
+     */
+    interface IRefPathEndpoints extends IWalkPath {
+        endPoints: IPoint[];
+    }
+
+    /**
+     * @private
+     */
+    class DeadEndFinder {
+
+        public pointMap: PointGraph<IRefPathEndpoints>;
+
+        constructor(public pointMatchingDistance, public keep?: IWalkPathBooleanCallback, public trackDeleted?: (wp: IWalkPath, reason: string) => void) {
+
+            pointMatchingDistance = pointMatchingDistance || .005;
+
+            this.pointMap = new PointGraph<IRefPathEndpoints>();
+        }
+
+        public removeDeadEnds() {
+
+            //TODO: find all points which have an odd number
+            //for each, follow until it ends
+        }
+    }
+
+    /**
+     * Remove paths from a model which have endpoints that do not connect to other paths.
+     * 
+     * @param modelContext The model to search for dead ends.
+     * @param pointMatchingDistance Optional max distance to consider two points as the same.
+     * @param keep Optional callback function (which should return a boolean) to decide if a dead end path should be kept instead.
+     * @param trackDeleted Optional callback function which will log discarded paths and the reason they were discarded.
+     * @returns The input model (for cascading).
+     */
+    export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: (wp: IWalkPath, reason: string) => void) {
+        var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep, trackDeleted);
+
+        var walkOptions: IWalkOptions = {
+            onPath: function (walkedPath: IWalkPath) {
+                var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
+
+                if (!endPoints) return;
+
+                var pathRef = <IRefPathEndpoints>walkedPath;
+                pathRef.endPoints = endPoints;
+
+                for (var i = 2; i--;) {
+                    deadEndFinder.pointMap.insertValue(endPoints[i], pathRef);
+                }
+            }
+        };
+
+        walk(modelContext, walkOptions);
+
+        deadEndFinder.pointMap.mergePoints(pointMatchingDistance)
+
+        deadEndFinder.removeDeadEnds();
+
+        return modelContext;
+    }
 }
 
 namespace MakerJs.chain {
@@ -640,4 +703,5 @@ namespace MakerJs.chain {
         removeDuplicateEnds(chainContext.endless, result);
         return result;
     }
+    
 }
