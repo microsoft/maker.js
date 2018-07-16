@@ -167,7 +167,7 @@
         /**
          * KD tree object.
          */
-        public kdbush: KDBush;
+        private kdbush: KDBush;
 
         constructor() {
             this.reset();
