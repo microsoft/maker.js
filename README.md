@@ -163,9 +163,10 @@ Some of these may require a [contributor agreement](https://github.com/Microsoft
 
 ### Credits
 Maker.js depends on:
-* [Clone](https://github.com/pvorb/node-clone) by Paul Vorbach
-* [Bezier-js](https://github.com/Pomax/bezierjs) by Pomax
-* [Graham_scan](https://github.com/brian3kb/graham_scan_js) by Brian Barnett
+* [clone](https://github.com/pvorb/node-clone) by Paul Vorbach
+* [bezier-js](https://github.com/Pomax/bezierjs) by Pomax
+* [graham_scan](https://github.com/brian3kb/graham_scan_js) by Brian Barnett
+* [kdbush](https://github.com/mourner/kdbush) by Vladimir Agafonkin
 ---
 
 Maker.js is a Microsoft Garage project. The Microsoft Garage turns fresh ideas into real projects. Learn more at [http://microsoft.com/garage](http://microsoft.com/garage).
