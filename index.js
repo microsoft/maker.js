@@ -2723,6 +2723,148 @@ var MakerJs;
         return Collector;
     }());
     MakerJs.Collector = Collector;
+    /**
+     * @private
+     */
+    var kdbush = require('kdbush');
+    /**
+     * A graph of items which may be located on the same points.
+     */
+    var PointGraph = /** @class */ (function () {
+        function PointGraph() {
+            this.reset();
+        }
+        /**
+         * Reset the stored points, graphs, lists, to initial state.
+         */
+        PointGraph.prototype.reset = function () {
+            this.insertedCount = 0;
+            this.graph = {};
+            this.index = {};
+            this.merged = {};
+            this.values = [];
+        };
+        /**
+         * Insert a value at a point.
+         * @param p Point.
+         * @param value Value associated with this point.
+         */
+        PointGraph.prototype.insertValue = function (p, value) {
+            var x = p[0], y = p[1];
+            if (!this.graph[x]) {
+                this.graph[x] = {};
+            }
+            var pgx = this.graph[x];
+            var existed = (y in pgx);
+            var el;
+            var pointId;
+            if (!existed) {
+                pgx[y] = pointId = this.insertedCount++;
+                el = {
+                    pointId: pointId,
+                    point: p,
+                    valueIds: [this.values.length]
+                };
+                this.index[pointId] = el;
+            }
+            else {
+                pointId = pgx[y];
+                if (pointId in this.merged) {
+                    pointId = this.merged[pointId];
+                }
+                el = this.index[pointId];
+                el.valueIds.push(this.values.length);
+            }
+            this.values.push(value);
+            return { existed: existed, pointId: pointId };
+        };
+        /**
+         * Merge points within a given distance from each other. Call this after inserting values.
+         * @param withinDistance Distance to consider points equal.
+         */
+        PointGraph.prototype.mergePoints = function (withinDistance) {
+            var _this = this;
+            var points = [];
+            var kEls = [];
+            for (var pointId in this.index) {
+                var el = this.index[pointId];
+                var p = el.point;
+                el.kdId = points.length;
+                points.push(p);
+                kEls.push(el);
+            }
+            this.kdbush = kdbush(points);
+            var _loop_1 = function (pointId) {
+                if (pointId in this_1.merged)
+                    return "continue";
+                var el = this_1.index[pointId];
+                var mergeIds = this_1.kdbush.within(el.point[0], el.point[1], withinDistance);
+                mergeIds.forEach(function (kdId) {
+                    if (kdId === el.kdId)
+                        return;
+                    _this.mergeIndexElements(el, kEls[kdId]);
+                });
+            };
+            var this_1 = this;
+            for (var pointId in this.index) {
+                _loop_1(pointId);
+            }
+        };
+        PointGraph.prototype.mergeIndexElements = function (keep, remove) {
+            keep.merged = keep.merged || [];
+            keep.merged.push(remove.pointId);
+            this.merged[remove.pointId] = keep.pointId;
+            keep.valueIds.push.apply(keep.valueIds, remove.valueIds);
+            delete this.index[remove.pointId];
+            return keep.pointId;
+        };
+        /**
+         * Iterate over points in the index.
+         * @param cb Callback for each point in the index.
+         */
+        PointGraph.prototype.forEachPoint = function (cb) {
+            var _this = this;
+            for (var pointId = 0; pointId < this.insertedCount; pointId++) {
+                var el = this.index[pointId];
+                if (!el)
+                    continue;
+                var length_1 = el.valueIds.length;
+                if (length_1 > 0) {
+                    cb(el.point, el.valueIds.map(function (i) { return _this.values[i]; }), pointId, el);
+                }
+            }
+        };
+        /**
+         * Gets the id of a point, after merging.
+         * @param p Point to look up id.
+         */
+        PointGraph.prototype.getIdOfPoint = function (p) {
+            var px = this.graph[p[0]];
+            if (px) {
+                var pointId = px[p[1]];
+                if (pointId >= 0) {
+                    if (pointId in this.merged) {
+                        return this.merged[pointId];
+                    }
+                    else {
+                        return pointId;
+                    }
+                }
+            }
+        };
+        /**
+         * Get the index element of a point, after merging.
+         * @param p Point to look up index element.
+         */
+        PointGraph.prototype.getElementAtPoint = function (p) {
+            var pointId = this.getIdOfPoint(p);
+            if (pointId >= 0) {
+                return this.index[pointId];
+            }
+        };
+        return PointGraph;
+    }());
+    MakerJs.PointGraph = PointGraph;
 })(MakerJs || (MakerJs = {}));
 var MakerJs;
 (function (MakerJs) {
@@ -5435,20 +5577,21 @@ var MakerJs;
         /**
          * @private
          */
-        function followLinks(connections, chainFound, chainNotFound) {
+        function followLinks(pointGraph, chainFound, chainNotFound) {
             function followLink(currLink, chain, firstLink) {
                 while (currLink) {
                     chain.links.push(currLink);
                     chain.pathLength += currLink.pathLength;
                     var next = currLink.reversed ? 0 : 1;
                     var nextPoint = currLink.endPoints[next];
-                    var items = connections.findCollection(nextPoint);
-                    if (!items || items.length === 0) {
+                    var nextEl = pointGraph.getElementAtPoint(nextPoint);
+                    if (!nextEl || nextEl.valueIds.length === 0) {
                         break;
                     }
+                    var items = nextEl.valueIds.map(function (valueIndex) { return pointGraph.values[valueIndex]; });
                     var nextLink = getOpposedLink(items, currLink.walkedPath.pathContext);
                     //remove the first 2 items, which should be currlink and nextlink
-                    items.splice(0, 2);
+                    nextEl.valueIds.splice(0, 2);
                     if (!nextLink) {
                         break;
                     }
@@ -5459,14 +5602,13 @@ var MakerJs;
                     currLink = nextLink;
                 }
             }
-            for (var i = 0; i < connections.collections.length; i++) {
-                var linkedPaths = connections.collections[i].items;
-                if (linkedPaths && linkedPaths.length > 0) {
+            pointGraph.forEachPoint(function (p, values, pointId, el) {
+                while (el.valueIds.length > 0) {
                     var chain = {
                         links: [],
                         pathLength: 0
                     };
-                    followLink(linkedPaths[0], chain, linkedPaths[0]);
+                    followLink(values[0], chain, values[0]);
                     if (chain.endless) {
                         chainFound(chain);
                     }
@@ -5486,12 +5628,8 @@ var MakerJs;
                             chainNotFound(chain.links[0].walkedPath);
                         }
                     }
-                    //if there were more than 2 paths on this point, follow those too.
-                    if (linkedPaths.length > 0) {
-                        i--;
-                    }
                 }
-            }
+            });
         }
         /**
          * Find a single chain within a model, across all layers. Shorthand of findChains; useful when you know there is only one chain to find in your model.
@@ -5532,20 +5670,16 @@ var MakerJs;
                 pointMatchingDistance: .005
             };
             MakerJs.extendObject(opts, options);
-            function comparePoint(pointA, pointB) {
-                var distance = MakerJs.measure.pointDistance(pointA, pointB);
-                return distance <= opts.pointMatchingDistance;
-            }
-            var connectionMap = {};
+            var pointGraphsByLayer = {};
             var chainsByLayer = {};
             var ignored = {};
             var walkOptions = {
                 onPath: function (walkedPath) {
                     var layer = opts.byLayers ? walkedPath.layer : '';
-                    if (!connectionMap[layer]) {
-                        connectionMap[layer] = new MakerJs.Collector(comparePoint);
+                    if (!pointGraphsByLayer[layer]) {
+                        pointGraphsByLayer[layer] = new MakerJs.PointGraph();
                     }
-                    var connections = connectionMap[layer];
+                    var pointGraph = pointGraphsByLayer[layer];
                     var pathLength = MakerJs.measure.pathLength(walkedPath.pathContext);
                     //circles are loops by nature
                     if (walkedPath.pathContext.type === MakerJs.pathType.Circle ||
@@ -5585,8 +5719,9 @@ var MakerJs;
                                 reversed: i != 0,
                                 pathLength: pathLength
                             };
-                            connections.addItemToCollection(endPoints[i], link);
+                            pointGraph.insertValue(endPoints[i], link);
                         }
+                        pointGraph.mergePoints(opts.pointMatchingDistance);
                     }
                 }
             };
@@ -5599,28 +5734,32 @@ var MakerJs;
                 swapBezierPathsWithSeeds(beziers, true);
             }
             model.walk(modelContext, walkOptions);
-            for (var layer in connectionMap) {
-                var connections = connectionMap[layer];
-                var loose = [];
-                if (!chainsByLayer[layer]) {
-                    chainsByLayer[layer] = [];
+            var _loop_2 = function (layer_1) {
+                var pointGraph = pointGraphsByLayer[layer_1];
+                loose = [];
+                if (!chainsByLayer[layer_1]) {
+                    chainsByLayer[layer_1] = [];
                 }
                 //follow paths to find endless chains
-                followLinks(connections, function (chain) {
+                followLinks(pointGraph, function (chain) {
                     chain.endless = !!chain.endless;
-                    chainsByLayer[layer].push(chain);
+                    chainsByLayer[layer_1].push(chain);
                 }, function (walkedPath) {
                     loose.push(walkedPath);
                 });
                 //sort to return largest chains first
-                chainsByLayer[layer].sort(function (a, b) { return b.pathLength - a.pathLength; });
+                chainsByLayer[layer_1].sort(function (a, b) { return b.pathLength - a.pathLength; });
                 if (opts.contain) {
-                    var containChainsOptions = MakerJs.isObject(opts.contain) ? opts.contain : { alternateDirection: false };
-                    var containedChains = getContainment(chainsByLayer[layer], containChainsOptions);
-                    chainsByLayer[layer] = containedChains;
+                    containChainsOptions = MakerJs.isObject(opts.contain) ? opts.contain : { alternateDirection: false };
+                    containedChains = getContainment(chainsByLayer[layer_1], containChainsOptions);
+                    chainsByLayer[layer_1] = containedChains;
                 }
                 if (callback)
-                    callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+                    callback(chainsByLayer[layer_1], loose, layer_1, ignored[layer_1]);
+            };
+            var loose, containChainsOptions, containedChains;
+            for (var layer_1 in pointGraphsByLayer) {
+                _loop_2(layer_1);
             }
             if (beziers) {
                 swapBezierPathsWithSeeds(beziers, false);
@@ -5961,236 +6100,96 @@ var MakerJs;
         /**
          * @private
          */
-        function getOpposedLink(linkedPaths, pathContext) {
-            if (linkedPaths[0].path === pathContext) {
-                return linkedPaths[1];
-            }
-            return linkedPaths[0];
-        }
-        /**
-         * @private
-         */
-        function getFirstPathFromModel(modelContext) {
-            if (!modelContext.paths)
-                return null;
-            for (var pathId in modelContext.paths) {
-                return modelContext.paths[pathId];
-            }
-            return null;
-        }
-        /**
-         * @private
-         */
-        function collectLoop(loop, loops, detach) {
-            loops.push(loop);
-            if (detach) {
-                detachLoop(loop);
-            }
-        }
-        /**
-         * @private
-         */
-        function follow(connections, loops, detach) {
-            //for a given point, follow the paths that connect to each other to form loops
-            for (var i = 0; i < connections.collections.length; i++) {
-                var linkedPaths = connections.collections[i].items;
-                if (linkedPaths && linkedPaths.length > 0) {
-                    var loopModel = {
-                        paths: {},
-                        insideCount: 0
-                    };
-                    var firstLink = linkedPaths[0];
-                    var currLink = firstLink;
-                    while (true) {
-                        var currPath = currLink.path;
-                        currPath.reversed = currLink.reversed;
-                        var id = model.getSimilarPathId(loopModel, currPath.pathId);
-                        loopModel.paths[id] = currPath;
-                        var items = connections.findCollection(currLink.nextConnection);
-                        if (!items || items.length == 0)
-                            break;
-                        var nextLink = getOpposedLink(items, currLink.path);
-                        //remove the first 2 items, which should be currlink and nextlink
-                        items.splice(0, 2);
-                        if (!nextLink)
-                            break;
-                        currLink = nextLink;
-                        if (currLink.path === firstLink.path) {
-                            //loop is closed
-                            collectLoop(loopModel, loops, detach);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        /**
-         * Find paths that have common endpoints and form loops.
-         *
-         * @param modelContext The model to search for loops.
-         * @param options Optional options object.
-         * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
-         */
-        function findLoops(modelContext, options) {
-            var loops = [];
-            var result = { models: {} };
-            var opts = {
-                pointMatchingDistance: .005
-            };
-            MakerJs.extendObject(opts, options);
-            function spin(callback) {
-                for (var i = 0; i < loops.length; i++) {
-                    callback(loops[i]);
-                }
-            }
-            function getModelByDepth(depth) {
-                var id = depth.toString();
-                if (!(id in result.models)) {
-                    var newModel = { models: {} };
-                    result.models[id] = newModel;
-                }
-                return result.models[id];
-            }
-            function comparePoint(pointA, pointB) {
-                var distance = MakerJs.measure.pointDistance(pointA, pointB);
-                return distance <= opts.pointMatchingDistance;
-            }
-            var connections = new MakerJs.Collector(comparePoint);
-            //todo: remove dead ends first
-            model.originate(modelContext);
-            //find loops by looking at all paths in this model
-            var walkOptions = {
-                onPath: function (walkedPath) {
-                    var safePath = MakerJs.path.clone(walkedPath.pathContext);
-                    safePath.pathId = walkedPath.pathId;
-                    safePath.modelContext = modelContext;
-                    //circles are loops by nature
-                    if (safePath.type == MakerJs.pathType.Circle || (safePath.type == MakerJs.pathType.Arc && MakerJs.angle.ofArcSpan(walkedPath.pathContext) == 360)) {
-                        var loopModel = {
-                            paths: {},
-                            insideCount: 0
-                        };
-                        loopModel.paths[walkedPath.pathId] = safePath;
-                        collectLoop(loopModel, loops, opts.removeFromOriginal);
-                    }
-                    else {
-                        //gather both endpoints from all non-circle segments
-                        safePath.endPoints = MakerJs.point.fromPathEnds(safePath);
-                        //don't add lines which are shorter than the tolerance
-                        if (safePath.type == MakerJs.pathType.Line) {
-                            var distance = MakerJs.measure.pointDistance(safePath.endPoints[0], safePath.endPoints[1]);
-                            if (distance < opts.pointMatchingDistance) {
-                                return;
-                            }
-                        }
-                        for (var i = 2; i--;) {
-                            var linkedPath = {
-                                path: safePath,
-                                nextConnection: safePath.endPoints[1 - i],
-                                reversed: i != 0
-                            };
-                            connections.addItemToCollection(safePath.endPoints[i], linkedPath);
-                        }
-                    }
-                }
-            };
-            model.walk(modelContext, walkOptions);
-            //follow paths to find loops
-            follow(connections, loops, opts.removeFromOriginal);
-            //now we have all loops, we need to see which are inside of each other
-            spin(function (firstLoop) {
-                var firstPath = getFirstPathFromModel(firstLoop);
-                if (!firstPath)
-                    return;
-                spin(function (secondLoop) {
-                    if (firstLoop === secondLoop)
-                        return;
-                    if (MakerJs.measure.isPointInsideModel(MakerJs.point.middle(firstPath), secondLoop)) {
-                        firstLoop.insideCount++;
-                    }
-                });
-            });
-            //now we can group similar loops by their nested level
-            spin(function (loop) {
-                var depthModel = getModelByDepth(loop.insideCount);
-                var id = model.countChildModels(depthModel).toString();
-                delete loop.insideCount;
-                depthModel.models[id] = loop;
-            });
-            return result;
-        }
-        model.findLoops = findLoops;
-        /**
-         * Remove all paths in a loop model from the model(s) which contained them.
-         *
-         * @param loopToDetach The model to search for loops.
-         */
-        function detachLoop(loopToDetach) {
-            for (var id in loopToDetach.paths) {
-                var pathDirectionalWithOriginalContext = loopToDetach.paths[id];
-                var primeModel = pathDirectionalWithOriginalContext.modelContext;
-                if (primeModel && primeModel.paths && pathDirectionalWithOriginalContext.pathId) {
-                    delete primeModel.paths[pathDirectionalWithOriginalContext.pathId];
-                }
-            }
-        }
-        model.detachLoop = detachLoop;
-        /**
-         * @private
-         */
         var DeadEndFinder = /** @class */ (function () {
-            function DeadEndFinder(pointMatchingDistance, keep, trackDeleted) {
-                this.pointMatchingDistance = pointMatchingDistance;
-                this.keep = keep;
-                this.trackDeleted = trackDeleted;
-                pointMatchingDistance = pointMatchingDistance || .005;
-                function comparePoint(pointA, pointB) {
-                    var distance = MakerJs.measure.pointDistance(pointA, pointB);
-                    return distance <= pointMatchingDistance;
-                }
-                this.pointMap = new MakerJs.Collector(comparePoint);
+            function DeadEndFinder(modelContext, options) {
+                this.modelContext = modelContext;
+                this.options = options;
+                this.pointMap = new MakerJs.PointGraph();
+                this.list = [];
+                this.removed = [];
+                this.ordinals = {};
+                this.load();
             }
-            DeadEndFinder.prototype.removePathRef = function (pathRef, reason) {
+            DeadEndFinder.prototype.load = function () {
                 var _this = this;
-                var removePath = function (p) {
-                    var pathRefs = _this.pointMap.findCollection(p);
-                    for (var i = 0; i < pathRefs.length; i++) {
-                        if (pathRefs[i] === pathRef) {
-                            pathRefs.splice(i, 1);
+                var walkOptions = {
+                    onPath: function (walkedPath) {
+                        var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
+                        if (!endPoints)
                             return;
+                        var pathRef = walkedPath;
+                        pathRef.endPoints = endPoints;
+                        for (var i = 2; i--;) {
+                            _this.pointMap.insertValue(endPoints[i], pathRef);
                         }
                     }
                 };
-                for (var i = 2; i--;) {
-                    removePath(pathRef.endPoints[i]);
-                }
-                delete pathRef.modelContext.paths[pathRef.pathId];
-                if (this.trackDeleted) {
-                    this.trackDeleted(pathRef, reason);
+                model.walk(this.modelContext, walkOptions);
+                if (this.options.pointMatchingDistance) {
+                    this.pointMap.mergePoints(this.options.pointMatchingDistance);
                 }
             };
-            DeadEndFinder.prototype.removeDeadEnd = function (baseCount) {
+            DeadEndFinder.prototype.findDeadEnds = function () {
                 var _this = this;
-                var found = 0;
-                for (var i = 0; i < this.pointMap.collections.length; i++) {
-                    var pathRefs = this.pointMap.collections[i].items;
-                    if (pathRefs.length % 2 == 0)
-                        continue;
-                    if (pathRefs.length == 1) {
-                        this.removePathRef(pathRefs[0], "dead end " + (baseCount + found));
-                        found++;
+                var i = 0;
+                this.pointMap.forEachPoint(function (p, values, pointId, el) {
+                    _this.ordinals[pointId] = i++;
+                    _this.list.push(el);
+                });
+                i = 0;
+                var _loop_3 = function () {
+                    var el = this_2.list[i];
+                    if (el.valueIds.length === 1) {
+                        this_2.removePath(el, el.valueIds[0], i);
                     }
-                    else if (this.keep) {
-                        //allow caller to decide to keep each path
-                        pathRefs.forEach(function (pathRef) {
-                            if (!_this.keep(pathRef)) {
-                                _this.removePathRef(pathRef, "not keeping");
-                                found++;
+                    else if (this_2.options.keep && el.valueIds.length % 2) {
+                        el.valueIds.forEach(function (valueId) {
+                            var value = _this.pointMap.values[valueId];
+                            if (!_this.options.keep(value)) {
+                                _this.removePath(el, valueId, i);
                             }
                         });
                     }
+                    i++;
+                };
+                var this_2 = this;
+                while (i < this.list.length) {
+                    _loop_3();
                 }
-                return found;
+                return this.removed;
+            };
+            DeadEndFinder.prototype.removePath = function (el, valueId, current) {
+                var value = this.pointMap.values[valueId];
+                var otherPointId = this.getOtherPointId(value.endPoints, el.pointId);
+                var otherElement = this.pointMap.index[otherPointId];
+                this.removed.push(value);
+                this.removeValue(el, valueId);
+                this.removeValue(otherElement, valueId);
+                if (otherElement.valueIds.length > 0) {
+                    this.appendQueue(otherElement, current);
+                }
+            };
+            DeadEndFinder.prototype.removeValue = function (el, valueId) {
+                var pos = el.valueIds.indexOf(valueId);
+                if (pos >= 0) {
+                    el.valueIds.splice(pos, 1);
+                }
+            };
+            DeadEndFinder.prototype.appendQueue = function (el, current) {
+                var otherOrdinal = this.ordinals[el.pointId];
+                if (otherOrdinal < current) {
+                    this.list[otherOrdinal] = null;
+                    this.list.push(el);
+                    this.ordinals[el.pointId] = this.list.length;
+                }
+            };
+            DeadEndFinder.prototype.getOtherPointId = function (endPoints, pointId) {
+                for (var i = 0; i < endPoints.length; i++) {
+                    var id = this.pointMap.getIdOfPoint(endPoints[i]);
+                    if (pointId !== id) {
+                        return id;
+                    }
+                }
             };
             return DeadEndFinder;
         }());
@@ -6204,24 +6203,18 @@ var MakerJs;
          * @returns The input model (for cascading).
          */
         function removeDeadEnds(modelContext, pointMatchingDistance, keep, trackDeleted) {
-            var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep, trackDeleted);
-            var walkOptions = {
-                onPath: function (walkedPath) {
-                    var endPoints = MakerJs.point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
-                    if (!endPoints)
-                        return;
-                    var pathRef = walkedPath;
-                    pathRef.endPoints = endPoints;
-                    for (var i = 2; i--;) {
-                        deadEndFinder.pointMap.addItemToCollection(endPoints[i], pathRef);
-                    }
-                }
+            var options = {
+                pointMatchingDistance: pointMatchingDistance || .005,
+                keep: keep
             };
-            model.walk(modelContext, walkOptions);
-            var total = 0;
-            var pass = 0;
-            while (pass = deadEndFinder.removeDeadEnd(total)) {
-                total += pass;
+            var deadEndFinder = new DeadEndFinder(modelContext, options);
+            var removed = deadEndFinder.findDeadEnds();
+            //do not leave an empty model
+            if (removed.length < deadEndFinder.pointMap.values.length) {
+                removed.forEach(function (wp) {
+                    trackDeleted(wp, 'dead end');
+                    delete wp.modelContext.paths[wp.pathId];
+                });
             }
             return modelContext;
         }
@@ -6431,161 +6424,6 @@ var MakerJs;
             }
             return head + tail + '.close().innerToCAG()';
         }
-        function makeFakeChainFromLoop(modelContext) {
-            var fakeChain = { endless: true, links: [], pathLength: 0 };
-            for (var pathId in modelContext.paths) {
-                var pathContext = modelContext.paths[pathId];
-                var walkedPath = {
-                    layer: '',
-                    modelContext: modelContext,
-                    offset: [0, 0],
-                    pathContext: pathContext,
-                    pathId: pathId,
-                    route: [],
-                    routeKey: ''
-                };
-                var link = {
-                    endPoints: pathContext.endPoints,
-                    pathLength: 0,
-                    reversed: pathContext.reversed,
-                    walkedPath: walkedPath
-                };
-                fakeChain.links.push(link);
-            }
-            return fakeChain;
-        }
-        /**
-         * DEPRECATED - use .toJscadScript() instead.
-         * Creates a string of JavaScript code for execution with the OpenJsCad engine.
-         *
-         * @param modelToExport Model object to export.
-         * @param options Export options object.
-         * @param options.extrusion Height of 3D extrusion.
-         * @param options.resolution Size of facets.
-         * @returns String of JavaScript containing a main() function for OpenJsCad.
-         */
-        function toOpenJsCad(itemToExport, options) {
-            if (!itemToExport)
-                return '';
-            var modelToExport;
-            var all = '';
-            var depth = 0;
-            var depthModel;
-            var opts = {
-                extrusion: 1,
-                pointMatchingDistance: .005,
-                functionName: 'main'
-            };
-            MakerJs.extendObject(opts, options);
-            if (MakerJs.isModel(itemToExport)) {
-                modelToExport = itemToExport;
-            }
-            else {
-                if (Array.isArray(itemToExport)) {
-                    modelToExport = { paths: {} };
-                    itemToExport.forEach(function (p, i) { return modelToExport.paths[i] = p; });
-                }
-                else {
-                    modelToExport = { paths: { 0: itemToExport } };
-                }
-            }
-            if (modelToExport.exporterOptions) {
-                MakerJs.extendObject(opts, modelToExport.exporterOptions['toOpenJsCad']);
-            }
-            //pass options back into calling object
-            MakerJs.extendObject(options, opts);
-            if (opts && opts.modelMap) {
-                all = exportFromOptionsMap(modelToExport, opts.modelMap);
-            }
-            if (!all) {
-                var result = [];
-                var loops = MakerJs.model.findLoops(modelToExport, opts);
-                while (depthModel = loops.models[depth]) {
-                    var union = '';
-                    for (var modelId in depthModel.models) {
-                        var subModel = depthModel.models[modelId];
-                        var fakeChain = makeFakeChainFromLoop(subModel);
-                        union += wrap('.union', chainToJscadScript(fakeChain, opts.facetSize, opts.accuracy), union);
-                    }
-                    var operator = (depth % 2 == 0) ? '.union' : '.subtract';
-                    result.push(wrap(operator, union, result.length));
-                    depth++;
-                }
-                if (result.length === 0) {
-                    throw ('No closed geometries found.');
-                }
-                var extrudeOptions = { offset: [0, 0, opts.extrusion] };
-                result.push(wrap('.extrude', JSON.stringify(extrudeOptions), true));
-                all = 'return ' + result.join('');
-            }
-            return 'function ' + opts.functionName + '(){' + all + ';}';
-        }
-        exporter.toOpenJsCad = toOpenJsCad;
-        /**
-         * @private
-         */
-        function exportFromOptionsMap(modelToExport, optionsMap) {
-            if (!modelToExport.models)
-                return;
-            var result = [];
-            var union = [];
-            var i = 0;
-            for (var key in optionsMap) {
-                var fName = 'f' + i;
-                var options = optionsMap[key];
-                options.functionName = fName;
-                var childModel = modelToExport.models[key];
-                if (childModel) {
-                    result.push(toOpenJsCad(childModel, options));
-                    union.push('(' + fName + '())');
-                }
-                i++;
-            }
-            if (!result.length)
-                return;
-            result.push('return ' + union.join('.union'));
-            return result.join(' ');
-        }
-        /**
-         * DEPRECATED - use .toJscadSTL() instead.
-         * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
-         *
-         * @param modelToExport Model object to export.
-         * @param options Export options object.
-         * @param options.extrusion Height of 3D extrusion.
-         * @param options.resolution Size of facets.
-         * @returns String of STL format of 3D object.
-         */
-        function toSTL(modelToExport, options) {
-            if (options === void 0) { options = {}; }
-            if (!modelToExport)
-                return '';
-            var container;
-            switch (MakerJs.environment) {
-                case MakerJs.environmentTypes.BrowserUI:
-                    if (!('CAG' in window) || !('CSG' in window)) {
-                        throw "OpenJsCad library not found. Download http://maker.js.org/external/OpenJsCad/csg.js and http://maker.js.org/external/OpenJsCad/formats.js to your website and add script tags.";
-                    }
-                    container = window;
-                    break;
-                case MakerJs.environmentTypes.NodeJs:
-                    //this can throw if not found
-                    container = eval('require("openjscad-csg")');
-                    break;
-                case MakerJs.environmentTypes.WebWorker:
-                    if (!('CAG' in self) || !('CSG' in self)) {
-                        throw "OpenJsCad library not found. Download http://maker.js.org/external/OpenJsCad/csg.js and http://maker.js.org/external/OpenJsCad/formats.js to your website and add an importScripts statement.";
-                    }
-                    container = self;
-                    break;
-            }
-            var script = toOpenJsCad(modelToExport, options);
-            script += 'return ' + options.functionName + '();';
-            var f = new Function('CAG', 'CSG', script);
-            var csg = f(container.CAG, container.CSG);
-            return csg.toStlString();
-        }
-        exporter.toSTL = toSTL;
         /**
          * @private
          */
@@ -9596,5 +9434,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.9.93";
+MakerJs.version = "0.10.0";
 ﻿var Bezier = require('bezier-js');
