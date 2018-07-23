@@ -56,19 +56,12 @@ var Viewer = {
             center = false;
         }
 
-        Viewer.panZoom = svgPanZoom('#svg1', {
-            zoomEnabled: true,
-            controlIconsEnabled: true,
-            fit: false,
-            center: center,
-            customEventsHandler: Viewer.touchEventsHandler
-        });
-
-        if (zoom && pan) {
-            Viewer.panZoom.zoom(zoom);
-            Viewer.panZoom.pan(pan);
-        }
-
+        // Viewer.panZoom = svgPanZoom('#svg1', {
+        //     zoomEnabled: true,
+        //     controlIconsEnabled: true,
+        //     fit: false,
+        //     center: true
+        // });
     },
 
     Fit: function () {
