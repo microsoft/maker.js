@@ -459,7 +459,6 @@
      */
     class DeadEndFinder {
         public pointMap: PointGraph<IWalkPathWithEndpoints>;
-        public pointMatchingDistance: number;
         private list: IPointGraphIndexElement[];
         private removed: IWalkPathWithEndpoints[];
         private ordinals: { [pointId: number]: number };
@@ -474,7 +473,7 @@
 
         private load() {
             var walkOptions: IWalkOptions = {
-                onPath: function (walkedPath: IWalkPath) {
+                onPath: (walkedPath: IWalkPath) => {
                     var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
 
                     if (!endPoints) return;
@@ -490,7 +489,7 @@
 
             walk(this.modelContext, walkOptions);
 
-            this.pointMap.mergePoints(this.pointMatchingDistance);
+            this.pointMap.mergePoints(this.options.pointMatchingDistance);
         }
 
         public removeDeadEnds() {
@@ -517,8 +516,11 @@
                 i++;
             }
 
+            //do not leave an empty model
             if (this.removed.length < this.pointMap.values.length) {
-                //TODO now remove the values
+                this.removed.forEach(wp => {
+                    delete wp.modelContext.paths[wp.pathId];
+                });
             }
         }
 
