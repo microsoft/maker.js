@@ -18,7 +18,9 @@ describe('jscad', function () {
 
         var model = {};
         for (let i = 0; i < 10; i++) {
-            makerjs.$(new makerjs.models.Square(i * 10)).addTo(model);
+            makerjs.$(new makerjs.models.Square(i * 10))
+            .center()
+            .addTo(model);
         }
 
         var progress = 0;
