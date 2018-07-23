@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.9.93
+// Type definitions for Maker.js 0.10.0
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -985,14 +985,6 @@ Break a model's paths everywhere they intersect with another path.
 
          */
         expandPaths(distance: number, joints?: number, combineOptions?: ICombineOptions): ICascadeModel;
-        /**
-         * Find paths that have common endpoints and form loops.
-         *
-         * @param options Optional options object.
-         * @returns this cascade container, this.$result will be A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
-
-         */
-        findLoops(options?: IFindLoopsOptions): ICascadeModel;
         /**
          * Set the layer of a model. This is equivalent to:
 ```
@@ -2119,6 +2111,103 @@ declare namespace MakerJs {
         removeItemFromCollection(key: K, item: T): boolean;
         getCollectionsOfMultiple(cb: (key: K, items: T[]) => void): void;
     }
+    /**
+     * The element type stored in the index of a PointGraph.
+     */
+    interface IPointGraphIndexElement {
+        /**
+         * The point.
+         */
+        point: IPoint;
+        /**
+         * The id of this point.
+         */
+        pointId: number;
+        /**
+         * Array of other pointId's merged with this one.
+         */
+        merged?: number[];
+        /**
+         * Array of valueId's for this point.
+         */
+        valueIds: number[];
+        /**
+         * This point's ordinal position in the kd-tree.
+         */
+        kdId?: number;
+    }
+    /**
+     * A graph of items which may be located on the same points.
+     */
+    class PointGraph<T> {
+        /**
+         * Number of points inserted
+         */
+        insertedCount: number;
+        /**
+         * Map of unique points by x, then y, to a point id. This will remain intact even after merging.
+         */
+        graph: {
+            [x: number]: {
+                [y: number]: number;
+            };
+        };
+        /**
+         * Index of points by id.
+         */
+        index: {
+            [pointId: number]: IPointGraphIndexElement;
+        };
+        /**
+         * Map of point ids which once existed but have been merged into another id due to close proximity.
+         */
+        merged: {
+            [pointId: number]: number;
+        };
+        /**
+         * List of values inserted at points.
+         */
+        values: T[];
+        /**
+         * KD tree object.
+         */
+        private kdbush;
+        constructor();
+        /**
+         * Reset the stored points, graphs, lists, to initial state.
+         */
+        reset(): void;
+        /**
+         * Insert a value at a point.
+         * @param p Point.
+         * @param value Value associated with this point.
+         */
+        insertValue(p: IPoint, value: T): {
+            existed: boolean;
+            pointId: number;
+        };
+        /**
+         * Merge points within a given distance from each other. Call this after inserting values.
+         * @param withinDistance Distance to consider points equal.
+         */
+        mergePoints(withinDistance: number): void;
+        private mergeIndexElements(keep, remove);
+        /**
+         * Iterate over points in the index.
+         * @param cb Callback for each point in the index.
+         */
+        forEachPoint(cb: (p: IPoint, values: T[], pointId?: number, el?: IPointGraphIndexElement) => void): void;
+        /**
+         * Gets the id of a point, after merging.
+         * @param p Point to look up id.
+         */
+        getIdOfPoint(p: IPoint): number;
+        /**
+         * Get the index element of a point, after merging.
+         * @param p Point to look up index element.
+         */
+        getElementAtPoint(p: IPoint): IPointGraphIndexElement;
+    }
 }
 declare namespace MakerJs.model {
     /**
@@ -2792,20 +2881,6 @@ declare namespace MakerJs.chain {
 }
 declare namespace MakerJs.model {
     /**
-     * Find paths that have common endpoints and form loops.
-     *
-     * @param modelContext The model to search for loops.
-     * @param options Optional options object.
-     * @returns A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
-     */
-    function findLoops(modelContext: IModel, options?: IFindLoopsOptions): IModel;
-    /**
-     * Remove all paths in a loop model from the model(s) which contained them.
-     *
-     * @param loopToDetach The model to search for loops.
-     */
-    function detachLoop(loopToDetach: IModel): void;
-    /**
      * Remove paths from a model which have endpoints that do not connect to other paths.
      *
      * @param modelContext The model to search for dead ends.
@@ -2875,20 +2950,6 @@ declare namespace MakerJs.exporter {
     }
 }
 declare namespace MakerJs.exporter {
-    function toOpenJsCad(modelToExport: IModel, options?: IOpenJsCadOptions): string;
-    function toOpenJsCad(pathsToExport: IPath[], options?: IOpenJsCadOptions): string;
-    function toOpenJsCad(pathToExport: IPath, options?: IOpenJsCadOptions): string;
-    /**
-     * DEPRECATED - use .toJscadSTL() instead.
-     * Executes a JavaScript string with the OpenJsCad engine - converts 2D to 3D.
-     *
-     * @param modelToExport Model object to export.
-     * @param options Export options object.
-     * @param options.extrusion Height of 3D extrusion.
-     * @param options.resolution Size of facets.
-     * @returns String of STL format of 3D object.
-     */
-    function toSTL(modelToExport: IModel, options?: IOpenJsCadOptions): string;
     /**
      * Converts a model to a @jscad/csg object - 2D to 2D.
      *
