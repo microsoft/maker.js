@@ -49,7 +49,7 @@
 
         }
 
-        pointGraph.forEachPoint((p, values, id, el) => {
+        pointGraph.forEachPoint((p: IPoint, values: IChainLink[], pointId?: number, el?: IPointGraphIndexElement) => {
 
             while (el.valueIds.length > 0) {
 
@@ -436,34 +436,129 @@
 
             }
         });
-
     }
 
     /**
      * @private
      */
-    interface IRefPathEndpoints extends IWalkPath {
+    interface IWalkPathWithEndpoints extends IWalkPath {
         endPoints: IPoint[];
     }
 
     /**
      * @private
      */
+    interface IDeadEndFinderOptions {
+        pointMatchingDistance?: number;
+        keep?: IWalkPathBooleanCallback;
+        trackDeleted?: (wp: IWalkPath, reason: string) => void;
+    }
+
+    /**
+     * @private
+     */
     class DeadEndFinder {
+        public pointMap: PointGraph<IWalkPathWithEndpoints>;
+        public pointMatchingDistance: number;
+        private list: IPointGraphIndexElement[];
+        private removed: IWalkPathWithEndpoints[];
+        private ordinals: { [pointId: number]: number };
 
-        public pointMap: PointGraph<IRefPathEndpoints>;
+        constructor(public modelContext: IModel, public options: IDeadEndFinderOptions) {
+            this.pointMap = new PointGraph<IWalkPathWithEndpoints>();
+            this.list = [];
+            this.removed = [];
+            this.ordinals = {};
+            this.load();
+        }
 
-        constructor(public pointMatchingDistance, public keep?: IWalkPathBooleanCallback, public trackDeleted?: (wp: IWalkPath, reason: string) => void) {
+        private load() {
+            var walkOptions: IWalkOptions = {
+                onPath: function (walkedPath: IWalkPath) {
+                    var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
 
-            pointMatchingDistance = pointMatchingDistance || .005;
+                    if (!endPoints) return;
 
-            this.pointMap = new PointGraph<IRefPathEndpoints>();
+                    var pathRef = <IWalkPathWithEndpoints>walkedPath;
+                    pathRef.endPoints = endPoints;
+
+                    for (var i = 2; i--;) {
+                        this.pointMap.insertValue(endPoints[i], pathRef);
+                    }
+                }
+            };
+
+            walk(this.modelContext, walkOptions);
+
+            this.pointMap.mergePoints(this.pointMatchingDistance);
         }
 
         public removeDeadEnds() {
+            let i = 0;
 
-            //TODO: find all points which have an odd number
-            //for each, follow until it ends
+            this.pointMap.forEachPoint((p: IPoint, values: IWalkPathWithEndpoints[], pointId: number, el: IPointGraphIndexElement) => {
+                this.ordinals[pointId] = i++;
+                this.list.push(el);
+            });
+
+            i = 0;
+            while (i < this.list.length) {
+                let el = this.list[i];
+                if (el.valueIds.length === 1) {
+                    this.removePath(el, el.valueIds[0], i);
+                } else if (this.options.keep && el.valueIds.length % 2) {
+                    el.valueIds.forEach(valueId => {
+                        const value = this.pointMap.values[valueId];
+                        if (!this.options.keep(value)) {
+                            this.removePath(el, valueId, i);
+                        }
+                    });
+                }
+                i++;
+            }
+
+            if (this.removed.length < this.pointMap.values.length) {
+                //TODO now remove the values
+            }
+        }
+
+        private removePath(el: IPointGraphIndexElement, valueId: number, current: number) {
+            const value = this.pointMap.values[valueId];
+            const otherPointId = this.getOtherPointId(value.endPoints, el.pointId);
+            const otherElement = this.pointMap.index[otherPointId];
+
+            this.removed.push(value);
+            this.removeValue(el, valueId);
+            this.removeValue(otherElement, valueId);
+
+            if (otherElement.valueIds.length > 0) {
+                this.appendQueue(otherElement, current);
+            }
+        }
+
+        private removeValue(el: IPointGraphIndexElement, valueId: number) {
+            const pos = el.valueIds.indexOf(valueId);
+            if (pos >= 0) {
+                el.valueIds.splice(pos, 1);
+            }
+        }
+
+        private appendQueue(el: IPointGraphIndexElement, current: number) {
+            let otherOrdinal = this.ordinals[el.pointId];
+            if (otherOrdinal < current) {
+                this.list[otherOrdinal] = null;
+                this.list.push(el);
+                this.ordinals[el.pointId] = this.list.length;
+            }
+        }
+
+        private getOtherPointId(endPoints: IPoint[], pointId: number) {
+            for (let i = 0; i < endPoints.length; i++) {
+                let id = this.pointMap.getIdOfPoint(endPoints[i]);
+                if (pointId !== id) {
+                    return id;
+                }
+            }
         }
     }
 
@@ -477,26 +572,13 @@
      * @returns The input model (for cascading).
      */
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: (wp: IWalkPath, reason: string) => void) {
-        var deadEndFinder = new DeadEndFinder(pointMatchingDistance, keep, trackDeleted);
-
-        var walkOptions: IWalkOptions = {
-            onPath: function (walkedPath: IWalkPath) {
-                var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
-
-                if (!endPoints) return;
-
-                var pathRef = <IRefPathEndpoints>walkedPath;
-                pathRef.endPoints = endPoints;
-
-                for (var i = 2; i--;) {
-                    deadEndFinder.pointMap.insertValue(endPoints[i], pathRef);
-                }
-            }
+        const options: IDeadEndFinderOptions = {
+            pointMatchingDistance: pointMatchingDistance || .005,
+            keep,
+            trackDeleted
         };
 
-        walk(modelContext, walkOptions);
-
-        deadEndFinder.pointMap.mergePoints(pointMatchingDistance)
+        var deadEndFinder = new DeadEndFinder(modelContext, options);
 
         deadEndFinder.removeDeadEnds();
 
@@ -703,5 +785,5 @@ namespace MakerJs.chain {
         removeDuplicateEnds(chainContext.endless, result);
         return result;
     }
-    
+
 }
