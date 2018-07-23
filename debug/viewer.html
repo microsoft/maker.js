@@ -5,15 +5,22 @@
 
     <link href="viewer.css" rel="stylesheet" />
 
-    <script src="../external/svg-pan-zoom/svg-pan-zoom.min.js"></script>
     <script src="../external/OpenJsCad/csg.js"></script>
     <script src="../external/OpenJsCad/formats.js"></script>
+    <script src="../external/bezier-js/bezier.js"></script>
 
     <script>
         //pretend we are in node
         var module = {};
+
+        function require(id) {
+            return window[id];
+        }
     </script>
 
+    <script src="../node_modules/clone/clone.js"></script>
+    <script src="../node_modules/graham_scan/graham_scan.min.js"></script>
+    <script src="../node_modules/kdbush/kdbush.js"></script>
     <script src="core/maker.js"></script>
     <script src="core/angle.js"></script>
     <script src="core/point.js"></script>
