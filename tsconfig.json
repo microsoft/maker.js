@@ -29,6 +29,7 @@
     "src/core/fillet.ts",
     "src/core/kit.ts",
     "src/core/chain.ts",
+    "src/core/deadend.ts",
     "src/core/xml.ts",
     "external/OpenJsCad/csg.d.ts",
     "external/jscad/csg.d.ts",
