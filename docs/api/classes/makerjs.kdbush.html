@@ -1,6 +1,6 @@
 ---
 layout: posts
-title: Api - ILinkedPath Interface
+title: Api - KDBush Class
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
@@ -11,7 +11,7 @@ title: Api - ILinkedPath Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">ILinkedPath</span>
+			<span class="target">KDBush</span>
 		</li>
 	</ul>
 </section>
@@ -20,47 +20,77 @@ title: Api - ILinkedPath Interface
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section tsd-is-not-exported">
-				<h3>Properties</h3>
+				<h3>Methods</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.model.ilinkedpath.html#nextconnection" class="tsd-kind-icon">next<wbr>Connection</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.model.ilinkedpath.html#path" class="tsd-kind-icon">path</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="makerjs.model.ilinkedpath.html#reversed" class="tsd-kind-icon">reversed</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.kdbush.html#range" class="tsd-kind-icon">range</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="makerjs.kdbush.html#within" class="tsd-kind-icon">within</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="nextconnection" class="tsd-anchor"></a>
-		<h3>next<wbr>Connection</h3>
-		<div class="tsd-signature tsd-kind-icon">next<wbr>Connection<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/8f6945ab/src/core/loops.ts#L14">core/loops.ts:14</a></li>
-			</ul>
-		</aside>
+	<h2>Methods</h2>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+		<a name="range" class="tsd-anchor"></a>
+		<h3>range</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">(</span>minX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, minY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, maxX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, maxY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/collect.ts#L90">core/collect.ts:90</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>minX: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>minY: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>maxX: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>maxY: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
 	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="path" class="tsd-anchor"></a>
-		<h3>path</h3>
-		<div class="tsd-signature tsd-kind-icon">path<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipathdirectional.html" class="tsd-signature-type">IPathDirectional</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/8f6945ab/src/core/loops.ts#L13">core/loops.ts:13</a></li>
-			</ul>
-		</aside>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-		<a name="reversed" class="tsd-anchor"></a>
-		<h3>reversed</h3>
-		<div class="tsd-signature tsd-kind-icon">reversed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/8f6945ab/src/core/loops.ts#L15">core/loops.ts:15</a></li>
-			</ul>
-		</aside>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+		<a name="within" class="tsd-anchor"></a>
+		<h3>within</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">within<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, r<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/collect.ts#L91">core/collect.ts:91</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>x: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>y: <span class="tsd-signature-type">number</span></h5>
+					</li>
+					<li>
+						<h5>r: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
+			</li>
+		</ul>
 	</section>
 </section>
 </div>

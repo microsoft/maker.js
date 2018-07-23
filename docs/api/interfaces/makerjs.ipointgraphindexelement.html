@@ -1,12 +1,12 @@
 ---
 layout: posts
-title: Api - IWalkModelCallback Interface
+title: Api - IPointGraphIndexElement Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Callback signature for model.walk().</p>
+			<p>The element type stored in the index of a PointGraph.</p>
 		</div>
 	</div>
 </section>
@@ -14,36 +14,104 @@ title: Api - IWalkModelCallback Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IWalkModelCallback</span>
+			<span class="target">IPointGraphIndexElement</span>
 		</li>
 	</ul>
 </section>
-<section class="tsd-panel">
-	<h3 class="tsd-before-signature">Callable</h3>
-	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module">
-		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-	</ul>
-	<ul class="tsd-descriptions">
-		<li class="tsd-description">
-			<aside class="tsd-sources">
-				<ul>
-					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/maker.ts#L803">core/maker.ts:803</a></li>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Properties</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipointgraphindexelement.html#kdid" class="tsd-kind-icon">kd<wbr>Id</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipointgraphindexelement.html#merged" class="tsd-kind-icon">merged</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipointgraphindexelement.html#point" class="tsd-kind-icon">point</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipointgraphindexelement.html#pointid" class="tsd-kind-icon">point<wbr>Id</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ipointgraphindexelement.html#valueids" class="tsd-kind-icon">value<wbr>Ids</a></li>
 				</ul>
-			</aside>
-			<div class="tsd-comment tsd-typography">
-				<div class="lead">
-					<p>Callback signature for model.walk().</p>
-				</div>
-			</div>
-			<h4 class="tsd-parameters-title">Parameters</h4>
-			<ul class="tsd-parameters">
-				<li>
-					<h5>context: <a href="makerjs.iwalkmodel.html" class="tsd-signature-type">IWalkModel</a></h5>
-				</li>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="kdid" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> kd<wbr>Id</h3>
+		<div class="tsd-signature tsd-kind-icon">kd<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/collect.ts#L134">core/collect.ts:134</a></li>
 			</ul>
-			<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-		</li>
-	</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>This point&#39;s ordinal position in the kd-tree.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="merged" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> merged</h3>
+		<div class="tsd-signature tsd-kind-icon">merged<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/collect.ts#L124">core/collect.ts:124</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Array of other pointId&#39;s merged with this one.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="point" class="tsd-anchor"></a>
+		<h3>point</h3>
+		<div class="tsd-signature tsd-kind-icon">point<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/collect.ts#L114">core/collect.ts:114</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The point.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="pointid" class="tsd-anchor"></a>
+		<h3>point<wbr>Id</h3>
+		<div class="tsd-signature tsd-kind-icon">point<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/collect.ts#L119">core/collect.ts:119</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The id of this point.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="valueids" class="tsd-anchor"></a>
+		<h3>value<wbr>Ids</h3>
+		<div class="tsd-signature tsd-kind-icon">value<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/core/collect.ts#L129">core/collect.ts:129</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Array of valueId&#39;s for this point.</p>
+			</div>
+		</div>
+	</section>
 </section>
 </div>
 <footer class="tsd-panel with-border-bottom">
