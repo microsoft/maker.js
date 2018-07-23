@@ -83,4 +83,218 @@
         }
     }
 
+    /**
+     * @private
+     */
+    declare class KDBush {
+        range(minX: number, minY: number, maxX: number, maxY: number): number[];
+        within(x: number, y: number, r: number): number[];
+    }
+
+    /**
+     * @private
+     */
+    interface kdbushLib {
+        (points: IPoint[]): KDBush;
+    }
+
+    /**
+     * @private
+     */
+    const kdbush = require('kdbush') as kdbushLib;
+
+    /**
+     * The element type stored in the index of a PointGraph.
+     */
+    export interface IPointGraphIndexElement {
+
+        /**
+         * The point.
+         */
+        point: IPoint;
+
+        /**
+         * The id of this point.
+         */
+        pointId: number;
+
+        /**
+         * Array of other pointId's merged with this one.
+         */
+        merged?: number[];
+
+        /**
+         * Array of valueId's for this point.
+         */
+        valueIds: number[];
+
+        /**
+         * This point's ordinal position in the kd-tree.
+         */
+        kdId?: number;
+    }
+
+    /**
+     * A graph of items which may be located on the same points.
+     */
+    export class PointGraph<T> {
+
+        /**
+         * Number of points inserted
+         */
+        public insertedCount: number;
+
+        /**
+         * Map of unique points by x, then y, to a point id. This will remain intact even after merging.
+         */
+        public graph: { [x: number]: { [y: number]: number } };
+
+        /**
+         * Index of points by id.
+         */
+        public index: { [pointId: number]: IPointGraphIndexElement };
+
+        /**
+         * Map of point ids which once existed but have been merged into another id due to close proximity.
+         */
+        public merged: { [pointId: number]: number };
+
+        /**
+         * List of values inserted at points.
+         */
+        public values: T[];
+
+        /**
+         * KD tree object.
+         */
+        private kdbush: KDBush;
+
+        constructor() {
+            this.reset();
+        }
+
+        /**
+         * Reset the stored points, graphs, lists, to initial state.
+         */
+        public reset() {
+            this.insertedCount = 0;
+            this.graph = {};
+            this.index = {};
+            this.merged = {};
+            this.values = [];
+        }
+
+        /**
+         * Insert a value at a point.
+         * @param p Point.
+         * @param value Value associated with this point.
+         */
+        public insertValue(p: IPoint, value: T) {
+            const x = p[0], y = p[1];
+            if (!this.graph[x]) {
+                this.graph[x] = {};
+            }
+            const pgx = this.graph[x];
+            const existed = (y in pgx);
+            let el: IPointGraphIndexElement;
+            let pointId: number;
+            if (!existed) {
+                pgx[y] = pointId = this.insertedCount++;
+                el = {
+                    pointId,
+                    point: p,
+                    valueIds: [this.values.length]
+                };
+                this.index[pointId] = el;
+            } else {
+                pointId = pgx[y];
+                if (pointId in this.merged) {
+                    pointId = this.merged[pointId];
+                }
+                el = this.index[pointId];
+                el.valueIds.push(this.values.length);
+            }
+            this.values.push(value);
+            return { existed, pointId };
+        }
+
+        /**
+         * Merge points within a given distance from each other. Call this after inserting values.
+         * @param withinDistance Distance to consider points equal.
+         */
+        public mergePoints(withinDistance: number) {
+            const points: IPoint[] = [];
+            const kEls: IPointGraphIndexElement[] = [];
+            for (let pointId in this.index) {
+                let el = this.index[pointId];
+                let p = el.point;
+                el.kdId = points.length;
+                points.push(p);
+                kEls.push(el);
+            }
+            this.kdbush = kdbush(points);
+            for (let pointId in this.index) {
+                if (pointId in this.merged) continue;
+                let el = this.index[pointId];
+                let mergeIds = this.kdbush.within(el.point[0], el.point[1], withinDistance);
+                mergeIds.forEach(kdId => {
+                    if (kdId === el.kdId) return;
+                    this.mergeIndexElements(el, kEls[kdId]);
+                });
+            }
+        }
+
+        private mergeIndexElements(keep: IPointGraphIndexElement, remove: IPointGraphIndexElement) {
+            keep.merged = keep.merged || [];
+            keep.merged.push(remove.pointId);
+            this.merged[remove.pointId] = keep.pointId;
+            keep.valueIds.push.apply(keep.valueIds, remove.valueIds);
+            delete this.index[remove.pointId];
+            return keep.pointId;
+        }
+
+        /**
+         * Iterate over points in the index.
+         * @param cb Callback for each point in the index.
+         */
+        public forEachPoint(cb: (p: IPoint, values: T[], pointId?: number, el?: IPointGraphIndexElement) => void) {
+            for (let pointId = 0; pointId < this.insertedCount; pointId++) {
+                let el = this.index[pointId];
+                if (!el) continue;
+                let length = el.valueIds.length;
+                if (length > 0) {
+                    cb(el.point, el.valueIds.map(i => this.values[i]), pointId, el);
+                }
+            }
+        }
+
+        /**
+         * Gets the id of a point, after merging.
+         * @param p Point to look up id.
+         */
+        public getIdOfPoint(p: IPoint) {
+            const px = this.graph[p[0]];
+            if (px) {
+                const pointId = px[p[1]];
+                if (pointId >= 0) {
+                    if (pointId in this.merged) {
+                        return this.merged[pointId];
+                    } else {
+                        return pointId;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Get the index element of a point, after merging.
+         * @param p Point to look up index element.
+         */
+        public getElementAtPoint(p: IPoint) {
+            const pointId = this.getIdOfPoint(p);
+            if (pointId >= 0) {
+                return this.index[pointId];
+            }
+        }
+    }
 }

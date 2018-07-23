@@ -54,12 +54,12 @@ var Viewer = {
             Viewer.panZoom.reset();
         }
 
-        Viewer.panZoom = svgPanZoom('#svg1', {
-            zoomEnabled: true,
-            controlIconsEnabled: true,
-            fit: false,
-            center: true
-        });
+        // Viewer.panZoom = svgPanZoom('#svg1', {
+        //     zoomEnabled: true,
+        //     controlIconsEnabled: true,
+        //     fit: false,
+        //     center: true
+        // });
     },
 
     Fit: function () {

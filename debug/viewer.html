@@ -5,41 +5,60 @@
 
     <link href="viewer.css" rel="stylesheet" />
 
-    <script src="../external/svg-pan-zoom/svg-pan-zoom.min.js"></script>
     <script src="../external/OpenJsCad/csg.js"></script>
     <script src="../external/OpenJsCad/formats.js"></script>
+    <script src="../external/bezier-js/bezier.js"></script>
 
     <script>
         //pretend we are in node
         var module = {};
+
+        function require(id) {
+            return window[id];
+        }
     </script>
 
+    <script src="../node_modules/clone/clone.js"></script>
+    <script src="../node_modules/graham_scan/graham_scan.min.js"></script>
+    <script src="../node_modules/kdbush/kdbush.js"></script>
     <script src="core/maker.js"></script>
     <script src="core/angle.js"></script>
     <script src="core/point.js"></script>
     <script src="core/units.js"></script>
+    <script src="core/equal.js"></script>
     <script src="core/measure.js"></script>
     <script src="core/path.js"></script>
     <script src="core/break.js"></script>
     <script src="core/paths.js"></script>
     <script src="core/model.js"></script>
     <script src="core/combine.js"></script>
-    <script src="core/loops.js"></script>
+    <script src="core/collect.js"></script>
+    <script src="core/simplify.js"></script>
+    <script src="core/chain.js"></script>
+    <script src="core/deadend.js"></script>
+    <script src="core/expand.js"></script>
     <script src="core/kit.js"></script>
     <script src="core/exporter.js"></script>
+    <script src="core/importer.js"></script>
     <script src="core/dxf.js"></script>
     <script src="core/xml.js"></script>
     <script src="core/svg.js"></script>
+    <script src="core/pdf.js"></script>
     <script src="core/openjscad.js"></script>
     <script src="core/solvers.js"></script>
     <script src="core/fillet.js"></script>
     <script src="core/intersect.js"></script>
+    <script src="models/Belt.js"></script>
+    <script src="models/Holes.js"></script>
     <script src="models/BoltCircle.js"></script>
     <script src="models/BoltRectangle.js"></script>
+    <script src="models/Dogbone.js"></script>
     <script src="models/Dome.js"></script>
     <script src="models/RoundRectangle.js"></script>
     <script src="models/Oval.js"></script>
     <script src="models/OvalArc.js"></script>
+    <script src="models/BezierCurve.js"></script>
+    <script src="models/Ellipse.js"></script>
     <script src="models/ConnectTheDots.js"></script>
     <script src="models/Rectangle.js"></script>
     <script src="models/Ring.js"></script>
@@ -48,6 +67,7 @@
     <script src="models/Slot.js"></script>
     <script src="models/SCurve.js"></script>
     <script src="models/Star.js"></script>
+    <script src="models/Text.js"></script>
 
     <script>
         //pretend it's been required

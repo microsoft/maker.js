@@ -139,15 +139,6 @@ Break a model's paths everywhere they intersect with another path.
         expandPaths(distance: number, joints?: number, combineOptions?: ICombineOptions): ICascadeModel;
 
         /**
-         * Find paths that have common endpoints and form loops.
-         * 
-         * @param options Optional options object.
-         * @returns this cascade container, this.$result will be A new model with child models ranked according to their containment within other found loops. The paths of models will be IPathDirectionalWithPrimeContext.
-
-         */
-        findLoops(options?: IFindLoopsOptions): ICascadeModel;
-
-        /**
          * Set the layer of a model. This is equivalent to:
 ```
 modelContext.layer = layer;
