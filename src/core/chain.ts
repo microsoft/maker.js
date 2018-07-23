@@ -451,7 +451,6 @@
     interface IDeadEndFinderOptions {
         pointMatchingDistance?: number;
         keep?: IWalkPathBooleanCallback;
-        trackDeleted?: (wp: IWalkPath, reason: string) => void;
     }
 
     /**
@@ -489,10 +488,12 @@
 
             walk(this.modelContext, walkOptions);
 
-            this.pointMap.mergePoints(this.options.pointMatchingDistance);
+            if (this.options.pointMatchingDistance) {
+                this.pointMap.mergePoints(this.options.pointMatchingDistance);
+            }
         }
 
-        public removeDeadEnds() {
+        public findDeadEnds() {
             let i = 0;
 
             this.pointMap.forEachPoint((p: IPoint, values: IWalkPathWithEndpoints[], pointId: number, el: IPointGraphIndexElement) => {
@@ -516,12 +517,7 @@
                 i++;
             }
 
-            //do not leave an empty model
-            if (this.removed.length < this.pointMap.values.length) {
-                this.removed.forEach(wp => {
-                    delete wp.modelContext.paths[wp.pathId];
-                });
-            }
+            return this.removed;
         }
 
         private removePath(el: IPointGraphIndexElement, valueId: number, current: number) {
@@ -576,13 +572,20 @@
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: (wp: IWalkPath, reason: string) => void) {
         const options: IDeadEndFinderOptions = {
             pointMatchingDistance: pointMatchingDistance || .005,
-            keep,
-            trackDeleted
+            keep
         };
 
         var deadEndFinder = new DeadEndFinder(modelContext, options);
 
-        deadEndFinder.removeDeadEnds();
+        const removed = deadEndFinder.findDeadEnds();
+
+        //do not leave an empty model
+        if (removed.length < deadEndFinder.pointMap.values.length) {
+            removed.forEach(wp => {
+                trackDeleted(wp, 'dead end');
+                delete wp.modelContext.paths[wp.pathId];
+            });
+        }
 
         return modelContext;
     }
