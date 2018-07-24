@@ -40,7 +40,9 @@
                 }
 
                 if (nextLink.walkedPath.pathContext === firstLink.walkedPath.pathContext) {
-                    chain.endless = true;
+                    if (chain.links.length > 1) {
+                        chain.endless = true;
+                    }
                     break;
                 }
 
