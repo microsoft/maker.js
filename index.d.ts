@@ -1,4 +1,4 @@
-// Type definitions for Maker.js 0.10.0
+// Type definitions for Maker.js 0.10.1
 // Project: https://github.com/Microsoft/maker.js
 // Definitions by: Dan Marshall <https://github.com/danmarshall>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -2191,6 +2191,12 @@ declare namespace MakerJs {
          * @param withinDistance Distance to consider points equal.
          */
         mergePoints(withinDistance: number): void;
+        /**
+         * Finds all points which have only one value associated. Then, merge to the nearest other point within this set.
+         * Call this after inserting values.
+         * @param withinDistance Distance to consider points equal.
+         */
+        mergeNearestSinglePoints(withinDistance: number): void;
         private mergeIndexElements(keep, remove);
         /**
          * Iterate over points in the index.
