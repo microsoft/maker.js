@@ -271,7 +271,11 @@
                 for (let i = 0; i < byDistance.length; i++) {
                     let other = byDistance[i].el;
                     if (other.pointId in this.merged) continue;
-                    this.mergeIndexElements(el, other);
+                    if (other.merged && other.merged.length > 0) {
+                        this.mergeIndexElements(other, el);
+                    } else {
+                        this.mergeIndexElements(el, other);
+                    }
                     return;
                 }
             });
