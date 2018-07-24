@@ -13,7 +13,7 @@
     /**
      * @private
      */
-    function followLinks(pointGraph: PointGraph<IChainLink>, chainFound: { (chain: Partial<IChain>): void; }, chainNotFound?: { (path: IWalkPath): void; }) {
+    function followLinks(pointGraph: PointGraph<IChainLink>, chainFound: { (chain: Partial<IChain>, checkEndless: boolean): void; }, chainNotFound?: { (path: IWalkPath): void; }) {
 
         function followLink(currLink: IChainLink, chain: Partial<IChain>, firstLink: IChainLink) {
 
@@ -63,7 +63,7 @@
                 followLink(values[0], chain, values[0]);
 
                 if (chain.endless) {
-                    chainFound(chain);
+                    chainFound(chain, false);
                 } else {
                     //need to go in reverse
                     chain.links.reverse();
@@ -79,7 +79,7 @@
                     followLink(currLink, chain, firstLink);
 
                     if (chain.links.length > 1) {
-                        chainFound(chain);
+                        chainFound(chain, true);
                     } else {
                         chainNotFound(chain.links[0].walkedPath);
                     }
@@ -105,6 +105,14 @@
         );
 
         return singleChain;
+    }
+
+    /**
+     * @private
+     */
+    function linkEndpoint(link: IChainLink, beginning: boolean) {
+        let index = (beginning === link.reversed) ? 1 : 0;
+        return link.endPoints[index];
     }
 
     /**
@@ -246,8 +254,12 @@
             //follow paths to find endless chains
             followLinks(
                 pointGraph,
-                function (chain: IChain) {
-                    chain.endless = !!chain.endless;
+                function (chain: IChain, checkEndless: boolean) {
+                    if (checkEndless) {
+                        chain.endless = measure.isPointEqual(linkEndpoint(chain.links[0], true), linkEndpoint(chain.links[chain.links.length - 1], false), opts.pointMatchingDistance);
+                    } else {
+                        chain.endless = !!chain.endless;
+                    }
                     chainsByLayer[layer].push(chain);
                 },
                 function (walkedPath: IWalkPath) {
