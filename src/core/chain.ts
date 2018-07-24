@@ -51,7 +51,7 @@
 
         pointGraph.forEachPoint((p: IPoint, values: IChainLink[], pointId?: number, el?: IPointGraphIndexElement) => {
 
-            while (el.valueIds.length > 0) {
+            if (el.valueIds.length > 0) {
 
                 var chain: Partial<IChain> = {
                     links: [],
@@ -190,8 +190,8 @@
 
                 } else {
 
-                    //don't add lines which are shorter than the tolerance
-                    if (pathLength < opts.pointMatchingDistance) {
+                    //don't add lines which are 5x shorter than the tolerance
+                    if (pathLength < opts.pointMatchingDistance / 5) {
 
                         if (!ignored[layer]) {
                             ignored[layer] = [];
@@ -214,8 +214,6 @@
 
                         pointGraph.insertValue(endPoints[i], link);
                     }
-
-                    pointGraph.mergePoints(opts.pointMatchingDistance);
                 }
             }
         };
@@ -234,6 +232,9 @@
 
         for (let layer in pointGraphsByLayer) {
             let pointGraph = pointGraphsByLayer[layer];
+
+            pointGraph.mergeNearestSinglePoints(opts.pointMatchingDistance);
+
             var loose: IWalkPath[] = [];
 
             if (!chainsByLayer[layer]) {
