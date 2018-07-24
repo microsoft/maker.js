@@ -17,7 +17,7 @@ describe('jscad', function () {
         var { CAG } = require('@jscad/csg');
 
         var model = {};
-        for (let i = 0; i < 10; i++) {
+        for (let i = 1; i < 10; i++) {
             makerjs.$(new makerjs.models.Square(i * 10))
             .center()
             .addTo(model);

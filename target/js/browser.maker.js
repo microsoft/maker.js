@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.10.0
+ *   version: 0.10.1
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -3224,6 +3224,47 @@ var MakerJs;
                 _loop_1(pointId);
             }
         };
+        /**
+         * Finds all points which have only one value associated. Then, merge to the nearest other point within this set.
+         * Call this after inserting values.
+         * @param withinDistance Distance to consider points equal.
+         */
+        PointGraph.prototype.mergeNearestSinglePoints = function (withinDistance) {
+            var _this = this;
+            var singles = [];
+            for (var pointId in this.index) {
+                var el = this.index[pointId];
+                if (el.valueIds.length === 1) {
+                    singles.push(el);
+                }
+            }
+            this.kdbush = kdbush(singles.map(function (el) { return el.point; }));
+            singles.forEach(function (el) {
+                if (el.pointId in _this.merged)
+                    return;
+                var mergeIds = _this.kdbush.within(el.point[0], el.point[1], withinDistance);
+                var byDistance = [];
+                mergeIds.forEach(function (i) {
+                    var other = singles[i];
+                    if (other.pointId === el.pointId)
+                        return;
+                    byDistance.push({ el: other, distance: MakerJs.measure.pointDistance(other.point, el.point) });
+                });
+                byDistance.sort(function (a, b) { return a.distance - b.distance; });
+                for (var i = 0; i < byDistance.length; i++) {
+                    var other = byDistance[i].el;
+                    if (other.pointId in _this.merged)
+                        continue;
+                    if (other.merged && other.merged.length > 0) {
+                        _this.mergeIndexElements(other, el);
+                    }
+                    else {
+                        _this.mergeIndexElements(el, other);
+                    }
+                    return;
+                }
+            });
+        };
         PointGraph.prototype.mergeIndexElements = function (keep, remove) {
             keep.merged = keep.merged || [];
             keep.merged.push(remove.pointId);
@@ -6010,14 +6051,16 @@ var MakerJs;
                         break;
                     }
                     if (nextLink.walkedPath.pathContext === firstLink.walkedPath.pathContext) {
-                        chain.endless = true;
+                        if (chain.links.length > 1) {
+                            chain.endless = true;
+                        }
                         break;
                     }
                     currLink = nextLink;
                 }
             }
             pointGraph.forEachPoint(function (p, values, pointId, el) {
-                while (el.valueIds.length > 0) {
+                if (el.valueIds.length > 0) {
                     var chain = {
                         links: [],
                         pathLength: 0
@@ -6116,8 +6159,8 @@ var MakerJs;
                         chainsByLayer[layer].push(chain);
                     }
                     else {
-                        //don't add lines which are shorter than the tolerance
-                        if (pathLength < opts.pointMatchingDistance) {
+                        //don't add lines which are 5x shorter than the tolerance
+                        if (pathLength < opts.pointMatchingDistance / 5) {
                             if (!ignored[layer]) {
                                 ignored[layer] = [];
                             }
@@ -6135,7 +6178,6 @@ var MakerJs;
                             };
                             pointGraph.insertValue(endPoints[i], link);
                         }
-                        pointGraph.mergePoints(opts.pointMatchingDistance);
                     }
                 }
             };
@@ -6150,6 +6192,7 @@ var MakerJs;
             model.walk(modelContext, walkOptions);
             var _loop_2 = function (layer_1) {
                 var pointGraph = pointGraphsByLayer[layer_1];
+                pointGraph.mergeNearestSinglePoints(opts.pointMatchingDistance);
                 loose = [];
                 if (!chainsByLayer[layer_1]) {
                     chainsByLayer[layer_1] = [];
@@ -9848,6 +9891,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.10.0";
+MakerJs.version = "0.10.1";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
