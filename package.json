@@ -23,7 +23,7 @@
     "predocs": "rm -r -f ./docs/api",
     "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
     "start": "http-server -o -p 8020",
-    "test": "mocha"
+    "test": "mocha --timeout 15000"
   },
   "maintainers": [
     {
