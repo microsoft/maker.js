@@ -244,6 +244,39 @@
             }
         }
 
+        /**
+         * Finds all points which have only one value associated. Then, merge to the nearest other point within this set.
+         * Call this after inserting values.
+         * @param withinDistance Distance to consider points equal.
+         */
+        public mergeNearestSinglePoints(withinDistance: number) {
+            const singles: IPointGraphIndexElement[] = [];
+            for (let pointId in this.index) {
+                let el = this.index[pointId];
+                if (el.valueIds.length === 1) {
+                    singles.push(el);
+                }
+            }
+            this.kdbush = kdbush(singles.map(el => el.point));
+            singles.forEach(el => {
+                if (el.pointId in this.merged) return;
+                let mergeIds = this.kdbush.within(el.point[0], el.point[1], withinDistance);
+                let byDistance: { el: IPointGraphIndexElement, distance: number }[] = [];
+                mergeIds.forEach(i => {
+                    const other = singles[i];
+                    if (other.pointId === el.pointId) return;
+                    byDistance.push({ el: other, distance: measure.pointDistance(other.point, el.point) });
+                });
+                byDistance.sort((a, b) => a.distance - b.distance);
+                for (let i = 0; i < byDistance.length; i++) {
+                    let other = byDistance[i].el;
+                    if (other.pointId in this.merged) continue;
+                    this.mergeIndexElements(el, other);
+                    return;
+                }
+            });
+        }
+
         private mergeIndexElements(keep: IPointGraphIndexElement, remove: IPointGraphIndexElement) {
             keep.merged = keep.merged || [];
             keep.merged.push(remove.pointId);
