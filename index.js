@@ -5653,7 +5653,7 @@ var MakerJs;
                     };
                     followLink(values[0], chain, values[0]);
                     if (chain.endless) {
-                        chainFound(chain);
+                        chainFound(chain, false);
                     }
                     else {
                         //need to go in reverse
@@ -5665,7 +5665,7 @@ var MakerJs;
                         var currLink = chain.links.pop();
                         followLink(currLink, chain, firstLink);
                         if (chain.links.length > 1) {
-                            chainFound(chain);
+                            chainFound(chain, true);
                         }
                         else {
                             chainNotFound(chain.links[0].walkedPath);
@@ -5688,6 +5688,13 @@ var MakerJs;
             return singleChain;
         }
         model.findSingleChain = findSingleChain;
+        /**
+         * @private
+         */
+        function linkEndpoint(link, beginning) {
+            var index = (beginning === link.reversed) ? 1 : 0;
+            return link.endPoints[index];
+        }
         function findChains(modelContext) {
             var args = [];
             for (var _i = 1; _i < arguments.length; _i++) {
@@ -5784,8 +5791,13 @@ var MakerJs;
                     chainsByLayer[layer_1] = [];
                 }
                 //follow paths to find endless chains
-                followLinks(pointGraph, function (chain) {
-                    chain.endless = !!chain.endless;
+                followLinks(pointGraph, function (chain, checkEndless) {
+                    if (checkEndless) {
+                        chain.endless = MakerJs.measure.isPointEqual(linkEndpoint(chain.links[0], true), linkEndpoint(chain.links[chain.links.length - 1], false), opts.pointMatchingDistance);
+                    }
+                    else {
+                        chain.endless = !!chain.endless;
+                    }
                     chainsByLayer[layer_1].push(chain);
                 }, function (walkedPath) {
                     loose.push(walkedPath);
@@ -9477,5 +9489,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.10.1";
+MakerJs.version = "0.10.2";
 ﻿var Bezier = require('bezier-js');
