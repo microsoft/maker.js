@@ -1616,7 +1616,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 451,
+              "line": 466,
               "character": 25
             }
           ]
@@ -1647,7 +1647,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 473,
+              "line": 488,
               "character": 27
             }
           ]
@@ -1684,7 +1684,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 486,
+              "line": 501,
               "character": 27
             }
           ]
@@ -1723,7 +1723,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 618,
+              "line": 633,
               "character": 31
             }
           ]
@@ -1761,7 +1761,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 509,
+              "line": 524,
               "character": 30
             }
           ]
@@ -1804,7 +1804,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 563,
+              "line": 578,
               "character": 28
             }
           ]
@@ -2058,17 +2058,17 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 115,
-              "character": 30
-            },
-            {
-              "fileName": "core/chain.ts",
               "line": 125,
               "character": 30
             },
             {
               "fileName": "core/chain.ts",
-              "line": 127,
+              "line": 135,
+              "character": 30
+            },
+            {
+              "fileName": "core/chain.ts",
+              "line": 137,
               "character": 30
             }
           ]
@@ -2099,7 +2099,7 @@
           "sources": [
             {
               "fileName": "core/chain.ts",
-              "line": 95,
+              "line": 97,
               "character": 35
             }
           ]
@@ -13051,6 +13051,10 @@
               {
                 "name": "new Text",
                 "kindString": "Constructor signature",
+                "comment": {
+                  "shortText": "Renders text in a given font to a model.",
+                  "returns": "Model of the text.\n"
+                },
                 "parameters": [
                   {
                     "name": "font",
@@ -13107,7 +13111,7 @@
               "sources": [
                 {
                   "fileName": "models/Text.ts",
-                  "line": 5,
+                  "line": 4,
                   "character": 21
                 }
               ],
@@ -13119,6 +13123,54 @@
                 "type": "reference",
                 "name": "IModel.models"
               }
+            }
+          },
+          "Method": {
+            "glyphToModel": {
+              "flags": {
+                "isStatic": true,
+                "isExported": true
+              },
+              "signatures": [
+                {
+                  "name": "glyphToModel",
+                  "kindString": "Call signature",
+                  "comment": {
+                    "shortText": "Convert an opentype glyph to a model.",
+                    "returns": "Model of the glyph.\n"
+                  },
+                  "parameters": [
+                    {
+                      "name": "glyph",
+                      "flags": {},
+                      "comment": "Opentype.Glyph object.",
+                      "type": "opentype.Glyph"
+                    },
+                    {
+                      "name": "fontSize",
+                      "flags": {},
+                      "comment": "Font size.",
+                      "type": "number"
+                    },
+                    {
+                      "name": "bezierAccuracy",
+                      "flags": {
+                        "isOptional": true
+                      },
+                      "comment": "Optional accuracy of Bezier curves.",
+                      "type": "number"
+                    }
+                  ],
+                  "type": "IModel"
+                }
+              ],
+              "sources": [
+                {
+                  "fileName": "models/Text.ts",
+                  "line": 72,
+                  "character": 27
+                }
+              ]
             }
           }
         }
@@ -20375,7 +20427,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 260,
+              "line": 297,
               "character": 27
             }
           ]
@@ -20406,7 +20458,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 293,
+              "line": 330,
               "character": 32
             }
           ]
@@ -20437,7 +20489,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 275,
+              "line": 312,
               "character": 27
             }
           ]
@@ -20475,6 +20527,37 @@
               "fileName": "core/collect.ts",
               "line": 192,
               "character": 26
+            }
+          ]
+        },
+        "mergeNearestSinglePoints": {
+          "flags": {
+            "isExported": true,
+            "isPublic": true
+          },
+          "signatures": [
+            {
+              "name": "mergeNearestSinglePoints",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Finds all points which have only one value associated. Then, merge to the nearest other point within this set.\nCall this after inserting values."
+              },
+              "parameters": [
+                {
+                  "name": "withinDistance",
+                  "flags": {},
+                  "comment": "Distance to consider points equal.\n",
+                  "type": "number"
+                }
+              ],
+              "type": "void"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/collect.ts",
+              "line": 252,
+              "character": 39
             }
           ]
         },

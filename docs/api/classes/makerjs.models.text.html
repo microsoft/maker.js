@@ -33,6 +33,12 @@ title: Api - Text Class
 					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.text.html#models" class="tsd-kind-icon">models</a></li>
 				</ul>
 			</section>
+			<section class="tsd-index-section ">
+				<h3>Methods</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="makerjs.models.text.html#glyphtomodel" class="tsd-kind-icon">glyph<wbr>ToModel</a></li>
+				</ul>
+			</section>
 		</div>
 	</section>
 </section>
@@ -48,34 +54,75 @@ title: Api - Text Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/models/Text.ts#L5">models/Text.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/models/Text.ts#L4">models/Text.ts:4</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Renders text in a given font to a model.</p>
+					</div>
+				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
 						<h5>font: <span class="tsd-signature-type">opentype.Font</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>OpenType.Font object.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5>text: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>String of text to render.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5>fontSize: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Font size.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> combine: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Flag (default false) to perform a combineUnion upon each character with characters to the left and right.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> centerCharacterOrigin: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Flag (default false) to move the x origin of each character to the center. Useful for rotating text characters.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> bezierAccuracy: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Optional accuracy of Bezier curves.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> opentypeOptions: <span class="tsd-signature-type">opentype.RenderOptions</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Optional opentype.RenderOptions object.</p>
+							</div>
+						</div>
 					</li>
 				</ul>
 				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.text.html" class="tsd-signature-type">Text</a></h4>
+				<p>Model of the text.</p>
 			</li>
 		</ul>
 	</section>
@@ -88,9 +135,56 @@ title: Api - Text Class
 		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/3e87cc67/src/models/Text.ts#L5">models/Text.ts:5</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/models/Text.ts#L4">models/Text.ts:4</a></li>
 			</ul>
 		</aside>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Methods</h2>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+		<a name="glyphtomodel" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagStatic">Static</span> glyph<wbr>ToModel</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+			<li class="tsd-signature tsd-kind-icon">glyph<wbr>ToModel<span class="tsd-signature-symbol">(</span>glyph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">opentype.Glyph</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, bezierAccuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/models/Text.ts#L72">models/Text.ts:72</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Convert an opentype glyph to a model.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>glyph: <span class="tsd-signature-type">opentype.Glyph</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Opentype.Glyph object.</p>
+						</div>
+					</li>
+					<li>
+						<h5>fontSize: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Font size.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> bezierAccuracy: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional accuracy of Bezier curves.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model of the glyph.</p>
+			</li>
+		</ul>
 	</section>
 </section>
 </div>
