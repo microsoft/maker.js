@@ -9391,6 +9391,17 @@ var MakerJs;
     var models;
     (function (models) {
         var Text = /** @class */ (function () {
+            /**
+             * Renders text in a given font to a model.
+             * @param font OpenType.Font object.
+             * @param text String of text to render.
+             * @param fontSize Font size.
+             * @param combine Flag (default false) to perform a combineUnion upon each character with characters to the left and right.
+             * @param centerCharacterOrigin Flag (default false) to move the x origin of each character to the center. Useful for rotating text characters.
+             * @param bezierAccuracy Optional accuracy of Bezier curves.
+             * @param opentypeOptions Optional opentype.RenderOptions object.
+             * @returns Model of the text.
+             */
             function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy, opentypeOptions) {
                 if (combine === void 0) { combine = false; }
                 if (centerCharacterOrigin === void 0) { centerCharacterOrigin = false; }
@@ -9400,50 +9411,7 @@ var MakerJs;
                 var prevDeleted;
                 var prevChar;
                 var cb = function (glyph, x, y, _fontSize, options) {
-                    var charModel = {};
-                    var firstPoint;
-                    var currPoint;
-                    var pathCount = 0;
-                    function addPath(p) {
-                        if (!charModel.paths) {
-                            charModel.paths = {};
-                        }
-                        charModel.paths['p_' + ++pathCount] = p;
-                    }
-                    function addModel(m) {
-                        if (!charModel.models) {
-                            charModel.models = {};
-                        }
-                        charModel.models['p_' + ++pathCount] = m;
-                    }
-                    var p = glyph.getPath(0, 0, _fontSize);
-                    p.commands.map(function (command, i) {
-                        var points = [[command.x, command.y], [command.x1, command.y1], [command.x2, command.y2]].map(function (p) {
-                            if (p[0] !== void 0) {
-                                return MakerJs.point.mirror(p, false, true);
-                            }
-                        });
-                        switch (command.type) {
-                            case 'M':
-                                firstPoint = points[0];
-                                break;
-                            case 'Z':
-                                points[0] = firstPoint;
-                            //fall through to line
-                            case 'L':
-                                if (!MakerJs.measure.isPointEqual(currPoint, points[0])) {
-                                    addPath(new MakerJs.paths.Line(currPoint, points[0]));
-                                }
-                                break;
-                            case 'C':
-                                addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0], bezierAccuracy));
-                                break;
-                            case 'Q':
-                                addModel(new models.BezierCurve(currPoint, points[1], points[0], bezierAccuracy));
-                                break;
-                        }
-                        currPoint = points[0];
-                    });
+                    var charModel = Text.glyphToModel(glyph, _fontSize, bezierAccuracy);
                     charModel.origin = [x, 0];
                     if (centerCharacterOrigin && (charModel.paths || charModel.models)) {
                         var m = MakerJs.measure.modelExtents(charModel);
@@ -9477,6 +9445,60 @@ var MakerJs;
                 };
                 font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
             }
+            /**
+             * Convert an opentype glyph to a model.
+             * @param glyph Opentype.Glyph object.
+             * @param fontSize Font size.
+             * @param bezierAccuracy Optional accuracy of Bezier curves.
+             * @returns Model of the glyph.
+             */
+            Text.glyphToModel = function (glyph, fontSize, bezierAccuracy) {
+                var charModel = {};
+                var firstPoint;
+                var currPoint;
+                var pathCount = 0;
+                function addPath(p) {
+                    if (!charModel.paths) {
+                        charModel.paths = {};
+                    }
+                    charModel.paths['p_' + ++pathCount] = p;
+                }
+                function addModel(m) {
+                    if (!charModel.models) {
+                        charModel.models = {};
+                    }
+                    charModel.models['p_' + ++pathCount] = m;
+                }
+                var p = glyph.getPath(0, 0, fontSize);
+                p.commands.map(function (command, i) {
+                    var points = [[command.x, command.y], [command.x1, command.y1], [command.x2, command.y2]].map(function (p) {
+                        if (p[0] !== void 0) {
+                            return MakerJs.point.mirror(p, false, true);
+                        }
+                    });
+                    switch (command.type) {
+                        case 'M':
+                            firstPoint = points[0];
+                            break;
+                        case 'Z':
+                            points[0] = firstPoint;
+                        //fall through to line
+                        case 'L':
+                            if (!MakerJs.measure.isPointEqual(currPoint, points[0])) {
+                                addPath(new MakerJs.paths.Line(currPoint, points[0]));
+                            }
+                            break;
+                        case 'C':
+                            addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0], bezierAccuracy));
+                            break;
+                        case 'Q':
+                            addModel(new models.BezierCurve(currPoint, points[1], points[0], bezierAccuracy));
+                            break;
+                    }
+                    currPoint = points[0];
+                });
+                return charModel;
+            };
             return Text;
         }());
         models.Text = Text;
@@ -9489,5 +9511,5 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.10.2";
+MakerJs.version = "0.10.3";
 ﻿var Bezier = require('bezier-js');
