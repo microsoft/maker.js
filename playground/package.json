@@ -5,11 +5,13 @@
   "description": "Maker.js playground",
   "main": "playground.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p . && tsc -p worker"
   },
   "author": "Dan Marshall",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/codemirror": "0.0.38",
+    "@types/marked": "^0.0.28",
     "makerjs": "^0.10.3"
   }
 }
