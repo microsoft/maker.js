@@ -1,0 +1,27 @@
+{
+  "name": "makerjs-dev",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Maker.js monorepo",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^3.0.0-rc.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/maker.js.git"
+  },
+  "author": "Dan Marshall",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Microsoft/maker.js/issues"
+  },
+  "homepage": "https://github.com/Microsoft/maker.js#readme"
+}
