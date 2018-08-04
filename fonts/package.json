@@ -1,0 +1,16 @@
+{
+  "name": "fonts",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "fonts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "pretty-camel": "0.0.8",
+    "sort-keys": "^2.0.0"
+  }
+}

@@ -1,5 +1,6 @@
 {
   "packages": [
+    "fonts",
     "packages/*",
     "playground"
   ],
