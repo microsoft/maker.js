@@ -7,7 +7,6 @@
   "directories": {
     "doc": "docs"
   },
-  "dependencies": {},
   "devDependencies": {
     "lerna": "^3.0.0-rc.0"
   },
