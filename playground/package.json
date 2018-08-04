@@ -1,0 +1,15 @@
+{
+  "name": "playground",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Maker.js playground",
+  "main": "playground.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dan Marshall",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "makerjs": "^0.10.3"
+  }
+}
