@@ -1,5 +1,5 @@
 var assert = require('assert');
-var makerjs = require('../index.js')
+var makerjs = require('../dist/index.js')
 
 describe('Core', function () {
 

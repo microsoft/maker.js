@@ -12,7 +12,9 @@
     "lerna": "^3.0.0-rc.0"
   },
   "scripts": {
-    "start": "http-server -o -p 8020"
+    "build": "lerna run build",
+    "start": "http-server -o -p 8020",
+    "test": "lerna run test"
   },
   "repository": {
     "type": "git",
