@@ -14,6 +14,7 @@
     "typescript": "^2.4.2"
   },
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "start": "http-server -o -p 8020",
     "test": "lerna run test"
