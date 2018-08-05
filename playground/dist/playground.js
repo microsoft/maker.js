@@ -64,7 +64,7 @@ var MakerJsPlayground;
         FullScreen: 'full-screen'
     };
     function isLandscapeOrientation() {
-        return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape';
+        return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape' || window.orientation === undefined;
     }
     function isHttp(url) {
         return "http" === url.substr(0, 4);
@@ -1328,9 +1328,6 @@ var MakerJsPlayground;
     MakerJsPlayground.command = command;
     //execution
     window.onload = function (ev) {
-        if (window.orientation === void 0) {
-            window.orientation = 'landscape';
-        }
         //hide the customize menu when booting on small screens
         //if (document.body.clientWidth < 540) {
         //    document.body.classList.add('collapse-rendering-options');
