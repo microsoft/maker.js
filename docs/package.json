@@ -1,0 +1,11 @@
+{
+  "name": "docs",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Maker.js docs",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "Dan Marshall",
+  "license": "Apache-2.0"
+}
