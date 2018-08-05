@@ -94,7 +94,7 @@
     }
 
     function isLandscapeOrientation() {
-        return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape';
+        return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape' || window.orientation === undefined;
     }
 
     function isHttp(url: string): boolean {
@@ -477,10 +477,10 @@
         return true;
     }
 
-    function lockToPath(path: Node) {
+    function lockToPath(path: SVGElement) {
 
         //trace back to root
-        var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGGElement;
+        var root = viewSvgContainer.querySelector(viewModelRootSelector) as SVGElement;
         var route: string[] = JSON.parse(path.attributes.getNamedItem('data-route').value);
 
         if (processed.lockedPath && arraysEqual(processed.lockedPath.route, route)) {
@@ -599,7 +599,7 @@
         if (!keepEventElement && srcElement && srcElement.tagName && srcElement.tagName == 'text') {
 
             var text = srcElement as SVGTextElement;
-            var path = text.previousSibling;
+            var path = text.previousSibling as SVGElement;
 
             lockToPath(path);
         }
@@ -1702,10 +1702,6 @@
     //execution
 
     window.onload = function (ev) {
-
-        if (window.orientation === void 0) {
-            window.orientation = 'landscape';
-        }
 
         //hide the customize menu when booting on small screens
         //if (document.body.clientWidth < 540) {
