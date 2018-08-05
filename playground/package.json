@@ -5,7 +5,7 @@
   "description": "Maker.js playground",
   "main": "playground.js",
   "scripts": {
-    "build": "tsc -p . && tsc -p worker"
+    "build": "tsc -p . && tsc -p src/worker"
   },
   "author": "Dan Marshall",
   "license": "Apache-2.0",
