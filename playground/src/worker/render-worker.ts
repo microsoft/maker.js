@@ -34,11 +34,11 @@ function load(id, src) {
 
 //add the makerjs module
 importScripts(
-    '../../fonts/fonts.js',
+    '../../../fonts/fonts.js',
     '../fontloader.js',
-    '../../target/js/browser.maker.js',
-    '../../external/bezier-js/bezier.js',
-    '../../external/opentype/opentype.js'
+    '../../../target/js/browser.maker.js',
+    '../../../external/bezier-js/bezier.js',
+    '../../../external/opentype/opentype.js'
 );
 var makerjs: typeof MakerJs = self.require('makerjs');
 module['makerjs'] = makerjs;

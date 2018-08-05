@@ -20,8 +20,8 @@ module.require = (id: string): any => {
 };
 
 importScripts(
-    '../../target/js/browser.maker.js?' + new Date().valueOf(),
-    '../../external/bezier-js/bezier.js',
+    '../../../target/js/browser.maker.js?' + new Date().valueOf(),
+    '../../../external/bezier-js/bezier.js',
     '../iexport.js');
 
 var makerjs: typeof MakerJs = require('makerjs');
@@ -70,8 +70,8 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
 
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Stl]) {
                     importScripts(
-                        '../../external/jscad/csg.js',
-                        '../../external/jscad/stl-serializer.js'
+                        '../../../external/jscad/csg.js',
+                        '../../../external/jscad/stl-serializer.js'
                     );
                     deps[MakerJsPlaygroundExport.ExportFormat.Stl] = true;
                 }
@@ -96,9 +96,9 @@ function getExporter(format: MakerJsPlaygroundExport.ExportFormat, result: Maker
 
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Pdf]) {
                     importScripts(
-                        '../../external/text-encoding/encoding-indexes.js',
-                        '../../external/text-encoding/encoding.js',
-                        '../../external/PDFKit/pdfkit.js',
+                        '../../../external/text-encoding/encoding-indexes.js',
+                        '../../../external/text-encoding/encoding.js',
+                        '../../../external/PDFKit/pdfkit.js',
                         'string-reader.js'
                     );
                     deps[MakerJsPlaygroundExport.ExportFormat.Pdf] = true;
