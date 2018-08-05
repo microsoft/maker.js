@@ -9,7 +9,7 @@ module.require = function (id) {
     }
     return _this;
 };
-importScripts('../../target/js/browser.maker.js?' + new Date().valueOf(), '../../external/bezier-js/bezier.js', '../iexport.js');
+importScripts('../../../target/js/browser.maker.js?' + new Date().valueOf(), '../../../external/bezier-js/bezier.js', '../iexport.js');
 var makerjs = require('makerjs');
 var deps = {};
 deps[MakerJsPlaygroundExport.ExportFormat.Dxf] = true;
@@ -40,7 +40,7 @@ function getExporter(format, result) {
         case f.Stl:
             function toStl(model, options) {
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Stl]) {
-                    importScripts('../../external/jscad/csg.js', '../../external/jscad/stl-serializer.js');
+                    importScripts('../../../external/jscad/csg.js', '../../../external/jscad/stl-serializer.js');
                     deps[MakerJsPlaygroundExport.ExportFormat.Stl] = true;
                 }
                 //make sure size is in mm for STL
@@ -57,7 +57,7 @@ function getExporter(format, result) {
         case f.Pdf:
             function toPdf(model, exportOptions) {
                 if (!deps[MakerJsPlaygroundExport.ExportFormat.Pdf]) {
-                    importScripts('../../external/text-encoding/encoding-indexes.js', '../../external/text-encoding/encoding.js', '../../external/PDFKit/pdfkit.js', 'string-reader.js');
+                    importScripts('../../../external/text-encoding/encoding-indexes.js', '../../../external/text-encoding/encoding.js', '../../../external/PDFKit/pdfkit.js', 'string-reader.js');
                     deps[MakerJsPlaygroundExport.ExportFormat.Pdf] = true;
                 }
                 function complete(pdfDataString) {

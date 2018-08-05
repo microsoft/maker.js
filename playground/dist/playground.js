@@ -654,7 +654,7 @@ var MakerJsPlayground;
         if (renderInWorker.worker) {
             renderInWorker.worker.terminate();
         }
-        renderInWorker.worker = new Worker('worker/render-worker.js');
+        renderInWorker.worker = new Worker('dist/worker/render-worker.js');
         renderInWorker.worker.onmessage = function (ev) {
             var response = ev.data;
             if (response.error) {
@@ -838,7 +838,7 @@ var MakerJsPlayground;
         iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
-        var scripts = ['require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
+        var scripts = ['dist/require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '<script>var paramValues=' + JSON.stringify(paramValues) + ';</script></head><body></body></html>');
         iframe.contentWindow.document.close();
@@ -1249,7 +1249,7 @@ var MakerJsPlayground;
     function exportOnWorkerThread(request) {
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
-            exportWorker = new Worker('worker/export-worker.js?' + new Date().valueOf());
+            exportWorker = new Worker('dist/worker/export-worker.js?' + new Date().valueOf());
             exportWorker.onmessage = getExport;
         }
         //tell the worker to process the job

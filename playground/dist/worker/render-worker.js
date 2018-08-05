@@ -20,7 +20,7 @@ function load(id, src) {
     module[id] = module.exports;
 }
 //add the makerjs module
-importScripts('../../fonts/fonts.js', '../fontloader.js', '../../target/js/browser.maker.js', '../../external/bezier-js/bezier.js', '../../external/opentype/opentype.js');
+importScripts('../../../fonts/fonts.js', '../fontloader.js', '../../../target/js/browser.maker.js', '../../../external/bezier-js/bezier.js', '../../../external/opentype/opentype.js');
 var makerjs = self.require('makerjs');
 module['makerjs'] = makerjs;
 module['./../target/js/node.maker.js'] = makerjs;
