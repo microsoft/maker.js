@@ -10,12 +10,13 @@
   "devDependencies": {
     "http-server": "^0.11.1",
     "lerna": "^3.0.0-rc.0",
-    "typedoc": "^0.8.0",
+    "typedoc": "^0.5.10",
     "typescript": "^2.4.2"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
+    "docs": "lerna run docs",
     "start": "http-server -o -p 8020",
     "test": "lerna run test"
   },

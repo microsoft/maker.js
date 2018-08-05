@@ -14,6 +14,9 @@
     "gen-cascades": "npm run project && node ./target/cascadable.js > ./src/core/cascades.ts",
     "prebuild": "npm run gen-cascades",
     "build": "tsc -p target && node ./target/build.js",
+    "cleandocs": "rimraf ../../docs/api",
+    "predocs": "npm run cleandocs && npm run project",
+    "docs": "typedoc ./src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ../../docgen/typedoc-theme --out ../../docs/api --ignoreCompilerErrors",    
     "test": "mocha --timeout 15000"
   },
   "maintainers": [
@@ -99,6 +102,7 @@
     "browserify": "^13.3.0",
     "licensify": "^3.1.2",
     "mocha": "^5.2.0",
+    "rimraf": "^2.6.2",
     "typescript-json-schema": "^0.20.0"
   },
   "dependencies": {
