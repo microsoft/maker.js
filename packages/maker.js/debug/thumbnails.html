@@ -36,7 +36,7 @@
         }
     </style>
 
-    <script src="../external/bezier-js/bezier.js"></script>
+    <script src="../../../external/bezier-js/bezier.js"></script>
 
     <script>
         //pretend we are in node
@@ -120,6 +120,7 @@
         for (var i = 0; i < sorted.length; i++) {
             var modelType = sorted[i];
             var constructor = makerjs.models[modelType];
+            if (constructor === makerjs.models.Text) continue;
             var parameters = makerjs.kit.getParameterValues(constructor);
             var model = makerjs.kit.construct(constructor, parameters);
 
