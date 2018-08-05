@@ -2,11 +2,14 @@
   "compilerOptions": {
     "lib": ["dom", "es2015"],
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "types": [
+      "codemirror",
+      "makerjs",
+      "marked"
+    ]
   },
   "files": [
-    "../external/jscad/io.d.ts",
-    "../external/jscad/stl-serializer.d.ts",
     "src/iexport.ts",
     "src/irender.ts",
     "src/pointer.ts",
