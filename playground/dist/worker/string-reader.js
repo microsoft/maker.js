@@ -6,6 +6,10 @@ var StringReader = /** @class */ (function () {
     StringReader.prototype.addListener = function (event, listener) {
         return this;
     };
+    StringReader.prototype.off = function (event, listener) {
+        return this;
+    };
+    ;
     StringReader.prototype.on = function (event, listener) {
         return this;
     };
@@ -20,6 +24,9 @@ var StringReader = /** @class */ (function () {
     };
     StringReader.prototype.prependOnceListener = function () {
         return this;
+    };
+    StringReader.prototype.rawListeners = function (event) {
+        return [];
     };
     StringReader.prototype.removeListener = function (event, listener) {
         return this;
