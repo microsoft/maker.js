@@ -1,0 +1,61 @@
+---
+layout: posts
+title: Packaging
+---
+
+1. create a github repo named makerjs-DRAWING
+    a. initialize with a README 
+    b. Add .gitignore: Node
+    c. License
+2. copy the repo url
+3. git clone the repo
+4. cd makerjs-DRAWING
+5. npm init
+6. copy-paste the github description
+test command: node test.js
+
+7. makerjs keyword
+8. npm install --save makerjs
+9. add .gitignore file, add node_modules
+add test.js, with console.log('success')
+npm test
+
+10. add index.js
+11. var makerjs = require('makerjs');
+
+function DRAWING() {
+    this.paths = [
+        new makerjs.paths.Circle('circle1', [0, 0], 7)
+    ];
+}
+
+module.exports = DRAWING;
+
+edit test.js
+
+var makerjs = require('makerjs');
+var DRAWING = require('./index.js');
+console.log(makerjs.exporter.toSVG(new DRAWING()));
+
+npm test
+
+* git add .gitignore, package.json, index.js, test.js
+git commit -m "initial checkin"
+git push
+
+npm publish
+
+
+
+<section class="tsd-panel">
+    <h2>npm install browserify</h2>
+</section>
+
+
+<section class="tsd-panel">
+    <h2>tutorial for browserifying requires</h2>
+
+    scenarios
+</section>
+
+

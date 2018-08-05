@@ -1,0 +1,70 @@
+---
+title: Mirroring
+---
+
+<p>
+    Use <a href="../api/modules/makerjs.angle.html#mirror">makerjs.angle.mirror</a> to get a mirror of an angle, and
+    <a href="../api/modules/makerjs.point.html#mirror">makerjs.point.mirror</a> to get a mirror of a simple point.
+</p>
+
+<p>
+    You can create a mirrored copy of paths and models with the following functions.
+    The mirroring can occur on the x axis, the y axis, or both.
+</p>
+
+<ul>
+    <li><a href="../api/modules/makerjs.path.html#mirror">makerjs.path.mirror</a>(path: object, mirrorX: boolean, mirrorY: boolean)</li>
+    <li><a href="../api/modules/makerjs.model.html#mirror">makerjs.model.mirror</a>(model: object, mirrorX: boolean, mirrorY: boolean)</li>
+</ul>
+
+<p>Each of these functions returns a new object and does not modify the original.</p>
+
+<p>Mirror path example:</p>
+
+{% highlight javascript %}
+//render a line mirrored in the x dimension
+
+var makerjs = require('makerjs');
+
+var line1 = new makerjs.paths.Line([0, 0], [100, 100]);
+var line2 = makerjs.path.mirror(line1, true, false);
+
+var paths = [line1, line2];
+
+var svg = makerjs.exporter.toSVG(paths);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>Mirror model example:</p>
+
+{% highlight javascript %}
+//render a model mirrored in the y dimension
+
+var makerjs = require('makerjs');
+
+var ovalArc1 = new makerjs.models.OvalArc(45, 135, 50, 10);
+
+var model = {
+    models: {
+        ovalArc1: ovalArc1,
+        ovalArc2: makerjs.model.mirror(ovalArc1, false, true)
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    Hint: When creating symmetrical models, it may be easier to create one half, and then use mirror to generate the other half.
+</p>

@@ -1,0 +1,112 @@
+---
+title: Frequently used functions
+---
+
+<p>
+    It's good to be aware of these functions which apply to many drawing scenarios. Also, browse the APIs of each module for lesser used specialized functions.
+</p>
+
+<h4>
+    Functions for working with points in the <a href="/docs/api/modules/makerjs.point.html#content">makerjs.point</a> module:
+</h4>
+
+<ul>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#add">point.add</a>
+        <p>Add two points together and return the result as a new point.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#subtract">point.subtract</a>
+        <p>Subtract a point from another point and return the result as a new point.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#average">point.average</a>
+        <p>Get the average of two points and return the result as a new point.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#frompolar">point.fromPolar</a>
+        <p>Get a point from its polar coordinates: angle (in radians) and radius.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#closest">point.closest</a>
+        <p>Given a reference point and an array of points, find the closest point in the array to the reference point.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#scale">point.scale</a>
+        <p>Proportionately scale a point and return the result as a new point.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#distort">point.distort</a>
+        <p>Disproportionately scale a point and return the result as a new point.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#rotate">point.rotate</a>
+        <p>Rotate a point and return the result as a new point.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.point.html#frompathends">point.fromPathEnds</a>
+        <p>Return the two end points of a given path (null if path is a circle).</p>
+    </li>
+</ul>
+
+<h4>
+    Functions for working with angles in the <a href="/docs/api/modules/makerjs.angle.html#content">makerjs.angle</a> module:
+</h4>
+
+<ul>
+    <li>
+        <a href="/docs/api/modules/makerjs.angle.html#todegrees">angle.toDegrees</a>
+        <p>Convert an angle from radians to degrees.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.angle.html#toradians">angle.toRadians</a>
+        <p>Convert an angle from degrees to radians.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.angle.html#oflineindegrees">angle.ofLineInDegrees</a>
+        <p>Given a line, returns its angle in degrees.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.angle.html#ofpointindegrees">angle.ofPointInDegrees</a>
+        <p>Given two points, returns the angle of the line through them, in degrees.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.angle.html#ofpointinradians">angle.ofPointInRadians</a>
+        <p>Given two points, returns the angle of the line through them, in radians.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.angle.html#norevolutions">angle.noRevolutions</a>
+        <p>Given a polar angle in degrees, returns the same angle cast between -360 and 360. For example, 725 degrees = 5 degrees.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.angle.html#ofarcspan">angle.ofArcSpan</a>
+        <p>Given an arc, returns total angle span between its start and end angles.</p>
+    </li>
+</ul>
+
+<h4>
+    Functions for working with measurements in the <a href="/docs/api/modules/makerjs.measure.html#content">makerjs.measure</a> module:
+</h4>
+
+<ul>
+    <li>
+        <a href="/docs/api/modules/makerjs.measure.html#pointdistance">measure.pointDistance</a>
+        <p>Calculates the distance between two points using the Pythagorean theorem.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.measure.html#pathlength">measure.pathLength</a>
+        <p>Measures the length of a path.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.measure.html#ispointequal">measure.isPointEqual</a>
+        <p>Given two points, determine if they are equal within a distance of accuracy.</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.measure.html#ismeasurementoverlapping">measure.isMeasurementOverlapping</a>
+        <p>Given two measurements, determine if they are overlapping. Also known as "bounding box overlap".</p>
+    </li>
+    <li>
+        <a href="/docs/api/modules/makerjs.measure.html#isangleequal">measure.isAngleEqual</a>
+        <p>Given two angles, determine if they are equal within a margin of accuracy.</p>
+    </li>
+</ul>

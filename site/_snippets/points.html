@@ -1,0 +1,41 @@
+---
+title: Points
+---
+
+<p>A point is represented by an array with 2 elements. The first element is x, the second element is y.</p>
+
+{% highlight javascript %}
+var p = [0, 0];
+{% endhighlight %}
+
+<h4>Coordinates</h4>
+
+<p>Maker.js uses the same coordinate system from basic mathematics and traditional drafting, 
+where x values increase from left to right, and y values increase from bottom to top. Negative values are allowed.</p>
+
+<script>
+var makerjs = require('makerjs');
+
+function arrow(id) {
+    this.paths = {};
+    this.paths[id] = new makerjs.paths.Line([0, 0], [100, 0]);
+    this.paths[''] = new makerjs.paths.Line([90, -10], [100, 0]);
+    this.paths[' '] = new makerjs.paths.Line([90, 10], [100, 0]);
+}
+
+var model = {
+    models: {
+        x1: new arrow('+x'),
+        y1: makerjs.model.rotate(new arrow('+y'), 90, [0, 0]),
+        x2: makerjs.model.rotate(new arrow('-x'), 180, [0, 0]),
+        y2: makerjs.model.rotate(new arrow('-y'), 270, [0, 0])
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model, { annotate: true, useSvgPathOnly: false });
+
+document.write('<div class="coordinates">' + svg + '</div>');
+</script>
+
+<p>Note that the SVG coordinate system is slightly different (Y values increase from top to bottom, and negative values do not appear), 
+but Maker.js will handle that for us automatically.</p>

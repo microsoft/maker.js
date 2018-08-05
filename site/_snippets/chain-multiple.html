@@ -1,0 +1,137 @@
+---
+title: Find multiple chains
+---
+
+You can find multiple chains by calling <a href="/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains(model)</a>, 
+which will return an array of chains, sorted by largest to smallest on the <b>pathLength</b> property.
+We can find 2 chains in this drawing with 2 rectangles:
+    
+{% highlight javascript %}
+//2 concentric rectangles
+
+var makerjs = require('makerjs');
+
+var model = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.Rectangle(60, 30)),
+        inner: makerjs.model.center(new makerjs.models.Rectangle(45, 15))
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+
+//now find the chains
+var chains = makerjs.model.findChains(model);
+
+document.write('found ' + chains.length + ' chains');
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Containment</h4>
+
+Instead of a "flat" array, we can see the containment of chains by also passing an <code>{ contain: true }</code> object to 
+<a href="/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains(model, options)</a>:
+
+{% highlight javascript %}
+//2 concentric rectangles
+
+var makerjs = require('makerjs');
+
+var model = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.Rectangle(60, 30)),
+        inner: makerjs.model.center(new makerjs.models.Rectangle(45, 15))
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+
+//now find the contained chains
+var chains = makerjs.model.findChains(model, { contain: true });
+
+document.write('found ' + chains.length + ' chain(s) ');
+document.write('which contains ' + chains[0].contains.length + ' chain(s)');
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Alternating flow directions</h4>
+
+There are scenarios where you may need contained chains to flow in the opposite direction of their containing chain.
+<i>This will require extra computation on each chain to test its direction.</i>
+If you need this, use <code>{ contain: { alternateDirection: true } }</code> in your options. In the returned chains array,
+the outmost chains will flow clockwise:
+
+{% highlight javascript %}
+//2 concentric rectangles
+
+var makerjs = require('makerjs');
+
+var model = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.Rectangle(60, 30)),
+        inner: makerjs.model.center(new makerjs.models.Rectangle(45, 15))
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+
+//now find the contained chains with alternating direction
+var chains = makerjs.model.findChains(model, { contain: { alternateDirection: true } });
+
+document.write('found ' + chains.length + ' chain(s)<br/>');
+document.write('which contains ' + chains[0].contains.length + ' chain(s)<br/>');
+document.write('outer is clockwise:' + makerjs.measure.isChainClockwise(chains[0]) + '<br/>');
+document.write('inner is clockwise:' + makerjs.measure.isChainClockwise(chains[0].contains[0]));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Isolating within layers</h4>
+
+You can find chains within layers by passing <code>{ byLayers: true }</code> in your options. 
+This will not return an array, but it will return an object map with keys being the layer names, and values being the 
+array of chains for that layer:
+
+{% highlight javascript %}
+//find chains on layers
+
+var makerjs = require('makerjs');
+
+var c1 = new makerjs.paths.Circle(1);
+var c2 = new makerjs.paths.Circle(1);
+
+c2.origin = [3, 0];
+
+c1.layer = 'red';
+c2.layer = 'blue';
+
+var model = { paths: { c1: c1, c2: c2 } };
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+
+//now find the chains by layer
+var chains = makerjs.model.findChains(model, { byLayers: true });
+
+document.write('found ' + chains['red'].length + ' chain(s) on red layer<br/>');
+document.write('found ' + chains['blue'].length + ' chain(s) on blue layer');
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

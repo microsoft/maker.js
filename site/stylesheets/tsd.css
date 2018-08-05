@@ -1,0 +1,574 @@
+
+.tsd-kind-icon { display: block; position: relative; padding-left: 20px; text-indent: -20px; }
+.tsd-kind-icon:before { content: ''; display: inline-block; vertical-align: middle; width: 17px; height: 17px; margin: 0 3px 2px 0; background-image: url(../images/icons.png); }
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) { .tsd-kind-icon:before { background-image: url(../images/icons@2x.png); background-size: 238px 204px; } }
+
+.tsd-signature.tsd-kind-icon:before { background-position: 0 -153px; }
+
+.tsd-kind-object-literal > .tsd-kind-icon:before { background-position: 0px -17px; }
+.tsd-kind-object-literal.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -17px; }
+.tsd-kind-object-literal.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -17px; }
+
+.tsd-kind-class > .tsd-kind-icon:before { background-position: 0px -34px; }
+.tsd-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -34px; }
+.tsd-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -34px; }
+
+.tsd-kind-class.tsd-has-type-parameter > .tsd-kind-icon:before { background-position: 0px -51px; }
+.tsd-kind-class.tsd-has-type-parameter.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -51px; }
+.tsd-kind-class.tsd-has-type-parameter.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -51px; }
+
+.tsd-kind-interface > .tsd-kind-icon:before { background-position: 0px -68px; }
+.tsd-kind-interface.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -68px; }
+.tsd-kind-interface.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -68px; }
+
+.tsd-kind-interface.tsd-has-type-parameter > .tsd-kind-icon:before { background-position: 0px -85px; }
+.tsd-kind-interface.tsd-has-type-parameter.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -85px; }
+.tsd-kind-interface.tsd-has-type-parameter.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -85px; }
+
+.tsd-kind-module > .tsd-kind-icon:before { background-position: 0px -102px; }
+.tsd-kind-module.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -102px; }
+.tsd-kind-module.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -102px; }
+
+.tsd-kind-external-module > .tsd-kind-icon:before { background-position: 0px -102px; }
+.tsd-kind-external-module.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -102px; }
+.tsd-kind-external-module.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -102px; }
+
+.tsd-kind-enum > .tsd-kind-icon:before { background-position: 0px -119px; }
+.tsd-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -119px; }
+.tsd-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -119px; }
+
+.tsd-kind-enum-member > .tsd-kind-icon:before { background-position: 0px -136px; }
+.tsd-kind-enum-member.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -136px; }
+.tsd-kind-enum-member.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -136px; }
+
+.tsd-kind-signature > .tsd-kind-icon:before { background-position: 0px -153px; }
+.tsd-kind-signature.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -153px; }
+.tsd-kind-signature.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -153px; }
+
+.tsd-kind-type-alias > .tsd-kind-icon:before { background-position: 0px -170px; }
+.tsd-kind-type-alias.tsd-is-protected > .tsd-kind-icon:before { background-position: -17px -170px; }
+.tsd-kind-type-alias.tsd-is-private > .tsd-kind-icon:before { background-position: -34px -170px; }
+
+.tsd-kind-variable > .tsd-kind-icon:before { background-position: -136px -0px; }
+.tsd-kind-variable.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -0px; }
+.tsd-kind-variable.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -0px; }
+.tsd-kind-variable.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -0px; }
+.tsd-kind-variable.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -0px; }
+.tsd-kind-variable.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -0px; }
+.tsd-kind-variable.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -0px; }
+.tsd-kind-variable.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -0px; }
+.tsd-kind-variable.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -0px; }
+.tsd-kind-variable.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -0px; }
+.tsd-kind-variable.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -0px; }
+.tsd-kind-variable.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -0px; }
+.tsd-kind-variable.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -0px; }
+
+.tsd-kind-property > .tsd-kind-icon:before { background-position: -136px -0px; }
+.tsd-kind-property.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -0px; }
+.tsd-kind-property.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -0px; }
+.tsd-kind-property.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -0px; }
+.tsd-kind-property.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -0px; }
+.tsd-kind-property.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -0px; }
+.tsd-kind-property.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -0px; }
+.tsd-kind-property.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -0px; }
+.tsd-kind-property.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -0px; }
+.tsd-kind-property.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -0px; }
+.tsd-kind-property.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -0px; }
+.tsd-kind-property.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -0px; }
+.tsd-kind-property.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -0px; }
+
+.tsd-kind-get-signature > .tsd-kind-icon:before { background-position: -136px -17px; }
+.tsd-kind-get-signature.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -17px; }
+.tsd-kind-get-signature.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -17px; }
+.tsd-kind-get-signature.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -17px; }
+
+.tsd-kind-set-signature > .tsd-kind-icon:before { background-position: -136px -34px; }
+.tsd-kind-set-signature.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -34px; }
+.tsd-kind-set-signature.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -34px; }
+.tsd-kind-set-signature.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -34px; }
+
+.tsd-kind-accessor > .tsd-kind-icon:before { background-position: -136px -51px; }
+.tsd-kind-accessor.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -51px; }
+.tsd-kind-accessor.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -51px; }
+.tsd-kind-accessor.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -51px; }
+
+.tsd-kind-function > .tsd-kind-icon:before { background-position: -136px -68px; }
+.tsd-kind-function.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -68px; }
+.tsd-kind-function.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-function.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -68px; }
+.tsd-kind-function.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -68px; }
+.tsd-kind-function.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -68px; }
+.tsd-kind-function.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -68px; }
+.tsd-kind-function.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-function.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -68px; }
+.tsd-kind-function.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -68px; }
+.tsd-kind-function.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-function.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -68px; }
+.tsd-kind-function.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -68px; }
+
+.tsd-kind-method > .tsd-kind-icon:before { background-position: -136px -68px; }
+.tsd-kind-method.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -68px; }
+.tsd-kind-method.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-method.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -68px; }
+.tsd-kind-method.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -68px; }
+.tsd-kind-method.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -68px; }
+.tsd-kind-method.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -68px; }
+.tsd-kind-method.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-method.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -68px; }
+.tsd-kind-method.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -68px; }
+.tsd-kind-method.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-method.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -68px; }
+.tsd-kind-method.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -68px; }
+
+.tsd-kind-call-signature > .tsd-kind-icon:before { background-position: -136px -68px; }
+.tsd-kind-call-signature.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -68px; }
+.tsd-kind-call-signature.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -68px; }
+.tsd-kind-call-signature.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -68px; }
+
+.tsd-kind-function.tsd-has-type-parameter > .tsd-kind-icon:before { background-position: -136px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -85px; }
+.tsd-kind-function.tsd-has-type-parameter.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -85px; }
+
+.tsd-kind-method.tsd-has-type-parameter > .tsd-kind-icon:before { background-position: -136px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -85px; }
+.tsd-kind-method.tsd-has-type-parameter.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -85px; }
+
+.tsd-kind-constructor > .tsd-kind-icon:before { background-position: -136px -102px; }
+.tsd-kind-constructor.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -102px; }
+.tsd-kind-constructor.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -102px; }
+.tsd-kind-constructor.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -102px; }
+
+.tsd-kind-constructor-signature > .tsd-kind-icon:before { background-position: -136px -102px; }
+.tsd-kind-constructor-signature.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -102px; }
+.tsd-kind-constructor-signature.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -102px; }
+.tsd-kind-constructor-signature.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -102px; }
+
+.tsd-kind-index-signature > .tsd-kind-icon:before { background-position: -136px -119px; }
+.tsd-kind-index-signature.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -119px; }
+.tsd-kind-index-signature.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -119px; }
+.tsd-kind-index-signature.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -119px; }
+
+.tsd-kind-event > .tsd-kind-icon:before { background-position: -136px -136px; }
+.tsd-kind-event.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -136px; }
+.tsd-kind-event.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -136px; }
+.tsd-kind-event.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -136px; }
+.tsd-kind-event.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -136px; }
+.tsd-kind-event.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -136px; }
+.tsd-kind-event.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -136px; }
+.tsd-kind-event.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -136px; }
+.tsd-kind-event.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -136px; }
+.tsd-kind-event.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -136px; }
+.tsd-kind-event.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -136px; }
+.tsd-kind-event.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -136px; }
+.tsd-kind-event.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -136px; }
+
+.tsd-is-static > .tsd-kind-icon:before { background-position: -136px -153px; }
+.tsd-is-static.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -153px; }
+.tsd-is-static.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -153px; }
+.tsd-is-static.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -153px; }
+.tsd-is-static.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -153px; }
+.tsd-is-static.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -153px; }
+.tsd-is-static.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -153px; }
+.tsd-is-static.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -153px; }
+.tsd-is-static.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -153px; }
+.tsd-is-static.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -153px; }
+.tsd-is-static.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -153px; }
+.tsd-is-static.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -153px; }
+.tsd-is-static.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -153px; }
+
+.tsd-is-static.tsd-kind-function > .tsd-kind-icon:before { background-position: -136px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -170px; }
+.tsd-is-static.tsd-kind-function.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -170px; }
+
+.tsd-is-static.tsd-kind-method > .tsd-kind-icon:before { background-position: -136px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -170px; }
+.tsd-is-static.tsd-kind-method.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -170px; }
+
+.tsd-is-static.tsd-kind-call-signature > .tsd-kind-icon:before { background-position: -136px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -170px; }
+.tsd-is-static.tsd-kind-call-signature.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -170px; }
+
+.tsd-is-static.tsd-kind-event > .tsd-kind-icon:before { background-position: -136px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-is-protected > .tsd-kind-icon:before { background-position: -153px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-class > .tsd-kind-icon:before { background-position: -51px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-class.tsd-is-inherited > .tsd-kind-icon:before { background-position: -68px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-class.tsd-is-protected > .tsd-kind-icon:before { background-position: -85px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-class.tsd-is-protected.tsd-is-inherited > .tsd-kind-icon:before { background-position: -102px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-class.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-enum > .tsd-kind-icon:before { background-position: -170px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-enum.tsd-is-protected > .tsd-kind-icon:before { background-position: -187px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-enum.tsd-is-private > .tsd-kind-icon:before { background-position: -119px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-interface > .tsd-kind-icon:before { background-position: -204px -187px; }
+.tsd-is-static.tsd-kind-event.tsd-parent-kind-interface.tsd-is-inherited > .tsd-kind-icon:before { background-position: -221px -187px; }
+
+
+dl.tsd-comment-tags { overflow: hidden; }
+dl.tsd-comment-tags dt { clear: both; float: left; padding: 1px 5px; margin: 0 10px 0 0; border-radius: 4px; border: 1px solid #808080; color: #808080; font-size: 0.8em; font-weight: normal; }
+dl.tsd-comment-tags dd { margin: 0 0 10px 0; }
+dl.tsd-comment-tags p { margin: 0; }
+
+.tsd-panel.tsd-comment .lead { font-size: 1.1em; line-height: 1.333em; margin-bottom: 2em; }
+.tsd-panel.tsd-comment .lead:last-child { margin-bottom: 0; }
+
+.toggle-protected .tsd-is-private { display: none; }
+
+.toggle-public .tsd-is-private, .toggle-public .tsd-is-protected, .toggle-public .tsd-is-private-protected { display: none; }
+
+.toggle-inherited .tsd-is-inherited { display: none; }
+
+.toggle-only-exported .tsd-is-not-exported { display: none; }
+
+.toggle-externals .tsd-is-external { display: none; }
+
+footer .tsd-legend-group { font-size: 0; }
+footer .tsd-legend { display: inline-block; width: 25%; padding: 0; font-size: 13px; list-style: none; line-height: 1.333em; vertical-align: top; }
+@media only screen and (max-width: 959px) and (min-width: 768px) { footer .tsd-legend { width: 50%; } }
+@media only screen and (max-width: 767px) { footer .tsd-legend { width: 50%; } }
+
+.tsd-hierarchy { list-style: square; padding: 0 0 0 20px; margin: 0; }
+.tsd-hierarchy .target { font-weight: bold; }
+
+.tsd-index-panel .tsd-index-content { margin-bottom: -30px !important; }
+.tsd-index-panel .tsd-index-section { margin-bottom: 30px !important; }
+.tsd-index-panel h3 { margin: 0 -20px 10px -20px; padding: 0 20px 10px 20px; border-bottom: 1px solid #eee; }
+.tsd-index-panel ul.tsd-index-list { -webkit-column-count: 3; -moz-column-count: 3; -ms-column-count: 3; column-count: 3; -webkit-column-gap: 20px; -moz-column-gap: 20px; -ms-column-gap: 20px; column-gap: 20px; padding: 0; list-style: none; line-height: 1.333em; }
+@media only screen and (max-width: 959px) and (min-width: 768px) { .tsd-index-panel ul.tsd-index-list { -webkit-column-count: 2; -moz-column-count: 2; -ms-column-count: 2; column-count: 2; } }
+@media only screen and (max-width: 767px) { 
+    .tsd-index-panel ul.tsd-index-list { -webkit-column-count: 2; -moz-column-count: 2; -ms-column-count: 2; column-count: 2; } 
+    section.tsd-panel p { overflow: hidden; }
+}
+
+.tsd-index-panel ul.tsd-index-list li { -webkit-column-break-inside: avoid; -moz-column-break-inside: avoid; -ms-column-break-inside: avoid; -o-column-break-inside: avoid; column-break-inside: avoid; -webkit-page-break-inside: avoid; -moz-page-break-inside: avoid; -ms-page-break-inside: avoid; -o-page-break-inside: avoid; page-break-inside: avoid; }
+.tsd-index-panel a, .tsd-index-panel .tsd-parent-kind-module a { color: #9600ff; }
+.tsd-index-panel .tsd-parent-kind-interface a { color: #7da01f; }
+.tsd-index-panel .tsd-parent-kind-enum a { color: #cc9900; }
+.tsd-index-panel .tsd-parent-kind-class a { color: #4da6ff; }
+.tsd-index-panel .tsd-kind-module a { color: #9600ff; }
+.tsd-index-panel .tsd-kind-interface a { color: #7da01f; }
+.tsd-index-panel .tsd-kind-enum a { color: #cc9900; }
+.tsd-index-panel .tsd-kind-class a { color: #4da6ff; }
+.tsd-index-panel .tsd-is-private a { color: #808080; }
+
+.tsd-flag { display: inline-block; padding: 1px 5px; border-radius: 4px; color: #fff; background-color: #808080; text-indent: 0; font-size: 14px; font-weight: normal; }
+
+.tsd-anchor { position: absolute; top: -100px; }
+
+.tsd-member { position: relative; }
+.tsd-member .tsd-anchor + h3 { margin-top: 0; margin-bottom: 0; border-bottom: none; }
+
+.tsd-navigation { padding: 0 0 0 40px; }
+.tsd-navigation a { display: block; padding-top: 2px; padding-bottom: 2px; border-left: 2px solid transparent; color: #222; text-decoration: none; -webkit-transition: border-left-color 0.1s; transition: border-left-color 0.1s; }
+.tsd-navigation a:hover { text-decoration: underline; }
+.tsd-navigation ul { margin: 0; padding: 0; list-style: none; }
+.tsd-navigation li { padding: 0; }
+
+.tsd-navigation.primary { padding-bottom: 40px; }
+.tsd-navigation.primary a { display: block; padding-top: 6px; padding-bottom: 6px; }
+.tsd-navigation.primary ul li a { padding-left: 5px; }
+.tsd-navigation.primary ul li li a { padding-left: 25px; }
+.tsd-navigation.primary ul li li li a { padding-left: 45px; }
+.tsd-navigation.primary ul li li li li a { padding-left: 65px; }
+.tsd-navigation.primary ul li li li li li a { padding-left: 85px; }
+.tsd-navigation.primary ul li li li li li li a { padding-left: 105px; }
+.tsd-navigation.primary > ul { border-bottom: 1px solid #eee; }
+.tsd-navigation.primary li { border-top: 1px solid #eee; }
+.tsd-navigation.primary li.current > a { font-weight: bold; }
+.tsd-navigation.primary li.label span { display: block; padding: 20px 0 6px 5px; color: #808080; }
+.tsd-navigation.primary li.globals + li > span, .tsd-navigation.primary li.globals + li > a { padding-top: 20px; }
+
+.tsd-navigation.secondary ul { -webkit-transition: opacity 0.2s; transition: opacity 0.2s; }
+.tsd-navigation.secondary ul li a { padding-left: 25px; }
+.tsd-navigation.secondary ul li li a { padding-left: 45px; }
+.tsd-navigation.secondary ul li li li a { padding-left: 65px; }
+.tsd-navigation.secondary ul li li li li a { padding-left: 85px; }
+.tsd-navigation.secondary ul li li li li li a { padding-left: 105px; }
+.tsd-navigation.secondary ul li li li li li li a { padding-left: 125px; }
+.tsd-navigation.secondary ul.current a { border-left-color: #eee; }
+.tsd-navigation.secondary li.focus > a, .tsd-navigation.secondary ul.current li.focus > a { border-left-color: #000; }
+.tsd-navigation.secondary li.current { margin-top: 20px; margin-bottom: 20px; border-left-color: #eee; }
+.tsd-navigation.secondary li.current > a { font-weight: bold; }
+
+.tsd-panel { margin: 2em 0; padding: 1em 1.5em; background-color: #fff; border: 1px solid #ccc; }
+.tsd-panel .tsd-panel { border-color: #ddd; }
+
+.tsd-panel:empty { display: none; }
+.tsd-panel > h1, .tsd-panel > h2, .tsd-panel > h3 { margin: 1.5em -20px 10px -20px; padding: 0 20px 10px 20px; border-bottom: 1px solid #eee; }
+.tsd-panel > h1.tsd-before-signature, .tsd-panel > h2.tsd-before-signature, .tsd-panel > h3.tsd-before-signature { margin-bottom: 0; border-bottom: 0; }
+.tsd-panel table { display: block; width: 100%; overflow: auto; margin-top: 10px; word-break: normal; word-break: keep-all; }
+.tsd-panel table th { font-weight: 500; }
+.tsd-panel table th, .tsd-panel table td { padding: 6px 13px; border: 1px solid #ddd; }
+.tsd-panel table tr { background-color: #fff; border-top: 1px solid #ccc; }
+.tsd-panel table tr:nth-child(2n) { background-color: #f8f8f8; }
+
+.tsd-panel-group { margin: 60px 0; }
+.tsd-panel-group > h1, .tsd-panel-group > h2, .tsd-panel-group > h3 { padding-left: 20px; padding-right: 20px; }
+
+.tsd-signature { margin: 0 0 1em 0; padding: 10px; border: 1px solid #eee; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px; }
+.tsd-signature.tsd-kind-icon { padding-left: 30px; }
+.tsd-signature.tsd-kind-icon:before { top: 10px; left: 10px; }
+.tsd-panel > .tsd-signature { margin-left: -20px; margin-right: -20px; border-width: 1px 0; }
+.tsd-panel > .tsd-signature.tsd-kind-icon { padding-left: 40px; }
+.tsd-panel > .tsd-signature.tsd-kind-icon:before { left: 20px; }
+
+.tsd-signature-symbol { color: #808080; font-weight: normal; }
+
+.tsd-signature-type { font-style: italic; font-weight: normal; }
+
+.tsd-signatures { padding: 0; margin: 0 0 1em 0; border: 1px solid #eee; }
+.tsd-signatures .tsd-signature { margin: 0; border-width: 1px 0 0 0; -webkit-transition: background-color 0.1s; transition: background-color 0.1s; }
+.tsd-signatures .tsd-signature:first-child { border-top-width: 0; }
+.tsd-signatures .tsd-signature.current { background-color: #eee; }
+.tsd-signatures.active > .tsd-signature { cursor: pointer; }
+.tsd-panel > .tsd-signatures { margin-left: -20px; margin-right: -20px; border-width: 1px 0; }
+.tsd-panel > .tsd-signatures .tsd-signature.tsd-kind-icon { padding-left: 40px; }
+.tsd-panel > .tsd-signatures .tsd-signature.tsd-kind-icon:before { left: 20px; }
+.tsd-panel > a.anchor + .tsd-signatures { border-top-width: 0; margin-top: -20px; }
+
+ul.tsd-descriptions { position: relative; overflow: hidden; -webkit-transition: height 0.3s; transition: height 0.3s; padding: 0; list-style: none; }
+ul.tsd-descriptions.active > .tsd-description { display: none; }
+ul.tsd-descriptions.active > .tsd-description.current { display: block; }
+ul.tsd-descriptions.active > .tsd-description.fade-in { -webkit-animation: fade-in-delayed 0.3s; animation: fade-in-delayed 0.3s; }
+ul.tsd-descriptions.active > .tsd-description.fade-out { -webkit-animation: fade-out-delayed 0.3s; animation: fade-out-delayed 0.3s; position: absolute; display: block; top: 0; left: 0; right: 0; opacity: 0; visibility: hidden; }
+ul.tsd-descriptions h4, ul.tsd-descriptions .tsd-index-panel h3, .tsd-index-panel ul.tsd-descriptions h3 { font-size: 16px; margin: 1em 0 0.5em 0; }
+
+ul.tsd-parameters, ul.tsd-type-parameters { list-style: square; margin: 0; padding-left: 20px; }
+ul.tsd-parameters > li.tsd-parameter-siganture, ul.tsd-type-parameters > li.tsd-parameter-siganture { list-style: none; margin-left: -20px; }
+ul.tsd-parameters h5, ul.tsd-type-parameters h5 { font-size: 16px; margin: 1em 0 0.5em 0; }
+ul.tsd-parameters .tsd-comment, ul.tsd-type-parameters .tsd-comment { margin-top: -0.5em; }
+
+.tsd-comment { position: relative; }
+
+.tsd-sources { font-size: 14px; color: #808080; margin: 0 0 1em 0; }
+.tsd-sources a { color: #808080; text-decoration: underline; }
+.tsd-sources ul, .tsd-sources p { margin: 0 !important; }
+.tsd-sources ul { list-style: none; padding: 0; }
+
+.code-output {
+    background-color: rgba(176, 196, 222, .1);
+    border: 1px solid rgba(176, 196, 222, .2);
+    border-top-width: 0;
+    color: rgb(70, 130, 180);
+    font-family: monospace;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+svg {
+    height: 100px;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 2px;
+}
+
+.fiddle {
+    color: #4682b4;
+    float: right;
+    font-size: 13px;
+    margin-right: 4px;
+    margin-top: -36px;
+    text-decoration: none;
+}
+.fiddle:hover {
+    color: #add8e6;
+    text-decoration: underline;
+}
+
+.coordinates svg {
+    height: 200px;
+}
+
+.coordinates svg line { 
+    stroke: red;
+    stroke-width: 2px;
+}
+
+.coordinates svg text { 
+  font-size: 24px;
+  fill: black;
+  stroke: none;
+}
+
+.thumb-link {
+    display: inline-block;
+}
+
+.thumb {
+    background-color: #317CCF;
+    position: relative;
+    width: 160px;
+    height: 120px;
+    margin: 20px;
+    vertical-align: middle;
+}
+
+.thumb svg {
+    max-width: 140px;
+    max-height: 100px;
+    margin-left: 8px;
+    margin-top: 8px;
+}
+
+.thumb svg path {
+    stroke: #fff;
+    stroke-width: 1.4px;
+}
+
+button.livedoc-play {
+    background-color: green;
+    color: white;
+    font-family: monospace;
+    position: absolute;
+    right: 0;
+}
+
+div.edit-source {
+    margin-top: 1em;
+    text-align: right;
+}
+
+a.edit-source {
+    font-size: small;
+}
+
+iframe.play {
+    width: 100%;
+    margin: 1em 0;
+}
+
+/* hide the play buton on mobile phones */
+@media only screen and (max-width: 540px) {
+    button.livedoc-play {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .thumb {
+        width: 140px;
+        height: 105px;
+        margin: 5px 3px;
+    }
+
+    .thumb svg {
+        max-width: 120px;
+        max-height: 85px;
+    }
+
+    .thumb svg path {
+        stroke-width: 1px;
+    }
+}

@@ -1,0 +1,57 @@
+---
+layout: posts
+---
+
+<script type="text/javascript">
+	if (navigator.userAgent.indexOf('Edge') > 0 || navigator.userAgent.indexOf('Trident') > 0) {
+		var makerjs = require('makerjs');
+		var toSVG = makerjs.exporter.toSVG;
+		makerjs.exporter.toSVG = function (item, options) {
+			if (makerjs.isModel(item)) {
+				var m = makerjs.measure.modelExtents(item);
+				if (m && m.height) {
+					if (!options) {
+						options = {};
+					}
+					options.strokeWidth = 2 * (m.height / 100) + 'px';
+					options.closingTags = true;
+				}
+			}
+			return toSVG(item, options);
+		}
+	} else {
+		document.write('<style type="text/css">svg path, svg line, svg circle { stroke-width: 2px; }</style>');
+	}
+</script>
+
+<div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="xtsd-panel-group tsd-index-group">
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<ul class="tsd-index-list">
+{% for snippet_title in page.snippet_titles %}{% for snippet in site.snippets %}{% if snippet.title == snippet_title %}<li class="tsd-kind-variable tsd-parent-kind-module"><a href="#{{ snippet.title }}" class="tsd-kind-icon">{{ snippet.title }}</a></li>{% endif %}{% endfor %}{% endfor %}
+				</ul>
+			</section>
+		</div>
+	</section>
+</section>
+
+<section class="tsd-panel-group tsd-member-group ">
+
+{% for snippet_title in page.snippet_titles %}{% for snippet in site.snippets %}{% if snippet.title == snippet_title %}<section class="tsd-panel tsd-member">
+    <a name="{{ snippet.title }}" ></a>
+    <h3>{{ snippet.title }}</h3>
+    <div class="tsd-comment tsd-typography">{{ snippet.content }}</div>
+
+	<div class="edit-source">
+    <a href="https://github.com/Microsoft/maker.js/blob/gh-pages/{{ snippet.path }}" class="edit-source">edit on GitHub</a>
+	</div>
+
+</section>{% endif %}{% endfor %}{% endfor %}
+
+</section>
+
+</div>
+
+{{ content }}

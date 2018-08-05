@@ -1,0 +1,170 @@
+---
+title: Expanding paths
+---
+
+<p>
+    Paths can be expanded to produce a closed geometry model which surrounds them perfectly.
+</p>
+
+{% highlight javascript %}
+//show each path type
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    p1: new makerjs.paths.Line([0, 2], [10, 2]),
+    p2: new makerjs.paths.Arc([20, 0], 5, 0, 180),
+    p3: new makerjs.paths.Circle([35, 2], 5)
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    Pass a path and a distance to <a href="/docs/api/modules/makerjs.path.html#expand">makerjs.path.expand</a>, this will return a new model:
+</p>
+
+{% highlight javascript %}
+//expand around each path type
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    p1: new makerjs.paths.Line([0, 2], [10, 2]),
+    p2: new makerjs.paths.Arc([20, 0], 5, 0, 180),
+    p3: new makerjs.paths.Circle([35, 2], 5)
+  }
+};
+
+model.models = {
+    x1: makerjs.path.expand(model.paths.p1, 2),
+    x2: makerjs.path.expand(model.paths.p2, 2),
+    x3: makerjs.path.expand(model.paths.p3, 2)
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+{% highlight javascript %}
+//show only expansions
+
+var makerjs = require('makerjs');
+
+var temp = {
+  paths: {
+    p1: new makerjs.paths.Line([0, 2], [10, 2]),
+    p2: new makerjs.paths.Arc([20, 0], 5, 0, 180),
+    p3: new makerjs.paths.Circle([35, 2], 5)
+  }
+};
+
+var model = {
+    models: {
+        x1: makerjs.path.expand(temp.paths.p1, 2),
+        x2: makerjs.path.expand(temp.paths.p2, 2),
+        x3: makerjs.path.expand(temp.paths.p3, 2)
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<hr />
+
+<p>
+    You can also expand all the paths in a model by calling <a href="/docs/api/modules/makerjs.model.html#expandpaths">makerjs.model.expandPaths</a>:
+</p>
+
+{% highlight javascript %}
+//expand a star model
+
+var m = require('makerjs');
+
+var star = m.model.rotate(new m.models.Star(5, 100), 18);
+var expanded = m.model.expandPaths(star, 10);
+
+var model = {
+    models: {
+        star: star,
+        outline: expanded
+    }
+};
+
+var svg = m.exporter.toSVG(model);
+
+document.write(svg);
+
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<hr/>
+
+<h4>Beveling joints</h4>
+
+<p>
+    A third parameter can be passed to <a href="/docs/api/modules/makerjs.model.html#expandpaths">makerjs.model.expandPaths</a> to specify the number of corners to apply to each joint and end cap:
+
+    <ul>
+        <li>0 (default) - no corners (rounded)</li>
+        <li>1 - one corner (pointed)</li>
+        <li>2 - two corners (beveled)</li>
+    </ul>
+</p>
+
+{% highlight javascript %}
+//expand and bevel
+
+var m = require('makerjs');
+
+var star = m.model.rotate(new m.models.Star(5, 100), 18);
+
+var rounded = m.model.expandPaths(star, 10, 0);
+
+var pointed = m.model.expandPaths(star, 10, 1);
+
+var beveled = m.model.expandPaths(star, 10, 2);
+
+var model = {
+    models: {
+        star: star,
+        rounded: m.model.move(rounded, [240, 0]),
+        pointed: m.model.move(pointed, [480, 0]),
+        beveled: m.model.move(beveled, [720, 0])
+
+    }
+};
+
+var svg = m.exporter.toSVG(model);
+
+document.write(svg);
+
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+

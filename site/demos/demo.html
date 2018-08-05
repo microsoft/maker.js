@@ -1,0 +1,37 @@
+---
+layout: demo
+title: Demo
+---
+
+<script>
+    //pretend we are in node
+    var module = {};
+    var makerjs = require('makerjs');
+</script>
+
+<script src="../external/svg-pan-zoom/svg-pan-zoom.min.js"></script>
+<script src="../external/svg-pan-zoom/hammer.js"></script>
+<script src="../external/OpenJsCad/csg.js"></script>
+<script src="../external/OpenJsCad/formats.js"></script>
+
+<script src="viewer.js"></script>
+    
+<p>Move the sliders below to change parameters. Then you can download your customized drawing.</p>
+
+<div id="view">
+    <div id="svg-render" class="svg-zone"></div>
+    <div id="svg-guides" class="svg-zone"></div>
+    <div id="export-zone"></div>
+</div>
+
+<div id="paramBar">
+    <div id="params">
+    </div>
+</div>
+
+<div class="optionpanel">
+    <a href="#" onclick="this.href = Viewer.getExport('dxf');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.dxf">download dxf</a>
+    <a href="#" onclick="this.href = Viewer.getExport('svg');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.svg">download svg</a>
+    <a href="#" onclick="this.href = Viewer.getExport('json');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.json">download json</a>
+    <a href="#" onclick="this.href = Viewer.getExport('stl');" title="Download works in Chrome, Firefox, and Microsoft Edge" download="myModel.stl">download stl</a>
+</div>

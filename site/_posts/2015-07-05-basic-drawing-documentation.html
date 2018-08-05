@@ -1,0 +1,77 @@
+---
+layout: post
+title: Basic Drawing documentation is live
+---
+<p>
+Hi Makers, <br/>
+I've just wrapped up some documentation on <a href="/docs/basic-drawing/#content">Basic Drawing</a>. 
+There are many simple walkthroughs, code examples, and hands-on demos using <a href="https://jsfiddle.net">JsFiddle</a>.
+Please take a look, I guarantee it will be worth your time - at the end, you'll know how to create your own skateboard deck!
+</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+function truckBolts() {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle(tx, ty, 7/32 / 2);
+  bolts.origin = [tx / -2, ty / -2];
+
+  this.models = [bolts];
+}
+
+function deck(width, length, truckOffset) {
+    
+  var board = new makerjs.models.Oval(length, width);
+  board.origin = [0, width / -2];
+    
+  var truck1 = new truckBolts();
+  truck1.origin = [truckOffset, 0];
+    
+  var truck2 = new truckBolts();
+  truck2.origin = [length - truckOffset, 0];
+
+  this.models = { board: board, truck1: truck1, truck2: truck2 };
+}
+
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7));
+
+document.write(svg);
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/grzm159o/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+var makerjs = require('makerjs');
+
+function truckBolts() {
+  var tx = 1 + 5/8;
+  var ty = 1 + 1/8;
+  var bolts = new makerjs.models.BoltRectangle(tx, ty, 7/32 / 2);
+  bolts.origin = [tx / -2, ty / -2];
+
+  this.models = [bolts];
+}
+
+function deck(width, length, truckOffset) {
+    
+  var board = new makerjs.models.Oval(length, width);
+  board.origin = [0, width / -2];
+    
+  var truck1 = new truckBolts();
+  truck1.origin = [truckOffset, 0];
+    
+  var truck2 = new truckBolts();
+  truck2.origin = [length - truckOffset, 0];
+
+  this.models = { board: board, truck1: truck1, truck2: truck2 };
+}
+
+var svg = makerjs.exporter.toSVG(new deck(8, 32, 7), { scale: 25});
+document.write(svg);
+</script>
+
+<p>Let me know what you think by visiting <a href="https://gitter.im/Microsoft/maker.js">our Gitter chatroom</a>.</p>
+
+<p>Thanks, <br/>Dan</p>

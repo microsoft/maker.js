@@ -1,0 +1,73 @@
+---
+title: STL
+---
+
+<p>
+    To use this functionality you will need the <a href="https://www.npmjs.com/package/openjscad-csg">OpenJsCsg</a> library which is a fork of <a href="https://github.com/joostn/OpenJsCad">OpenJsCad</a> without the GUI.
+</p>
+
+<h4>For the browser</h4>
+
+<h5></h5>
+{% highlight html %}
+<script src="http://maker.js.org/external/OpenJsCad/csg.js" type="text/javascript"></script>
+<script src="http://maker.js.org/external/OpenJsCad/formats.js" type="text/javascript"></script>
+{% endhighlight %}
+
+<p>
+    Note: This is here for your debugging convenience. For complex models, 3D rendering on the main thread of the browser can make your page unresponsive.
+    It is advised that you use a web worker instead.
+</p>
+
+<h5>For a web worker</h5>
+
+{% highlight javascript %}
+importScripts(
+    'http://maker.js.org/external/OpenJsCad/csg.js',
+    'http://maker.js.org/external/OpenJsCad/formats.js'
+);
+{% endhighlight %}
+
+<hr />
+
+<h4>For Node.js</h4>
+
+<p>
+    From the command line:
+</p>
+
+{% highlight bash %}
+npm install openjscad-csg --save
+{% endhighlight %}
+
+<p>
+    In your Node.js code:
+</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+var fs = require('fs');
+
+var model = new makerjs.models.Star(5, 100);
+model.paths.c = new makerjs.paths.Circle([0, 0], 20);
+
+fs.writeFileSync('star.stl', makerjs.exporter.toSTL(model));
+{% endhighlight %}
+
+<hr />
+
+<h4>Simple export</h4>
+
+<p>
+    Call <code><a href="/docs/api/modules/makerjs.exporter.html#tostl">makerjs.exporter.toSTL</a>(model)</code> passing your model.
+    This function returns a string of STL.
+</p>
+
+<h4>Advanced options</h4>
+
+<p>
+    Call <code><a href="/docs/api/modules/makerjs.exporter.html#tostl">makerjs.exporter.toSTL</a>(model, options)</code> passing your model and an options object.
+</p>
+<p>
+    See the <a href="/docs/api/interfaces/makerjs.exporter.iopenjscadoptions.html#content">API documentation for OpenJsCad export options</a>
+</p>

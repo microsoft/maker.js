@@ -1,0 +1,73 @@
+---
+title: Layers
+---
+
+<p>
+    Layers are a way of logically grouping your paths or models as you see fit. Simply add a <code>layer</code> property to any path or model object, with the name of the layer.
+    Every path within a model will automatically inherit its parent model's layer, unless it has its own layer property. As you can see in this example, a layer can transcend the logical grouping boundaries of models:
+</p>
+
+{% highlight javascript %}
+//render a round rectangle with arcs in their own layer
+
+var makerjs = require('makerjs');
+
+var roundRect = new makerjs.models.RoundRectangle(100, 50, 10);
+roundRect.layer = "layer1";
+
+roundRect.paths.BottomLeft.layer = "layer2";
+roundRect.paths.BottomRight.layer = "layer2";
+roundRect.paths.TopRight.layer = "layer2";
+roundRect.paths.TopLeft.layer = "layer2";
+
+var svg = makerjs.exporter.toSVG(roundRect);
+
+document.write(svg);
+
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<i>Layers are not visible in this example but they logically exist to separate arcs from straight lines.</i>
+
+<p>
+    A layer name can be any string. Furthermore, you can use a reserved color name from this list to get an automatic stroke color when your model is exported in DXF or SVG:
+    <br/>
+    aqua, black, blue, fuchsia, green, gray, lime, maroon, navy, olive, orange, purple, red, silver, teal, white, yellow
+</p>
+
+{% highlight javascript %}
+//render a round rectangle with arcs in their own color layer
+
+var makerjs = require('makerjs');
+
+var roundRect = new makerjs.models.RoundRectangle(100, 50, 10);
+roundRect.layer = "layer1";
+
+roundRect.paths.BottomLeft.layer = "red";
+roundRect.paths.BottomRight.layer = "red";
+roundRect.paths.TopRight.layer = "blue";
+roundRect.paths.TopLeft.layer = "blue";
+
+var svg = makerjs.exporter.toSVG(roundRect);
+
+document.write(svg);
+
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<hr />
+
+<p>
+    Layers will be output during the export process in these formats:
+    <ul>
+        <li>DXF - paths will be assigned to a DXF layer.</li>
+        <li>SVG - in continuous mode, a new &lt;path&gt; element will be created for each layer.</li>
+        <!--li>OpenJsCad - extrusion depth can be specified by layer.</li-->
+    </ul>
+</p>

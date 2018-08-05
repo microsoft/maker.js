@@ -1,0 +1,68 @@
+---
+title: SVG path data
+---
+
+<p>
+    SVG Path data is the value of the <b>d</b> attribute of a <b>path</b> element. For example, given this SVG:
+</p>
+
+{% highlight html %}
+<svg width="100" height="100" viewBox="0 0 100 100">
+  <path d="M 0 100 L 100 100 L 100 0 L 0 0 L 0 100 Z" />
+</svg>
+{% endhighlight %}
+
+<p>
+    The path data is:
+</p>
+
+{% highlight html %}
+M 0 100 L 100 100 L 100 0 L 0 0 L 0 100 Z
+{% endhighlight %}
+
+<p>
+    Call <a href="/docs/api/modules/makerjs.importer.html#fromsvgpathdata">makerjs.importer.fromSVGPathData</a>(pathData) passing your path data string. 
+    This will return a new model.
+</p>
+
+<p>
+    If your SVG path data contains <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Curve_commands">Curve commands</a>, 
+    these will become <a href="/docs/advanced-drawing/#Bezier curves">Bezier curves</a> in your model.
+</p>
+
+<h4>Advanced options</h4>
+
+<p>
+    You may override the default import behavior by calling <code><a href="/docs/api/modules/makerjs.importer.html#fromsvgpathdata">makerjs.importer.fromSVGPathData</a>(pathData, options)</code> and passing an options object.
+    The options object has these properties:
+
+    <table>
+        <tr>
+            <th>property</th>
+            <th>type</th>
+            <th>values / effects</th>
+        </tr>
+        <tr>
+            <td>bezierAccuracy</td>
+            <td>number</td>
+            <td>
+                The maximum distance between the true curve and the arc approximations. A lower number is more accurate but requires more computation. 
+                Using zero is not recommended as it may never finish computing. This number is relative to the unit system of your SVG; so if you are rendering pixels, then 0.5 is accurate to half a pixel.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p>
+    Example:
+</p>
+
+{% highlight javascript %}
+
+var makerjs = require('makerjs');
+
+var pathData = "M 95 35 L 59 35 L 48 0 L 36 35 L 0 35 L 29 56 L 18 90 L 48 69 L 77 90 L 66 56 Z";
+
+var model = makerjs.importer.fromSVGPathData(pathData);
+
+{% endhighlight %}

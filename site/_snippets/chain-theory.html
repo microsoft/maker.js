@@ -1,0 +1,133 @@
+---
+title: Chain theory
+---
+
+<p>
+    When 2 or more paths connect end to end, we call this a <b>chain</b>. 
+    Here are 3 lines that connect end to end, forming a chain with 3 links; 
+    each line path is considered a link in the chain:
+</p>
+
+<script>
+//render a model with paths that form a chain
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    "0": new makerjs.paths.Line([0, 0], [100, 0]),
+    "1": new makerjs.paths.Line([100, 0], [100, 100]),
+    "2": new makerjs.paths.Line([100, 100], [200, 100]),
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
+
+<p>
+    When the links do not have any loose ends and connect to each other, we call this an <b>endless</b> chain.
+    Frequently, endless chains are used to represent a <i>closed geometry</i>.
+    Here is an endless chain made up of 2 lines and an arc:
+</p>
+
+<script>
+//render a model with paths that form an endless chain
+
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    "v": new makerjs.paths.Line([0, 0], [0, 100]),
+    "h": new makerjs.paths.Line([0, 0], [100, 0]),
+    "arc":new makerjs.paths.Arc([0, 0], 100, 0, 90)
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
+
+<p>
+    A circle is a closed geometry by nature. In Maker.js, a single circle comprises an endless chain with only one link. 
+</p>
+
+<script>
+    //render a circle
+    
+    var makerjs = require('makerjs');
+    
+    var svg = makerjs.exporter.toSVG(new makerjs.paths.Circle(50));
+    
+    document.write(svg);
+</script>
+        
+<p>
+    A chain may contain other chains, recursively. A chain may only contain others if it is an endless chain itself.
+    Here are some examples of one chain containing another:
+</p>
+
+<script>
+//render a ring
+
+var makerjs = require('makerjs');
+
+var model = {
+    models: {
+        ring: new makerjs.models.Ring(15, 7),
+        plate: makerjs.model.moveRelative(
+            {
+                models: {
+                    outer: makerjs.model.center(new makerjs.models.Rectangle(60, 30)),
+                    inner: makerjs.model.center(new makerjs.models.Oval(45, 15))
+                }
+            },
+            [60, 0]
+        )
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
+
+<p>
+    Here is a model which does <b>not</b> have any chains. Although the lines overlap, they do not connect end to end.
+</p>
+
+<script>
+var makerjs = require('makerjs');
+
+var model = {
+  paths: {
+    "h1": new makerjs.paths.Line([0, 10], [30, 10]),
+    "h2": new makerjs.paths.Line([0, 20], [30, 20]),
+    "v1": new makerjs.paths.Line([10, 0], [10, 30]),
+    "v2": new makerjs.paths.Line([20, 0], [20, 30])
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+</script>
+
+<h4>Chains are implicit</h4>
+
+You do not explicitly define chains in your drawing, chains are something that Maker.js <i>finds</i> in your model(s).
+
+<h4>Finding</h4>
+
+Call one of these two functions to find chains, which will return one or more <b>Chain</b> objects:
+
+<ul>
+    <li><a href="/docs/api/modules/makerjs.model.html#findsinglechain">makerjs.model.findSingleChain(model)</a></li>
+    <li><a href="/docs/api/modules/makerjs.model.html#findchains">makerjs.model.findChains(model)</a></li>
+</ul>
+
+<h4>Chain object type</h4>
+
+{% include object-type.html type=site.data.project.Interface.IChain %}

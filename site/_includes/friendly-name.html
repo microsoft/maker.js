@@ -1,0 +1,13 @@
+{% case include.name %}
+{% when 'IPathArc' %}Arc
+{% when 'IPathCircle' %}Circle
+{% when 'IPathLine' %}Line
+{% when 'IPathBezierSeed' %}BezierSeed
+{% else %}
+{% capture firstchar %}{{ include.name | slice: 0 }}{% endcapture %}
+{% capture secondchar %}{{ include.name | slice: 1, 1 }}{% endcapture %}
+{% capture secondcharUp %}{{ secondchar | upcase }}{% endcapture %}
+{% if firstchar == 'I' and secondchar == secondcharUp %}
+{{ include.name | slice: 1, 100 }}
+{% else %}{{ include.name }}{% endif %}
+{% endcase %}

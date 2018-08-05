@@ -1,0 +1,123 @@
+---
+title: Moving
+---
+
+<p>
+    Models and paths can be moved to an absolute location, or moved by an [x, y] amount relative to their current location.
+    Keep in mind that since paths are contained within models, and models may be contained within models, that their coordinates will be relative to the containing model.
+</p>
+
+<p>
+    To illustrate this, let's create a model that has a few squares:
+</p>
+
+{% highlight javascript %}
+//create some squares side by side
+
+function Squares() {
+
+    this.models = {
+
+        s1: new makerjs.models.Square(100),
+
+        //calling makerjs.model.move and creating a model all on one line of code.
+        s2: makerjs.model.move(new makerjs.models.Square(100), [120, 0]),
+
+        s3: new makerjs.models.Square(100)
+
+    };
+
+    //move the third square by setting its origin property.
+    this.models.s3.origin = [240, 0];
+
+}
+
+var makerjs = require('makerjs');
+var squares = new Squares();
+
+var svg = makerjs.exporter.toSVG(squares);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    The way to move a model to an absolute position is to set its <b>origin</b> property.
+    The <a href="/docs/api/modules/makerjs.model.html#move">makerjs.model.move</a> function does just that, but it also lets you do more operations on one line of code.
+</p>
+
+<p>
+    To move a model by a relative amount, use <a href="/docs/api/modules/makerjs.model.html#moverelative">makerjs.model.moveRelative</a>:
+</p>
+
+{% highlight javascript %}
+//move some squares by a relative distance
+
+function Squares() {
+    this.models = {
+        s1: new makerjs.models.Square(100),
+        s2: makerjs.model.move(new makerjs.models.Square(100), [120, 0]),
+        s3: new makerjs.models.Square(100)
+    };
+    this.models.s3.origin = [240, 0];
+}
+
+var makerjs = require('makerjs');
+var squares = new Squares();
+
+//move some squares by a relative distance
+makerjs.model.moveRelative(squares.models.s2, [-10, 10]);
+makerjs.model.moveRelative(squares.models.s3, [-20, 20]);
+
+var svg = makerjs.exporter.toSVG(squares);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    Likewise, paths can be moved absolutely with <a href="/docs/api/modules/makerjs.path.html#move">makerjs.path.move</a>
+    or relatively with <a href="/docs/api/modules/makerjs.path.html#moverelative">makerjs.path.moveRelative</a>:
+</p>
+
+{% highlight javascript %}
+//move some paths within the squares
+
+function Squares() {
+    this.models = {
+        s1: new makerjs.models.Square(100),
+        s2: makerjs.model.move(new makerjs.models.Square(100), [120, 0]),
+        s3: new makerjs.models.Square(100)
+    };
+    this.models.s3.origin = [240, 0];
+}
+
+var makerjs = require('makerjs');
+var squares = new Squares();
+
+//move a path by a relative distance
+makerjs.path.moveRelative(squares.models.s3.paths.ShapeLine3, [0, 20]);
+
+//move a path to an absolute point
+makerjs.path.move(squares.models.s2.paths.ShapeLine1, [30, 20]);
+
+var svg = makerjs.exporter.toSVG(squares);
+
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    Notice that the 2nd square had an origin of [120, 0] but we moved a line within the square to an absolute point [30, 20]. Since the line is contained within the square model, its
+    coordinates are in terms of the square, which is why it appears to be at [150, 20].
+</p>

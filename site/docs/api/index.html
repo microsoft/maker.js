@@ -1,0 +1,1198 @@
+---
+layout: posts
+title: Api - MakerJs Module
+---
+<div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-comment">
+	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>Root module for Maker.js.</p>
+		</div>
+		<p>Example: get a reference to Maker.js</p>
+		<pre><code><span class="hljs-attribute">var makerjs</span> = require(<span class="hljs-string">'makerjs'</span>);
+</code></pre>
+	</div>
+</section>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Modules</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.angle.html" class="tsd-kind-icon">angle</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.chain.html" class="tsd-kind-icon">chain</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.exporter.html" class="tsd-kind-icon">exporter</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.importer.html" class="tsd-kind-icon">importer</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.kit.html" class="tsd-kind-icon">kit</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.layout.html" class="tsd-kind-icon">layout</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.measure.html" class="tsd-kind-icon">measure</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.model.html" class="tsd-kind-icon">model</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.models.html" class="tsd-kind-icon">models</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.path.html" class="tsd-kind-icon">path</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.paths.html" class="tsd-kind-icon">paths</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.point.html" class="tsd-kind-icon">point</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.solvers.html" class="tsd-kind-icon">solvers</a></li>
+					<li class="tsd-kind-module tsd-parent-kind-module"><a href="modules/makerjs.units.html" class="tsd-kind-icon">units</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Classes</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter tsd-is-private"><a href="classes/makerjs.cascade.html" class="tsd-kind-icon">Cascade</a></li>
+					<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="classes/makerjs.collector.html" class="tsd-kind-icon">Collector</a></li>
+					<li class="tsd-kind-class tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="classes/makerjs.kdbush.html" class="tsd-kind-icon">KDBush</a></li>
+					<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="classes/makerjs.pointgraph.html" class="tsd-kind-icon">Point<wbr>Graph</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Interfaces</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ibezierrange.html" class="tsd-kind-icon">IBezier<wbr>Range</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iboundinghex.html" class="tsd-kind-icon">IBounding<wbr>Hex</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.icascade.html" class="tsd-kind-icon">ICascade</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.icascademodel.html" class="tsd-kind-icon">ICascade<wbr>Model</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.icascadepath.html" class="tsd-kind-icon">ICascade<wbr>Path</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.icascadepoint.html" class="tsd-kind-icon">ICascade<wbr>Point</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ichain.html" class="tsd-kind-icon">IChain</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ichaincallback.html" class="tsd-kind-icon">IChain<wbr>Callback</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ichainlink.html" class="tsd-kind-icon">IChain<wbr>Link</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ichainsmap.html" class="tsd-kind-icon">IChains<wbr>Map</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="interfaces/makerjs.icollection.html" class="tsd-kind-icon">ICollection</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="interfaces/makerjs.icollectionkeycomparer.html" class="tsd-kind-icon">ICollection<wbr>Key<wbr>Comparer</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.icombineoptions.html" class="tsd-kind-icon">ICombine<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.icontainchainsoptions.html" class="tsd-kind-icon">IContain<wbr>Chains<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ifindchainsoptions.html" class="tsd-kind-icon">IFind<wbr>Chains<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ifindloopsoptions.html" class="tsd-kind-icon">IFind<wbr>Loops<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iispointonpathoptions.html" class="tsd-kind-icon">IIs<wbr>Point<wbr>OnPath<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ikit.html" class="tsd-kind-icon">IKit</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imeasure.html" class="tsd-kind-icon">IMeasure</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imeasuremap.html" class="tsd-kind-icon">IMeasure<wbr>Map</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imeasurepointinsideoptions.html" class="tsd-kind-icon">IMeasure<wbr>Point<wbr>Inside<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imeasurewithcenter.html" class="tsd-kind-icon">IMeasure<wbr>With<wbr>Center</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imetaparameter.html" class="tsd-kind-icon">IMeta<wbr>Parameter</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imodel.html" class="tsd-kind-icon">IModel</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imodelmap.html" class="tsd-kind-icon">IModel<wbr>Map</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.imodelpathcallback.html" class="tsd-kind-icon">IModel<wbr>Path<wbr>Callback</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipath.html" class="tsd-kind-icon">IPath</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipatharc.html" class="tsd-kind-icon">IPath<wbr>Arc</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipatharcinbeziercurve.html" class="tsd-kind-icon">IPath<wbr>Arc<wbr>InBezier<wbr>Curve</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathbezierseed.html" class="tsd-kind-icon">IPath<wbr>Bezier<wbr>Seed</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathcircle.html" class="tsd-kind-icon">IPath<wbr>Circle</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathdirectional.html" class="tsd-kind-icon">IPath<wbr>Directional</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathintersection.html" class="tsd-kind-icon">IPath<wbr>Intersection</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathintersectionbaseoptions.html" class="tsd-kind-icon">IPath<wbr>Intersection<wbr>Base<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathintersectionoptions.html" class="tsd-kind-icon">IPath<wbr>Intersection<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathline.html" class="tsd-kind-icon">IPath<wbr>Line</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathmap.html" class="tsd-kind-icon">IPath<wbr>Map</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipathremoved.html" class="tsd-kind-icon">IPath<wbr>Removed</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipoint.html" class="tsd-kind-icon">IPoint</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipointgraphindexelement.html" class="tsd-kind-icon">IPoint<wbr>Graph<wbr>Index<wbr>Element</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.ipointmatchoptions.html" class="tsd-kind-icon">IPoint<wbr>Match<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.irefmodelinmodel.html" class="tsd-kind-icon">IRef<wbr>Model<wbr>InModel</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.irefpathidinmodel.html" class="tsd-kind-icon">IRef<wbr>Path<wbr>IdIn<wbr>Model</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.irouteoffset.html" class="tsd-kind-icon">IRoute<wbr>Offset</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.isimplifyoptions.html" class="tsd-kind-icon">ISimplify<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.islope.html" class="tsd-kind-icon">ISlope</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iwalkmodel.html" class="tsd-kind-icon">IWalk<wbr>Model</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iwalkmodelcallback.html" class="tsd-kind-icon">IWalk<wbr>Model<wbr>Callback</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iwalkmodelcancellablecallback.html" class="tsd-kind-icon">IWalk<wbr>Model<wbr>Cancellable<wbr>Callback</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iwalkoptions.html" class="tsd-kind-icon">IWalk<wbr>Options</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iwalkpath.html" class="tsd-kind-icon">IWalk<wbr>Path</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iwalkpathbooleancallback.html" class="tsd-kind-icon">IWalk<wbr>Path<wbr>Boolean<wbr>Callback</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/makerjs.iwalkpathcallback.html" class="tsd-kind-icon">IWalk<wbr>Path<wbr>Callback</a></li>
+					<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="interfaces/makerjs.kdbushlib.html" class="tsd-kind-icon">kdbush<wbr>Lib</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Variables</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private"><a href="index.html#clone" class="tsd-kind-icon">clone</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module"><a href="index.html#environment" class="tsd-kind-icon">environment</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="index.html#kdbush-1" class="tsd-kind-icon">kdbush</a></li>
+					<li class="tsd-kind-variable tsd-parent-kind-module"><a href="index.html#version" class="tsd-kind-icon">version</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Functions</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#_" class="tsd-kind-icon">$</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="index.html#cloneobject" class="tsd-kind-icon">clone<wbr>Object</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#createroutekey" class="tsd-kind-icon">create<wbr>Route<wbr>Key</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="index.html#detectenvironment" class="tsd-kind-icon">detect<wbr>Environment</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#extendobject" class="tsd-kind-icon">extend<wbr>Object</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ischain" class="tsd-kind-icon">is<wbr>Chain</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#isfunction" class="tsd-kind-icon">is<wbr>Function</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ismodel" class="tsd-kind-icon">is<wbr>Model</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#isobject" class="tsd-kind-icon">is<wbr>Object</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispath" class="tsd-kind-icon">is<wbr>Path</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispatharc" class="tsd-kind-icon">is<wbr>Path<wbr>Arc</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispatharcinbeziercurve" class="tsd-kind-icon">is<wbr>Path<wbr>Arc<wbr>InBezier<wbr>Curve</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispathcircle" class="tsd-kind-icon">is<wbr>Path<wbr>Circle</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispathline" class="tsd-kind-icon">is<wbr>Path<wbr>Line</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#ispoint" class="tsd-kind-icon">is<wbr>Point</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#round" class="tsd-kind-icon">round</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#split" class="tsd-kind-icon">split</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#splitdecimal" class="tsd-kind-icon">split<wbr>Decimal</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="index.html#travel" class="tsd-kind-icon">travel</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="index.html#tryeval" class="tsd-kind-icon">try<wbr>Eval</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Object literals</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-object-literal tsd-parent-kind-module"><a href="index.html#environmenttypes" class="tsd-kind-icon">environment<wbr>Types</a></li>
+					<li class="tsd-kind-object-literal tsd-parent-kind-module"><a href="index.html#pathtype" class="tsd-kind-icon">path<wbr>Type</a></li>
+					<li class="tsd-kind-object-literal tsd-parent-kind-module"><a href="index.html#unittype" class="tsd-kind-icon">unit<wbr>Type</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Variables</h2>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private">
+		<a name="clone" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> clone</h3>
+		<div class="tsd-signature tsd-kind-icon">clone<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L221">core/maker.ts:221</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
+		<a name="environment" class="tsd-anchor"></a>
+		<h3>environment</h3>
+		<div class="tsd-signature tsd-kind-icon">environment<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L63">core/maker.ts:63</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Current execution environment type, should be one of environmentTypes.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="kdbush-1" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> kdbush</h3>
+		<div class="tsd-signature tsd-kind-icon">kdbush<span class="tsd-signature-symbol">:</span> <a href="interfaces/makerjs.kdbushlib.html" class="tsd-signature-type">kdbushLib</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/collect.ts#L104">core/collect.ts:104</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
+		<a name="version" class="tsd-anchor"></a>
+		<h3>version</h3>
+		<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L15">core/maker.ts:15</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Version info</p>
+			</div>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="_" class="tsd-anchor"></a>
+		<h3>$</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">$<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.icascademodel.html" class="tsd-signature-type">ICascadeModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">$<span class="tsd-signature-symbol">(</span>pathContext<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+			<li class="tsd-signature tsd-kind-icon">$<span class="tsd-signature-symbol">(</span>pointContext<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.icascadepoint.html" class="tsd-signature-type">ICascadePoint</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L971">core/maker.ts:971</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a container to cascade a series of functions upon a model. This allows JQuery-style method chaining, e.g.:</p>
+						<pre><code>makerjs.$(shape).center().<span class="hljs-keyword">rotate</span>(<span class="hljs-number">45</span>).$result
+</code></pre><p>The output of each function call becomes the first parameter input to the next function call.
+						The returned value of the last function call is available via the <code>.$result</code> property.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelContext: <a href="interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The initial model to execute functions upon.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="interfaces/makerjs.icascademodel.html" class="tsd-signature-type">ICascadeModel</a></h4>
+				<p>A new cascade container with ICascadeModel methods.</p>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L984">core/maker.ts:984</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a container to cascade a series of functions upon a path. This allows JQuery-style method chaining, e.g.:</p>
+						<pre><code>makerjs.$(path).center().<span class="hljs-keyword">rotate</span>(<span class="hljs-number">90</span>).$result
+</code></pre><p>The output of each function call becomes the first parameter input to the next function call.
+						The returned value of the last function call is available via the <code>.$result</code> property.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pathContext: <a href="interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The initial path to execute functions upon.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="interfaces/makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>A new cascade container with ICascadePath methods.</p>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L997">core/maker.ts:997</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a container to cascade a series of functions upon a point. This allows JQuery-style method chaining, e.g.:</p>
+						<pre><code>makerjs.$([<span class="hljs-number">1</span>,<span class="hljs-number">0</span>]).scale(<span class="hljs-number">5</span>).rotate(<span class="hljs-number">60</span>).$result
+</code></pre><p>The output of each function call becomes the first parameter input to the next function call.
+						The returned value of the last function call is available via the <code>.$result</code> property.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pointContext: <a href="interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The initial point to execute functions upon.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="interfaces/makerjs.icascadepoint.html" class="tsd-signature-type">ICascadePoint</a></h4>
+				<p>A new cascade container with ICascadePoint methods.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+		<a name="cloneobject" class="tsd-anchor"></a>
+		<h3>clone<wbr>Object</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+			<li class="tsd-signature tsd-kind-icon">clone<wbr>Object&lt;T&gt;<span class="tsd-signature-symbol">(</span>objectToClone<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L229">core/maker.ts:229</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Clone an object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-type-parameters-title">Type parameters</h4>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T</h4>
+					</li>
+				</ul>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>objectToClone: <span class="tsd-signature-type">T</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to clone.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+				<p>A new clone of the original object.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="createroutekey" class="tsd-anchor"></a>
+		<h3>create<wbr>Route<wbr>Key</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">create<wbr>Route<wbr>Key<span class="tsd-signature-symbol">(</span>route<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L164">core/maker.ts:164</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a string representation of a route array.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>route: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Array of strings which are segments of a route.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+				<p>String of the flattened array.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="detectenvironment" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> detect<wbr>Environment</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">detect<wbr>Environment<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L42">core/maker.ts:42</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="extendobject" class="tsd-anchor"></a>
+		<h3>extend<wbr>Object</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">extend<wbr>Object<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, other<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L245">core/maker.ts:245</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Copy the properties from one object to another object.</p>
+					</div>
+					<p>Example:</p>
+					<pre><code><span class="hljs-string">makerjs.extendObject({</span> <span class="hljs-attr">abc:</span> <span class="hljs-number">123</span> <span class="hljs-string">},</span> <span class="hljs-string">{</span> <span class="hljs-attr">xyz:</span> <span class="hljs-number">789</span> <span class="hljs-string">});</span> <span class="hljs-string">//returns</span> <span class="hljs-string">{</span> <span class="hljs-attr">abc:</span> <span class="hljs-number">123</span><span class="hljs-string">,</span> <span class="hljs-attr">xyz:</span> <span class="hljs-number">789</span> <span class="hljs-string">}</span>
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>target: <span class="tsd-signature-type">Object</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to extend. It will receive the new properties.</p>
+						</div>
+					</li>
+					<li>
+						<h5>other: <span class="tsd-signature-type">Object</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>An object containing properties to merge in.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Object</span></h4>
+				<p>The original object after merging.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ischain" class="tsd-anchor"></a>
+		<h3>is<wbr>Chain</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Chain<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L736">core/maker.ts:736</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of a chain.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The item to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isfunction" class="tsd-anchor"></a>
+		<h3>is<wbr>Function</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Function<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L262">core/maker.ts:262</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if a variable is a function.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>value: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>True if the object is a function type.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ismodel" class="tsd-anchor"></a>
+		<h3>is<wbr>Model</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Model<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L629">core/maker.ts:629</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of a model.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isnumber" class="tsd-anchor"></a>
+		<h3>is<wbr>Number</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Number<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L272">core/maker.ts:272</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if a variable is a number.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>value: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>True if the object is a number type.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="isobject" class="tsd-anchor"></a>
+		<h3>is<wbr>Object</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Object<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L282">core/maker.ts:282</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if a variable is an object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>value: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The object to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+				<p>True if the object is an object type.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispath" class="tsd-anchor"></a>
+		<h3>is<wbr>Path</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L385">core/maker.ts:385</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of a path.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The item to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispatharc" class="tsd-anchor"></a>
+		<h3>is<wbr>Path<wbr>Arc</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Arc<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L412">core/maker.ts:412</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of an arc.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The item to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispatharcinbeziercurve" class="tsd-anchor"></a>
+		<h3>is<wbr>Path<wbr>Arc<wbr>InBezier<wbr>Curve</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Arc<wbr>InBezier<wbr>Curve<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L421">core/maker.ts:421</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of an arc in a bezier curve.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The item to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispathcircle" class="tsd-anchor"></a>
+		<h3>is<wbr>Path<wbr>Circle</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Circle<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L403">core/maker.ts:403</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of a circle.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The item to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispathline" class="tsd-anchor"></a>
+		<h3>is<wbr>Path<wbr>Line</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Path<wbr>Line<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L394">core/maker.ts:394</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of a line.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The item to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="ispoint" class="tsd-anchor"></a>
+		<h3>is<wbr>Point</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">is<wbr>Point<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L293">core/maker.ts:293</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Test to see if an object implements the required properties of a point.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>item: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The item to test.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="round" class="tsd-anchor"></a>
+		<h3>round</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">round<span class="tsd-signature-symbol">(</span>n<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L127">core/maker.ts:127</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Numeric rounding</p>
+					</div>
+					<p>Example: round to 3 decimal places</p>
+					<pre><code>makerjs.round(<span class="hljs-number">3.14159</span>, <span class="hljs-number">.001</span>); <span class="hljs-comment">//returns 3.142</span>
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>n: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The number to round off.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> accuracy: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1e-7</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional exemplar of number of decimal places.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+				<p>Rounded number.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="split" class="tsd-anchor"></a>
+		<h3>split</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">split<span class="tsd-signature-symbol">(</span>s<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, char<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L84">core/maker.ts:84</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>private</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>s: <span class="tsd-signature-type">string</span></h5>
+					</li>
+					<li>
+						<h5>char: <span class="tsd-signature-type">string</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="splitdecimal" class="tsd-anchor"></a>
+		<h3>split<wbr>Decimal</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">split<wbr>Decimal<span class="tsd-signature-symbol">(</span>n<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L106">core/maker.ts:106</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Split a decimal into its whole and fractional parts as strings.</p>
+					</div>
+					<p>Example: get whole and fractional parts of 42.056</p>
+					<pre><code>makerjs.splitDecimal(<span class="hljs-number">42.056</span>); <span class="hljs-regexp">//</span>returns [<span class="hljs-string">"42"</span>, <span class="hljs-string">"056"</span>]
+</code></pre>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>n: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The number to split.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+				<p>Array of 2 strings when n contains a decimal point, or an array of one string when n is an integer.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="travel" class="tsd-anchor"></a>
+		<h3>travel</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">travel<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, route<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L186">core/maker.ts:186</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Travel along a route inside of a model to extract a specific node in its tree.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelContext: <a href="interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Model to travel within.</p>
+						</div>
+					</li>
+					<li>
+						<h5>route: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>String of a flattened route, or a string array of route segments.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
+				<p>Model or Path object within the modelContext tree.</p>
+				<ul class="tsd-parameters">
+					<li class="tsd-parameter">
+						<h5>offset<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li class="tsd-parameter">
+						<h5>result<span class="tsd-signature-symbol">: </span><a href="interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
+		<a name="tryeval" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> try<wbr>Eval</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private">
+			<li class="tsd-signature tsd-kind-icon">try<wbr>Eval<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L30">core/maker.ts:30</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>name: <span class="tsd-signature-type">string</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+			</li>
+		</ul>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Object literals</h2>
+	<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-module">
+		<a name="environmenttypes" class="tsd-anchor"></a>
+		<h3>environment<wbr>Types</h3>
+		<div class="tsd-signature tsd-kind-icon">environment<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L20">core/maker.ts:20</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Enumeration of environment types.</p>
+			</div>
+		</div>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="environmenttypes.browserui" class="tsd-anchor"></a>
+			<h3>BrowserUI</h3>
+			<div class="tsd-signature tsd-kind-icon">BrowserUI<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L21">core/maker.ts:21</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="environmenttypes.nodejs" class="tsd-anchor"></a>
+			<h3>Node<wbr>Js</h3>
+			<div class="tsd-signature tsd-kind-icon">Node<wbr>Js<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L22">core/maker.ts:22</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="environmenttypes.unknown" class="tsd-anchor"></a>
+			<h3>Unknown</h3>
+			<div class="tsd-signature tsd-kind-icon">Unknown<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L24">core/maker.ts:24</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="environmenttypes.webworker" class="tsd-anchor"></a>
+			<h3>Web<wbr>Worker</h3>
+			<div class="tsd-signature tsd-kind-icon">Web<wbr>Worker<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L23">core/maker.ts:23</a></li>
+				</ul>
+			</aside>
+		</section>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-module">
+		<a name="pathtype" class="tsd-anchor"></a>
+		<h3>path<wbr>Type</h3>
+		<div class="tsd-signature tsd-kind-icon">path<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L434">core/maker.ts:434</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>String-based enumeration of all paths types.</p>
+			</div>
+			<p>Examples: use pathType instead of string literal when creating a circle.</p>
+			<pre><code>var <span class="hljs-string">circle:</span> IPathCircle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//typescript</span>
+var circle = { <span class="hljs-string">type:</span> pathType.Circle, <span class="hljs-string">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-string">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//javascript</span>
+</code></pre>
+		</div>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="pathtype.arc" class="tsd-anchor"></a>
+			<h3>Arc</h3>
+			<div class="tsd-signature tsd-kind-icon">Arc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L437">core/maker.ts:437</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="pathtype.bezierseed" class="tsd-anchor"></a>
+			<h3>Bezier<wbr>Seed</h3>
+			<div class="tsd-signature tsd-kind-icon">Bezier<wbr>Seed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L438">core/maker.ts:438</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="pathtype.circle" class="tsd-anchor"></a>
+			<h3>Circle</h3>
+			<div class="tsd-signature tsd-kind-icon">Circle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L436">core/maker.ts:436</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="pathtype.line" class="tsd-anchor"></a>
+			<h3>Line</h3>
+			<div class="tsd-signature tsd-kind-icon">Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L435">core/maker.ts:435</a></li>
+				</ul>
+			</aside>
+		</section>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-module">
+		<a name="unittype" class="tsd-anchor"></a>
+		<h3>unit<wbr>Type</h3>
+		<div class="tsd-signature tsd-kind-icon">unit<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L73">core/maker.ts:73</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>String-based enumeration of unit types: imperial, metric or otherwise.
+					A model may specify the unit system it is using, if any. When importing a model, it may have different units.
+					Unit conversion function is makerjs.units.conversionScale().
+				Important: If you add to this, you must also add a corresponding conversion ratio in the unit.ts file!</p>
+			</div>
+		</div>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="unittype.centimeter" class="tsd-anchor"></a>
+			<h3>Centimeter</h3>
+			<div class="tsd-signature tsd-kind-icon">Centimeter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L74">core/maker.ts:74</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="unittype.foot" class="tsd-anchor"></a>
+			<h3>Foot</h3>
+			<div class="tsd-signature tsd-kind-icon">Foot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L75">core/maker.ts:75</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="unittype.inch" class="tsd-anchor"></a>
+			<h3>Inch</h3>
+			<div class="tsd-signature tsd-kind-icon">Inch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L76">core/maker.ts:76</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="unittype.meter" class="tsd-anchor"></a>
+			<h3>Meter</h3>
+			<div class="tsd-signature tsd-kind-icon">Meter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L77">core/maker.ts:77</a></li>
+				</ul>
+			</aside>
+		</section>
+		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+			<a name="unittype.millimeter" class="tsd-anchor"></a>
+			<h3>Millimeter</h3>
+			<div class="tsd-signature tsd-kind-icon">Millimeter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/0137c386/src/core/maker.ts#L78">core/maker.ts:78</a></li>
+				</ul>
+			</aside>
+		</section>
+	</section>
+</section>
+</div>
+<footer class="tsd-panel with-border-bottom">
+<div class="container">
+	<h2>Legend</h2>
+	<div class="tsd-legend-group">
+		<ul class="tsd-legend">
+			<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+			<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+			<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+			<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+			<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+			<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+		</ul>
+	</div>
+</div>
+</footer>
+<div class="container tsd-generator">
+<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+</div>
