@@ -99,9 +99,6 @@
     "browserify": "^13.3.0",
     "licensify": "^3.1.2",
     "mocha": "^5.2.0",
-    "shx": "^0.2.2",
-    "typedoc": "^0.7.1",
-    "typescript": "^2.4.2",
     "typescript-json-schema": "^0.20.0"
   },
   "dependencies": {
