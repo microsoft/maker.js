@@ -8,10 +8,11 @@
     "doc": "docs"
   },
   "devDependencies": {
+    "http-server": "^0.11.1",
     "lerna": "^3.0.0-rc.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "http-server -o -p 8020"
   },
   "repository": {
     "type": "git",
