@@ -30,6 +30,10 @@ class StringReader implements NodeJS.WritableStream {
         return this;
     }
 
+    public off(event: string | symbol, listener: (...args: any[]) => void): this {
+        return this;
+    };
+
     public on(event: string, listener: Function): this {
         return this;
     }
@@ -48,6 +52,10 @@ class StringReader implements NodeJS.WritableStream {
 
     public prependOnceListener() {
         return this;
+    }
+
+    public rawListeners(event: string | symbol): Function[] {
+        return [];
     }
 
     public removeListener(event: string, listener: Function): this {
