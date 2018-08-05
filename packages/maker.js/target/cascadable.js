@@ -1,5 +1,5 @@
 var fs = require('fs');
-var project = require('./project.json');
+var project = require('../dist/project.json');
 
 function findNamespace(context, namespaceArray) {
     if (context.children) {

@@ -7,7 +7,7 @@ CONTRIBUTING.md
 /.vscode
 /docs/api/assets
 debug.log
-/target/project.json
+packages/maker.js/dist/
 Gemfile
 Gemfile.lock
 _site

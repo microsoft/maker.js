@@ -2,25 +2,18 @@
   "name": "makerjs",
   "version": "0.10.3",
   "description": "Maker.js, a Microsoft Garage project, is a JavaScript library for creating and sharing modular line drawings for CNC and laser cutters.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build-jscad-csg": "browserify -p licensify -r @jscad/csg -o external/jscad/csg.js",
     "build-jscad-stl": "browserify -p licensify -r @jscad/stl-serializer --ignore @jscad/csg -o external/jscad/stl-serializer.js",
-    "cat-browser": "shx cat target/header.txt target/js/browser.js > target/js/browser.maker.js && shx rm target/js/browser.js",
-    "cat-node": "shx cat target/header.txt target/js/node.js target/node-requires.js > target/js/node.maker.js && shx rm target/js/node.js",
-    "version-tsd": "node ./target/version-tsd.js > index.d.ts && shx rm target/maker.d.ts",
-    "target-node-platform": "cd target && shx mv maker.js js/node.js && cd ..",
-    "target-browser-platform": "browserify -p licensify --ignore buffer -r ./target/js/node.js:makerjs -o ./target/js/browser.js",
-    "version-inside": "node ./target/version-inside.js",
     "build-debug": "tsc",
     "build-model-schema": "typescript-json-schema \"src/core/schema.ts\" MakerJs.IModel > schemas/makerjs-model.json",
     "build-schemas": "npm run build-model-schema",
-    "project": "typedoc ./src --json ./target/project.json",
+    "project": "typedoc ./src --json ./dist/project.json",
     "gen-cascades": "npm run project && node ./target/cascadable.js > ./src/core/cascades.ts",
     "prebuild": "npm run gen-cascades",
-    "build": "tsc -p target && npm run version-tsd && npm run version-inside && npm run target-node-platform && npm run target-browser-platform && npm run cat-browser && npm run cat-node && shx mv target/js/node.maker.js ./index.js",
-    "predocs": "rm -r -f ./docs/api",
-    "docs": "typedoc ./src --excludeExternals --mode file --entryPoint MakerJs --readme none --theme ./docgen/typedoc-theme --out ./docs/api",
+    "build": "tsc -p target && node ./target/build.js",
     "start": "http-server -o -p 8020",
     "test": "mocha --timeout 15000"
   },
@@ -127,8 +120,8 @@
     "external/jscad/csg.d.ts",
     "external/jscad/io.d.ts",
     "external/jscad/stl-serializer.d.ts",
-    "target/js/browser.maker.js",
-    "index.d.ts",
-    "index.js"
+    "dist/browser.maker.js",
+    "dist/index.d.ts",
+    "dist/index.js"
   ]
 }
