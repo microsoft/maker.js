@@ -40,7 +40,9 @@
     <script src="../external/codemirror/mode/javascript/javascript.js"></script>
     <script src="../external/bezier-js/bezier.js"></script>
     <script src="../external/opentype/opentype.js"></script>
-    
+
+    <!-- Uncomment below for local development -->
+    <!-- 
     <script>
         //pretend we are in node
         var module = {};
@@ -107,6 +109,14 @@
         //pretend it's been required
         var makerjs = MakerJs;
     </script>
+ -->
+
+    <!-- comment out below for local development -->
+    <script src="../target/js/browser.maker.js"></script>
+    <script>
+        var makerjs = require('makerjs');
+    </script>
+    <!-- comment out above for local development -->
 
     <script src="dist/iexport.js"></script>
     <script src="dist/pointer.js"></script>
