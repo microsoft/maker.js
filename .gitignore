@@ -11,3 +11,4 @@ packages/maker.js/dist/
 Gemfile
 Gemfile.lock
 _site
+.jekyll-metadata
