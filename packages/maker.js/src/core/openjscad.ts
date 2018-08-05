@@ -53,7 +53,7 @@
         var beginMap: IChainLinkFunctionMap = {};
 
         beginMap[pathType.Circle] = function (circle: IPathCircle, link: IChainLink) {
-            var circleOptions: CSG.ICircleOptions = {
+            var circleOptions: jscad.CSG.ICircleOptions = {
                 center: <number[]>point.rounded(point.add(circle.origin, link.walkedPath.offset), accuracy),
                 radius: round(circle.radius, accuracy),
                 resolution: facetSizeToResolution(circle, facetSize)
@@ -76,7 +76,7 @@
             if (link.reversed) {
                 reverseTail = true;
             }
-            var arcOptions: CSG.IArcOptions = {
+            var arcOptions: jscad.CSG.IArcOptions = {
                 center: <number[]>point.rounded(point.add(arc.origin, link.walkedPath.offset), accuracy),
                 radius: round(arc.radius, accuracy),
                 startangle: round(arc.startAngle, accuracy),
@@ -97,7 +97,7 @@
         appendMap[pathType.Arc] = function (arc: IPathArc, link: IChainLink) {
             var reverse = (reverseTail != link.reversed);
             var endAngle = angle.ofArcEnd(arc);
-            var arcOptions: CSG.IEllpiticalArcOptions = {
+            var arcOptions: jscad.CSG.IEllpiticalArcOptions = {
                 radius: round(arc.radius, accuracy),
                 clockwise: reverse,
                 large: Math.abs(endAngle - arc.startAngle) > 180,
