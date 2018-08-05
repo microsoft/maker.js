@@ -1,17 +1,17 @@
 ﻿{
   "compilerOptions": {
     "lib": ["webworker", "es5", "scripthost"],
+    "outDir": "../../dist",
     "skipLibCheck": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": [
+      "makerjs"
+    ]
   },
   "files": [
-    "../../index.d.ts",
     "../iexport.ts",
     "../irender.ts",
     "../fontloader.ts",
-    "../../external/jscad/csg.d.ts",
-    "../../external/jscad/io.d.ts",
-    "../../external/jscad/stl-serializer.d.ts",
     "export-worker.ts",
     "render-worker.ts",
     "string-reader.ts"
