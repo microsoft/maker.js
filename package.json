@@ -10,8 +10,8 @@
   "devDependencies": {
     "http-server": "^0.11.1",
     "lerna": "^3.0.0-rc.0",
-    "typedoc": "^0.5.10",
-    "typescript": "^2.4.2"
+    "typedoc": "^0.11.1",
+    "typescript": "^2.7.2"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
