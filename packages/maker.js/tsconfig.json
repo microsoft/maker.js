@@ -2,7 +2,15 @@
   "compilerOptions": {
     "lib": ["dom", "es2015"],
     "outDir": "debug/",
-    "sourceMap": true
+    "sourceMap": true,
+    "types": [
+      "@danmarshall/jscad-typings",
+      "bezier-js",
+      "graham_scan",
+      "node",
+      "opentype.js",
+      "pdfkit"
+    ]
   },
 "files": [
     "src/core/schema.ts",
@@ -31,9 +39,6 @@
     "src/core/chain.ts",
     "src/core/deadend.ts",
     "src/core/xml.ts",
-    "external/jscad/csg.d.ts",
-    "external/jscad/io.d.ts",
-    "external/jscad/stl-serializer.d.ts",
     "src/core/openjscad.ts",
     "src/core/pdf.ts",
     "src/core/svg.ts",
