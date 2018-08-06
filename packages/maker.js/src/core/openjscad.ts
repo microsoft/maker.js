@@ -180,7 +180,7 @@
      * @param options.statusCallback Optional callback function to get the percentage complete.
      * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
      */
-    export function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, jsCadCagOptions?: IJscadCagOptions) {
+    export function toJscadCAG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, jsCadCagOptions?: IJscadCagOptions): jscad.CAG | { [layerId: string]: jscad.CAG } {
 
         function chainToJscadCag(c: IChain, maxArcFacet: number) {
             const keyPoints = chain.toKeyPoints(c, maxArcFacet);
@@ -317,7 +317,7 @@
      * @param options.layerOptions Optional object map of options per layer, keyed by layer name. Each value for a key is an object with 'extrude' and 'z' properties.
      * @returns jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.
      */
-    export function toJscadCSG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, options?: IJscadCsgOptions) {
+    export function toJscadCSG(jscadCAG: typeof jscad.CAG, modelToExport: IModel, options?: IJscadCsgOptions): jscad.CSG {
 
         function to2D(opts: IJscadCsgOptions) {
             return toJscadCAG(jscadCAG, modelToExport, opts);
