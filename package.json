@@ -18,7 +18,7 @@
     "build": "lerna run build",
     "docs": "lerna run docs",
     "start": "http-server -o -p 8020",
-    "test": "lerna run test"
+    "test": "npm run bootstrap && npm run build && lerna run test"
   },
   "repository": {
     "type": "git",
