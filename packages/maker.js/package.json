@@ -16,7 +16,7 @@
     "build": "tsc -p target && node ./target/build.js",
     "cleandocs": "rimraf ../../docs/api",
     "predocs": "npm run cleandocs && npm run project",
-    "docs": "typedoc ./src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ../../docgen/typedoc-theme --out ../../docs/api --ignoreCompilerErrors",    
+    "docs": "typedoc ./src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ../../docgen/typedoc-theme --out ../../docs/api --ignoreCompilerErrors",
     "test": "mocha --timeout 15000"
   },
   "maintainers": [
@@ -106,6 +106,7 @@
     "typescript-json-schema": "^0.20.0"
   },
   "dependencies": {
+    "@danmarshall/jscad-typings": "^1.0.0",
     "@types/bezier-js": "^0.0.6",
     "@types/node": "^7.0.5",
     "@types/opentype.js": "^0.7.0",
@@ -116,9 +117,6 @@
     "kdbush": "^2.0.1"
   },
   "files": [
-    "external/jscad/csg.d.ts",
-    "external/jscad/io.d.ts",
-    "external/jscad/stl-serializer.d.ts",
     "dist/browser.maker.js",
     "dist/index.d.ts",
     "dist/index.js"
