@@ -14,10 +14,10 @@
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "project": "typedoc ../packages/maker.js/src --json ./dist/project.json && node ./project-to-data.js > ../_data/project.json",
+    "project": "typedoc ../packages/maker.js/src --json ./dist/project.json && node ./gen/project-to-data.js > ../_data/project.json",
     "cleandocs": "rimraf ./api",
     "predocs": "npm run cleandocs && npm run project",
-    "docs": "typedoc ../packages/maker.js/src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ../docgen/typedoc-theme --out ./api --ignoreCompilerErrors"
+    "docs": "typedoc ../packages/maker.js/src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ./gen/typedoc-theme --out ./api --ignoreCompilerErrors"
   },
   "author": "Dan Marshall",
   "license": "Apache-2.0"
