@@ -1,5 +1,5 @@
 var fs = require('fs');
-var project = require('../target/project.json');
+var project = require('./dist/project.json');
 
 function deepClean(obj) {
     if (typeof obj === 'object') {
