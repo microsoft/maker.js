@@ -1,0 +1,24 @@
+{
+  "name": "docs",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@danmarshall/jscad-typings": "^1.0.0",
+    "@types/bezier-js": "0.0.7",
+    "@types/graham_scan": "^1.0.28",
+    "@types/opentype.js": "^0.7.0",
+    "@types/pdfkit": "^0.7.36",
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "project": "typedoc ../packages/maker.js/src --json ./dist/project.json && node ./project-to-data.js > ../_data/project.json",
+    "cleandocs": "rimraf ./api",
+    "predocs": "npm run cleandocs && npm run project",
+    "docs": "typedoc ../packages/maker.js/src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ../docgen/typedoc-theme --out ./api --ignoreCompilerErrors"
+  },
+  "author": "Dan Marshall",
+  "license": "Apache-2.0"
+}
