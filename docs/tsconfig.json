@@ -1,0 +1,13 @@
+﻿{
+  "compilerOptions": {
+    "lib": ["dom", "es2015"],
+    "types": [
+      "@danmarshall/jscad-typings",
+      "bezier-js",
+      "graham_scan",
+      "node",
+      "opentype.js",
+      "pdfkit"
+    ]
+  }
+}
