@@ -6,6 +6,7 @@ CONTRIBUTING.md
 /.vs
 /.vscode
 /docs/api/assets
+docs/dist
 debug.log
 packages/maker.js/dist/
 Gemfile
