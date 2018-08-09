@@ -152,7 +152,7 @@ function demoIndexPage() {
 }
 function homePage() {
     console.log('writing homepage');
-    var stream = fs.createWriteStream('./index.html');
+    var stream = fs.createWriteStream('../index.html');
     stream.once('open', function (fd) {
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
         console.log('writing about markdown');
