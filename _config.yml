@@ -1,5 +1,5 @@
 url: http://maker.js.org
 encoding: utf-8
-exclude: ['docgen/typedoc-theme']
+exclude: ['docs/_build/typedoc-theme']
 collections:
 - snippets
