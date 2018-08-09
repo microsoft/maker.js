@@ -32,7 +32,7 @@ function thumbnail(key, kit, baseUrl) {
     var parameters = kit.params || makerjs.kit.getParameterValues(kit.ctor);
     if (key === 'Text') {
         parameters = [
-            opentypeLib.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf'),
+            opentypeLib.loadSync('../fonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
     }
@@ -40,7 +40,7 @@ function thumbnail(key, kit, baseUrl) {
         if (kit.ctor.metaParameters) {
             kit.ctor.metaParameters.forEach(function (metaParameter, i) {
                 if (metaParameter.type === 'font') {
-                    parameters[i] = opentypeLib.loadSync('./fonts/allertastencil/AllertaStencil-Regular.ttf');
+                    parameters[i] = opentypeLib.loadSync('../fonts/allertastencil/AllertaStencil-Regular.ttf');
                 }
             });
         }
@@ -96,7 +96,7 @@ function getRequireKit(spec) {
     }
     else {
         result = {
-            ctor: require('../js/' + key)
+            ctor: require('./js/' + key)
         };
     }
     if (kvp) {
@@ -156,7 +156,7 @@ function homePage() {
     stream.once('open', function (fd) {
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
         console.log('writing about markdown');
-        var readmeMarkdown = fs.readFileSync('README.md', 'UTF8');
+        var readmeMarkdown = fs.readFileSync('../README.md', 'UTF8');
         var sections = readmeMarkdown.split('\n## ');
         //remove H1 tag and make the slogan an H2
         var topSection = sections[0].replace('# Maker.js\r\n\r\n', '## ');
