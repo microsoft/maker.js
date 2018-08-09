@@ -669,7 +669,7 @@ var MakerJsPlayground;
         idToUrlMap = {};
         for (var i = 0; i < orderedDependencies.length; i++) {
             //add extra path traversal for worker subfolder
-            idToUrlMap[orderedDependencies[i]] = '../' + filenameFromRequireId(orderedDependencies[i], true);
+            idToUrlMap[orderedDependencies[i]] = '../../' + filenameFromRequireId(orderedDependencies[i], true);
         }
         var options = {
             fontDir: '../' + MakerJsPlayground.fontDir,
