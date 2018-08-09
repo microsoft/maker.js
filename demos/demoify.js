@@ -96,7 +96,7 @@ function getRequireKit(spec) {
     }
     else {
         result = {
-            ctor: require('../demos/js/' + key)
+            ctor: require('../js/' + key)
         };
     }
     if (kvp) {
@@ -109,7 +109,7 @@ function getRequireKit(spec) {
     return result;
 }
 function demoIndexPage() {
-    var stream = fs.createWriteStream('./demos/index.html');
+    var stream = fs.createWriteStream('./index.html');
     stream.once('open', function (fd) {
         function writeHeading(level, heading) {
             var h = new makerjs.exporter.XmlTag('h' + level);
@@ -126,7 +126,7 @@ function demoIndexPage() {
         var st = sectionTag();
         stream.write(jekyll('default', 'Demos'));
         writeHeading(1, 'Demos');
-        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/gh-pages/demos/js).\n 3. Submit a pull request!');
+        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/demos/js).\n 3. Submit a pull request!');
         stream.write(section(yourDemoHtml));
         stream.write(st.getOpeningTag(false));
         writeHeading(2, 'Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
@@ -198,7 +198,7 @@ function copyRequire(root, key, copyTo) {
     var main = djson.main;
     var src = fs.readFileSync(dirpath + main, 'UTF8');
     allRequires[key] = 1;
-    fs.writeFileSync('./demos/js/' + copyTo + key + '.js', src, 'UTF8');
+    fs.writeFileSync('./js/' + copyTo + key + '.js', src, 'UTF8');
     var requires = detective(src);
     console.log('...requires ' + requires.length + ' libraries');
     for (var i = 0; i < requires.length; i++) {

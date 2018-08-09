@@ -115,7 +115,7 @@ function getRequireKit(spec: string): Kit {
         };
     } else {
         result = {
-            ctor: require('../demos/js/' + key)
+            ctor: require('../js/' + key)
         };
     }
 
@@ -132,7 +132,7 @@ function getRequireKit(spec: string): Kit {
 
 function demoIndexPage() {
 
-    var stream = fs.createWriteStream('./demos/index.html');
+    var stream = fs.createWriteStream('./index.html');
     stream.once('open', function (fd) {
 
         function writeHeading(level: number, heading: string) {
@@ -155,7 +155,7 @@ function demoIndexPage() {
 
         writeHeading(1, 'Demos');
 
-        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/gh-pages/demos/js).\n 3. Submit a pull request!');
+        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/demos/js).\n 3. Submit a pull request!');
 
         stream.write(section(yourDemoHtml));
 
@@ -268,7 +268,7 @@ function copyRequire(root, key, copyTo) {
 
     allRequires[key] = 1;
 
-    fs.writeFileSync('./demos/js/' + copyTo + key + '.js', src, 'UTF8');
+    fs.writeFileSync('./js/' + copyTo + key + '.js', src, 'UTF8');
 
     var requires = <string[]>detective(src);
 
