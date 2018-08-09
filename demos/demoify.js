@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var fs = require("fs");
 var browserify = require('browserify');
-var packageJson = require('../package.json');
+var packageJson = require('./package.json');
 var makerjs = require('makerjs');
 var marked = require('marked');
 var detective = require('detective');

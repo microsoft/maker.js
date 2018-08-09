@@ -1,6 +1,6 @@
 ﻿import fs = require('fs');
 var browserify = require('browserify');
-var packageJson = require('../package.json');
+var packageJson = require('./package.json');
 var makerjs = require('makerjs') as typeof MakerJs;
 var marked = require('marked') as MarkedStatic;
 var detective = require('detective');
