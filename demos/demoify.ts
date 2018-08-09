@@ -1,10 +1,8 @@
-﻿/// <reference path="../index.d.ts" />
-
-import fs = require('fs');
+﻿import fs = require('fs');
 var browserify = require('browserify');
 var packageJson = require('../package.json');
-var makerjs = <typeof MakerJs>require('../index.js');
-var marked = <MarkedStatic>require('marked');
+var makerjs = require('makerjs') as typeof MakerJs;
+var marked = require('marked') as MarkedStatic;
 var detective = require('detective');
 import * as opentypeLib from 'opentype.js';
 

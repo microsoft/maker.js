@@ -1,5 +1,6 @@
 {
   "packages": [
+    "demos",
     "docs",
     "fonts",
     "packages/*",
