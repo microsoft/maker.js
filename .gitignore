@@ -8,6 +8,7 @@ debug.log
 packages/docs/dist
 packages/maker.js/debug
 packages/maker.js/dist
+packages/maker.js/README.md
 Gemfile
 Gemfile.lock
 _site

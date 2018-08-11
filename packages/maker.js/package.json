@@ -14,7 +14,8 @@
     "gen-cascades": "npm run project && node ./target/cascadable.js > ./src/core/cascades.ts",
     "prebuild": "npm run gen-cascades",
     "build": "tsc -p target && node ./target/build.js",
-    "test": "mocha --timeout 15000"
+    "test": "mocha --timeout 15000",
+    "prepublish": "node ./target/prepublish.js"
   },
   "maintainers": [
     {
@@ -113,6 +114,7 @@
     "kdbush": "^2.0.1"
   },
   "files": [
+    "README.md",
     "dist/browser.maker.js",
     "dist/index.d.ts",
     "dist/index.js"
