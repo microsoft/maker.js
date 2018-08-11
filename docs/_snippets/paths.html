@@ -1,0 +1,66 @@
+---
+title: Paths
+---
+
+<p>A path is represented by an object with these mandatory properties:</p>
+
+<ul>
+  <li>type: string - "line", "circle", or "arc"</li>
+  <li>origin: point</li>
+</ul>
+
+<h4>Line</h4>
+
+<p>A line is a path with the type <b>"line"</b> and this additional property:</p>
+
+<ul>
+  <li>end: point</li>
+</ul>
+
+{% highlight javascript %}
+var line = { 
+  type: 'line', 
+  origin: [0, 0], 
+  end: [1, 1] 
+ };
+{% endhighlight %}
+
+<h4>Circle</h4>
+
+<p>A circle is a path with the type <b>"circle"</b> and this additional property:</p>
+
+<ul>
+  <li>radius: number</li>
+</ul>
+
+{% highlight javascript %}
+var circle = { 
+  type: 'circle', 
+  origin: [0, 0],
+  radius: 1
+ };
+{% endhighlight %}
+
+<h4>Arc</h4>
+
+<p>An arc is a path with the type <b>"arc"</b> and these additional properties:</p>
+
+<ul>
+  <li>radius: number</li>
+  <li>startAngle: number</li>
+  <li>endAngle: number</li>
+</ul>
+
+<p>Note: Property names are case-sensitive.</p>
+
+{% highlight javascript %}
+var arc = { 
+  type: 'arc', 
+  origin: [0, 0],
+  radius: 1,
+  startAngle: 0,
+  endAngle: 45
+ };
+{% endhighlight %}
+
+<i>(additional optional properties covered in advanced lessons)</i>

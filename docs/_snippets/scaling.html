@@ -1,0 +1,59 @@
+---
+title: Scaling
+---
+
+<p>
+    To proportionately scale a simple point, use <a href="../api/modules/makerjs.point.html#scale">makerjs.point.scale</a>.
+    To proportionately scale paths and models, use these functions:
+</p>
+
+<ul>
+    <li><a href="../api/modules/makerjs.path.html#scale">makerjs.path.scale</a>(path: object, scaleValue: number)</li>
+    <li><a href="../api/modules/makerjs.model.html#scale">makerjs.model.scale</a>(model: object, scaleValue: number)</li>
+</ul>
+
+<p>Each of these functions return the original object, so that we can "chain" on the same line of code.</p>
+
+<p>Scale path example:</p>
+
+{% highlight javascript %}
+//render a scaled arc
+
+var makerjs = require('makerjs');
+
+var arc1 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
+var arc2 = new makerjs.paths.Arc([0, 0], 25, 0, 90);
+
+arc2 = makerjs.path.scale(arc2, 2);
+
+var svg = makerjs.exporter.toSVG({ paths: { arc1: arc1, arc2: arc2 }});
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>Scale model example:</p>
+
+{% highlight javascript %}
+//render a scaled polygon
+
+var makerjs = require('makerjs');
+
+var model = {
+  models: {
+    inner: new makerjs.models.Polygon(6, 40),
+    outer: makerjs.model.scale(new makerjs.models.Polygon(6, 40), 1.7)
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

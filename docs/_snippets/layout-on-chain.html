@@ -1,0 +1,59 @@
+---
+title: Layout on a chain
+---
+
+Similar to <a href="/docs/advanced-drawing/#Layout on a path">layout on a path</a>, you can use a chain as a layout guide for a row of child models within a model. 
+Call <a href="/docs/api/modules/makerjs.layout.html#childrenonchain">makerjs.layout.childrenOnChain(parentModel: Model, onChain: chain)</a>,
+the x-axis will be projected onto your onChain:
+
+{% highlight javascript %}
+//render a row of squares on a chain
+
+var makerjs = require('makerjs');
+
+var square = new makerjs.models.Square(5);
+
+var row = makerjs.layout.cloneToRow(square, 10, 10);
+
+var curve = new makerjs.models.BezierCurve([0, 0], [33, 25], [66, -25], [100, 0]);
+
+var chain = makerjs.model.findSingleChain(curve);
+
+makerjs.layout.childrenOnChain(row, chain, 0.5, false, true);
+
+var model = {
+    models: {
+        curve: curve,
+        row: row
+    }
+};
+
+curve.layer = "red";
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+There are additional optional parameters to this makerjs.layout.childrenOnChain:
+
+<ul>
+    <li><b>baseline</b>: number <i>[default: 0]</i></li>
+    <li><b>reversed</b>: boolean <i>[default: false]</i></li>
+    <li><b>contain</b>: boolean <i>[default: false]</i></li>
+    <li><b>rotate</b>: boolean <i>[default: true]</i></li>
+</ul>
+
+These behave the same as when laying out on a path. 
+See <a href="/docs/advanced-drawing/#Layout on a path">layout on a path</a> for explanation.
+
+<hr/>
+
+<h4>Laying out text</h4>
+
+Layout on a chain works well with fonts and text. <a href="/playground/?script=text-on-chain">See an example here</a>.
+

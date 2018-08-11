@@ -1,0 +1,13 @@
+﻿{
+  "compilerOptions": {
+    "lib": ["dom", "es2015"],
+    "types": [
+      "makerjs",
+      "marked",
+      "node"
+    ]
+  },
+  "files": [
+    "demoify.ts"
+  ]
+}

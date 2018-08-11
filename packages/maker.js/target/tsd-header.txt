@@ -1,0 +1,7 @@
+// Type definitions for Maker.js #VERSION#
+// Project: https://github.com/Microsoft/maker.js
+// Definitions by: Dan Marshall <https://github.com/danmarshall>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+/// <reference types="@danmarshall/jscad-typings" />
+/// <reference types="opentype.js" />

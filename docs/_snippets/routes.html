@@ -1,0 +1,151 @@
+---
+title: Routes
+---
+
+<p>
+    We know that we are able to refer to deep objects by using the dot notation: 
+</p>
+
+{% highlight javascript %}
+var bottomRight_bolt = plate.models.bolts.paths.BottomRight_bolt;
+{% endhighlight %}
+
+<p>
+    The reference from <code>plate</code> to <code>BottomRight_bolt</code> is hard-coded. Suppose that we had a
+    model <code>plate2</code> which was a duplicate of <code>plate</code> - we would need to have to hard-code 
+    the reference to its <code>BottomRight_bolt</code>: 
+</p>
+
+{% highlight javascript %}
+var bottomRight_bolt2 = plate2.models.bolts.paths.BottomRight_bolt;
+{% endhighlight %}
+
+<p>
+    Instead of hard-coded dot notation, we can have an abstract way of referencing deep objects by using a <b>route</b>.
+    It is simply an array of strings that represent the segments names between the dots. We do not put the root object in a route.
+    A route that we can apply to both <code>plate</code> and <code>plate2</code> would be:
+</p>
+
+{% highlight javascript %}
+var route = ["models", "bolts", "paths", "BottomRight_bolt"];
+{% endhighlight %}
+
+<h4>Travel a route</h4>
+
+<p>
+    Use <a href="/docs/api/index.html#travel">makerjs.travel(rootModel, route)</a> to get to a child object in rootModel via a route. 
+    This function will return an object with these 2 properties:
+    <ul>
+        <li><b>result</b>: model or path - the object referenced by the route</li>
+        <li><b>offset</b>: point - the offset of the result object's origin from the rootModel's origin</li>
+    </ul>
+</p>
+
+{% highlight javascript %}
+//mounting plate
+var makerjs = require('makerjs');
+
+var plate = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.RoundRectangle(120, 100, 10)),
+        bolts: makerjs.model.center(new makerjs.models.BoltRectangle(100, 80, 5))
+    },
+    paths: {
+        hole: new makerjs.paths.Circle(25)
+    }
+};
+
+var plate2 = makerjs.cloneObject(plate);
+plate2.origin = [130, 0];
+
+//route to the BottomRight_bolt circle
+var route = ["models", "bolts", "paths", "BottomRight_bolt"];
+
+//create a local variables for BottomRight_bolt holes
+var bottomRight_bolt = makerjs.travel(plate, route).result;
+bottomRight_bolt.radius = 2;
+
+var bottomRight_bolt2 = makerjs.travel(plate2, route).result;
+bottomRight_bolt2.radius = 3;
+
+var plates = {
+    models: {
+        plate: plate,
+        plate2: plate2
+    }
+};
+
+var svg = makerjs.exporter.toSVG(plates);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Patterns in Routes</h4>
+
+<p>
+    Notice that the schema for Maker.js models has a pattern of <code>models.<i>modelName</i></code> and <code>paths.<i>pathName</i></code>.
+    There are always 2 segments between model and/or path objects. So, in any given route to an object, you can always get to its parent
+    by subtracting the last 2 array elements of the route. We will use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice">Array.slice</a>(0, -2)
+    to make a copy of the route array without the last 2 elements:
+</p>
+
+{% highlight javascript %}
+//mounting plate
+var makerjs = require('makerjs');
+
+var plate = {
+    models: {
+        outer: makerjs.model.center(new makerjs.models.RoundRectangle(120, 100, 10)),
+        bolts: makerjs.model.center(new makerjs.models.BoltRectangle(100, 80, 5))
+    },
+    paths: {
+        hole: new makerjs.paths.Circle(25)
+    }
+};
+
+var plate2 = makerjs.cloneObject(plate);
+plate2.origin = [130, 0];
+
+//route to the BottomRight_bolt circle
+var route = ["models", "bolts", "paths", "BottomRight_bolt"];
+
+//create a local variables for BottomRight_bolt holes
+var bottomRight_bolt = makerjs.travel(plate, route).result;
+bottomRight_bolt.radius = 2;
+
+//subtract 2 elements to get the parent
+var parentRoute = route.slice(0, -2);
+var bolts = makerjs.travel(plate2, parentRoute).result;
+
+//modify children
+delete bolts.paths.TopLeft_bolt;
+delete bolts.paths.BottomRight_bolt;
+
+var plates = {
+    models: {
+        plate: plate,
+        plate2: plate2
+    }
+};
+
+var svg = makerjs.exporter.toSVG(plates);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Route Keys</h4>
+
+<p>
+    Additionally, we can "flatten" a route array into a string, known as a <b>route key</b>, by calling 
+    <a href="/docs/api/index.html#createroutekey">makerjs.createRouteKey(route)</a> and passing a route.
+    Every route key is of course unique in the scope of the root object. 
+    It may used as a unique id of a child path or model.
+</p>

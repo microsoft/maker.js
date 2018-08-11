@@ -1,0 +1,100 @@
+---
+title: Bezier curves
+---
+
+<p>
+    Bezier curves are a fascinating and complex topic too large to cover here, it is recommended that you visit <a href="//pomax.github.io/bezierinfo/">A Primer on Bezier Curves by Mike Kamermans (aka Pomax)</a>.
+    Maker.js depends on Pomax's <a href="//pomax.github.io/bezierjs/">Bezier.js</a> which is a vital site to visit for understanding Bezier curve functionality in depth.
+</p>
+
+<p>
+    It is important to understand how Maker.js manages the complexity of these mathematical wonders. For this explanation, we will start at the end and work our way backwards to the beginning of the process.
+</p>
+<p>
+    The final representation of a Bezier curve in Maker.js is a model containing a series of circular arc paths which closely approximate the curve.
+    Closer approximation means more calculation time and more arcs.
+</p>
+<p>
+    Prior to generating the arcs, the curve is broken down into a series of sub-curves. It is from the sub-curves that the arcs are generated. Each sub-curve is guaranteed to not have an "S" shape so that it more closely resembles a circular arc.
+    The sub-curves are also broken at their rectangular "boundary box" points so that we are guaranteed that the boundary box tangent points are truly points on the curve and not approximations.
+    In the Bezier.js terminology, these breaking points are known as <a href="//pomax.github.io/bezierjs/#extrema">extrema</a>.
+</p>
+<p>
+    Now we are at the beginning of the process, where you call <a href="/docs/api/classes/makerjs.models.beziercurve.html#content">makerjs.models.BezierCurve</a> with the <b>new</b> operator. 
+    You can create both quadratic and cubic Bezier curves. For either type, you may optionally pass the accuracy - the maximum distance between the true curve and the arc approximations.
+    The default accuracy coefficient in Maker.js will produce an accurate and visually smooth curve in a reasonable calculation timeframe.
+</p>
+
+<hr />
+
+<p>
+    Create a quadratic Bezier curve in by passing an array of three points - an origin point, a control point, and an end point:
+</p>
+
+{% highlight javascript %}
+//create a quadratic Bezier curve
+
+var m = require('makerjs');
+
+var points = [[0, 100], [0, 0], [100, 0]];
+
+var curve1 = new m.models.BezierCurve(points);
+curve1.origin = [20, 20];
+
+//more accurate
+var curve2 = new m.models.BezierCurve(points, 0.01);
+
+var model = {
+  models: {
+    c1: curve1, c2: curve2
+  }
+};
+
+var svg = m.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<hr />
+
+<p>
+    Create a cubic Bezier curve in by passing an array of four points - an origin point, a first control point (relating to the origin point), a second control point (relating to the end point), and an end point:
+</p>
+
+{% highlight javascript %}
+//create a cubic Bezier curve
+
+var m = require('makerjs');
+
+var points = [[0, 0], [50, 50], [50, -50], [100, 0]];
+
+var curve1 = new m.models.BezierCurve(points);
+curve1.origin = [0, 20];
+
+//more accurate
+var curve2 = new m.models.BezierCurve(points, 0.1);
+
+var model = {
+  models: {
+    c1: curve1, c2: curve2
+  }
+};
+
+var svg = m.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<hr />
+
+<p>
+    Be sure to Play these examples, then click "show path names" to see the arcs representing the curve.
+</p>

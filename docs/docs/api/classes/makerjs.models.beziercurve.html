@@ -1,0 +1,391 @@
+---
+layout: posts
+title: Api - BezierCurve Class
+---
+<div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-hierarchy">
+	<h3>Hierarchy</h3>
+	<ul class="tsd-hierarchy">
+		<li>
+			<span class="target">BezierCurve</span>
+		</li>
+	</ul>
+</section>
+<section class="tsd-panel">
+	<h3>Implements</h3>
+	<ul class="tsd-hierarchy">
+		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+	</ul>
+</section>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Constructors</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.beziercurve.html#constructor" class="tsd-kind-icon">constructor</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Properties</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.beziercurve.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.beziercurve.html#models" class="tsd-kind-icon">models</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.beziercurve.html#origin" class="tsd-kind-icon">origin</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.beziercurve.html#paths" class="tsd-kind-icon">paths</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.beziercurve.html#seed" class="tsd-kind-icon">seed</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.beziercurve.html#type" class="tsd-kind-icon">type</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="makerjs.models.beziercurve.html#typename" class="tsd-kind-icon">type<wbr>Name</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Methods</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="makerjs.models.beziercurve.html#computelength" class="tsd-kind-icon">compute<wbr>Length</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="makerjs.models.beziercurve.html#computepoint" class="tsd-kind-icon">compute<wbr>Point</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="makerjs.models.beziercurve.html#getbezierseeds" class="tsd-kind-icon">get<wbr>Bezier<wbr>Seeds</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Constructors</h2>
+	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+		<a name="constructor" class="tsd-anchor"></a>
+		<h3>constructor</h3>
+		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>seed<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, control<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, controls<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Bezier<wbr>Curve<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, control1<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, control2<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, accuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L340">models/BezierCurve.ts:340</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>points: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L342">models/BezierCurve.ts:342</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>seed: <a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L343">models/BezierCurve.ts:343</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5>control: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5>end: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L344">models/BezierCurve.ts:344</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5>controls: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5>end: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></h4>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L345">models/BezierCurve.ts:345</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>origin: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5>control1: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5>control2: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5>end: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> accuracy: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></h4>
+			</li>
+		</ul>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="accuracy" class="tsd-anchor"></a>
+		<h3>accuracy</h3>
+		<div class="tsd-signature tsd-kind-icon">accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L340">models/BezierCurve.ts:340</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="models" class="tsd-anchor"></a>
+		<h3>models</h3>
+		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L335">models/BezierCurve.ts:335</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="origin" class="tsd-anchor"></a>
+		<h3>origin</h3>
+		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L337">models/BezierCurve.ts:337</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="paths" class="tsd-anchor"></a>
+		<h3>paths</h3>
+		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L336">models/BezierCurve.ts:336</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="seed" class="tsd-anchor"></a>
+		<h3>seed</h3>
+		<div class="tsd-signature tsd-kind-icon">seed<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L339">models/BezierCurve.ts:339</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="type" class="tsd-anchor"></a>
+		<h3>type</h3>
+		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L338">models/BezierCurve.ts:338</a></li>
+			</ul>
+		</aside>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+		<a name="typename" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagStatic">Static</span> type<wbr>Name</h3>
+		<div class="tsd-signature tsd-kind-icon">type<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L439">models/BezierCurve.ts:439</a></li>
+			</ul>
+		</aside>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Methods</h2>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+		<a name="computelength" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagStatic">Static</span> compute<wbr>Length</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+			<li class="tsd-signature tsd-kind-icon">compute<wbr>Length<span class="tsd-signature-symbol">(</span>seed<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L546">models/BezierCurve.ts:546</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>seed: <a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+		<a name="computepoint" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagStatic">Static</span> compute<wbr>Point</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+			<li class="tsd-signature tsd-kind-icon">compute<wbr>Point<span class="tsd-signature-symbol">(</span>seed<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a>, t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L551">models/BezierCurve.ts:551</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>seed: <a href="../interfaces/makerjs.ipathbezierseed.html" class="tsd-signature-type">IPathBezierSeed</a></h5>
+					</li>
+					<li>
+						<h5>t: <span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+		<a name="getbezierseeds" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagStatic">Static</span> get<wbr>Bezier<wbr>Seeds</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Bezier<wbr>Seeds<span class="tsd-signature-symbol">(</span>curve<span class="tsd-signature-symbol">: </span><a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ifindchainsoptions.html" class="tsd-signature-type">IFindChainsOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/models/BezierCurve.ts#L441">models/BezierCurve.ts:441</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>curve: <a href="makerjs.models.beziercurve.html" class="tsd-signature-type">BezierCurve</a></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/makerjs.ifindchainsoptions.html" class="tsd-signature-type">IFindChainsOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">[]</span>
+					<span class="tsd-signature-symbol"> | </span>
+					<span class="tsd-signature-type">object</span>
+				</h4>
+			</li>
+		</ul>
+	</section>
+</section>
+</div>
+<footer class="tsd-panel with-border-bottom">
+<div class="container">
+	<h2>Legend</h2>
+	<div class="tsd-legend-group">
+		<ul class="tsd-legend">
+			<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+			<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+			<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+			<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+			<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+			<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+		</ul>
+	</div>
+</div>
+</footer>
+<div class="container tsd-generator">
+<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+</div>

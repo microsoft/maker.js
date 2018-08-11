@@ -1,0 +1,10 @@
+<ul class="object-type">
+    {% for prop_hash in include.type.Property %}
+        {% assign propdata = prop_hash[1] %}
+    <li>
+        <b>{{prop_hash[0]}}</b>: 
+        <i>{% include friendly-name.html name = propdata.type.name %} {% if propdata.type.isArray == true %} array{% endif %}</i> 
+        - {% if propdata.flags.isOptional == true %}(optional){% endif %} {{propdata.comment.shortText}}
+    </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,57 @@
+---
+title: For the browser
+---
+
+<p>Download the browser-based version of Maker.js, then upload it to your website:</p>
+
+<p><a href="http://maker.js.org/target/js/browser.maker.js">http://maker.js.org/target/js/browser.maker.js</a></p>
+
+<p>Or you can link to it:</p>
+
+{% highlight html %}
+<script src="http://maker.js.org/target/js/browser.maker.js" type="text/javascript"></script>
+{% endhighlight %}
+
+To work with Bezier Curves, you will also need a copy of <a href="http://pomax.github.io/bezierjs/">Bezier.js by Pomax</a>:
+
+{% highlight html %}
+<script src="https://pomax.github.io/bezierjs/bezier.js" type="text/javascript"></script>
+{% endhighlight %}
+
+To work with fonts, you will need both Bezier.js (above) and a copy of <a href="https://github.com/nodebox/opentype.js">Opentype.js by Frederik&nbsp;De&nbsp;Bleser</a>
+
+{% highlight html %}
+<script src="http://opentype.js.org/dist/opentype.js" type="text/javascript"></script>
+{% endhighlight %}
+
+<hr>
+
+<p>Then, in your JavaScript, use the require function to get a reference:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+{% endhighlight %}
+
+<h3>Including via CDN</h3>
+
+{% highlight html %}
+<script src="https://cdn.jsdelivr.net/npm/makerjs@0/target/js/browser.maker.js"></script>
+{% endhighlight %}
+
+To work with Bezier Curves, you will also need a copy of <a href="http://pomax.github.io/bezierjs/">Bezier.js by Pomax</a>:
+
+{% highlight html %}
+<script src="https://cdn.jsdelivr.net/npm/bezier-js@2/bezier.js"></script>
+{% endhighlight %}
+
+To work with fonts, you will need both Bezier.js (above) and a copy of <a href="https://github.com/nodebox/opentype.js">Opentype.js by Frederik&nbsp;De&nbsp;Bleser</a>
+
+{% highlight html %}
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@0/dist/opentype.js"></script>
+{% endhighlight %}
+
+<p>Then, in your JavaScript, use the require function to get a reference:</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+{% endhighlight %}

@@ -1,0 +1,109 @@
+---
+title: The $ function
+---
+
+<p>
+    As an alternative to cascading functions, Maker.js offers a handy way to modify your drawing in an object-oriented style,
+    inspired by the <a href="http://www.jquery.com">jQuery</a> library.
+</p>
+
+Call <a href="/docs/api/index.html#_">makerjs.$(x)</a> to get a <b>cascade container</b> object returned.
+You can then invoke a series of cascading functions upon x. The output of each function becomes the input of the next.
+A cascade container will only work with functions that output the same type of object that they input as their first parameter, 
+which must be one of these types:
+
+<ul>
+    <li><b>Model</b></li>
+    <li><b>Path</b></li>
+    <li><b>Point</b></li>
+</ul>
+
+<h4>Container operators</h4>
+
+A cascade container will have special properties that operate the container itself (as opposed to operating upon x).
+These are prefixed with $:
+
+<ul>
+    <li><b>$initial</b>: <i>object</i> Gets the original x object that you passed in.</li>
+    <li><b>$result</b>: <i>object</i> Gets the final result of all cascaded function calls.</li>
+    <li><b>$reset()</b>: <i>function()</i> - Resets the container to $initial.</li>
+</ul>
+
+<h4>Cascadable functions</h4>
+
+Depending on the type of x, a cascade container will provide all of the functions from one of the corresponding modules. 
+
+<ul>
+    <li><a href="/docs/api/modules/makerjs.model.html"><b>model</b> module</a> / <a href="/docs/api/interfaces/makerjs.icascademodel.html"><i>cascade-safe functions</i></a></li>
+    <li><a href="/docs/api/modules/makerjs.path.html"><b>path</b> module</a> / <a href="/docs/api/interfaces/makerjs.icascadepath.html"><i>cascade-safe functions</i></a></li>
+    <li><a href="/docs/api/modules/makerjs.point.html"><b>point</b> module</a> / <a href="/docs/api/interfaces/makerjs.icascadepoint.html"><i>cascade-safe functions</i></a></li>
+</ul>
+
+These are the same functions that we've covered in previous lessons. One difference is that you do not need to provide the first parameter, 
+since it will either be x or the cascaded result of the previous function call.
+
+<h4>Example</h4>
+
+Let's rewrite the example from above to compare the readability of the code:
+
+{% highlight javascript %}
+//cascade functions
+
+var makerjs = require('makerjs');
+
+//many operations in this one statement
+var square = makerjs.$(new makerjs.models.Square(10))
+    .center()
+    .rotate(45)
+    .moveRelative([0, 15])
+    .$result;
+
+var drawing = {
+    models: {
+        dome: new makerjs.models.Dome(30, 30),
+        square: square
+    }
+};
+
+var svg = makerjs.exporter.toSVG(drawing);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+This has saved us some typing - we didnt need to use <i>makerjs.model...</i> to access any functions.
+The order of operations makes more sense too: the first operation (<i>center()</i>) is at the top, 
+the final operation (<i>moveRelative([0, 15])</i>) is at the bottom, and the function parameters are together with their call.
+
+<h4>Using addTo() instead of .$result</h4>
+
+In some cases, you can avoid using <b>.$result</b> and just <a href="/docs/api/modules/makerjs.path.html#addto">add a path</a> or <a href="/docs/api/modules/makerjs.model.html#addto">add a model</a> to a parent model by calling <b>addTo(model, id)</b>.
+This is particularly useful prior to a call that creates a clone (such as <b>mirror</b>):
+
+{% highlight javascript %}
+//use addTo with mirror
+
+var makerjs = require('makerjs');
+
+var starburst = {};
+
+makerjs.$(new makerjs.paths.Arc([5, 5], 5, 180, 270))
+.addTo(starburst, 'arc1')
+.mirror(true, false)
+.addTo(starburst, 'arc2')
+.mirror(false, true)
+.addTo(starburst, 'arc3')
+.mirror(true, false)
+.addTo(starburst, 'arc4');
+
+var svg = makerjs.exporter.toSVG(starburst);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

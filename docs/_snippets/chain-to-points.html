@@ -1,0 +1,68 @@
+---
+title: Chain to points
+---
+
+To get points consistently spaced along a chains, call
+<a href="/docs/api/modules/makerjs.chain.html#topoints">makerjs.model.toPoints(chain, distance)</a>
+passing your chain, and the distance between points:
+
+{% highlight javascript %}
+//convert a round rectangle to points
+
+var makerjs = require('makerjs');
+
+var rect = new makerjs.models.RoundRectangle(100, 50, 10);
+
+var chain = makerjs.model.findSingleChain(rect);
+var spacing = 10;
+var keyPoints = makerjs.chain.toPoints(chain, spacing);
+
+var model = {
+  models: {
+    rect: rect,
+    dots: new makerjs.models.Holes(1, keyPoints)
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+Hint: you can use the <b>pathLength</b> property of the chain to make sure your distance divides equally on the entire chain:
+
+{% highlight javascript %}
+//convert a round rectangle to points
+
+var makerjs = require('makerjs');
+
+var rect = new makerjs.models.RoundRectangle(100, 50, 10);
+
+var chain = makerjs.model.findSingleChain(rect);
+var minimumSpacing = 10;
+var divisions = Math.floor(chain.pathLength / minimumSpacing);
+var spacing = chain.pathLength / divisions;
+
+console.log(spacing);
+
+var keyPoints = makerjs.chain.toPoints(chain, spacing);
+
+var model = {
+  models: {
+    rect: rect,
+    dots: new makerjs.models.Holes(1, keyPoints)
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

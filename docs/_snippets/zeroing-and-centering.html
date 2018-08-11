@@ -1,0 +1,90 @@
+---
+title: Zeroing and Centering
+---
+
+<p>
+    To move a model so that its bottom and/or left edges are on the x &amp; y axes, use <a href="/docs/api/modules/makerjs.model.html#zero">model.zero</a>.
+    This function accepts 2 boolean parameters: zeroOnXAxis, zeroOnYAxis. If you do not pass any parameters, it will zero on both axes.
+</p>
+
+{% highlight javascript %}
+//zero a model
+
+var makerjs = require('makerjs');
+
+var model = {
+  models: {
+
+    crosshairs: {
+      paths: {
+        h: new makerjs.paths.Line([-5, 0], [5, 0]),
+        v: new makerjs.paths.Line([0, -5], [0, 5])
+      }
+    },
+
+    nut: {
+      models: {
+        polygon: new makerjs.models.Polygon(6, 40)
+      },
+      paths: {
+        inner: new makerjs.paths.Circle(20)
+      }
+    }
+
+  }
+};
+
+makerjs.model.zero(model.models.nut);
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    To move a model so that it is centered on on the x &amp; y axes, use <a href="/docs/api/modules/makerjs.model.html#center">model.center</a>.
+    This function accepts 2 boolean parameters: centerOnXAxis, centerOnYAxis. If you do not pass any parameters, it will center on both axes.
+</p>
+
+{% highlight javascript %}
+//center a couple of models
+
+var makerjs = require('makerjs');
+
+var model = {
+  models: {
+
+    crosshairs: {
+      paths: {
+        h: new makerjs.paths.Line([-5, 0], [5, 0]),
+        v: new makerjs.paths.Line([0, -5], [0, 5])
+      }
+    },
+
+    box: {
+      models: {
+        outer: new makerjs.models.Rectangle(60, 30),
+        inner: new makerjs.models.Oval(45, 15)
+      }
+    }
+
+  }
+};
+
+var shortcut = model.models.box.models;
+
+makerjs.model.center(shortcut.outer);
+makerjs.model.center(shortcut.inner);
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

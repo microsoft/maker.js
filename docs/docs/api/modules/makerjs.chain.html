@@ -1,0 +1,539 @@
+---
+layout: posts
+title: Api - chain Module
+---
+<div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Functions</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="makerjs.chain.html#chainfillet" class="tsd-kind-icon">chain<wbr>Fillet</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#cycle" class="tsd-kind-icon">cycle</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#dogbone" class="tsd-kind-icon">dogbone</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#fillet" class="tsd-kind-icon">fillet</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.chain.html#removeduplicateends" class="tsd-kind-icon">remove<wbr>Duplicate<wbr>Ends</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#reverse" class="tsd-kind-icon">reverse</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#startat" class="tsd-kind-icon">start<wbr>At</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#tokeypoints" class="tsd-kind-icon">to<wbr>Key<wbr>Points</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#tonewmodel" class="tsd-kind-icon">to<wbr>New<wbr>Model</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.chain.html#topoints" class="tsd-kind-icon">to<wbr>Points</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+		<a name="chainfillet" class="tsd-anchor"></a>
+		<h3>chain<wbr>Fillet</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">chain<wbr>Fillet<span class="tsd-signature-symbol">(</span>traditional<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletSpec<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/fillet.ts#L507">core/fillet.ts:507</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>traditional: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+					</li>
+					<li>
+						<h5>filletSpec: <span class="tsd-signature-type">any</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="cycle" class="tsd-anchor"></a>
+		<h3>cycle</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">cycle<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, amount<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/chain.ts#L466">core/chain.ts:466</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Shift the links of an endless chain.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain to cycle through. Must be endless.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional number of links to shift. May be negative to cycle backwards.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h4>
+				<p>The chainContext for cascading.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="dogbone" class="tsd-anchor"></a>
+		<h3>dogbone</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">dogbone<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">dogbone<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadii<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/fillet.ts#L466">core/fillet.ts:466</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain to add fillets to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Radius of the fillet.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/fillet.ts#L477">core/fillet.ts:477</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a dogbone fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain to add fillets to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadii: <span class="tsd-signature-type">object</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Object specifying directional radii.</p>
+						</div>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> left<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of left turning fillets.</p>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> right<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of right turning fillets.</p>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="fillet" class="tsd-anchor"></a>
+		<h3>fillet</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">fillet<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">fillet<span class="tsd-signature-symbol">(</span>chainToFillet<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, filletRadii<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/fillet.ts#L490">core/fillet.ts:490</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain to add fillets to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadius: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Radius of the fillet.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/fillet.ts#L501">core/fillet.ts:501</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Adds a fillet between each link in a chain. Each path will be cropped to fit a fillet, and all fillets will be returned as paths in a returned model object.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainToFillet: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The chain to add fillets to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>filletRadii: <span class="tsd-signature-type">object</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Object specifying directional radii.</p>
+						</div>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> left<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of left turning fillets.</p>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> right<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Radius of right turning fillets.</p>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>Model object containing paths which fillet the joints in the chain.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<a name="removeduplicateends" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagPrivate">Private</span> remove<wbr>Duplicate<wbr>Ends</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+			<li class="tsd-signature tsd-kind-icon">remove<wbr>Duplicate<wbr>Ends<span class="tsd-signature-symbol">(</span>endless<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, points<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/chain.ts#L563">core/chain.ts:563</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>endless: <span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li>
+						<h5>points: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="reverse" class="tsd-anchor"></a>
+		<h3>reverse</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">reverse<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/chain.ts#L488">core/chain.ts:488</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Reverse the links of a chain.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain to reverse.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h4>
+				<p>The chainContext for cascading.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="startat" class="tsd-anchor"></a>
+		<h3>start<wbr>At</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">start<wbr>At<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, routeKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/chain.ts#L501">core/chain.ts:501</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Set the beginning of an endless chain to a known routeKey of a path.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain to cycle through. Must be endless.</p>
+						</div>
+					</li>
+					<li>
+						<h5>routeKey: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>RouteKey of the desired path to start the chain with.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h4>
+				<p>The chainContext for cascading.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="tokeypoints" class="tsd-anchor"></a>
+		<h3>to<wbr>Key<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">to<wbr>Key<wbr>Points<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, maxArcFacet<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/chain.ts#L633">core/chain.ts:633</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get key points (a minimal a number of points) along a chain of paths.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain of paths to get points from.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> maxArcFacet: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The maximum length between points on an arc or circle.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array of points which are on the chain.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="tonewmodel" class="tsd-anchor"></a>
+		<h3>to<wbr>New<wbr>Model</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">to<wbr>New<wbr>Model<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, detachFromOldModel<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/chain.ts#L524">core/chain.ts:524</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Convert a chain to a new model, independent of any model from where the chain was found.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain to convert to a model.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagDefault value">Default value</span> detachFromOldModel: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Flag to remove the chain&#39;s paths from their current parent model. If false, each path will be cloned. If true, the original path will be re-parented into the resulting new model. Default is false.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>A new model containing paths from the chain.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="topoints" class="tsd-anchor"></a>
+		<h3>to<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">to<wbr>Points<span class="tsd-signature-symbol">(</span>chainContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a>, distanceOrDistances<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span>, maxPoints<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/chain.ts#L578">core/chain.ts:578</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get points along a chain of paths.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>chainContext: <a href="../interfaces/makerjs.ichain.html" class="tsd-signature-type">IChain</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Chain of paths to get points from.</p>
+						</div>
+					</li>
+					<li>
+						<h5>distanceOrDistances: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> maxPoints: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Maximum number of points to retrieve.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">[]</span></h4>
+				<p>Array of points which are on the chain spread at a uniform interval.</p>
+			</li>
+		</ul>
+	</section>
+</section>
+</div>
+<footer class="tsd-panel with-border-bottom">
+<div class="container">
+	<h2>Legend</h2>
+	<div class="tsd-legend-group">
+		<ul class="tsd-legend">
+			<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+			<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+			<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+			<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+			<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+			<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+		</ul>
+	</div>
+</div>
+</footer>
+<div class="container tsd-generator">
+<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+</div>

@@ -1,0 +1,21 @@
+﻿{
+  "compilerOptions": {
+    "lib": ["dom", "es2015"],
+    "outDir": "../../docs/playground/js",
+    "sourceMap": true,
+    "types": [
+      "codemirror",
+      "makerjs",
+      "marked"
+    ]
+  },
+  "files": [
+    "src/iexport.ts",
+    "src/irender.ts",
+    "src/pointer.ts",
+    "src/fontloader.ts",
+    "src/playground.ts",
+    "src/format-options.ts",
+    "src/require-iframe.ts"
+  ]
+}

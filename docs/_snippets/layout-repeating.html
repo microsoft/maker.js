@@ -1,0 +1,130 @@
+---
+title: Repeating layouts
+---
+
+Maker.js provides several functions which will clone your paths or models and repeat them in various layouts.
+
+<h4>Columns</h4>
+
+Call <a href="/docs/api/modules/makerjs.layout.html#clonetocolumn">makerjs.layout.cloneToColumn(path or model, count, [optional] margin)</a> to repeatedly clone and layout in a column.
+The interval will be the height of the path's or model's bounding box. Extra vertical margin is optional.
+
+{% highlight javascript %}
+//Grooves for a finger joint
+
+var m = require('makerjs');
+
+var dogbone = new m.models.Dogbone(50, 20, 2, -1, false);
+
+var grooves = m.layout.cloneToColumn(dogbone, 5, 20);
+
+document.write(m.exporter.toSVG(grooves));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Rows</h4>
+
+Call <a href="/docs/api/modules/makerjs.layout.html#clonetorow">makerjs.layout.cloneToRow(path or model, count, [optional] margin)</a> to repeatedly clone and layout in a row.
+The interval will be the width of the path's or model's bounding box. Extra horizontal margin is optional.
+
+{% highlight javascript %}
+//grill of ovals
+
+var m = require('makerjs');
+
+var oval = new m.models.Oval(20, 150);
+
+var grill = m.layout.cloneToRow(oval, 12, 20);
+
+document.write(m.exporter.toSVG(grill));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Grid</h4>
+
+Call <a href="/docs/api/modules/makerjs.layout.html#clonetogrid">makerjs.layout.cloneToGrid(path or model, xcount, ycount, [optional] margin)</a> to repeatedly clone and layout in a grid.
+The interval will be the path's or model's bounding box. Extra margin is optional.
+
+{% highlight javascript %}
+//grill of rounded squares
+
+var m = require('makerjs');
+
+var roundSquare = new m.models.RoundRectangle(20, 20, 4);
+
+var grid = m.layout.cloneToGrid(roundSquare, 11, 5, 5);
+
+document.write(m.exporter.toSVG(grid));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Brick</h4>
+
+Call <a href="/docs/api/modules/makerjs.layout.html#clonetobrick">makerjs.layout.cloneToBrick(path or model, xcount, ycount, [optional] margin)</a> to repeatedly clone and layout in a brick wall format.
+The interval will be the path's or model's bounding box. Extra margin is optional.
+
+{% highlight javascript %}
+//brick wall
+
+var m = require('makerjs');
+
+var brick = new m.models.Rectangle(20, 8);
+
+var wall = m.layout.cloneToBrick(brick, 8, 7, 2);
+
+document.write(m.exporter.toSVG(wall));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Honeycomb</h4>
+
+Call <a href="/docs/api/modules/makerjs.layout.html#clonetohoneycomb">makerjs.layout.cloneToHoneycomb(path or model, xcount, ycount, [optional] margin)</a> to repeatedly clone and layout in a honeycomb format.
+The interval will be the path's or model's bounding hexagon. Extra margin is optional.
+
+{% highlight javascript %}
+//Honeycomb
+
+var m = require('makerjs');
+
+var star = m.model.rotate(new m.models.Star(6, 50, 0, 2), 30);
+
+var pattern = m.layout.cloneToHoneycomb(star, 8, 5, 30);
+
+document.write(m.exporter.toSVG(pattern));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<h4>Radial</h4>
+
+Call <a href="/docs/api/modules/makerjs.layout.html#clonetoradial">makerjs.layout.cloneToRadial(path or model, count, angleInDegrees, [optional] rotationOrigin)</a> to repeatedly clone and layout in a radial format.
+
+{% highlight javascript %}
+//spinner
+
+var m = require('makerjs');
+
+var rect = m.model.move(new m.models.Rectangle(30, 10), [40, -5]);
+
+var spinner = m.layout.cloneToRadial(rect, 16, 22.5);
+
+document.write(m.exporter.toSVG(spinner));
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

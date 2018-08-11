@@ -1,0 +1,41 @@
+---
+title: Cascading functions
+---
+
+When calling a function, you can pass its output directly into another function. This is called cascading.
+This lets you do multiple operations in one statement. Here we will center, rotate and move a square:
+
+{% highlight javascript %}
+//cascade functions
+
+var makerjs = require('makerjs');
+
+//many operations in this one statement
+var square = 
+        makerjs.model.moveRelative(
+            makerjs.model.rotate(
+                makerjs.model.center(
+                    new makerjs.models.Square(10)
+                ),
+            45),
+        [0, 15])
+    ;
+
+var drawing = {
+    models: {
+        dome: new makerjs.models.Dome(30, 30),
+        square: square
+    }
+};
+
+var svg = makerjs.exporter.toSVG(drawing);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+This is convenient, but it also has the drawback of making the code less readable. As more function calls are added,
+the parameters associated with the call are separated outward. Also notice that the final operation (moveRelative) appears at the beginning of the statement.

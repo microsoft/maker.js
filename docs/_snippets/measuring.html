@@ -1,0 +1,91 @@
+---
+title: Measuring
+---
+
+<p>
+    Browse to the <a href="../api/modules/makerjs.measure.html">makerjs.measure</a> module documentation to see all functions related to measuring.
+</p>
+
+<p>
+To get the bounding rectangle of a path or a model, use:
+</p>
+
+<ul>
+  <li>makerjs.measure.pathExtents(path: object)</li>
+  <li>makerjs.model.modelExtents(model: object)</li>
+</ul>
+
+<p>These functions return a measurement object with <b>high</b> and <b>low</b> points.</p>
+
+<p>Measure path example:</p>
+
+{% highlight javascript %}
+//render an arc, and a measurement reactangle around it
+
+var makerjs = require('makerjs');
+
+var arc = new makerjs.paths.Arc([0, 0], 100, 45, 135);
+var m = makerjs.measure.pathExtents(arc);
+
+console.log('measurement:');
+console.log(m);
+
+var totalWidth = m.high[0] - m.low[0];
+var totalHeight = m.high[1] - m.low[1];
+
+var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+measureRect.origin = m.low;
+
+var model = {
+    paths: {
+        arc: arc
+    },
+    models: {
+        measureRect: measureRect
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>Measure model example:</p>
+
+{% highlight javascript %}
+//render an oval, and a measurement reactangle around it
+
+var makerjs = require('makerjs');
+
+var oval = new makerjs.models.Oval(100, 20);
+makerjs.model.rotate(oval, 30);
+var m = makerjs.measure.modelExtents(oval);
+
+console.log('measurement:');
+console.log(m);
+
+var totalWidth = m.high[0] - m.low[0];
+var totalHeight = m.high[1] - m.low[1];
+
+var measureRect = new makerjs.models.Rectangle(totalWidth, totalHeight);
+measureRect.origin = m.low;
+
+var model = {
+    models: {
+        measureRect: measureRect,
+        oval: oval
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

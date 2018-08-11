@@ -1,0 +1,33 @@
+---
+title: Chain to key points
+---
+
+If you want a "low poly" representation of a chain, call 
+<a href="/docs/api/modules/makerjs.chain.html#tokeypoints">makerjs.model.toKeyPoints(chain, [optional] maxArcFacet)</a>
+passing your chain, and the maximum length of facets on arcs &amp; circles:
+
+{% highlight javascript %}
+//convert a round rectangle to key points
+
+var makerjs = require('makerjs');
+
+var rect = new makerjs.models.RoundRectangle(100, 50, 10);
+
+var chain = makerjs.model.findSingleChain(rect);
+var keyPoints = makerjs.chain.toKeyPoints(chain, 5);
+
+var model = {
+  models: {
+    rect: rect,
+    dots: new makerjs.models.Holes(1, keyPoints)
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

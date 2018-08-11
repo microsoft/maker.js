@@ -1,0 +1,95 @@
+---
+title: Walking a model tree
+---
+
+<p>
+    You can traverse a model tree by calling <a href="/docs/api/modules/makerjs.model.html#walk">makerjs.model.walk</a> with your model and an object with these optional properties:
+
+    <table>
+        <tr>
+            <th>property name</th>
+            <th>property type</th>
+            <th>description</th>
+        </tr>
+        <tr>
+            <td>onPath</td>
+            <td>function(<a href="/docs/api/interfaces/makerjs.iwalkpath.html#content">walkPath</a> object)</td>
+            <td>called for every path (in every model) in your tree.</td>
+        </tr>
+        <tr>
+            <td>beforeChildWalk</td>
+            <td>function(<a href="/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>)</td>
+            <td>called for every model in your tree, prior to diving deeper down the tree. <b>Return false if you wish to not dive deeper.</b></td>
+        </tr>
+        <tr>
+            <td>afterChildWalk</td>
+            <td>function(<a href="/docs/api/interfaces/makerjs.iwalkmodel.html#content">walkModel</a>)</td>
+            <td>called for every model in your tree, after returning from a deep dive down the tree.</td>
+        </tr>
+    </table>
+
+</p>
+
+<h4>walkPath object</h4>
+
+<p>
+    A walkPath object has these properties: 
+    <ul>
+        <li><b>layer</b>: the layer name (if any) containing this path.</li>
+        <li><b>modelContext</b>: the model containing this path.</li>
+        <li><b>offset</b>: the absolute coordinates from [0, 0] where this path is located.</li>
+        <li><b>pathContext</b>: the path itself.</li>
+        <li><b>pathId</b>: the id of this path in its parent model.paths container.</li>
+        <li><b>route</b>: array of property names to locate this path from the root of the tree.</li>
+        <li><b>routeKey</b>: a string representation of the route which may safely be used as a unique key identifier for this path.</li>
+    </ul>
+</p>
+
+<h4>walkModel object</h4>
+
+<p>
+    A walkModel object has these properties:
+    <ul>
+        <li><b>childId</b>: the id of this model in its parent model.models container.</li>
+        <li><b>childModel</b>: the model itself</li>
+        <li><b>layer</b>: the layer name (if any) containing this path.</li>
+        <li><b>offset</b>: the absolute coordinates from [0, 0] where this model is located.</li>
+        <li><b>parentModel</b>: the model containing this model.</li>
+        <li><b>route</b>: array of property names to locate this model from the root of the tree.</li>
+        <li><b>routeKey</b>: a string representation of the route which may safely be used as a unique key identifier for this model.</li>
+    </ul>
+</p>
+
+<h4>Example</h4>
+
+<p>In this example we will create a RoundRectangle and walk its tree. We have an <code>onPath</code> function that will get called for every path in the model. If the path is an arc, we will invert it:</p>
+
+{% highlight javascript %}
+//render a model using mixed units
+var makerjs = require('makerjs');
+
+function invertArc(arc) {
+  var chord = new makerjs.paths.Chord(arc);
+  var midPoint = makerjs.point.middle(chord);
+  makerjs.path.rotate(arc, 180, midPoint);
+}
+
+var shape = new makerjs.models.RoundRectangle(100, 50, 10);
+
+var walkOptions = {
+  onPath: function (wp) {
+    if (wp.pathContext.type === 'arc') {
+      invertArc(wp.pathContext);
+    }
+  }
+};
+
+makerjs.model.walk(shape, walkOptions);
+var svg = makerjs.exporter.toSVG(shape);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

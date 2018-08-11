@@ -1,0 +1,60 @@
+---
+title: Rotating
+---
+
+<p>
+    To rotate a single point, see <a href="../api/modules/makerjs.point.html#frompolar">makerjs.point.fromPolar</a>
+    and <a href="../api/modules/makerjs.point.html#rotate">makerjs.point.rotate</a> depending on what you are trying to achieve.
+</p>
+
+<p>
+    You can rotate paths and models with these functions:
+</p>
+
+<ul>
+    <li><a href="../api/modules/makerjs.path.html#rotate">makerjs.path.rotate</a>(path: object, angleInDegrees: number, rotationOrigin: point)</li>
+    <li><a href="../api/modules/makerjs.model.html#rotate">makerjs.model.rotate</a>(model: object, angleInDegrees: number, rotationOrigin: point)</li>
+</ul>
+
+<p>Each of these functions return the original object, so that we can "chain" on the same line of code.</p>
+
+<p>Rotate path example:</p>
+
+{% highlight javascript %}
+//render a rotated line
+
+var makerjs = require('makerjs');
+
+var line1 = new makerjs.paths.Line([0, 0], [100, 0]);
+var line2 = new makerjs.paths.Line([0, 0], [100, 0]);
+
+var paths = [line1, makerjs.path.rotate(line2, -30, [100, 0])];
+
+var svg = makerjs.exporter.toSVG(paths);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>Rotate model example:</p>
+
+{% highlight javascript %}
+//render a rotated rectangle
+
+var makerjs = require('makerjs');
+
+var rect1 = new makerjs.models.Rectangle(40, 80);
+
+makerjs.model.rotate(rect1, 45, [0, 0]);
+
+var svg = makerjs.exporter.toSVG(rect1);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

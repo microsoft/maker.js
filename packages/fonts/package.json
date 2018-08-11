@@ -1,0 +1,17 @@
+{
+  "name": "fonts",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc gen.ts"
+  },
+  "author": "Dan Marshall",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "pretty-camel": "0.0.8",
+    "sort-keys": "^2.0.0"
+  },
+  "dependencies": {
+    "@types/node": "^10.5.7"
+  }
+}

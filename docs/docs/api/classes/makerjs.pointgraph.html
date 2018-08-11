@@ -1,0 +1,506 @@
+---
+layout: posts
+title: Api - PointGraph Class
+---
+<div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-comment">
+	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>A graph of items which may be located on the same points.</p>
+		</div>
+	</div>
+</section>
+<section class="tsd-panel tsd-type-parameters">
+	<h3>Type parameters</h3>
+	<ul class="tsd-type-parameters">
+		<li>
+			<h4>T</h4>
+		</li>
+	</ul>
+</section>
+<section class="tsd-panel tsd-hierarchy">
+	<h3>Hierarchy</h3>
+	<ul class="tsd-hierarchy">
+		<li>
+			<span class="target">PointGraph</span>
+		</li>
+	</ul>
+</section>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section ">
+				<h3>Constructors</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.pointgraph.html#constructor" class="tsd-kind-icon">constructor</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Properties</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.pointgraph.html#graph" class="tsd-kind-icon">graph</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.pointgraph.html#index" class="tsd-kind-icon">index</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.pointgraph.html#insertedcount" class="tsd-kind-icon">inserted<wbr>Count</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.pointgraph.html#merged" class="tsd-kind-icon">merged</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.pointgraph.html#values" class="tsd-kind-icon">values</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Methods</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.pointgraph.html#foreachpoint" class="tsd-kind-icon">for<wbr>Each<wbr>Point</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.pointgraph.html#getelementatpoint" class="tsd-kind-icon">get<wbr>Element<wbr>AtPoint</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.pointgraph.html#getidofpoint" class="tsd-kind-icon">get<wbr>IdOf<wbr>Point</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.pointgraph.html#insertvalue" class="tsd-kind-icon">insert<wbr>Value</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.pointgraph.html#mergenearestsinglepoints" class="tsd-kind-icon">merge<wbr>Nearest<wbr>Single<wbr>Points</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.pointgraph.html#mergepoints" class="tsd-kind-icon">merge<wbr>Points</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-class"><a href="makerjs.pointgraph.html#reset" class="tsd-kind-icon">reset</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Constructors</h2>
+	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+		<a name="constructor" class="tsd-anchor"></a>
+		<h3>constructor</h3>
+		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Point<wbr>Graph<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.pointgraph.html" class="tsd-signature-type">PointGraph</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L170">core/collect.ts:170</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.pointgraph.html" class="tsd-signature-type">PointGraph</a></h4>
+			</li>
+		</ul>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="graph" class="tsd-anchor"></a>
+		<h3>graph</h3>
+		<div class="tsd-signature tsd-kind-icon">graph<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L150">core/collect.ts:150</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Map of unique points by x, then y, to a point id. This will remain intact even after merging.</p>
+			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>x: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">object</span></h5>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-index-signature">
+							<h5><span class="tsd-signature-symbol">[</span>y: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">number</span></h5>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="index" class="tsd-anchor"></a>
+		<h3>index</h3>
+		<div class="tsd-signature tsd-kind-icon">index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L155">core/collect.ts:155</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Index of points by id.</p>
+			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pointId: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><a href="../interfaces/makerjs.ipointgraphindexelement.html" class="tsd-signature-type">IPointGraphIndexElement</a></h5>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="insertedcount" class="tsd-anchor"></a>
+		<h3>inserted<wbr>Count</h3>
+		<div class="tsd-signature tsd-kind-icon">inserted<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L145">core/collect.ts:145</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Number of points inserted</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="merged" class="tsd-anchor"></a>
+		<h3>merged</h3>
+		<div class="tsd-signature tsd-kind-icon">merged<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L160">core/collect.ts:160</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Map of point ids which once existed but have been merged into another id due to close proximity.</p>
+			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-index-signature">
+					<h5><span class="tsd-signature-symbol">[</span>pointId: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">number</span></h5>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+		<a name="values" class="tsd-anchor"></a>
+		<h3>values</h3>
+		<div class="tsd-signature tsd-kind-icon">values<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L165">core/collect.ts:165</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>List of values inserted at points.</p>
+			</div>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Methods</h2>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="foreachpoint" class="tsd-anchor"></a>
+		<h3>for<wbr>Each<wbr>Point</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">for<wbr>Each<wbr>Point<span class="tsd-signature-symbol">(</span>cb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L297">core/collect.ts:297</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Iterate over points in the index.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>cb: <span class="tsd-signature-type">function</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Callback for each point in the index.</p>
+						</div>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, values<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span>, pointId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, el<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipointgraphindexelement.html" class="tsd-signature-type">IPointGraphIndexElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>p: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+											</li>
+											<li>
+												<h5>values: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> pointId: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> el: <a href="../interfaces/makerjs.ipointgraphindexelement.html" class="tsd-signature-type">IPointGraphIndexElement</a></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="getelementatpoint" class="tsd-anchor"></a>
+		<h3>get<wbr>Element<wbr>AtPoint</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>Element<wbr>AtPoint<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipointgraphindexelement.html" class="tsd-signature-type">IPointGraphIndexElement</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L330">core/collect.ts:330</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Get the index element of a point, after merging.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>p: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Point to look up index element.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.ipointgraphindexelement.html" class="tsd-signature-type">IPointGraphIndexElement</a></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="getidofpoint" class="tsd-anchor"></a>
+		<h3>get<wbr>IdOf<wbr>Point</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>IdOf<wbr>Point<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L312">core/collect.ts:312</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Gets the id of a point, after merging.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>p: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Point to look up id.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="insertvalue" class="tsd-anchor"></a>
+		<h3>insert<wbr>Value</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">insert<wbr>Value<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L192">core/collect.ts:192</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Insert a value at a point.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>p: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Point.</p>
+						</div>
+					</li>
+					<li>
+						<h5>value: <span class="tsd-signature-type">T</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Value associated with this point.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
+				<ul class="tsd-parameters">
+					<li class="tsd-parameter">
+						<h5>existed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+					</li>
+					<li class="tsd-parameter">
+						<h5>point<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="mergenearestsinglepoints" class="tsd-anchor"></a>
+		<h3>merge<wbr>Nearest<wbr>Single<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">merge<wbr>Nearest<wbr>Single<wbr>Points<span class="tsd-signature-symbol">(</span>withinDistance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L252">core/collect.ts:252</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Finds all points which have only one value associated. Then, merge to the nearest other point within this set.
+						Call this after inserting values.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>withinDistance: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Distance to consider points equal.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="mergepoints" class="tsd-anchor"></a>
+		<h3>merge<wbr>Points</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">merge<wbr>Points<span class="tsd-signature-symbol">(</span>withinDistance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L225">core/collect.ts:225</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Merge points within a given distance from each other. Call this after inserting values.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>withinDistance: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Distance to consider points equal.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+		<a name="reset" class="tsd-anchor"></a>
+		<h3>reset</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+			<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/collect.ts#L179">core/collect.ts:179</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Reset the stored points, graphs, lists, to initial state.</p>
+					</div>
+				</div>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+			</li>
+		</ul>
+	</section>
+</section>
+</div>
+<footer class="tsd-panel with-border-bottom">
+<div class="container">
+	<h2>Legend</h2>
+	<div class="tsd-legend-group">
+		<ul class="tsd-legend">
+			<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+			<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+			<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+			<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+			<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+			<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+		</ul>
+	</div>
+</div>
+</footer>
+<div class="container tsd-generator">
+<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+</div>

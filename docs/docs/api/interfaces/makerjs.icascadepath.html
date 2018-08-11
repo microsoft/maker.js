@@ -1,0 +1,623 @@
+---
+layout: posts
+title: Api - ICascadePath Interface
+---
+<div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-hierarchy">
+	<h3>Hierarchy</h3>
+	<ul class="tsd-hierarchy">
+		<li>
+			<a href="makerjs.icascade.html" class="tsd-signature-type">ICascade</a>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">ICascadePath</span>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</section>
+<section class="tsd-panel-group tsd-index-group">
+	<h2>Index</h2>
+	<section class="tsd-panel tsd-index-panel">
+		<div class="tsd-index-content">
+			<section class="tsd-index-section tsd-is-inherited">
+				<h3>Properties</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.icascadepath.html#_initial" class="tsd-kind-icon">$initial</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.icascadepath.html#_reset" class="tsd-kind-icon">$reset</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.icascadepath.html#_result" class="tsd-kind-icon">$result</a></li>
+				</ul>
+			</section>
+			<section class="tsd-index-section ">
+				<h3>Methods</h3>
+				<ul class="tsd-index-list">
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#addto" class="tsd-kind-icon">add<wbr>To</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#alterlength" class="tsd-kind-icon">alter<wbr>Length</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#breakatpoint" class="tsd-kind-icon">break<wbr>AtPoint</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#center" class="tsd-kind-icon">center</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#clone" class="tsd-kind-icon">clone</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#copyprops" class="tsd-kind-icon">copy<wbr>Props</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#layer" class="tsd-kind-icon">layer</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#mirror" class="tsd-kind-icon">mirror</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#move" class="tsd-kind-icon">move</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#moverelative" class="tsd-kind-icon">move<wbr>Relative</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#rotate" class="tsd-kind-icon">rotate</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#scale" class="tsd-kind-icon">scale</a></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascadepath.html#zero" class="tsd-kind-icon">zero</a></li>
+				</ul>
+			</section>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+	<h2>Properties</h2>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="_initial" class="tsd-anchor"></a>
+		<h3>$initial</h3>
+		<div class="tsd-signature tsd-kind-icon">$initial<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.icascade.html">ICascade</a>.<a href="makerjs.icascade.html#_initial">$initial</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/maker.ts#L916">core/maker.ts:916</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The initial context object of the cascade.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="_reset" class="tsd-anchor"></a>
+		<h3>$reset</h3>
+		<div class="tsd-signature tsd-kind-icon">$reset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.icascade.html">ICascade</a>.<a href="makerjs.icascade.html#_reset">$reset</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/maker.ts#L926">core/maker.ts:926</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Use the $original as the $result.</p>
+			</div>
+		</div>
+		<div class="tsd-type-declaration">
+			<h4>Type declaration</h4>
+			<ul class="tsd-parameters">
+				<li class="tsd-parameter-siganture">
+					<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="_result" class="tsd-anchor"></a>
+		<h3>$result</h3>
+		<div class="tsd-signature tsd-kind-icon">$result<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.icascade.html">ICascade</a>.<a href="makerjs.icascade.html#_result">$result</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/maker.ts#L921">core/maker.ts:921</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>The current final value of the cascade.</p>
+			</div>
+		</div>
+	</section>
+</section>
+<section class="tsd-panel-group tsd-member-group ">
+	<h2>Methods</h2>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="addto" class="tsd-anchor"></a>
+		<h3>add<wbr>To</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">add<wbr>To<span class="tsd-signature-symbol">(</span>parentModel<span class="tsd-signature-symbol">: </span><a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a>, pathId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, overwrite<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L286">core/cascades.ts:286</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Add a path to a model. This is basically equivalent to:</p>
+						<pre><code>parentModel.paths[pathId] = childPath<span class="hljs-comment">;</span>
+</code></pre><p>with additional checks to make it safe for cascading.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>parentModel: <a href="makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model to add to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>pathId: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The id of the path.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> overwrite: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>(default false) Optional flag to overwrite any path referenced by pathId. Default is false, which will create an id similar to pathId.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="alterlength" class="tsd-anchor"></a>
+		<h3>alter<wbr>Length</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">alter<wbr>Length<span class="tsd-signature-symbol">(</span>distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, useOrigin<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L296">core/cascades.ts:296</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Alter a path by lengthening or shortening it.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>distance: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Numeric amount of length to add or remove from the path. Use a positive number to lengthen, negative to shorten. When shortening: this function will not alter the path and will return null if the resulting path length is less than or equal to zero.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> useOrigin: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>(default false) Optional flag to alter from the origin instead of the end of the path.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading), or null if the path could not be altered.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="breakatpoint" class="tsd-anchor"></a>
+		<h3>break<wbr>AtPoint</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">break<wbr>AtPoint<span class="tsd-signature-symbol">(</span>pointOfBreak<span class="tsd-signature-symbol">: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L307">core/cascades.ts:307</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Breaks a path in two. The supplied path will end at the supplied pointOfBreak,
+							a new path is returned which begins at the pointOfBreak and ends at the supplied path&#39;s initial end point.
+						For Circle, the original path will be converted in place to an Arc, and null is returned.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>pointOfBreak: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The point at which to break the path.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be A new path of the same type, when path type is line or arc. Returns null for circle.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="center" class="tsd-anchor"></a>
+		<h3>center</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">center<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L315">core/cascades.ts:315</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Center a path at [0, 0].</p>
+					</div>
+				</div>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="clone" class="tsd-anchor"></a>
+		<h3>clone</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">clone<span class="tsd-signature-symbol">(</span>offset<span class="tsd-signature-symbol">?: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L324">core/cascades.ts:324</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a clone of a path. This is faster than cloneObject.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> offset: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional point to move path a relative distance.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be Cloned path.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="copyprops" class="tsd-anchor"></a>
+		<h3>copy<wbr>Props</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">copy<wbr>Props<span class="tsd-signature-symbol">(</span>destPath<span class="tsd-signature-symbol">: </span><a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L333">core/cascades.ts:333</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Copy the schema properties of one path to another.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>destPath: <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The destination path to copy property values to.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The source path.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="layer" class="tsd-anchor"></a>
+		<h3>layer</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">layer<span class="tsd-signature-symbol">(</span>layer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L345">core/cascades.ts:345</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Set the layer of a path. This is equivalent to:</p>
+						<pre><code>pathContext.layer = layer<span class="hljs-comment">;</span>
+</code></pre>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>layer: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The layer name.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="mirror" class="tsd-anchor"></a>
+		<h3>mirror</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">mirror<span class="tsd-signature-symbol">(</span>mirrorX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, mirrorY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L355">core/cascades.ts:355</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a clone of a path, mirrored on either or both x and y axes.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>mirrorX: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Boolean to mirror on the x axis.</p>
+						</div>
+					</li>
+					<li>
+						<h5>mirrorY: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Boolean to mirror on the y axis.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be Mirrored path.</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="move" class="tsd-anchor"></a>
+		<h3>move</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">move<span class="tsd-signature-symbol">(</span>origin<span class="tsd-signature-symbol">: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L364">core/cascades.ts:364</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Move a path to an absolute point.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>origin: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The new origin for the path.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="moverelative" class="tsd-anchor"></a>
+		<h3>move<wbr>Relative</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">move<wbr>Relative<span class="tsd-signature-symbol">(</span>delta<span class="tsd-signature-symbol">: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, subtract<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L374">core/cascades.ts:374</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Move a path&#39;s origin by a relative amount.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>delta: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The x &amp; y adjustments as a point object.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> subtract: <span class="tsd-signature-type">boolean</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional boolean to subtract instead of add.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="rotate" class="tsd-anchor"></a>
+		<h3>rotate</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">rotate<span class="tsd-signature-symbol">(</span>angleInDegrees<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, rotationOrigin<span class="tsd-signature-symbol">?: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L384">core/cascades.ts:384</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Rotate a path.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>angleInDegrees: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The amount of rotation, in degrees.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> rotationOrigin: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>(default [0, 0]) The center point of rotation.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="scale" class="tsd-anchor"></a>
+		<h3>scale</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">(</span>scaleValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L393">core/cascades.ts:393</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Scale a path.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>scaleValue: <span class="tsd-signature-type">number</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The amount of scaling.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="zero" class="tsd-anchor"></a>
+		<h3>zero</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">zero<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/d8861ee8/packages/maker.js/src/core/cascades.ts#L401">core/cascades.ts:401</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Move a path so its bounding box begins at [0, 0].</p>
+					</div>
+				</div>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascadepath.html" class="tsd-signature-type">ICascadePath</a></h4>
+				<p>this cascade container, this.$result will be The original path (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+</section>
+</div>
+<footer class="tsd-panel with-border-bottom">
+<div class="container">
+	<h2>Legend</h2>
+	<div class="tsd-legend-group">
+		<ul class="tsd-legend">
+			<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+			<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+			<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+			<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+			<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+			<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+		</ul>
+		<ul class="tsd-legend">
+			<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+		</ul>
+	</div>
+</div>
+</footer>
+<div class="container tsd-generator">
+<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+</div>

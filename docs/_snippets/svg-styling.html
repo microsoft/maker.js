@@ -1,0 +1,81 @@
+---
+title: SVG styling
+---
+
+<p>
+    It may be helpful to add visual styles to your drawing when debugging.
+    You can do this using CSS and referencing elements in your SVG.
+    Of course this will only add style in the browser,
+    it will not affect SVG exported to a file for the laser cutter.
+</p>
+
+<p>
+    The keys you use within your <b>paths</b> and <b>models</b> collections become an <b>id</b> attribute
+    in the generated SVG. For Example:
+</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+
+var model = {
+    paths: {
+        circle1: new makerjs.paths.Circle([0, 0], 30)
+    },
+    models: {
+        bigOvalArc: new makerjs.models.OvalArc(120, 60, 50, 10)
+    }
+};
+
+var svg = makerjs.exporter.toSVG(model, {useSvgPathOnly: false});
+
+document.write(svg);
+document.write('<hr/><code>');
+document.write(svg.replace(/</g, '&lt;')); //show raw xml in browser
+document.write('</code><hr/>');
+{% endhighlight %}
+
+<a class="fiddle" href="https://jsfiddle.net/danmarshall/5u7Lr02n/" target="_blank">try it in JsFiddle &#8663;</a>
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<p>
+    We see that <i>circle1</i> was a key within our <b>paths</b> collection and was translated into an <b>id</b>
+    in an SVG element. We also see that the model <i>bigOvalArc</i> has geen translated to an SVG group with that id.
+</p>
+
+<p>
+    We can use a CSS id selector and the <b>stroke</b> property to give them individual color:
+</p>
+
+{% highlight html %}
+<style type="text/css">
+    svg #circle1 {
+        stroke: lime;
+    }
+
+    svg #bigOvalArc {
+        stroke: orange;
+    }
+
+    svg #EndCap {
+        stroke: black;
+    }
+</style>
+{% endhighlight %}
+
+<style type="text/css">
+    svg #circle1 {
+        stroke: lime;
+    }
+
+    svg #bigOvalArc {
+        stroke: orange;
+    }
+
+    svg #EndCap {
+        stroke: black;
+    }
+</style>
+
