@@ -1,10 +1,6 @@
 {
   "packages": [
-    "demos",
-    "docs",
-    "fonts",
-    "packages/*",
-    "playground"
+    "packages/*"
   ],
   "version": "0.0.0"
 }
