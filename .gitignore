@@ -3,8 +3,7 @@ web.config
 *.sln
 .vs
 .vscode
-docs/api/assets
-docs/dist
+docs/docs/api/assets
 debug.log
 packages/docs/dist
 packages/maker.js/debug
