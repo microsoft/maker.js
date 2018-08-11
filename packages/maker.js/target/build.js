@@ -1,6 +1,5 @@
 ﻿const browserify = require('browserify');
 const fs = require('fs');
-const path = require('path');
 const utf8 = 'utf8';
 
 //add versioned header to top of declaration file
