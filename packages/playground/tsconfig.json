@@ -1,7 +1,7 @@
 ﻿{
   "compilerOptions": {
     "lib": ["dom", "es2015"],
-    "outDir": "dist",
+    "outDir": "../../docs/playground/js",
     "sourceMap": true,
     "types": [
       "codemirror",

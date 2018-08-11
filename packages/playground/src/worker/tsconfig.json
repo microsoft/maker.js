@@ -1,7 +1,7 @@
 ﻿{
   "compilerOptions": {
     "lib": ["webworker", "es5", "scripthost"],
-    "outDir": "../../dist",
+    "outDir": "../../../../docs/playground/js",
     "skipLibCheck": true,
     "sourceMap": true,
     "types": [
