@@ -3,7 +3,8 @@
     "lib": ["dom", "es2015"],
     "types": [
       "makerjs",
-      "marked"
+      "marked",
+      "node"
     ]
   },
   "files": [
