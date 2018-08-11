@@ -858,7 +858,7 @@
             renderInWorker.worker.terminate();
         }
 
-        renderInWorker.worker = new Worker('dist/worker/render-worker.js');
+        renderInWorker.worker = new Worker('js/worker/render-worker.js');
         renderInWorker.worker.onmessage = function (ev: MessageEvent) {
             var response = ev.data as MakerJsPlaygroundRender.IRenderResponse;
             if (response.error) {
@@ -1099,7 +1099,7 @@
 
         document.body.appendChild(iframe);
 
-        var scripts = ['dist/require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
+        var scripts = ['js/require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
 
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '<script>var paramValues=' + JSON.stringify(paramValues) + ';</script></head><body></body></html>');
@@ -1618,7 +1618,7 @@
 
         //initialize a worker - this will download scripts into the worker
         if (!exportWorker) {
-            exportWorker = new Worker('dist/worker/export-worker.js?' + new Date().valueOf());
+            exportWorker = new Worker('js/worker/export-worker.js?' + new Date().valueOf());
             exportWorker.onmessage = getExport;
         }
 
