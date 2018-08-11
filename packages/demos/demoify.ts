@@ -1,5 +1,4 @@
 ﻿import fs = require('fs');
-var browserify = require('browserify');
 var packageJson = require('./package.json');
 var makerjs = require('makerjs') as typeof MakerJs;
 var marked = require('marked') as MarkedStatic;
@@ -34,14 +33,14 @@ function thumbnail(key: string, kit: Kit, baseUrl: string) {
 
     if (key === 'Text') {
         parameters = [
-            opentypeLib.loadSync('../fonts/stardosstencil/StardosStencil-Regular.ttf'),
+            opentypeLib.loadSync('../../docsfonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
     } else {
         if (kit.ctor.metaParameters) {
             kit.ctor.metaParameters.forEach((metaParameter, i) => {
                 if (metaParameter.type === 'font') {
-                    parameters[i] = opentypeLib.loadSync('../fonts/allertastencil/AllertaStencil-Regular.ttf')
+                    parameters[i] = opentypeLib.loadSync('../../docs/fonts/allertastencil/AllertaStencil-Regular.ttf')
                 }
             });
         }
@@ -115,7 +114,7 @@ function getRequireKit(spec: string): Kit {
         };
     } else {
         result = {
-            ctor: require('./js/' + key)
+            ctor: require('../../docs/demos/js/' + key)
         };
     }
 
@@ -132,7 +131,7 @@ function getRequireKit(spec: string): Kit {
 
 function demoIndexPage() {
 
-    var stream = fs.createWriteStream('./index.html');
+    var stream = fs.createWriteStream('../../docs/index.html');
     stream.once('open', function (fd) {
 
         function writeHeading(level: number, heading: string) {
@@ -194,14 +193,14 @@ function demoIndexPage() {
 function homePage() {
     console.log('writing homepage');
 
-    var stream = fs.createWriteStream('../index.html');
+    var stream = fs.createWriteStream('../../docs/index.html');
     stream.once('open', function (fd) {
 
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
 
         console.log('writing about markdown');
 
-        var readmeMarkdown = fs.readFileSync('../README.md', 'UTF8');
+        var readmeMarkdown = fs.readFileSync('../../README.md', 'UTF8');
 
         var sections = readmeMarkdown.split('\n## ');
 
@@ -268,7 +267,7 @@ function copyRequire(root, key, copyTo) {
 
     allRequires[key] = 1;
 
-    fs.writeFileSync('./js/' + copyTo + key + '.js', src, 'UTF8');
+    fs.writeFileSync('../../docs/demos/js/' + copyTo + key + '.js', src, 'UTF8');
 
     var requires = <string[]>detective(src);
 
@@ -288,13 +287,9 @@ function copyRequire(root, key, copyTo) {
 }
 
 function copyDependencies() {
-
-    var root = './';
-
     for (var key in packageJson.dependencies) {
         copyRequire('./node_modules', key, '');
     }
-
 }
 
 demoIndexPage();

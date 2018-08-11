@@ -1,7 +1,6 @@
 "use strict";
 exports.__esModule = true;
 var fs = require("fs");
-var browserify = require('browserify');
 var packageJson = require('./package.json');
 var makerjs = require('makerjs');
 var marked = require('marked');
@@ -32,7 +31,7 @@ function thumbnail(key, kit, baseUrl) {
     var parameters = kit.params || makerjs.kit.getParameterValues(kit.ctor);
     if (key === 'Text') {
         parameters = [
-            opentypeLib.loadSync('../fonts/stardosstencil/StardosStencil-Regular.ttf'),
+            opentypeLib.loadSync('../../docsfonts/stardosstencil/StardosStencil-Regular.ttf'),
             'A'
         ];
     }
@@ -40,7 +39,7 @@ function thumbnail(key, kit, baseUrl) {
         if (kit.ctor.metaParameters) {
             kit.ctor.metaParameters.forEach(function (metaParameter, i) {
                 if (metaParameter.type === 'font') {
-                    parameters[i] = opentypeLib.loadSync('../fonts/allertastencil/AllertaStencil-Regular.ttf');
+                    parameters[i] = opentypeLib.loadSync('../../docs/fonts/allertastencil/AllertaStencil-Regular.ttf');
                 }
             });
         }
@@ -96,7 +95,7 @@ function getRequireKit(spec) {
     }
     else {
         result = {
-            ctor: require('./js/' + key)
+            ctor: require('../../docs/demos/js/' + key)
         };
     }
     if (kvp) {
@@ -109,7 +108,7 @@ function getRequireKit(spec) {
     return result;
 }
 function demoIndexPage() {
-    var stream = fs.createWriteStream('./index.html');
+    var stream = fs.createWriteStream('../../docs/index.html');
     stream.once('open', function (fd) {
         function writeHeading(level, heading) {
             var h = new makerjs.exporter.XmlTag('h' + level);
@@ -152,11 +151,11 @@ function demoIndexPage() {
 }
 function homePage() {
     console.log('writing homepage');
-    var stream = fs.createWriteStream('../index.html');
+    var stream = fs.createWriteStream('../../docs/index.html');
     stream.once('open', function (fd) {
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
         console.log('writing about markdown');
-        var readmeMarkdown = fs.readFileSync('../README.md', 'UTF8');
+        var readmeMarkdown = fs.readFileSync('../../README.md', 'UTF8');
         var sections = readmeMarkdown.split('\n## ');
         //remove H1 tag and make the slogan an H2
         var topSection = sections[0].replace('# Maker.js\r\n\r\n', '## ');
@@ -198,7 +197,7 @@ function copyRequire(root, key, copyTo) {
     var main = djson.main;
     var src = fs.readFileSync(dirpath + main, 'UTF8');
     allRequires[key] = 1;
-    fs.writeFileSync('./js/' + copyTo + key + '.js', src, 'UTF8');
+    fs.writeFileSync('../../docs/demos/js/' + copyTo + key + '.js', src, 'UTF8');
     var requires = detective(src);
     console.log('...requires ' + requires.length + ' libraries');
     for (var i = 0; i < requires.length; i++) {
@@ -213,7 +212,6 @@ function copyRequire(root, key, copyTo) {
     }
 }
 function copyDependencies() {
-    var root = './';
     for (var key in packageJson.dependencies) {
         copyRequire('./node_modules', key, '');
     }
