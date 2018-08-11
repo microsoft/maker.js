@@ -4,18 +4,19 @@ import * as path from "path";
 //TypeScript can't resolve import :(
 var sortKeys = require("sort-keys");
 var pc = require("pretty-camel");
-var tags = require("./tags");
+var fontRoot = "../../docs/fonts/";
+var tags = require(fontRoot + "tags");
 
 var out = {};
 
-var dirs = fs.readdirSync(__dirname).filter(function (file) {
-    return fs.statSync(path.join(__dirname, file)).isDirectory();
+var dirs = fs.readdirSync(fontRoot).filter(function (file) {
+    return fs.statSync(path.join(fontRoot, file)).isDirectory();
 });
 
 dirs.forEach(function (dir) {
     var ext = '.ttf';
 
-    var fonts = fs.readdirSync(path.join(__dirname, dir)).filter(function (file) {
+    var fonts = fs.readdirSync(path.join(fontRoot, dir)).filter(function (file) {
         return path.extname(file).toLowerCase() == ext;
     });
 
@@ -28,7 +29,7 @@ dirs.forEach(function (dir) {
 })
 
 function write(fileName, content) {
-    var fd = fs.openSync(path.join(__dirname, fileName), 'w');
+    var fd = fs.openSync(path.join(fontRoot, fileName), 'w');
     fs.writeSync(fd, content);
     fs.closeSync(fd);
 }
@@ -43,4 +44,4 @@ for (var id in sorted) {
 
 var json = JSON.stringify(sorted, null, '  ');
 
-write('fonts.js', 'var fonts = ' + json + ';\n');
+write('../../docs/fonts/fonts.js', 'var fonts = ' + json + ';\n');
