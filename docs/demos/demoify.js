@@ -155,7 +155,7 @@ function homePage() {
     stream.once('open', function (fd) {
         stream.write(jekyll('default', 'Create parametric CNC drawings using JavaScript'));
         console.log('writing about markdown');
-        var readmeMarkdown = fs.readFileSync('../README.md', 'UTF8');
+        var readmeMarkdown = fs.readFileSync('../../README.md', 'UTF8');
         var sections = readmeMarkdown.split('\n## ');
         //remove H1 tag and make the slogan an H2
         var topSection = sections[0].replace('# Maker.js\r\n\r\n', '## ');

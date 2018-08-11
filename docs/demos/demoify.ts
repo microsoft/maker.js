@@ -200,7 +200,7 @@ function homePage() {
 
         console.log('writing about markdown');
 
-        var readmeMarkdown = fs.readFileSync('../README.md', 'UTF8');
+        var readmeMarkdown = fs.readFileSync('../../README.md', 'UTF8');
 
         var sections = readmeMarkdown.split('\n## ');
 
