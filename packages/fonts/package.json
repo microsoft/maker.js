@@ -2,12 +2,10 @@
   "name": "fonts",
   "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "fonts.js",
   "scripts": {
     "build": "tsc gen.ts"
   },
-  "author": "",
+  "author": "Dan Marshall",
   "license": "Apache-2.0",
   "devDependencies": {
     "pretty-camel": "0.0.8",
