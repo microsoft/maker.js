@@ -25,7 +25,7 @@ b.bundle(function (err, buf) {
     fs.writeFileSync('./dist/browser.maker.js', browserCode, utf8);
 
     //also copy to web
-    fs.writeFileSync('../../target/js/browser.maker.js', browserCode, utf8);
+    fs.writeFileSync('../../docs/target/js/browser.maker.js', browserCode, utf8);
 
     //append header to node version
     const nodeCode = header + fs.readFileSync(js, utf8);
