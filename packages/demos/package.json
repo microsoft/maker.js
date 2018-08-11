@@ -13,6 +13,7 @@
     "@types/marked": "^0.0.28",
     "@types/node": "^10.5.7",
     "@types/opentype.js": "^0.7.0",
+    "detective": "^5.1.0",
     "makerjs": "^0.10.3",
     "opentype.js": "^0.9.0"
   },
