@@ -42,8 +42,10 @@ namespace MakerJs.model {
                     var pathRef = <IWalkPathWithEndpoints>walkedPath;
                     pathRef.endPoints = endPoints;
 
+                    const valueId = this.pointMap.insertValue(pathRef);
+
                     for (var i = 2; i--;) {
-                        this.pointMap.insertValue(endPoints[i], pathRef);
+                        this.pointMap.insertValueIdAtPoint(valueId, endPoints[i]);
                     }
                 }
             };

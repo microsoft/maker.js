@@ -185,11 +185,21 @@
         }
 
         /**
+         * Insert a value.
+         * @param value Value associated with this point.
+         * @returns valueId of the inserted value.
+         */
+        public insertValue(value: T) {
+            this.values.push(value);
+            return this.values.length - 1;
+        }
+
+        /**
          * Insert a value at a point.
          * @param p Point.
          * @param value Value associated with this point.
          */
-        public insertValue(p: IPoint, value: T) {
+        public insertValueIdAtPoint(valueId: number, p: IPoint) {
             const x = p[0], y = p[1];
             if (!this.graph[x]) {
                 this.graph[x] = {};
@@ -203,7 +213,7 @@
                 el = {
                     pointId,
                     point: p,
-                    valueIds: [this.values.length]
+                    valueIds: [valueId]
                 };
                 this.index[pointId] = el;
             } else {
@@ -212,9 +222,8 @@
                     pointId = this.merged[pointId];
                 }
                 el = this.index[pointId];
-                el.valueIds.push(this.values.length);
+                el.valueIds.push(valueId);
             }
-            this.values.push(value);
             return { existed, pointId };
         }
 

@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.10.3
+ *   version: 0.10.4
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -514,7 +514,7 @@ var MakerJs;
         Millimeter: 'mm'
     };
     /**
-     * private
+     * @private
      */
     function split(s, char) {
         var p = s.indexOf(char);
@@ -850,13 +850,13 @@ var MakerJs;
     var angle;
     (function (angle) {
         /**
-         * private
+         * @private
          */
         function getFractionalPart(n) {
             return MakerJs.splitDecimal(n)[1];
         }
         /**
-         * private
+         * @private
          */
         function setFractionalPart(n, fractionalPart) {
             if (fractionalPart) {
@@ -867,7 +867,7 @@ var MakerJs;
             }
         }
         /**
-         * private
+         * @private
          */
         function copyFractionalPart(src, dest) {
             if ((src < 0 && dest < 0) || (src > 0 && dest > 0)) {
@@ -1129,13 +1129,13 @@ var MakerJs;
         }
         point.closest = closest;
         /**
-         * private
+         * @private
          */
         var zero_cos = {};
         zero_cos[Math.PI / 2] = true;
         zero_cos[3 * Math.PI / 2] = true;
         /**
-         * private
+         * @private
          */
         var zero_sin = {};
         zero_sin[Math.PI] = true;
@@ -1426,7 +1426,7 @@ var MakerJs;
             }
         }
         /**
-         * private
+         * @private
          */
         var copyPropsMap = {};
         copyPropsMap[MakerJs.pathType.Circle] = function (srcCircle, destCircle, offset) {
@@ -2741,7 +2741,7 @@ var MakerJs;
             return null;
         }
         /**
-         * private
+         * @private
          */
         function getPointsOnPath(points, onPath, popOptions) {
             var endpointsOnPath = [];
@@ -3159,11 +3159,20 @@ var MakerJs;
             this.values = [];
         };
         /**
+         * Insert a value.
+         * @param value Value associated with this point.
+         * @returns valueId of the inserted value.
+         */
+        PointGraph.prototype.insertValue = function (value) {
+            this.values.push(value);
+            return this.values.length - 1;
+        };
+        /**
          * Insert a value at a point.
          * @param p Point.
          * @param value Value associated with this point.
          */
-        PointGraph.prototype.insertValue = function (p, value) {
+        PointGraph.prototype.insertValueIdAtPoint = function (valueId, p) {
             var x = p[0], y = p[1];
             if (!this.graph[x]) {
                 this.graph[x] = {};
@@ -3177,7 +3186,7 @@ var MakerJs;
                 el = {
                     pointId: pointId,
                     point: p,
-                    valueIds: [this.values.length]
+                    valueIds: [valueId]
                 };
                 this.index[pointId] = el;
             }
@@ -3187,9 +3196,8 @@ var MakerJs;
                     pointId = this.merged[pointId];
                 }
                 el = this.index[pointId];
-                el.valueIds.push(this.values.length);
+                el.valueIds.push(valueId);
             }
-            this.values.push(value);
             return { existed: existed, pointId: pointId };
         };
         /**
@@ -3509,7 +3517,7 @@ var MakerJs;
             else if (arcSpan > 180) {
                 joints = 3;
             }
-            else if (arcSpan > 150 || bevel) { //30 degrees is the sharpest
+            else if (arcSpan > 150 || bevel) {
                 joints = 2;
             }
             var jointAngleInRadians = MakerJs.angle.toRadians(arcSpan / joints);
@@ -3908,7 +3916,7 @@ var MakerJs;
         }
         measure.isPointOnCircle = isPointOnCircle;
         /**
-         * private
+         * @private
          */
         var onPathMap = {};
         onPathMap[MakerJs.pathType.Circle] = function (p, circle, withinDistance) {
@@ -6183,7 +6191,8 @@ var MakerJs;
                                 reversed: i != 0,
                                 pathLength: pathLength
                             };
-                            pointGraph.insertValue(endPoints[i], link);
+                            var valueId = pointGraph.insertValue(link);
+                            pointGraph.insertValueIdAtPoint(valueId, endPoints[i]);
                         }
                     }
                 }
@@ -6588,8 +6597,9 @@ var MakerJs;
                             return;
                         var pathRef = walkedPath;
                         pathRef.endPoints = endPoints;
+                        var valueId = _this.pointMap.insertValue(pathRef);
                         for (var i = 2; i--;) {
-                            _this.pointMap.insertValue(endPoints[i], pathRef);
+                            _this.pointMap.insertValueIdAtPoint(valueId, endPoints[i]);
                         }
                     }
                 };
@@ -8507,11 +8517,8 @@ var MakerJs;
          */
         function getExtrema(b) {
             var extrema = b.extrema().values
-                //round the numbers so we can compare them to each other
                 .map(function (m) { return MakerJs.round(m); })
-                //remove duplicates
                 .filter(function (value, index, self) { return self.indexOf(value) === index; })
-                //and put them in order
                 .sort();
             if (extrema.length === 0)
                 return [0, 1];
@@ -8644,7 +8651,7 @@ var MakerJs;
                 }
                 this.type = MakerJs.pathType.BezierSeed;
                 switch (args.length) {
-                    case 1: //point array
+                    case 1://point array
                         var points = args[0];
                         this.origin = points[0];
                         if (points.length === 3) {
@@ -8659,7 +8666,7 @@ var MakerJs;
                             this.end = points[1];
                         }
                         break;
-                    case 3: //quadratic or cubic
+                    case 3://quadratic or cubic
                         if (Array.isArray(args[1])) {
                             this.controls = args[1];
                         }
@@ -8668,7 +8675,7 @@ var MakerJs;
                         }
                         this.end = args[2];
                         break;
-                    case 4: //cubic params
+                    case 4://cubic params
                         this.controls = [args[1], args[2]];
                         this.end = args[3];
                         break;
@@ -8696,7 +8703,7 @@ var MakerJs;
                             break;
                         }
                     //fall through to point array
-                    case 1: //point array or seed
+                    case 1://point array or seed
                         if (isArrayArg0) {
                             var points = args[0];
                             this.seed = new BezierSeed(points);
@@ -9286,7 +9293,7 @@ var MakerJs;
                 var maxRadius;
                 switch (style) {
                     case -1: //horizontal
-                    case 1: //vertical
+                    case 1://vertical
                         maxRadius = maxSide / 2;
                         break;
                     case 0: //equal
@@ -9928,6 +9935,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.10.3";
+MakerJs.version = "0.10.4";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);

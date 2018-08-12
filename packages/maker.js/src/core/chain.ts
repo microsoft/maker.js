@@ -212,7 +212,7 @@
                     }
 
                     //gather both endpoints from all non-circle segments
-                    var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
+                    const endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
 
                     for (var i = 0; i < 2; i++) {
                         var link: IChainLink = {
@@ -221,8 +221,8 @@
                             reversed: i != 0,
                             pathLength: pathLength
                         };
-
-                        pointGraph.insertValue(endPoints[i], link);
+                        let valueId = pointGraph.insertValue(link);
+                        pointGraph.insertValueIdAtPoint(valueId, endPoints[i]);
                     }
                 }
             }

@@ -329,7 +329,7 @@ namespace MakerJs.exporter {
     }
 
     /**
-     * private
+     * @private
      */
     interface IChainOnLayer {
         chain: IChain;
