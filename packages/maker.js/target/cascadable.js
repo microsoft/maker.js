@@ -59,7 +59,7 @@ function getCascadable(project, namespaceArray, interfaceName) {
                 });
                 if (exportedFunctions) {
                     exportedFunctions.forEach(function (ef) {
-                        if (!isCascadable(ef)) return;
+                        if (!isCascadable(ef) || ef.flags.isPrivate) return;
                         functionArray.push({
                             comment: getComment(ef.signatures[0]),
                             code: getCode(ef.name, ef.signatures[0], interfaceName)
