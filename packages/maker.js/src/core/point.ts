@@ -71,14 +71,14 @@ namespace MakerJs.point {
     }
 
     /**
-     * private
+     * @private
      */
     const zero_cos: { [index: number]: boolean } = {};
     zero_cos[Math.PI / 2] = true;
     zero_cos[3 * Math.PI / 2] = true;
 
     /**
-     * private
+     * @private
      */
     const zero_sin: { [index: number]: boolean } = {};
     zero_sin[Math.PI] = true;

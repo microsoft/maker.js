@@ -79,7 +79,7 @@ namespace MakerJs {
     };
 
     /**
-     * private
+     * @private
      */
     function split(s: string, char: string) {
         var p = s.indexOf(char);
