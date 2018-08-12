@@ -16,4 +16,15 @@ describe('Combine', function () {
         });
     });
 
+    it('should trim dead ends', function () {
+        var wedge = require('./wedge');
+
+        makerjs.model.combine(wedge.models.punch, wedge.models.knife, false, true, false, false);
+        
+        var chain = makerjs.model.findChains(wedge, function (chains, loose, layer) {
+            assert.equal(loose.length, 0);
+            assert.equal(chains.length, 1);
+        });
+    });
+
 });
