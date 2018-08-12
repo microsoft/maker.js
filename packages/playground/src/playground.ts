@@ -501,7 +501,7 @@
 
             processed.lockedPath = {
                 route: route,
-                notes: "Path Info|\n---|---\nRoute|``` " + crumb + " ```\nJSON|"
+                notes: `Path Info|\n---|---\nRoute|${mdCode(crumb)}\nJSON|`
             };
 
             updateLockedPathNotes();
@@ -535,15 +535,24 @@
 
     function updateLockedPathNotes() {
         if (processed.model && processed.lockedPath) {
-            var pathAndOffset = getLockedPathAndOffset();
+            const pathAndOffset = getLockedPathAndOffset();
+            const endpoints = makerjs.point.fromPathEnds(pathAndOffset.result as MakerJs.IPath, pathAndOffset.offset);
             if (pathAndOffset) {
-                setNotes(processed.lockedPath.notes + "``` " + JSON.stringify(pathAndOffset.result) + "```\nOffset|```" + JSON.stringify(pathAndOffset.offset) + "```");
+                setNotes([
+                    processed.lockedPath.notes + mdCode(pathAndOffset.result),
+                    `Offset|${mdCode(pathAndOffset.offset)}`,
+                    `Endpoints|${mdCode(endpoints)}`
+                ].join('\n'));
             } else {
                 setNotesFromModelOrKit();
             }
             return true;
         }
         return false;
+    }
+
+    function mdCode(s: string | object) {
+        return "``` " + (typeof s === 'string' ? s : JSON.stringify(s)) + " ```";
     }
 
     function measureLockedPath(): MakerJs.IMeasure {
@@ -743,7 +752,9 @@
 
         if (!processed.measurement) {
             setProcessedModelTimer = setTimeout(function () {
-                setProcessedModel(new StraightFace(), 'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n```' + JSON.stringify(processed.model) + '```');
+                setProcessedModel(
+                    new StraightFace(),
+                    'Your model code was processed, but it resulted in a model with no measurement. It probably does not have any paths. Here is the JSON representation: \n\n' + mdCode(processed.model));
             }, 2500);
             return;
         }
