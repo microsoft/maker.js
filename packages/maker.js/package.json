@@ -114,6 +114,7 @@
     "kdbush": "^2.0.1"
   },
   "files": [
+    "LICENSE",
     "README.md",
     "dist/browser.maker.js",
     "dist/index.d.ts",
