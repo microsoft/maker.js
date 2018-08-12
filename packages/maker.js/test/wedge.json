@@ -1,0 +1,129 @@
+{
+    "models": {
+        "punch": {
+            "paths": {
+                "Ring_outer": {
+                    "type": "arc",
+                    "origin": [
+                        0,
+                        0
+                    ],
+                    "radius": 100,
+                    "startAngle": 101.5369590341135,
+                    "endAngle": 150.4630409496386
+                },
+                "Ring_outer_1": {
+                    "type": "arc",
+                    "origin": [
+                        0,
+                        0
+                    ],
+                    "radius": 100,
+                    "startAngle": 173.53695902799197,
+                    "endAngle": 438.46304096588653
+                },
+                "Ring_inner": {
+                    "type": "arc",
+                    "origin": [
+                        0,
+                        0
+                    ],
+                    "radius": 40,
+                    "startAngle": 105.36925595661435,
+                    "endAngle": 146.63074400030243
+                },
+                "Ring_inner_1": {
+                    "type": "arc",
+                    "origin": [
+                        0,
+                        0
+                    ],
+                    "radius": 40,
+                    "startAngle": 177.36925589846075,
+                    "endAngle": 434.6307440433857
+                },
+                "ShapeLine1": {
+                    "type": "line",
+                    "origin": [
+                        10.6015504,
+                        38.5695103
+                    ],
+                    "end": [
+                        20,
+                        97.9795897
+                    ]
+                },
+                "ShapeLine5": {
+                    "type": "line",
+                    "origin": [
+                        -20,
+                        97.9795897
+                    ],
+                    "end": [
+                        -10.6015504,
+                        38.5695103
+                    ]
+                },
+                "ShapeLine6": {
+                    "type": "line",
+                    "origin": [
+                        -33.4057249,
+                        22.0013077
+                    ],
+                    "end": [
+                        -87.0037874,
+                        49.2984886
+                    ]
+                },
+                "ShapeLine7": {
+                    "type": "line",
+                    "origin": [
+                        -99.3644671,
+                        11.256228
+                    ],
+                    "end": [
+                        -39.9578433,
+                        1.8359606
+                    ]
+                }
+            }
+        },
+        "knife": {
+            "paths": {
+                "ShapeLine1": {
+                    "type": "line",
+                    "origin": [
+                        0,
+                        0
+                    ],
+                    "end": [
+                        100,
+                        -100
+                    ]
+                },
+                "ShapeLine2": {
+                    "type": "line",
+                    "origin": [
+                        100,
+                        -100
+                    ],
+                    "end": [
+                        101.7300102,
+                        -98.2395289
+                    ]
+                },
+                "ShapeLine3": {
+                    "type": "line",
+                    "origin": [
+                        101.7300102,
+                        -98.2395289
+                    ],
+                    "end": [
+                        0,
+                        0
+                    ]
+                }
+            }
+        }
+    }
+}

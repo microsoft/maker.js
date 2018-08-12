@@ -136,7 +136,7 @@
     }
 
     /**
-     * private
+     * @private
      */
     const onPathMap: { [pathType: string]: (point: IPoint, path: IPath, withinDistance: number, options?: IIsPointOnPathOptions) => boolean } = {};
 

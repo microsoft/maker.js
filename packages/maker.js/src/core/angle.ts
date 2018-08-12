@@ -1,14 +1,14 @@
 namespace MakerJs.angle {
 
     /**
-     * private
+     * @private
      */
     function getFractionalPart(n: number) {
         return splitDecimal(n)[1];
     }
 
     /**
-     * private
+     * @private
      */
     function setFractionalPart(n: number, fractionalPart: string) {
         if (fractionalPart) {
@@ -19,7 +19,7 @@ namespace MakerJs.angle {
     }
 
     /**
-     * private
+     * @private
      */
     function copyFractionalPart(src: number, dest: number) {
         if ((src < 0 && dest < 0) || (src > 0 && dest > 0)) {

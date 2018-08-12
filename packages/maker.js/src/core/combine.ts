@@ -27,7 +27,7 @@
     }
 
     /**
-     * private
+     * @private
      */
     function getPointsOnPath(points: IPoint[], onPath: IPath, popOptions: IIsPointOnPathOptions): IPoint[] {
         const endpointsOnPath: IPoint[] = [];

@@ -33,7 +33,7 @@ namespace MakerJs.path {
     }
 
     /**
-     * private
+     * @private
      */
     var copyPropsMap: { [pathType: string]: (src: IPath, dest: IPath, offset?: IPoint) => void } = {};
 
