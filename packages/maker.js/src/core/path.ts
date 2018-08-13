@@ -335,7 +335,7 @@ namespace MakerJs.path {
      * @returns The original path (for cascading).
      */
     export function scale(pathToScale: IPath, scaleValue: number): IPath {
-        if (!pathToScale || scaleValue == 1) return pathToScale;
+        if (!pathToScale || scaleValue === 1 || !scaleValue) return pathToScale;
 
         pathToScale.origin = point.scale(pathToScale.origin, scaleValue);
 
@@ -385,7 +385,7 @@ namespace MakerJs.path {
      * @returns A new IModel (for circles and arcs) or IPath (for lines and bezier seeds).
      */
     export function distort(pathToDistort: IPath, scaleX: number, scaleY: number): IModel | IPath {
-        if (!pathToDistort) return null;
+        if (!pathToDistort || !scaleX || !scaleY) return null;
 
         var fn = distortMap[pathToDistort.type];
         if (fn) {
