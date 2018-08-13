@@ -128,6 +128,18 @@ Break a model's paths everywhere they intersect with another path.
         convertUnits(destUnitType: string): ICascadeModel;
 
         /**
+         * Create a distorted copy of a model - scale x and y individually.
+         * 
+         * @param scaleX The amount of x scaling.
+         * @param scaleY The amount of y scaling.
+         * @param scaleOrigin (default false) Optional boolean to scale the origin point. Typically false for the root model.
+         * @param bezierAccuracy Optional accuracy of Bezier curves.
+         * @returns this cascade container, this.$result will be New model (for cascading).
+
+         */
+        distort(scaleX: number, scaleY: number, scaleOrigin?: boolean, bezierAccuracy?: number): ICascadeModel;
+
+        /**
          * Expand all paths in a model, then combine the resulting expansions.
          * 
          * @param distance Distance to expand.

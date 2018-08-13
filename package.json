@@ -19,7 +19,7 @@
     "build": "lerna run build",
     "demo": "lerna run demo",
     "docs": "lerna run docs",
-    "start": "http-server -o -p 8020",
+    "start": "http-server -p 8020 -o http://localhost:8020/docs/playground/",
     "test": "npm run bootstrap && npm run build && npm run build-tools && lerna run test && npm run docs"
   },
   "repository": {

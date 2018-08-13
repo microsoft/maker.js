@@ -414,10 +414,10 @@
                 }
 
                 //use seeds as path, hide the arc paths from findChains()
-                var bezierSeedsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true }) as { [layer: string]: IPathBezierSeed[] };
+                var bezierPartsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true });
 
-                for (var layer in bezierSeedsByLayer) {
-                    var bezierSeeds = bezierSeedsByLayer[layer];
+                for (var layer in bezierPartsByLayer) {
+                    var bezierSeeds = bezierPartsByLayer[layer];
                     if (bezierSeeds.length > 0) {
                         b[tempKey] = b.paths;
 

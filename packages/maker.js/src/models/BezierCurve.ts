@@ -244,6 +244,74 @@
 
     /**
      * @private
+     */
+    function getActualBezierRange(curve: BezierCurve, arc: IPathArcInBezierCurve, endpoints: IPoint[], offset: IPoint): IBezierRange {
+        var b = getScratch(curve.seed);
+        var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(t => new TPoint(b, t, offset));
+        var ends = endpoints.slice();
+
+        //clipped arcs will still have endpoints closer to the original endpoints
+        var endpointDistancetoStart = ends.map(e => measure.pointDistance(e, tPoints[0].point));
+        if (endpointDistancetoStart[0] > endpointDistancetoStart[1]) ends.reverse();
+
+        for (var i = 2; i--;) {
+            if (!measure.isPointEqual(ends[i], tPoints[i].point)) {
+                return null;
+            }
+        }
+
+        return arc.bezierData;
+    }
+
+    /**
+     * @private
+     */
+    interface IAddToLayer {
+        (pathToAdd: IPath, layer: string, clone?: boolean): void;
+    }
+
+    /**
+     * @private
+     */
+    function getChainBezierRange(curve: BezierCurve, c: IChain, layer: string, addToLayer: IAddToLayer): IBezierRange {
+
+        var endLinks = [c.links[0], c.links[c.links.length - 1]];
+        if ((endLinks[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (endLinks[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT) {
+            chain.reverse(c);
+            endLinks.reverse();
+        }
+
+        var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(curve, endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints, endLink.walkedPath.offset));
+
+        var result: IBezierRange = {
+            startT: actualBezierRanges[0] ? actualBezierRanges[0].startT : null,
+            endT: actualBezierRanges[1] ? actualBezierRanges[1].endT : null
+        };
+
+        if (result.startT !== null && result.endT !== null) {
+            return result;
+
+        } else if (c.links.length > 2) {
+
+            if (result.startT === null) {
+                //exclude the first from the chain
+                addToLayer(c.links[0].walkedPath.pathContext, layer, true);
+                result.startT = (c.links[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT;
+            }
+
+            if (result.endT === null) {
+                //exclude the last from the chain
+                addToLayer(c.links[c.links.length - 1].walkedPath.pathContext, layer, true);
+                result.endT = (c.links[c.links.length - 2].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT;
+            }
+
+            return result;
+        }
+        return null;
+    }
+
+    /**
+     * @private
      * Class for bezier seed.
      */
     class BezierSeed implements IPathBezierSeed {
@@ -441,96 +509,42 @@
         public static getBezierSeeds(curve: BezierCurve, options: IFindChainsOptions = {}): IPath[] | { [layer: string]: IPath[] } {
 
             options.shallow = true;
+            options.unifyBeziers = false;
 
-            var seedsByLayer: { [layer: string]: IPath[] } = {};
+            const seedsByLayer: { [layer: string]: IPath[] } = {};
 
-            function getActualBezierRange(arc: IPathArcInBezierCurve, endpoints: IPoint[], offset: IPoint): IBezierRange {
-                var b = getScratch(curve.seed);
-                var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(t => new TPoint(b, t, offset));
-                var ends = endpoints.slice();
-
-                //clipped arcs will still have endpoints closer to the original endpoints
-                var endpointDistancetoStart = ends.map(e => measure.pointDistance(e, tPoints[0].point));
-                if (endpointDistancetoStart[0] > endpointDistancetoStart[1]) ends.reverse();
-
-                for (var i = 2; i--;) {
-                    if (!measure.isPointEqual(ends[i], tPoints[i].point)) {
-                        return null;
-                    }
+            const addToLayer: IAddToLayer = (pathToAdd: IPath, layer: string, clone = false) => {
+                if (!seedsByLayer[layer]) {
+                    seedsByLayer[layer] = [];
                 }
-
-                return arc.bezierData;
+                seedsByLayer[layer].push(clone ? path.clone(pathToAdd) : pathToAdd);
             }
 
             model.findChains(curve, function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
-                function addToLayer(pathToAdd: IPath, clone = false) {
-                    if (!seedsByLayer[layer]) {
-                        seedsByLayer[layer] = [];
-                    }
-                    seedsByLayer[layer].push(clone ? path.clone(pathToAdd) : pathToAdd);
-                }
-
-                function getChainBezierRange(c: IChain): IBezierRange {
-
-                    var endLinks = [c.links[0], c.links[c.links.length - 1]];
-                    if ((endLinks[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (endLinks[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT) {
-                        chain.reverse(c);
-                        endLinks.reverse();
-                    }
-
-                    var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints, endLink.walkedPath.offset));
-
-                    var result: IBezierRange = {
-                        startT: actualBezierRanges[0] ? actualBezierRanges[0].startT : null,
-                        endT: actualBezierRanges[1] ? actualBezierRanges[1].endT : null
-                    };
-
-                    if (result.startT !== null && result.endT !== null) {
-                        return result;
-
-                    } else if (c.links.length > 2) {
-
-                        if (result.startT === null) {
-                            //exclude the first from the chain
-                            addToLayer(c.links[0].walkedPath.pathContext, true);
-                            result.startT = (c.links[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT;
-                        }
-
-                        if (result.endT === null) {
-                            //exclude the last from the chain
-                            addToLayer(c.links[c.links.length - 1].walkedPath.pathContext, true);
-                            result.endT = (c.links[c.links.length - 2].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT;
-                        }
-
-                        return result;
-                    }
-                    return null;
-                }
-
                 chains.forEach(c => {
-                    var range = getChainBezierRange(c);
+                    var range = getChainBezierRange(curve, c, layer, addToLayer);
                     if (range) {
                         var b = getScratch(curve.seed);
                         var piece = b.split(range.startT, range.endT);
-                        addToLayer(BezierToSeed(piece));
+                        addToLayer(BezierToSeed(piece), layer);
                     } else {
-                        c.links.forEach(link => addToLayer(link.walkedPath.pathContext, true));
+                        c.links.forEach(link => addToLayer(link.walkedPath.pathContext, layer, true));
                     }
                 });
 
                 loose.forEach(wp => {
                     if (wp.pathContext.type === pathType.Line) {
                         //bezier is linear
-                        return addToLayer(wp.pathContext, true);
+                        return addToLayer(wp.pathContext, layer, true);
                     }
-                    var range = getActualBezierRange(wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext), wp.offset);
+                    var range = getActualBezierRange(curve, wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext), wp.offset);
                     if (range) {
                         var b = getScratch(curve.seed);
                         var piece = b.split(range.startT, range.endT);
-                        addToLayer(BezierToSeed(piece));
+                        addToLayer(BezierToSeed(piece), layer);
                     } else {
-                        addToLayer(wp.pathContext, true);
+                        addToLayer(wp.pathContext, layer, true);
                     }
                 });
 
