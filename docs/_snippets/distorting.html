@@ -2,3 +2,91 @@
 title: Distorting
 ---
 
+<p>
+    To disproportionately scale a simple point, use <a href="../api/modules/makerjs.point.html#distort">makerjs.point.distort</a>.
+</p>
+
+<p>
+    To disproportionately scale a path, use 
+    <a href="../api/modules/makerjs.path.html#distort">makerjs.path.distort</a>(path: object, scaleX: number, scaleY: number)
+    which returns a new object and does not modify the original.
+    The type of returned object is dependent on the type of path being distorted:
+    <ul>
+        <li>A line will return a line <i>IPath</i> object, since the distortion can be represented with another line.</li>
+        <li>An arc will return a BezierCurve <i>IModel</i> object, since the distortion is not circular.</li>
+        <li>A circle will return an Ellipse <i>IModel</i> object, since the distortion is not circular.</li>
+    </ul>
+</p>
+
+<p>Distort path example:</p>
+
+{% highlight javascript %}
+//render distorted paths
+
+var makerjs = require('makerjs');
+
+var circle = new makerjs.paths.Circle(50);
+var line = new makerjs.paths.Line([-50,-50], [50, 50]);
+
+//a distorted line is a path, so it should be added to paths
+var distortedLine = makerjs.path.distort(line, 4, 1.5);
+
+//a distorted circle is a model, so it should be added to models
+var ellipse = makerjs.path.distort(circle, 4, 1.5);
+
+var model = {
+  paths: {
+    circle: circle,
+    line: line,
+    distortedLine: distortedLine
+  },
+  models: {
+    ellipse: ellipse
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+  
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+
+<hr />
+
+<p>
+    To disproportionately scale a model, use 
+    <a href="../api/modules/makerjs.model.html#distort">makerjs.model.distort</a>(model: object, scaleX: number,  scaleY: number)
+    which returns a new <i>IModel</i> object and does not modify the original.
+</p>
+
+<p>Distort model example:</p>
+
+{% highlight javascript %}
+//render a distorted star
+
+var makerjs = require('makerjs');
+
+var star = new makerjs.models.Star(5, 100);
+makerjs.model.rotate(star, 18);
+
+//make the star 4 times wider, and 2 times taller
+var wideStar = makerjs.model.distort(star, 4, 2);
+
+var model = {
+  models: {
+    star: star,
+    wideStar: wideStar
+  }
+};
+
+var svg = makerjs.exporter.toSVG(model);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>

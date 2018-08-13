@@ -34,7 +34,7 @@ Learn more in [the tutorial](https://maker.js.org/docs/basic-drawing/) or [API d
 
 * Other people's Models can be required the Node.js way, [modified](https://maker.js.org/docs/intermediate-drawing/#Modifying%20models), and re-exported.
 
-* Models can be [scaled](https://maker.js.org/docs/intermediate-drawing/#Scaling), [measured](https://maker.js.org/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](https://maker.js.org/docs/basic-drawing/#Units).
+* Models can be [scaled](https://maker.js.org/docs/intermediate-drawing/#Scaling), [distorted](https://maker.js.org/docs/intermediate-drawing/#Distorting), [measured](https://maker.js.org/docs/api/modules/makerjs.measure.html#modelextents), and [converted to different unit systems](https://maker.js.org/docs/basic-drawing/#Units).
 
 * Paths can be [distorted](https://maker.js.org/docs/api/modules/makerjs.path.html#distort).
 
