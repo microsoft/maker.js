@@ -1,85 +1,47 @@
 ---
 layout: posts
-title: Api - IMeasurePointInsideOptions Interface
+title: Api - IAddToLayer Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
-		<div class="lead">
-			<p>Options to pass to measure.isPointInsideModel().</p>
-		</div>
 	</div>
 </section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">IMeasurePointInsideOptions</span>
+			<span class="target">IAddToLayer</span>
 		</li>
 	</ul>
 </section>
-<section class="tsd-panel-group tsd-index-group">
-	<h2>Index</h2>
-	<section class="tsd-panel tsd-index-panel">
-		<div class="tsd-index-content">
-			<section class="tsd-index-section ">
-				<h3>Properties</h3>
-				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imeasurepointinsideoptions.html#farpoint" class="tsd-kind-icon">far<wbr>Point</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imeasurepointinsideoptions.html#measureatlas" class="tsd-kind-icon">measure<wbr>Atlas</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imeasurepointinsideoptions.html#out_intersectionpoints" class="tsd-kind-icon">out_<wbr>intersection<wbr>Points</a></li>
+<section class="tsd-panel">
+	<h3 class="tsd-before-signature">Callable</h3>
+	<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+		<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>pathToAdd<span class="tsd-signature-symbol">: </span><a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a>, layer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, clone<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+	</ul>
+	<ul class="tsd-descriptions">
+		<li class="tsd-description">
+			<aside class="tsd-sources">
+				<ul>
+					<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/models/BezierCurve.ts#L269">models/BezierCurve.ts:269</a></li>
 				</ul>
-			</section>
-		</div>
-	</section>
-</section>
-<section class="tsd-panel-group tsd-member-group ">
-	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="farpoint" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> far<wbr>Point</h3>
-		<div class="tsd-signature tsd-kind-icon">far<wbr>Point<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/core/maker.ts#L367">core/maker.ts:367</a></li>
+			</aside>
+			<h4 class="tsd-parameters-title">Parameters</h4>
+			<ul class="tsd-parameters">
+				<li>
+					<h5>pathToAdd: <a href="makerjs.ipath.html" class="tsd-signature-type">IPath</a></h5>
+				</li>
+				<li>
+					<h5>layer: <span class="tsd-signature-type">string</span></h5>
+				</li>
+				<li>
+					<h5><span class="tsd-flag ts-flagOptional">Optional</span> clone: <span class="tsd-signature-type">boolean</span></h5>
+				</li>
 			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Optional point of reference which is outside the bounds of the modelContext.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="measureatlas" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> measure<wbr>Atlas</h3>
-		<div class="tsd-signature tsd-kind-icon">measure<wbr>Atlas<span class="tsd-signature-symbol">:</span> <a href="../classes/makerjs.measure.atlas.html" class="tsd-signature-type">Atlas</a></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/core/maker.ts#L372">core/maker.ts:372</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Optional atlas of measurements of paths within the model (to prevent intersection calculations).</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="out_intersectionpoints" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> out_<wbr>intersection<wbr>Points</h3>
-		<div class="tsd-signature tsd-kind-icon">out_<wbr>intersection<wbr>Points<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IPoint[]</span></div>
-		<aside class="tsd-sources">
-			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/core/maker.ts#L377">core/maker.ts:377</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Output variable which will contain an array of points where the ray intersected the model. The ray is a line from pointToCheck to options.farPoint.</p>
-			</div>
-		</div>
-	</section>
+			<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+		</li>
+	</ul>
 </section>
 </div>
 <footer class="tsd-panel with-border-bottom">

@@ -12,65 +12,6 @@
         }
       ],
       "Function": {
-        "copyFractionalPart": {
-          "flags": {},
-          "signatures": [
-            {
-              "name": "copyFractionalPart",
-              "kindString": "Call signature",
-              "comment": {
-                "shortText": "private"
-              },
-              "parameters": [
-                {
-                  "name": "src",
-                  "flags": {},
-                  "type": "number"
-                },
-                {
-                  "name": "dest",
-                  "flags": {},
-                  "type": "number"
-                }
-              ],
-              "type": "number"
-            }
-          ],
-          "sources": [
-            {
-              "fileName": "core/angle.ts",
-              "line": 24,
-              "character": 31
-            }
-          ]
-        },
-        "getFractionalPart": {
-          "flags": {},
-          "signatures": [
-            {
-              "name": "getFractionalPart",
-              "kindString": "Call signature",
-              "comment": {
-                "shortText": "private"
-              },
-              "parameters": [
-                {
-                  "name": "n",
-                  "flags": {},
-                  "type": "number"
-                }
-              ],
-              "type": "string"
-            }
-          ],
-          "sources": [
-            {
-              "fileName": "core/angle.ts",
-              "line": 6,
-              "character": 30
-            }
-          ]
-        },
         "mirror": {
           "flags": {
             "isExported": true
@@ -384,38 +325,6 @@
               "fileName": "core/angle.ts",
               "line": 136,
               "character": 36
-            }
-          ]
-        },
-        "setFractionalPart": {
-          "flags": {},
-          "signatures": [
-            {
-              "name": "setFractionalPart",
-              "kindString": "Call signature",
-              "comment": {
-                "shortText": "private"
-              },
-              "parameters": [
-                {
-                  "name": "n",
-                  "flags": {},
-                  "type": "number"
-                },
-                {
-                  "name": "fractionalPart",
-                  "flags": {},
-                  "type": "string"
-                }
-              ],
-              "type": "number"
-            }
-          ],
-          "sources": [
-            {
-              "fileName": "core/angle.ts",
-              "line": 13,
-              "character": 30
             }
           ]
         },
@@ -865,7 +774,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 482,
+              "line": 488,
               "character": 31
             }
           ]
@@ -896,7 +805,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 594,
+              "line": 600,
               "character": 26
             }
           ]
@@ -988,7 +897,7 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 407,
+              "line": 413,
               "character": 28
             }
           ]
@@ -1249,14 +1158,12 @@
                 {
                   "name": "pathsToMove",
                   "flags": {},
-                  "comment": "The paths to move.",
-                  "type": "IPath"
+                  "comment": "The paths to move."
                 },
                 {
                   "name": "deltas",
                   "flags": {},
-                  "comment": "The x & y adjustments as a point object array.",
-                  "type": "IPoint"
+                  "comment": "The x & y adjustments as a point object array."
                 },
                 {
                   "name": "task",
@@ -1384,14 +1291,13 @@
                   "comment": "Optional maximum length between points on an arc or circle.",
                   "type": "number"
                 }
-              ],
-              "type": "IPoint"
+              ]
             }
           ],
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 556,
+              "line": 562,
               "character": 31
             }
           ]
@@ -1421,14 +1327,13 @@
                   "comment": "Number of points to divide the path.",
                   "type": "number"
                 }
-              ],
-              "type": "IPoint"
+              ]
             }
           ],
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 506,
+              "line": 512,
               "character": 28
             }
           ]
@@ -1459,115 +1364,10 @@
           "sources": [
             {
               "fileName": "core/path.ts",
-              "line": 608,
+              "line": 614,
               "character": 24
             }
           ]
-        }
-      },
-      "Variable": {
-        "copyPropsMap": {
-          "flags": {},
-          "comment": {
-            "shortText": "private"
-          },
-          "sources": [
-            {
-              "fileName": "core/path.ts",
-              "line": 38,
-              "character": 20
-            }
-          ],
-          "type": {
-            "type": "reflection",
-            "declaration": {
-              "name": "__type",
-              "kindString": "Type literal",
-              "flags": {},
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "pathType",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "string"
-                      }
-                    }
-                  ],
-                  "type": {
-                    "type": "reflection",
-                    "declaration": {
-                      "name": "__type",
-                      "kindString": "Type literal",
-                      "flags": {},
-                      "signatures": [
-                        {
-                          "name": "__call",
-                          "kindString": "Call signature",
-                          "flags": {},
-                          "parameters": [
-                            {
-                              "name": "src",
-                              "kindString": "Parameter",
-                              "flags": {},
-                              "type": {
-                                "type": "reference",
-                                "name": "IPath"
-                              }
-                            },
-                            {
-                              "name": "dest",
-                              "kindString": "Parameter",
-                              "flags": {},
-                              "type": {
-                                "type": "reference",
-                                "name": "IPath"
-                              }
-                            },
-                            {
-                              "name": "offset",
-                              "kindString": "Parameter",
-                              "flags": {
-                                "isOptional": true
-                              },
-                              "type": {
-                                "type": "reference",
-                                "name": "IPoint"
-                              }
-                            }
-                          ],
-                          "type": {
-                            "type": "instrinct",
-                            "name": "void"
-                          }
-                        }
-                      ],
-                      "sources": [
-                        {
-                          "fileName": "core/path.ts",
-                          "line": 38,
-                          "character": 43
-                        }
-                      ]
-                    }
-                  }
-                }
-              ],
-              "sources": [
-                {
-                  "fileName": "core/path.ts",
-                  "line": 38,
-                  "character": 21
-                }
-              ]
-            }
-          }
         }
       }
     },
@@ -1716,8 +1516,7 @@
                   "comment": "The maximum length between points on an arc or circle.",
                   "type": "number"
                 }
-              ],
-              "type": "IPoint"
+              ]
             }
           ],
           "sources": [
@@ -1797,8 +1596,7 @@
                   "comment": "Maximum number of points to retrieve.",
                   "type": "number"
                 }
-              ],
-              "type": "IPoint"
+              ]
             }
           ],
           "sources": [
@@ -1810,7 +1608,9 @@
           ]
         },
         "chainFillet": {
-          "flags": {},
+          "flags": {
+            "isExported": true
+          },
           "signatures": [
             {
               "name": "chainFillet",
@@ -2327,43 +2127,6 @@
             }
           ]
         },
-        "getPointsOnPath": {
-          "flags": {},
-          "signatures": [
-            {
-              "name": "getPointsOnPath",
-              "kindString": "Call signature",
-              "comment": {
-                "shortText": "private"
-              },
-              "parameters": [
-                {
-                  "name": "points",
-                  "flags": {},
-                  "type": "IPoint"
-                },
-                {
-                  "name": "onPath",
-                  "flags": {},
-                  "type": "IPath"
-                },
-                {
-                  "name": "popOptions",
-                  "flags": {},
-                  "type": "IIsPointOnPathOptions"
-                }
-              ],
-              "type": "IPoint"
-            }
-          ],
-          "sources": [
-            {
-              "fileName": "core/combine.ts",
-              "line": 32,
-              "character": 28
-            }
-          ]
-        },
         "isPathInsideModel": {
           "flags": {
             "isExported": true
@@ -2472,7 +2235,7 @@
           "sources": [
             {
               "fileName": "core/deadend.ts",
-              "line": 134,
+              "line": 136,
               "character": 34
             }
           ]
@@ -2844,7 +2607,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 384,
+              "line": 452,
               "character": 32
             }
           ]
@@ -2877,6 +2640,64 @@
               "fileName": "core/model.ts",
               "line": 77,
               "character": 36
+            }
+          ]
+        },
+        "distort": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "distort",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Create a distorted copy of a model - scale x and y individually.",
+                "returns": "New model (for cascading).\n"
+              },
+              "parameters": [
+                {
+                  "name": "modelToDistort",
+                  "flags": {},
+                  "comment": "The model to distort.",
+                  "type": "IModel"
+                },
+                {
+                  "name": "scaleX",
+                  "flags": {},
+                  "comment": "The amount of x scaling.",
+                  "type": "number"
+                },
+                {
+                  "name": "scaleY",
+                  "flags": {},
+                  "comment": "The amount of y scaling.",
+                  "type": "number"
+                },
+                {
+                  "name": "scaleOrigin",
+                  "flags": {},
+                  "comment": "Optional boolean to scale the origin point. Typically false for the root model.",
+                  "type": "boolean",
+                  "defaultValue": "false"
+                },
+                {
+                  "name": "bezierAccuracy",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional accuracy of Bezier curves.",
+                  "type": "number"
+                }
+              ],
+              "type": "IModel"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/model.ts",
+              "line": 408,
+              "character": 27
             }
           ]
         },
@@ -3302,7 +3123,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 431,
+              "line": 499,
               "character": 24
             }
           ]
@@ -3338,7 +3159,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 407,
+              "line": 475,
               "character": 29
             }
           ]
@@ -3383,7 +3204,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 502,
+              "line": 570,
               "character": 24
             }
           ]
@@ -3440,49 +3261,6 @@
         }
       ],
       "Interface": {
-        "IChainOnLayer": {
-          "flags": {},
-          "comment": {
-            "shortText": "private"
-          },
-          "sources": [
-            {
-              "fileName": "core/dxf.ts",
-              "line": 334,
-              "character": 27
-            }
-          ],
-          "Property": {
-            "chain": {
-              "flags": {},
-              "sources": [
-                {
-                  "fileName": "core/dxf.ts",
-                  "line": 335,
-                  "character": 13
-                }
-              ],
-              "type": {
-                "type": "reference",
-                "name": "IChain"
-              }
-            },
-            "layer": {
-              "flags": {},
-              "sources": [
-                {
-                  "fileName": "core/dxf.ts",
-                  "line": 336,
-                  "character": 13
-                }
-              ],
-              "type": {
-                "type": "instrinct",
-                "name": "string"
-              }
-            }
-          }
-        },
         "IDXFLayerOptions": {
           "flags": {
             "isExported": true
@@ -3513,7 +3291,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             }
@@ -3556,7 +3334,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -3584,29 +3362,29 @@
                 "declaration": {
                   "name": "__type",
                   "kindString": "Type literal",
-                  "flags": {},
-                  "indexSignature": [
-                    {
-                      "name": "__index",
-                      "kindString": "Index signature",
-                      "flags": {},
-                      "parameters": [
-                        {
-                          "name": "layerId",
-                          "kindString": "Parameter",
-                          "flags": {},
-                          "type": {
-                            "type": "instrinct",
-                            "name": "string"
-                          }
+                  "flags": {
+                    "isExported": true
+                  },
+                  "indexSignature": {
+                    "name": "__index",
+                    "kindString": "Index signature",
+                    "flags": {},
+                    "parameters": [
+                      {
+                        "name": "layerId",
+                        "kindString": "Parameter",
+                        "flags": {},
+                        "type": {
+                          "type": "intrinsic",
+                          "name": "string"
                         }
-                      ],
-                      "type": {
-                        "type": "reference",
-                        "name": "IDXFLayerOptions"
                       }
+                    ],
+                    "type": {
+                      "type": "reference",
+                      "name": "IDXFLayerOptions"
                     }
-                  ],
+                  },
                   "sources": [
                     {
                       "fileName": "core/dxf.ts",
@@ -3633,7 +3411,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -3657,7 +3435,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             }
@@ -3700,7 +3478,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -3724,7 +3502,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -3744,7 +3522,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -3826,7 +3604,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -3850,7 +3628,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             },
@@ -3870,7 +3648,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -3890,7 +3668,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -3934,7 +3712,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -3991,7 +3769,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4015,7 +3793,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               },
               "inheritedFrom": {
@@ -4039,7 +3817,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4068,28 +3846,26 @@
                   "name": "__type",
                   "kindString": "Type literal",
                   "flags": {},
-                  "indexSignature": [
-                    {
-                      "name": "__index",
-                      "kindString": "Index signature",
-                      "flags": {},
-                      "parameters": [
-                        {
-                          "name": "layerId",
-                          "kindString": "Parameter",
-                          "flags": {},
-                          "type": {
-                            "type": "instrinct",
-                            "name": "string"
-                          }
+                  "indexSignature": {
+                    "name": "__index",
+                    "kindString": "Index signature",
+                    "flags": {},
+                    "parameters": [
+                      {
+                        "name": "layerId",
+                        "kindString": "Parameter",
+                        "flags": {},
+                        "type": {
+                          "type": "intrinsic",
+                          "name": "string"
                         }
-                      ],
-                      "type": {
-                        "type": "reference",
-                        "name": "IJscadExtrudeOptions"
                       }
+                    ],
+                    "type": {
+                      "type": "reference",
+                      "name": "IJscadExtrudeOptions"
                     }
-                  ],
+                  },
                   "sources": [
                     {
                       "fileName": "core/openjscad.ts",
@@ -4116,7 +3892,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4140,7 +3916,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4188,7 +3964,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -4212,7 +3988,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4259,7 +4035,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -4279,7 +4055,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             }
@@ -4322,7 +4098,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4346,7 +4122,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               },
               "inheritedFrom": {
@@ -4370,7 +4146,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4394,7 +4170,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -4414,7 +4190,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -4439,28 +4215,26 @@
                   "name": "__type",
                   "kindString": "Type literal",
                   "flags": {},
-                  "indexSignature": [
-                    {
-                      "name": "__index",
-                      "kindString": "Index signature",
-                      "flags": {},
-                      "parameters": [
-                        {
-                          "name": "layerId",
-                          "kindString": "Parameter",
-                          "flags": {},
-                          "type": {
-                            "type": "instrinct",
-                            "name": "string"
-                          }
+                  "indexSignature": {
+                    "name": "__index",
+                    "kindString": "Index signature",
+                    "flags": {},
+                    "parameters": [
+                      {
+                        "name": "layerId",
+                        "kindString": "Parameter",
+                        "flags": {},
+                        "type": {
+                          "type": "intrinsic",
+                          "name": "string"
                         }
-                      ],
-                      "type": {
-                        "type": "reference",
-                        "name": "IJscadExtrudeOptions"
                       }
+                    ],
+                    "type": {
+                      "type": "reference",
+                      "name": "IJscadExtrudeOptions"
                     }
-                  ],
+                  },
                   "sources": [
                     {
                       "fileName": "core/openjscad.ts",
@@ -4491,7 +4265,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4515,7 +4289,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4563,7 +4337,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -4587,7 +4361,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4638,7 +4412,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4662,7 +4436,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -4682,7 +4456,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -4702,7 +4476,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -4742,7 +4516,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4766,7 +4540,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               },
               "inheritedFrom": {
@@ -4790,7 +4564,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -4807,31 +4581,29 @@
           "comment": {
             "shortText": "Map of OpenJsCad export options."
           },
-          "indexSignature": [
-            {
-              "name": "__index",
-              "kindString": "Index signature",
-              "flags": {},
-              "comment": {
-                "shortText": "Map of OpenJsCad export options."
-              },
-              "parameters": [
-                {
-                  "name": "modelId",
-                  "kindString": "Parameter",
-                  "flags": {},
-                  "type": {
-                    "type": "instrinct",
-                    "name": "string"
-                  }
+          "indexSignature": {
+            "name": "__index",
+            "kindString": "Index signature",
+            "flags": {},
+            "comment": {
+              "shortText": "Map of OpenJsCad export options."
+            },
+            "parameters": [
+              {
+                "name": "modelId",
+                "kindString": "Parameter",
+                "flags": {},
+                "type": {
+                  "type": "intrinsic",
+                  "name": "string"
                 }
-              ],
-              "type": {
-                "type": "reference",
-                "name": "IOpenJsCadOptions"
               }
+            ],
+            "type": {
+              "type": "reference",
+              "name": "IOpenJsCadOptions"
             }
-          ],
+          },
           "sources": [
             {
               "fileName": "core/openjscad.ts",
@@ -4877,7 +4649,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -4921,7 +4693,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -4941,7 +4713,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -4981,7 +4753,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             }
@@ -4994,31 +4766,29 @@
           "comment": {
             "shortText": "Map of SVG Path Data by layer name."
           },
-          "indexSignature": [
-            {
-              "name": "__index",
-              "kindString": "Index signature",
-              "flags": {},
-              "comment": {
-                "shortText": "Map of SVG Path Data by layer name."
-              },
-              "parameters": [
-                {
-                  "name": "layer",
-                  "kindString": "Parameter",
-                  "flags": {},
-                  "type": {
-                    "type": "instrinct",
-                    "name": "string"
-                  }
+          "indexSignature": {
+            "name": "__index",
+            "kindString": "Index signature",
+            "flags": {},
+            "comment": {
+              "shortText": "Map of SVG Path Data by layer name."
+            },
+            "parameters": [
+              {
+                "name": "layer",
+                "kindString": "Parameter",
+                "flags": {},
+                "type": {
+                  "type": "intrinsic",
+                  "name": "string"
                 }
-              ],
-              "type": {
-                "type": "instrinct",
-                "name": "string"
               }
+            ],
+            "type": {
+              "type": "intrinsic",
+              "name": "string"
             }
-          ],
+          },
           "sources": [
             {
               "fileName": "core/svg.ts",
@@ -5064,7 +4834,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -5084,7 +4854,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -5104,7 +4874,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -5124,7 +4894,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             }
@@ -5167,7 +4937,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -5191,7 +4961,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             },
@@ -5260,7 +5030,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -5311,7 +5081,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "inheritedFrom": {
@@ -5335,7 +5105,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             },
@@ -5355,7 +5125,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             },
@@ -5375,7 +5145,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -5399,7 +5169,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -5472,7 +5242,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -5497,28 +5267,26 @@
                   "name": "__type",
                   "kindString": "Type literal",
                   "flags": {},
-                  "indexSignature": [
-                    {
-                      "name": "__index",
-                      "kindString": "Index signature",
-                      "flags": {},
-                      "parameters": [
-                        {
-                          "name": "layerId",
-                          "kindString": "Parameter",
-                          "flags": {},
-                          "type": {
-                            "type": "instrinct",
-                            "name": "string"
-                          }
+                  "indexSignature": {
+                    "name": "__index",
+                    "kindString": "Index signature",
+                    "flags": {},
+                    "parameters": [
+                      {
+                        "name": "layerId",
+                        "kindString": "Parameter",
+                        "flags": {},
+                        "type": {
+                          "type": "intrinsic",
+                          "name": "string"
                         }
-                      ],
-                      "type": {
-                        "type": "reference",
-                        "name": "ISVGElementRenderOptions"
                       }
+                    ],
+                    "type": {
+                      "type": "reference",
+                      "name": "ISVGElementRenderOptions"
                     }
-                  ],
+                  },
                   "sources": [
                     {
                       "fileName": "core/svg.ts",
@@ -5565,7 +5333,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -5585,7 +5353,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             },
@@ -5605,7 +5373,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -5629,7 +5397,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               }
             },
@@ -5649,7 +5417,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -5693,7 +5461,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "inheritedFrom": {
@@ -5717,7 +5485,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             },
@@ -5737,7 +5505,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               }
             }
@@ -5750,76 +5518,74 @@
           "comment": {
             "shortText": "Map of MakerJs unit system to SVG unit system"
           },
-          "indexSignature": [
-            {
-              "name": "__index",
-              "kindString": "Index signature",
-              "flags": {},
-              "comment": {
-                "shortText": "Map of MakerJs unit system to SVG unit system"
-              },
-              "parameters": [
-                {
-                  "name": "unitType",
-                  "kindString": "Parameter",
-                  "flags": {},
-                  "type": {
-                    "type": "instrinct",
-                    "name": "string"
-                  }
-                }
-              ],
-              "type": {
-                "type": "reflection",
-                "declaration": {
-                  "name": "__type",
-                  "kindString": "Type literal",
-                  "flags": {},
-                  "children": [
-                    {
-                      "name": "scaleConversion",
-                      "kindString": "Variable",
-                      "flags": {},
-                      "sources": [
-                        {
-                          "fileName": "core/svg.ts",
-                          "line": 763,
-                          "character": 66
-                        }
-                      ],
-                      "type": {
-                        "type": "instrinct",
-                        "name": "number"
-                      }
-                    },
-                    {
-                      "name": "svgUnitType",
-                      "kindString": "Variable",
-                      "flags": {},
-                      "sources": [
-                        {
-                          "fileName": "core/svg.ts",
-                          "line": 763,
-                          "character": 41
-                        }
-                      ],
-                      "type": {
-                        "type": "instrinct",
-                        "name": "string"
-                      }
-                    }
-                  ],
-                  "sources": [
-                    {
-                      "fileName": "core/svg.ts",
-                      "line": 763,
-                      "character": 27
-                    }
-                  ]
+          "indexSignature": {
+            "name": "__index",
+            "kindString": "Index signature",
+            "flags": {},
+            "comment": {
+              "shortText": "Map of MakerJs unit system to SVG unit system"
+            },
+            "parameters": [
+              {
+                "name": "unitType",
+                "kindString": "Parameter",
+                "flags": {},
+                "type": {
+                  "type": "intrinsic",
+                  "name": "string"
                 }
               }
+            ],
+            "type": {
+              "type": "reflection",
+              "declaration": {
+                "name": "__type",
+                "kindString": "Type literal",
+                "flags": {},
+                "children": [
+                  {
+                    "name": "scaleConversion",
+                    "kindString": "Variable",
+                    "flags": {},
+                    "sources": [
+                      {
+                        "fileName": "core/svg.ts",
+                        "line": 763,
+                        "character": 66
+                      }
+                    ],
+                    "type": {
+                      "type": "intrinsic",
+                      "name": "number"
+                    }
+                  },
+                  {
+                    "name": "svgUnitType",
+                    "kindString": "Variable",
+                    "flags": {},
+                    "sources": [
+                      {
+                        "fileName": "core/svg.ts",
+                        "line": 763,
+                        "character": 41
+                      }
+                    ],
+                    "type": {
+                      "type": "intrinsic",
+                      "name": "string"
+                    }
+                  }
+                ],
+                "sources": [
+                  {
+                    "fileName": "core/svg.ts",
+                    "line": 763,
+                    "character": 27
+                  }
+                ]
+              }
             }
-          ],
+          },
           "sources": [
             {
               "fileName": "core/svg.ts",
@@ -5872,8 +5638,7 @@
               "parameters": [
                 {
                   "name": "pathsToExport",
-                  "flags": {},
-                  "type": "IPath"
+                  "flags": {}
                 },
                 {
                   "name": "options",
@@ -6337,8 +6102,7 @@
               "parameters": [
                 {
                   "name": "pathsToExport",
-                  "flags": {},
-                  "type": "IPath"
+                  "flags": {}
                 },
                 {
                   "name": "options",
@@ -6502,7 +6266,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "object"
           },
           "Variable": {
@@ -6518,7 +6282,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "4"
@@ -6535,7 +6299,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "0"
@@ -6552,7 +6316,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "5"
@@ -6569,7 +6333,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "6"
@@ -6586,7 +6350,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "9"
@@ -6603,7 +6367,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "94"
@@ -6620,7 +6384,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "3"
@@ -6637,7 +6401,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "14"
@@ -6654,7 +6418,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "174"
@@ -6671,7 +6435,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "58"
@@ -6688,7 +6452,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "30"
@@ -6705,7 +6469,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "214"
@@ -6722,7 +6486,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "1"
@@ -6739,7 +6503,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "254"
@@ -6756,7 +6520,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "134"
@@ -6773,7 +6537,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "7"
@@ -6790,7 +6554,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "defaultValue": "2"
@@ -6831,135 +6595,6 @@
           "character": 25
         }
       ],
-      "Variable": {
-        "onPathMap": {
-          "flags": {},
-          "comment": {
-            "shortText": "private"
-          },
-          "sources": [
-            {
-              "fileName": "core/equal.ts",
-              "line": 141,
-              "character": 19
-            }
-          ],
-          "type": {
-            "type": "reflection",
-            "declaration": {
-              "name": "__type",
-              "kindString": "Type literal",
-              "flags": {},
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "pathType",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "string"
-                      }
-                    }
-                  ],
-                  "type": {
-                    "type": "reflection",
-                    "declaration": {
-                      "name": "__type",
-                      "kindString": "Type literal",
-                      "flags": {},
-                      "signatures": [
-                        {
-                          "name": "__call",
-                          "kindString": "Call signature",
-                          "flags": {},
-                          "parameters": [
-                            {
-                              "name": "point",
-                              "kindString": "Parameter",
-                              "flags": {},
-                              "type": {
-                                "type": "reference",
-                                "name": "IPoint"
-                              }
-                            },
-                            {
-                              "name": "path",
-                              "kindString": "Parameter",
-                              "flags": {},
-                              "type": {
-                                "type": "reference",
-                                "name": "IPath"
-                              }
-                            },
-                            {
-                              "name": "withinDistance",
-                              "kindString": "Parameter",
-                              "flags": {},
-                              "type": {
-                                "type": "instrinct",
-                                "name": "number"
-                              }
-                            },
-                            {
-                              "name": "options",
-                              "kindString": "Parameter",
-                              "flags": {
-                                "isOptional": true
-                              },
-                              "type": {
-                                "type": "reference",
-                                "name": "IIsPointOnPathOptions"
-                              }
-                            }
-                          ],
-                          "type": {
-                            "type": "instrinct",
-                            "name": "boolean"
-                          }
-                        }
-                      ],
-                      "sources": [
-                        {
-                          "fileName": "core/equal.ts",
-                          "line": 141,
-                          "character": 42
-                        }
-                      ]
-                    }
-                  }
-                }
-              ],
-              "sources": [
-                {
-                  "fileName": "core/equal.ts",
-                  "line": 141,
-                  "character": 20
-                }
-              ]
-            }
-          }
-        },
-        "graham_scan": {
-          "flags": {},
-          "sources": [
-            {
-              "fileName": "core/measure.ts",
-              "line": 182,
-              "character": 19
-            }
-          ],
-          "type": {
-            "type": "reference",
-            "name": "ConvexHullGrahamScan"
-          },
-          "defaultValue": " require('graham_scan') as typeof ConvexHullGrahamScan"
-        }
-      },
       "Function": {
         "isAngleEqual": {
           "flags": {
@@ -7084,8 +6719,7 @@
                 {
                   "name": "pointArray",
                   "flags": {},
-                  "comment": "array of points.",
-                  "type": "IPoint"
+                  "comment": "array of points."
                 },
                 {
                   "name": "withinDistance",
@@ -7898,8 +7532,7 @@
                 {
                   "name": "points",
                   "flags": {},
-                  "comment": "The array of points to test.",
-                  "type": "IPoint"
+                  "comment": "The array of points to test."
                 },
                 {
                   "name": "out_result",
@@ -8278,7 +7911,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               },
               "defaultValue": "false"
@@ -8327,6 +7960,23 @@
             }
           }
         }
+      },
+      "Variable": {
+        "graham_scan": {
+          "flags": {},
+          "sources": [
+            {
+              "fileName": "core/measure.ts",
+              "line": 182,
+              "character": 19
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "ConvexHullGrahamScan"
+          },
+          "defaultValue": " require('graham_scan') as typeof ConvexHullGrahamScan"
+        }
       }
     },
     "importer": {
@@ -8361,8 +8011,7 @@
                   "comment": "The string of numbers.",
                   "type": "string"
                 }
-              ],
-              "type": "number"
+              ]
             }
           ],
           "sources": [
@@ -8444,7 +8093,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             }
@@ -8520,8 +8169,7 @@
                   "comment": "The constructor for the class which is an IKit.",
                   "type": "IKit"
                 }
-              ],
-              "type": "any"
+              ]
             }
           ],
           "sources": [
@@ -9126,7 +8774,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "implementationOf": {
@@ -9168,7 +8816,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "implementationOf": {
@@ -9189,7 +8837,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "implementationOf": {
@@ -9210,7 +8858,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "implementationOf": {
@@ -9319,7 +8967,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "implementationOf": {
@@ -9472,7 +9120,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               },
               "implementationOf": {
@@ -9493,7 +9141,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "implementationOf": {
@@ -9534,8 +9182,7 @@
                 "parameters": [
                   {
                     "name": "points",
-                    "flags": {},
-                    "type": "IPoint"
+                    "flags": {}
                   }
                 ],
                 "type": "Line"
@@ -9618,7 +9265,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "implementationOf": {
@@ -9747,7 +9394,7 @@
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "implementationOf": {
@@ -9770,108 +9417,6 @@
           "character": 23
         }
       ],
-      "Variable": {
-        "zero_cos": {
-          "flags": {},
-          "comment": {
-            "shortText": "private"
-          },
-          "sources": [
-            {
-              "fileName": "core/point.ts",
-              "line": 76,
-              "character": 18
-            }
-          ],
-          "type": {
-            "type": "reflection",
-            "declaration": {
-              "name": "__type",
-              "kindString": "Type literal",
-              "flags": {},
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "index",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "number"
-                      }
-                    }
-                  ],
-                  "type": {
-                    "type": "instrinct",
-                    "name": "boolean"
-                  }
-                }
-              ],
-              "sources": [
-                {
-                  "fileName": "core/point.ts",
-                  "line": 76,
-                  "character": 19
-                }
-              ]
-            }
-          }
-        },
-        "zero_sin": {
-          "flags": {},
-          "comment": {
-            "shortText": "private"
-          },
-          "sources": [
-            {
-              "fileName": "core/point.ts",
-              "line": 83,
-              "character": 18
-            }
-          ],
-          "type": {
-            "type": "reflection",
-            "declaration": {
-              "name": "__type",
-              "kindString": "Type literal",
-              "flags": {},
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "index",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "number"
-                      }
-                    }
-                  ],
-                  "type": {
-                    "type": "instrinct",
-                    "name": "boolean"
-                  }
-                }
-              ],
-              "sources": [
-                {
-                  "fileName": "core/point.ts",
-                  "line": 83,
-                  "character": 19
-                }
-              ]
-            }
-          }
-        }
-      },
       "Function": {
         "add": {
           "flags": {
@@ -10008,8 +9553,7 @@
                 {
                   "name": "pointOptions",
                   "flags": {},
-                  "comment": "Array of points to choose from.",
-                  "type": "IPoint"
+                  "comment": "Array of points to choose from."
                 }
               ],
               "type": "IPoint"
@@ -10122,8 +9666,7 @@
                   "comment": "The arc path object.",
                   "type": "IPathArc"
                 }
-              ],
-              "type": "IPoint"
+              ]
             }
           ],
           "sources": [
@@ -10160,8 +9703,7 @@
                   },
                   "type": "IPoint"
                 }
-              ],
-              "type": "IPoint"
+              ]
             }
           ],
           "sources": [
@@ -10560,8 +10102,7 @@
                   "type": "boolean",
                   "defaultValue": "false"
                 }
-              ],
-              "type": "number"
+              ]
             }
           ],
           "sources": [
@@ -10890,7 +10431,7 @@
           "sources": [
             {
               "fileName": "models/BezierCurve.ts",
-              "line": 333,
+              "line": 401,
               "character": 28
             }
           ],
@@ -10908,8 +10449,7 @@
                 "parameters": [
                   {
                     "name": "points",
-                    "flags": {},
-                    "type": "IPoint"
+                    "flags": {}
                   },
                   {
                     "name": "accuracy",
@@ -10980,8 +10520,7 @@
                   },
                   {
                     "name": "controls",
-                    "flags": {},
-                    "type": "IPoint"
+                    "flags": {}
                   },
                   {
                     "name": "end",
@@ -11043,12 +10582,12 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 340,
+                  "line": 408,
                   "character": 23
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "number"
               }
             },
@@ -11060,7 +10599,7 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 335,
+                  "line": 403,
                   "character": 21
                 }
               ],
@@ -11081,7 +10620,7 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 337,
+                  "line": 405,
                   "character": 21
                 }
               ],
@@ -11102,7 +10641,7 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 336,
+                  "line": 404,
                   "character": 20
                 }
               ],
@@ -11123,7 +10662,7 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 339,
+                  "line": 407,
                   "character": 19
                 }
               ],
@@ -11140,12 +10679,12 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 338,
+                  "line": 406,
                   "character": 19
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "defaultValue": " BezierCurve.typeName",
@@ -11163,12 +10702,12 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 439,
+                  "line": 507,
                   "character": 30
                 }
               ],
               "type": {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "string"
               },
               "defaultValue": "\"BezierCurve\""
@@ -11198,7 +10737,7 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 546,
+                  "line": 560,
                   "character": 35
                 }
               ]
@@ -11231,7 +10770,7 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 551,
+                  "line": 565,
                   "character": 34
                 }
               ]
@@ -11264,7 +10803,7 @@
               "sources": [
                 {
                   "fileName": "models/BezierCurve.ts",
-                  "line": 441,
+                  "line": 509,
                   "character": 36
                 }
               ]
@@ -11477,8 +11016,7 @@
                 "parameters": [
                   {
                     "name": "coords",
-                    "flags": {},
-                    "type": "number"
+                    "flags": {}
                   }
                 ],
                 "type": "ConnectTheDots"
@@ -11498,8 +11036,7 @@
                   },
                   {
                     "name": "coords",
-                    "flags": {},
-                    "type": "number"
+                    "flags": {}
                   }
                 ],
                 "type": "ConnectTheDots"
@@ -11519,8 +11056,7 @@
                   },
                   {
                     "name": "points",
-                    "flags": {},
-                    "type": "IPoint"
+                    "flags": {}
                   }
                 ],
                 "type": "ConnectTheDots"
@@ -12020,15 +11556,13 @@
                   },
                   {
                     "name": "points",
-                    "flags": {},
-                    "type": "IPoint"
+                    "flags": {}
                   },
                   {
                     "name": "ids",
                     "flags": {
                       "isOptional": true
-                    },
-                    "type": "string"
+                    }
                   }
                 ],
                 "type": "Holes"
@@ -12368,8 +11902,7 @@
                       "type": "boolean",
                       "defaultValue": "false"
                     }
-                  ],
-                  "type": "IPoint"
+                  ]
                 }
               ],
               "sources": [
@@ -13211,7 +12744,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           },
           "inheritedFrom": {
@@ -13238,14 +12771,16 @@
             "declaration": {
               "name": "__type",
               "kindString": "Type literal",
-              "flags": {},
+              "flags": {
+                "isExported": true
+              },
               "signatures": [
                 {
                   "name": "__call",
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
-                    "type": "instrinct",
+                    "type": "intrinsic",
                     "name": "this"
                   }
                 }
@@ -13279,7 +12814,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           },
           "inheritedFrom": {
@@ -13716,6 +13251,59 @@
             }
           ]
         },
+        "distort": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "distort",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Create a distorted copy of a model - scale x and y individually.",
+                "returns": "this cascade container, this.$result will be New model (for cascading).\n\n"
+              },
+              "parameters": [
+                {
+                  "name": "scaleX",
+                  "flags": {},
+                  "comment": "The amount of x scaling.",
+                  "type": "number"
+                },
+                {
+                  "name": "scaleY",
+                  "flags": {},
+                  "comment": "The amount of y scaling.",
+                  "type": "number"
+                },
+                {
+                  "name": "scaleOrigin",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "(default false) Optional boolean to scale the origin point. Typically false for the root model.",
+                  "type": "boolean"
+                },
+                {
+                  "name": "bezierAccuracy",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional accuracy of Bezier curves.",
+                  "type": "number"
+                }
+              ],
+              "type": "ICascadeModel"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/cascades.ts",
+              "line": 140,
+              "character": 15
+            }
+          ]
+        },
         "expandPaths": {
           "flags": {
             "isExported": true
@@ -13758,7 +13346,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 139,
+              "line": 151,
               "character": 19
             }
           ]
@@ -13789,7 +13377,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 151,
+              "line": 163,
               "character": 13
             }
           ]
@@ -13826,7 +13414,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 161,
+              "line": 173,
               "character": 14
             }
           ]
@@ -13857,7 +13445,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 170,
+              "line": 182,
               "character": 12
             }
           ]
@@ -13888,7 +13476,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 179,
+              "line": 191,
               "character": 20
             }
           ]
@@ -13921,7 +13509,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 188,
+              "line": 200,
               "character": 17
             }
           ]
@@ -13976,7 +13564,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 200,
+              "line": 212,
               "character": 15
             }
           ]
@@ -14007,7 +13595,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 209,
+              "line": 221,
               "character": 21
             }
           ]
@@ -14056,7 +13644,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 220,
+              "line": 232,
               "character": 22
             }
           ]
@@ -14095,7 +13683,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 230,
+              "line": 242,
               "character": 14
             }
           ]
@@ -14134,7 +13722,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 240,
+              "line": 252,
               "character": 13
             }
           ]
@@ -14167,7 +13755,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 249,
+              "line": 261,
               "character": 16
             }
           ]
@@ -14198,7 +13786,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 258,
+              "line": 270,
               "character": 12
             }
           ]
@@ -14239,7 +13827,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 268,
+              "line": 280,
               "character": 12
             }
           ]
@@ -14253,7 +13841,7 @@
       "sources": [
         {
           "fileName": "core/cascades.ts",
-          "line": 271,
+          "line": 283,
           "character": 33
         }
       ],
@@ -14279,7 +13867,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           },
           "inheritedFrom": {
@@ -14306,14 +13894,16 @@
             "declaration": {
               "name": "__type",
               "kindString": "Type literal",
-              "flags": {},
+              "flags": {
+                "isExported": true
+              },
               "signatures": [
                 {
                   "name": "__call",
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
-                    "type": "instrinct",
+                    "type": "intrinsic",
                     "name": "this"
                   }
                 }
@@ -14347,7 +13937,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           },
           "inheritedFrom": {
@@ -14397,7 +13987,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 286,
+              "line": 298,
               "character": 13
             }
           ]
@@ -14436,7 +14026,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 296,
+              "line": 308,
               "character": 19
             }
           ]
@@ -14467,7 +14057,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 307,
+              "line": 319,
               "character": 20
             }
           ]
@@ -14490,7 +14080,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 315,
+              "line": 327,
               "character": 14
             }
           ]
@@ -14523,7 +14113,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 324,
+              "line": 336,
               "character": 13
             }
           ]
@@ -14554,7 +14144,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 333,
+              "line": 345,
               "character": 17
             }
           ]
@@ -14585,7 +14175,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 345,
+              "line": 357,
               "character": 13
             }
           ]
@@ -14622,7 +14212,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 355,
+              "line": 367,
               "character": 14
             }
           ]
@@ -14653,7 +14243,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 364,
+              "line": 376,
               "character": 12
             }
           ]
@@ -14692,7 +14282,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 374,
+              "line": 386,
               "character": 20
             }
           ]
@@ -14731,7 +14321,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 384,
+              "line": 396,
               "character": 14
             }
           ]
@@ -14762,7 +14352,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 393,
+              "line": 405,
               "character": 13
             }
           ]
@@ -14785,7 +14375,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 401,
+              "line": 413,
               "character": 12
             }
           ]
@@ -14799,7 +14389,7 @@
       "sources": [
         {
           "fileName": "core/cascades.ts",
-          "line": 404,
+          "line": 416,
           "character": 34
         }
       ],
@@ -14825,7 +14415,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           },
           "inheritedFrom": {
@@ -14852,14 +14442,16 @@
             "declaration": {
               "name": "__type",
               "kindString": "Type literal",
-              "flags": {},
+              "flags": {
+                "isExported": true
+              },
               "signatures": [
                 {
                   "name": "__call",
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
-                    "type": "instrinct",
+                    "type": "intrinsic",
                     "name": "this"
                   }
                 }
@@ -14893,7 +14485,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           },
           "inheritedFrom": {
@@ -14937,7 +14529,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 414,
+              "line": 426,
               "character": 11
             }
           ]
@@ -14968,7 +14560,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 423,
+              "line": 435,
               "character": 15
             }
           ]
@@ -14991,7 +14583,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 431,
+              "line": 443,
               "character": 13
             }
           ]
@@ -15012,8 +14604,7 @@
                 {
                   "name": "pointOptions",
                   "flags": {},
-                  "comment": "Array of points to choose from.",
-                  "type": "IPoint"
+                  "comment": "Array of points to choose from."
                 }
               ],
               "type": "ICascadePoint"
@@ -15022,7 +14613,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 440,
+              "line": 452,
               "character": 15
             }
           ]
@@ -15059,7 +14650,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 450,
+              "line": 462,
               "character": 15
             }
           ]
@@ -15096,7 +14687,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 460,
+              "line": 472,
               "character": 14
             }
           ]
@@ -15135,7 +14726,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 470,
+              "line": 482,
               "character": 14
             }
           ]
@@ -15168,7 +14759,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 479,
+              "line": 491,
               "character": 15
             }
           ]
@@ -15199,7 +14790,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 488,
+              "line": 500,
               "character": 13
             }
           ]
@@ -15230,7 +14821,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 497,
+              "line": 509,
               "character": 16
             }
           ]
@@ -15276,9 +14867,11 @@
             }
           ],
           "type": {
-            "type": "typeParameter",
-            "isArray": true,
-            "name": "T"
+            "type": "array",
+            "elementType": {
+              "type": "typeParameter",
+              "name": "T"
+            }
           }
         },
         "key": {
@@ -15374,7 +14967,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -15394,9 +14987,11 @@
             }
           ],
           "type": {
-            "type": "instrinct",
-            "isArray": true,
-            "name": "number"
+            "type": "array",
+            "elementType": {
+              "type": "intrinsic",
+              "name": "number"
+            }
           }
         },
         "point": {
@@ -15433,7 +15028,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -15452,9 +15047,11 @@
             }
           ],
           "type": {
-            "type": "instrinct",
-            "isArray": true,
-            "name": "number"
+            "type": "array",
+            "elementType": {
+              "type": "intrinsic",
+              "name": "number"
+            }
           }
         }
       }
@@ -15503,28 +15100,26 @@
               "flags": {
                 "isExported": true
               },
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "exporterName",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "string"
-                      }
+              "indexSignature": {
+                "name": "__index",
+                "kindString": "Index signature",
+                "flags": {},
+                "parameters": [
+                  {
+                    "name": "exporterName",
+                    "kindString": "Parameter",
+                    "flags": {},
+                    "type": {
+                      "type": "intrinsic",
+                      "name": "string"
                     }
-                  ],
-                  "type": {
-                    "type": "instrinct",
-                    "name": "any"
                   }
+                ],
+                "type": {
+                  "type": "intrinsic",
+                  "name": "any"
                 }
-              ],
+              },
               "sources": [
                 {
                   "fileName": "core/schema.ts",
@@ -15555,7 +15150,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -15603,7 +15198,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -15674,7 +15269,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -15694,7 +15289,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -15718,7 +15313,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -15778,7 +15373,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           }
         },
@@ -15810,7 +15405,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "type": {
-                    "type": "instrinct",
+                    "type": "intrinsic",
                     "name": "this"
                   }
                 }
@@ -15840,7 +15435,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           }
         }
@@ -15877,9 +15472,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IChain"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IChain"
+            }
           }
         },
         "endless": {
@@ -15897,7 +15494,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         },
@@ -15916,9 +15513,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IChainLink"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IChainLink"
+            }
           }
         },
         "pathLength": {
@@ -15936,7 +15535,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         }
@@ -15959,13 +15558,11 @@
           "parameters": [
             {
               "name": "chains",
-              "flags": {},
-              "type": "IChain"
+              "flags": {}
             },
             {
               "name": "loose",
-              "flags": {},
-              "type": "IWalkPath"
+              "flags": {}
             },
             {
               "name": "layer",
@@ -15976,8 +15573,7 @@
               "name": "ignored",
               "flags": {
                 "isOptional": true
-              },
-              "type": "IWalkPath"
+              }
             }
           ],
           "type": "void"
@@ -16021,9 +15617,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IPoint"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IPoint"
+            }
           }
         },
         "pathLength": {
@@ -16041,7 +15639,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -16060,7 +15658,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         },
@@ -16092,32 +15690,32 @@
       "comment": {
         "shortText": "A map of chains by layer."
       },
-      "indexSignature": [
-        {
-          "name": "__index",
-          "kindString": "Index signature",
-          "flags": {},
-          "comment": {
-            "shortText": "A map of chains by layer."
-          },
-          "parameters": [
-            {
-              "name": "layer",
-              "kindString": "Parameter",
-              "flags": {},
-              "type": {
-                "type": "instrinct",
-                "name": "string"
-              }
+      "indexSignature": {
+        "name": "__index",
+        "kindString": "Index signature",
+        "flags": {},
+        "comment": {
+          "shortText": "A map of chains by layer."
+        },
+        "parameters": [
+          {
+            "name": "layer",
+            "kindString": "Parameter",
+            "flags": {},
+            "type": {
+              "type": "intrinsic",
+              "name": "string"
             }
-          ],
-          "type": {
+          }
+        ],
+        "type": {
+          "type": "array",
+          "elementType": {
             "type": "reference",
-            "isArray": true,
             "name": "IChain"
           }
         }
-      ],
+      },
       "sources": [
         {
           "fileName": "core/maker.ts",
@@ -16223,9 +15821,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IModel"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IModel"
+            }
           }
         },
         "pointMatchingDistance": {
@@ -16244,7 +15844,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           },
           "inheritedFrom": {
@@ -16268,7 +15868,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         }
@@ -16305,7 +15905,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         }
@@ -16348,7 +15948,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         },
@@ -16371,7 +15971,7 @@
             "type": "union",
             "types": [
               {
-                "type": "instrinct",
+                "type": "intrinsic",
                 "name": "boolean"
               },
               {
@@ -16397,7 +15997,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           },
           "inheritedFrom": {
@@ -16421,7 +16021,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         },
@@ -16441,7 +16041,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         }
@@ -16490,7 +16090,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           },
           "inheritedFrom": {
@@ -16514,7 +16114,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         }
@@ -16584,8 +16184,7 @@
                 "name": "args",
                 "flags": {
                   "isRest": true
-                },
-                "type": "any"
+                }
               }
             ],
             "type": "IModel"
@@ -16609,9 +16208,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IMetaParameter"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IMetaParameter"
+            }
           }
         },
         "notes": {
@@ -16630,7 +16231,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         }
@@ -16704,31 +16305,29 @@
       "comment": {
         "shortText": "A map of measurements."
       },
-      "indexSignature": [
-        {
-          "name": "__index",
-          "kindString": "Index signature",
-          "flags": {},
-          "comment": {
-            "shortText": "A map of measurements."
-          },
-          "parameters": [
-            {
-              "name": "key",
-              "kindString": "Parameter",
-              "flags": {},
-              "type": {
-                "type": "instrinct",
-                "name": "string"
-              }
+      "indexSignature": {
+        "name": "__index",
+        "kindString": "Index signature",
+        "flags": {},
+        "comment": {
+          "shortText": "A map of measurements."
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "kindString": "Parameter",
+            "flags": {},
+            "type": {
+              "type": "intrinsic",
+              "name": "string"
             }
-          ],
-          "type": {
-            "type": "reference",
-            "name": "IMeasure"
           }
+        ],
+        "type": {
+          "type": "reference",
+          "name": "IMeasure"
         }
-      ],
+      },
       "sources": [
         {
           "fileName": "core/maker.ts",
@@ -16808,9 +16407,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IPoint"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IPoint"
+            }
           }
         }
       }
@@ -16870,7 +16471,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -16935,7 +16536,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         }
@@ -16972,7 +16573,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -16992,7 +16593,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -17012,7 +16613,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -17031,7 +16632,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -17050,7 +16651,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -17069,7 +16670,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "any"
           }
         }
@@ -17153,9 +16754,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IPoint"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IPoint"
+            }
           }
         },
         "layer": {
@@ -17174,7 +16777,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -17221,7 +16824,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         },
@@ -17240,7 +16843,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -17280,9 +16883,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IPoint"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IPoint"
+            }
           }
         },
         "path1Angles": {
@@ -17301,9 +16906,11 @@
             }
           ],
           "type": {
-            "type": "instrinct",
-            "isArray": true,
-            "name": "number"
+            "type": "array",
+            "elementType": {
+              "type": "intrinsic",
+              "name": "number"
+            }
           }
         },
         "path2Angles": {
@@ -17322,9 +16929,11 @@
             }
           ],
           "type": {
-            "type": "instrinct",
-            "isArray": true,
-            "name": "number"
+            "type": "array",
+            "elementType": {
+              "type": "intrinsic",
+              "name": "number"
+            }
           }
         }
       }
@@ -17366,7 +16975,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         },
@@ -17386,7 +16995,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         }
@@ -17429,7 +17038,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           },
           "inheritedFrom": {
@@ -17453,7 +17062,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           },
           "inheritedFrom": {
@@ -17540,7 +17149,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -17586,7 +17195,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -17605,7 +17214,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -17624,7 +17233,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -17687,7 +17296,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         }
@@ -17726,7 +17335,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -17813,7 +17422,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         }
@@ -17856,7 +17465,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -17888,9 +17497,11 @@
             }
           ],
           "type": {
-            "type": "instrinct",
-            "isArray": true,
-            "name": "string"
+            "type": "array",
+            "elementType": {
+              "type": "intrinsic",
+              "name": "string"
+            }
           }
         },
         "routeKey": {
@@ -17905,7 +17516,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         }
@@ -17948,7 +17559,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           },
           "inheritedFrom": {
@@ -17972,7 +17583,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         }
@@ -18008,7 +17619,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "boolean"
           }
         },
@@ -18047,7 +17658,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -18067,7 +17678,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         }
@@ -18110,7 +17721,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -18150,7 +17761,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -18210,9 +17821,11 @@
             }
           ],
           "type": {
-            "type": "instrinct",
-            "isArray": true,
-            "name": "string"
+            "type": "array",
+            "elementType": {
+              "type": "intrinsic",
+              "name": "string"
+            }
           },
           "inheritedFrom": {
             "type": "reference",
@@ -18231,7 +17844,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -18429,7 +18042,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -18505,7 +18118,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -18525,9 +18138,11 @@
             }
           ],
           "type": {
-            "type": "instrinct",
-            "isArray": true,
-            "name": "string"
+            "type": "array",
+            "elementType": {
+              "type": "intrinsic",
+              "name": "string"
+            }
           },
           "inheritedFrom": {
             "type": "reference",
@@ -18546,7 +18161,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -18650,7 +18265,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -18669,7 +18284,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         }
@@ -18803,31 +18418,27 @@
             "declaration": {
               "name": "__type",
               "kindString": "Type literal",
-              "flags": {
-                "isExported": true
-              },
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "exporterName",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "string"
-                      }
+              "flags": {},
+              "indexSignature": {
+                "name": "__index",
+                "kindString": "Index signature",
+                "flags": {},
+                "parameters": [
+                  {
+                    "name": "exporterName",
+                    "kindString": "Parameter",
+                    "flags": {},
+                    "type": {
+                      "type": "intrinsic",
+                      "name": "string"
                     }
-                  ],
-                  "type": {
-                    "type": "instrinct",
-                    "name": "any"
                   }
+                ],
+                "type": {
+                  "type": "intrinsic",
+                  "name": "any"
                 }
-              ],
+              },
               "sources": [
                 {
                   "fileName": "core/schema.ts",
@@ -18854,7 +18465,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -18894,7 +18505,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -18954,7 +18565,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -18974,7 +18585,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         }
@@ -18987,31 +18598,29 @@
       "comment": {
         "shortText": "Model objects by id."
       },
-      "indexSignature": [
-        {
-          "name": "__index",
-          "kindString": "Index signature",
-          "flags": {},
-          "comment": {
-            "shortText": "Model objects by id."
-          },
-          "parameters": [
-            {
-              "name": "id",
-              "kindString": "Parameter",
-              "flags": {},
-              "type": {
-                "type": "instrinct",
-                "name": "string"
-              }
+      "indexSignature": {
+        "name": "__index",
+        "kindString": "Index signature",
+        "flags": {},
+        "comment": {
+          "shortText": "Model objects by id."
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "kindString": "Parameter",
+            "flags": {},
+            "type": {
+              "type": "intrinsic",
+              "name": "string"
             }
-          ],
-          "type": {
-            "type": "reference",
-            "name": "IModel"
           }
+        ],
+        "type": {
+          "type": "reference",
+          "name": "IModel"
         }
-      ],
+      },
       "sources": [
         {
           "fileName": "core/schema.ts",
@@ -19037,6 +18646,14 @@
       "extendedBy": [
         {
           "type": "reference",
+          "name": "IPathRemoved"
+        },
+        {
+          "type": "reference",
+          "name": "IPathDirectional"
+        },
+        {
+          "type": "reference",
           "name": "IPathLine"
         },
         {
@@ -19046,14 +18663,6 @@
         {
           "type": "reference",
           "name": "IPathArcInBezierCurve"
-        },
-        {
-          "type": "reference",
-          "name": "IPathRemoved"
-        },
-        {
-          "type": "reference",
-          "name": "IPathDirectional"
         }
       ],
       "Property": {
@@ -19073,7 +18682,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         },
@@ -19111,7 +18720,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           }
         }
@@ -19160,7 +18769,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -19180,7 +18789,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19226,7 +18835,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           },
           "inheritedFrom": {
@@ -19249,7 +18858,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -19268,7 +18877,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19331,7 +18940,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19377,7 +18986,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19429,9 +19038,11 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "IPoint"
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "IPoint"
+            }
           }
         },
         "end": {
@@ -19473,7 +19084,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19539,7 +19150,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19599,7 +19210,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19645,7 +19256,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -19664,7 +19275,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19751,7 +19362,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19797,7 +19408,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "inheritedFrom": {
@@ -19814,48 +19425,46 @@
       "comment": {
         "shortText": "Path objects by id."
       },
-      "indexSignature": [
-        {
-          "name": "__index",
-          "kindString": "Index signature",
-          "flags": {},
-          "comment": {
-            "shortText": "Path objects by id."
-          },
-          "parameters": [
-            {
-              "name": "id",
-              "kindString": "Parameter",
-              "flags": {},
-              "type": {
-                "type": "instrinct",
-                "name": "string"
-              }
+      "indexSignature": {
+        "name": "__index",
+        "kindString": "Index signature",
+        "flags": {},
+        "comment": {
+          "shortText": "Path objects by id."
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "kindString": "Parameter",
+            "flags": {},
+            "type": {
+              "type": "intrinsic",
+              "name": "string"
             }
-          ],
-          "type": {
-            "type": "union",
-            "types": [
-              {
-                "type": "reference",
-                "name": "IPath"
-              },
-              {
-                "type": "reference",
-                "name": "IPathArc"
-              },
-              {
-                "type": "reference",
-                "name": "IPathCircle"
-              },
-              {
-                "type": "reference",
-                "name": "IPathLine"
-              }
-            ]
           }
+        ],
+        "type": {
+          "type": "union",
+          "types": [
+            {
+              "type": "reference",
+              "name": "IPath"
+            },
+            {
+              "type": "reference",
+              "name": "IPathArc"
+            },
+            {
+              "type": "reference",
+              "name": "IPathCircle"
+            },
+            {
+              "type": "reference",
+              "name": "IPathLine"
+            }
+          ]
         }
-      ],
+      },
       "sources": [
         {
           "fileName": "core/schema.ts",
@@ -19872,32 +19481,30 @@
         "shortText": "An x-y point in a two-dimensional space.\nImplemented as an array with 2 elements. The first element is x, the second element is y.",
         "text": "Examples:\n```\nvar p: IPoint = [0, 0];   //typescript\nvar p = [0, 0];   //javascript\n```\n"
       },
-      "indexSignature": [
-        {
-          "name": "__index",
-          "kindString": "Index signature",
-          "flags": {},
-          "comment": {
-            "shortText": "An x-y point in a two-dimensional space.\nImplemented as an array with 2 elements. The first element is x, the second element is y.",
-            "text": "Examples:\n```\nvar p: IPoint = [0, 0];   //typescript\nvar p = [0, 0];   //javascript\n```\n"
-          },
-          "parameters": [
-            {
-              "name": "index",
-              "kindString": "Parameter",
-              "flags": {},
-              "type": {
-                "type": "instrinct",
-                "name": "number"
-              }
+      "indexSignature": {
+        "name": "__index",
+        "kindString": "Index signature",
+        "flags": {},
+        "comment": {
+          "shortText": "An x-y point in a two-dimensional space.\nImplemented as an array with 2 elements. The first element is x, the second element is y.",
+          "text": "Examples:\n```\nvar p: IPoint = [0, 0];   //typescript\nvar p = [0, 0];   //javascript\n```\n"
+        },
+        "parameters": [
+          {
+            "name": "index",
+            "kindString": "Parameter",
+            "flags": {},
+            "type": {
+              "type": "intrinsic",
+              "name": "number"
             }
-          ],
-          "type": {
-            "type": "instrinct",
-            "name": "number"
           }
+        ],
+        "type": {
+          "type": "intrinsic",
+          "name": "number"
         }
-      ],
+      },
       "sources": [
         {
           "fileName": "core/schema.ts",
@@ -19966,19 +19573,21 @@
             }
           ],
           "type": {
-            "type": "reference",
-            "isArray": true,
-            "name": "ICollection",
-            "typeArguments": [
-              {
-                "type": "typeParameter",
-                "name": "K"
-              },
-              {
-                "type": "typeParameter",
-                "name": "T"
-              }
-            ]
+            "type": "array",
+            "elementType": {
+              "type": "reference",
+              "name": "ICollection",
+              "typeArguments": [
+                {
+                  "type": "typeParameter",
+                  "name": "K"
+                },
+                {
+                  "type": "typeParameter",
+                  "name": "T"
+                }
+              ]
+            }
           },
           "defaultValue": " []"
         }
@@ -20037,8 +19646,7 @@
                     "isOptional": true
                   }
                 }
-              ],
-              "type": "T"
+              ]
             }
           ],
           "sources": [
@@ -20187,62 +19795,62 @@
             "declaration": {
               "name": "__type",
               "kindString": "Type literal",
-              "flags": {},
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "x",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "number"
-                      }
+              "flags": {
+                "isExported": true
+              },
+              "indexSignature": {
+                "name": "__index",
+                "kindString": "Index signature",
+                "flags": {},
+                "parameters": [
+                  {
+                    "name": "x",
+                    "kindString": "Parameter",
+                    "flags": {},
+                    "type": {
+                      "type": "intrinsic",
+                      "name": "number"
                     }
-                  ],
-                  "type": {
-                    "type": "reflection",
-                    "declaration": {
-                      "name": "__type",
-                      "kindString": "Type literal",
+                  }
+                ],
+                "type": {
+                  "type": "reflection",
+                  "declaration": {
+                    "name": "__type",
+                    "kindString": "Type literal",
+                    "flags": {
+                      "isExported": true
+                    },
+                    "indexSignature": {
+                      "name": "__index",
+                      "kindString": "Index signature",
                       "flags": {},
-                      "indexSignature": [
+                      "parameters": [
                         {
-                          "name": "__index",
-                          "kindString": "Index signature",
+                          "name": "y",
+                          "kindString": "Parameter",
                           "flags": {},
-                          "parameters": [
-                            {
-                              "name": "y",
-                              "kindString": "Parameter",
-                              "flags": {},
-                              "type": {
-                                "type": "instrinct",
-                                "name": "number"
-                              }
-                            }
-                          ],
                           "type": {
-                            "type": "instrinct",
+                            "type": "intrinsic",
                             "name": "number"
                           }
                         }
                       ],
-                      "sources": [
-                        {
-                          "fileName": "core/collect.ts",
-                          "line": 150,
-                          "character": 36
-                        }
-                      ]
-                    }
+                      "type": {
+                        "type": "intrinsic",
+                        "name": "number"
+                      }
+                    },
+                    "sources": [
+                      {
+                        "fileName": "core/collect.ts",
+                        "line": 150,
+                        "character": 36
+                      }
+                    ]
                   }
                 }
-              ],
+              },
               "sources": [
                 {
                   "fileName": "core/collect.ts",
@@ -20273,29 +19881,29 @@
             "declaration": {
               "name": "__type",
               "kindString": "Type literal",
-              "flags": {},
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "pointId",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "number"
-                      }
+              "flags": {
+                "isExported": true
+              },
+              "indexSignature": {
+                "name": "__index",
+                "kindString": "Index signature",
+                "flags": {},
+                "parameters": [
+                  {
+                    "name": "pointId",
+                    "kindString": "Parameter",
+                    "flags": {},
+                    "type": {
+                      "type": "intrinsic",
+                      "name": "number"
                     }
-                  ],
-                  "type": {
-                    "type": "reference",
-                    "name": "IPointGraphIndexElement"
                   }
+                ],
+                "type": {
+                  "type": "reference",
+                  "name": "IPointGraphIndexElement"
                 }
-              ],
+              },
               "sources": [
                 {
                   "fileName": "core/collect.ts",
@@ -20322,7 +19930,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "number"
           }
         },
@@ -20346,29 +19954,29 @@
             "declaration": {
               "name": "__type",
               "kindString": "Type literal",
-              "flags": {},
-              "indexSignature": [
-                {
-                  "name": "__index",
-                  "kindString": "Index signature",
-                  "flags": {},
-                  "parameters": [
-                    {
-                      "name": "pointId",
-                      "kindString": "Parameter",
-                      "flags": {},
-                      "type": {
-                        "type": "instrinct",
-                        "name": "number"
-                      }
+              "flags": {
+                "isExported": true
+              },
+              "indexSignature": {
+                "name": "__index",
+                "kindString": "Index signature",
+                "flags": {},
+                "parameters": [
+                  {
+                    "name": "pointId",
+                    "kindString": "Parameter",
+                    "flags": {},
+                    "type": {
+                      "type": "intrinsic",
+                      "name": "number"
                     }
-                  ],
-                  "type": {
-                    "type": "instrinct",
-                    "name": "number"
                   }
+                ],
+                "type": {
+                  "type": "intrinsic",
+                  "name": "number"
                 }
-              ],
+              },
               "sources": [
                 {
                   "fileName": "core/collect.ts",
@@ -20395,9 +20003,11 @@
             }
           ],
           "type": {
-            "type": "typeParameter",
-            "isArray": true,
-            "name": "T"
+            "type": "array",
+            "elementType": {
+              "type": "typeParameter",
+              "name": "T"
+            }
           }
         }
       },
@@ -20427,7 +20037,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 297,
+              "line": 306,
               "character": 27
             }
           ]
@@ -20458,7 +20068,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 330,
+              "line": 339,
               "character": 32
             }
           ]
@@ -20489,7 +20099,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 312,
+              "line": 321,
               "character": 27
             }
           ]
@@ -20504,22 +20114,18 @@
               "name": "insertValue",
               "kindString": "Call signature",
               "comment": {
-                "shortText": "Insert a value at a point."
+                "shortText": "Insert a value.",
+                "returns": "valueId of the inserted value.\n"
               },
               "parameters": [
                 {
-                  "name": "p",
-                  "flags": {},
-                  "comment": "Point.",
-                  "type": "IPoint"
-                },
-                {
                   "name": "value",
                   "flags": {},
-                  "comment": "Value associated with this point.\n",
+                  "comment": "Value associated with this point.",
                   "type": "T"
                 }
-              ]
+              ],
+              "type": "number"
             }
           ],
           "sources": [
@@ -20527,6 +20133,41 @@
               "fileName": "core/collect.ts",
               "line": 192,
               "character": 26
+            }
+          ]
+        },
+        "insertValueIdAtPoint": {
+          "flags": {
+            "isExported": true,
+            "isPublic": true
+          },
+          "signatures": [
+            {
+              "name": "insertValueIdAtPoint",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Insert a value at a point."
+              },
+              "parameters": [
+                {
+                  "name": "valueId",
+                  "flags": {},
+                  "type": "number"
+                },
+                {
+                  "name": "p",
+                  "flags": {},
+                  "comment": "Point.",
+                  "type": "IPoint"
+                }
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/collect.ts",
+              "line": 202,
+              "character": 35
             }
           ]
         },
@@ -20556,7 +20197,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 252,
+              "line": 261,
               "character": 39
             }
           ]
@@ -20587,7 +20228,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 225,
+              "line": 234,
               "character": 26
             }
           ]
@@ -20634,7 +20275,7 @@
         }
       ],
       "type": {
-        "type": "instrinct",
+        "type": "intrinsic",
         "name": "string"
       },
       "defaultValue": " detectEnvironment()"
@@ -20654,7 +20295,7 @@
         }
       ],
       "type": {
-        "type": "instrinct",
+        "type": "intrinsic",
         "name": "string"
       },
       "defaultValue": "\"debug\""
@@ -20795,8 +20436,7 @@
             {
               "name": "route",
               "flags": {},
-              "comment": "Array of strings which are segments of a route.",
-              "type": "string"
+              "comment": "Array of strings which are segments of a route."
             }
           ],
           "type": "string"
@@ -21219,40 +20859,6 @@
         }
       ]
     },
-    "split": {
-      "flags": {
-        "isExported": true
-      },
-      "signatures": [
-        {
-          "name": "split",
-          "kindString": "Call signature",
-          "comment": {
-            "shortText": "private"
-          },
-          "parameters": [
-            {
-              "name": "s",
-              "flags": {},
-              "type": "string"
-            },
-            {
-              "name": "char",
-              "flags": {},
-              "type": "string"
-            }
-          ],
-          "type": "Array"
-        }
-      ],
-      "sources": [
-        {
-          "fileName": "core/maker.ts",
-          "line": 84,
-          "character": 18
-        }
-      ]
-    },
     "splitDecimal": {
       "flags": {
         "isExported": true
@@ -21273,8 +20879,7 @@
               "comment": "The number to split.",
               "type": "number"
             }
-          ],
-          "type": "Array"
+          ]
         }
       ],
       "sources": [
@@ -21337,7 +20942,7 @@
         }
       ],
       "type": {
-        "type": "instrinct",
+        "type": "intrinsic",
         "name": "object"
       },
       "Variable": {
@@ -21353,7 +20958,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"browser\""
@@ -21370,7 +20975,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"node\""
@@ -21387,7 +20992,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"unknown\""
@@ -21404,7 +21009,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"worker\""
@@ -21427,7 +21032,7 @@
         }
       ],
       "type": {
-        "type": "instrinct",
+        "type": "intrinsic",
         "name": "object"
       },
       "Variable": {
@@ -21443,7 +21048,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"arc\""
@@ -21460,7 +21065,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"bezier-seed\""
@@ -21477,7 +21082,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"circle\""
@@ -21494,7 +21099,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"line\""
@@ -21516,7 +21121,7 @@
         }
       ],
       "type": {
-        "type": "instrinct",
+        "type": "intrinsic",
         "name": "object"
       },
       "Variable": {
@@ -21532,7 +21137,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"cm\""
@@ -21549,7 +21154,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"foot\""
@@ -21566,7 +21171,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"inch\""
@@ -21583,7 +21188,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"m\""
@@ -21600,7 +21205,7 @@
             }
           ],
           "type": {
-            "type": "instrinct",
+            "type": "intrinsic",
             "name": "string"
           },
           "defaultValue": "\"mm\""
