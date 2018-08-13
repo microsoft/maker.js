@@ -195,7 +195,7 @@
         }
 
         //lines are parallel, but not vertical, see if y-intercept is the same
-        return round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+        return Math.abs(slopeA.yIntercept - slopeB.yIntercept) < .001;
     }
 
     /**
@@ -212,7 +212,7 @@
             return true;
         }
 
-        if (slopeA.hasSlope && slopeB.hasSlope && (round(slopeA.slope - slopeB.slope, .00001) == 0)) {
+        if (slopeA.hasSlope && slopeB.hasSlope && (Math.abs(slopeA.slope - slopeB.slope) < .00001)) {
 
             //lines are parallel
             return true;
