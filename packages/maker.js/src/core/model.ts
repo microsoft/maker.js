@@ -375,6 +375,74 @@ namespace MakerJs.model {
     }
 
     /**
+     * @private
+     */
+    function addDistortedPath(parentModel: IModel, pathToDistort: IPath, pathId: string, layer: string, scaleX: number, scaleY: number, bezierAccuracy?: number) {
+        const distortedPath = path.distort(pathToDistort, scaleX, scaleY);
+        layer = layer || pathToDistort.layer;
+        if (layer) {
+            distortedPath.layer = layer;
+        }
+        if (isPath(distortedPath)) {
+            if (distortedPath.type === pathType.BezierSeed) {
+                const curve = new models.BezierCurve(distortedPath as IPathBezierSeed, bezierAccuracy);
+                addModel(parentModel, curve, pathId);
+            } else {
+                addPath(parentModel, distortedPath as IPath, pathId);
+            }
+        } else {
+            addModel(parentModel, distortedPath as IModel, pathId);
+        }
+    }
+
+    /**
+     * Create a distorted copy of a model - scale x and y individually.
+     * 
+     * @param modelToDistort The model to distort.
+     * @param scaleX The amount of x scaling.
+     * @param scaleY The amount of y scaling.
+     * @param scaleOrigin Optional boolean to scale the origin point. Typically false for the root model.
+     * @param bezierAccuracy Optional accuracy of Bezier curves.
+     * @returns New model (for cascading).
+     */
+    export function distort(modelToDistort: IModel, scaleX: number, scaleY: number, scaleOrigin = false, bezierAccuracy?: number) {
+        const distorted: IModel = {};
+        if (modelToDistort.layer) {
+            distorted.layer = modelToDistort.layer;
+        }
+
+        if (scaleOrigin && modelToDistort.origin) {
+            distorted.origin = point.distort(modelToDistort.origin, scaleX, scaleY);
+        }
+
+        if (modelToDistort.type === models.BezierCurve.typeName) {
+            const b = modelToDistort as models.BezierCurve;
+            const bezierPartsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true });
+            for (let layer in bezierPartsByLayer) {
+                let pathArray = bezierPartsByLayer[layer]
+                pathArray.forEach((p, i) => {
+                    addDistortedPath(distorted, p, i.toString(), layer, scaleX, scaleY, bezierAccuracy);
+                })
+            }
+        } else if (modelToDistort.paths) {
+            for (let pathId in modelToDistort.paths) {
+                let pathToDistort = modelToDistort.paths[pathId];
+                addDistortedPath(distorted, pathToDistort, pathId, null, scaleX, scaleY, bezierAccuracy);
+            }
+        }
+
+        if (modelToDistort.models) {
+            for (let childId in modelToDistort.models) {
+                let childModel = modelToDistort.models[childId];
+                let distortedChild = distort(childModel, scaleX, scaleY, true, bezierAccuracy);
+                addModel(distorted, distortedChild, childId);
+            }
+        }
+
+        return distorted;
+    }
+
+    /**
      * Convert a model to match a different unit system.
      * 
      * @param modeltoConvert The model to convert.
