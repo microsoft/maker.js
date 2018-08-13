@@ -22,7 +22,7 @@ namespace MakerJs.path {
      * @private
      */
     function copyLayer(pathA: IPath, pathB: IPath) {
-        if (pathA && pathB && ('layer' in pathA)) {
+        if (pathA && pathB && typeof pathA.layer !== 'undefined') {
             pathB.layer = pathA.layer;
         }
 
@@ -389,7 +389,13 @@ namespace MakerJs.path {
 
         var fn = distortMap[pathToDistort.type];
         if (fn) {
-            return fn(pathToDistort, scaleX, scaleY);
+            const distorted = fn(pathToDistort, scaleX, scaleY);
+
+            if (typeof pathToDistort.layer !== 'undefined') {
+                distorted.layer = pathToDistort.layer;
+            }
+
+            return distorted;
         }
 
         return null;
