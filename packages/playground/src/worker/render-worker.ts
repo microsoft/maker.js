@@ -29,7 +29,13 @@ module.require = (id: string): any => {
 
 function load(id, src) {
     importScripts(src);
-    module[id] = module.exports;
+    let loadedModule = module.exports;
+    if (!loadedModule) {
+        //try to get browserified module
+        loadedModule = require(id);
+    }
+    module[id] = loadedModule;
+    return loadedModule;
 }
 
 //add the makerjs module
@@ -133,9 +139,18 @@ onmessage = (ev: MessageEvent) => {
 
         self.require = module.require;
 
+        const loadErrors: string[] = [];
         request.orderedDependencies.forEach(function (id) {
-            load(id, request.dependencyUrls[id]);
+            try {
+                const loadedModule = load(id, request.dependencyUrls[id]);
+            } catch (e) {
+                loadErrors.push(id);
+            }
         });
+
+        if (loadErrors.length) {
+            postError(request.requestId, `errors loading these modules: ${loadErrors.join()}`);
+        }
     }
 
     if (requireError) {
@@ -180,7 +195,7 @@ onmessage = (ev: MessageEvent) => {
                 postMessage(response);
 
             } catch (e) {
-                postError(request.requestId, 'runtime error');
+                postError(request.requestId, 'runtime error: ' + (e as Error).stack);
             }
         };
 
