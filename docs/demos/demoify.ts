@@ -27,6 +27,7 @@ marked.setOptions({
 
 var thumbSize = { width: 140, height: 100 };
 var allRequires = { 'makerjs': 1 };
+var needToBrowserify: { parent: string, child: string }[] = [];
 
 function thumbnail(key: string, kit: Kit, baseUrl: string) {
     var parameters = kit.params || makerjs.kit.getParameterValues(kit.ctor);
@@ -257,6 +258,7 @@ function copyRequire(root, key, copyTo) {
         dirjson = fs.readFileSync(dirpath + 'package.json', 'UTF8');
     }
     catch (e) {
+        return false;
     }
 
     if (!dirjson) return;
@@ -279,11 +281,14 @@ function copyRequire(root, key, copyTo) {
         if (!(irequire in allRequires)) {
             console.log('requiring ' + irequire);
 
-            copyRequire(dirpath + 'node_modules', irequire, '');
+            if (!copyRequire(dirpath + 'node_modules', irequire, '')) {
+                needToBrowserify.push({ parent: key, child: irequire });
+            }
         } else {
             console.log('ignoring ' + irequire);
         }
     }
+    return true;
 }
 
 function copyDependencies() {
@@ -301,3 +306,9 @@ demoIndexPage();
 homePage();
 
 copyDependencies();
+
+if (needToBrowserify.length) {
+    console.log('\n need to browserify the following:\n');
+
+    needToBrowserify.forEach(x => console.log(JSON.stringify(x)));
+};
