@@ -3315,6 +3315,10 @@
             {
               "type": "reference",
               "name": "IExportOptions"
+            },
+            {
+              "type": "reference",
+              "name": "IPointMatchOptions"
             }
           ],
           "Property": {
@@ -3393,6 +3397,30 @@
                     }
                   ]
                 }
+              }
+            },
+            "pointMatchingDistance": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Max distance to consider two points as the same."
+              },
+              "sources": [
+                {
+                  "fileName": "core/maker.ts",
+                  "line": 532,
+                  "character": 29
+                }
+              ],
+              "type": {
+                "type": "intrinsic",
+                "name": "number"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "IPointMatchOptions.pointMatchingDistance"
               }
             },
             "units": {
@@ -17258,6 +17286,10 @@
         }
       ],
       "extendedBy": [
+        {
+          "type": "reference",
+          "name": "IDXFRenderOptions"
+        },
         {
           "type": "reference",
           "name": "ICombineOptions"

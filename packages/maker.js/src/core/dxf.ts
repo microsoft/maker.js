@@ -261,7 +261,7 @@ namespace MakerJs.exporter {
                     });
                     walkedPaths.push.apply(walkedPaths, loose);
                 }
-                model.findChains(modelToExport, cb, { byLayers: true });
+                model.findChains(modelToExport, cb, { byLayers: true, pointMatchingDistance: opts.pointMatchingDistance });
             } else {
                 var walkOptions: IWalkOptions = {
                     onPath: (walkedPath: IWalkPath) => {
@@ -315,7 +315,7 @@ namespace MakerJs.exporter {
     /**
      * DXF rendering options.
      */
-    export interface IDXFRenderOptions extends IExportOptions {
+    export interface IDXFRenderOptions extends IExportOptions, IPointMatchOptions {
 
         /**
          * DXF options per layer.
