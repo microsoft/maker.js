@@ -790,9 +790,16 @@ var MakerJsPlayground;
             }
             else if (div.select) {
                 var select = div.select;
+                var valueAsString = (typeof value === 'string') ? value : JSON.stringify(value);
                 for (var i = 0; i < select.options.length; i++) {
-                    var optionValue = select.options[i].getAttribute('value');
-                    if (optionValue == value) {
+                    var optionValue = void 0;
+                    if (select.options[i].attributes.length) {
+                        optionValue = select.options[i].getAttribute('value');
+                    }
+                    else {
+                        optionValue = select.options[i].innerText;
+                    }
+                    if (optionValue === valueAsString) {
                         select.selectedIndex = i;
                         break;
                     }
