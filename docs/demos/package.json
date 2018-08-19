@@ -31,9 +31,11 @@
     "makerjs-spokes-flared": "^1.0.2",
     "makerjs-spokes-straight": "^1.1.1",
     "makerjs-ventgrid": "^1.1.1",
-    "makerjs-ventgridcircle": "^1.1.3"
+    "makerjs-ventgridcircle": "^1.1.3",
+    "makerjs-wrap-text": "https://github.com/danmarshall/makerjs-wrap-text.git"
   },
   "ordered_demo_list": [
+    "makerjs-wrap-text",
     "dogbone-polygon",
     "kerf-compensation",
     "exoPanel",

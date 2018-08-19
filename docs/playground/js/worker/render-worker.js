@@ -17,7 +17,13 @@ module.require = function (id) {
 };
 function load(id, src) {
     importScripts(src);
-    module[id] = module.exports;
+    var loadedModule = module.exports;
+    if (!loadedModule) {
+        //try to get browserified module
+        loadedModule = require(id);
+    }
+    module[id] = loadedModule;
+    return loadedModule;
 }
 //add the makerjs module
 importScripts('../../../fonts/fonts.js', '../fontloader.js', '../../../target/js/browser.maker.js', '../../../external/bezier-js/bezier.js', '../../../external/opentype/opentype.js');
@@ -89,9 +95,18 @@ onmessage = function (ev) {
     var request = ev.data;
     if (request.orderedDependencies) {
         self.require = module.require;
+        var loadErrors_1 = [];
         request.orderedDependencies.forEach(function (id) {
-            load(id, request.dependencyUrls[id]);
+            try {
+                var loadedModule = load(id, request.dependencyUrls[id]);
+            }
+            catch (e) {
+                loadErrors_1.push(id);
+            }
         });
+        if (loadErrors_1.length) {
+            postError(request.requestId, "errors loading these modules: " + loadErrors_1.join());
+        }
     }
     if (requireError) {
         postError(request.requestId, requireError);
@@ -127,7 +142,7 @@ onmessage = function (ev) {
                 postMessage(response);
             }
             catch (e) {
-                postError(request.requestId, 'runtime error');
+                postError(request.requestId, 'runtime error: ' + e.stack);
             }
         };
         fontLoader.failureCb = function (id) {

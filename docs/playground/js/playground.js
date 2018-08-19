@@ -680,7 +680,7 @@ var MakerJsPlayground;
             idToUrlMap[orderedDependencies[i]] = '../../' + filenameFromRequireId(orderedDependencies[i], true);
         }
         var options = {
-            fontDir: '../' + MakerJsPlayground.fontDir,
+            fontDir: '../../' + MakerJsPlayground.fontDir,
             requestId: 0,
             javaScript: javaScript,
             orderedDependencies: orderedDependencies,
@@ -707,7 +707,7 @@ var MakerJsPlayground;
         };
         renderInWorker.requestId = new Date().valueOf();
         var options = {
-            fontDir: '../' + MakerJsPlayground.fontDir,
+            fontDir: '../../' + MakerJsPlayground.fontDir,
             requestId: renderInWorker.requestId,
             paramValues: processed.paramValues
         };

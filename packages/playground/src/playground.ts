@@ -888,7 +888,7 @@
         }
 
         var options: MakerJsPlaygroundRender.IRenderRequest = {
-            fontDir: '../' + fontDir,
+            fontDir: '../../' + fontDir,
             requestId: 0,
             javaScript: javaScript,
             orderedDependencies: orderedDependencies,
@@ -920,7 +920,7 @@
         renderInWorker.requestId = new Date().valueOf();
 
         var options: MakerJsPlaygroundRender.IRenderRequest = {
-            fontDir: '../' + fontDir,
+            fontDir: '../../' + fontDir,
             requestId: renderInWorker.requestId,
             paramValues: processed.paramValues
         }
