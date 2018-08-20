@@ -1021,10 +1021,16 @@
                 div.text.value = value;
 
             } else if (div.select) {
-                var select = div.select;
-                for (var i = 0; i < select.options.length; i++) {
-                    var optionValue = select.options[i].getAttribute('value');
-                    if (optionValue == value) {
+                let select = div.select;
+                let valueAsString = (typeof value === 'string') ? value : JSON.stringify(value);
+                for (let i = 0; i < select.options.length; i++) {
+                    let optionValue: string;
+                    if (select.options[i].attributes.length) {
+                        optionValue = select.options[i].getAttribute('value');
+                    } else {
+                        optionValue = select.options[i].innerText;
+                    }
+                    if (optionValue === valueAsString) {
                         select.selectedIndex = i;
                         break;
                     }
