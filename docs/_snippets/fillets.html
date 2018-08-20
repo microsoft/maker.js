@@ -3,13 +3,14 @@ title: Fillets
 ---
 
 <p>
-    Fillets are round corners where two paths meet. Rounding a corner can add strength to your part, as well as make it faster to print. Maker.js provides two types of fillets:
-    <a href="/docs/api/modules/makerjs.path.html#fillet">traditional fillets</a> and <a href="/docs/api/modules/makerjs.path.html#dogbone">dogbone fillets</a>.
+    Fillets are round corners where two paths meet. Maker.js provides two types of fillets:
+    traditional fillets and <a href="#Dogbone%20Fillets">dogbone fillets</a>.
 </p>
 
 <h4>Traditional fillet</h4>
 
 <p>
+    Rounding a corner can add strength to your part, as well as make it faster to print.
     Using <a href="/docs/api/modules/makerjs.path.html#fillet">makerjs.path.fillet</a> you can round a corner at the junction between two lines, two arcs, or a line and an arc.
     This function will clip the two paths that you pass it, and will return a new arc path which fits between the clipped ends. The paths must meet at one point,
     this is how it determines which ends of the paths to clip. You also provide a radius of the fillet. If the fillet cannot be created this function will return null.
@@ -85,49 +86,6 @@ var model = {
 var arc2 = makerjs.path.fillet(model.paths.arc, model.paths.line, 2);
 
 //add the fillet to the model
-model.paths.arc2 = arc2;
-
-var svg = makerjs.exporter.toSVG(model);
-
-document.write(svg);
-{% endhighlight %}
-
-<script>
-    LiveDoc.evalLastCode();
-</script>
-
-<hr/>
-
-<a name="Dogbone"></a>
-<h4>Dogbone fillet</h4>
-
-<p>
-    Many CNC tools are not able to cut a sharp interior corner. The way to clear the apex of an interior corner is by encompassing the corner with a circular cut known as a dogbone fillet.
-    Use <a href="/docs/api/modules/makerjs.path.html#dogbone">makerjs.path.dogbone</a> to round a corner at the junction between two lines.
-    This function will only work for two lines which must meet at one point. It will clip the two lines that you pass it, and will return a new arc path which clears the corner where the lines meet.
-    It will return null if a dogbone fillet cannot be created at the radius you specify.
-</p>
-
-{% highlight javascript %}
-//dogbone fillet between lines.
-
-var makerjs = require('makerjs');
-
-var model = {
-  paths: {
-    line1: new makerjs.paths.Line([0, 0], [0, 5]),
-    line2: new makerjs.paths.Line([0, 5], [10, 5]),
-    line3: new makerjs.paths.Line([10, 5], [10, 0])
-  }
-};
-
-//create dogbone fillets
-var arc1 = makerjs.path.dogbone(model.paths.line1, model.paths.line2, 1);
-
-var arc2 = makerjs.path.dogbone(model.paths.line2, model.paths.line3, 1);
-
-//add the fillets to the model
-model.paths.arc1 = arc1;
 model.paths.arc2 = arc2;
 
 var svg = makerjs.exporter.toSVG(model);
