@@ -15,6 +15,9 @@ title: Api - IDXFRenderOptions Interface
 	<ul class="tsd-hierarchy">
 		<li>
 			<a href="makerjs.exporter.iexportoptions.html" class="tsd-signature-type">IExportOptions</a>
+		</li>
+		<li>
+			<a href="makerjs.ipointmatchoptions.html" class="tsd-signature-type">IPointMatchOptions</a>
 			<ul class="tsd-hierarchy">
 				<li>
 					<span class="target">IDXFRenderOptions</span>
@@ -32,6 +35,7 @@ title: Api - IDXFRenderOptions Interface
 				<ul class="tsd-index-list">
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.idxfrenderoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.idxfrenderoptions.html#layeroptions" class="tsd-kind-icon">layer<wbr>Options</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.idxfrenderoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.idxfrenderoptions.html#units" class="tsd-kind-icon">units</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.idxfrenderoptions.html#usepolyline" class="tsd-kind-icon">usePOLYLINE</a></li>
 				</ul>
@@ -48,7 +52,7 @@ title: Api - IDXFRenderOptions Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#accuracy">accuracy</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/core/exporter.ts#L11">core/exporter.ts:11</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6dcb7dfc/packages/maker.js/src/core/exporter.ts#L11">core/exporter.ts:11</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -63,7 +67,7 @@ title: Api - IDXFRenderOptions Interface
 		<div class="tsd-signature tsd-kind-icon">layer<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/core/dxf.ts#L323">core/dxf.ts:323</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6dcb7dfc/packages/maker.js/src/core/dxf.ts#L323">core/dxf.ts:323</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -81,13 +85,29 @@ title: Api - IDXFRenderOptions Interface
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+		<a name="pointmatchingdistance" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
+		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<aside class="tsd-sources">
+			<p>Inherited from <a href="makerjs.ipointmatchoptions.html">IPointMatchOptions</a>.<a href="makerjs.ipointmatchoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6dcb7dfc/packages/maker.js/src/core/maker.ts#L532">core/maker.ts:532</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Max distance to consider two points as the same.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 		<a name="units" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
 		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.exporter.iexportoptions.html">IExportOptions</a>.<a href="makerjs.exporter.iexportoptions.html#units">units</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/core/exporter.ts#L16">core/exporter.ts:16</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6dcb7dfc/packages/maker.js/src/core/exporter.ts#L16">core/exporter.ts:16</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -102,7 +122,7 @@ title: Api - IDXFRenderOptions Interface
 		<div class="tsd-signature tsd-kind-icon">usePOLYLINE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/4fe4791b/packages/maker.js/src/core/dxf.ts#L328">core/dxf.ts:328</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/6dcb7dfc/packages/maker.js/src/core/dxf.ts#L328">core/dxf.ts:328</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
