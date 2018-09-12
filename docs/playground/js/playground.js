@@ -114,11 +114,11 @@ var MakerJsPlayground;
                             "value": attrs.value,
                             "onfocus": 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.activateParam(this.parentElement); }',
                             "onblur": 'if (MakerJsPlayground.isSmallDevice()) { MakerJsPlayground.deActivateParam(this.parentElement, 0); }',
-                            "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.value, .001))'
+                            "onchange": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.valueAsNumber, .001))'
                         };
                         var formAttrs = {
                             "action": 'javascript:void(0);',
-                            "onsubmit": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.elements[0].value, .001))'
+                            "onsubmit": 'MakerJsPlayground.setParam(' + i + ', makerjs.round(this.elements[0].valueAsNumber, .001))'
                         };
                         numberBox = new makerjs.exporter.XmlTag('form', formAttrs);
                         numberBox.innerText = new makerjs.exporter.XmlTag('input', numberBoxAttrs).toString();
