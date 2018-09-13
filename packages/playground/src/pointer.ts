@@ -44,6 +44,10 @@ module Pointer {
     }
 
     function distanceBetweenCurrent2Points(all: IPointer[]) {
+        if (all[0].current == null || all[1].current == null)
+        {
+            return null;
+        }    
         return makerjs.measure.pointDistance(all[0].current.fromCanvas, all[1].current.fromCanvas);
     }
 
