@@ -165,6 +165,10 @@ namespace MakerJs.model {
                 }
             }
 
+            if (m.nativeText) {
+                path.moveRelative(m.nativeText.anchor, newOrigin);
+            }
+
             m.origin = point.zero();
         }
 
@@ -248,6 +252,11 @@ namespace MakerJs.model {
                 if (!childModelMirrored) continue;
                 newModel.models[id] = childModelMirrored;
             }
+        }
+
+        if (modelToMirror.nativeText) {
+            newModel.nativeText = cloneObject(modelToMirror.nativeText);
+            newModel.nativeText.anchor = path.mirror(modelToMirror.nativeText.anchor, mirrorX, mirrorY) as IPathLine;
         }
 
         return newModel;
@@ -338,6 +347,10 @@ namespace MakerJs.model {
             }
         }
 
+        if (modelToRotate.nativeText) {
+            path.rotate(modelToRotate.nativeText.anchor, angleInDegrees, offsetOrigin);
+        }
+
         return modelToRotate;
     }
 
@@ -369,6 +382,10 @@ namespace MakerJs.model {
             for (var id in modelToScale.models) {
                 scale(modelToScale.models[id], scaleValue, true);
             }
+        }
+
+        if (modelToScale.nativeText) {
+            path.scale(modelToScale.nativeText.anchor, scaleValue);
         }
 
         return modelToScale;
@@ -437,6 +454,11 @@ namespace MakerJs.model {
                 let distortedChild = distort(childModel, scaleX, scaleY, true, bezierAccuracy);
                 addModel(distorted, distortedChild, childId);
             }
+        }
+
+        if (modelToDistort.nativeText) {
+            distorted.nativeText = cloneObject(modelToDistort.nativeText);
+            distorted.nativeText.anchor = path.distort(modelToDistort.nativeText.anchor, scaleX, scaleY) as IPathLine;
         }
 
         return distorted;

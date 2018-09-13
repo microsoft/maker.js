@@ -139,6 +139,24 @@ namespace MakerJs {
         bezierData: IBezierRange;
     }
 
+    //native text
+
+    /**
+     * Text annotation, diplayable natively to the output format.
+     */
+    export interface INativeText {
+
+        /**
+         * Text annotation.
+         */
+        text: string;
+
+        /**
+         * Invisible line to which the text is aligned. The text will be centered on the center point of this line.
+         */
+        anchor: IPathLine;
+    }
+
     //models
 
     /**
@@ -156,7 +174,7 @@ namespace MakerJs {
     }
 
     /**
-     * A model is a composite object which may contain an array of paths, or an array of models recursively.
+     * A model is a composite object which may contain a map of paths, or a map of models recursively.
      * 
      * Example:
      * ```
@@ -181,12 +199,12 @@ namespace MakerJs {
         "type"?: string;
 
         /**
-         * Optional array of path objects in this model.
+         * Optional map of path objects in this model.
          */
         paths?: IPathMap;
 
         /**
-         * Optional array of models within this model.
+         * Optional map of models within this model.
          */
         models?: IModelMap;
 
@@ -204,6 +222,11 @@ namespace MakerJs {
          * Optional layer of this model.
          */
         layer?: string;
+
+        /**
+         * Optional Native Text object.
+         */
+        nativeText?: INativeText;
 
         /**
          * Optional exporter options for this model.
