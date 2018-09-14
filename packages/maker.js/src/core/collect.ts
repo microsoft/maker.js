@@ -101,7 +101,12 @@
     /**
      * @private
      */
-    const kdbush = require('kdbush') as kdbushLib;
+    const _kdbush = require('kdbush');
+
+    /**
+     * @private
+     */
+    const kdbush = (_kdbush.default || _kdbush) as kdbushLib;
 
     /**
      * The element type stored in the index of a PointGraph.
