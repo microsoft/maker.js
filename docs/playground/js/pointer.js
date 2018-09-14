@@ -3,6 +3,9 @@ var Pointer;
     Pointer.wheelZoomDelta = 0.1;
     Pointer.clickDistance = 2;
     function distanceBetweenCurrent2Points(all) {
+        if (!all[0].current || !all[1].current) {
+            return null;
+        }
         return makerjs.measure.pointDistance(all[0].current.fromCanvas, all[1].current.fromCanvas);
     }
     function average(all, fromCanvas) {
