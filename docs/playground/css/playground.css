@@ -251,6 +251,12 @@ svg#drawing .locked {
     display: none;
 }
 
+#view svg#drawing g#nativeText text {
+    fill: yellow;
+    display: unset;
+    font-family: monospace;
+}
+
 .collapse-flow #view svg#drawing .flow {
     display: none;
 }

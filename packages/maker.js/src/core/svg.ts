@@ -64,7 +64,7 @@ namespace MakerJs.exporter {
     function correctArc(arc: IPathArc) {
         const arcSpan = angle.ofArcSpan(arc);
         arc.startAngle = angle.noRevolutions(arc.startAngle);
-        arc.endAngle = arc.startAngle + arcSpan;        
+        arc.endAngle = arc.startAngle + arcSpan;
     }
 
     /**
@@ -611,7 +611,7 @@ namespace MakerJs.exporter {
             map[pathType.Arc] = function (id: string, arc: IPathArc, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
                 correctArc(arc);
                 var arcPoints = point.fromArc(arc);
-        
+
                 if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
                     circleInPaths(id, arc.origin, arc.radius, layer, route, annotate, flow);
                 } else {
@@ -701,6 +701,37 @@ namespace MakerJs.exporter {
                 layerGroup.innerTextEscaped = true;
                 append(layerGroup.toString());
             }
+        }
+
+        const nativeTexts: string[] = [];
+
+        function tryAddNativeText(m: IModel, origin: IPoint) {
+            if (!m.nativeText) return;
+            const offset = point.add(fixPoint(origin), opts.origin);
+            const anchor = fixPath(m.nativeText.anchor, offset) as IPathLine;
+            const center = point.rounded(point.middle(anchor), opts.accuracy);
+            const nativeTextTag = new XmlTag('text', {
+                "alignment-baseline": "middle",
+                "text-anchor": "middle",
+                "transform": `rotate(${angle.ofLineInDegrees(anchor)},${center[0]},${center[1]})`,
+                "x": center[0],
+                "y": center[1]
+            });
+            nativeTextTag.innerText = m.nativeText.text;
+            const nativeTextTagString = nativeTextTag.toString();
+            nativeTexts.push(nativeTextTagString);
+        }
+
+        tryAddNativeText(modelToExport, modelToExport.origin);
+        model.walk(modelToExport, {
+            afterChildWalk: wm => tryAddNativeText(wm.childModel, wm.offset)
+        });
+
+        if (nativeTexts.length) {
+            const nativeTextGroup = new XmlTag('g', { "id": "nativeText" });
+            nativeTextGroup.innerText = nativeTexts.join('');
+            nativeTextGroup.innerTextEscaped = true;
+            append(nativeTextGroup.toString());
         }
 
         append(svgGroup.getClosingTag());
