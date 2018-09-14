@@ -7060,7 +7060,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 543,
+              "line": 546,
               "character": 27
             }
           ]
@@ -7091,7 +7091,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 740,
+              "line": 743,
               "character": 35
             }
           ]
@@ -7459,7 +7459,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 198,
+              "line": 201,
               "character": 36
             }
           ]
@@ -7502,7 +7502,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 265,
+              "line": 268,
               "character": 37
             }
           ]
@@ -7539,7 +7539,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 287,
+              "line": 290,
               "character": 44
             }
           ]
@@ -7576,7 +7576,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 217,
+              "line": 220,
               "character": 41
             }
           ]
@@ -7620,7 +7620,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 859,
+              "line": 862,
               "character": 38
             }
           ]
@@ -7649,7 +7649,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 298,
+              "line": 301,
               "character": 29
             }
           ]
@@ -7688,7 +7688,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 487,
+              "line": 490,
               "character": 32
             }
           ]
@@ -7719,7 +7719,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 458,
+              "line": 461,
               "character": 35
             }
           ]
@@ -7757,7 +7757,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 391,
+              "line": 394,
               "character": 31
             }
           ]
@@ -7788,7 +7788,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 440,
+              "line": 443,
               "character": 30
             }
           ]
@@ -7825,7 +7825,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 327,
+              "line": 330,
               "character": 33
             }
           ]
@@ -7858,7 +7858,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 561,
+              "line": 564,
               "character": 22
             }
           ],
@@ -7894,7 +7894,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 582,
+                  "line": 585,
                   "character": 39
                 }
               ],
@@ -7914,7 +7914,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 571,
+                  "line": 574,
                   "character": 23
                 }
               ],
@@ -7934,7 +7934,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 566,
+                  "line": 569,
                   "character": 29
                 }
               ],
@@ -7955,7 +7955,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 576,
+                  "line": 579,
                   "character": 22
                 }
               ],
@@ -7981,29 +7981,12 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 585,
+                  "line": 588,
                   "character": 28
                 }
               ]
             }
           }
-        }
-      },
-      "Variable": {
-        "graham_scan": {
-          "flags": {},
-          "sources": [
-            {
-              "fileName": "core/measure.ts",
-              "line": 182,
-              "character": 19
-            }
-          ],
-          "type": {
-            "type": "reference",
-            "name": "ConvexHullGrahamScan"
-          },
-          "defaultValue": " require('graham_scan') as typeof ConvexHullGrahamScan"
         }
       }
     },
@@ -14974,7 +14957,7 @@
       "sources": [
         {
           "fileName": "core/collect.ts",
-          "line": 109,
+          "line": 114,
           "character": 44
         }
       ],
@@ -14990,7 +14973,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 134,
+              "line": 139,
               "character": 12
             }
           ],
@@ -15010,7 +14993,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 124,
+              "line": 129,
               "character": 14
             }
           ],
@@ -15032,7 +15015,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 114,
+              "line": 119,
               "character": 13
             }
           ],
@@ -15051,7 +15034,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 119,
+              "line": 124,
               "character": 15
             }
           ],
@@ -15070,7 +15053,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 129,
+              "line": 134,
               "character": 16
             }
           ],
@@ -19793,7 +19776,7 @@
       "sources": [
         {
           "fileName": "core/collect.ts",
-          "line": 140,
+          "line": 145,
           "character": 27
         }
       ],
@@ -19818,7 +19801,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 150,
+              "line": 155,
               "character": 20
             }
           ],
@@ -19876,7 +19859,7 @@
                     "sources": [
                       {
                         "fileName": "core/collect.ts",
-                        "line": 150,
+                        "line": 155,
                         "character": 36
                       }
                     ]
@@ -19886,7 +19869,7 @@
               "sources": [
                 {
                   "fileName": "core/collect.ts",
-                  "line": 150,
+                  "line": 155,
                   "character": 21
                 }
               ]
@@ -19904,7 +19887,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 155,
+              "line": 160,
               "character": 20
             }
           ],
@@ -19939,7 +19922,7 @@
               "sources": [
                 {
                   "fileName": "core/collect.ts",
-                  "line": 155,
+                  "line": 160,
                   "character": 21
                 }
               ]
@@ -19957,7 +19940,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 145,
+              "line": 150,
               "character": 28
             }
           ],
@@ -19977,7 +19960,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 160,
+              "line": 165,
               "character": 21
             }
           ],
@@ -20012,7 +19995,7 @@
               "sources": [
                 {
                   "fileName": "core/collect.ts",
-                  "line": 160,
+                  "line": 165,
                   "character": 22
                 }
               ]
@@ -20030,7 +20013,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 165,
+              "line": 170,
               "character": 21
             }
           ],
@@ -20069,7 +20052,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 306,
+              "line": 311,
               "character": 27
             }
           ]
@@ -20100,7 +20083,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 339,
+              "line": 344,
               "character": 32
             }
           ]
@@ -20131,7 +20114,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 321,
+              "line": 326,
               "character": 27
             }
           ]
@@ -20163,7 +20146,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 192,
+              "line": 197,
               "character": 26
             }
           ]
@@ -20198,7 +20181,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 202,
+              "line": 207,
               "character": 35
             }
           ]
@@ -20229,7 +20212,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 261,
+              "line": 266,
               "character": 39
             }
           ]
@@ -20260,7 +20243,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 234,
+              "line": 239,
               "character": 26
             }
           ]
@@ -20283,7 +20266,7 @@
           "sources": [
             {
               "fileName": "core/collect.ts",
-              "line": 179,
+              "line": 184,
               "character": 20
             }
           ]
