@@ -152,7 +152,10 @@ namespace MakerJs {
         text: string;
 
         /**
-         * Invisible line to which the text is aligned. The text will be centered on the center point of this line.
+         * Invisible line to which the text is aligned. 
+         * The text will be horizontally and vertically centered on the center point of this line.
+         * The text may be longer or shorter than the line, it is used only for position and angle. 
+         * The anchor line's endpoints may be omitted, in which the case the text will always remain non-angled, even if the model is rotated.
          */
         anchor: IPathLine;
     }
