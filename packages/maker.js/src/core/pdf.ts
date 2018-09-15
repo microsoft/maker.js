@@ -12,6 +12,8 @@
 
         //fixup options
         var opts: IPDFRenderOptions = {
+            fontName: 'Courier',
+            fontSize: 9,
             origin: [0, 0],
             stroke: "#000",
         };
@@ -82,7 +84,7 @@
             { byLayers: false }
         );
 
-        doc.font('Courier').fontSize(9);
+        doc.font(opts.fontName).fontSize(opts.fontSize);
 
         model.getAllNativeTextOffsets(scaledModel).forEach(nativeTextOffset => {
 
@@ -116,6 +118,16 @@
      * PDF rendering options.
      */
     export interface IPDFRenderOptions extends IExportOptions {
+
+        /**
+         * Font name, see list at https://github.com/foliojs/pdfkit/blob/master/docs/text.coffee.md#fonts
+         */
+        fontName?: string;
+
+        /**
+         * Font size.
+         */
+        fontSize?: number;
 
         /**
          * Rendered reference origin. 
