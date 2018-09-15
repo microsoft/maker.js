@@ -9,6 +9,12 @@ namespace MakerJs.model {
      * @returns The original model (for cascading).
      */
     export function addNativeText(modelContext: IModel, text: string, leftAnchorPoint?: IPoint, rightAnchorPoint?: IPoint) {
+        if (!leftAnchorPoint) {
+            leftAnchorPoint = point.zero();
+        }
+        if (!rightAnchorPoint) {
+            rightAnchorPoint = point.clone(leftAnchorPoint);
+        }
         modelContext.nativeText = { text, anchor: new paths.Line(leftAnchorPoint, rightAnchorPoint) };
         return modelContext;
     }
