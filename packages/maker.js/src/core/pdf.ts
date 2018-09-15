@@ -81,6 +81,16 @@
             },
             { byLayers: false }
         );
+
+        model.getAllNativeTextOffsets(scaledModel).forEach(nativeTextOffset => {
+            const anchor = path.moveRelative(nativeTextOffset.nativeText.anchor, offset) as IPathLine;
+            const a = angle.ofLineInDegrees(anchor);
+            const center = point.middle(anchor);
+            const x = center[0], y = center[1];
+            doc.rotate(a, { origin: [x, y] });
+            doc.text(nativeTextOffset.nativeText.text, x, y);
+            doc.rotate(-a, { origin: [x, y] });
+        });
     }
 
     /**

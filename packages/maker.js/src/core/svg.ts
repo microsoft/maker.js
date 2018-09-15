@@ -703,12 +703,9 @@ namespace MakerJs.exporter {
             }
         }
 
-        const nativeTexts: string[] = [];
-
-        function tryAddNativeText(m: IModel, origin: IPoint) {
-            if (!m.nativeText) return;
-            const offset = point.add(fixPoint(origin), opts.origin);
-            const anchor = fixPath(m.nativeText.anchor, offset) as IPathLine;
+        const nativeTextTags = model.getAllNativeTextOffsets(modelToExport).map(nativeTextOffset => {
+            const offset = point.add(fixPoint(nativeTextOffset.offset), opts.origin);
+            const anchor = fixPath(nativeTextOffset.nativeText.anchor, offset) as IPathLine;
             const center = point.rounded(point.middle(anchor), opts.accuracy);
             const nativeTextTag = new XmlTag('text', {
                 "alignment-baseline": "middle",
@@ -717,19 +714,14 @@ namespace MakerJs.exporter {
                 "x": center[0],
                 "y": center[1]
             });
-            nativeTextTag.innerText = m.nativeText.text;
+            nativeTextTag.innerText = nativeTextOffset.nativeText.text;
             const nativeTextTagString = nativeTextTag.toString();
-            nativeTexts.push(nativeTextTagString);
-        }
-
-        tryAddNativeText(modelToExport, modelToExport.origin);
-        model.walk(modelToExport, {
-            afterChildWalk: wm => tryAddNativeText(wm.childModel, wm.offset)
+            return nativeTextTagString;
         });
 
-        if (nativeTexts.length) {
+        if (nativeTextTags.length) {
             const nativeTextGroup = new XmlTag('g', { "id": "nativeText" });
-            nativeTextGroup.innerText = nativeTexts.join('');
+            nativeTextGroup.innerText = nativeTextTags.join('');
             nativeTextGroup.innerTextEscaped = true;
             append(nativeTextGroup.toString());
         }

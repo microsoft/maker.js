@@ -87,6 +87,29 @@ namespace MakerJs.model {
     }
 
     /**
+     * Gets all NativeText objects (and their offset) in this model and its children.
+     * @param modelContext The model to search for Native Text objects.
+     * @returns Array of Native Text Offset objects.
+     */
+    export function getAllNativeTextOffsets(modelContext: IModel) {
+        const allNativeText: INativeTextOffset[] = [];
+
+        function tryAddNativeText(m: IModel, offset: IPoint) {
+            const nativeText = m.nativeText;
+            if (nativeText) {
+                allNativeText.push({ nativeText, offset });
+            }
+        }
+
+        tryAddNativeText(modelContext, modelContext.origin);
+        model.walk(modelContext, {
+            afterChildWalk: wm => tryAddNativeText(wm.childModel, wm.offset)
+        });
+
+        return allNativeText;
+    }
+
+    /**
      * @private
      */
     function getSimilarId(map: { [id: string]: any }, id: string): string {
