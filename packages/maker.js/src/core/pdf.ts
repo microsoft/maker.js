@@ -82,14 +82,33 @@
             { byLayers: false }
         );
 
+        doc.font('Courier').fontSize(9);
+
         model.getAllNativeTextOffsets(scaledModel).forEach(nativeTextOffset => {
-            const anchor = path.moveRelative(nativeTextOffset.nativeText.anchor, offset) as IPathLine;
-            const a = angle.ofLineInDegrees(anchor);
-            const center = point.middle(anchor);
-            const x = center[0], y = center[1];
-            doc.rotate(a, { origin: [x, y] });
-            doc.text(nativeTextOffset.nativeText.text, x, y);
-            doc.rotate(-a, { origin: [x, y] });
+
+            //move the anchor to its absolute position
+            path.moveRelative(nativeTextOffset.nativeText.anchor, nativeTextOffset.offset);
+
+            //measure the angle of the line, prior to mirroring
+            const a = angle.ofLineInDegrees(nativeTextOffset.nativeText.anchor);
+
+            //mirror into pdf y coords
+            const anchor = path.mirror(nativeTextOffset.nativeText.anchor, false, true) as IPathLine;
+
+            //move mirrored line by document offset
+            path.moveRelative(anchor, offset);
+
+            //measure center point of text
+            const text = nativeTextOffset.nativeText.text;
+            const textCenter: IPoint = [doc.widthOfString(text) / 2, doc.heightOfString(text) / 2];
+
+            //get center point on line
+            const center = point.middle(anchor) as number[];
+            const textOffset = point.subtract(center, textCenter);
+
+            doc.rotate(-a, { origin: center });
+            doc.text(text, textOffset[0], textOffset[1]);
+            doc.rotate(a, { origin: center });
         });
     }
 
