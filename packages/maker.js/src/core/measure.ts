@@ -179,7 +179,10 @@ namespace MakerJs.measure {
         return true;
     }
 
-    var graham_scan = require('graham_scan') as typeof ConvexHullGrahamScan;
+    /**
+     * @private
+     */
+    const graham_scan = require('graham_scan') as typeof ConvexHullGrahamScan;
 
     /**
      * @private

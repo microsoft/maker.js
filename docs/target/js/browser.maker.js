@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.11.1
+ *   version: 0.11.2
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -3220,7 +3220,11 @@ var MakerJs;
     /**
      * @private
      */
-    var kdbush = require('kdbush');
+    var _kdbush = require('kdbush');
+    /**
+     * @private
+     */
+    var kdbush = (_kdbush["default"] || _kdbush);
     /**
      * A graph of items which may be located on the same points.
      */
@@ -4233,6 +4237,9 @@ var MakerJs;
             return true;
         }
         measure.isBezierSeedLinear = isBezierSeedLinear;
+        /**
+         * @private
+         */
         var graham_scan = require('graham_scan');
         /**
          * @private
@@ -10022,6 +10029,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.11.1";
+MakerJs.version = "0.11.2";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
