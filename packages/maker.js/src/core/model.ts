@@ -1,6 +1,37 @@
 namespace MakerJs.model {
 
     /**
+     * Add a Native Text object to a model.
+     * @param modelContext The model to add to.
+     * @param text Text to add.
+     * @param leftAnchorPoint Optional Point on left side middle of text.
+     * @param rightAnchorPoint Optional Point on right side middle of text.
+     * @returns The original model (for cascading).
+     */
+    export function addNativeText(modelContext: IModel, text: string, leftAnchorPoint?: IPoint, rightAnchorPoint?: IPoint) {
+        modelContext.nativeText = new NativeText(text, leftAnchorPoint, rightAnchorPoint);
+        return modelContext;
+    }
+
+    /**
+     * Native Text which can be added to a model.
+     */
+    export class NativeText implements INativeText {
+
+        /**
+         * The anchor is an invisible line, to which the text is aligned. 
+         * The text may be longer or shorter than the line, it is used only for position and angle. 
+         * The text and the line will share the same horizontal and vertical center point.
+         * The anchor line's endpoints may be omitted, in which the case the text will always remain non-angled, even if the model is rotated.
+         */
+        public anchor: IPathLine;
+
+        constructor(public text: string, leftAnchorPoint: IPoint = point.zero(), rightAnchorPoint: IPoint = point.zero()) { 
+            this.anchor = new paths.Line(leftAnchorPoint, rightAnchorPoint);
+        }
+    }
+
+    /**
      * Add a path as a child. This is basically equivalent to:
      * ```
      * parentModel.paths[childPathId] = childPath;
