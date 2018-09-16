@@ -14,10 +14,10 @@ namespace MakerJs.measure {
      * 
      * @param baseMeasure The measurement to increase.
      * @param addMeasure The additional measurement.
-     * @param addOffset Optional offset point of the additional measurement.
+     * @param augmentBaseMeasure Optional flag to call measure.augment on the measurement.
      * @returns The increased original measurement (for cascading).
      */
-    export function increase(baseMeasure: IMeasure, addMeasure: IMeasure): IMeasure {
+    export function increase(baseMeasure: IMeasure, addMeasure: IMeasure, augmentBaseMeasure?: boolean): IMeasure {
 
         function getExtreme(basePoint: IPoint, newPoint: IPoint, fn: IMathMinMax) {
 
@@ -38,6 +38,10 @@ namespace MakerJs.measure {
         if (addMeasure) {
             getExtreme(baseMeasure.low, addMeasure.low, Math.min);
             getExtreme(baseMeasure.high, addMeasure.high, Math.max);
+        }
+
+        if (augmentBaseMeasure) {
+            augment(baseMeasure);
         }
 
         return baseMeasure;
