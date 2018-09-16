@@ -445,7 +445,13 @@ namespace MakerJs.exporter {
             modelToExport = { paths: { modelToMeasure: <IPath>itemToExport } };
         }
 
-        var size = measure.modelExtents(modelToExport);
+        const size = measure.modelExtents(modelToExport);
+
+        //increase size to fit native text
+        const allNativeTextOffsets = model.getAllNativeTextOffsets(modelToExport);
+        allNativeTextOffsets.forEach(nativeTextOffset => {
+            measure.increase(size, measure.pathExtents(nativeTextOffset.nativeText.anchor), true);
+        });
 
         //try to get the unit system from the itemToExport
         if (!opts.units) {
@@ -703,7 +709,7 @@ namespace MakerJs.exporter {
             }
         }
 
-        const nativeTextTags = model.getAllNativeTextOffsets(modelToExport).map(nativeTextOffset => {
+        const nativeTextTags = allNativeTextOffsets.map(nativeTextOffset => {
             const offset = point.add(fixPoint(nativeTextOffset.offset), opts.origin);
             const anchor = fixPath(nativeTextOffset.nativeText.anchor, offset) as IPathLine;
             const center = point.rounded(point.middle(anchor), opts.accuracy);
