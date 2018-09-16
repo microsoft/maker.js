@@ -749,7 +749,7 @@
         if (!makerjs.isPoint(processed.model.origin)) processed.model.origin = [0, 0];
         var newMeasurement = makerjs.measure.modelExtents(processed.model);
         makerjs.model.getAllNativeTextOffsets(processed.model).forEach(nativeTextOffset => {
-            makerjs.measure.increase(newMeasurement, makerjs.measure.pathExtents(nativeTextOffset.nativeText.anchor));
+            makerjs.measure.increase(newMeasurement, makerjs.measure.pathExtents(nativeTextOffset.nativeText.anchor), true);
         });
 
         processed.measurement = newMeasurement;
