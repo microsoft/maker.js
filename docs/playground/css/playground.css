@@ -251,7 +251,7 @@ svg#drawing .locked {
     display: none;
 }
 
-#view svg#drawing g#nativeText text {
+#view svg#drawing g#captions text {
     fill: yellow;
     display: unset;
     font-family: monospace;
