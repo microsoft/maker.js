@@ -296,10 +296,8 @@ namespace MakerJs.model {
         }
 
         if (modelToMirror.caption) {
-            newModel.caption = {
-                text: modelToMirror.caption.text,
-                anchor: path.mirror(modelToMirror.caption.anchor, mirrorX, mirrorY) as IPathLine
-            };
+            newModel.caption = cloneObject(modelToMirror.caption);
+            newModel.caption.anchor = path.mirror(modelToMirror.caption.anchor, mirrorX, mirrorY) as IPathLine;
         }
 
         return newModel;
