@@ -17,7 +17,9 @@ namespace MakerJs.exporter {
         //DXF format documentation:
         //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
 
-        var opts: IDXFRenderOptions = {};
+        var opts: IDXFRenderOptions = {
+            fontSize: 9
+        };
         var layerIds: string[] = [];
         var dxf: { [index: string]: (string | number)[] } = { "top": [], "bottom": [] };
         var dxfIndex = "top";
@@ -157,6 +159,26 @@ namespace MakerJs.exporter {
             append("SEQEND");
         }
 
+        function mtext(nativeTextOffset: INativeTextOffset) {
+            const center = point.middle(nativeTextOffset.nativeText.anchor);
+            append("0");
+            append("MTEXT");
+            append("10");
+            append(round(nativeTextOffset.offset[0] + center[0], opts.accuracy));
+            append("20");
+            append(round(nativeTextOffset.offset[1] + center[1], opts.accuracy));
+            append("40");
+            append(opts.fontSize);
+            append("71");
+            append(5);  //5 = Middle center
+            append("72");
+            append(1);  //1 = Left to right
+            append("1");
+            append(nativeTextOffset.nativeText.text);  //TODO: break into 250 char chunks
+            append("50");
+            append(angle.ofPointInRadians(nativeTextOffset.nativeText.anchor.origin, nativeTextOffset.nativeText.anchor.end));
+        }
+
         function section(sectionFn: () => void) {
             append("0");
             append("SECTION");
@@ -217,17 +239,18 @@ namespace MakerJs.exporter {
             }
         }
 
-        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[]) {
+        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], nativeTextOffsets: INativeTextOffset[]) {
             append("2");
             append("ENTITIES");
 
-            chains.forEach(c => polyline(c))
+            chains.forEach(polyline);
             walkedPaths.forEach((walkedPath: IWalkPath) => {
                 var fn = map[walkedPath.pathContext.type];
                 if (fn) {
                     fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
                 }
             });
+            nativeTextOffsets.forEach(mtext);
         }
 
         //fixup options
@@ -270,7 +293,7 @@ namespace MakerJs.exporter {
                 };
                 model.walk(modelToExport, walkOptions);
             }
-            entities(walkedPaths, chainsOnLayers);
+            entities(walkedPaths, chainsOnLayers, model.getAllNativeTextOffsets(modelToExport));
         });
 
         dxfIndex = "top";
@@ -316,6 +339,11 @@ namespace MakerJs.exporter {
      * DXF rendering options.
      */
     export interface IDXFRenderOptions extends IExportOptions, IPointMatchOptions {
+
+        /**
+         * Text size for MTEXT entities.
+         */
+        fontSize?: number;
 
         /**
          * DXF options per layer.
