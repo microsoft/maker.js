@@ -159,14 +159,14 @@ namespace MakerJs.exporter {
             append("SEQEND");
         }
 
-        function mtext(nativeTextOffset: INativeTextOffset) {
-            const center = point.middle(nativeTextOffset.nativeText.anchor);
+        function mtext(caption: ICaption) {
+            const center = point.middle(caption.anchor);
             append("0");
             append("MTEXT");
             append("10");
-            append(round(nativeTextOffset.offset[0] + center[0], opts.accuracy));
+            append(round(center[0], opts.accuracy));
             append("20");
-            append(round(nativeTextOffset.offset[1] + center[1], opts.accuracy));
+            append(round(center[1], opts.accuracy));
             append("40");
             append(opts.fontSize);
             append("71");
@@ -174,9 +174,9 @@ namespace MakerJs.exporter {
             append("72");
             append(1);  //1 = Left to right
             append("1");
-            append(nativeTextOffset.nativeText.text);  //TODO: break into 250 char chunks
+            append(caption.text);  //TODO: break into 250 char chunks
             append("50");
-            append(angle.ofPointInRadians(nativeTextOffset.nativeText.anchor.origin, nativeTextOffset.nativeText.anchor.end));
+            append(angle.ofPointInRadians(caption.anchor.origin, caption.anchor.end));
         }
 
         function section(sectionFn: () => void) {
@@ -239,7 +239,7 @@ namespace MakerJs.exporter {
             }
         }
 
-        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], nativeTextOffsets: INativeTextOffset[]) {
+        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], captions: ICaption[]) {
             append("2");
             append("ENTITIES");
 
@@ -250,7 +250,7 @@ namespace MakerJs.exporter {
                     fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
                 }
             });
-            nativeTextOffsets.forEach(mtext);
+            captions.forEach(mtext);
         }
 
         //fixup options
@@ -293,7 +293,7 @@ namespace MakerJs.exporter {
                 };
                 model.walk(modelToExport, walkOptions);
             }
-            entities(walkedPaths, chainsOnLayers, model.getAllNativeTextOffsets(modelToExport));
+            entities(walkedPaths, chainsOnLayers, model.getAllCaptionsOffset(modelToExport));
         });
 
         dxfIndex = "top";

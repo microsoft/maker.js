@@ -293,7 +293,7 @@ namespace MakerJsRequireIframe {
 
                     //restore properties from the "this" keyword
                     model = {};
-                    var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units', 'nativeText', 'exporterOptions'];
+                    var props = ['layer', 'models', 'notes', 'origin', 'paths', 'type', 'units', 'caption', 'exporterOptions'];
                     var hasProps = false;
                     for (var i = 0; i < props.length; i++) {
                         var prop = props[i];

@@ -447,10 +447,10 @@ namespace MakerJs.exporter {
 
         const size = measure.modelExtents(modelToExport);
 
-        //increase size to fit native text
-        const allNativeTextOffsets = model.getAllNativeTextOffsets(modelToExport);
-        allNativeTextOffsets.forEach(nativeTextOffset => {
-            measure.increase(size, measure.pathExtents(nativeTextOffset.nativeText.anchor), true);
+        //increase size to fit caption text
+        const captions = model.getAllCaptionsOffset(modelToExport);
+        captions.forEach(caption => {
+            measure.increase(size, measure.pathExtents(caption.anchor), true);
         });
 
         //try to get the unit system from the itemToExport
@@ -709,27 +709,25 @@ namespace MakerJs.exporter {
             }
         }
 
-        const nativeTextTags = allNativeTextOffsets.map(nativeTextOffset => {
-            const offset = point.add(fixPoint(nativeTextOffset.offset), opts.origin);
-            const anchor = fixPath(nativeTextOffset.nativeText.anchor, offset) as IPathLine;
+        const captionTags = captions.map(caption => {
+            const anchor = fixPath(caption.anchor, opts.origin) as IPathLine;
             const center = point.rounded(point.middle(anchor), opts.accuracy);
-            const nativeTextTag = new XmlTag('text', {
+            const tag = new XmlTag('text', {
                 "alignment-baseline": "middle",
                 "text-anchor": "middle",
                 "transform": `rotate(${angle.ofLineInDegrees(anchor)},${center[0]},${center[1]})`,
                 "x": center[0],
                 "y": center[1]
             });
-            nativeTextTag.innerText = nativeTextOffset.nativeText.text;
-            const nativeTextTagString = nativeTextTag.toString();
-            return nativeTextTagString;
+            tag.innerText = caption.text;
+            return tag.toString();
         });
 
-        if (nativeTextTags.length) {
-            const nativeTextGroup = new XmlTag('g', { "id": "nativeText" });
-            nativeTextGroup.innerText = nativeTextTags.join('');
-            nativeTextGroup.innerTextEscaped = true;
-            append(nativeTextGroup.toString());
+        if (captionTags.length) {
+            const captionGroup = new XmlTag('g', { "id": "captions" });
+            captionGroup.innerText = captionTags.join('');
+            captionGroup.innerTextEscaped = true;
+            append(captionGroup.toString());
         }
 
         append(svgGroup.getClosingTag());

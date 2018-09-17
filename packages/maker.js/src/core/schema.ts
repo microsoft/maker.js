@@ -139,15 +139,15 @@ namespace MakerJs {
         bezierData: IBezierRange;
     }
 
-    //native text
+    //captions
 
     /**
      * Text annotation, diplayable natively to the output format.
      */
-    export interface INativeText {
+    export interface ICaption {
 
         /**
-         * Text annotation.
+         * Caption text.
          */
         text: string;
 
@@ -227,9 +227,9 @@ namespace MakerJs {
         layer?: string;
 
         /**
-         * Optional Native Text object.
+         * Optional Caption object.
          */
-        nativeText?: INativeText;
+        caption?: ICaption;
 
         /**
          * Optional exporter options for this model.

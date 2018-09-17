@@ -1,21 +1,21 @@
 namespace MakerJs.model {
 
     /**
-     * Add a Native Text object to a model.
+     * Add a Caption object to a model.
      * @param modelContext The model to add to.
      * @param text Text to add.
      * @param leftAnchorPoint Optional Point on left side middle of text.
      * @param rightAnchorPoint Optional Point on right side middle of text.
      * @returns The original model (for cascading).
      */
-    export function addNativeText(modelContext: IModel, text: string, leftAnchorPoint?: IPoint, rightAnchorPoint?: IPoint) {
+    export function addCaption(modelContext: IModel, text: string, leftAnchorPoint?: IPoint, rightAnchorPoint?: IPoint) {
         if (!leftAnchorPoint) {
             leftAnchorPoint = point.zero();
         }
         if (!rightAnchorPoint) {
             rightAnchorPoint = point.clone(leftAnchorPoint);
         }
-        modelContext.nativeText = { text, anchor: new paths.Line(leftAnchorPoint, rightAnchorPoint) };
+        modelContext.caption = { text, anchor: new paths.Line(leftAnchorPoint, rightAnchorPoint) };
         return modelContext;
     }
 
@@ -106,26 +106,25 @@ namespace MakerJs.model {
     }
 
     /**
-     * Gets all NativeText objects (and their offset) in this model and its children.
-     * @param modelContext The model to search for Native Text objects.
-     * @returns Array of Native Text Offset objects.
+     * Gets all Caption objects, in absolute position, in this model and its children.
+     * @param modelContext The model to search for Caption objects.
+     * @returns Array of Caption objects.
      */
-    export function getAllNativeTextOffsets(modelContext: IModel) {
-        const allNativeText: INativeTextOffset[] = [];
+    export function getAllCaptionsOffset(modelContext: IModel) {
+        const captions: ICaption[] = [];
 
-        function tryAddNativeText(m: IModel, offset: IPoint) {
-            const nativeText = m.nativeText;
-            if (nativeText) {
-                allNativeText.push({ nativeText, offset });
+        function tryAddCaption(m: IModel, offset: IPoint) {
+            if (m.caption) {
+                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, offset) as IPathLine });
             }
         }
 
-        tryAddNativeText(modelContext, modelContext.origin);
+        tryAddCaption(modelContext, modelContext.origin);
         model.walk(modelContext, {
-            afterChildWalk: wm => tryAddNativeText(wm.childModel, wm.offset)
+            afterChildWalk: wm => tryAddCaption(wm.childModel, wm.offset)
         });
 
-        return allNativeText;
+        return captions;
     }
 
     /**
@@ -207,8 +206,8 @@ namespace MakerJs.model {
                 }
             }
 
-            if (m.nativeText) {
-                path.moveRelative(m.nativeText.anchor, newOrigin);
+            if (m.caption) {
+                path.moveRelative(m.caption.anchor, newOrigin);
             }
 
             m.origin = point.zero();
@@ -296,9 +295,11 @@ namespace MakerJs.model {
             }
         }
 
-        if (modelToMirror.nativeText) {
-            newModel.nativeText = cloneObject(modelToMirror.nativeText);
-            newModel.nativeText.anchor = path.mirror(modelToMirror.nativeText.anchor, mirrorX, mirrorY) as IPathLine;
+        if (modelToMirror.caption) {
+            newModel.caption = {
+                text: modelToMirror.caption.text,
+                anchor: path.mirror(modelToMirror.caption.anchor, mirrorX, mirrorY) as IPathLine
+            };
         }
 
         return newModel;
@@ -389,8 +390,8 @@ namespace MakerJs.model {
             }
         }
 
-        if (modelToRotate.nativeText) {
-            path.rotate(modelToRotate.nativeText.anchor, angleInDegrees, offsetOrigin);
+        if (modelToRotate.caption) {
+            path.rotate(modelToRotate.caption.anchor, angleInDegrees, offsetOrigin);
         }
 
         return modelToRotate;
@@ -426,8 +427,8 @@ namespace MakerJs.model {
             }
         }
 
-        if (modelToScale.nativeText) {
-            path.scale(modelToScale.nativeText.anchor, scaleValue);
+        if (modelToScale.caption) {
+            path.scale(modelToScale.caption.anchor, scaleValue);
         }
 
         return modelToScale;
@@ -498,9 +499,9 @@ namespace MakerJs.model {
             }
         }
 
-        if (modelToDistort.nativeText) {
-            distorted.nativeText = cloneObject(modelToDistort.nativeText);
-            distorted.nativeText.anchor = path.distort(modelToDistort.nativeText.anchor, scaleX, scaleY) as IPathLine;
+        if (modelToDistort.caption) {
+            distorted.caption = cloneObject(modelToDistort.caption);
+            distorted.caption.anchor = path.distort(modelToDistort.caption.anchor, scaleX, scaleY) as IPathLine;
         }
 
         return distorted;

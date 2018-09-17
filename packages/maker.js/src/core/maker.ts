@@ -843,22 +843,6 @@ namespace MakerJs {
         radius: number;
     }
 
-    /**
-     * Object wrapper around a Native Text object, with its offset position.
-     */
-    export interface INativeTextOffset {
-
-        /**
-         * The Native Text object context.
-         */
-        nativeText: INativeText;
-
-        /**
-         * Offset position of the Native Text object.
-         */
-        offset: IPoint;
-    }
-
     //kits
 
     /**

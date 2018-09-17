@@ -86,22 +86,19 @@
 
         doc.font(opts.fontName).fontSize(opts.fontSize);
 
-        model.getAllNativeTextOffsets(scaledModel).forEach(nativeTextOffset => {
-
-            //move the anchor to its absolute position
-            path.moveRelative(nativeTextOffset.nativeText.anchor, nativeTextOffset.offset);
+        model.getAllCaptionsOffset(scaledModel).forEach(caption => {
 
             //measure the angle of the line, prior to mirroring
-            const a = angle.ofLineInDegrees(nativeTextOffset.nativeText.anchor);
+            const a = angle.ofLineInDegrees(caption.anchor);
 
             //mirror into pdf y coords
-            const anchor = path.mirror(nativeTextOffset.nativeText.anchor, false, true) as IPathLine;
+            const anchor = path.mirror(caption.anchor, false, true) as IPathLine;
 
             //move mirrored line by document offset
             path.moveRelative(anchor, offset);
 
             //measure center point of text
-            const text = nativeTextOffset.nativeText.text;
+            const text = caption.text;
             const textCenter: IPoint = [doc.widthOfString(text) / 2, doc.heightOfString(text) / 2];
 
             //get center point on line
