@@ -738,6 +738,10 @@ body.full-screen {
     fill: #777;
 }
 
+#view svg#drawing g#captions text {
+    fill: #888;
+}
+
 .full-screen #view svg#drawing .locked + text {
     font-weight: bold;
 }
