@@ -1,0 +1,101 @@
+---
+title: Captions
+---
+
+<p>
+    Captions are fragments of text that can be positioned anywhere in your model, 
+    useful for adding documentation within your drawing.
+    Captions are unlike the <a href="/docs/advanced-drawing/#Fonts%20and%20text">Text model</a>, which is a line drawing of glyphs in a given font.
+</p>
+
+<p>
+    A caption is aligned to an invisible line called an anchor.
+    The caption text is centered both horizontally and vertically at the center point of the anchor line.
+    The text in a caption will not wrap, it is a single line of text.
+    The text and anchor line do not need to be the same length, the anchor line is only used to determine the center point and the slope.
+    The anchor line may be rotated to angle the caption text. 
+    Anchor lines are moved, originated, scaled, distorted and rotated accoordingly within a model. 
+    The font size of caption text is determined when you export your model.
+    Note: In the Playground, caption text does not scale when you zoom in or out.
+</p>
+
+<h4>Creating a caption object</h4>
+
+<p>
+    A caption is an object with these two properties:
+    <ul>
+        <li>text - String</li>
+        <li>anchor - Line object</li>
+    </ul>
+    Add this to a model via the <b>caption</b> property:
+</p>
+
+{% highlight javascript %}
+//add a caption to a model
+
+var makerjs = require('makerjs');
+
+var square = new makerjs.models.Square(100);
+
+square.caption = {
+    text: "a square",
+    anchor: new makerjs.paths.Line([0, 50], [100, 50])
+};
+
+var svg = makerjs.exporter.toSVG(square);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+    
+<p>
+    There is a helper function <a href="/docs/api/modules/makerjs.model.html#addcaption">makerjs.model.addCaption(text, [optional] leftAnchorPoint, [optional] rightAnchorPoint)</a>
+    which lets you add a caption on one line of code:
+</p>
+
+{% highlight javascript %}
+//add a caption to a model with the helper
+
+var makerjs = require('makerjs');
+
+var square = new makerjs.models.Square(100);
+
+makerjs.model.addPath(square, new makerjs.paths.Line([10, 10], [90, 90]));
+
+makerjs.model.addCaption(square, 'fold here', [10, 20], [80, 90]);
+
+var svg = makerjs.exporter.toSVG(square);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
+    
+<p>
+    If the anchor line is degenerate (meaning its origin and end point are the same), you can achieve text 
+    which will remain horizontally aligned regardless of model rotation:
+</p>
+    
+{% highlight javascript %}
+//add a caption that will not rotate
+
+var makerjs = require('makerjs');
+
+var square = makerjs.$(new makerjs.models.Square(100))
+    .addCaption('always aligned', [50, 50], [50, 50])
+    .rotate(22)
+	.$result;
+
+var svg = makerjs.exporter.toSVG(square);
+
+document.write(svg);
+{% endhighlight %}
+
+<script>
+    LiveDoc.evalLastCode();
+</script>
