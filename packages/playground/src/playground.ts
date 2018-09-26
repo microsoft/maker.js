@@ -748,6 +748,10 @@
 
         if (!makerjs.isPoint(processed.model.origin)) processed.model.origin = [0, 0];
         var newMeasurement = makerjs.measure.modelExtents(processed.model);
+        makerjs.model.getAllCaptionsOffset(processed.model).forEach(caption => {
+            makerjs.measure.increase(newMeasurement, makerjs.measure.pathExtents(caption.anchor), true);
+        });
+
         processed.measurement = newMeasurement;
 
         if (!processed.measurement) {

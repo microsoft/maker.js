@@ -1,6 +1,25 @@
 namespace MakerJs.model {
 
     /**
+     * Add a Caption object to a model.
+     * @param modelContext The model to add to.
+     * @param text Text to add.
+     * @param leftAnchorPoint Optional Point on left side middle of text.
+     * @param rightAnchorPoint Optional Point on right side middle of text.
+     * @returns The original model (for cascading).
+     */
+    export function addCaption(modelContext: IModel, text: string, leftAnchorPoint?: IPoint, rightAnchorPoint?: IPoint) {
+        if (!leftAnchorPoint) {
+            leftAnchorPoint = point.zero();
+        }
+        if (!rightAnchorPoint) {
+            rightAnchorPoint = point.clone(leftAnchorPoint);
+        }
+        modelContext.caption = { text, anchor: new paths.Line(leftAnchorPoint, rightAnchorPoint) };
+        return modelContext;
+    }
+
+    /**
      * Add a path as a child. This is basically equivalent to:
      * ```
      * parentModel.paths[childPathId] = childPath;
@@ -87,6 +106,28 @@ namespace MakerJs.model {
     }
 
     /**
+     * Gets all Caption objects, in absolute position, in this model and its children.
+     * @param modelContext The model to search for Caption objects.
+     * @returns Array of Caption objects.
+     */
+    export function getAllCaptionsOffset(modelContext: IModel) {
+        const captions: ICaption[] = [];
+
+        function tryAddCaption(m: IModel, offset: IPoint) {
+            if (m.caption) {
+                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, offset) as IPathLine });
+            }
+        }
+
+        tryAddCaption(modelContext, modelContext.origin);
+        model.walk(modelContext, {
+            afterChildWalk: wm => tryAddCaption(wm.childModel, wm.offset)
+        });
+
+        return captions;
+    }
+
+    /**
      * @private
      */
     function getSimilarId(map: { [id: string]: any }, id: string): string {
@@ -163,6 +204,10 @@ namespace MakerJs.model {
                 for (var id in m.models) {
                     innerOriginate(m.models[id], newOrigin);
                 }
+            }
+
+            if (m.caption) {
+                path.moveRelative(m.caption.anchor, newOrigin);
             }
 
             m.origin = point.zero();
@@ -248,6 +293,11 @@ namespace MakerJs.model {
                 if (!childModelMirrored) continue;
                 newModel.models[id] = childModelMirrored;
             }
+        }
+
+        if (modelToMirror.caption) {
+            newModel.caption = cloneObject(modelToMirror.caption);
+            newModel.caption.anchor = path.mirror(modelToMirror.caption.anchor, mirrorX, mirrorY) as IPathLine;
         }
 
         return newModel;
@@ -338,6 +388,10 @@ namespace MakerJs.model {
             }
         }
 
+        if (modelToRotate.caption) {
+            path.rotate(modelToRotate.caption.anchor, angleInDegrees, offsetOrigin);
+        }
+
         return modelToRotate;
     }
 
@@ -369,6 +423,10 @@ namespace MakerJs.model {
             for (var id in modelToScale.models) {
                 scale(modelToScale.models[id], scaleValue, true);
             }
+        }
+
+        if (modelToScale.caption) {
+            path.scale(modelToScale.caption.anchor, scaleValue);
         }
 
         return modelToScale;
@@ -437,6 +495,11 @@ namespace MakerJs.model {
                 let distortedChild = distort(childModel, scaleX, scaleY, true, bezierAccuracy);
                 addModel(distorted, distortedChild, childId);
             }
+        }
+
+        if (modelToDistort.caption) {
+            distorted.caption = cloneObject(modelToDistort.caption);
+            distorted.caption.anchor = path.distort(modelToDistort.caption.anchor, scaleX, scaleY) as IPathLine;
         }
 
         return distorted;

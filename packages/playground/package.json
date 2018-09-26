@@ -13,6 +13,6 @@
     "@types/codemirror": "0.0.38",
     "@types/marked": "^0.0.28",
     "@types/opentype.js": "^0.7.0",
-    "makerjs": "^0.10.3"
+    "makerjs": "*"
   }
 }

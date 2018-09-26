@@ -5,6 +5,17 @@ namespace MakerJs {
     export interface ICascadeModel extends ICascade {
 
         /**
+         * Add a Caption object to a model.
+         * 
+         * @param text Text to add.
+         * @param leftAnchorPoint Optional Point on left side middle of text.
+         * @param rightAnchorPoint Optional Point on right side middle of text.
+         * @returns this cascade container, this.$result will be The original model (for cascading).
+
+         */
+        addCaption(text: string, leftAnchorPoint?: IPoint, rightAnchorPoint?: IPoint): ICascadeModel;
+
+        /**
          * Add a model as a child. This is basically equivalent to:
 ```
 parentModel.models[childModelId] = childModel;

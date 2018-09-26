@@ -64,7 +64,7 @@ namespace MakerJs.exporter {
     function correctArc(arc: IPathArc) {
         const arcSpan = angle.ofArcSpan(arc);
         arc.startAngle = angle.noRevolutions(arc.startAngle);
-        arc.endAngle = arc.startAngle + arcSpan;        
+        arc.endAngle = arc.startAngle + arcSpan;
     }
 
     /**
@@ -445,7 +445,13 @@ namespace MakerJs.exporter {
             modelToExport = { paths: { modelToMeasure: <IPath>itemToExport } };
         }
 
-        var size = measure.modelExtents(modelToExport);
+        const size = measure.modelExtents(modelToExport);
+
+        //increase size to fit caption text
+        const captions = model.getAllCaptionsOffset(modelToExport);
+        captions.forEach(caption => {
+            measure.increase(size, measure.pathExtents(caption.anchor), true);
+        });
 
         //try to get the unit system from the itemToExport
         if (!opts.units) {
@@ -611,7 +617,7 @@ namespace MakerJs.exporter {
             map[pathType.Arc] = function (id: string, arc: IPathArc, layer: string, className: string, route: string[], annotate: boolean, flow: IFlowAnnotation) {
                 correctArc(arc);
                 var arcPoints = point.fromArc(arc);
-        
+
                 if (measure.isPointEqual(arcPoints[0], arcPoints[1])) {
                     circleInPaths(id, arc.origin, arc.radius, layer, route, annotate, flow);
                 } else {
@@ -701,6 +707,27 @@ namespace MakerJs.exporter {
                 layerGroup.innerTextEscaped = true;
                 append(layerGroup.toString());
             }
+        }
+
+        const captionTags = captions.map(caption => {
+            const anchor = fixPath(caption.anchor, opts.origin) as IPathLine;
+            const center = point.rounded(point.middle(anchor), opts.accuracy);
+            const tag = new XmlTag('text', {
+                "alignment-baseline": "middle",
+                "text-anchor": "middle",
+                "transform": `rotate(${angle.ofLineInDegrees(anchor)},${center[0]},${center[1]})`,
+                "x": center[0],
+                "y": center[1]
+            });
+            tag.innerText = caption.text;
+            return tag.toString();
+        });
+
+        if (captionTags.length) {
+            const captionGroup = new XmlTag('g', { "id": "captions" });
+            captionGroup.innerText = captionTags.join('');
+            captionGroup.innerTextEscaped = true;
+            append(captionGroup.toString());
         }
 
         append(svgGroup.getClosingTag());

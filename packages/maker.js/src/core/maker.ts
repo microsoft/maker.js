@@ -574,7 +574,7 @@ namespace MakerJs {
          */
         cachedLineSlope?: ISlope;
     }
-    
+
     /**
      * Options to pass to model.findLoops.
      */

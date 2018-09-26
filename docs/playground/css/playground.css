@@ -251,6 +251,12 @@ svg#drawing .locked {
     display: none;
 }
 
+#view svg#drawing g#captions text {
+    fill: yellow;
+    display: unset;
+    font-family: monospace;
+}
+
 .collapse-flow #view svg#drawing .flow {
     display: none;
 }
@@ -730,6 +736,10 @@ body.full-screen {
 
 .full-screen #view svg#drawing text {
     fill: #777;
+}
+
+#view svg#drawing g#captions text {
+    fill: #888;
 }
 
 .full-screen #view svg#drawing .locked + text {

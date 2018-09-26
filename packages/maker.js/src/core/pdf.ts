@@ -12,6 +12,8 @@
 
         //fixup options
         var opts: IPDFRenderOptions = {
+            fontName: 'Courier',
+            fontSize: 9,
             origin: [0, 0],
             stroke: "#000",
         };
@@ -81,12 +83,48 @@
             },
             { byLayers: false }
         );
+
+        doc.font(opts.fontName).fontSize(opts.fontSize);
+
+        model.getAllCaptionsOffset(scaledModel).forEach(caption => {
+
+            //measure the angle of the line, prior to mirroring
+            const a = angle.ofLineInDegrees(caption.anchor);
+
+            //mirror into pdf y coords
+            const anchor = path.mirror(caption.anchor, false, true) as IPathLine;
+
+            //move mirrored line by document offset
+            path.moveRelative(anchor, offset);
+
+            //measure center point of text
+            const text = caption.text;
+            const textCenter: IPoint = [doc.widthOfString(text) / 2, doc.heightOfString(text) / 2];
+
+            //get center point on line
+            const center = point.middle(anchor) as number[];
+            const textOffset = point.subtract(center, textCenter);
+
+            doc.rotate(-a, { origin: center });
+            doc.text(text, textOffset[0], textOffset[1]);
+            doc.rotate(a, { origin: center });
+        });
     }
 
     /**
      * PDF rendering options.
      */
     export interface IPDFRenderOptions extends IExportOptions {
+
+        /**
+         * Font name, see list at https://github.com/foliojs/pdfkit/blob/master/docs/text.coffee.md#fonts
+         */
+        fontName?: string;
+
+        /**
+         * Font size.
+         */
+        fontSize?: number;
 
         /**
          * Rendered reference origin. 
