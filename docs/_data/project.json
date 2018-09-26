@@ -2349,6 +2349,59 @@
             }
           ]
         },
+        "addCaption": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "addCaption",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Add a Caption object to a model.",
+                "returns": "The original model (for cascading).\n"
+              },
+              "parameters": [
+                {
+                  "name": "modelContext",
+                  "flags": {},
+                  "comment": "The model to add to.",
+                  "type": "IModel"
+                },
+                {
+                  "name": "text",
+                  "flags": {},
+                  "comment": "Text to add.",
+                  "type": "string"
+                },
+                {
+                  "name": "leftAnchorPoint",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional Point on left side middle of text.",
+                  "type": "IPoint"
+                },
+                {
+                  "name": "rightAnchorPoint",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional Point on right side middle of text.",
+                  "type": "IPoint"
+                }
+              ],
+              "type": "IModel"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/model.ts",
+              "line": 11,
+              "character": 30
+            }
+          ]
+        },
         "addModel": {
           "flags": {
             "isExported": true
@@ -2394,7 +2447,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 36,
+              "line": 55,
               "character": 28
             }
           ]
@@ -2444,7 +2497,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 16,
+              "line": 35,
               "character": 27
             }
           ]
@@ -2494,7 +2547,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 56,
+              "line": 75,
               "character": 25
             }
           ]
@@ -2539,7 +2592,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 188,
+              "line": 233,
               "character": 26
             }
           ]
@@ -2570,7 +2623,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 67,
+              "line": 86,
               "character": 25
             }
           ]
@@ -2607,7 +2660,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 452,
+              "line": 515,
               "character": 32
             }
           ]
@@ -2638,7 +2691,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 77,
+              "line": 96,
               "character": 36
             }
           ]
@@ -2696,8 +2749,38 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 408,
+              "line": 466,
               "character": 27
+            }
+          ]
+        },
+        "getAllCaptionsOffset": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "getAllCaptionsOffset",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Gets all Caption objects, in absolute position, in this model and its children.",
+                "returns": "Array of Caption objects.\n"
+              },
+              "parameters": [
+                {
+                  "name": "modelContext",
+                  "flags": {},
+                  "comment": "The model to search for Caption objects.",
+                  "type": "IModel"
+                }
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/model.ts",
+              "line": 113,
+              "character": 40
             }
           ]
         },
@@ -2732,7 +2815,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 109,
+              "line": 150,
               "character": 37
             }
           ]
@@ -2768,7 +2851,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 119,
+              "line": 160,
               "character": 36
             }
           ]
@@ -2805,7 +2888,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 133,
+              "line": 174,
               "character": 25
             }
           ]
@@ -2848,7 +2931,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 205,
+              "line": 250,
               "character": 26
             }
           ]
@@ -2885,7 +2968,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 263,
+              "line": 313,
               "character": 24
             }
           ]
@@ -2922,7 +3005,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 275,
+              "line": 325,
               "character": 32
             }
           ]
@@ -2961,7 +3044,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 145,
+              "line": 186,
               "character": 29
             }
           ]
@@ -2998,7 +3081,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 291,
+              "line": 341,
               "character": 33
             }
           ]
@@ -3042,7 +3125,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 320,
+              "line": 370,
               "character": 26
             }
           ]
@@ -3086,7 +3169,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 352,
+              "line": 406,
               "character": 25
             }
           ]
@@ -3123,7 +3206,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 499,
+              "line": 562,
               "character": 24
             }
           ]
@@ -3159,7 +3242,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 475,
+              "line": 538,
               "character": 29
             }
           ]
@@ -3204,7 +3287,7 @@
           "sources": [
             {
               "fileName": "core/model.ts",
-              "line": 570,
+              "line": 633,
               "character": 24
             }
           ]
@@ -3271,7 +3354,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 307,
+              "line": 330,
               "character": 37
             }
           ],
@@ -3286,7 +3369,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 312,
+                  "line": 335,
                   "character": 13
                 }
               ],
@@ -3307,7 +3390,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 318,
+              "line": 341,
               "character": 38
             }
           ],
@@ -3346,6 +3429,26 @@
                 "name": "IExportOptions.accuracy"
               }
             },
+            "fontSize": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Text size for MTEXT entities."
+              },
+              "sources": [
+                {
+                  "fileName": "core/dxf.ts",
+                  "line": 346,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "intrinsic",
+                "name": "number"
+              }
+            },
             "layerOptions": {
               "flags": {
                 "isExported": true,
@@ -3357,7 +3460,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 323,
+                  "line": 351,
                   "character": 20
                 }
               ],
@@ -3392,7 +3495,7 @@
                   "sources": [
                     {
                       "fileName": "core/dxf.ts",
-                      "line": 323,
+                      "line": 351,
                       "character": 22
                     }
                   ]
@@ -3458,7 +3561,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 328,
+                  "line": 356,
                   "character": 19
                 }
               ],
@@ -4650,7 +4753,7 @@
           "sources": [
             {
               "fileName": "core/pdf.ts",
-              "line": 89,
+              "line": 117,
               "character": 38
             }
           ],
@@ -4685,6 +4788,46 @@
                 "name": "IExportOptions.accuracy"
               }
             },
+            "fontName": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Font name, see list at https://github.com/foliojs/pdfkit/blob/master/docs/text.coffee.md#fonts"
+              },
+              "sources": [
+                {
+                  "fileName": "core/pdf.ts",
+                  "line": 122,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            },
+            "fontSize": {
+              "flags": {
+                "isExported": true,
+                "isOptional": true
+              },
+              "comment": {
+                "shortText": "Font size."
+              },
+              "sources": [
+                {
+                  "fileName": "core/pdf.ts",
+                  "line": 127,
+                  "character": 16
+                }
+              ],
+              "type": {
+                "type": "intrinsic",
+                "name": "number"
+              }
+            },
             "origin": {
               "flags": {
                 "isExported": true,
@@ -4696,7 +4839,7 @@
               "sources": [
                 {
                   "fileName": "core/pdf.ts",
-                  "line": 94,
+                  "line": 132,
                   "character": 14
                 }
               ],
@@ -4716,7 +4859,7 @@
               "sources": [
                 {
                   "fileName": "core/pdf.ts",
-                  "line": 99,
+                  "line": 137,
                   "character": 14
                 }
               ],
@@ -4761,7 +4904,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 812,
+              "line": 839,
               "character": 36
             }
           ],
@@ -4776,7 +4919,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 817,
+                  "line": 844,
                   "character": 12
                 }
               ],
@@ -4835,7 +4978,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 786,
+              "line": 813,
               "character": 45
             }
           ],
@@ -4857,7 +5000,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 806,
+                  "line": 833,
                   "character": 16
                 }
               ],
@@ -4877,7 +5020,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 791,
+                  "line": 818,
                   "character": 12
                 }
               ],
@@ -4897,7 +5040,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 796,
+                  "line": 823,
                   "character": 14
                 }
               ],
@@ -4917,7 +5060,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 801,
+                  "line": 828,
                   "character": 19
                 }
               ],
@@ -4938,7 +5081,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 894,
+              "line": 921,
               "character": 46
             }
           ],
@@ -4984,7 +5127,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 899,
+                  "line": 926,
                   "character": 16
                 }
               ],
@@ -5004,7 +5147,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 904,
+                  "line": 931,
                   "character": 16
                 }
               ],
@@ -5033,7 +5176,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 909,
+                  "line": 936,
                   "character": 14
                 }
               ],
@@ -5078,7 +5221,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 823,
+              "line": 850,
               "character": 38
             }
           ],
@@ -5128,7 +5271,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 843,
+                  "line": 870,
                   "character": 16
                 }
               ],
@@ -5148,7 +5291,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 888,
+                  "line": 915,
                   "character": 19
                 }
               ],
@@ -5168,7 +5311,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 806,
+                  "line": 833,
                   "character": 16
                 }
               ],
@@ -5192,7 +5335,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 791,
+                  "line": 818,
                   "character": 12
                 }
               ],
@@ -5216,7 +5359,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 868,
+                  "line": 895,
                   "character": 16
                 }
               ],
@@ -5245,7 +5388,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 848,
+                  "line": 875,
                   "character": 12
                 }
               ],
@@ -5265,7 +5408,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 833,
+                  "line": 860,
                   "character": 16
                 }
               ],
@@ -5285,7 +5428,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 878,
+                  "line": 905,
                   "character": 20
                 }
               ],
@@ -5318,7 +5461,7 @@
                   "sources": [
                     {
                       "fileName": "core/svg.ts",
-                      "line": 878,
+                      "line": 905,
                       "character": 22
                     }
                   ]
@@ -5336,7 +5479,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 853,
+                  "line": 880,
                   "character": 14
                 }
               ],
@@ -5356,7 +5499,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 838,
+                  "line": 865,
                   "character": 13
                 }
               ],
@@ -5376,7 +5519,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 883,
+                  "line": 910,
                   "character": 21
                 }
               ],
@@ -5396,7 +5539,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 796,
+                  "line": 823,
                   "character": 14
                 }
               ],
@@ -5420,7 +5563,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 873,
+                  "line": 900,
                   "character": 21
                 }
               ],
@@ -5440,7 +5583,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 801,
+                  "line": 828,
                   "character": 19
                 }
               ],
@@ -5464,7 +5607,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 828,
+                  "line": 855,
                   "character": 16
                 }
               ],
@@ -5508,7 +5651,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 858,
+                  "line": 885,
                   "character": 22
                 }
               ],
@@ -5528,7 +5671,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 863,
+                  "line": 890,
                   "character": 15
                 }
               ],
@@ -5578,7 +5721,7 @@
                     "sources": [
                       {
                         "fileName": "core/svg.ts",
-                        "line": 763,
+                        "line": 790,
                         "character": 66
                       }
                     ],
@@ -5594,7 +5737,7 @@
                     "sources": [
                       {
                         "fileName": "core/svg.ts",
-                        "line": 763,
+                        "line": 790,
                         "character": 41
                       }
                     ],
@@ -5607,7 +5750,7 @@
                 "sources": [
                   {
                     "fileName": "core/svg.ts",
-                    "line": 763,
+                    "line": 790,
                     "character": 27
                   }
                 ]
@@ -5617,7 +5760,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 762,
+              "line": 789,
               "character": 38
             }
           ]
@@ -6601,7 +6744,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 769,
+              "line": 796,
               "character": 22
             }
           ],
@@ -7060,7 +7203,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 546,
+              "line": 550,
               "character": 27
             }
           ]
@@ -7091,7 +7234,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 743,
+              "line": 747,
               "character": 35
             }
           ]
@@ -7120,6 +7263,14 @@
                   "flags": {},
                   "comment": "The additional measurement.",
                   "type": "IMeasure"
+                },
+                {
+                  "name": "augmentBaseMeasure",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional flag to call measure.augment on the measurement.",
+                  "type": "boolean"
                 }
               ],
               "type": "IMeasure"
@@ -7165,7 +7316,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 53,
+              "line": 57,
               "character": 44
             }
           ]
@@ -7204,7 +7355,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 73,
+              "line": 77,
               "character": 36
             }
           ]
@@ -7247,7 +7398,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 85,
+              "line": 89,
               "character": 40
             }
           ]
@@ -7296,7 +7447,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 109,
+              "line": 113,
               "character": 29
             }
           ]
@@ -7339,7 +7490,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 125,
+              "line": 129,
               "character": 38
             }
           ]
@@ -7382,7 +7533,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 145,
+              "line": 149,
               "character": 35
             }
           ]
@@ -7421,7 +7572,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 167,
+              "line": 171,
               "character": 38
             }
           ]
@@ -7459,7 +7610,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 201,
+              "line": 205,
               "character": 36
             }
           ]
@@ -7502,7 +7653,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 268,
+              "line": 272,
               "character": 37
             }
           ]
@@ -7539,7 +7690,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 290,
+              "line": 294,
               "character": 44
             }
           ]
@@ -7576,7 +7727,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 220,
+              "line": 224,
               "character": 41
             }
           ]
@@ -7620,7 +7771,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 862,
+              "line": 866,
               "character": 38
             }
           ]
@@ -7649,7 +7800,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 301,
+              "line": 305,
               "character": 29
             }
           ]
@@ -7688,7 +7839,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 490,
+              "line": 494,
               "character": 32
             }
           ]
@@ -7719,7 +7870,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 461,
+              "line": 465,
               "character": 35
             }
           ]
@@ -7757,7 +7908,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 394,
+              "line": 398,
               "character": 31
             }
           ]
@@ -7788,7 +7939,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 443,
+              "line": 447,
               "character": 30
             }
           ]
@@ -7825,7 +7976,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 330,
+              "line": 334,
               "character": 33
             }
           ]
@@ -7858,7 +8009,7 @@
           "sources": [
             {
               "fileName": "core/measure.ts",
-              "line": 564,
+              "line": 568,
               "character": 22
             }
           ],
@@ -7894,7 +8045,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 585,
+                  "line": 589,
                   "character": 39
                 }
               ],
@@ -7914,7 +8065,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 574,
+                  "line": 578,
                   "character": 23
                 }
               ],
@@ -7934,7 +8085,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 569,
+                  "line": 573,
                   "character": 29
                 }
               ],
@@ -7955,7 +8106,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 579,
+                  "line": 583,
                   "character": 22
                 }
               ],
@@ -7981,7 +8132,7 @@
               "sources": [
                 {
                   "fileName": "core/measure.ts",
-                  "line": 588,
+                  "line": 592,
                   "character": 28
                 }
               ]
@@ -7997,7 +8148,7 @@
       "sources": [
         {
           "fileName": "core/svg.ts",
-          "line": 913,
+          "line": 940,
           "character": 26
         }
       ],
@@ -8066,7 +8217,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 945,
+              "line": 972,
               "character": 35
             }
           ]
@@ -8083,7 +8234,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 929,
+              "line": 956,
               "character": 38
             }
           ],
@@ -8099,7 +8250,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 934,
+                  "line": 961,
                   "character": 22
                 }
               ],
@@ -12835,6 +12986,53 @@
         }
       },
       "Method": {
+        "addCaption": {
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "name": "addCaption",
+              "kindString": "Call signature",
+              "comment": {
+                "shortText": "Add a Caption object to a model.",
+                "returns": "this cascade container, this.$result will be The original model (for cascading).\n\n"
+              },
+              "parameters": [
+                {
+                  "name": "text",
+                  "flags": {},
+                  "comment": "Text to add.",
+                  "type": "string"
+                },
+                {
+                  "name": "leftAnchorPoint",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional Point on left side middle of text.",
+                  "type": "IPoint"
+                },
+                {
+                  "name": "rightAnchorPoint",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "comment": "Optional Point on right side middle of text.",
+                  "type": "IPoint"
+                }
+              ],
+              "type": "ICascadeModel"
+            }
+          ],
+          "sources": [
+            {
+              "fileName": "core/cascades.ts",
+              "line": 16,
+              "character": 18
+            }
+          ]
+        },
         "addModel": {
           "flags": {
             "isExported": true
@@ -12875,7 +13073,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 20,
+              "line": 31,
               "character": 16
             }
           ]
@@ -12920,7 +13118,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 35,
+              "line": 46,
               "character": 15
             }
           ]
@@ -12965,7 +13163,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 50,
+              "line": 61,
               "character": 13
             }
           ]
@@ -12998,7 +13196,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 60,
+              "line": 71,
               "character": 33
             }
           ]
@@ -13039,7 +13237,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 70,
+              "line": 81,
               "character": 14
             }
           ]
@@ -13062,7 +13260,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 78,
+              "line": 89,
               "character": 13
             }
           ]
@@ -13133,7 +13331,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 92,
+              "line": 103,
               "character": 15
             }
           ]
@@ -13164,7 +13362,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 101,
+              "line": 112,
               "character": 27
             }
           ]
@@ -13195,7 +13393,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 110,
+              "line": 121,
               "character": 26
             }
           ]
@@ -13226,7 +13424,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 119,
+              "line": 130,
               "character": 20
             }
           ]
@@ -13257,7 +13455,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 128,
+              "line": 139,
               "character": 20
             }
           ]
@@ -13310,7 +13508,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 140,
+              "line": 151,
               "character": 15
             }
           ]
@@ -13357,7 +13555,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 151,
+              "line": 162,
               "character": 19
             }
           ]
@@ -13388,7 +13586,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 163,
+              "line": 174,
               "character": 13
             }
           ]
@@ -13425,7 +13623,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 173,
+              "line": 184,
               "character": 14
             }
           ]
@@ -13456,7 +13654,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 182,
+              "line": 193,
               "character": 12
             }
           ]
@@ -13487,7 +13685,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 191,
+              "line": 202,
               "character": 20
             }
           ]
@@ -13520,7 +13718,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 200,
+              "line": 211,
               "character": 17
             }
           ]
@@ -13575,7 +13773,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 212,
+              "line": 223,
               "character": 15
             }
           ]
@@ -13606,7 +13804,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 221,
+              "line": 232,
               "character": 21
             }
           ]
@@ -13655,7 +13853,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 232,
+              "line": 243,
               "character": 22
             }
           ]
@@ -13694,7 +13892,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 242,
+              "line": 253,
               "character": 14
             }
           ]
@@ -13733,7 +13931,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 252,
+              "line": 263,
               "character": 13
             }
           ]
@@ -13766,7 +13964,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 261,
+              "line": 272,
               "character": 16
             }
           ]
@@ -13797,7 +13995,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 270,
+              "line": 281,
               "character": 12
             }
           ]
@@ -13838,7 +14036,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 280,
+              "line": 291,
               "character": 12
             }
           ]
@@ -13852,7 +14050,7 @@
       "sources": [
         {
           "fileName": "core/cascades.ts",
-          "line": 283,
+          "line": 294,
           "character": 33
         }
       ],
@@ -13998,7 +14196,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 298,
+              "line": 309,
               "character": 13
             }
           ]
@@ -14037,7 +14235,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 308,
+              "line": 319,
               "character": 19
             }
           ]
@@ -14068,7 +14266,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 319,
+              "line": 330,
               "character": 20
             }
           ]
@@ -14091,7 +14289,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 327,
+              "line": 338,
               "character": 14
             }
           ]
@@ -14124,7 +14322,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 336,
+              "line": 347,
               "character": 13
             }
           ]
@@ -14155,7 +14353,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 345,
+              "line": 356,
               "character": 17
             }
           ]
@@ -14186,7 +14384,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 357,
+              "line": 368,
               "character": 13
             }
           ]
@@ -14223,7 +14421,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 367,
+              "line": 378,
               "character": 14
             }
           ]
@@ -14254,7 +14452,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 376,
+              "line": 387,
               "character": 12
             }
           ]
@@ -14293,7 +14491,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 386,
+              "line": 397,
               "character": 20
             }
           ]
@@ -14332,7 +14530,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 396,
+              "line": 407,
               "character": 14
             }
           ]
@@ -14363,7 +14561,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 405,
+              "line": 416,
               "character": 13
             }
           ]
@@ -14386,7 +14584,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 413,
+              "line": 424,
               "character": 12
             }
           ]
@@ -14400,7 +14598,7 @@
       "sources": [
         {
           "fileName": "core/cascades.ts",
-          "line": 416,
+          "line": 427,
           "character": 34
         }
       ],
@@ -14540,7 +14738,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 426,
+              "line": 437,
               "character": 11
             }
           ]
@@ -14571,7 +14769,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 435,
+              "line": 446,
               "character": 15
             }
           ]
@@ -14594,7 +14792,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 443,
+              "line": 454,
               "character": 13
             }
           ]
@@ -14624,7 +14822,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 452,
+              "line": 463,
               "character": 15
             }
           ]
@@ -14661,7 +14859,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 462,
+              "line": 473,
               "character": 15
             }
           ]
@@ -14698,7 +14896,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 472,
+              "line": 483,
               "character": 14
             }
           ]
@@ -14737,7 +14935,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 482,
+              "line": 493,
               "character": 14
             }
           ]
@@ -14770,7 +14968,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 491,
+              "line": 502,
               "character": 15
             }
           ]
@@ -14801,7 +14999,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 500,
+              "line": 511,
               "character": 13
             }
           ]
@@ -14832,7 +15030,7 @@
           "sources": [
             {
               "fileName": "core/cascades.ts",
-              "line": 509,
+              "line": 520,
               "character": 16
             }
           ]
@@ -15088,6 +15286,30 @@
         }
       ],
       "Property": {
+        "caption": {
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "Optional Caption object."
+          },
+          "sources": [
+            {
+              "fileName": "core/schema.ts",
+              "line": 232,
+              "character": 15
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "ICaption"
+          },
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "IModel.caption"
+          }
+        },
         "exporterOptions": {
           "flags": {
             "isExported": true,
@@ -15099,7 +15321,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 211,
+              "line": 237,
               "character": 23
             }
           ],
@@ -15134,7 +15356,7 @@
               "sources": [
                 {
                   "fileName": "core/schema.ts",
-                  "line": 211,
+                  "line": 237,
                   "character": 25
                 }
               ]
@@ -15156,7 +15378,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 206,
+              "line": 227,
               "character": 13
             }
           ],
@@ -15175,12 +15397,12 @@
             "isOptional": true
           },
           "comment": {
-            "shortText": "Optional array of models within this model."
+            "shortText": "Optional map of models within this model."
           },
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 191,
+              "line": 212,
               "character": 14
             }
           ],
@@ -15204,7 +15426,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 201,
+              "line": 222,
               "character": 13
             }
           ],
@@ -15228,7 +15450,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 176,
+              "line": 197,
               "character": 14
             }
           ],
@@ -15247,12 +15469,12 @@
             "isOptional": true
           },
           "comment": {
-            "shortText": "Optional array of path objects in this model."
+            "shortText": "Optional map of path objects in this model."
           },
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 186,
+              "line": 207,
               "character": 13
             }
           ],
@@ -15295,7 +15517,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 181,
+              "line": 202,
               "character": 14
             }
           ],
@@ -15319,7 +15541,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 196,
+              "line": 217,
               "character": 13
             }
           ],
@@ -18305,18 +18527,73 @@
         }
       }
     },
+    "ICaption": {
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Text annotation, diplayable natively to the output format."
+      },
+      "sources": [
+        {
+          "fileName": "core/schema.ts",
+          "line": 147,
+          "character": 29
+        }
+      ],
+      "Property": {
+        "anchor": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Invisible line to which the text is aligned.\nThe text will be horizontally and vertically centered on the center point of this line.\nThe text may be longer or shorter than the line, it is used only for position and angle.\nThe anchor line's endpoints may be omitted, in which the case the text will always remain non-angled, even if the model is rotated."
+          },
+          "sources": [
+            {
+              "fileName": "core/schema.ts",
+              "line": 160,
+              "character": 14
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "IPathLine"
+          }
+        },
+        "text": {
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Caption text."
+          },
+          "sources": [
+            {
+              "fileName": "core/schema.ts",
+              "line": 152,
+              "character": 12
+            }
+          ],
+          "type": {
+            "type": "intrinsic",
+            "name": "string"
+          }
+        }
+      }
+    },
     "IModel": {
       "flags": {
         "isExported": true
       },
       "comment": {
-        "shortText": "A model is a composite object which may contain an array of paths, or an array of models recursively.",
+        "shortText": "A model is a composite object which may contain a map of paths, or a map of models recursively.",
         "text": "Example:\n```\nvar m = {\n  paths: {\n    \"line1\": { type: 'line', origin: [0, 0], end: [1, 1] },\n    \"line2\": { type: 'line', origin: [0, 0], end: [-1, -1] }\n  }\n};\n```\n"
       },
       "sources": [
         {
           "fileName": "core/schema.ts",
-          "line": 171,
+          "line": 192,
           "character": 27
         }
       ],
@@ -18413,6 +18690,26 @@
         }
       ],
       "Property": {
+        "caption": {
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "Optional Caption object."
+          },
+          "sources": [
+            {
+              "fileName": "core/schema.ts",
+              "line": 232,
+              "character": 15
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "ICaption"
+          }
+        },
         "exporterOptions": {
           "flags": {
             "isExported": true,
@@ -18424,7 +18721,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 211,
+              "line": 237,
               "character": 23
             }
           ],
@@ -18457,7 +18754,7 @@
               "sources": [
                 {
                   "fileName": "core/schema.ts",
-                  "line": 211,
+                  "line": 237,
                   "character": 25
                 }
               ]
@@ -18475,7 +18772,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 206,
+              "line": 227,
               "character": 13
             }
           ],
@@ -18490,12 +18787,12 @@
             "isOptional": true
           },
           "comment": {
-            "shortText": "Optional array of models within this model."
+            "shortText": "Optional map of models within this model."
           },
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 191,
+              "line": 212,
               "character": 14
             }
           ],
@@ -18515,7 +18812,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 201,
+              "line": 222,
               "character": 13
             }
           ],
@@ -18535,7 +18832,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 176,
+              "line": 197,
               "character": 14
             }
           ],
@@ -18550,12 +18847,12 @@
             "isOptional": true
           },
           "comment": {
-            "shortText": "Optional array of path objects in this model."
+            "shortText": "Optional map of path objects in this model."
           },
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 186,
+              "line": 207,
               "character": 13
             }
           ],
@@ -18575,7 +18872,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 181,
+              "line": 202,
               "character": 14
             }
           ],
@@ -18595,7 +18892,7 @@
           "sources": [
             {
               "fileName": "core/schema.ts",
-              "line": 196,
+              "line": 217,
               "character": 13
             }
           ],
@@ -18639,7 +18936,7 @@
       "sources": [
         {
           "fileName": "core/schema.ts",
-          "line": 154,
+          "line": 175,
           "character": 30
         }
       ]
@@ -19483,7 +19780,7 @@
       "sources": [
         {
           "fileName": "core/schema.ts",
-          "line": 147,
+          "line": 168,
           "character": 29
         }
       ]

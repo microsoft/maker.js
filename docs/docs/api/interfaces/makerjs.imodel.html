@@ -6,7 +6,7 @@ title: Api - IModel Interface
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>A model is a composite object which may contain an array of paths, or an array of models recursively.</p>
+			<p>A model is a composite object which may contain a map of paths, or a map of models recursively.</p>
 		</div>
 		<p>Example:</p>
 		<pre><code>var m = {
@@ -64,6 +64,7 @@ title: Api - IModel Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imodel.html#caption" class="tsd-kind-icon">caption</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imodel.html#exporteroptions" class="tsd-kind-icon">exporter<wbr>Options</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imodel.html#layer" class="tsd-kind-icon">layer</a></li>
 					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.imodel.html#models" class="tsd-kind-icon">models</a></li>
@@ -80,12 +81,27 @@ title: Api - IModel Interface
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="caption" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> caption</h3>
+		<div class="tsd-signature tsd-kind-icon">caption<span class="tsd-signature-symbol">:</span> <a href="makerjs.icaption.html" class="tsd-signature-type">ICaption</a></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L232">core/schema.ts:232</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Optional Caption object.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 		<a name="exporteroptions" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagOptional">Optional</span> exporter<wbr>Options</h3>
 		<div class="tsd-signature tsd-kind-icon">exporter<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L211">core/schema.ts:211</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L237">core/schema.ts:237</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -108,7 +124,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">layer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L206">core/schema.ts:206</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L227">core/schema.ts:227</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -123,12 +139,12 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L191">core/schema.ts:191</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L212">core/schema.ts:212</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional array of models within this model.</p>
+				<p>Optional map of models within this model.</p>
 			</div>
 		</div>
 	</section>
@@ -138,7 +154,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">notes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L201">core/schema.ts:201</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L222">core/schema.ts:222</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -153,7 +169,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L176">core/schema.ts:176</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L197">core/schema.ts:197</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -168,12 +184,12 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L186">core/schema.ts:186</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L207">core/schema.ts:207</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional array of path objects in this model.</p>
+				<p>Optional map of path objects in this model.</p>
 			</div>
 		</div>
 	</section>
@@ -183,7 +199,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L181">core/schema.ts:181</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L202">core/schema.ts:202</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -198,7 +214,7 @@ title: Api - IModel Interface
 		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/schema.ts#L196">core/schema.ts:196</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L217">core/schema.ts:217</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">

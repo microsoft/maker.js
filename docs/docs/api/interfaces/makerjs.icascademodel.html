@@ -31,6 +31,7 @@ title: Api - ICascadeModel Interface
 			<section class="tsd-index-section ">
 				<h3>Methods</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascademodel.html#addcaption" class="tsd-kind-icon">add<wbr>Caption</a></li>
 					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascademodel.html#addmodel" class="tsd-kind-icon">add<wbr>Model</a></li>
 					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascademodel.html#addpath" class="tsd-kind-icon">add<wbr>Path</a></li>
 					<li class="tsd-kind-method tsd-parent-kind-interface"><a href="makerjs.icascademodel.html#addto" class="tsd-kind-icon">add<wbr>To</a></li>
@@ -71,7 +72,7 @@ title: Api - ICascadeModel Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.icascade.html">ICascade</a>.<a href="makerjs.icascade.html#_initial">$initial</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/maker.ts#L916">core/maker.ts:916</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/maker.ts#L916">core/maker.ts:916</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -87,7 +88,7 @@ title: Api - ICascadeModel Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.icascade.html">ICascade</a>.<a href="makerjs.icascade.html#_reset">$reset</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/maker.ts#L926">core/maker.ts:926</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/maker.ts#L926">core/maker.ts:926</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -118,7 +119,7 @@ title: Api - ICascadeModel Interface
 		<aside class="tsd-sources">
 			<p>Inherited from <a href="makerjs.icascade.html">ICascade</a>.<a href="makerjs.icascade.html#_result">$result</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/maker.ts#L921">core/maker.ts:921</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/maker.ts#L921">core/maker.ts:921</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -131,6 +132,50 @@ title: Api - ICascadeModel Interface
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Methods</h2>
 	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+		<a name="addcaption" class="tsd-anchor"></a>
+		<h3>add<wbr>Caption</h3>
+		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+			<li class="tsd-signature tsd-kind-icon">add<wbr>Caption<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, leftAnchorPoint<span class="tsd-signature-symbol">?: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, rightAnchorPoint<span class="tsd-signature-symbol">?: </span><a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.icascademodel.html" class="tsd-signature-type">ICascadeModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L16">core/cascades.ts:16</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Add a Caption object to a model.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>text: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Text to add.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> leftAnchorPoint: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional Point on left side middle of text.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> rightAnchorPoint: <a href="makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional Point on right side middle of text.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="makerjs.icascademodel.html" class="tsd-signature-type">ICascadeModel</a></h4>
+				<p>this cascade container, this.$result will be The original model (for cascading).</p>
+			</li>
+		</ul>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 		<a name="addmodel" class="tsd-anchor"></a>
 		<h3>add<wbr>Model</h3>
 		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -140,7 +185,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L20">core/cascades.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L31">core/cascades.ts:31</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -186,7 +231,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L35">core/cascades.ts:35</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L46">core/cascades.ts:46</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -232,7 +277,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L50">core/cascades.ts:50</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L61">core/cascades.ts:61</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -278,7 +323,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L60">core/cascades.ts:60</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L71">core/cascades.ts:71</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -311,7 +356,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L70">core/cascades.ts:70</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L81">core/cascades.ts:81</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -349,7 +394,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L78">core/cascades.ts:78</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L89">core/cascades.ts:89</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -372,7 +417,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L92">core/cascades.ts:92</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L103">core/cascades.ts:103</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -434,7 +479,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L101">core/cascades.ts:101</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L112">core/cascades.ts:112</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -466,7 +511,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L110">core/cascades.ts:110</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L121">core/cascades.ts:121</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -498,7 +543,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L119">core/cascades.ts:119</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L130">core/cascades.ts:130</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -530,7 +575,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L128">core/cascades.ts:128</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L139">core/cascades.ts:139</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -562,7 +607,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L140">core/cascades.ts:140</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L151">core/cascades.ts:151</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -612,7 +657,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L151">core/cascades.ts:151</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L162">core/cascades.ts:162</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -656,7 +701,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L163">core/cascades.ts:163</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L174">core/cascades.ts:174</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -690,7 +735,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L173">core/cascades.ts:173</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L184">core/cascades.ts:184</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -728,7 +773,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L182">core/cascades.ts:182</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L193">core/cascades.ts:193</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -760,7 +805,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L191">core/cascades.ts:191</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L202">core/cascades.ts:202</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -792,7 +837,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L200">core/cascades.ts:200</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L211">core/cascades.ts:211</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -824,7 +869,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L212">core/cascades.ts:212</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L223">core/cascades.ts:223</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -874,7 +919,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L221">core/cascades.ts:221</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L232">core/cascades.ts:232</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -906,7 +951,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L232">core/cascades.ts:232</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L243">core/cascades.ts:243</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -950,7 +995,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L242">core/cascades.ts:242</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L253">core/cascades.ts:253</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -988,7 +1033,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L252">core/cascades.ts:252</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L263">core/cascades.ts:263</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1026,7 +1071,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L261">core/cascades.ts:261</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L272">core/cascades.ts:272</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1058,7 +1103,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L270">core/cascades.ts:270</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L281">core/cascades.ts:281</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1090,7 +1135,7 @@ title: Api - ICascadeModel Interface
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/cascades.ts#L280">core/cascades.ts:280</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/cascades.ts#L291">core/cascades.ts:291</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">

@@ -1,20 +1,21 @@
 ---
 layout: posts
-title: Api - Belt Class
+title: Api - ICaption Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
+<section class="tsd-panel tsd-comment">
+	<div class="tsd-comment tsd-typography">
+		<div class="lead">
+			<p>Text annotation, diplayable natively to the output format.</p>
+		</div>
+	</div>
+</section>
 <section class="tsd-panel tsd-hierarchy">
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="target">Belt</span>
+			<span class="target">ICaption</span>
 		</li>
-	</ul>
-</section>
-<section class="tsd-panel">
-	<h3>Implements</h3>
-	<ul class="tsd-hierarchy">
-		<li><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 	</ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -22,63 +23,49 @@ title: Api - Belt Class
 	<section class="tsd-panel tsd-index-panel">
 		<div class="tsd-index-content">
 			<section class="tsd-index-section ">
-				<h3>Constructors</h3>
-				<ul class="tsd-index-list">
-					<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="makerjs.models.belt.html#constructor" class="tsd-kind-icon">constructor</a></li>
-				</ul>
-			</section>
-			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-class"><a href="makerjs.models.belt.html#paths" class="tsd-kind-icon">paths</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icaption.html#anchor" class="tsd-kind-icon">anchor</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.icaption.html#text" class="tsd-kind-icon">text</a></li>
 				</ul>
 			</section>
 		</div>
 	</section>
 </section>
 <section class="tsd-panel-group tsd-member-group ">
-	<h2>Constructors</h2>
-	<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-		<a name="constructor" class="tsd-anchor"></a>
-		<h3>constructor</h3>
-		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Belt<span class="tsd-signature-symbol">(</span>leftRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, rightRadius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.belt.html" class="tsd-signature-type">Belt</a></li>
-		</ul>
-		<ul class="tsd-descriptions">
-			<li class="tsd-description">
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/models/Belt.ts#L5">models/Belt.ts:5</a></li>
-					</ul>
-				</aside>
-				<h4 class="tsd-parameters-title">Parameters</h4>
-				<ul class="tsd-parameters">
-					<li>
-						<h5>leftRadius: <span class="tsd-signature-type">number</span></h5>
-					</li>
-					<li>
-						<h5>distance: <span class="tsd-signature-type">number</span></h5>
-					</li>
-					<li>
-						<h5>rightRadius: <span class="tsd-signature-type">number</span></h5>
-					</li>
-				</ul>
-				<h4 class="tsd-returns-title">Returns <a href="makerjs.models.belt.html" class="tsd-signature-type">Belt</a></h4>
-			</li>
-		</ul>
-	</section>
-</section>
-<section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-		<a name="paths" class="tsd-anchor"></a>
-		<h3>paths</h3>
-		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="anchor" class="tsd-anchor"></a>
+		<h3>anchor</h3>
+		<div class="tsd-signature tsd-kind-icon">anchor<span class="tsd-signature-symbol">:</span> <a href="makerjs.ipathline.html" class="tsd-signature-type">IPathLine</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/models/Belt.ts#L5">models/Belt.ts:5</a></li>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L160">core/schema.ts:160</a></li>
 			</ul>
 		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Invisible line to which the text is aligned.
+					The text will be horizontally and vertically centered on the center point of this line.
+					The text may be longer or shorter than the line, it is used only for position and angle.
+				The anchor line&#39;s endpoints may be omitted, in which the case the text will always remain non-angled, even if the model is rotated.</p>
+			</div>
+		</div>
+	</section>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="text" class="tsd-anchor"></a>
+		<h3>text</h3>
+		<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+		<aside class="tsd-sources">
+			<ul>
+				<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/schema.ts#L152">core/schema.ts:152</a></li>
+			</ul>
+		</aside>
+		<div class="tsd-comment tsd-typography">
+			<div class="lead">
+				<p>Caption text.</p>
+			</div>
+		</div>
 	</section>
 </section>
 </div>

@@ -28,6 +28,7 @@ title: Api - model Module
 			<section class="tsd-index-section ">
 				<h3>Functions</h3>
 				<ul class="tsd-index-list">
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#addcaption" class="tsd-kind-icon">add<wbr>Caption</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="makerjs.model.html#adddistortedpath" class="tsd-kind-icon">add<wbr>Distorted<wbr>Path</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#addmodel" class="tsd-kind-icon">add<wbr>Model</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#addordeletesegments" class="tsd-kind-icon">add<wbr>OrDelete<wbr>Segments</a></li>
@@ -51,6 +52,7 @@ title: Api - model Module
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#findchains" class="tsd-kind-icon">find<wbr>Chains</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#findsinglechain" class="tsd-kind-icon">find<wbr>Single<wbr>Chain</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#followlinks" class="tsd-kind-icon">follow<wbr>Links</a></li>
+					<li class="tsd-kind-function tsd-parent-kind-module"><a href="makerjs.model.html#getallcaptionsoffset" class="tsd-kind-icon">get<wbr>All<wbr>Captions<wbr>Offset</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#getbeziermodels" class="tsd-kind-icon">get<wbr>Bezier<wbr>Models</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#getclosedgeometries" class="tsd-kind-icon">get<wbr>Closed<wbr>Geometries</a></li>
 					<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private"><a href="makerjs.model.html#getcontainment" class="tsd-kind-icon">get<wbr>Containment</a></li>
@@ -85,6 +87,56 @@ title: Api - model Module
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Functions</h2>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="addcaption" class="tsd-anchor"></a>
+		<h3>add<wbr>Caption</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">add<wbr>Caption<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, leftAnchorPoint<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a>, rightAnchorPoint<span class="tsd-signature-symbol">?: </span><a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L11">core/model.ts:11</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Add a Caption object to a model.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model to add to.</p>
+						</div>
+					</li>
+					<li>
+						<h5>text: <span class="tsd-signature-type">string</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Text to add.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> leftAnchorPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional Point on left side middle of text.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> rightAnchorPoint: <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional Point on right side middle of text.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h4>
+				<p>The original model (for cascading).</p>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
 		<a name="adddistortedpath" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> add<wbr>Distorted<wbr>Path</h3>
@@ -95,7 +147,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L380">core/model.ts:380</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L438">core/model.ts:438</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -138,7 +190,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L36">core/model.ts:36</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L55">core/model.ts:55</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -190,7 +242,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L280">core/combine.ts:280</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L280">core/combine.ts:280</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -230,7 +282,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L16">core/model.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L35">core/model.ts:35</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -282,7 +334,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L56">core/model.ts:56</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L75">core/model.ts:75</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -334,7 +386,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L191">core/combine.ts:191</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L191">core/combine.ts:191</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -374,7 +426,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L45">core/combine.ts:45</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L45">core/combine.ts:45</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -405,7 +457,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L168">core/combine.ts:168</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L168">core/combine.ts:168</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -444,7 +496,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L188">core/model.ts:188</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L233">core/model.ts:233</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -488,7 +540,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L250">core/combine.ts:250</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L250">core/combine.ts:250</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -519,7 +571,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/simplify.ts#L6">core/simplify.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/simplify.ts#L6">core/simplify.ts:6</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -595,7 +647,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L67">core/model.ts:67</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L86">core/model.ts:86</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -627,7 +679,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L348">core/combine.ts:348</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L348">core/combine.ts:348</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -695,7 +747,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L431">core/combine.ts:431</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L431">core/combine.ts:431</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -733,7 +785,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L442">core/combine.ts:442</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L442">core/combine.ts:442</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -771,7 +823,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L453">core/combine.ts:453</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L453">core/combine.ts:453</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -809,7 +861,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L452">core/model.ts:452</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L515">core/model.ts:515</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -847,7 +899,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L77">core/model.ts:77</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L96">core/model.ts:96</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -879,7 +931,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L408">core/model.ts:408</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L466">core/model.ts:466</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -935,7 +987,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/expand.ts#L101">core/expand.ts:101</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/expand.ts#L101">core/expand.ts:101</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -986,7 +1038,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L125">core/chain.ts:125</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L125">core/chain.ts:125</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1018,7 +1070,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L135">core/chain.ts:135</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L135">core/chain.ts:135</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1065,7 +1117,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L97">core/chain.ts:97</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L97">core/chain.ts:97</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1097,7 +1149,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L16">core/chain.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L16">core/chain.ts:16</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1157,6 +1209,38 @@ title: Api - model Module
 			</li>
 		</ul>
 	</section>
+	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+		<a name="getallcaptionsoffset" class="tsd-anchor"></a>
+		<h3>get<wbr>All<wbr>Captions<wbr>Offset</h3>
+		<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+			<li class="tsd-signature tsd-kind-icon">get<wbr>All<wbr>Captions<wbr>Offset<span class="tsd-signature-symbol">(</span>modelContext<span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ICaption[]</span></li>
+		</ul>
+		<ul class="tsd-descriptions">
+			<li class="tsd-description">
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L113">core/model.ts:113</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Gets all Caption objects, in absolute position, in this model and its children.</p>
+					</div>
+				</div>
+				<h4 class="tsd-parameters-title">Parameters</h4>
+				<ul class="tsd-parameters">
+					<li>
+						<h5>modelContext: <a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>The model to search for Caption objects.</p>
+						</div>
+					</li>
+				</ul>
+				<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ICaption[]</span></h4>
+				<p>Array of Caption objects.</p>
+			</li>
+		</ul>
+	</section>
 	<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private">
 		<a name="getbeziermodels" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Bezier<wbr>Models</h3>
@@ -1167,7 +1251,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L364">core/chain.ts:364</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L364">core/chain.ts:364</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1192,7 +1276,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/expand.ts#L223">core/expand.ts:223</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/expand.ts#L223">core/expand.ts:223</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1217,7 +1301,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L296">core/chain.ts:296</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L296">core/chain.ts:296</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1245,7 +1329,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/expand.ts#L212">core/expand.ts:212</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/expand.ts#L212">core/expand.ts:212</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1270,7 +1354,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L6">core/combine.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L6">core/combine.ts:6</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1298,7 +1382,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L6">core/chain.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L6">core/chain.ts:6</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1326,7 +1410,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L32">core/combine.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L32">core/combine.ts:32</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1357,7 +1441,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L92">core/model.ts:92</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L133">core/model.ts:133</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1390,7 +1474,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L109">core/model.ts:109</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L150">core/model.ts:150</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1427,7 +1511,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L119">core/model.ts:119</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L160">core/model.ts:160</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1464,7 +1548,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/combine.ts#L120">core/combine.ts:120</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/combine.ts#L120">core/combine.ts:120</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1515,7 +1599,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L133">core/model.ts:133</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L174">core/model.ts:174</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1555,7 +1639,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L113">core/chain.ts:113</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L113">core/chain.ts:113</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1583,7 +1667,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L205">core/model.ts:205</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L250">core/model.ts:250</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1627,7 +1711,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L263">core/model.ts:263</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L313">core/model.ts:313</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1665,7 +1749,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L275">core/model.ts:275</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L325">core/model.ts:325</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1703,7 +1787,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L145">core/model.ts:145</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L186">core/model.ts:186</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1741,7 +1825,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/expand.ts#L248">core/expand.ts:248</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/expand.ts#L248">core/expand.ts:248</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1797,7 +1881,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L291">core/model.ts:291</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L341">core/model.ts:341</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1835,7 +1919,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/deadend.ts#L136">core/deadend.ts:136</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/deadend.ts#L136">core/deadend.ts:136</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1906,7 +1990,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L320">core/model.ts:320</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L370">core/model.ts:370</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1950,7 +2034,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L352">core/model.ts:352</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L406">core/model.ts:406</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1994,7 +2078,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/simplify.ts#L56">core/simplify.ts:56</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/simplify.ts#L56">core/simplify.ts:56</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2029,7 +2113,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/chain.ts#L401">core/chain.ts:401</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/chain.ts#L401">core/chain.ts:401</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2057,7 +2141,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L499">core/model.ts:499</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L562">core/model.ts:562</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2095,7 +2179,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L475">core/model.ts:475</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L538">core/model.ts:538</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2133,7 +2217,7 @@ title: Api - model Module
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/b660138f/packages/maker.js/src/core/model.ts#L570">core/model.ts:570</a></li>
+						<li>Defined in <a href="https://github.com/Microsoft/maker.js/blob/7c370d6d/packages/maker.js/src/core/model.ts#L633">core/model.ts:633</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
