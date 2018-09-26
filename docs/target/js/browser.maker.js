@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.11.2
+ *   version: 0.12.0
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2245,6 +2245,25 @@ var MakerJs;
     var model;
     (function (model) {
         /**
+         * Add a Caption object to a model.
+         * @param modelContext The model to add to.
+         * @param text Text to add.
+         * @param leftAnchorPoint Optional Point on left side middle of text.
+         * @param rightAnchorPoint Optional Point on right side middle of text.
+         * @returns The original model (for cascading).
+         */
+        function addCaption(modelContext, text, leftAnchorPoint, rightAnchorPoint) {
+            if (!leftAnchorPoint) {
+                leftAnchorPoint = MakerJs.point.zero();
+            }
+            if (!rightAnchorPoint) {
+                rightAnchorPoint = MakerJs.point.clone(leftAnchorPoint);
+            }
+            modelContext.caption = { text: text, anchor: new MakerJs.paths.Line(leftAnchorPoint, rightAnchorPoint) };
+            return modelContext;
+        }
+        model.addCaption = addCaption;
+        /**
          * Add a path as a child. This is basically equivalent to:
          * ```
          * parentModel.paths[childPathId] = childPath;
@@ -2332,6 +2351,25 @@ var MakerJs;
         }
         model.countChildModels = countChildModels;
         /**
+         * Gets all Caption objects, in absolute position, in this model and its children.
+         * @param modelContext The model to search for Caption objects.
+         * @returns Array of Caption objects.
+         */
+        function getAllCaptionsOffset(modelContext) {
+            var captions = [];
+            function tryAddCaption(m, offset) {
+                if (m.caption) {
+                    captions.push({ text: m.caption.text, anchor: MakerJs.path.clone(m.caption.anchor, offset) });
+                }
+            }
+            tryAddCaption(modelContext, modelContext.origin);
+            model.walk(modelContext, {
+                afterChildWalk: function (wm) { return tryAddCaption(wm.childModel, wm.offset); }
+            });
+            return captions;
+        }
+        model.getAllCaptionsOffset = getAllCaptionsOffset;
+        /**
          * @private
          */
         function getSimilarId(map, id) {
@@ -2404,6 +2442,9 @@ var MakerJs;
                     for (var id in m.models) {
                         innerOriginate(m.models[id], newOrigin);
                     }
+                }
+                if (m.caption) {
+                    MakerJs.path.moveRelative(m.caption.anchor, newOrigin);
                 }
                 m.origin = MakerJs.point.zero();
             }
@@ -2487,6 +2528,10 @@ var MakerJs;
                     newModel.models[id] = childModelMirrored;
                 }
             }
+            if (modelToMirror.caption) {
+                newModel.caption = MakerJs.cloneObject(modelToMirror.caption);
+                newModel.caption.anchor = MakerJs.path.mirror(modelToMirror.caption.anchor, mirrorX, mirrorY);
+            }
             return newModel;
         }
         model.mirror = mirror;
@@ -2566,6 +2611,9 @@ var MakerJs;
                     rotate(modelToRotate.models[id], angleInDegrees, offsetOrigin);
                 }
             }
+            if (modelToRotate.caption) {
+                MakerJs.path.rotate(modelToRotate.caption.anchor, angleInDegrees, offsetOrigin);
+            }
             return modelToRotate;
         }
         model.rotate = rotate;
@@ -2594,6 +2642,9 @@ var MakerJs;
                 for (var id in modelToScale.models) {
                     scale(modelToScale.models[id], scaleValue, true);
                 }
+            }
+            if (modelToScale.caption) {
+                MakerJs.path.scale(modelToScale.caption.anchor, scaleValue);
             }
             return modelToScale;
         }
@@ -2664,6 +2715,10 @@ var MakerJs;
                     var distortedChild = distort(childModel, scaleX, scaleY, true, bezierAccuracy);
                     addModel(distorted, distortedChild, childId);
                 }
+            }
+            if (modelToDistort.caption) {
+                distorted.caption = MakerJs.cloneObject(modelToDistort.caption);
+                distorted.caption.anchor = MakerJs.path.distort(modelToDistort.caption.anchor, scaleX, scaleY);
             }
             return distorted;
         }
@@ -4085,10 +4140,10 @@ var MakerJs;
          *
          * @param baseMeasure The measurement to increase.
          * @param addMeasure The additional measurement.
-         * @param addOffset Optional offset point of the additional measurement.
+         * @param augmentBaseMeasure Optional flag to call measure.augment on the measurement.
          * @returns The increased original measurement (for cascading).
          */
-        function increase(baseMeasure, addMeasure) {
+        function increase(baseMeasure, addMeasure, augmentBaseMeasure) {
             function getExtreme(basePoint, newPoint, fn) {
                 if (!newPoint)
                     return;
@@ -4106,6 +4161,9 @@ var MakerJs;
             if (addMeasure) {
                 getExtreme(baseMeasure.low, addMeasure.low, Math.min);
                 getExtreme(baseMeasure.high, addMeasure.high, Math.max);
+            }
+            if (augmentBaseMeasure) {
+                augment(baseMeasure);
             }
             return baseMeasure;
         }
@@ -4950,7 +5008,9 @@ var MakerJs;
             //DXF format documentation:
             //http://images.autodesk.com/adsk/files/acad_dxf0.pdf
             if (options === void 0) { options = {}; }
-            var opts = {};
+            var opts = {
+                fontSize: 9
+            };
             var layerIds = [];
             var dxf = { "top": [], "bottom": [] };
             var dxfIndex = "top";
@@ -5074,6 +5134,25 @@ var MakerJs;
                 append("0");
                 append("SEQEND");
             }
+            function mtext(caption) {
+                var center = MakerJs.point.middle(caption.anchor);
+                append("0");
+                append("MTEXT");
+                append("10");
+                append(MakerJs.round(center[0], opts.accuracy));
+                append("20");
+                append(MakerJs.round(center[1], opts.accuracy));
+                append("40");
+                append(opts.fontSize);
+                append("71");
+                append(5); //5 = Middle center
+                append("72");
+                append(1); //1 = Left to right
+                append("1");
+                append(caption.text); //TODO: break into 250 char chunks
+                append("50");
+                append(MakerJs.angle.ofPointInRadians(caption.anchor.origin, caption.anchor.end));
+            }
             function section(sectionFn) {
                 append("0");
                 append("SECTION");
@@ -5123,16 +5202,17 @@ var MakerJs;
                     append(units);
                 }
             }
-            function entities(walkedPaths, chains) {
+            function entities(walkedPaths, chains, captions) {
                 append("2");
                 append("ENTITIES");
-                chains.forEach(function (c) { return polyline(c); });
+                chains.forEach(polyline);
                 walkedPaths.forEach(function (walkedPath) {
                     var fn = map[walkedPath.pathContext.type];
                     if (fn) {
                         fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
                     }
                 });
+                captions.forEach(mtext);
             }
             //fixup options
             if (!opts.units) {
@@ -5171,7 +5251,7 @@ var MakerJs;
                     };
                     MakerJs.model.walk(modelToExport, walkOptions);
                 }
-                entities(walkedPaths, chainsOnLayers);
+                entities(walkedPaths, chainsOnLayers, MakerJs.model.getAllCaptionsOffset(modelToExport));
             });
             dxfIndex = "top";
             section(header);
@@ -7280,6 +7360,8 @@ var MakerJs;
                 return;
             //fixup options
             var opts = {
+                fontName: 'Courier',
+                fontSize: 9,
                 origin: [0, 0],
                 stroke: "#000"
             };
@@ -7331,6 +7413,24 @@ var MakerJs;
                 });
                 loose.map(single);
             }, { byLayers: false });
+            doc.font(opts.fontName).fontSize(opts.fontSize);
+            MakerJs.model.getAllCaptionsOffset(scaledModel).forEach(function (caption) {
+                //measure the angle of the line, prior to mirroring
+                var a = MakerJs.angle.ofLineInDegrees(caption.anchor);
+                //mirror into pdf y coords
+                var anchor = MakerJs.path.mirror(caption.anchor, false, true);
+                //move mirrored line by document offset
+                MakerJs.path.moveRelative(anchor, offset);
+                //measure center point of text
+                var text = caption.text;
+                var textCenter = [doc.widthOfString(text) / 2, doc.heightOfString(text) / 2];
+                //get center point on line
+                var center = MakerJs.point.middle(anchor);
+                var textOffset = MakerJs.point.subtract(center, textCenter);
+                doc.rotate(-a, { origin: center });
+                doc.text(text, textOffset[0], textOffset[1]);
+                doc.rotate(a, { origin: center });
+            });
         }
         exporter.toPDF = toPDF;
     })(exporter = MakerJs.exporter || (MakerJs.exporter = {}));
@@ -7650,6 +7750,11 @@ var MakerJs;
                 modelToExport = { paths: { modelToMeasure: itemToExport } };
             }
             var size = MakerJs.measure.modelExtents(modelToExport);
+            //increase size to fit caption text
+            var captions = MakerJs.model.getAllCaptionsOffset(modelToExport);
+            captions.forEach(function (caption) {
+                MakerJs.measure.increase(size, MakerJs.measure.pathExtents(caption.anchor), true);
+            });
             //try to get the unit system from the itemToExport
             if (!opts.units) {
                 var unitSystem = exporter.tryGetModelUnits(itemToExport);
@@ -7832,6 +7937,25 @@ var MakerJs;
                     layerGroup.innerTextEscaped = true;
                     append(layerGroup.toString());
                 }
+            }
+            var captionTags = captions.map(function (caption) {
+                var anchor = fixPath(caption.anchor, opts.origin);
+                var center = MakerJs.point.rounded(MakerJs.point.middle(anchor), opts.accuracy);
+                var tag = new exporter.XmlTag('text', {
+                    "alignment-baseline": "middle",
+                    "text-anchor": "middle",
+                    "transform": "rotate(" + MakerJs.angle.ofLineInDegrees(anchor) + "," + center[0] + "," + center[1] + ")",
+                    "x": center[0],
+                    "y": center[1]
+                });
+                tag.innerText = caption.text;
+                return tag.toString();
+            });
+            if (captionTags.length) {
+                var captionGroup = new exporter.XmlTag('g', { "id": "captions" });
+                captionGroup.innerText = captionTags.join('');
+                captionGroup.innerTextEscaped = true;
+                append(captionGroup.toString());
             }
             append(svgGroup.getClosingTag());
             append(svgTag.getClosingTag());
@@ -10029,6 +10153,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.11.2";
+MakerJs.version = "0.12.0";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
