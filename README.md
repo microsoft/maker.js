@@ -154,9 +154,9 @@ There are many ways to contribute to Maker.js:
 * Create a demo for the [gallery](http://maker.js.org/demos/#content).
 * Create lessons or videos for the [documentation](http://maker.js.org/docs/#content).
 * Enhance the [website](https://github.com/Microsoft/maker.js/tree/gh-pages).
-* Add features to the [Playground app](https://github.com/Microsoft/maker.js/tree/master/playground).
+* Add features to the [Playground app](https://maker.js.org/playground/).
 * Create a new Maker.js app, and we will link to it here.
-* Find some TODO's in the [core source code](https://github.com/Microsoft/maker.js/tree/master/src).
+* Find some TODO's in the [core source code](https://github.com/Microsoft/maker.js/tree/master).
 * Create unit tests for the core.
 
 Some of these may require a [contributor agreement](https://github.com/Microsoft/maker.js/blob/master/CONTRIBUTING.md).
