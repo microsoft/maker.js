@@ -42,6 +42,6 @@ var points = "50 160, 55 180, 70 180, 60 190, 65 205, 50 195, 35 205, 40 190, 30
 
 var closed = true; //true for SVG polygon, false for SVG polyline
 
-var model = makerjs.model.mirror(new makerjs.models.ConnectTheDots(closed, svgData), false, true);
+var model = makerjs.model.mirror(new makerjs.models.ConnectTheDots(closed, points), false, true);
 
 {% endhighlight %}
