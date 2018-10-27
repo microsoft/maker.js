@@ -155,7 +155,7 @@ function demoIndexPage() {
 
         writeHeading(1, 'Demos');
 
-        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/demos/js).\n 3. Submit a pull request!');
+        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/docs/demos/js).\n 3. Submit a pull request!');
 
         stream.write(section(yourDemoHtml));
 
