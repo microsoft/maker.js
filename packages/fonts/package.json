@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc gen.ts"
+    "build": "tsc -p ."
   },
   "author": "Dan Marshall",
   "license": "Apache-2.0",

@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "es2015"
+        ]
+    },
+    "include": [
+        "gen.ts"
+    ]
+}
