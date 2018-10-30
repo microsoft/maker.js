@@ -7,13 +7,13 @@ Create line drawings using familiar constructs from geometry and drafting. Initi
 2D Export formats: 
 [DXF](https://maker.js.org/docs/api/modules/makerjs.exporter.html#todxf), 
 [SVG](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tosvg),
-[PDF](https://maker.js.org/docs/api/modules/makerjs.exporter.html#topdf) (Requires [PDFKit](https://pdfkit.org/)),
-[Jscad CAG object](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcag) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg))
+[PDF](https://maker.js.org/docs/api/modules/makerjs.exporter.html#topdf),
+[Jscad CAG object](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcag)
 
 3D Export formats:
 [Jscad Script](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadscript),
-[Jscad CSG object](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcsg) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg)),
-[STL](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadstl) (Requires [@jscad/csg](https://www.npmjs.com/package/@jscad/csg) & [@jscad/stl-serializer](https://www.npmjs.com/package/@jscad/stl-serializer))
+[Jscad CSG object](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadcsg),
+[STL](https://maker.js.org/docs/api/modules/makerjs.exporter.html#tojscadstl)
 
 [Demos](https://maker.js.org/demos/) - [Documentation](http://maker.js.org/docs/)
 

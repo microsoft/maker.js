@@ -4753,7 +4753,7 @@
           "sources": [
             {
               "fileName": "core/pdf.ts",
-              "line": 117,
+              "line": 118,
               "character": 38
             }
           ],
@@ -4799,7 +4799,7 @@
               "sources": [
                 {
                   "fileName": "core/pdf.ts",
-                  "line": 122,
+                  "line": 123,
                   "character": 16
                 }
               ],
@@ -4819,7 +4819,7 @@
               "sources": [
                 {
                   "fileName": "core/pdf.ts",
-                  "line": 127,
+                  "line": 128,
                   "character": 16
                 }
               ],
@@ -4839,7 +4839,7 @@
               "sources": [
                 {
                   "fileName": "core/pdf.ts",
-                  "line": 132,
+                  "line": 133,
                   "character": 14
                 }
               ],
@@ -4859,7 +4859,7 @@
               "sources": [
                 {
                   "fileName": "core/pdf.ts",
-                  "line": 137,
+                  "line": 138,
                   "character": 14
                 }
               ],
@@ -5915,7 +5915,7 @@
               "name": "toJscadCAG",
               "kindString": "Call signature",
               "comment": {
-                "shortText": "Converts a model to a @jscad/csg object - 2D to 2D.",
+                "shortText": "Converts a model to a @jscad/csg CAG object - 2D to 2D. See https://en.wikibooks.org/wiki/OpenJSCAD_User_Guide#2D_Paths",
                 "text": "Example:\n```\n//First, use npm install @jscad/csg from the command line in your jscad project\n//Create a CAG instance from a model.\nvar { CAG } = require('@jscad/csg');\nvar model = new makerjs.models.Ellipse(70, 40);\nvar cag = makerjs.exporter.toJscadCAG(CAG, model, {maxArcFacet: 1});\n```\n",
                 "returns": "jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.\n"
               },
@@ -5923,7 +5923,7 @@
                 {
                   "name": "jscadCAG",
                   "flags": {},
-                  "comment": "@jscad/csg CAG engine.",
+                  "comment": "@jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg",
                   "type": "CAG"
                 },
                 {
@@ -5959,7 +5959,7 @@
               "name": "toJscadCSG",
               "kindString": "Call signature",
               "comment": {
-                "shortText": "Converts a model to a @jscad/csg object - 2D to 3D.",
+                "shortText": "Converts a model to a @jscad/csg CSG object - 2D to 3D.",
                 "text": "Example:\n```\n//First, use npm install @jscad/csg from the command line in your jscad project\n//Create a CSG instance from a model.\nvar { CAG } = require('@jscad/csg');\nvar model = new makerjs.models.Ellipse(70, 40);\nvar csg = makerjs.exporter.toJscadCSG(CAG, model, {maxArcFacet: 1, extrude: 10});\n```\n",
                 "returns": "jscad CAG object in 2D, or a map (keyed by layer id) of jscad CAG objects - if options.byLayers is true.\n"
               },
@@ -5967,7 +5967,7 @@
                 {
                   "name": "jscadCAG",
                   "flags": {},
-                  "comment": "@jscad/csg CAG engine.",
+                  "comment": "@jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg",
                   "type": "CAG"
                 },
                 {
@@ -6017,7 +6017,7 @@
                 {
                   "name": "stlSerializer",
                   "flags": {},
-                  "comment": "@jscad/stl-serializer (require('@jscad/stl-serializer')).",
+                  "comment": "@jscad/stl-serializer, see https://www.npmjs.com/package/@jscad/stl-serializer",
                   "type": "StlSerializer"
                 },
                 {
@@ -6099,6 +6099,7 @@
                 {
                   "name": "doc",
                   "flags": {},
+                  "comment": "PDFKit.PDFDocument object. See https://pdfkit.org/",
                   "type": "PDFDocument"
                 },
                 {
@@ -6122,7 +6123,7 @@
           "sources": [
             {
               "fileName": "core/pdf.ts",
-              "line": 10,
+              "line": 11,
               "character": 25
             }
           ]

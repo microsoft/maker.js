@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.12.0
+ *   version: 0.12.1
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -7079,7 +7079,7 @@ var MakerJs;
             };
         }
         /**
-         * Converts a model to a @jscad/csg object - 2D to 2D.
+         * Converts a model to a @jscad/csg CAG object - 2D to 2D. See https://en.wikibooks.org/wiki/OpenJSCAD_User_Guide#2D_Paths
          *
          * Example:
          * ```
@@ -7090,7 +7090,7 @@ var MakerJs;
          * var cag = makerjs.exporter.toJscadCAG(CAG, model, {maxArcFacet: 1});
          * ```
          *
-         * @param jscadCAG @jscad/csg CAG engine.
+         * @param jscadCAG @jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg
          * @param modelToExport Model object to export.
          * @param options Optional options object.
          * @param options.byLayers Optional flag to separate chains by layers.
@@ -7199,7 +7199,7 @@ var MakerJs;
             return options.byLayers ? resultMap : resultMap[''];
         }
         /**
-         * Converts a model to a @jscad/csg object - 2D to 3D.
+         * Converts a model to a @jscad/csg CSG object - 2D to 3D.
          *
          * Example:
          * ```
@@ -7210,7 +7210,7 @@ var MakerJs;
          * var csg = makerjs.exporter.toJscadCSG(CAG, model, {maxArcFacet: 1, extrude: 10});
          * ```
          *
-         * @param jscadCAG @jscad/csg CAG engine.
+         * @param jscadCAG @jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg
          * @param modelToExport Model object to export.
          * @param options Optional options object.
          * @param options.byLayers Optional flag to separate chains by layers.
@@ -7323,8 +7323,8 @@ var MakerJs;
         /**
          * Exports a model in STL format - 2D to 3D.
          *
-         * @param jscadCAG @jscad/csg CAG engine.
-         * @param stlSerializer @jscad/stl-serializer (require('@jscad/stl-serializer')).
+         * @param jscadCAG @jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg
+         * @param stlSerializer @jscad/stl-serializer, see https://www.npmjs.com/package/@jscad/stl-serializer
          * @param modelToExport Model object to export.
          * @param options Optional options object.
          * @param options.byLayers Optional flag to separate chains by layers.
@@ -7351,6 +7351,7 @@ var MakerJs;
         /**
          * Injects drawing into a PDFKit document.
          *
+         * @param doc PDFKit.PDFDocument object. See https://pdfkit.org/
          * @param modelToExport Model object to export.
          * @param options Export options object.
          * @returns String of PDF file contents.
@@ -10153,6 +10154,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.12.0";
+MakerJs.version = "0.12.1";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
