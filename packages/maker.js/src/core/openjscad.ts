@@ -160,7 +160,7 @@
     }
 
     /**
-     * Converts a model to a @jscad/csg object - 2D to 2D.
+     * Converts a model to a @jscad/csg CAG object - 2D to 2D. See https://en.wikibooks.org/wiki/OpenJSCAD_User_Guide#2D_Paths
      * 
      * Example:
      * ```
@@ -171,7 +171,7 @@
      * var cag = makerjs.exporter.toJscadCAG(CAG, model, {maxArcFacet: 1});
      * ```
      * 
-     * @param jscadCAG @jscad/csg CAG engine.
+     * @param jscadCAG @jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg
      * @param modelToExport Model object to export.
      * @param options Optional options object.
      * @param options.byLayers Optional flag to separate chains by layers.
@@ -295,7 +295,7 @@
     }
 
     /**
-     * Converts a model to a @jscad/csg object - 2D to 3D.
+     * Converts a model to a @jscad/csg CSG object - 2D to 3D.
      * 
      * Example:
      * ```
@@ -306,7 +306,7 @@
      * var csg = makerjs.exporter.toJscadCSG(CAG, model, {maxArcFacet: 1, extrude: 10});
      * ```
      * 
-     * @param jscadCAG @jscad/csg CAG engine.
+     * @param jscadCAG @jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg
      * @param modelToExport Model object to export.
      * @param options Optional options object.
      * @param options.byLayers Optional flag to separate chains by layers.
@@ -443,8 +443,8 @@
     /**
      * Exports a model in STL format - 2D to 3D.
      * 
-     * @param jscadCAG @jscad/csg CAG engine.
-     * @param stlSerializer @jscad/stl-serializer (require('@jscad/stl-serializer')).
+     * @param jscadCAG @jscad/csg CAG engine, see https://www.npmjs.com/package/@jscad/csg
+     * @param stlSerializer @jscad/stl-serializer, see https://www.npmjs.com/package/@jscad/stl-serializer
      * @param modelToExport Model object to export.
      * @param options Optional options object.
      * @param options.byLayers Optional flag to separate chains by layers.

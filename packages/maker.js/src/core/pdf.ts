@@ -3,6 +3,7 @@
     /**
      * Injects drawing into a PDFKit document.
      * 
+     * @param doc PDFKit.PDFDocument object. See https://pdfkit.org/
      * @param modelToExport Model object to export.
      * @param options Export options object.
      * @returns String of PDF file contents.
