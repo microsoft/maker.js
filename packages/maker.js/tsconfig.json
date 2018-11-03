@@ -4,6 +4,7 @@
     "outDir": "debug/",
     "sourceMap": true,
     "types": [
+      "dxf-parser",
       "@danmarshall/jscad-typings",
       "bezier-js",
       "graham_scan",

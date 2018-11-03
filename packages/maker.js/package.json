@@ -96,7 +96,8 @@
   "devDependencies": {
     "@jscad/csg": "^0.3.7",
     "@jscad/stl-serializer": "^0.1.0",
-    "@types/graham_scan": "^1.0.28"
+    "@types/graham_scan": "^1.0.28",
+    "dxf-parser-typings": "^1.2.1"
   },
   "dependencies": {
     "@danmarshall/jscad-typings": "^1.0.0",
