@@ -201,7 +201,7 @@ namespace MakerJs.exporter {
                 var fn = map[walkedPath.pathContext.type];
                 if (fn) {
                     const entity = fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
-                    entityArray.push.apply(entityArray, entity);
+                    entityArray.push(entity);
                 }
             });
             entityArray.push.apply(entityArray, captions.map(mtext));
