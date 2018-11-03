@@ -2,6 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "es2015"],
     "types": [
+      "dxf-parser",
       "@danmarshall/jscad-typings",
       "bezier-js",
       "graham_scan",
