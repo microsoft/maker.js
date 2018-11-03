@@ -260,158 +260,150 @@ namespace MakerJs.exporter {
     function outputDocument(doc: DxfParser.DXFDocument) {
 
         const dxf: (string | number)[] = [];
-        function append(value: string | number) {
-            dxf.push(value);
+        function append(...values: (string | number)[]) {
+            dxf.push.apply(dxf, values);
         }
 
         var map: { [entityType: string]: (entity: DxfParser.Entity) => void; } = {};
 
         map["LINE"] = function (line: DxfParser.EntityLINE) {
-            append("0");
-            append("LINE");
-            append("8");
-            append(line.layer);
-            append("10");
-            append(line.vertices[0].x);
-            append("20");
-            append(line.vertices[0].y);
-            append("11");
-            append(line.vertices[1].x);
-            append("21");
-            append(line.vertices[1].y);
+            append("0", "LINE",
+                "8",
+                line.layer,
+                "10",
+                line.vertices[0].x,
+                "20",
+                line.vertices[0].y,
+                "11",
+                line.vertices[1].x,
+                "21",
+                line.vertices[1].y
+            );
         };
 
         map["CIRCLE"] = function (circle: DxfParser.EntityCIRCLE) {
-            append("0");
-            append("CIRCLE");
-            append("8");
-            append(circle.layer);
-            append("10");
-            append(circle.center.x);
-            append("20");
-            append(circle.center.y);
-            append("40");
-            append(circle.radius);
+            append("0", "CIRCLE",
+                "8",
+                circle.layer,
+                "10",
+                circle.center.x,
+                "20",
+                circle.center.y,
+                "40",
+                circle.radius
+            );
         };
 
         map["ARC"] = function (arc: DxfParser.EntityARC) {
-            append("0");
-            append("ARC");
-            append("8");
-            append(arc.layer);
-            append("10");
-            append(arc.center.x);
-            append("20");
-            append(arc.center.y);
-            append("40");
-            append(arc.radius);
-            append("50");
-            append(arc.startAngle);
-            append("51");
-            append(arc.endAngle);
+            append("0", "ARC",
+                "8",
+                arc.layer,
+                "10",
+                arc.center.x,
+                "20",
+                arc.center.y,
+                "40",
+                arc.radius,
+                "50",
+                arc.startAngle,
+                "51",
+                arc.endAngle
+            );
         };
 
         //TODO - handle scenario if any bezier seeds get passed
         //map[pathType.BezierSeed]
 
         map["VERTEX"] = function (vertex: DxfParser.EntityVERTEX) {
-            append("0");
-            append("VERTEX");
-            append("8");
-            append(vertex.layer);
-            append("10");
-            append(vertex.x);
-            append("20");
-            append(vertex.y);
-            append("30");
-            append(0);
+            append("0", "VERTEX",
+                "8",
+                vertex.layer,
+                "10",
+                vertex.x,
+                "20",
+                vertex.y,
+                "30",
+                0
+            );
 
             if (vertex.bulge !== undefined) {
-                append("42");
-                append(vertex.bulge);
+                append("42", vertex.bulge);
             }
         }
 
         map["POLYLINE"] = function (polyline: DxfParser.EntityPOLYLINE) {
-            append("0");
-            append("POLYLINE");
-            append("8");
-            append(polyline.layer);
-            append("10");
-            append(0);
-            append("20");
-            append(0);
-            append("30");
-            append(0);
-            append("70");
-            append(polyline.shape ? 1 : 0);
+            append("0", "POLYLINE",
+                "8",
+                polyline.layer,
+                "10",
+                0,
+                "20",
+                0,
+                "30",
+                0,
+                "70",
+                polyline.shape ? 1 : 0
+            );
 
             polyline.vertices.forEach(vertex => map["VERTEX"](vertex));
 
-            append("0");
-            append("SEQEND");
+            append("0", "SEQEND");
         }
 
         map["MTEXT"] = function (mtext: DxfParser.EntityMTEXT) {
-            append("0");
-            append("MTEXT");
-            append("10");
-            append(mtext.position.x);
-            append("20");
-            append(mtext.position.y);
-            append("40");
-            append(mtext.height);
-            append("71");
-            append(mtext.attachmentPoint);
-            append("72");
-            append(mtext.drawingDirection);
-            append("1");
-            append(mtext.text);  //TODO: break into 250 char chunks
-            append("50");
-            append(mtext.rotation);
+            append("0", "MTEXT",
+                "10",
+                mtext.position.x,
+                "20",
+                mtext.position.y,
+                "40",
+                mtext.height,
+                "71",
+                mtext.attachmentPoint,
+                "72",
+                mtext.drawingDirection,
+                "1",
+                mtext.text,  //TODO: break into 250 char chunks
+                "50",
+                mtext.rotation
+            );
         }
 
         function section(sectionFn: () => void) {
-            append("0");
-            append("SECTION");
+            append("0", "SECTION");
 
             sectionFn();
 
-            append("0");
-            append("ENDSEC");
+            append("0", "ENDSEC");
         }
 
         function tables() {
-            append("2");
-            append("TABLES");
-            append("0");
-            append("TABLE");
+            append("2", "TABLES");
 
+            append("0", "TABLE");
             layersOut();
 
-            append("0");
-            append("ENDTAB");
+            append("0", "ENDTAB");
         }
 
         function layerOut(layer: DxfParser.Layer) {
-            append("0");
-            append("LAYER");
-            append("2");
-            append(layer.name);
-            append("70");
-            append("0");
-            append("62");
-            append(layer.color);
-            append("6");
-            append("CONTINUOUS");
+            append("0", "LAYER",
+                "2",
+                layer.name,
+                "70",
+                "0",
+                "62",
+                layer.color,
+                "6",
+                "CONTINUOUS"
+            );
         }
 
         function layersOut() {
             const layerTableName: DxfParser.TableNames = 'layer';
             const layerTable = doc.tables[layerTableName] as DxfParser.TableLAYER;
 
-            append("2");
-            append("LAYER");
+            append("2", "LAYER");
 
             for (let layerId in layerTable.layers) {
                 let layer = layerTable.layers[layerId];
@@ -420,21 +412,16 @@ namespace MakerJs.exporter {
         }
 
         function header() {
-            append("2");
-            append("HEADER");
+            append("2", "HEADER");
 
             for (let key in doc.header) {
                 let value = doc.header[key];
-                append("9");
-                append(key);
-                append("70");
-                append(value);
+                append("9", key, "70", value);
             }
         }
 
         function entities(entityArray: DxfParser.Entity[]) {
-            append("2");
-            append("ENTITIES");
+            append("2", "ENTITIES");
 
             entityArray.forEach(entity => {
                 const fn = map[entity.type];
@@ -447,11 +434,10 @@ namespace MakerJs.exporter {
         //begin dxf output
 
         section(header);
-        section(() => tables());
+        section(tables);
         section(() => entities(doc.entities));
 
-        append("0");
-        append("EOF");
+        append("0", "EOF");
 
         return dxf.join('\n');
     }
