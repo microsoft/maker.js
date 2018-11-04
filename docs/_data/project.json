@@ -3354,7 +3354,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 330,
+              "line": 465,
               "character": 37
             }
           ],
@@ -3369,7 +3369,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 335,
+                  "line": 470,
                   "character": 13
                 }
               ],
@@ -3390,7 +3390,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 341,
+              "line": 476,
               "character": 38
             }
           ],
@@ -3440,7 +3440,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 346,
+                  "line": 481,
                   "character": 16
                 }
               ],
@@ -3460,7 +3460,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 351,
+                  "line": 486,
                   "character": 20
                 }
               ],
@@ -3495,7 +3495,7 @@
                   "sources": [
                     {
                       "fileName": "core/dxf.ts",
-                      "line": 351,
+                      "line": 486,
                       "character": 22
                     }
                   ]
@@ -3561,7 +3561,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 356,
+                  "line": 491,
                   "character": 19
                 }
               ],

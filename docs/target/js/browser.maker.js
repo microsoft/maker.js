@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.12.1
+ *   version: 0.13.0
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -5012,11 +5012,11 @@ var MakerJs;
                 fontSize: 9
             };
             var layerIds = [];
-            var dxf = { "top": [], "bottom": [] };
-            var dxfIndex = "top";
-            function append(value) {
-                dxf[dxfIndex].push(value);
-            }
+            var doc = {
+                entities: [],
+                header: {},
+                tables: {}
+            };
             MakerJs.extendObject(opts, options);
             if (MakerJs.isModel(itemToExport)) {
                 var modelToExport = itemToExport;
@@ -5042,78 +5042,67 @@ var MakerJs;
             }
             var map = {};
             map[MakerJs.pathType.Line] = function (line, offset, layer) {
-                append("0");
-                append("LINE");
-                append("8");
-                append(defaultLayer(line, layer));
-                append("10");
-                append(MakerJs.round(line.origin[0] + offset[0], opts.accuracy));
-                append("20");
-                append(MakerJs.round(line.origin[1] + offset[1], opts.accuracy));
-                append("11");
-                append(MakerJs.round(line.end[0] + offset[0], opts.accuracy));
-                append("21");
-                append(MakerJs.round(line.end[1] + offset[1], opts.accuracy));
+                var lineEntity = {
+                    type: "LINE",
+                    layer: defaultLayer(line, layer),
+                    vertices: [
+                        {
+                            x: MakerJs.round(line.origin[0] + offset[0], opts.accuracy),
+                            y: MakerJs.round(line.origin[1] + offset[1], opts.accuracy)
+                        },
+                        {
+                            x: MakerJs.round(line.end[0] + offset[0], opts.accuracy),
+                            y: MakerJs.round(line.end[1] + offset[1], opts.accuracy)
+                        }
+                    ]
+                };
+                return lineEntity;
             };
             map[MakerJs.pathType.Circle] = function (circle, offset, layer) {
-                append("0");
-                append("CIRCLE");
-                append("8");
-                append(defaultLayer(circle, layer));
-                append("10");
-                append(MakerJs.round(circle.origin[0] + offset[0], opts.accuracy));
-                append("20");
-                append(MakerJs.round(circle.origin[1] + offset[1], opts.accuracy));
-                append("40");
-                append(MakerJs.round(circle.radius, opts.accuracy));
+                var circleEntity = {
+                    type: "CIRCLE",
+                    layer: defaultLayer(circle, layer),
+                    center: {
+                        x: MakerJs.round(circle.origin[0] + offset[0], opts.accuracy),
+                        y: MakerJs.round(circle.origin[1] + offset[1], opts.accuracy)
+                    },
+                    radius: MakerJs.round(circle.radius, opts.accuracy)
+                };
+                return circleEntity;
             };
             map[MakerJs.pathType.Arc] = function (arc, offset, layer) {
-                append("0");
-                append("ARC");
-                append("8");
-                append(defaultLayer(arc, layer));
-                append("10");
-                append(MakerJs.round(arc.origin[0] + offset[0], opts.accuracy));
-                append("20");
-                append(MakerJs.round(arc.origin[1] + offset[1], opts.accuracy));
-                append("40");
-                append(MakerJs.round(arc.radius, opts.accuracy));
-                append("50");
-                append(MakerJs.round(arc.startAngle, opts.accuracy));
-                append("51");
-                append(MakerJs.round(arc.endAngle, opts.accuracy));
+                var arcEntity = {
+                    type: "ARC",
+                    layer: defaultLayer(arc, layer),
+                    center: {
+                        x: MakerJs.round(arc.origin[0] + offset[0], opts.accuracy),
+                        y: MakerJs.round(arc.origin[1] + offset[1], opts.accuracy)
+                    },
+                    radius: MakerJs.round(arc.radius, opts.accuracy),
+                    startAngle: MakerJs.round(arc.startAngle, opts.accuracy),
+                    endAngle: MakerJs.round(arc.endAngle, opts.accuracy)
+                };
+                return arcEntity;
             };
             //TODO - handle scenario if any bezier seeds get passed
             //map[pathType.BezierSeed]
             function appendVertex(v, layer, bulge) {
-                append("0");
-                append("VERTEX");
-                append("8");
-                append(defaultLayer(null, layer));
-                append("10");
-                append(MakerJs.round(v[0], opts.accuracy));
-                append("20");
-                append(MakerJs.round(v[1], opts.accuracy));
-                append("30");
-                append(0);
-                if (bulge !== undefined) {
-                    append("42");
-                    append(bulge);
-                }
+                var vertex = {
+                    type: "VERTEX",
+                    layer: defaultLayer(null, layer),
+                    x: MakerJs.round(v[0], opts.accuracy),
+                    y: MakerJs.round(v[1], opts.accuracy),
+                    bulge: bulge
+                };
+                return vertex;
             }
             function polyline(c) {
-                append("0");
-                append("POLYLINE");
-                append("8");
-                append(defaultLayer(null, c.layer));
-                append("10");
-                append(0);
-                append("20");
-                append(0);
-                append("30");
-                append(0);
-                append("70");
-                append(c.chain.endless ? 1 : 0);
+                var polylineEntity = {
+                    type: "POLYLINE",
+                    layer: defaultLayer(null, c.layer),
+                    shape: c.chain.endless,
+                    vertices: []
+                };
                 c.chain.links.forEach(function (link, i) {
                     var bulge;
                     if (link.walkedPath.pathContext.type === MakerJs.pathType.Arc) {
@@ -5124,95 +5113,68 @@ var MakerJs;
                         }
                     }
                     var vertex = link.endPoints[link.reversed ? 1 : 0];
-                    appendVertex(vertex, c.layer, bulge);
+                    polylineEntity.vertices.push(appendVertex(vertex, c.layer, bulge));
                 });
                 if (!c.chain.endless) {
                     var lastLink = c.chain.links[c.chain.links.length - 1];
                     var endPoint = lastLink.endPoints[lastLink.reversed ? 0 : 1];
-                    appendVertex(endPoint, c.layer);
+                    polylineEntity.vertices.push(appendVertex(endPoint, c.layer));
                 }
-                append("0");
-                append("SEQEND");
+                return polylineEntity;
             }
             function mtext(caption) {
                 var center = MakerJs.point.middle(caption.anchor);
-                append("0");
-                append("MTEXT");
-                append("10");
-                append(MakerJs.round(center[0], opts.accuracy));
-                append("20");
-                append(MakerJs.round(center[1], opts.accuracy));
-                append("40");
-                append(opts.fontSize);
-                append("71");
-                append(5); //5 = Middle center
-                append("72");
-                append(1); //1 = Left to right
-                append("1");
-                append(caption.text); //TODO: break into 250 char chunks
-                append("50");
-                append(MakerJs.angle.ofPointInRadians(caption.anchor.origin, caption.anchor.end));
-            }
-            function section(sectionFn) {
-                append("0");
-                append("SECTION");
-                sectionFn();
-                append("0");
-                append("ENDSEC");
-            }
-            function tables(tableFn) {
-                append("2");
-                append("TABLES");
-                append("0");
-                append("TABLE");
-                tableFn();
-                append("0");
-                append("ENDTAB");
+                var mtextEntity = {
+                    type: "MTEXT",
+                    position: {
+                        x: MakerJs.round(center[0], opts.accuracy),
+                        y: MakerJs.round(center[1], opts.accuracy)
+                    },
+                    height: opts.fontSize,
+                    text: caption.text,
+                    attachmentPoint: 5,
+                    drawingDirection: 1,
+                    rotation: MakerJs.angle.ofPointInRadians(caption.anchor.origin, caption.anchor.end)
+                };
+                return mtextEntity;
             }
             function layerOut(layerId, layerColor) {
-                append("0");
-                append("LAYER");
-                append("2");
-                append(layerId);
-                append("70");
-                append("0");
-                append("62");
-                append(layerColor);
-                append("6");
-                append("CONTINUOUS");
+                var layerEntity = {
+                    name: layerId,
+                    color: layerColor
+                };
+                return layerEntity;
             }
             function layersOut() {
-                append("2");
-                append("LAYER");
+                var layerTable = {
+                    layers: {}
+                };
                 layerIds.forEach(function (layerId) {
                     var layerOptions = colorLayerOptions(layerId);
                     if (layerOptions) {
-                        layerOut(layerId, layerOptions.color);
+                        layerTable.layers[layerId] = layerOut(layerId, layerOptions.color);
                     }
                 });
+                var tableName = 'layer';
+                doc.tables[tableName] = layerTable;
             }
             function header() {
-                append("2");
-                append("HEADER");
                 if (opts.units) {
                     var units = dxfUnit[opts.units];
-                    append("9");
-                    append("$INSUNITS");
-                    append("70");
-                    append(units);
+                    doc.header["$INSUNITS"] = units;
                 }
             }
             function entities(walkedPaths, chains, captions) {
-                append("2");
-                append("ENTITIES");
-                chains.forEach(polyline);
+                var entityArray = doc.entities;
+                entityArray.push.apply(entityArray, chains.map(polyline));
                 walkedPaths.forEach(function (walkedPath) {
                     var fn = map[walkedPath.pathContext.type];
                     if (fn) {
-                        fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
+                        var entity = fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
+                        entityArray.push(entity);
                     }
                 });
-                captions.forEach(mtext);
+                entityArray.push.apply(entityArray, captions.map(mtext));
             }
             //fixup options
             if (!opts.units) {
@@ -5224,44 +5186,122 @@ var MakerJs;
             //also pass back to options parameter
             MakerJs.extendObject(options, opts);
             //begin dxf output
-            dxfIndex = "bottom";
-            section(function () {
-                var chainsOnLayers = [];
-                var walkedPaths = [];
-                if (opts.usePOLYLINE) {
-                    var cb = function (chains, loose, layer) {
-                        chains.forEach(function (c) {
-                            if (c.endless && c.links.length === 1 && c.links[0].walkedPath.pathContext.type === MakerJs.pathType.Circle) {
-                                //don't treat circles as lwpolylines
-                                walkedPaths.push(c.links[0].walkedPath);
-                                return;
-                            }
-                            var chainOnLayer = { chain: c, layer: layer };
-                            chainsOnLayers.push(chainOnLayer);
-                        });
-                        walkedPaths.push.apply(walkedPaths, loose);
-                    };
-                    MakerJs.model.findChains(modelToExport, cb, { byLayers: true, pointMatchingDistance: opts.pointMatchingDistance });
-                }
-                else {
-                    var walkOptions = {
-                        onPath: function (walkedPath) {
-                            walkedPaths.push(walkedPath);
+            var chainsOnLayers = [];
+            var walkedPaths = [];
+            if (opts.usePOLYLINE) {
+                var cb = function (chains, loose, layer) {
+                    chains.forEach(function (c) {
+                        if (c.endless && c.links.length === 1 && c.links[0].walkedPath.pathContext.type === MakerJs.pathType.Circle) {
+                            //don't treat circles as lwpolylines
+                            walkedPaths.push(c.links[0].walkedPath);
+                            return;
                         }
-                    };
-                    MakerJs.model.walk(modelToExport, walkOptions);
-                }
-                entities(walkedPaths, chainsOnLayers, MakerJs.model.getAllCaptionsOffset(modelToExport));
-            });
-            dxfIndex = "top";
-            section(header);
-            section(function () { return tables(layersOut); });
-            dxfIndex = "bottom";
-            append("0");
-            append("EOF");
-            return dxf["top"].concat(dxf["bottom"]).join('\n');
+                        var chainOnLayer = { chain: c, layer: layer };
+                        chainsOnLayers.push(chainOnLayer);
+                    });
+                    walkedPaths.push.apply(walkedPaths, loose);
+                };
+                MakerJs.model.findChains(modelToExport, cb, { byLayers: true, pointMatchingDistance: opts.pointMatchingDistance });
+            }
+            else {
+                var walkOptions = {
+                    onPath: function (walkedPath) {
+                        walkedPaths.push(walkedPath);
+                    }
+                };
+                MakerJs.model.walk(modelToExport, walkOptions);
+            }
+            entities(walkedPaths, chainsOnLayers, MakerJs.model.getAllCaptionsOffset(modelToExport));
+            header();
+            layersOut();
+            return outputDocument(doc);
         }
         exporter.toDXF = toDXF;
+        /**
+         * @private
+         */
+        function outputDocument(doc) {
+            var dxf = [];
+            function append() {
+                var values = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    values[_i] = arguments[_i];
+                }
+                dxf.push.apply(dxf, values);
+            }
+            var map = {};
+            map["LINE"] = function (line) {
+                append("0", "LINE", "8", line.layer, "10", line.vertices[0].x, "20", line.vertices[0].y, "11", line.vertices[1].x, "21", line.vertices[1].y);
+            };
+            map["CIRCLE"] = function (circle) {
+                append("0", "CIRCLE", "8", circle.layer, "10", circle.center.x, "20", circle.center.y, "40", circle.radius);
+            };
+            map["ARC"] = function (arc) {
+                append("0", "ARC", "8", arc.layer, "10", arc.center.x, "20", arc.center.y, "40", arc.radius, "50", arc.startAngle, "51", arc.endAngle);
+            };
+            //TODO - handle scenario if any bezier seeds get passed
+            //map[pathType.BezierSeed]
+            map["VERTEX"] = function (vertex) {
+                append("0", "VERTEX", "8", vertex.layer, "10", vertex.x, "20", vertex.y, "30", 0);
+                if (vertex.bulge !== undefined) {
+                    append("42", vertex.bulge);
+                }
+            };
+            map["POLYLINE"] = function (polyline) {
+                append("0", "POLYLINE", "8", polyline.layer, "10", 0, "20", 0, "30", 0, "70", polyline.shape ? 1 : 0);
+                polyline.vertices.forEach(function (vertex) { return map["VERTEX"](vertex); });
+                append("0", "SEQEND");
+            };
+            map["MTEXT"] = function (mtext) {
+                append("0", "MTEXT", "10", mtext.position.x, "20", mtext.position.y, "40", mtext.height, "71", mtext.attachmentPoint, "72", mtext.drawingDirection, "1", mtext.text, //TODO: break into 250 char chunks
+                "50", mtext.rotation);
+            };
+            function section(sectionFn) {
+                append("0", "SECTION");
+                sectionFn();
+                append("0", "ENDSEC");
+            }
+            function tables() {
+                append("2", "TABLES");
+                append("0", "TABLE");
+                layersOut();
+                append("0", "ENDTAB");
+            }
+            function layerOut(layer) {
+                append("0", "LAYER", "2", layer.name, "70", "0", "62", layer.color, "6", "CONTINUOUS");
+            }
+            function layersOut() {
+                var layerTableName = 'layer';
+                var layerTable = doc.tables[layerTableName];
+                append("2", "LAYER");
+                for (var layerId in layerTable.layers) {
+                    var layer = layerTable.layers[layerId];
+                    layerOut(layer);
+                }
+            }
+            function header() {
+                append("2", "HEADER");
+                for (var key in doc.header) {
+                    var value = doc.header[key];
+                    append("9", key, "70", value);
+                }
+            }
+            function entities(entityArray) {
+                append("2", "ENTITIES");
+                entityArray.forEach(function (entity) {
+                    var fn = map[entity.type];
+                    if (fn) {
+                        fn(entity);
+                    }
+                });
+            }
+            //begin dxf output
+            section(header);
+            section(tables);
+            section(function () { return entities(doc.entities); });
+            append("0", "EOF");
+            return dxf.join('\n');
+        }
         /**
          * @private
          */
@@ -10154,6 +10194,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.12.1";
+MakerJs.version = "0.13.0";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
