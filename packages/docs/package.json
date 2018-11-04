@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
   "devDependencies": {
     "@danmarshall/jscad-typings": "^1.0.0",
     "@types/bezier-js": "0.0.7",
     "@types/graham_scan": "^1.0.28",
     "@types/opentype.js": "^0.7.0",
     "@types/pdfkit": "^0.7.36",
+    "dxf-parser-typings": "^1.2.1",
     "rimraf": "^2.6.2"
   },
   "scripts": {
