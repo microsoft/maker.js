@@ -2,7 +2,10 @@
   "compilerOptions": {
     "declaration": true,
     "outFile": "../dist/index.js",
-    "lib": ["dom", "es2015"],
+    "lib": [
+      "dom",
+      "es2015"
+    ],
     "sourceMap": false,
     "types": [
       "dxf-parser",
@@ -14,7 +17,7 @@
       "pdfkit"
     ]
   },
-"files": [
+  "files": [
     "../src/core/schema.ts",
     "../src/core/maker.ts",
     "../src/core/cascades.ts",
@@ -64,6 +67,11 @@
     "../src/models/Slot.ts",
     "../src/models/Square.ts",
     "../src/models/Star.ts",
-    "../src/models/Text.ts"
+    "../src/models/Text.ts",
+    "../src/dimensions/Size.ts",
+    "../src/dimensions/ArrowHead.ts",
+    "../src/dimensions/Linear.ts",
+    "../src/dimensions/Radial.ts",
+    "../src/dimensions/Angular.ts"
   ]
 }

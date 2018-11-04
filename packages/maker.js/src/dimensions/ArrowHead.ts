@@ -1,7 +1,7 @@
 namespace MakerJs.dimensions {
 
-    export class Arrow implements IModel {
-        public static readonly typeName = 'dimensions.Arrow';
+    export class ArrowHead implements IModel {
+        public static readonly typeName = 'dimensions.ArrowHead';
 
         public layer: string;
         public paths: IPathMap = {};
