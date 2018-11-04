@@ -856,7 +856,7 @@ namespace MakerJs {
         title: string;
 
         /**
-         * Type of the parameter. Currently supports "range".
+         * Type of the parameter: "bool", "range", "select".
          */
         type: string;
 
