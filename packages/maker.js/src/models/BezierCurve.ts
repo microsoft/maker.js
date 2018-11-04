@@ -504,7 +504,7 @@
             }
         }
 
-        public static typeName = 'BezierCurve';
+        public static readonly typeName = 'BezierCurve';
 
         public static getBezierSeeds(curve: BezierCurve, options: IFindChainsOptions = {}): IPath[] | { [layer: string]: IPath[] } {
 
