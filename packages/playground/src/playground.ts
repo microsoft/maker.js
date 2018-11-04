@@ -319,25 +319,25 @@
         return '{ ' + result.join(', ') + ' }';
     }
 
-    function generateCodeFromKit(id: string, kit: MakerJs.IKit): string {
+    function generateCodeFromKit(id: string, kit: MakerJs.IKit, namespace: string): string {
         var code: string[] = [];
         var safeParamNames = kit.metaParameters.map(safeParamName).join(', ');
 
-        code.push("var makerjs = require('makerjs');");
-        code.push("");
-        code.push("function demo(" + safeParamNames + ") {");
-        code.push("");
-        code.push("  this.models = {");
-        code.push("    example: new makerjs.models." + id + "(" + safeParamNames + ")");
-        code.push("  };");
-        code.push("");
-        code.push("}");
-        code.push("");
-        code.push("demo.metaParameters = [");
+        code.push(`var makerjs = require('makerjs');`);
+        code.push(``);
+        code.push(`function demo(${safeParamNames}) {`);
+        code.push(``);
+        code.push(`  this.models = {`);
+        code.push(`    example: new makerjs.${namespace}.${id}(${safeParamNames})`);
+        code.push(`  };`);
+        code.push(``);
+        code.push(`}`);
+        code.push(``);
+        code.push(`demo.metaParameters = [`);
         code.push(kit.metaParameters.map(m => '  ' + metaParameterAsString(m)).join(',\n'));
-        code.push("];");
-        code.push("");
-        code.push("module.exports = demo;");
+        code.push(`];`);
+        code.push(``);
+        code.push(`module.exports = demo;`);
 
         return code.join('\n');
     }
@@ -1797,7 +1797,13 @@
 
                     if (scriptname in makerjs.models) {
 
-                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname]);
+                        var code = generateCodeFromKit(scriptname, makerjs.models[scriptname], 'models');
+                        codeMirrorEditor.getDoc().setValue(code);
+                        runCodeFromEditor(paramValues);
+
+                    } else if (scriptname in makerjs.dimensions) {
+
+                        var code = generateCodeFromKit(scriptname, makerjs.dimensions[scriptname], 'dimensions');
                         codeMirrorEditor.getDoc().setValue(code);
                         runCodeFromEditor(paramValues);
 
