@@ -113,14 +113,14 @@ namespace MakerJs.model {
     export function getAllCaptionsOffset(modelContext: IModel) {
         const captions: ICaption[] = [];
 
-        function tryAddCaption(m: IModel, offset: IPoint) {
+        function tryAddCaption(m: IModel, offset?: IPoint) {
             if (m.caption) {
-                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, offset) as IPathLine });
+                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, point.add(m.origin, offset)) as IPathLine });
             }
         }
 
-        tryAddCaption(modelContext, modelContext.origin);
-        model.walk(modelContext, {
+        tryAddCaption(modelContext);
+        walk(modelContext, {
             afterChildWalk: wm => tryAddCaption(wm.childModel, wm.offset)
         });
 
