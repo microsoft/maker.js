@@ -12,7 +12,7 @@ namespace MakerJs.dimensions {
             angleDirection: number);
 
         constructor(
-            arrowSize: number, arrowSpanAngle: number, textSize: number, accuracy: number, textOffset: number, entensionLength: number, extensionAnchor: number,
+            arrowSize: number, arrowSpanAngle: number, accuracy: number, textOffset: number, entensionLength: number, extensionAnchor: number,
             angleDirection: number);
 
         constructor(...args: any[]) {

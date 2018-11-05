@@ -4,7 +4,6 @@ namespace MakerJs.dimensions {
         constructor(
             public arrowSize = 5,
             public arrowSpanAngle = 45,
-            public textSize = 9,
             public accuracy = .001,
             public textOffset = 5,
             public entensionLength = 10,
@@ -22,7 +21,6 @@ namespace MakerJs.dimensions {
     (<IKit>Size).metaParameters = [
         { title: "arrow size", type: "range", min: 1, max: 25, value: 5 },
         { title: "arrow span angle", type: "range", min: 5, max: 135, value: 45 },
-        { title: "text size", type: "range", min: 1, max: 50, value: 9 },
         {
             title: "accuracy", type: "select", value: [
                 0.0001, 0.001, 0.01, 0.1, 1.0

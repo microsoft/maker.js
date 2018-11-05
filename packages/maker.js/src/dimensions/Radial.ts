@@ -15,7 +15,7 @@ namespace MakerJs.dimensions {
             origin: IPoint, radius: number, angleInDegrees: number);
 
         constructor(
-            arrowSize: number, textSize: number, textOffset: number, entensionLength: number, extensionAnchor: number,
+            arrowSize: number, arrowSpanAngle: number, accuracy: number, textOffset: number, entensionLength: number, extensionAnchor: number,
             origin: IPoint, radius: number, angleInDegrees: number);
 
         constructor(...args: any[]) {
