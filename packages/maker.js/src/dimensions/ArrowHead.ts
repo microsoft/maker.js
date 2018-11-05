@@ -4,24 +4,51 @@ namespace MakerJs.dimensions {
         public static readonly typeName = 'dimensions.ArrowHead';
 
         public layer: string;
-        public paths: IPathMap = {};
+        public paths: IPathMap;
         public type: string;
 
-        constructor(sizeOrLength: number | Size, angleDirection = 0, angleSpan: number = 45) {
-            const len = isNumber(sizeOrLength) ? sizeOrLength as number : (sizeOrLength as Size).arrowSize;
-            this.type = this.layer = Arrow.typeName;
-            const end = point.rotate([-len, 0], -angleSpan / 2);
-            this.paths.top = new paths.Line(point.zero(), end);
-            this.paths.bottom = new paths.Line(point.zero(), point.mirror(end, false, true));
+        constructor(
+            size: Size,
+            angleDirection: number);
+
+        constructor(
+            arrowSize: number, arrowSpanAngle: number, textSize: number, textOffset: number, entensionLength: number, extensionAnchor: number,
+            angleDirection: number);
+
+        constructor(...args: any[]) {
+            let temp: _ArrowHead;
+            switch (args.length) {
+                case 2:
+                    temp = {} as _ArrowHead;
+                    _ArrowHead.apply(temp, args);
+                    break;
+                default:
+                    temp = new _ArrowHead(Size.fromArgs(args), args.shift());
+                    break;
+            }
+            this.type = this.layer = ArrowHead.typeName;
+            this.paths = temp.paths;
+        }
+    }
+
+    /**
+     * @private
+     */
+    class _ArrowHead {
+        public paths: IPathMap;
+        constructor(size: Size, angleDirection = 0) {
+            const end = point.rotate([-size.arrowSize, 0], -size.arrowSpanAngle / 2);
+            this.paths = {
+                top: new paths.Line(point.zero(), end),
+                bottom: new paths.Line(point.zero(), point.mirror(end, false, true))
+            };
             if (angleDirection) {
                 model.rotate(this, angleDirection);
             }
         }
     }
 
-    (<IKit>Arrow).metaParameters = [
-        { title: "size", type: "range", min: 1, max: 100, value: 5 },
-        { title: "direction angle", type: "range", min: 0, max: 360, value: 0 },
-        { title: "span angle", type: "range", min: 5, max: 135, value: 45 }
-    ];
+    (<IKit>ArrowHead).metaParameters = (<IKit>Size).metaParameters.concat([
+        { title: "direction angle", type: "range", min: 0, max: 360, value: 0 }
+    ]);
 }
