@@ -29,7 +29,7 @@ namespace MakerJs.dimensions {
                     temp = new _Linear(Size.fromArgs(args), args.shift(), args.shift());
                     break;
             }
-            this.type = this.layer = ArrowHead.typeName;
+            this.type = Linear.typeName;
             this.models = temp.models;
             this.paths = temp.paths;
             this.caption = temp.caption;
