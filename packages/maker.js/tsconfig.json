@@ -71,6 +71,7 @@
     "src/dimensions/ArrowHead.ts",
     "src/dimensions/Linear.ts",
     "src/dimensions/Radial.ts",
+    "src/dimensions/Diametric.ts",
     "src/dimensions/Angular.ts"
   ]
 }
