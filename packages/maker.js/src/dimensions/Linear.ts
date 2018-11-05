@@ -15,7 +15,7 @@ namespace MakerJs.dimensions {
             p1: IPoint, p2: IPoint);
 
         constructor(
-            arrowSize: number, textSize: number, textOffset: number, entensionLength: number, extensionAnchor: number,
+            arrowSize: number, arrowSpanAngle: number, textSize: number, accuracy: number, textOffset: number, entensionLength: number, extensionAnchor: number,
             p1: IPoint, p2: IPoint);
 
         constructor(...args: any[]) {
@@ -63,7 +63,7 @@ namespace MakerJs.dimensions {
             if (90 < a && a < 270) {
                 anchor.reverse();
             }
-            model.addCaption(this, d.toString(), anchor[0], anchor[1]);
+            model.addCaption(this, round(d, size.accuracy).toString(), anchor[0], anchor[1]);
             if (a) {
                 model.rotate(this, a);
             }
