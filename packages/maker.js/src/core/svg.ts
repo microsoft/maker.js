@@ -367,7 +367,7 @@ namespace MakerJs.exporter {
             }
         }
 
-        function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, innerText: string = null, forcePush = false) {
+        function createElement(tagname: string, attrs: IXmlTagAttrs, layer: string, route: string[], innerText: string = null, forcePush = false) {
 
             if (tagname !== 'text') {
                 addSvgAttrs(attrs, colorLayerOptions(layer));
@@ -375,6 +375,10 @@ namespace MakerJs.exporter {
 
             if (!opts.scalingStroke) {
                 attrs['vector-effect'] = 'non-scaling-stroke';
+            }
+
+            if (route && emitRoute) {
+                attrs["data-route"] = route;
             }
 
             var tag = new XmlTag(tagname, attrs);
@@ -399,8 +403,10 @@ namespace MakerJs.exporter {
             return path.moveRelative(path.scale(mirrorY, opts.scale), origin);
         }
 
+        let emitRoute = true;
+
         //fixup options
-        var opts: ISVGRenderOptions = {
+        const opts: ISVGRenderOptions = {
             accuracy: .001,
             annotate: false,
             origin: null,
@@ -509,6 +515,7 @@ namespace MakerJs.exporter {
         append(svgGroup.getOpeningTag(false));
 
         if (opts.useSvgPathOnly) {
+            emitRoute = false;
 
             var findChainsOptions: IFindChainsOptions = {
                 byLayers: true
@@ -528,7 +535,7 @@ namespace MakerJs.exporter {
                 if (layerId1.length > 0) {
                     attrs["id"] = layerId1;
                 }
-                createElement("path", attrs, layerId1, null, true);
+                createElement("path", attrs, layerId1, null, null, true);
             }
 
         } else {
@@ -542,6 +549,7 @@ namespace MakerJs.exporter {
                         "y": round(textPoint[1], opts.accuracy)
                     },
                     layer,
+                    null,
                     id);
             }
 
@@ -550,10 +558,9 @@ namespace MakerJs.exporter {
                     "path",
                     {
                         "id": id,
-                        "data-route": route,
                         "d": ["M", round(x, opts.accuracy), round(y, opts.accuracy)].concat(d).join(" ")
                     },
-                    layer);
+                    layer, route);
 
                 if (annotate) {
                     drawText(id, textPoint, layer);
@@ -577,13 +584,12 @@ namespace MakerJs.exporter {
                     {
                         "id": id,
                         "class": className,
-                        "data-route": route,
                         "x1": round(start[0], opts.accuracy),
                         "y1": round(start[1], opts.accuracy),
                         "x2": round(end[0], opts.accuracy),
                         "y2": round(end[1], opts.accuracy)
                     },
-                    layer);
+                    layer, route);
 
                 if (annotate) {
                     drawText(id, point.middle(line), layer);
@@ -602,12 +608,11 @@ namespace MakerJs.exporter {
                     {
                         "id": id,
                         "class": className,
-                        "data-route": route,
                         "r": circle.radius,
                         "cx": round(center[0], opts.accuracy),
                         "cy": round(center[1], opts.accuracy)
                     },
-                    layer);
+                    layer, route);
 
                 if (annotate) {
                     drawText(id, center, layer);
