@@ -4,7 +4,6 @@ namespace MakerJs.dimensions {
         public static readonly typeName = 'dimensions.Radial';
 
         public caption: ICaption;
-        public layer: string;
         public models: IModelMap;
         public paths: IPathMap;
         public type: string;
