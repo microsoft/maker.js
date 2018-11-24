@@ -5,7 +5,7 @@ namespace MakerJs.dimensions {
             public arrowSize = 5,
             public arrowSpanAngle = 45,
             public accuracy = .001,
-            public textOffset = 5,
+            public textOffset = 10,
             public entensionLength = 10,
             public extensionAnchor = 0.5
         ) { }
@@ -26,7 +26,7 @@ namespace MakerJs.dimensions {
                 0.0001, 0.001, 0.01, 0.1, 1.0
             ]
         },
-        { title: "text offset", type: "range", min: 0, max: 50, value: 5 },
+        { title: "text offset", type: "range", min: 0, max: 50, value: 10 },
         { title: "extension length", type: "range", min: 1, max: 50, value: 10 },
         { title: "extension anchor", type: "range", min: 0, max: 1, value: 0.5, step: 0.1 }
     ];
