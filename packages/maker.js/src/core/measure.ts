@@ -522,6 +522,12 @@ namespace MakerJs.measure {
                 increaseParentModel(walkedPath.route, atlas.pathMap[walkedPath.routeKey]);
             },
             afterChildWalk: function (walkedModel: IWalkModel) {
+
+                if (walkedModel.childModel.caption) {
+                    //increase size to fit caption text
+                    increase(atlas.modelMap[walkedModel.routeKey], pathExtents(walkedModel.childModel.caption.anchor));
+                }
+
                 //model has been updated by all its children, update parent
                 increaseParentModel(walkedModel.route, atlas.modelMap[walkedModel.routeKey]);
             }

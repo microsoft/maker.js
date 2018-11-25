@@ -452,12 +452,7 @@ namespace MakerJs.exporter {
         }
 
         const size = measure.modelExtents(modelToExport);
-
-        //increase size to fit caption text
         const captions = model.getAllCaptionsOffset(modelToExport);
-        captions.forEach(caption => {
-            measure.increase(size, measure.pathExtents(caption.anchor), true);
-        });
 
         //try to get the unit system from the itemToExport
         if (!opts.units) {
