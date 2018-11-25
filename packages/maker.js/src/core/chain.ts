@@ -164,7 +164,7 @@
         var ignored: { [layer: string]: IWalkPath[]; } = {};
 
         var walkOptions: IWalkOptions = {
-            beforeChildWalk: options.beforeChildWalk,
+            beforeChildWalk: opts.beforeChildWalk,
             onPath: function (walkedPath: IWalkPath) {
 
                 var layer = opts.byLayers ? walkedPath.layer : '';
