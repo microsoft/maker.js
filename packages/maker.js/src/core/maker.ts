@@ -751,6 +751,11 @@ namespace MakerJs {
     export interface IFindChainsOptions extends IPointMatchOptions {
 
         /**
+         * Callback for every child model in every model. Return false to stop walking down further models.
+         */
+        beforeChildWalk?: IWalkModelCancellableCallback;
+
+        /**
          * Flag to separate chains by layers.
          */
         byLayers?: boolean;
