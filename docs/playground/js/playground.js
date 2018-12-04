@@ -616,6 +616,7 @@ var MakerJsPlayground;
             MakerJsPlayground.onViewportChange();
         }
     }
+    MakerJsPlayground.setProcessedModel = setProcessedModel;
     function constructOnMainThread(successCb) {
         var fontLoader = new MakerJsPlayground.FontLoader(MakerJsPlayground.fontDir, opentype, processed.kit.metaParameters, processed.paramValues);
         fontLoader.successCb = function (realValues) {

@@ -716,7 +716,7 @@
         return true;
     }
 
-    function setProcessedModel(model: MakerJs.IModel, error?: string) {
+    export function setProcessedModel(model: MakerJs.IModel, error?: string) {
         clearTimeout(setProcessedModelTimer);
 
         var oldUnits = getUnits();
