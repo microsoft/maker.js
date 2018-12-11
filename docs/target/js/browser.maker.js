@@ -39,13 +39,13 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.13.0
+ *   version: 0.13.1
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
  *   author: James Halliday <mail@substack.net>
  *   homepage: https://github.com/browserify/browserify#readme
- *   version: 16.2.2
+ *   version: 16.2.3
  *
  * clone:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -3656,7 +3656,7 @@ var MakerJs;
             else if (arcSpan > 180) {
                 joints = 3;
             }
-            else if (arcSpan > 150 || bevel) {
+            else if (arcSpan > 150 || bevel) { //30 degrees is the sharpest
                 joints = 2;
             }
             var jointAngleInRadians = MakerJs.angle.toRadians(arcSpan / joints);
@@ -3757,8 +3757,8 @@ var MakerJs;
                             delete combineOptions.measureB;
                             //replace the rounded path with the straightened model
                             straightCaps.models[id].models[walkedPath.pathId] = straightened;
-                            //delete all the paths in the model containing this path
-                            delete walkedPath.modelContext.paths;
+                            //delete this path in the parent model
+                            delete walkedPath.modelContext.paths[walkedPath.pathId];
                         }
                     });
                 }
@@ -8769,8 +8769,11 @@ var MakerJs;
          */
         function getExtrema(b) {
             var extrema = b.extrema().values
+                //round the numbers so we can compare them to each other
                 .map(function (m) { return MakerJs.round(m); })
+                //remove duplicates
                 .filter(function (value, index, self) { return self.indexOf(value) === index; })
+                //and put them in order
                 .sort();
             if (extrema.length === 0)
                 return [0, 1];
@@ -8953,7 +8956,7 @@ var MakerJs;
                 }
                 this.type = MakerJs.pathType.BezierSeed;
                 switch (args.length) {
-                    case 1://point array
+                    case 1: //point array
                         var points = args[0];
                         this.origin = points[0];
                         if (points.length === 3) {
@@ -8968,7 +8971,7 @@ var MakerJs;
                             this.end = points[1];
                         }
                         break;
-                    case 3://quadratic or cubic
+                    case 3: //quadratic or cubic
                         if (Array.isArray(args[1])) {
                             this.controls = args[1];
                         }
@@ -8977,7 +8980,7 @@ var MakerJs;
                         }
                         this.end = args[2];
                         break;
-                    case 4://cubic params
+                    case 4: //cubic params
                         this.controls = [args[1], args[2]];
                         this.end = args[3];
                         break;
@@ -9005,7 +9008,7 @@ var MakerJs;
                             break;
                         }
                     //fall through to point array
-                    case 1://point array or seed
+                    case 1: //point array or seed
                         if (isArrayArg0) {
                             var points = args[0];
                             this.seed = new BezierSeed(points);
@@ -9552,7 +9555,7 @@ var MakerJs;
                 var maxRadius;
                 switch (style) {
                     case -1: //horizontal
-                    case 1://vertical
+                    case 1: //vertical
                         maxRadius = maxSide / 2;
                         break;
                     case 0: //equal
@@ -10194,6 +10197,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.13.0";
+MakerJs.version = "0.13.1";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
