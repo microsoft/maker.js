@@ -191,8 +191,8 @@ namespace MakerJs.model {
                         //replace the rounded path with the straightened model
                         straightCaps.models[id].models[walkedPath.pathId] = straightened;
 
-                        //delete all the paths in the model containing this path
-                        delete walkedPath.modelContext.paths;
+                        //delete this path in the parent model
+                        delete walkedPath.modelContext.paths[walkedPath.pathId];
                     }
                 });
             }
