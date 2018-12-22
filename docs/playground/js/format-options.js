@@ -74,7 +74,9 @@ var MakerJsPlayground;
                 return _super !== null && _super.apply(this, arguments) || this;
             }
             SvgOptions.prototype.getOptionObject = function () {
-                var options = {};
+                var options = {
+                    svgAttrs: { xmlns: "http://www.w3.org/2000/svg" }
+                };
                 this.addAccuracy('#svg-accuracy', options);
                 return options;
             };

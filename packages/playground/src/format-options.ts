@@ -62,7 +62,9 @@ namespace MakerJsPlayground.FormatOptions {
 
     class SvgOptions extends BaseOptions {
         getOptionObject() {
-            const options: MakerJs.exporter.ISVGRenderOptions = {};
+            const options: MakerJs.exporter.ISVGRenderOptions = {
+                svgAttrs: { xmlns: "http://www.w3.org/2000/svg" }
+            };
             this.addAccuracy('#svg-accuracy', options);
             return options;
         }
