@@ -172,6 +172,21 @@ namespace MakerJs.exporter {
             return layerEntity;
         }
 
+        function lineTypesOut() {
+            const lineStyleTable: DxfParser.TableLTYPE =
+            {
+                lineTypes: {
+                    "CONTINUOUS": {
+                        name: "CONTINUOUS",
+                        description: "______",
+                        patternLength: 0
+                    }
+                }
+            };
+            const tableName: DxfParser.TableNames = 'lineType';
+            doc.tables[tableName] = lineStyleTable;
+        }
+
         function layersOut() {
             const layerTable: DxfParser.TableLAYER = {
                 layers: {}
@@ -249,6 +264,7 @@ namespace MakerJs.exporter {
 
         header();
 
+        lineTypesOut();
         layersOut();
 
         return outputDocument(doc);
@@ -377,13 +393,17 @@ namespace MakerJs.exporter {
             append("0", "ENDSEC");
         }
 
+        function table(fn: Function) {
+            append("0", "TABLE");
+            fn();
+            append("0", "ENDTAB");
+        }
+
         function tables() {
             append("2", "TABLES");
 
-            append("0", "TABLE");
-            layersOut();
-
-            append("0", "ENDTAB");
+            table(lineTypesOut);
+            table(layersOut);
         }
 
         function layerOut(layer: DxfParser.Layer) {
@@ -397,6 +417,35 @@ namespace MakerJs.exporter {
                 "6",
                 "CONTINUOUS"
             );
+        }
+
+        function lineTypeOut(lineType: DxfParser.LineType) {
+            append("0", "LTYPE",
+                "72", //72 Alignment code; value is always 65, the ASCII code for A
+                "65",
+                "70",
+                "64",
+                "2",
+                lineType.name,
+                "3",
+                lineType.description,
+                "73",
+                "0",
+                "40",
+                lineType.patternLength
+            );
+        }
+
+        function lineTypesOut() {
+            const lineTypeTableName: DxfParser.TableNames = 'lineType';
+            const lineTypeTable = doc.tables[lineTypeTableName] as DxfParser.TableLTYPE;
+
+            append("2", "LTYPE");
+
+            for (let lineTypeId in lineTypeTable.lineTypes) {
+                let lineType = lineTypeTable.lineTypes[lineTypeId];
+                lineTypeOut(lineType);
+            }
         }
 
         function layersOut() {
