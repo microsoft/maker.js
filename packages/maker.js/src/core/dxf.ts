@@ -337,9 +337,7 @@ namespace MakerJs.exporter {
                 "10",
                 vertex.x,
                 "20",
-                vertex.y,
-                "30",
-                0
+                vertex.y
             );
 
             if (vertex.bulge !== undefined) {
@@ -351,12 +349,8 @@ namespace MakerJs.exporter {
             append("0", "POLYLINE",
                 "8",
                 polyline.layer,
-                "10",
-                0,
-                "20",
-                0,
-                "30",
-                0,
+                "66",
+                1,
                 "70",
                 polyline.shape ? 1 : 0
             );
