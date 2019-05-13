@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.13.1
+ *   version: 0.14.0
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -5145,6 +5145,19 @@ var MakerJs;
                 };
                 return layerEntity;
             }
+            function lineTypesOut() {
+                var lineStyleTable = {
+                    lineTypes: {
+                        "CONTINUOUS": {
+                            name: "CONTINUOUS",
+                            description: "______",
+                            patternLength: 0
+                        }
+                    }
+                };
+                var tableName = 'lineType';
+                doc.tables[tableName] = lineStyleTable;
+            }
             function layersOut() {
                 var layerTable = {
                     layers: {}
@@ -5213,6 +5226,7 @@ var MakerJs;
             }
             entities(walkedPaths, chainsOnLayers, MakerJs.model.getAllCaptionsOffset(modelToExport));
             header();
+            lineTypesOut();
             layersOut();
             return outputDocument(doc);
         }
@@ -5242,13 +5256,13 @@ var MakerJs;
             //TODO - handle scenario if any bezier seeds get passed
             //map[pathType.BezierSeed]
             map["VERTEX"] = function (vertex) {
-                append("0", "VERTEX", "8", vertex.layer, "10", vertex.x, "20", vertex.y, "30", 0);
+                append("0", "VERTEX", "8", vertex.layer, "10", vertex.x, "20", vertex.y);
                 if (vertex.bulge !== undefined) {
                     append("42", vertex.bulge);
                 }
             };
             map["POLYLINE"] = function (polyline) {
-                append("0", "POLYLINE", "8", polyline.layer, "10", 0, "20", 0, "30", 0, "70", polyline.shape ? 1 : 0);
+                append("0", "POLYLINE", "8", polyline.layer, "66", 1, "70", polyline.shape ? 1 : 0);
                 polyline.vertices.forEach(function (vertex) { return map["VERTEX"](vertex); });
                 append("0", "SEQEND");
             };
@@ -5261,14 +5275,31 @@ var MakerJs;
                 sectionFn();
                 append("0", "ENDSEC");
             }
+            function table(fn) {
+                append("0", "TABLE");
+                fn();
+                append("0", "ENDTAB");
+            }
             function tables() {
                 append("2", "TABLES");
-                append("0", "TABLE");
-                layersOut();
-                append("0", "ENDTAB");
+                table(lineTypesOut);
+                table(layersOut);
             }
             function layerOut(layer) {
                 append("0", "LAYER", "2", layer.name, "70", "0", "62", layer.color, "6", "CONTINUOUS");
+            }
+            function lineTypeOut(lineType) {
+                append("0", "LTYPE", "72", //72 Alignment code; value is always 65, the ASCII code for A
+                "65", "70", "64", "2", lineType.name, "3", lineType.description, "73", "0", "40", lineType.patternLength);
+            }
+            function lineTypesOut() {
+                var lineTypeTableName = 'lineType';
+                var lineTypeTable = doc.tables[lineTypeTableName];
+                append("2", "LTYPE");
+                for (var lineTypeId in lineTypeTable.lineTypes) {
+                    var lineType = lineTypeTable.lineTypes[lineTypeId];
+                    lineTypeOut(lineType);
+                }
             }
             function layersOut() {
                 var layerTableName = 'layer';
@@ -10197,6 +10228,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.13.1";
+MakerJs.version = "0.14.0";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
