@@ -112,6 +112,18 @@ namespace MakerJs {
         return split(s, '.');
     }
 
+   /*
+    * Find out if two numbers are almost equal
+    * 
+    * @param a First number.
+    * @param b Second number.
+    * @ param  epsilon maximum difference between a and b
+    * @returns true if numbers are almost equal
+    */
+   export function almostEqual(a: number, b: number, epsilon: number = .000001): boolean {
+       return Math.abs(a - b) < epsilon
+   }
+
     /**
      * Numeric rounding
      * 

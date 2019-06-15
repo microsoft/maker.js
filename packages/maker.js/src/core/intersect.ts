@@ -340,20 +340,25 @@ namespace MakerJs.path {
 
         } else {
 
-            function intersectionBetweenEndpoints(x: number, angleOfX: number) {
-                if (measure.isBetween(round(x), round(clonedLine.origin[0]), round(clonedLine.end[0]), options.excludeTangents)) {
-                    anglesOfIntersection.push(unRotate(angleOfX));
-                }
-            }
-
             //find angle where line intersects
             var intersectRadians = Math.asin(lineY / radius);
             var intersectDegrees = angle.toDegrees(intersectRadians);
+            var roundedIntersectDegrees = round(intersectDegrees);
 
             //line may intersect in 2 places
             var intersectX = Math.cos(intersectRadians) * radius;
-            intersectionBetweenEndpoints(-intersectX, 180 - intersectDegrees);
-            intersectionBetweenEndpoints(intersectX, intersectDegrees);
+            const roundedIntersectX = round(intersectX)
+
+            var roundedStartX = round(clonedLine.origin[0]);
+            var roundedEndX = round(clonedLine.end[0]);
+
+            if (measure.isBetween(-roundedIntersectX, roundedStartX, roundedEndX, options.excludeTangents)) {
+                anglesOfIntersection.push(unRotate(180 - roundedIntersectDegrees));
+            }
+            
+            if (measure.isBetween(roundedIntersectX, roundedStartX, roundedEndX, options.excludeTangents)) {
+                anglesOfIntersection.push(unRotate(roundedIntersectDegrees));
+            }
         }
 
         if (anglesOfIntersection.length > 0) {
@@ -401,7 +406,7 @@ namespace MakerJs.path {
         var x = c2.origin[0];
 
         //see if circles are tangent interior on left side
-        if (round(c2.radius - x - c1.radius) == 0) {
+        if (almostEqual(c2.radius - x - c1.radius, 0)) {
 
             if (options.excludeTangents) {
                 return null;
@@ -411,7 +416,7 @@ namespace MakerJs.path {
         }
 
         //see if circles are tangent interior on right side
-        if (round(c2.radius + x - c1.radius) == 0) {
+        if (almostEqual(c2.radius + x - c1.radius, 0)) {
 
             if (options.excludeTangents) {
                 return null;
@@ -421,7 +426,7 @@ namespace MakerJs.path {
         }
 
         //see if circles are tangent exterior
-        if (round(x - c2.radius - c1.radius) == 0) {
+        if (almostEqual(x - c2.radius - c1.radius, 0)) {
 
             if (options.excludeTangents) {
                 return null;
@@ -430,18 +435,19 @@ namespace MakerJs.path {
             return [[unRotate(0)], [unRotate(180)]];
         }
 
+        var xMinusC2RadiusRounded = round(x - c2.radius)
         //see if c2 is outside of c1
-        if (round(x - c2.radius) > c1.radius) {
+        if (xMinusC2RadiusRounded > c1.radius) {
+            return null;
+        }
+
+        //see if c1 is within c2
+        if (xMinusC2RadiusRounded < -c1.radius) {
             return null;
         }
 
         //see if c2 is within c1
         if (round(x + c2.radius) < c1.radius) {
-            return null;
-        }
-
-        //see if c1 is within c2
-        if (round(x - c2.radius) < -c1.radius) {
             return null;
         }
 
