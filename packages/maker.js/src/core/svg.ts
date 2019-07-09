@@ -708,6 +708,8 @@ namespace MakerJs.exporter {
                 layerGroup.innerTextEscaped = true;
                 append(layerGroup.toString());
             }
+
+            endModel(modelToExport);
         }
 
         const captionTags = captions.map(caption => {
