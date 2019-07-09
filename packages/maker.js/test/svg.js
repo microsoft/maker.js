@@ -37,4 +37,9 @@ describe('Export SVG', function () {
         assert.ok(svg.indexOf('style="style3"') > 0);
     });
 
+    it('should export with xmlns by default', function () {
+        var svg = makerjs.exporter.toSVG(model);
+        assert.ok(svg.indexOf('xmlns="http://www.w3.org/2000/svg"') > 0);
+    });
+
 });
