@@ -3354,7 +3354,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 465,
+              "line": 508,
               "character": 37
             }
           ],
@@ -3369,7 +3369,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 470,
+                  "line": 513,
                   "character": 13
                 }
               ],
@@ -3390,7 +3390,7 @@
           "sources": [
             {
               "fileName": "core/dxf.ts",
-              "line": 476,
+              "line": 519,
               "character": 38
             }
           ],
@@ -3440,7 +3440,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 481,
+                  "line": 524,
                   "character": 16
                 }
               ],
@@ -3460,7 +3460,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 486,
+                  "line": 529,
                   "character": 20
                 }
               ],
@@ -3495,7 +3495,7 @@
                   "sources": [
                     {
                       "fileName": "core/dxf.ts",
-                      "line": 486,
+                      "line": 529,
                       "character": 22
                     }
                   ]
@@ -3561,7 +3561,7 @@
               "sources": [
                 {
                   "fileName": "core/dxf.ts",
-                  "line": 491,
+                  "line": 534,
                   "character": 19
                 }
               ],
@@ -4904,7 +4904,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 839,
+              "line": 842,
               "character": 36
             }
           ],
@@ -4919,7 +4919,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 844,
+                  "line": 847,
                   "character": 12
                 }
               ],
@@ -4978,7 +4978,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 813,
+              "line": 816,
               "character": 45
             }
           ],
@@ -5000,7 +5000,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 833,
+                  "line": 836,
                   "character": 16
                 }
               ],
@@ -5020,7 +5020,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 818,
+                  "line": 821,
                   "character": 12
                 }
               ],
@@ -5040,7 +5040,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 823,
+                  "line": 826,
                   "character": 14
                 }
               ],
@@ -5060,7 +5060,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 828,
+                  "line": 831,
                   "character": 19
                 }
               ],
@@ -5081,7 +5081,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 921,
+              "line": 924,
               "character": 46
             }
           ],
@@ -5127,7 +5127,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 926,
+                  "line": 929,
                   "character": 16
                 }
               ],
@@ -5147,7 +5147,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 931,
+                  "line": 934,
                   "character": 16
                 }
               ],
@@ -5176,7 +5176,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 936,
+                  "line": 939,
                   "character": 14
                 }
               ],
@@ -5221,7 +5221,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 850,
+              "line": 853,
               "character": 38
             }
           ],
@@ -5271,7 +5271,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 870,
+                  "line": 873,
                   "character": 16
                 }
               ],
@@ -5291,7 +5291,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 915,
+                  "line": 918,
                   "character": 19
                 }
               ],
@@ -5311,7 +5311,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 833,
+                  "line": 836,
                   "character": 16
                 }
               ],
@@ -5335,7 +5335,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 818,
+                  "line": 821,
                   "character": 12
                 }
               ],
@@ -5359,7 +5359,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 895,
+                  "line": 898,
                   "character": 16
                 }
               ],
@@ -5388,7 +5388,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 875,
+                  "line": 878,
                   "character": 12
                 }
               ],
@@ -5408,7 +5408,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 860,
+                  "line": 863,
                   "character": 16
                 }
               ],
@@ -5428,7 +5428,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 905,
+                  "line": 908,
                   "character": 20
                 }
               ],
@@ -5461,7 +5461,7 @@
                   "sources": [
                     {
                       "fileName": "core/svg.ts",
-                      "line": 905,
+                      "line": 908,
                       "character": 22
                     }
                   ]
@@ -5479,7 +5479,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 880,
+                  "line": 883,
                   "character": 14
                 }
               ],
@@ -5499,7 +5499,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 865,
+                  "line": 868,
                   "character": 13
                 }
               ],
@@ -5519,7 +5519,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 910,
+                  "line": 913,
                   "character": 21
                 }
               ],
@@ -5539,7 +5539,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 823,
+                  "line": 826,
                   "character": 14
                 }
               ],
@@ -5563,7 +5563,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 900,
+                  "line": 903,
                   "character": 21
                 }
               ],
@@ -5583,7 +5583,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 828,
+                  "line": 831,
                   "character": 19
                 }
               ],
@@ -5607,7 +5607,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 855,
+                  "line": 858,
                   "character": 16
                 }
               ],
@@ -5651,7 +5651,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 885,
+                  "line": 888,
                   "character": 22
                 }
               ],
@@ -5671,7 +5671,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 890,
+                  "line": 893,
                   "character": 15
                 }
               ],
@@ -5721,7 +5721,7 @@
                     "sources": [
                       {
                         "fileName": "core/svg.ts",
-                        "line": 790,
+                        "line": 793,
                         "character": 66
                       }
                     ],
@@ -5737,7 +5737,7 @@
                     "sources": [
                       {
                         "fileName": "core/svg.ts",
-                        "line": 790,
+                        "line": 793,
                         "character": 41
                       }
                     ],
@@ -5750,7 +5750,7 @@
                 "sources": [
                   {
                     "fileName": "core/svg.ts",
-                    "line": 790,
+                    "line": 793,
                     "character": 27
                   }
                 ]
@@ -5760,7 +5760,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 789,
+              "line": 792,
               "character": 38
             }
           ]
@@ -6745,7 +6745,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 796,
+              "line": 799,
               "character": 22
             }
           ],
@@ -8149,7 +8149,7 @@
       "sources": [
         {
           "fileName": "core/svg.ts",
-          "line": 940,
+          "line": 943,
           "character": 26
         }
       ],
@@ -8218,7 +8218,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 972,
+              "line": 975,
               "character": 35
             }
           ]
@@ -8235,7 +8235,7 @@
           "sources": [
             {
               "fileName": "core/svg.ts",
-              "line": 956,
+              "line": 959,
               "character": 38
             }
           ],
@@ -8251,7 +8251,7 @@
               "sources": [
                 {
                   "fileName": "core/svg.ts",
-                  "line": 961,
+                  "line": 964,
                   "character": 22
                 }
               ],
