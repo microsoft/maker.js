@@ -477,7 +477,7 @@ namespace MakerJs.exporter {
 
         //begin svg output
 
-        var svgAttrs: IXmlTagAttrs;
+        var svgAttrs: IXmlTagAttrs = {};
 
         if (size && opts.viewBox) {
             var width = round(size.width * opts.scale, opts.accuracy);
@@ -493,7 +493,8 @@ namespace MakerJs.exporter {
             };
         }
 
-        var svgTag = new XmlTag('svg', <IXmlTagAttrs>extendObject(svgAttrs || {}, opts.svgAttrs));
+        svgAttrs["xmlns"] = "http://www.w3.org/2000/svg";
+        var svgTag = new XmlTag('svg', <IXmlTagAttrs>extendObject(svgAttrs, opts.svgAttrs));
 
         append(svgTag.getOpeningTag(false));
 
