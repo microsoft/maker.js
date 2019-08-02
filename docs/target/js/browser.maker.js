@@ -39,13 +39,13 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.14.0
+ *   version: 0.15.0
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
  *   author: James Halliday <mail@substack.net>
  *   homepage: https://github.com/browserify/browserify#readme
- *   version: 16.2.3
+ *   version: 16.3.0
  *
  * clone:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -7846,7 +7846,7 @@ var MakerJs;
             //also pass back to options parameter
             MakerJs.extendObject(options, opts);
             //begin svg output
-            var svgAttrs;
+            var svgAttrs = {};
             if (size && opts.viewBox) {
                 var width = MakerJs.round(size.width * opts.scale, opts.accuracy);
                 var height = MakerJs.round(size.height * opts.scale, opts.accuracy);
@@ -7858,7 +7858,8 @@ var MakerJs;
                     viewBox: viewBox.join(' ')
                 };
             }
-            var svgTag = new exporter.XmlTag('svg', MakerJs.extendObject(svgAttrs || {}, opts.svgAttrs));
+            svgAttrs["xmlns"] = "http://www.w3.org/2000/svg";
+            var svgTag = new exporter.XmlTag('svg', MakerJs.extendObject(svgAttrs, opts.svgAttrs));
             append(svgTag.getOpeningTag(false));
             var groupAttrs = {
                 id: 'svgGroup',
@@ -8009,6 +8010,7 @@ var MakerJs;
                     layerGroup.innerTextEscaped = true;
                     append(layerGroup.toString());
                 }
+                endModel(modelToExport);
             }
             var captionTags = captions.map(function (caption) {
                 var anchor = fixPath(caption.anchor, opts.origin);
@@ -10228,6 +10230,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.14.0";
+MakerJs.version = "0.15.0";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
