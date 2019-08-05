@@ -111,17 +111,17 @@ namespace MakerJs.model {
      * @returns Array of Caption objects.
      */
     export function getAllCaptionsOffset(modelContext: IModel) {
-        const captions: ICaption[] = [];
+        const captions: (ICaption & { layer?: string })[] = [];
 
-        function tryAddCaption(m: IModel, offset: IPoint) {
+        function tryAddCaption(m: IModel, offset: IPoint, layer: string) {
             if (m.caption) {
-                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, offset) as IPathLine });
+                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, offset) as IPathLine, layer });
             }
         }
 
-        tryAddCaption(modelContext, modelContext.origin);
+        tryAddCaption(modelContext, modelContext.origin, modelContext.layer);
         model.walk(modelContext, {
-            afterChildWalk: wm => tryAddCaption(wm.childModel, wm.offset)
+            afterChildWalk: wm => tryAddCaption(wm.childModel, wm.offset, wm.layer)
         });
 
         return captions;

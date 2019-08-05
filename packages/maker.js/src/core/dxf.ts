@@ -147,13 +147,13 @@ namespace MakerJs.exporter {
             return polylineEntity;
         }
 
-        function text(caption: ICaption) {
+        function text(caption: ICaption & { layer?: string }) {
             const center = point.middle(caption.anchor);
             const textEntity: DxfParser.EntityTEXT = {
                 type: "TEXT",
                 startPoint: appendVertex(center, null),
                 endPoint: appendVertex(center, null),
-                layer: defaultLayer(null, null),
+                layer: defaultLayer(null, caption.layer),
                 textHeight: opts.fontSize,
                 text: caption.text,
                 halign: 4, // Middle
@@ -207,7 +207,7 @@ namespace MakerJs.exporter {
             }
         }
 
-        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], captions: ICaption[]) {
+        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], captions: (ICaption & { layer?: string })[]) {
             const entityArray = doc.entities;
 
             entityArray.push.apply(entityArray, chains.map(polyline));
