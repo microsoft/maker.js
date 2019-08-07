@@ -148,13 +148,15 @@ namespace MakerJs.exporter {
         }
 
         function text(caption: ICaption & { layer?: string }) {
+            const layerId = defaultLayer(null, caption.layer);
+            const layerOptions = colorLayerOptions(layerId);
             const center = point.middle(caption.anchor);
             const textEntity: DxfParser.EntityTEXT = {
                 type: "TEXT",
                 startPoint: appendVertex(center, null),
                 endPoint: appendVertex(center, null),
-                layer: defaultLayer(null, caption.layer),
-                textHeight: opts.fontSize,
+                layer: layerId,
+                textHeight: (layerOptions && layerOptions.fontSize) || opts.fontSize,
                 text: caption.text,
                 halign: 4, // Middle
                 valign: 0, // Baseline
@@ -516,6 +518,11 @@ namespace MakerJs.exporter {
          * DXF layer color.
          */
         color: number
+
+        /**
+         * Text size for TEXT entities.
+         */
+        fontSize?: number;
     }
 
     /**
