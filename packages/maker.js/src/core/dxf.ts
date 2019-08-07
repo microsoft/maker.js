@@ -153,7 +153,7 @@ namespace MakerJs.exporter {
                 type: "TEXT",
                 startPoint: appendVertex(center, null),
                 endPoint: appendVertex(center, null),
-                layer: defaultLayer(null, caption.layer),
+                layer: defaultLayer(caption.anchor, caption.layer),
                 textHeight: opts.fontSize,
                 text: caption.text,
                 halign: 4, // Middle
