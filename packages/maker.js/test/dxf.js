@@ -35,4 +35,10 @@ describe('Export DXF', function() {
         var dxf = makerjs.exporter.toDXF(model, exportOptions);
         assert.equal(dxf, expected);
     });
+
+    it('should allow override of layer using anchor', function() {
+        model.models.square.caption.anchor.layer = "override-layer";
+        var dxf = makerjs.exporter.toDXF(model, exportOptions);
+        assert.ok(dxf.includes("override-layer"));
+    });
 });
