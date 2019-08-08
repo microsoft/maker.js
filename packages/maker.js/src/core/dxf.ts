@@ -6,7 +6,7 @@ namespace MakerJs.exporter {
 
     /**
      * Renders an item in AutoDesk DFX file format.
-     * 
+     *
      * @param itemToExport Item to render: may be a path, an array of paths, or a model object.
      * @param options Rendering options object.
      * @param options.units String of the unit system. May be omitted. See makerjs.unitType for possible values.
@@ -147,21 +147,20 @@ namespace MakerJs.exporter {
             return polylineEntity;
         }
 
-        function mtext(caption: ICaption) {
+        function text(caption: ICaption & { layer?: string }) {
             const center = point.middle(caption.anchor);
-            const mtextEntity: DxfParser.EntityMTEXT = {
-                type: "MTEXT",
-                position: {
-                    x: round(center[0], opts.accuracy),
-                    y: round(center[1], opts.accuracy)
-                },
-                height: opts.fontSize,
+            const textEntity: DxfParser.EntityTEXT = {
+                type: "TEXT",
+                startPoint: appendVertex(center, null),
+                endPoint: appendVertex(center, null),
+                layer: defaultLayer(null, caption.layer),
+                textHeight: opts.fontSize,
                 text: caption.text,
-                attachmentPoint: 5, //5 = Middle center
-                drawingDirection: 1, //1 = Left to right
-                rotation: angle.ofPointInRadians(caption.anchor.origin, caption.anchor.end)
+                halign: 4, // Middle
+                valign: 0, // Baseline
+                rotation: angle.ofPointInDegrees(caption.anchor.origin, caption.anchor.end)
             };
-            return mtextEntity;
+            return textEntity;
         }
 
         function layerOut(layerId: string, layerColor: number) {
@@ -208,7 +207,7 @@ namespace MakerJs.exporter {
             }
         }
 
-        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], captions: ICaption[]) {
+        function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], captions: (ICaption & { layer?: string })[]) {
             const entityArray = doc.entities;
 
             entityArray.push.apply(entityArray, chains.map(polyline));
@@ -219,7 +218,7 @@ namespace MakerJs.exporter {
                     entityArray.push(entity);
                 }
             });
-            entityArray.push.apply(entityArray, captions.map(mtext));
+            entityArray.push.apply(entityArray, captions.map(text));
         }
 
         //fixup options
@@ -360,22 +359,28 @@ namespace MakerJs.exporter {
             append("0", "SEQEND");
         }
 
-        map["MTEXT"] = function (mtext: DxfParser.EntityMTEXT) {
-            append("0", "MTEXT",
+        map["TEXT"] = function (text: DxfParser.EntityTEXT) {
+            append("0", "TEXT",
                 "10",
-                mtext.position.x,
+                text.startPoint.x,
                 "20",
-                mtext.position.y,
+                text.startPoint.y,
+                "11",
+                text.endPoint.x,
+                "21",
+                text.endPoint.y,
                 "40",
-                mtext.height,
-                "71",
-                mtext.attachmentPoint,
-                "72",
-                mtext.drawingDirection,
+                text.textHeight,
                 "1",
-                mtext.text,  //TODO: break into 250 char chunks
+                text.text,
                 "50",
-                mtext.rotation
+                text.rotation,
+                "8",
+                text.layer,
+                "72",
+                text.halign,
+                "73",
+                text.valign
             );
         }
 
@@ -519,7 +524,7 @@ namespace MakerJs.exporter {
     export interface IDXFRenderOptions extends IExportOptions, IPointMatchOptions {
 
         /**
-         * Text size for MTEXT entities.
+         * Text size for TEXT entities.
          */
         fontSize?: number;
 
