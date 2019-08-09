@@ -57,4 +57,40 @@ describe('Export SVG', function () {
         assert.ok(svg.indexOf('xmlns="http://www.w3.org/2000/svg"') > 0);
     });
 
+    it('should export with layerOptions on caption text element', function () {
+        const exportOptions = {
+            fill: "green",
+            fontSize: '8pt',
+            stroke: "#333",
+            strokeWidth: "0.5mm",
+            layerOptions: {
+                square: {
+                    fill: "#999",
+                    cssStyle: "fill-opacity: 0.2",
+                },
+                square_caption: {
+                    stroke: "red",
+                },
+            },
+        };
+        var model = {};
+        makerjs
+            .$(new makerjs.models.Square(50))
+            .layer('square')
+            .addCaption('fold here', [0, 0], [50, 50])
+            .addTo(model, 'square');
+        model.models.square.caption.anchor.layer = "square_caption";
+        const svg = makerjs.exporter.toSVG(model, exportOptions);
+        const expected = [
+            '<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">',
+                '<g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="8pt" stroke="#333" stroke-width="0.5mm" fill="green" style="stroke:#333;stroke-width:0.5mm;fill:green">',
+                    '<path d="M 0 50 L 50 50 L 50 0 L 0 0 L 0 50 Z" id="square" fill="#999" style="fill-opacity: 0.2" vector-effect="non-scaling-stroke"/>',
+                    '<g id="captions">',
+                        '<text alignment-baseline="middle" text-anchor="middle" transform="rotate(315,25,25)" x="25" y="25" stroke="red" style="stroke:red">fold here</text>',
+                    '</g>',
+                '</g>',
+            '</svg>'
+        ].join("");
+        assert.equal(svg, expected);
+    });
 });
