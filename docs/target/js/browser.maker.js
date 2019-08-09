@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.15.0
+ *   version: 0.16.0
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2357,14 +2357,14 @@ var MakerJs;
          */
         function getAllCaptionsOffset(modelContext) {
             var captions = [];
-            function tryAddCaption(m, offset) {
+            function tryAddCaption(m, offset, layer) {
                 if (m.caption) {
-                    captions.push({ text: m.caption.text, anchor: MakerJs.path.clone(m.caption.anchor, offset) });
+                    captions.push({ text: m.caption.text, anchor: MakerJs.path.clone(m.caption.anchor, offset), layer: (m.caption.anchor.layer || layer) });
                 }
             }
-            tryAddCaption(modelContext, modelContext.origin);
+            tryAddCaption(modelContext, modelContext.origin, modelContext.layer);
             model.walk(modelContext, {
-                afterChildWalk: function (wm) { return tryAddCaption(wm.childModel, wm.offset); }
+                afterChildWalk: function (wm) { return tryAddCaption(wm.childModel, wm.offset, wm.layer); }
             });
             return captions;
         }
@@ -5122,21 +5122,22 @@ var MakerJs;
                 }
                 return polylineEntity;
             }
-            function mtext(caption) {
+            function text(caption) {
+                var layerId = defaultLayer(null, caption.layer);
+                var layerOptions = colorLayerOptions(layerId);
                 var center = MakerJs.point.middle(caption.anchor);
-                var mtextEntity = {
-                    type: "MTEXT",
-                    position: {
-                        x: MakerJs.round(center[0], opts.accuracy),
-                        y: MakerJs.round(center[1], opts.accuracy)
-                    },
-                    height: opts.fontSize,
+                var textEntity = {
+                    type: "TEXT",
+                    startPoint: appendVertex(center, null),
+                    endPoint: appendVertex(center, null),
+                    layer: layerId,
+                    textHeight: (layerOptions && layerOptions.fontSize) || opts.fontSize,
                     text: caption.text,
-                    attachmentPoint: 5,
-                    drawingDirection: 1,
-                    rotation: MakerJs.angle.ofPointInRadians(caption.anchor.origin, caption.anchor.end)
+                    halign: 4,
+                    valign: 0,
+                    rotation: MakerJs.angle.ofPointInDegrees(caption.anchor.origin, caption.anchor.end)
                 };
-                return mtextEntity;
+                return textEntity;
             }
             function layerOut(layerId, layerColor) {
                 var layerEntity = {
@@ -5187,7 +5188,7 @@ var MakerJs;
                         entityArray.push(entity);
                     }
                 });
-                entityArray.push.apply(entityArray, captions.map(mtext));
+                entityArray.push.apply(entityArray, captions.map(text));
             }
             //fixup options
             if (!opts.units) {
@@ -5266,9 +5267,8 @@ var MakerJs;
                 polyline.vertices.forEach(function (vertex) { return map["VERTEX"](vertex); });
                 append("0", "SEQEND");
             };
-            map["MTEXT"] = function (mtext) {
-                append("0", "MTEXT", "10", mtext.position.x, "20", mtext.position.y, "40", mtext.height, "71", mtext.attachmentPoint, "72", mtext.drawingDirection, "1", mtext.text, //TODO: break into 250 char chunks
-                "50", mtext.rotation);
+            map["TEXT"] = function (text) {
+                append("0", "TEXT", "10", text.startPoint.x, "20", text.startPoint.y, "11", text.endPoint.x, "21", text.endPoint.y, "40", text.textHeight, "1", text.text, "50", text.rotation, "8", text.layer, "72", text.halign, "73", text.valign);
             };
             function section(sectionFn) {
                 append("0", "SECTION");
@@ -8022,6 +8022,7 @@ var MakerJs;
                     "x": center[0],
                     "y": center[1]
                 });
+                addSvgAttrs(tag.attrs, colorLayerOptions(caption.layer));
                 tag.innerText = caption.text;
                 return tag.toString();
             });
@@ -8074,7 +8075,7 @@ var MakerJs;
             d.push(r, r);
             d.push(0); //0 = x-axis rotation
             d.push(largeArc ? 1 : 0); //large arc=1, small arc=0
-            d.push(increasing ? 0 : 1); //sweep-flag 0=increasing, 1=decreasing 
+            d.push(increasing ? 0 : 1); //sweep-flag 0=increasing, 1=decreasing
             d.push(MakerJs.round(end[0], accuracy), MakerJs.round(end[1], accuracy));
         }
         /**
@@ -10230,6 +10231,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.15.0";
+MakerJs.version = "0.16.0";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
