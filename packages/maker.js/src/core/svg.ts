@@ -729,6 +729,7 @@ namespace MakerJs.exporter {
 
         if (captionTags.length) {
             const captionGroup = new XmlTag('g', { "id": "captions" });
+            addSvgAttrs(captionGroup.attrs, colorLayerOptions(captionGroup.attrs.id));
             captionGroup.innerText = captionTags.join('');
             captionGroup.innerTextEscaped = true;
             append(captionGroup.toString());
