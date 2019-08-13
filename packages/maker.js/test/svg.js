@@ -57,6 +57,24 @@ describe('Export SVG', function () {
         assert.ok(svg.indexOf('xmlns="http://www.w3.org/2000/svg"') > 0);
     });
 
+    it('should export with layerOptions on captions group', function () {
+        const exportOptions = {
+            layerOptions: {
+                captions: {
+                    fill: "#999",
+                    cssStyle: "fill-opacity: 0.2",
+                },
+            },
+        };
+        var model = {};
+        makerjs
+            .$(new makerjs.models.Square(50))
+            .addCaption('fold here', [0, 0], [50, 50])
+            .addTo(model, 'square');
+        const svg = makerjs.exporter.toSVG(model, exportOptions);
+        assert.ok(svg.indexOf('<g id="captions" fill="#999" style="fill-opacity: 0.2">') > 0);
+    });
+
     it('should export with layerOptions on caption text element', function () {
         const exportOptions = {
             fill: "green",
