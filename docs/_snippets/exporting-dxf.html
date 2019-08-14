@@ -8,18 +8,65 @@ title: DXF
     Call <code><a href="/docs/api/modules/makerjs.exporter.html#todxf">makerjs.exporter.toDXF</a>(model)</code> passing your model. This function returns a string of DXF.
 </p>
 
+<p>
+    If your drawing has layers with names that match the following reserved color names,
+    paths on that layer will have a stroke color automatically:
+    <br/>
+    aqua, black, blue, fuchsia, green, gray, lime, maroon, navy, olive, orange, purple, red, silver, teal, white, yellow
+</p>
+
+<h4>Captions</h4>
+
+<p>
+    A <a href="/docs/intermediate-drawing/#Captions">caption</a> will inherit the <code>layerOptions</code> that are applied to its model's layer name unless overridden by the anchor layer.
+</p>
+
 <h4>Advanced options</h4>
 
 <p>
-    Call <code><a href="/docs/api/modules/makerjs.exporter.html#todxf">makerjs.exporter.toDXF</a>(model, options)</code> passing your model and an options object.
+    You may override the default export behavior by calling <code><a href="/docs/api/modules/makerjs.exporter.html#todxf">makerjs.exporter.toDXF</a>(model, options)</code> and passing an options object.
     The options object has these properties:
 
-    <ul>
-        <li>
-            <a href="/docs/api/interfaces/makerjs.exporter.idxfrenderoptions.html#units">units</a> - <a href="/docs/api/index.html#unittype">Maker.js unit type</a> (default - extracted from drawing. If unit system is not in drawing or not passed, it will use DXF default of inches)
-        </li>
-        <li>
-            <a href="/docs/api/interfaces/makerjs.exporter.idxfrenderoptions.html#fontsize">fontSize</a> - (default - 9) font size of captions.
-        </li>
-    </ul>
+    <table>
+        <tr>
+            <th>property</th>
+            <th>values / effects</th>
+        </tr>
+        <tr>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.idxfrenderoptions.html#units">units</a></td>
+            <td>
+                <a href="/docs/api/index.html#unittype">Maker.js unit type</a> - unit system (default: extracted from drawing. If unit system is not in drawing or not passed, it will use DXF default of inches)
+            </td>
+        </tr>
+        <tr>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.idxfrenderoptions.html#fontsize">fontSize</a></td>
+            <td>
+                number - font size of captions (default: 9).  The font size is in the same unit system as the <code>units</code> property.
+            </td>
+        </tr>
+        <tr>
+            <td><a href="/docs/api/interfaces/makerjs.exporter.idxfrenderoptions.html#layeroptions">layerOptions</a></td>
+            <td>
+                object map - keys are the layer names, values are an object with these properties:
+                <table>
+                    <tr>
+                        <th>property</th>
+                        <th>values</th>
+                    </tr>
+                    <tr>
+                        <td><a href="/docs/api/interfaces/makerjs.exporter.idxflayeroptions.html#color">color</a></td>
+                        <td>
+                            number - <a href="/docs/api/modules/makerjs.exporter.html#colors">Maker.js color</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/docs/api/interfaces/makerjs.exporter.idxflayeroptions.html#fontsize">fontSize</a></td>
+                        <td>
+                            number - font size of captions.  The font size is in the same unit system as the <code>units</code> property.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </p>

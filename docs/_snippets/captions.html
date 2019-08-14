@@ -3,7 +3,7 @@ title: Captions
 ---
 
 <p>
-    Captions are fragments of text that can be positioned anywhere in your model, 
+    Captions are fragments of text that can be positioned anywhere in your model,
     useful for adding documentation within your drawing.
     Captions are unlike the <a href="/docs/advanced-drawing/#Fonts%20and%20text">Text model</a>, which is a line drawing of glyphs in a given font.
 </p>
@@ -13,9 +13,10 @@ title: Captions
     The caption text is centered both horizontally and vertically at the center point of the anchor line.
     The text in a caption will not wrap, it is a single line of text.
     The text and anchor line do not need to be the same length, the anchor line is only used to determine the center point and the slope.
-    The anchor line may be rotated to angle the caption text. 
-    Anchor lines are moved, originated, scaled, distorted and rotated accoordingly within a model. 
+    The anchor line may be rotated to angle the caption text.
+    Anchor lines are moved, originated, scaled, distorted and rotated accoordingly within a model.
     The font size of caption text is determined when you export your model.
+    A caption can be put on a different <a href="/docs/intermediate-drawing/#Layers">layer</a> from it's model by setting the layer of it's anchor.
     Note: In the Playground, caption text does not scale when you zoom in or out.
 </p>
 
@@ -50,7 +51,7 @@ document.write(svg);
 <script>
     LiveDoc.evalLastCode();
 </script>
-    
+
 <p>
     There is a helper function <a href="/docs/api/modules/makerjs.model.html#addcaption">makerjs.model.addCaption(text, [optional] leftAnchorPoint, [optional] rightAnchorPoint)</a>
     which lets you add a caption on one line of code:
@@ -75,12 +76,12 @@ document.write(svg);
 <script>
     LiveDoc.evalLastCode();
 </script>
-    
+
 <p>
-    If the anchor line is degenerate (meaning its origin and end point are the same), you can achieve text 
+    If the anchor line is degenerate (meaning its origin and end point are the same), you can achieve text
     which will remain horizontally aligned regardless of model rotation:
 </p>
-    
+
 {% highlight javascript %}
 //add a caption that will not rotate
 
