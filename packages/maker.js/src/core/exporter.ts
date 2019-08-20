@@ -64,9 +64,10 @@ namespace MakerJs.exporter {
     /**
      * Named colors, safe for CSS and DXF
      * 17 colors from https://www.w3.org/TR/CSS21/syndata.html#value-def-color mapped to DXF equivalent AutoDesk Color Index
+     * ftp://ftp.ecn.purdue.edu/jshan/86/help/html/import_export/dxf_colortable.htm
      */
     export var colors = {
-        black: 0,
+        black: 255,
         red: 1,
         yellow: 2,
         lime: 3,
