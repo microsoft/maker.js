@@ -12,8 +12,9 @@ namespace MakerJs.models {
             };
 
             for (var id in radii) {
-                if (radii[id] === void 0) continue;
-                this.paths[id] = new paths.Circle(point.zero(), radii[id]);
+                let r = radii[id];
+                if (r === undefined || r <= 0) continue;
+                this.paths[id] = new paths.Circle(point.zero(), r);
             }
         }
     }
