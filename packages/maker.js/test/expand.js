@@ -40,6 +40,20 @@ describe('Expand', function () {
         assert.equal(chains.length, 1);
     });
 
+    it('should expand a box - thin', function () {
+        var square = new makerjs.models.Square(10);
+        var expansion = makerjs.model.expandPaths(square, 1);
+        var chains = makerjs.model.findChains(expansion);
+        assert.equal(chains.length, 2);
+    });
+
+    it('should expand a box - thick', function () {
+        var square = new makerjs.models.Square(10);
+        var expansion = makerjs.model.expandPaths(square, 10);
+        var chains = makerjs.model.findChains(expansion);
+        assert.equal(chains.length, 1);
+    });
+
     it('should expand ArbutusSlab - thin', textFunction('arbutusslab-ArbutusSlab-Regular', 1, 4));
     //it('should expand ArbutusSlab - thin', textFunction('arbutusslab-ArbutusSlab-Regular', 3, 3)); //broken
     it('should expand ArbutusSlab - thick', textFunction('arbutusslab-ArbutusSlab-Regular', 7, 2));
