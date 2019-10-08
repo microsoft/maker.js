@@ -106,6 +106,8 @@
                 }
             }
         }
+
+        return foreignIntersection;
     }
 
     /**
@@ -453,4 +455,257 @@
     export function combineUnion(modelA: IModel, modelB: IModel) {
         return combine(modelA, modelB, false, true, false, true);
     }
+
+    export function combineArray(modelArray: IModel[], includePathsInsideOthers: boolean, includePathsOutsideOthers: boolean) {
+        const itinerary = gatherPathsFromModels(modelArray);
+        const plan: IPlan1 = {
+            bus: {
+                riders: [],
+                lastX: null,
+                dropOffs: []
+            },
+            itinerary,
+            overlappedSegments: []
+        };
+
+        const plan2: IPlan<ICrossedPathSegment> = {
+            bus: {
+                riders: [],
+                lastX: null,
+                dropOffs: []
+            },
+            itinerary: new Itinerary<ICrossedPathSegment>()
+        };
+
+        drive(plan, plan2);
+        plan2.itinerary.complete();
+
+        drive2(plan2);
+    }
+
+    enum PassengerAction {
+        enter, midPoint, exit
+    }
+
+    interface IPassengerEvent {
+        x: number;
+        y?: number;
+        event: PassengerAction;
+        passengerId: number;
+    }
+
+    interface IPassenger<T> {
+        pid: number;
+        measure: IMeasure;
+        ticketId: number;
+        item: T;
+    }
+
+    class Itinerary<T> {
+        passengers: IPassenger<T>[];
+        events: IPassengerEvent[];
+
+        constructor() {
+            this.passengers = [];
+            this.events = [];
+        }
+
+        listPassenger(pz: IPath, item: T) {
+            const { events, passengers } = this;
+            const p: IPassenger<T> = {
+                item,
+                pid: passengers.length,
+                measure: measure.pathExtents(pz),
+                ticketId: null
+            };
+            const enterEvent: IPassengerEvent = { event: PassengerAction.enter, passengerId: p.pid, x: round(p.measure.low[0]) };
+            events.push(enterEvent);
+            const exitEvent: IPassengerEvent = { event: PassengerAction.exit, passengerId: p.pid, x: round(p.measure.high[0]) };
+            events.push(exitEvent);
+            passengers.push(p);
+        }
+
+        complete() {
+            this.events.sort((a, b) => a.x - b.x);
+        }
+    }
+
+    function gatherPathsFromModels(modelArray: IModel[]) {
+        const wpArray: IWalkPath[] = [];
+        modelArray.forEach((m, modelIndex) => {
+            model.walk(m, {
+                onPath: wp => wpArray.push(wp)
+            });
+        });
+        return gatherPathsFromWalkedPaths(wpArray);
+    }
+
+    function gatherPathsFromWalkedPaths(wpArray: IWalkPath[]) {
+        const itinerary = new Itinerary<ICrossedPath>();
+        wpArray.forEach(wp => {
+
+            //clone this path and make it the first segment
+            var segment: ICrossedPathSegment = {
+                absolutePath: path.clone(wp.pathContext, wp.offset),
+                pathId: wp.pathId,
+                overlapped: false,
+                uniqueForeignIntersectionPoints: []
+            };
+
+            const item = {
+                ...wp,
+                broken: false,
+                segments: [segment]
+            };
+
+            itinerary.listPassenger(wp.pathContext, item);
+        });
+        itinerary.complete();
+        return itinerary;
+    }
+
+    interface IBus<T> {
+        riders: IPassenger<T>[];
+        lastX: number;
+        dropOffs: IPassenger<T>[];
+    }
+
+    interface IPlan<T> {
+        bus: IBus<T>;
+        itinerary: Itinerary<T>;
+    }
+
+    //    type IBus1 = IBus<ICrossedPath> & { overlappedSegments: ICrossedPathSegment[] };
+
+    type IPlan1 = IPlan<ICrossedPath> & { overlappedSegments: ICrossedPathSegment[] };
+
+    function drive(plan: IPlan1, plan2: IPlan<ICrossedPathSegment>) {
+        const { bus, itinerary } = plan;
+        const { itinerary: itinerary2 } = plan2;
+
+        const process = () => {
+            const s = `bus: ${bus.riders.filter(Boolean).map(p => p.ticketId).join()}, exits: ${bus.dropOffs.map(x => x.ticketId).join()}`;
+            bus.dropOffs.forEach(ex => {
+                //insert segments into new itinerary
+
+                ex.item.segments.forEach(segment => {
+                    const midPoint = point.middle(segment.absolutePath);
+                    itinerary2.listPassenger(segment.absolutePath, segment);
+                    itinerary2.events.push({
+                        event: PassengerAction.midPoint,
+                        x: midPoint[0],
+                        y: midPoint[1],
+                        passengerId: ex.pid
+                    })
+                })
+
+                delete bus[ex.ticketId];
+            });
+            bus.dropOffs.length = 0;
+            //const s2 = `/ bus: ${bus.filter(Boolean).map(p=>p.passengerId).join()}`;
+            return s //+ s2;
+        }
+
+        let i = 0;
+        let logs = ['start'];
+        while (i < itinerary.events.length) {
+            let ev = itinerary.events[i];
+            if (ev.x !== bus.lastX && bus.riders.length) {
+                logs.push(process());
+            }
+            if (ev.event === PassengerAction.enter) {
+                logs.push(board(itinerary.passengers[ev.passengerId], plan));
+            }
+            if (ev.event === PassengerAction.exit) {
+                bus.dropOffs.push(itinerary.passengers[ev.passengerId]);
+            }
+            bus.lastX = itinerary.events[i].x;
+            i++;
+        }
+        logs.push(process());
+    }
+
+    function board(passenger: IPassenger<ICrossedPath>, plan: IPlan1) {
+        const { bus, overlappedSegments } = plan;
+        const s = [];
+        passenger.ticketId = bus.riders.length;
+        bus.riders.forEach(op => {
+            if (!op) return;
+            //see if passenger overlaps
+            if (measure.isBetween(passenger.measure.high[1], op.measure.high[1], op.measure.low[1], false) ||
+                measure.isBetween(op.measure.high[1], passenger.measure.high[1], passenger.measure.low[1], false)) {
+                if (breakAlongForeignPath(passenger.item, overlappedSegments, op.item)) {
+                    breakAlongForeignPath(op.item, overlappedSegments, passenger.item);
+                }
+                s.push(op.ticketId);
+            }
+        })
+        bus.riders.push(passenger);
+        return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
+    }
+
+    function drive2(plan2: IPlan<ICrossedPathSegment>) {
+        const { bus: bus2, itinerary: itinerary2 } = plan2;
+
+        const midPointChecks: IPassenger<ICrossedPathSegment>[] = [];
+
+        const process2 = () => {
+            midPointChecks.forEach(mp => {
+                //TODO cast a line
+                //TODO intersect with all bus riders, count the number of intersections
+            });
+            midPointChecks.length = 0;
+
+            const s = `bus: ${bus2.riders.filter(Boolean).map(p => p.ticketId).join()}, exits: ${bus2.dropOffs.map(x => x.ticketId).join()}`;
+            bus2.dropOffs.forEach(ex => {
+                delete bus2[ex.ticketId];
+            });
+            bus2.dropOffs.length = 0;
+            //const s2 = `/ bus: ${bus.filter(Boolean).map(p=>p.passengerId).join()}`;
+            return s //+ s2;
+        }
+
+        let i = 0;
+        let logs = ['start'];
+        while (i < itinerary2.events.length) {
+            let ev = itinerary2.events[i];
+            if (ev.x !== bus2.lastX && bus2.riders.length) {
+                logs.push(process2());
+            }
+            if (ev.event === PassengerAction.enter) {
+                logs.push(board2(itinerary2.passengers[ev.passengerId], plan2));
+            }
+            if (ev.event === PassengerAction.midPoint) {
+                midPointChecks.push(itinerary2.passengers[ev.passengerId]);
+            }
+            if (ev.event === PassengerAction.exit) {
+                bus2.dropOffs.push(itinerary2.passengers[ev.passengerId]);
+            }
+            bus2.lastX = itinerary2.events[i].x;
+            i++;
+        }
+        logs.push(process2());
+    }
+
+    function board2(passenger: IPassenger<ICrossedPathSegment>, plan: IPlan<ICrossedPathSegment>) {
+        const { bus } = plan;
+        passenger.ticketId = bus.riders.length;
+        bus.riders.push(passenger);
+        return '?';
+    }
+
+    function midpointEvent(passenger: IPassenger<ICrossedPathSegment>, bus2: IBus<ICrossedPathSegment>) {
+        //TODO cast a line
+        const s = [];
+        bus2.riders.forEach(op => {
+            if (!op) return;
+            //TODO see if passenger intersects with line, count the intersections
+            if (true) {
+                //TODO increment intersection count
+                s.push(op.ticketId);
+            }
+        });
+        return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
+    }
+
 }
