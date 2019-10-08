@@ -652,6 +652,7 @@ namespace MakerJs {
      * A path reference in a walk.
      */
     export interface IWalkPath extends IRefPathIdInModel, IRouteOffset {
+        rootModel: IModel;
         pathContext: IPath;
     }
 

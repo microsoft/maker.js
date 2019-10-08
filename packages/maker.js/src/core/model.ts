@@ -562,6 +562,7 @@ namespace MakerJs.model {
     export function walk(modelContext: IModel, options: IWalkOptions) {
 
         if (!modelContext) return;
+        const rootModel = modelContext;
 
         function walkRecursive(modelContext: IModel, layer: string, offset: IPoint, route: string[], routeKey: string) {
 
@@ -575,7 +576,8 @@ namespace MakerJs.model {
                     if (!pathContext) continue;
 
                     var walkedPath: IWalkPath = {
-                        modelContext: modelContext,
+                        rootModel,
+                        modelContext,
                         layer: (pathContext.layer != undefined) ? pathContext.layer : layer,
                         offset: newOffset,
                         pathContext: pathContext,
