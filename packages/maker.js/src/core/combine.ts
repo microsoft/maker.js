@@ -147,6 +147,7 @@
      * @private
      */
     interface ICrossedPath extends IWalkPath {
+        sourceIndex: number;
         outerContour?: boolean;
         broken: boolean;
         segments: ICrossedPathSegment[];
@@ -457,19 +458,17 @@
         return combine(modelA, modelB, false, true, false, true);
     }
 
-    export function combineArray(modelArray: IModel[], includePathsInsideOthers: boolean, includePathsOutsideOthers: boolean) {
-        const itinerary = gatherPathsFromModels(modelArray);
-        const plan: IPlan1 = {
+    export function combineArray(sourceArray: (IChain | IModel)[], includePathsInsideOthers: boolean, includePathsOutsideOthers: boolean) {
+        const coarseJourney: IJourneyCoarse = {
             bus: {
                 riders: [],
                 lastX: null,
                 dropOffs: []
             },
-            itinerary,
+            itinerary: new Itinerary<ICrossedPath>(),
             overlappedSegments: []
         };
-
-        const plan2: IPlan<ICrossedPathSegment> = {
+        const fineJourney: IJourneyFine = {
             bus: {
                 riders: [],
                 lastX: null,
@@ -478,10 +477,31 @@
             itinerary: new Itinerary<ICrossedPathSegment>()
         };
 
-        drive(plan, plan2);
-        plan2.itinerary.complete();
+        const handleDropOffs = (dropOffs: IPassenger<ICrossedPath>[]) => {
+            const { itinerary } = fineJourney;
+            dropOffs.forEach(ex => {
+                //insert segments into new itinerary
+                ex.item.segments.forEach(segment => {
+                    const midPoint = point.middle(segment.absolutePath);
+                    itinerary.listPassenger(segment.absolutePath, segment);
+                    itinerary.events.push({
+                        event: PassengerAction.midPoint,
+                        x: midPoint[0],
+                        y: midPoint[1],
+                        passengerId: ex.pid
+                    });
+                });
+            });
+        };
 
-        drive2(plan2);
+        const crossedPaths = gatherPathsFromSource(sourceArray);
+        crossedPaths.forEach(cp => coarseJourney.itinerary.listPassenger(cp.pathContext, cp));
+        coarseJourney.itinerary.complete();
+
+        driveCoarse(coarseJourney, handleDropOffs);
+        fineJourney.itinerary.complete();
+
+        driveFine(fineJourney);
     }
 
     enum PassengerAction {
@@ -500,6 +520,11 @@
         measure: IMeasure;
         ticketId: number;
         item: T;
+    }
+
+    interface ISource {
+        sourceIndex: number;
+        chain: IChain;
     }
 
     class Itinerary<T> {
@@ -531,61 +556,59 @@
         }
     }
 
-    function gatherPathsFromModels(modelArray: IModel[]) {
+    function gatherPathsFromSource(sourceArray: (IChain | IModel)[]) {
+        //collect chains
+        const sourceChains: ISource[] = [];
+        sourceArray.forEach((source, sourceIndex) => {
+            if (isChain(source)) {
+                const c = source as IChain;
+                sourceChains.push({ sourceIndex, chain: c });
+            } else {
+                //find chains
+                const m = source as IModel;
+                const cs = model.findChains(m, { contain: true }) as IChain[];
+                const scs = cs.map(c => {
+                    const source: ISource = {
+                        chain: c,
+                        sourceIndex
+                    };
+                    return source;
+                });
+                sourceChains.push.apply(sourceChains, scs);
+            }
+        });
+
+        //collect crossed paths
         const crossedPaths: ICrossedPath[] = [];
-
-        //find chains
-        modelArray.forEach((m, modelIndex) => {
-            const chains = model.findChains(m, { contain: true }) as IChain[];
-            gatherPathsFromChains(chains, crossedPaths);
-        });
-
-        const itinerary = new Itinerary<ICrossedPath>();
-
-        crossedPaths.forEach(cp => {
-            itinerary.listPassenger(cp.pathContext, cp);
-        });
-
-        itinerary.complete();
-
-        return itinerary;
-    }
-
-    function gatherPathsFromChains(chains: IChain[], crossedPaths: ICrossedPath[]) {
-
-        const addChains = (chains: IChain[], outerContour: boolean) => {
-            chains.forEach(c => {
+        const getCrossedPathsFromChains = (cs: IChain[], outerContour: boolean, sourceIndex: number) => {
+            cs.forEach(c => {
                 c.links.forEach(link => {
-                    const cp = createCrossedPath(link.walkedPath, outerContour);
-                    crossedPaths.push(cp);
+                    const wp = link.walkedPath;
+                    //clone this path and make it the first segment
+                    var segment: ICrossedPathSegment = {
+                        absolutePath: path.clone(wp.pathContext, wp.offset),
+                        pathId: wp.pathId,
+                        overlapped: false,
+                        uniqueForeignIntersectionPoints: []
+                    };
+                    const crossedPath: ICrossedPath = {
+                        ...wp,
+                        sourceIndex,
+                        broken: false,
+                        outerContour,
+                        segments: [segment]
+                    };
+                    crossedPaths.push(crossedPath);
                 });
                 if (c.contains) {
-                    addChains(c.contains, !outerContour);
+                    getCrossedPathsFromChains(c.contains, !outerContour, sourceIndex);
                 }
             });
         }
-
-        addChains(chains, true);
-    }
-
-    function createCrossedPath(wp: IWalkPath, outerContour: boolean) {
-
-        //clone this path and make it the first segment
-        var segment: ICrossedPathSegment = {
-            absolutePath: path.clone(wp.pathContext, wp.offset),
-            pathId: wp.pathId,
-            overlapped: false,
-            uniqueForeignIntersectionPoints: []
-        };
-
-        const crossedPath: ICrossedPath = {
-            ...wp,
-            broken: false,
-            outerContour,
-            segments: [segment]
-        };
-
-        return crossedPath;
+        sourceChains.forEach(sc => {
+            getCrossedPathsFromChains([sc.chain], true, sc.sourceIndex);
+        });
+        return crossedPaths;
     }
 
     interface IBus<T> {
@@ -594,37 +617,20 @@
         dropOffs: IPassenger<T>[];
     }
 
-    interface IPlan<T> {
+    interface IJourney<T> {
         bus: IBus<T>;
         itinerary: Itinerary<T>;
     }
 
-    //    type IBus1 = IBus<ICrossedPath> & { overlappedSegments: ICrossedPathSegment[] };
+    type IJourneyCoarse = IJourney<ICrossedPath> & { overlappedSegments: ICrossedPathSegment[] };
+    type IJourneyFine = IJourney<ICrossedPathSegment>;
 
-    type IPlan1 = IPlan<ICrossedPath> & { overlappedSegments: ICrossedPathSegment[] };
-
-    function drive(plan: IPlan1, plan2: IPlan<ICrossedPathSegment>) {
-        const { bus, itinerary } = plan;
-        const { itinerary: itinerary2 } = plan2;
+    function driveCoarse(coarseJourney: IJourneyCoarse, handleDropOffs: (dropOffs: IPassenger<ICrossedPath>[]) => void) {
+        const { bus, itinerary } = coarseJourney;
 
         const process = () => {
             const s = `bus: ${bus.riders.filter(Boolean).map(p => p.ticketId).join()}, exits: ${bus.dropOffs.map(x => x.ticketId).join()}`;
-            bus.dropOffs.forEach(ex => {
-                //insert segments into new itinerary
-
-                ex.item.segments.forEach(segment => {
-                    const midPoint = point.middle(segment.absolutePath);
-                    itinerary2.listPassenger(segment.absolutePath, segment);
-                    itinerary2.events.push({
-                        event: PassengerAction.midPoint,
-                        x: midPoint[0],
-                        y: midPoint[1],
-                        passengerId: ex.pid
-                    })
-                })
-
-                delete bus[ex.ticketId];
-            });
+            handleDropOffs(bus.dropOffs);
             bus.dropOffs.length = 0;
             //const s2 = `/ bus: ${bus.filter(Boolean).map(p=>p.passengerId).join()}`;
             return s //+ s2;
@@ -638,7 +644,7 @@
                 logs.push(process());
             }
             if (ev.event === PassengerAction.enter) {
-                logs.push(board(itinerary.passengers[ev.passengerId], plan));
+                logs.push(board(itinerary.passengers[ev.passengerId], coarseJourney));
             }
             if (ev.event === PassengerAction.exit) {
                 bus.dropOffs.push(itinerary.passengers[ev.passengerId]);
@@ -649,8 +655,8 @@
         logs.push(process());
     }
 
-    function board(passenger: IPassenger<ICrossedPath>, plan: IPlan1) {
-        const { bus, overlappedSegments } = plan;
+    function board(passenger: IPassenger<ICrossedPath>, coarseJourney: IJourneyCoarse) {
+        const { bus, overlappedSegments } = coarseJourney;
         const s = [];
         passenger.ticketId = bus.riders.length;
         bus.riders.forEach(op => {
@@ -668,8 +674,8 @@
         return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
     }
 
-    function drive2(plan2: IPlan<ICrossedPathSegment>) {
-        const { bus: bus2, itinerary: itinerary2 } = plan2;
+    function driveFine(fineJourney: IJourneyFine) {
+        const { bus, itinerary } = fineJourney;
 
         const midPointChecks: IPassenger<ICrossedPathSegment>[] = [];
 
@@ -680,38 +686,38 @@
             });
             midPointChecks.length = 0;
 
-            const s = `bus: ${bus2.riders.filter(Boolean).map(p => p.ticketId).join()}, exits: ${bus2.dropOffs.map(x => x.ticketId).join()}`;
-            bus2.dropOffs.forEach(ex => {
-                delete bus2[ex.ticketId];
+            const s = `bus: ${bus.riders.filter(Boolean).map(p => p.ticketId).join()}, exits: ${bus.dropOffs.map(x => x.ticketId).join()}`;
+            bus.dropOffs.forEach(ex => {
+                delete bus[ex.ticketId];
             });
-            bus2.dropOffs.length = 0;
+            bus.dropOffs.length = 0;
             //const s2 = `/ bus: ${bus.filter(Boolean).map(p=>p.passengerId).join()}`;
             return s //+ s2;
         }
 
         let i = 0;
         let logs = ['start'];
-        while (i < itinerary2.events.length) {
-            let ev = itinerary2.events[i];
-            if (ev.x !== bus2.lastX && bus2.riders.length) {
+        while (i < itinerary.events.length) {
+            let ev = itinerary.events[i];
+            if (ev.x !== bus.lastX && bus.riders.length) {
                 logs.push(process2());
             }
             if (ev.event === PassengerAction.enter) {
-                logs.push(board2(itinerary2.passengers[ev.passengerId], plan2));
+                logs.push(board2(itinerary.passengers[ev.passengerId], fineJourney));
             }
             if (ev.event === PassengerAction.midPoint) {
-                midPointChecks.push(itinerary2.passengers[ev.passengerId]);
+                midPointChecks.push(itinerary.passengers[ev.passengerId]);
             }
             if (ev.event === PassengerAction.exit) {
-                bus2.dropOffs.push(itinerary2.passengers[ev.passengerId]);
+                bus.dropOffs.push(itinerary.passengers[ev.passengerId]);
             }
-            bus2.lastX = itinerary2.events[i].x;
+            bus.lastX = itinerary.events[i].x;
             i++;
         }
         logs.push(process2());
     }
 
-    function board2(passenger: IPassenger<ICrossedPathSegment>, plan: IPlan<ICrossedPathSegment>) {
+    function board2(passenger: IPassenger<ICrossedPathSegment>, plan: IJourneyFine) {
         const { bus } = plan;
         passenger.ticketId = bus.riders.length;
         bus.riders.push(passenger);
