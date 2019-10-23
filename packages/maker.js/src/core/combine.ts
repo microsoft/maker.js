@@ -147,6 +147,7 @@
      * @private
      */
     interface ICrossedPath extends IWalkPath {
+        outerContour?: boolean;
         broken: boolean;
         segments: ICrossedPathSegment[];
     }
@@ -531,37 +532,60 @@
     }
 
     function gatherPathsFromModels(modelArray: IModel[]) {
-        const wpArray: IWalkPath[] = [];
+        const crossedPaths: ICrossedPath[] = [];
+
+        //find chains
         modelArray.forEach((m, modelIndex) => {
-            model.walk(m, {
-                onPath: wp => wpArray.push(wp)
-            });
+            const chains = model.findChains(m, { contain: true }) as IChain[];
+            gatherPathsFromChains(chains, crossedPaths);
         });
-        return gatherPathsFromWalkedPaths(wpArray);
+
+        const itinerary = new Itinerary<ICrossedPath>();
+
+        crossedPaths.forEach(cp => {
+            itinerary.listPassenger(cp.pathContext, cp);
+        });
+
+        itinerary.complete();
+
+        return itinerary;
     }
 
-    function gatherPathsFromWalkedPaths(wpArray: IWalkPath[]) {
-        const itinerary = new Itinerary<ICrossedPath>();
-        wpArray.forEach(wp => {
+    function gatherPathsFromChains(chains: IChain[], crossedPaths: ICrossedPath[]) {
 
-            //clone this path and make it the first segment
-            var segment: ICrossedPathSegment = {
-                absolutePath: path.clone(wp.pathContext, wp.offset),
-                pathId: wp.pathId,
-                overlapped: false,
-                uniqueForeignIntersectionPoints: []
-            };
+        const addChains = (chains: IChain[], outerContour: boolean) => {
+            chains.forEach(c => {
+                c.links.forEach(link => {
+                    const cp = createCrossedPath(link.walkedPath, outerContour);
+                    crossedPaths.push(cp);
+                });
+                if (c.contains) {
+                    addChains(c.contains, !outerContour);
+                }
+            });
+        }
 
-            const item = {
-                ...wp,
-                broken: false,
-                segments: [segment]
-            };
+        addChains(chains, true);
+    }
 
-            itinerary.listPassenger(wp.pathContext, item);
-        });
-        itinerary.complete();
-        return itinerary;
+    function createCrossedPath(wp: IWalkPath, outerContour: boolean) {
+
+        //clone this path and make it the first segment
+        var segment: ICrossedPathSegment = {
+            absolutePath: path.clone(wp.pathContext, wp.offset),
+            pathId: wp.pathId,
+            overlapped: false,
+            uniqueForeignIntersectionPoints: []
+        };
+
+        const crossedPath: ICrossedPath = {
+            ...wp,
+            broken: false,
+            outerContour,
+            segments: [segment]
+        };
+
+        return crossedPath;
     }
 
     interface IBus<T> {
