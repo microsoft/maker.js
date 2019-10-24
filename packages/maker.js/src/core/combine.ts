@@ -147,6 +147,7 @@
      * @private
      */
     interface ICrossedPath extends IWalkPath {
+        absolutePath: IPath;
         sourceIndex: number;
         outerContour?: boolean;
         broken: boolean;
@@ -462,14 +463,25 @@
         const coarseBus = new CoarseBus();
         const fineBus = new FineBus();
 
+        const crossedPaths = gatherPathsFromSource(sourceArray);
+        crossedPaths.forEach(cp => coarseBus.itinerary.listPassenger(cp.absolutePath, cp));
+        coarseBus.itinerary.complete();
+
         coarseBus.handleDropOff = (dropOff: IPassenger<ICrossedPath>) => {
             //insert segments into new itinerary
-            fineBus.listSegment(dropOff);
+            const { itinerary } = fineBus;
+            //insert segments into new itinerary
+            dropOff.item.segments.forEach(segment => {
+                const midPoint = point.middle(segment.absolutePath);
+                itinerary.listPassenger(segment.absolutePath, segment);
+                itinerary.events.push({
+                    event: PassengerAction.midPoint,
+                    x: midPoint[0],
+                    y: midPoint[1],
+                    passengerId: dropOff.passengerId
+                });
+            });
         };
-
-        const crossedPaths = gatherPathsFromSource(sourceArray);
-        crossedPaths.forEach(cp => coarseBus.itinerary.listPassenger(cp.pathContext, cp));
-        coarseBus.itinerary.complete();
 
         coarseBus.drive();
         fineBus.itinerary.complete();
@@ -489,8 +501,8 @@
     }
 
     interface IPassenger<T> {
-        pid: number;
-        measure: IMeasure;
+        passengerId: number;
+        pathExtents: IMeasure;
         ticketId: number;
         item: T;
     }
@@ -513,13 +525,13 @@
             const { events, passengers } = this;
             const p: IPassenger<T> = {
                 item,
-                pid: passengers.length,
-                measure: measure.pathExtents(pz),
+                passengerId: passengers.length,
+                pathExtents: measure.pathExtents(pz),
                 ticketId: null
             };
-            const enterEvent: IPassengerEvent = { event: PassengerAction.enter, passengerId: p.pid, x: round(p.measure.low[0]) };
+            const enterEvent: IPassengerEvent = { event: PassengerAction.enter, passengerId: p.passengerId, x: round(p.pathExtents.low[0]) };
             events.push(enterEvent);
-            const exitEvent: IPassengerEvent = { event: PassengerAction.exit, passengerId: p.pid, x: round(p.measure.high[0]) };
+            const exitEvent: IPassengerEvent = { event: PassengerAction.exit, passengerId: p.passengerId, x: round(p.pathExtents.high[0]) };
             events.push(exitEvent);
             passengers.push(p);
         }
@@ -598,8 +610,8 @@
             riders.forEach(op => {
                 if (!op) return;
                 //see if passenger overlaps
-                if (measure.isBetween(passenger.measure.high[1], op.measure.high[1], op.measure.low[1], false) ||
-                    measure.isBetween(op.measure.high[1], passenger.measure.high[1], passenger.measure.low[1], false)) {
+                if (measure.isBetween(passenger.pathExtents.high[1], op.pathExtents.high[1], op.pathExtents.low[1], false) ||
+                    measure.isBetween(op.pathExtents.high[1], passenger.pathExtents.high[1], passenger.pathExtents.low[1], false)) {
                     if (breakAlongForeignPath(passenger.item, this.overlappedSegments, op.item)) {
                         breakAlongForeignPath(op.item, this.overlappedSegments, passenger.item);
                     }
@@ -620,21 +632,6 @@
             this.midpointChecks = [];
         }
 
-        public listSegment(dropOff: IPassenger<ICrossedPath>) {
-            const { itinerary } = this;
-            //insert segments into new itinerary
-            dropOff.item.segments.forEach(segment => {
-                const midPoint = point.middle(segment.absolutePath);
-                itinerary.listPassenger(segment.absolutePath, segment);
-                itinerary.events.push({
-                    event: PassengerAction.midPoint,
-                    x: midPoint[0],
-                    y: midPoint[1],
-                    passengerId: dropOff.pid
-                });
-            });
-        }
-
         public passengerEvent(ev: IPassengerEvent) {
             if (ev.event === PassengerAction.midPoint) {
                 this.midpointChecks.push(this.itinerary.passengers[ev.passengerId]);
@@ -643,7 +640,6 @@
 
         public stop() {
             this.midpointChecks.forEach(mp => {
-                //TODO midpoint
 
                 //TODO cast a line
                 const s = [];
@@ -665,6 +661,8 @@
     }
 
     function gatherPathsFromSource(sourceArray: (IChain | IModel)[]) {
+        const m: IMeasure = { high: null, low: null };
+
         //collect chains
         const sourceChains: ISource[] = [];
         sourceArray.forEach((source, sourceIndex) => {
@@ -686,21 +684,24 @@
             }
         });
 
-        //collect crossed paths
+        //collect all links from all chains
         const crossedPaths: ICrossedPath[] = [];
         const getCrossedPathsFromChains = (cs: IChain[], outerContour: boolean, sourceIndex: number) => {
             cs.forEach(c => {
                 c.links.forEach(link => {
                     const wp = link.walkedPath;
+                    const absolutePath = path.clone(wp.pathContext, wp.offset);
+                    //measure.increase(m, wp.)
                     //clone this path and make it the first segment
                     var segment: ICrossedPathSegment = {
-                        absolutePath: path.clone(wp.pathContext, wp.offset),
+                        absolutePath,
                         pathId: wp.pathId,
                         overlapped: false,
                         uniqueForeignIntersectionPoints: []
                     };
                     const crossedPath: ICrossedPath = {
                         ...wp,
+                        absolutePath,
                         sourceIndex,
                         broken: false,
                         outerContour,
