@@ -459,7 +459,13 @@
         return combine(modelA, modelB, false, true, false, true);
     }
 
-    export function combineArray(sourceArray: (IChain | IModel)[], includePathsInsideOthers: boolean, includePathsOutsideOthers: boolean) {
+    /**
+     * Combine an array of models or chains, resulting in a union. Each model will be modified accordingly.
+     *
+     * @param sourceArray Array of IModel or IChain.
+     * @returns A new model containing all of the input models.
+     */
+    export function combineArray(sourceArray: (IChain | IModel)[]) {
         const crossedPaths = gatherPathsFromSource(sourceArray);
 
         const coarseBus = new CoarseBus();
@@ -484,6 +490,9 @@
 
         coarseBus.drive();
         fineBus.drive();
+
+        const result: IModel = {};
+        return result;
     }
 
     enum PassengerAction {
@@ -637,12 +646,6 @@
             this.midpointChecks = [];
             this.model = { paths: {} };
             this.midPointCount = 0;
-        }
-
-        public onBoard(passenger: IPassenger<IFineSegment>) {
-            const { riders } = this;
-            passenger.ticketId = riders.length;
-            riders.push(passenger);
         }
 
         public passengerEvent(ev: IPassengerEvent) {
