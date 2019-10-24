@@ -460,20 +460,19 @@
     }
 
     export function combineArray(sourceArray: (IChain | IModel)[], includePathsInsideOthers: boolean, includePathsOutsideOthers: boolean) {
+        const crossedPaths = gatherPathsFromSource(sourceArray);
+
         const coarseBus = new CoarseBus();
         const fineBus = new FineBus();
 
-        const crossedPaths = gatherPathsFromSource(sourceArray);
         crossedPaths.forEach(cp => coarseBus.itinerary.listPassenger(cp.absolutePath, cp));
-        coarseBus.itinerary.complete();
 
         coarseBus.handleDropOff = (dropOff: IPassenger<ICrossedPath>) => {
-            //insert segments into new itinerary
             const { itinerary } = fineBus;
             //insert segments into new itinerary
             dropOff.item.segments.forEach(segment => {
                 const midPoint = point.middle(segment.absolutePath);
-                itinerary.listPassenger(segment.absolutePath, segment);
+                itinerary.listPassenger(segment.absolutePath, { sourceIndex: dropOff.item.sourceIndex, segment });
                 itinerary.events.push({
                     event: PassengerAction.midPoint,
                     x: midPoint[0],
@@ -484,8 +483,6 @@
         };
 
         coarseBus.drive();
-        fineBus.itinerary.complete();
-
         fineBus.drive();
     }
 
@@ -512,6 +509,11 @@
         chain: IChain;
     }
 
+    interface IFineSegment {
+        sourceIndex: number;
+        segment: ICrossedPathSegment;
+    }
+
     class Itinerary<T> {
         passengers: IPassenger<T>[];
         events: IPassengerEvent[];
@@ -536,7 +538,7 @@
             passengers.push(p);
         }
 
-        complete() {
+        close() {
             this.events.sort((a, b) => a.x - b.x);
         }
     }
@@ -567,6 +569,7 @@
 
         public drive() {
             const { dropOffs, itinerary } = this;
+            itinerary.close();
             let i = 0;
             while (i < itinerary.events.length) {
                 let ev = itinerary.events[i];
@@ -611,10 +614,10 @@
                 if (!op) return;
                 //see if passenger overlaps
                 if (measure.isBetween(passenger.pathExtents.high[1], op.pathExtents.high[1], op.pathExtents.low[1], false) ||
-                    measure.isBetween(op.pathExtents.high[1], passenger.pathExtents.high[1], passenger.pathExtents.low[1], false)) {
-                    if (breakAlongForeignPath(passenger.item, this.overlappedSegments, op.item)) {
-                        breakAlongForeignPath(op.item, this.overlappedSegments, passenger.item);
-                    }
+                    measure.isBetween(op.pathExtents.high[1], passenger.pathExtents.high[1], passenger.pathExtents.low[1], false)
+                ) {
+                    breakAlongForeignPath(passenger.item, this.overlappedSegments, op.item);
+                    breakAlongForeignPath(op.item, this.overlappedSegments, passenger.item);
                     //s.push(op.ticketId);
                 }
             })
@@ -624,36 +627,50 @@
 
     }
 
-    class FineBus extends Bus<ICrossedPathSegment> {
-        public midpointChecks: IPassenger<ICrossedPathSegment>[];
+    class FineBus extends Bus<IFineSegment> {
+        public midpointChecks: { ev: IPassengerEvent, passenger: IPassenger<IFineSegment> }[];
+        public model: IModel;
+        public midPointCount: number;
 
         constructor() {
             super();
             this.midpointChecks = [];
+            this.model = { paths: {} };
+            this.midPointCount = 0;
+        }
+
+        public onBoard(passenger: IPassenger<IFineSegment>) {
+            const { riders } = this;
+            passenger.ticketId = riders.length;
+            riders.push(passenger);
         }
 
         public passengerEvent(ev: IPassengerEvent) {
             if (ev.event === PassengerAction.midPoint) {
-                this.midpointChecks.push(this.itinerary.passengers[ev.passengerId]);
+                this.midpointChecks.push({ ev, passenger: this.itinerary.passengers[ev.passengerId] });
             }
         }
 
         public stop() {
             this.midpointChecks.forEach(mp => {
-
-                //TODO cast a line
-                const s = [];
+                //create a line, but we do not know where it ends yet
+                const dip = new paths.Line([mp.ev.x, mp.ev.y], [mp.ev.x, mp.ev.y - 1]);
+                //const s = [];
                 this.riders.forEach(op => {
                     if (!op) return;
+                    //do not check within same source
+                    if (op.item.sourceIndex === mp.passenger.item.sourceIndex) return;
+                    //move y position below this rider
+                    dip.end[1] = Math.min(dip.end[1], op.pathExtents.low[1] - 1);
                     //TODO see if passenger intersects with line, count the intersections
                     if (true) {
                         //TODO increment intersection count
-                        s.push(op.ticketId);
+                        //      s.push(op.ticketId);
                     }
                 });
                 //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
 
-
+                this.midPointCount++;
             });
             this.midpointChecks.length = 0;
             super.stop();
@@ -661,8 +678,6 @@
     }
 
     function gatherPathsFromSource(sourceArray: (IChain | IModel)[]) {
-        const m: IMeasure = { high: null, low: null };
-
         //collect chains
         const sourceChains: ISource[] = [];
         sourceArray.forEach((source, sourceIndex) => {
@@ -686,38 +701,38 @@
 
         //collect all links from all chains
         const crossedPaths: ICrossedPath[] = [];
-        const getCrossedPathsFromChains = (cs: IChain[], outerContour: boolean, sourceIndex: number) => {
-            cs.forEach(c => {
-                c.links.forEach(link => {
-                    const wp = link.walkedPath;
-                    const absolutePath = path.clone(wp.pathContext, wp.offset);
-                    //measure.increase(m, wp.)
-                    //clone this path and make it the first segment
-                    var segment: ICrossedPathSegment = {
-                        absolutePath,
-                        pathId: wp.pathId,
-                        overlapped: false,
-                        uniqueForeignIntersectionPoints: []
-                    };
-                    const crossedPath: ICrossedPath = {
-                        ...wp,
-                        absolutePath,
-                        sourceIndex,
-                        broken: false,
-                        outerContour,
-                        segments: [segment]
-                    };
-                    crossedPaths.push(crossedPath);
-                });
-                if (c.contains) {
-                    getCrossedPathsFromChains(c.contains, !outerContour, sourceIndex);
-                }
+        const getCrossedPathsFromChains = (c: IChain, outerContour: boolean, sourceIndex: number) => {
+            c.links.forEach(link => {
+                const wp = link.walkedPath;
+                const absolutePath = path.clone(wp.pathContext, wp.offset);
+                //clone this path and make it the first segment
+                const segment: ICrossedPathSegment = {
+                    absolutePath,
+                    pathId: wp.pathId,
+                    overlapped: false,
+                    uniqueForeignIntersectionPoints: []
+                };
+                const crossedPath: ICrossedPath = {
+                    ...wp,
+                    absolutePath,
+                    sourceIndex,
+                    broken: false,
+                    outerContour,
+                    segments: [segment]
+                };
+                crossedPaths.push(crossedPath);
             });
+            if (c.contains) {
+                c.contains.forEach(c2 => {
+                    getCrossedPathsFromChains(c2, !outerContour, sourceIndex);
+                });
+            }
         }
         sourceChains.forEach(sc => {
-            getCrossedPathsFromChains([sc.chain], true, sc.sourceIndex);
+            getCrossedPathsFromChains(sc.chain, true, sc.sourceIndex);
         });
         return crossedPaths;
     }
 
 }
+s
