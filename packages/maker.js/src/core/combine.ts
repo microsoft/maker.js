@@ -656,27 +656,72 @@
 
         public stop() {
             this.midpointChecks.forEach(mp => {
-                //create a line, but we do not know where it ends yet
-                const dip = new paths.Line([mp.ev.x, mp.ev.y], [mp.ev.x, mp.ev.y - 1]);
-                //const s = [];
-                this.riders.forEach(op => {
-                    if (!op) return;
-                    //do not check within same source
-                    if (op.item.sourceIndex === mp.passenger.item.sourceIndex) return;
-                    //move y position below this rider
-                    dip.end[1] = Math.min(dip.end[1], op.pathExtents.low[1] - 1);
-                    //TODO see if passenger intersects with line, count the intersections
-                    if (true) {
-                        //TODO increment intersection count
-                        //      s.push(op.ticketId);
-                    }
-                });
-                //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
+                const { ev, passenger } = mp;
+                const { item } = passenger;
+                const midPoint = [ev.x, ev.y];
+                let dip: IPathLine
 
-                this.midPointCount++;
+                //const s = [];
+                const ridersBySource = this.getRidersBySource(item.sourceIndex, ev.y);
+                for (let sourceIndex in ridersBySource) {
+                    let riders = ridersBySource[sourceIndex];
+                    let intersectionPoints: IPoint[] = [];
+                    riders.forEach(rider => {
+                        //lazy create a line
+                        if (!dip) {
+                            dip = new paths.Line(midPoint, [ev.x, 0]);
+                        }
+
+                        //ensure end y position below this rider
+                        dip.end[1] = Math.min(dip.end[1], rider.pathExtents.low[1] - 1);
+
+                        //see if passenger intersects with line, count the intersections
+                        const int = path.intersection(dip, rider.item.segment.absolutePath);
+                        if (int) {
+                            intersectionPoints.push.apply(int.intersectionPoints);
+                        }
+                    });
+
+                    const unique = intersectionPoints.filter(p => measure.isPointDistinct(p, unique, .00000001));
+
+                    //if number of intersections is an odd number, it's inside this source.
+                    if (unique.length % 2 == 1) {
+                        item.segment.isInside = true;
+
+                        //only needs to be inside of one source, exit for all sources.
+                        return;
+                    }
+                }
+                //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
+                if (dip) {
+                    if (item.segment.isInside) {
+                        dip.layer = 'red';
+                    }
+                    this.model.paths[this.midPointCount] = dip;
+                    this.midPointCount++;
+                }
             });
             this.midpointChecks.length = 0;
             super.stop();
+        }
+
+        public getRidersBySource(currentSourceIndex: number, atOrBelowY: number) {
+            const ridersBySource: { [sourceIndex: number]: IPassenger<IFineSegment>[] } = {};
+            this.riders.forEach(rider => {
+                if (!rider) return;
+                //do not check within same source
+                if (rider.item.sourceIndex === currentSourceIndex) return;
+
+                //see if passenger's bottom extent is at or below y
+                if (rider.pathExtents.low[1] <= atOrBelowY) {
+                    if (!ridersBySource[rider.item.sourceIndex]) {
+                        ridersBySource[rider.item.sourceIndex] = [rider];
+                    } else {
+                        ridersBySource[rider.item.sourceIndex].push(rider);
+                    }
+                }
+            });
+            return ridersBySource;
         }
     }
 
