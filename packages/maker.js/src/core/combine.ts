@@ -725,6 +725,9 @@
         }
     }
 
+    /**
+     * @private
+     */
     function gatherPathsFromSource(sourceArray: (IChain | IModel)[]) {
         //collect chains
         const sourceChains: ISource[] = [];
