@@ -106,8 +106,6 @@
                 }
             }
         }
-
-        return foreignIntersection;
     }
 
     /**
