@@ -461,13 +461,14 @@
      * Combine an array of models or chains, resulting in a union. Each model will be modified accordingly.
      *
      * @param sourceArray Array of IModel or IChain.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing all of the input models.
      */
-    export function combineArray(sourceArray: (IChain | IModel)[]) {
+    export function combineArray(sourceArray: (IChain | IModel)[], options: IBusOptions) {
         const crossedPaths = gatherPathsFromSource(sourceArray);
 
-        const coarseBus = new CoarseBus();
-        const fineBus = new FineBus();
+        const coarseBus = new CoarseBus(options);
+        const fineBus = new FineBus(options);
 
         crossedPaths.forEach(cp => coarseBus.itinerary.listPassenger(cp.absolutePath, cp));
 
@@ -550,6 +551,10 @@
         }
     }
 
+    interface IBusOptions extends IPointMatchOptions {
+
+    }
+
     class Bus<T> {
         public riders: IPassenger<T>[];
         public lastX: number;
@@ -557,7 +562,7 @@
         public itinerary: Itinerary<T>;
         public handleDropOff: (dropOff: IPassenger<T>) => void;
 
-        constructor() {
+        constructor(public options: IBusOptions) {
             this.riders = [];
             this.lastX = null;
             this.dropOffs = [];
@@ -608,8 +613,8 @@
     class CoarseBus extends Bus<ICrossedPath> {
         public overlappedSegments: ICrossedPathSegment[];
 
-        constructor() {
-            super();
+        constructor(options: IBusOptions) {
+            super(options);
             this.overlappedSegments = [];
         }
 
@@ -639,16 +644,30 @@
         public model: IModel;
         public midPointCount: number;
 
-        constructor() {
-            super();
+        constructor(options: IBusOptions) {
+            super(options);
             this.midpointChecks = [];
             this.model = { paths: {} };
             this.midPointCount = 0;
         }
 
         public passengerEvent(ev: IPassengerEvent) {
+            const passenger = this.itinerary.passengers[ev.passengerId];
             if (ev.event === PassengerAction.midPoint) {
-                this.midpointChecks.push({ ev, passenger: this.itinerary.passengers[ev.passengerId] });
+                this.midpointChecks.forEach(mp => {
+                    //check if midpoint is the same
+                    if (
+                        Math.abs(ev.y - mp.ev.y) <= this.options.pointMatchingDistance
+                        && measure.isPathEqual(
+                            passenger.item.segment.absolutePath,
+                            mp.passenger.item.segment.absolutePath,
+                            this.options.pointMatchingDistance
+                        )
+                    ) {
+                        passenger.item.segment.duplicate = mp.passenger.item.segment.duplicate = true;
+                    }
+                });
+                this.midpointChecks.push({ ev, passenger });
             }
         }
 
@@ -680,7 +699,7 @@
                         }
                     });
 
-                    const unique = intersectionPoints.filter(p => measure.isPointDistinct(p, unique, .00000001));
+                    const unique = intersectionPoints.filter(p => measure.isPointDistinct(p, unique, this.options.pointMatchingDistance));
 
                     //if number of intersections is an odd number, it's inside this source.
                     if (unique.length % 2 == 1) {
