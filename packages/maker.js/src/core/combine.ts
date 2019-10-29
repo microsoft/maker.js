@@ -465,6 +465,12 @@
      * @returns A new model containing all of the input models.
      */
     export function combineArray(sourceArray: (IChain | IModel)[], options: IBusOptions) {
+    }
+
+    /**
+     * @private
+     */
+    function sweep(sourceArray: (IChain | IModel)[], options: IBusOptions) {
         const crossedPaths = gatherPathsFromSource(sourceArray);
 
         const coarseBus = new CoarseBus(options);
@@ -487,8 +493,8 @@
             });
         };
 
-        coarseBus.drive();
-        fineBus.drive();
+        coarseBus.load();
+        fineBus.load();
 
         const result: IModel = {};
         return result;
@@ -579,14 +585,18 @@
             //subclass may override
         }
 
-        public drive() {
+        public shuttle() {
+            //subclass may override
+        }
+
+        public load() {
             const { dropOffs, itinerary } = this;
             itinerary.close();
             let i = 0;
             while (i < itinerary.events.length) {
                 let ev = itinerary.events[i];
                 if (ev.x !== this.lastX && i) {
-                    this.stop();
+                    this.shuttle();
                 }
                 if (ev.event === PassengerAction.enter) {
                     this.onBoard(itinerary.passengers[ev.passengerId]);
@@ -598,10 +608,10 @@
                 this.lastX = itinerary.events[i].x;
                 i++;
             }
-            this.stop();
+            this.shuttle();
         }
 
-        public stop() {
+        public unload() {
             this.dropOffs.forEach(passenger => {
                 if (this.handleDropOff) this.handleDropOff(passenger);
                 delete this[passenger.ticketId];
@@ -637,6 +647,9 @@
             //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
         }
 
+        public shuttle() {
+            this.unload();
+        }
     }
 
     class FineBus extends Bus<IFineSegment> {
@@ -671,7 +684,7 @@
             }
         }
 
-        public stop() {
+        public shuttle() {
             this.midpointChecks.forEach(mp => {
                 const { ev, passenger } = mp;
                 const { item } = passenger;
@@ -719,7 +732,7 @@
                 }
             });
             this.midpointChecks.length = 0;
-            super.stop();
+            this.unload();
         }
 
         public getRidersBySource(currentSourceIndex: number, atOrBelowY: number) {
