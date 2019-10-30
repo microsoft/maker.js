@@ -362,8 +362,8 @@
         //TODO out_deleted.models['insideChecks'] = insideChecks
 
         //make sure model measurements capture all paths
-        opts.measureA.measureModels();
-        opts.measureB.measureModels();
+        //opts.measureA.measureModels();
+        //opts.measureB.measureModels();
 
         // if (!opts.farPoint) {
         //     var measureBoth = measure.increase(measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
