@@ -139,6 +139,7 @@
         pathId: string;
         overlapped: boolean;
         duplicate?: boolean;
+        deleted?: boolean;
     }
 
     /**
@@ -357,22 +358,22 @@
         };
         extendObject(opts, options);
 
-        opts.measureA = opts.measureA || new measure.Atlas(modelA);
-        opts.measureB = opts.measureB || new measure.Atlas(modelB);
+        const { crossedPaths, insideChecks } = sweep([modelA, modelB], options);
+        //TODO out_deleted.models['insideChecks'] = insideChecks
 
         //make sure model measurements capture all paths
         opts.measureA.measureModels();
         opts.measureB.measureModels();
 
-        if (!opts.farPoint) {
-            var measureBoth = measure.increase(measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
-            opts.farPoint = point.add(measureBoth.high, [1, 1]);
-        }
+        // if (!opts.farPoint) {
+        //     var measureBoth = measure.increase(measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
+        //     opts.farPoint = point.add(measureBoth.high, [1, 1]);
+        // }
 
-        var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
-        var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
+        // var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
+        // var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
 
-        checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
+        // checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
 
         function trackDeleted(which: number, deletedPath: IPath, routeKey: string, reason: string) {
             addPath(opts.out_deleted[which], deletedPath, 'deleted');
@@ -381,42 +382,52 @@
             p.routeKey = routeKey;
         }
 
-        for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, reason) => trackDeleted(0, p, id, reason));
-        }
+        // for (var i = 0; i < pathsA.crossedPaths.length; i++) {
+        //     addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, reason) => trackDeleted(0, p, id, reason));
+        // }
 
-        for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-            addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, reason) => trackDeleted(1, p, id, reason));
-        }
+        // for (var i = 0; i < pathsB.crossedPaths.length; i++) {
+        //     addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, reason) => trackDeleted(1, p, id, reason));
+        // }
+
+        const addOrDelete = [
+            (cp: ICrossedPath) => {
+                addOrDeleteSegments(cp, includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, reason) => trackDeleted(0, p, id, reason));
+            },
+            (cp: ICrossedPath) => {
+                addOrDeleteSegments(cp, includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, reason) => trackDeleted(1, p, id, reason));
+            }
+        ];
+        crossedPaths.forEach(cp => addOrDelete[cp.sourceIndex](cp));
 
         var result: IModel = { models: { a: modelA, b: modelB } };
 
-        if (opts.trimDeadEnds) {
+        // if (opts.trimDeadEnds) {
 
-            var shouldKeep: IWalkPathBooleanCallback;
+        //     var shouldKeep: IWalkPathBooleanCallback;
 
-            //union
-            if (!includeAInsideB && !includeBInsideA) {
-                shouldKeep = function (walkedPath: IWalkPath): boolean {
+        //     //union
+        //     if (!includeAInsideB && !includeBInsideA) {
+        //         shouldKeep = function (walkedPath: IWalkPath): boolean {
 
-                    //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
-                    //Duplicates were discarded from B but kept in A
-                    for (var i = 0; i < pathsA.overlappedSegments.length; i++) {
-                        if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].addedPath) {
-                            return false;
-                        }
-                    }
+        //             //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
+        //             //Duplicates were discarded from B but kept in A
+        //             for (var i = 0; i < pathsA.overlappedSegments.length; i++) {
+        //                 if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].addedPath) {
+        //                     return false;
+        //                 }
+        //             }
 
-                    //default - keep the path
-                    return true;
-                }
-            }
+        //             //default - keep the path
+        //             return true;
+        //         }
+        //     }
 
-            removeDeadEnds(result, null, shouldKeep, (wp, reason) => {
-                var which = wp.route[1] === 'a' ? 0 : 1;
-                trackDeleted(which, wp.pathContext, wp.routeKey, reason)
-            });
-        }
+        //     removeDeadEnds(result, null, shouldKeep, (wp, reason) => {
+        //         var which = wp.route[1] === 'a' ? 0 : 1;
+        //         trackDeleted(which, wp.pathContext, wp.routeKey, reason)
+        //     });
+        // }
 
         //pass options back to caller
         extendObject(options, opts);
@@ -465,6 +476,10 @@
      * @returns A new model containing all of the input models.
      */
     export function combineArray(sourceArray: (IChain | IModel)[], options: IBusOptions) {
+        sweep(sourceArray, options);
+
+        //TODO add/delete segments
+        //TODO remove duplicates
     }
 
     /**
@@ -472,6 +487,7 @@
      */
     function sweep(sourceArray: (IChain | IModel)[], options: IBusOptions) {
         const crossedPaths = gatherPathsFromSource(sourceArray);
+        const deadEndFinder = new DeadEndFinder<IFineSegment>();
 
         const coarseBus = new CoarseBus(options);
         const fineBus = new FineBus(options);
@@ -481,9 +497,10 @@
         coarseBus.handleDropOff = (dropOff: IPassenger<ICrossedPath>) => {
             const { itinerary } = fineBus;
             //insert segments into new itinerary
-            dropOff.item.segments.forEach(segment => {
+            const crossedPath = dropOff.item;
+            crossedPath.segments.forEach((segment, segmentIndex) => {
                 const midPoint = point.middle(segment.absolutePath);
-                itinerary.listPassenger(segment.absolutePath, { sourceIndex: dropOff.item.sourceIndex, segment });
+                itinerary.listPassenger(segment.absolutePath, { parent: dropOff, segment, segmentIndex });
                 itinerary.events.push({
                     event: PassengerAction.midPoint,
                     x: midPoint[0],
@@ -493,11 +510,27 @@
             });
         };
 
+        fineBus.handleDropOff = (dropOff: IPassenger<IFineSegment>) => {
+            //TODO determine add/delete
+            //insert into deadEndFinder
+            const endPoints = point.fromPathEnds(dropOff.item.segment.absolutePath);
+            deadEndFinder.loadItem(endPoints, dropOff.item);
+        };
+
         coarseBus.load();
         fineBus.load();
 
-        const result: IModel = {};
-        return result;
+        deadEndFinder.findDeadEnds(options.pointMatchingDistance, item => {
+            //TODO: determine if should keep based on insideA, outsideA
+            if (item.duplicateGroup !== undefined) {
+                //const duplicateGroup = fineBus.duplicateGroups[item.duplicateGroup];
+                //TODO keep via contour
+                //item.parent.item.outerContour
+            }
+            return true;
+        });
+
+        return { crossedPaths, insideChecks: fineBus.model };
     }
 
     enum PassengerAction {
@@ -524,8 +557,10 @@
     }
 
     interface IFineSegment {
-        sourceIndex: number;
+        parent: IPassenger<ICrossedPath>;
         segment: ICrossedPathSegment;
+        segmentIndex: number;
+        duplicateGroup?: number;
     }
 
     class Itinerary<T> {
@@ -629,22 +664,18 @@
         }
 
         public onBoard(passenger: IPassenger<ICrossedPath>) {
-            const { riders } = this;
-            //const s = [];
-            passenger.ticketId = riders.length;
-            riders.forEach(op => {
+            super.onBoard(passenger);
+            this.riders.forEach(op => {
                 if (!op) return;
+                if (op === passenger) return;
                 //see if passenger overlaps
                 if (measure.isBetween(passenger.pathExtents.high[1], op.pathExtents.high[1], op.pathExtents.low[1], false) ||
                     measure.isBetween(op.pathExtents.high[1], passenger.pathExtents.high[1], passenger.pathExtents.low[1], false)
                 ) {
                     breakAlongForeignPath(passenger.item, this.overlappedSegments, op.item);
                     breakAlongForeignPath(op.item, this.overlappedSegments, passenger.item);
-                    //s.push(op.ticketId);
                 }
-            })
-            riders.push(passenger);
-            //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
+            });
         }
 
         public shuttle() {
@@ -656,32 +687,32 @@
         public midpointChecks: { ev: IPassengerEvent, passenger: IPassenger<IFineSegment> }[];
         public model: IModel;
         public midPointCount: number;
+        public duplicateGroups: IFineSegment[][];
 
         constructor(options: IBusOptions) {
             super(options);
             this.midpointChecks = [];
             this.model = { paths: {} };
             this.midPointCount = 0;
+            this.duplicateGroups = [];
         }
 
         public passengerEvent(ev: IPassengerEvent) {
-            const passenger = this.itinerary.passengers[ev.passengerId];
             if (ev.event === PassengerAction.midPoint) {
-                this.midpointChecks.forEach(mp => {
-                    //check if midpoint is the same
-                    if (
-                        Math.abs(ev.y - mp.ev.y) <= this.options.pointMatchingDistance
-                        && measure.isPathEqual(
-                            passenger.item.segment.absolutePath,
-                            mp.passenger.item.segment.absolutePath,
-                            this.options.pointMatchingDistance
-                        )
-                    ) {
-                        passenger.item.segment.duplicate = mp.passenger.item.segment.duplicate = true;
-                    }
-                });
-                this.midpointChecks.push({ ev, passenger });
+                this.midpointChecks.push({ ev, passenger: this.itinerary.passengers[ev.passengerId] });
             }
+        }
+
+        public onBoard(passenger: IPassenger<IFineSegment>) {
+            super.onBoard(passenger);
+            this.riders.forEach(op => {
+                if (!op) return;
+                if (op === passenger) return;
+                //see if passenger overlaps
+                if (measure.isPathEqual(passenger.item.segment.absolutePath, op.item.segment.absolutePath, this.options.pointMatchingDistance)) {
+                    this.markDuplicates(passenger.item, op.item);
+                }
+            });
         }
 
         public shuttle() {
@@ -692,7 +723,7 @@
                 let dip: IPathLine
 
                 //const s = [];
-                const ridersBySource = this.getRidersBySource(item.sourceIndex, ev.y);
+                const ridersBySource = this.getRidersBySource(item.parent.item.sourceIndex, ev.y);
                 for (let sourceIndex in ridersBySource) {
                     let riders = ridersBySource[sourceIndex];
                     let intersectionPoints: IPoint[] = [];
@@ -735,19 +766,32 @@
             this.unload();
         }
 
+        private markDuplicates(a: IFineSegment, b: IFineSegment) {
+            if (b.duplicateGroup !== undefined) {
+                a.duplicateGroup = b.duplicateGroup;
+                this.duplicateGroups[b.duplicateGroup].push(a);
+            } else {
+                const duplicateGroup: IFineSegment[] = [a, b];
+                a.duplicateGroup = b.duplicateGroup = this.duplicateGroups.length;
+                this.duplicateGroups.push(duplicateGroup);
+            }
+            a.segment.duplicate = b.segment.duplicate = true;
+        }
+
         public getRidersBySource(currentSourceIndex: number, atOrBelowY: number) {
             const ridersBySource: { [sourceIndex: number]: IPassenger<IFineSegment>[] } = {};
             this.riders.forEach(rider => {
                 if (!rider) return;
+                const { sourceIndex } = rider.item.parent.item;
                 //do not check within same source
-                if (rider.item.sourceIndex === currentSourceIndex) return;
+                if (sourceIndex === currentSourceIndex) return;
 
                 //see if passenger's bottom extent is at or below y
                 if (rider.pathExtents.low[1] <= atOrBelowY) {
-                    if (!ridersBySource[rider.item.sourceIndex]) {
-                        ridersBySource[rider.item.sourceIndex] = [rider];
+                    if (!ridersBySource[sourceIndex]) {
+                        ridersBySource[sourceIndex] = [rider];
                     } else {
-                        ridersBySource[rider.item.sourceIndex].push(rider);
+                        ridersBySource[sourceIndex].push(rider);
                     }
                 }
             });
