@@ -140,6 +140,7 @@
         overlapped: boolean;
         duplicate?: boolean;
         deleted?: boolean;
+        reason?: string;
     }
 
     /**
@@ -358,7 +359,22 @@
         };
         extendObject(opts, options);
 
-        const { crossedPaths, insideChecks } = sweep([modelA, modelB], options);
+        const { crossedPaths, insideChecks } = sweep([modelA, modelB], {
+            ...options,
+            flags: sourceIndex => {
+                if (sourceIndex === 0) {
+                    return {
+                        inside: includeAInsideB,
+                        outside: includeAOutsideB
+                    }
+                } else {
+                    return {
+                        inside: includeBInsideA,
+                        outside: includeBOutsideA
+                    }
+                }
+            }
+        });
         //TODO out_deleted.models['insideChecks'] = insideChecks
 
         //make sure model measurements capture all paths
@@ -480,6 +496,17 @@
 
         //TODO add/delete segments
         //TODO remove duplicates
+
+        const { crossedPaths, insideChecks } = sweep(sourceArray, {
+            ...options,
+            flags: sourceIndex => {
+                return {
+                    inside: false,
+                    outside: true
+                };
+            }
+        });
+
     }
 
     /**
@@ -510,15 +537,39 @@
             });
         };
 
-        fineBus.handleDropOff = (dropOff: IPassenger<IFineSegment>) => {
-            //TODO determine add/delete
-            //insert into deadEndFinder
-            const endPoints = point.fromPathEnds(dropOff.item.segment.absolutePath);
-            deadEndFinder.loadItem(endPoints, dropOff.item);
-        };
-
         coarseBus.load();
         fineBus.load();
+
+        fineBus.duplicateGroups.forEach(dg => {
+            dg.slice(1).forEach(d => {
+                d.segment.deleted = true;
+                d.segment.reason = 'duplicate';
+            });
+        });
+
+        let flags: IFlags;
+        if (typeof options.flags === 'object') {
+            flags = options.flags;
+        }
+
+        fineBus.itinerary.passengers.forEach(p => {
+            const { segment } = p.item;
+            if (segment.deleted) return;
+
+            if (typeof options.flags === 'function') {
+                flags = options.flags(p.item.parent.item.sourceIndex);
+            }
+            //determine delete based on inside/outside
+            if (!(segment.isInside && flags.inside || !segment.isInside && flags.outside)) {
+                segment.deleted = true;
+                segment.reason = 'segment is ' + (segment.isInside ? 'inside' : 'outside');
+            }
+            if (!segment.deleted) {
+                //insert into deadEndFinder
+                const endPoints = point.fromPathEnds(p.item.segment.absolutePath);
+                deadEndFinder.loadItem(endPoints, p.item);
+            }
+        });
 
         deadEndFinder.findDeadEnds(options.pointMatchingDistance, item => {
             //TODO: determine if should keep based on insideA, outsideA
@@ -592,8 +643,15 @@
         }
     }
 
-    interface IBusOptions extends IPointMatchOptions {
+    interface IFlags {
+        inside: boolean;
+        outside: boolean;
+    }
 
+    type IGetFlags = IFlags | { (sourceIndex: number): IFlags };
+
+    interface IBusOptions extends IPointMatchOptions {
+        flags: IGetFlags;
     }
 
     class Bus<T> {
@@ -705,20 +763,29 @@
 
         public onBoard(passenger: IPassenger<IFineSegment>) {
             super.onBoard(passenger);
-            this.riders.forEach(op => {
-                if (!op) return;
-                if (op === passenger) return;
-                //see if passenger overlaps
+            for (let i = 0; i < this.riders.length; i++) {
+                let op = this.riders[i];
+                if (!op) continue;
+                if (op === passenger) continue;
+                //see if passenger is a duplicate
                 if (measure.isPathEqual(passenger.item.segment.absolutePath, op.item.segment.absolutePath, this.options.pointMatchingDistance)) {
                     this.markDuplicates(passenger.item, op.item);
+                    break;
                 }
-            });
+            }
         }
 
         public shuttle() {
             this.midpointChecks.forEach(mp => {
                 const { ev, passenger } = mp;
                 const { item } = passenger;
+
+                if (item.duplicateGroup !== undefined && this.duplicateGroups[item.duplicateGroup][0] !== item) {
+                    //don't need to check for duplicates
+                    return;
+                }
+
+                const { segment } = item;
                 const midPoint = [ev.x, ev.y];
                 let dip: IPathLine
 
@@ -747,7 +814,7 @@
 
                     //if number of intersections is an odd number, it's inside this source.
                     if (unique.length % 2 == 1) {
-                        item.segment.isInside = true;
+                        segment.isInside = true;
 
                         //only needs to be inside of one source, exit for all sources.
                         return;
@@ -755,7 +822,7 @@
                 }
                 //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
                 if (dip) {
-                    if (item.segment.isInside) {
+                    if (segment.isInside) {
                         dip.layer = 'red';
                     }
                     this.model.paths[this.midPointCount] = dip;
@@ -771,7 +838,7 @@
                 a.duplicateGroup = b.duplicateGroup;
                 this.duplicateGroups[b.duplicateGroup].push(a);
             } else {
-                const duplicateGroup: IFineSegment[] = [a, b];
+                const duplicateGroup: IFineSegment[] = [b, a];
                 a.duplicateGroup = b.duplicateGroup = this.duplicateGroups.length;
                 this.duplicateGroups.push(duplicateGroup);
             }
