@@ -784,6 +784,22 @@ namespace MakerJs {
     }
 
     /**
+     * Value used in a DeadEndFinder pointGraph.
+     */
+    export interface IDeadEndGraphValue<T> {
+        endPoints: IPoint[]; 
+        item: T;
+    }
+
+    /**
+     * Options to pass to DeadEndFinder constructor.
+     */
+    export interface IDeadEndFinderOptions<T> {
+        pointMatchingDistance?: number;
+        keep?: (item: T) => boolean;
+    }
+
+    /**
      * Reference to a model within a model.
      */
     export interface IRefModelInModel {

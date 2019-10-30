@@ -1,66 +1,37 @@
 namespace MakerJs.model {
 
     /**
-     * @private
+     * Finds dead ends and paths which are unchainable.
      */
-    interface IWalkPathWithEndpoints extends IWalkPath {
-        endPoints: IPoint[];
-    }
-
-    /**
-     * @private
-     */
-    interface IDeadEndFinderOptions {
-        pointMatchingDistance?: number;
-        keep?: IWalkPathBooleanCallback;
-    }
-
-    /**
-     * @private
-     */
-    class DeadEndFinder {
-        public pointMap: PointGraph<IWalkPathWithEndpoints>;
+    export class DeadEndFinder<T> {
+        public pointGraph: PointGraph<IDeadEndGraphValue<T>>;
         private list: IPointGraphIndexElement[];
-        private removed: IWalkPathWithEndpoints[];
+        private removed: IDeadEndGraphValue<T>[];
         private ordinals: { [pointId: number]: number };
 
-        constructor(public modelContext: IModel, public options: IDeadEndFinderOptions) {
-            this.pointMap = new PointGraph<IWalkPathWithEndpoints>();
+        constructor(public options: IDeadEndFinderOptions<T>) {
+            this.pointGraph = new PointGraph<IDeadEndGraphValue<T>>();
             this.list = [];
             this.removed = [];
             this.ordinals = {};
-            this.load();
         }
 
-        private load() {
-            var walkOptions: IWalkOptions = {
-                onPath: (walkedPath: IWalkPath) => {
-                    var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
+        public loadItem(endPoints: IPoint[], item: T) {
+            const valueId = this.pointGraph.insertValue({ endPoints, item });
 
-                    if (!endPoints) return;
-
-                    var pathRef = <IWalkPathWithEndpoints>walkedPath;
-                    pathRef.endPoints = endPoints;
-
-                    const valueId = this.pointMap.insertValue(pathRef);
-
-                    for (var i = 2; i--;) {
-                        this.pointMap.insertValueIdAtPoint(valueId, endPoints[i]);
-                    }
-                }
-            };
-
-            walk(this.modelContext, walkOptions);
-
-            if (this.options.pointMatchingDistance) {
-                this.pointMap.mergePoints(this.options.pointMatchingDistance);
+            for (var i = 2; i--;) {
+                this.pointGraph.insertValueIdAtPoint(valueId, endPoints[i]);
             }
         }
 
         public findDeadEnds() {
+            if (this.options.pointMatchingDistance) {
+                this.pointGraph.mergePoints(this.options.pointMatchingDistance);
+            }
+
             let i = 0;
 
-            this.pointMap.forEachPoint((p: IPoint, values: IWalkPathWithEndpoints[], pointId: number, el: IPointGraphIndexElement) => {
+            this.pointGraph.forEachPoint((p: IPoint, values: IDeadEndGraphValue<T>[], pointId: number, el: IPointGraphIndexElement) => {
                 this.ordinals[pointId] = i++;
                 this.list.push(el);
             });
@@ -72,8 +43,8 @@ namespace MakerJs.model {
                     this.removePath(el, el.valueIds[0], i);
                 } else if (this.options.keep && el.valueIds.length % 2) {
                     el.valueIds.forEach(valueId => {
-                        const value = this.pointMap.values[valueId];
-                        if (!this.options.keep(value)) {
+                        const value = this.pointGraph.values[valueId];
+                        if (!this.options.keep(value.item)) {
                             this.removePath(el, valueId, i);
                         }
                     });
@@ -85,16 +56,16 @@ namespace MakerJs.model {
         }
 
         private removePath(el: IPointGraphIndexElement, valueId: number, current: number) {
-            const value = this.pointMap.values[valueId];
+            const value = this.pointGraph.values[valueId];
             const otherPointId = this.getOtherPointId(value.endPoints, el.pointId);
-            const otherElement = this.pointMap.index[otherPointId];
+            const otherElement = this.pointGraph.index[otherPointId];
 
             this.removed.push(value);
             this.removeValue(el, valueId);
             this.removeValue(otherElement, valueId);
 
             if (otherElement.valueIds.length > 0) {
-                this.appendQueue(otherElement, current);
+                this.appendToList(otherElement, current);
             }
         }
 
@@ -105,7 +76,7 @@ namespace MakerJs.model {
             }
         }
 
-        private appendQueue(el: IPointGraphIndexElement, current: number) {
+        private appendToList(el: IPointGraphIndexElement, current: number) {
             let otherOrdinal = this.ordinals[el.pointId];
             if (otherOrdinal < current) {
                 this.list[otherOrdinal] = null;
@@ -116,7 +87,7 @@ namespace MakerJs.model {
 
         private getOtherPointId(endPoints: IPoint[], pointId: number) {
             for (let i = 0; i < endPoints.length; i++) {
-                let id = this.pointMap.getIdOfPoint(endPoints[i]);
+                let id = this.pointGraph.getIdOfPoint(endPoints[i]);
                 if (pointId !== id) {
                     return id;
                 }
@@ -134,20 +105,26 @@ namespace MakerJs.model {
      * @returns The input model (for cascading).
      */
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: (wp: IWalkPath, reason: string) => void) {
-        const options: IDeadEndFinderOptions = {
+        const options: IDeadEndFinderOptions<IWalkPath> = {
             pointMatchingDistance: pointMatchingDistance || .005,
             keep
         };
 
-        var deadEndFinder = new DeadEndFinder(modelContext, options);
-
+        var deadEndFinder = new DeadEndFinder<IWalkPath>(options);
+        walk(modelContext, {
+            onPath: (walkedPath: IWalkPath) => {
+                var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
+                if (!endPoints) return;
+                deadEndFinder.loadItem(endPoints, walkedPath);
+            }
+        });
         const removed = deadEndFinder.findDeadEnds();
 
         //do not leave an empty model
-        if (removed.length < deadEndFinder.pointMap.values.length) {
-            removed.forEach(wp => {
-                trackDeleted(wp, 'dead end');
-                delete wp.modelContext.paths[wp.pathId];
+        if (removed.length < deadEndFinder.pointGraph.values.length) {
+            removed.forEach(x => {
+                trackDeleted(x.item, 'dead end');
+                delete x.item.modelContext.paths[x.item.pathId];
             });
         }
 
