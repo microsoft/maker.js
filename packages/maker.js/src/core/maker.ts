@@ -792,14 +792,6 @@ namespace MakerJs {
     }
 
     /**
-     * Options to pass to DeadEndFinder constructor.
-     */
-    export interface IDeadEndFinderOptions<T> {
-        pointMatchingDistance?: number;
-        keep?: (item: T) => boolean;
-    }
-
-    /**
      * Reference to a model within a model.
      */
     export interface IRefModelInModel {

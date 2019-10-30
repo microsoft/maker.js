@@ -9,7 +9,7 @@ namespace MakerJs.model {
         private removed: IDeadEndGraphValue<T>[];
         private ordinals: { [pointId: number]: number };
 
-        constructor(public options: IDeadEndFinderOptions<T>) {
+        constructor() {
             this.pointGraph = new PointGraph<IDeadEndGraphValue<T>>();
             this.list = [];
             this.removed = [];
@@ -24,9 +24,9 @@ namespace MakerJs.model {
             }
         }
 
-        public findDeadEnds() {
-            if (this.options.pointMatchingDistance) {
-                this.pointGraph.mergePoints(this.options.pointMatchingDistance);
+        public findDeadEnds(pointMatchingDistance: number, keep: (item: T) => boolean) {
+            if (pointMatchingDistance) {
+                this.pointGraph.mergePoints(pointMatchingDistance);
             }
 
             let i = 0;
@@ -41,10 +41,10 @@ namespace MakerJs.model {
                 let el = this.list[i];
                 if (el.valueIds.length === 1) {
                     this.removePath(el, el.valueIds[0], i);
-                } else if (this.options.keep && el.valueIds.length % 2) {
+                } else if (keep && el.valueIds.length % 2) {
                     el.valueIds.forEach(valueId => {
                         const value = this.pointGraph.values[valueId];
-                        if (!this.options.keep(value.item)) {
+                        if (!keep(value.item)) {
                             this.removePath(el, valueId, i);
                         }
                     });
@@ -105,12 +105,7 @@ namespace MakerJs.model {
      * @returns The input model (for cascading).
      */
     export function removeDeadEnds(modelContext: IModel, pointMatchingDistance?: number, keep?: IWalkPathBooleanCallback, trackDeleted?: (wp: IWalkPath, reason: string) => void) {
-        const options: IDeadEndFinderOptions<IWalkPath> = {
-            pointMatchingDistance: pointMatchingDistance || .005,
-            keep
-        };
-
-        var deadEndFinder = new DeadEndFinder<IWalkPath>(options);
+        var deadEndFinder = new DeadEndFinder<IWalkPath>();
         walk(modelContext, {
             onPath: (walkedPath: IWalkPath) => {
                 var endPoints = point.fromPathEnds(walkedPath.pathContext, walkedPath.offset);
@@ -118,7 +113,7 @@ namespace MakerJs.model {
                 deadEndFinder.loadItem(endPoints, walkedPath);
             }
         });
-        const removed = deadEndFinder.findDeadEnds();
+        const removed = deadEndFinder.findDeadEnds(pointMatchingDistance || .005, keep);
 
         //do not leave an empty model
         if (removed.length < deadEndFinder.pointGraph.values.length) {
