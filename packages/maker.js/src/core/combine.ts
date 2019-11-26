@@ -253,29 +253,6 @@
     /**
      * @private
      */
-    function checkForEqualOverlaps(crossedPathsA: ICrossedPathSegment[], crossedPathsB: ICrossedPathSegment[], pointMatchingDistance: number) {
-
-        function compareSegments(segment1: ICrossedPathSegment, segment2: ICrossedPathSegment) {
-            if (measure.isPathEqual(segment1.absolutePath, segment2.absolutePath, pointMatchingDistance)) {
-                segment1.duplicate = segment2.duplicate = true;
-            }
-        }
-
-        function compareAll(segment: ICrossedPathSegment) {
-            for (var i = 0; i < crossedPathsB.length; i++) {
-                compareSegments(crossedPathsB[i], segment);
-            }
-        }
-
-        for (var i = 0; i < crossedPathsA.length; i++) {
-            compareAll(crossedPathsA[i]);
-        }
-
-    }
-
-    /**
-     * @private
-     */
     interface ITrackDeleted {
         (pathToDelete: IPath, routeKey: string, reason: string): void;
     }
@@ -283,11 +260,10 @@
     /**
      * @private
      */
-    function addOrDeleteSegments(crossedPath: ICrossedPath) {
+    function addOrDeleteSegments(crossedPath: ICrossedPath, deleted: (segment: ICrossedPathSegment) => void) {
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(modelContext, pathIdBase);
-            var newRouteKey = (id == pathIdBase) ? crossedPath.routeKey : createRouteKey(crossedPath.route.slice(0, -1).concat([id]));
 
             segment.addedPath = cloneObject(crossedPath.pathContext);
 
@@ -298,46 +274,22 @@
             path.moveRelative(segment.addedPath, crossedPath.offset, true);
 
             modelContext.paths[id] = segment.addedPath;
-
-            // if (crossedPath.broken) {
-            //     //save the new segment's measurement
-            //     var measurement = measure.pathExtents(segment.absolutePath);
-            //     atlas.pathMap[newRouteKey] = measurement;
-            //     atlas.modelsMeasured = false;
-            // } else {
-            //     //keep the original measurement
-            //     atlas.pathMap[newRouteKey] = savedMeasurement;
-            // }
         }
 
         function checkAddSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
-            //            if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
             if (segment.shouldAdd) {
                 addSegment(modelContext, pathIdBase, segment);
+            } else {
+                deleted(segment);
             }
-            // } else {
-            //     atlas.modelsMeasured = false;
-            //     trackDeleted(segment.absolutePath, crossedPath.routeKey, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
-            // }
         }
-
-        //save the original measurement
-        //        var savedMeasurement = atlas.pathMap[crossedPath.routeKey];
 
         //delete the original, its segments will be added
         delete crossedPath.modelContext.paths[crossedPath.pathId];
         //      delete atlas.pathMap[crossedPath.routeKey];
 
         for (var i = 0; i < crossedPath.segments.length; i++) {
-            // if (crossedPath.segments[i].duplicate) {
-            //     if (keepDuplicates) {
-            //         addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
-            //     } else {
-            //         trackDeleted(crossedPath.segments[i].absolutePath, crossedPath.routeKey, 'segment is duplicate');
-            //     }
-            // } else {
             checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
-            //            }
         }
     }
 
@@ -362,7 +314,7 @@
         };
         extendObject(opts, options);
 
-        const { crossedPaths } = sweep([modelA, modelB], {
+        const { crossedPaths, insideChecks } = sweep([modelA, modelB], {
             flags: sourceIndex => {
                 if (sourceIndex === 0) {
                     return {
@@ -376,10 +328,14 @@
                     }
                 }
             },
-            pointMatchingDistance: options.pointMatchingDistance
+            pointMatchingDistance: opts.pointMatchingDistance
         });
 
-        crossedPaths.forEach(addOrDeleteSegments);
+        opts.out_deleted.push(insideChecks);
+
+        crossedPaths.forEach(cp => addOrDeleteSegments(cp, deletedSegment => {
+            addPath(opts.out_deleted[cp.sourceIndex], deletedSegment.absolutePath, deletedSegment.pathId);
+        }));
 
         var result: IModel = { models: { a: modelA, b: modelB } };
 
@@ -465,12 +421,12 @@
             const crossedPath = dropOff.item;
             crossedPath.segments.forEach((segment, segmentIndex) => {
                 const midPoint = point.middle(segment.absolutePath);
-                itinerary.listPassenger(segment.absolutePath, { parent: dropOff, segment, segmentIndex });
+                const passengerId = itinerary.listPassenger(segment.absolutePath, { parent: dropOff, segment, segmentIndex });
                 itinerary.events.push({
                     event: PassengerAction.midPoint,
                     x: midPoint[0],
                     y: midPoint[1],
-                    passengerId: dropOff.passengerId
+                    passengerId
                 });
             });
         };
@@ -517,7 +473,7 @@
         deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
             item => item.segment.shouldAdd,
             values => {
-                const duplicate = values.filter(value => value.segment.duplicate)[0];
+                const duplicate = values.filter(value => value.parent.item.inEndlessChain && value.segment.duplicate && !value.segment.shouldAdd)[0];
                 if (duplicate) {
                     duplicate.segment.shouldAdd = true;
                     return true;
@@ -581,11 +537,17 @@
             const exitEvent: IPassengerEvent = { event: PassengerAction.exit, passengerId: p.passengerId, x: round(p.pathExtents.high[0]) };
             events.push(exitEvent);
             passengers.push(p);
+            return p.passengerId;
         }
 
         close() {
             this.events.sort((a, b) => a.x - b.x);
         }
+    }
+
+    interface IDip extends IPathLine {
+        for?: string;
+        crosses?: string[];
     }
 
     interface IFlags {
@@ -652,7 +614,7 @@
         public unload() {
             this.dropOffs.forEach(passenger => {
                 if (this.handleDropOff) this.handleDropOff(passenger);
-                delete this[passenger.ticketId];
+                delete this.riders[passenger.ticketId];
             });
             this.dropOffs.length = 0;
         }
@@ -732,46 +694,66 @@
 
                 const { segment } = item;
                 const midPoint = [ev.x, ev.y];
-                let dip: IPathLine
+                let dip: IDip
 
                 //const s = [];
                 const ridersBySource = this.getRidersBySource(item.parent.item.sourceIndex, ev.y);
                 for (let sourceIndex in ridersBySource) {
-                    let riders = ridersBySource[sourceIndex];
+                    let ridersAboveBelow = ridersBySource[sourceIndex];
                     let intersectionPoints: IPoint[] = [];
+                    const above = ridersAboveBelow.above < ridersAboveBelow.below;
+                    const riders = above ? ridersAboveBelow.above : ridersAboveBelow.below;
                     riders.forEach(rider => {
-                        if (rider.item.parent.item.inEndlessChain) return;
+
+                        //dont check duplicates
+                        if (item.duplicateGroup !== undefined && rider.item.duplicateGroup === item.duplicateGroup) return;
+
+                        //only check within closed geometries
+                        if (!rider.item.parent.item.inEndlessChain) return;
 
                         //lazy create a line
                         if (!dip) {
-                            dip = new paths.Line(midPoint, [ev.x, 0]);
+                            dip = new paths.Line(midPoint, [ev.x, ev.y]);
+                            dip.crosses = [];
+                            dip.for = segment.pathId + '_' + item.segmentIndex;
                         }
 
                         //ensure end y position below this rider
-                        dip.end[1] = Math.min(dip.end[1], rider.pathExtents.low[1] - 1);
+                        if (above) {
+                            dip.end[1] = Math.max(dip.end[1], rider.pathExtents.high[1] + 1);
+                        } else {
+                            dip.end[1] = Math.min(dip.end[1], rider.pathExtents.low[1] - 1);
+                        }
 
                         //see if passenger intersects with line, count the intersections
-                        const int = path.intersection(dip, rider.item.segment.absolutePath);
-                        if (int) {
-                            intersectionPoints.push.apply(int.intersectionPoints);
+                        const options: IPathIntersectionOptions = {};
+                        const int = path.intersection(dip, rider.item.segment.absolutePath, options);
+                        if (int && options.out_AreCrossing) {
+                            intersectionPoints.push.apply(intersectionPoints, int.intersectionPoints);
+                            dip.crosses.push(rider.item.segment.pathId + ' ' + JSON.stringify(intersectionPoints));
                         }
                     });
 
-                    const unique = intersectionPoints.filter(p => measure.isPointDistinct(p, unique, this.options.pointMatchingDistance));
+                    const unique: IPoint[] = [];
+                    intersectionPoints.forEach(p => {
+                        const distinct = measure.isPointDistinct(p, unique, this.options.pointMatchingDistance);
+                        if (distinct) unique.push(p);
+                    });
+
+                    if (dip) {
+                        dip.crosses.push(JSON.stringify(unique));
+                    }
 
                     //if number of intersections is an odd number, it's inside this source.
                     if (unique.length % 2 == 1) {
                         segment.isInside = true;
 
                         //only needs to be inside of one source, exit for all sources.
-                        return;
+                        break;
                     }
                 }
                 //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
                 if (dip) {
-                    if (segment.isInside) {
-                        dip.layer = 'red';
-                    }
                     this.model.paths[this.midPointCount] = dip;
                     this.midPointCount++;
                 }
@@ -792,21 +774,24 @@
             a.segment.duplicate = b.segment.duplicate = true;
         }
 
-        public getRidersBySource(currentSourceIndex: number, atOrBelowY: number) {
-            const ridersBySource: { [sourceIndex: number]: IPassenger<IFineSegment>[] } = {};
+        public getRidersBySource(currentSourceIndex: number, y: number) {
+            const ridersBySource: { [sourceIndex: number]: { above: IPassenger<IFineSegment>[], below: IPassenger<IFineSegment>[] } } = {};
             this.riders.forEach(rider => {
                 if (!rider) return;
                 const { sourceIndex } = rider.item.parent.item;
                 //do not check within same source
                 if (sourceIndex === currentSourceIndex) return;
 
+                if (!ridersBySource[sourceIndex]) {
+                    ridersBySource[sourceIndex] = { above: [], below: [] };
+                }
+
                 //see if passenger's bottom extent is at or below y
-                if (rider.pathExtents.low[1] <= atOrBelowY) {
-                    if (!ridersBySource[sourceIndex]) {
-                        ridersBySource[sourceIndex] = [rider];
-                    } else {
-                        ridersBySource[sourceIndex].push(rider);
-                    }
+                if (rider.pathExtents.low[1] <= y) {
+                    ridersBySource[sourceIndex].below.push(rider);
+                }
+                if (rider.pathExtents.high[1] >= y) {
+                    ridersBySource[sourceIndex].above.push(rider);
                 }
             });
             return ridersBySource;
