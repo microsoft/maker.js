@@ -21,7 +21,8 @@ namespace MakerJs.path {
 
         moveTemp([arc1, arc2], options, swapOffsets, function () {
 
-            var angles = circleToCircle(arc1, arc2, options);
+            const c2c = circleToCircle(arc1, arc2, options);
+            const angles = c2c && c2c.angles;
             if (angles) {
                 var arc1Angles = getAnglesWithinArc(angles[0], arc1, options);
                 var arc2Angles = getAnglesWithinArc(angles[1], arc2, options);
@@ -44,6 +45,7 @@ namespace MakerJs.path {
                                         path1Angles: [arc1Angles[i1]],
                                         path2Angles: [arc2Angles[i2]]
                                     };
+                                    options.out_AreCrossing = c2c.crossing;
 
                                     return;
                                 }
@@ -57,6 +59,7 @@ namespace MakerJs.path {
                             path1Angles: arc1Angles,
                             path2Angles: arc2Angles
                         };
+                        options.out_AreCrossing = c2c.crossing;
                     }
                 }
             } else {
@@ -76,7 +79,8 @@ namespace MakerJs.path {
 
         moveTemp([arc, circle], options, swapOffsets, function () {
 
-            var angles = circleToCircle(arc, circle, options);
+            const c2c = circleToCircle(arc, circle, options);
+            const angles = c2c && c2c.angles;
             if (angles) {
                 var arcAngles = getAnglesWithinArc(angles[0], arc, options);
                 if (arcAngles) {
@@ -96,6 +100,7 @@ namespace MakerJs.path {
                         path1Angles: arcAngles,
                         path2Angles: circleAngles
                     };
+                    options.out_AreCrossing = c2c.crossing;
                 }
             }
         });
@@ -108,7 +113,8 @@ namespace MakerJs.path {
 
         moveTemp([arc, line], options, swapOffsets, function () {
 
-            var angles = lineToCircle(line, arc, options);
+            const l2c = lineToCircle(line, arc, options);
+            const angles = l2c && l2c.angles;
             if (angles) {
                 var arcAngles = getAnglesWithinArc(angles, arc, options);
                 if (arcAngles) {
@@ -116,6 +122,7 @@ namespace MakerJs.path {
                         intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
                         path1Angles: arcAngles
                     };
+                    options.out_AreCrossing = l2c.crossing;
                 }
             }
         });
@@ -136,13 +143,15 @@ namespace MakerJs.path {
 
         moveTemp([circle1, circle2], options, swapOffsets, function () {
 
-            var angles = circleToCircle(circle1, circle2, options);
+            const c2c = circleToCircle(circle1, circle2, options);
+            const angles = c2c && c2c.angles;
             if (angles) {
                 result = {
                     intersectionPoints: pointsFromAnglesOnCircle(angles[0], circle1),
                     path1Angles: angles[0],
                     path2Angles: angles[1]
                 };
+                options.out_AreCrossing = c2c.crossing;
             }
         });
 
@@ -154,12 +163,14 @@ namespace MakerJs.path {
 
         moveTemp([circle, line], options, swapOffsets, function () {
 
-            var angles = lineToCircle(line, circle, options);
+            const l2c = lineToCircle(line, circle, options);
+            const angles = l2c && l2c.angles;
             if (angles) {
                 result = {
                     intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
                     path1Angles: angles
                 };
+                options.out_AreCrossing = l2c.crossing;
             }
         });
 
@@ -188,6 +199,7 @@ namespace MakerJs.path {
         moveTemp([line1, line2], options, swapOffsets, function () {
 
             var intersectionPoint = point.fromSlopeIntersection(line1, line2, options);
+            options.out_AreCrossing = false;
             if (intersectionPoint) {
 
                 //we have the point of intersection of endless lines, now check to see if the point is between both segemnts
@@ -195,6 +207,7 @@ namespace MakerJs.path {
                     result = {
                         intersectionPoints: [intersectionPoint]
                     };
+                    options.out_AreCrossing = true;
                 }
             }
         });
@@ -291,7 +304,7 @@ namespace MakerJs.path {
     /**
      * @private
      */
-    function lineToCircle(line: IPathLine, circle: IPathCircle, options: IPathIntersectionOptions): number[] {
+    function lineToCircle(line: IPathLine, circle: IPathCircle, options: IPathIntersectionOptions): { angles: number[], crossing: boolean } {
 
         var radius = round(circle.radius);
 
@@ -327,10 +340,12 @@ namespace MakerJs.path {
             return null;
         }
 
-        var anglesOfIntersection: number[] = [];
+        const anglesOfIntersection: number[] = [];
+        let crossing: boolean;
 
         //if horizontal Y is the same as the radius, we know it's 90 degrees
         if (lineYabs == radius) {
+            crossing = false;
 
             if (options.excludeTangents) {
                 return null;
@@ -339,6 +354,7 @@ namespace MakerJs.path {
             anglesOfIntersection.push(unRotate(lineY > 0 ? 90 : 270));
 
         } else {
+            crossing = true;
 
             function intersectionBetweenEndpoints(x: number, angleOfX: number) {
                 if (measure.isBetween(round(x), round(clonedLine.origin[0]), round(clonedLine.end[0]), options.excludeTangents)) {
@@ -357,7 +373,7 @@ namespace MakerJs.path {
         }
 
         if (anglesOfIntersection.length > 0) {
-            return anglesOfIntersection;
+            return { angles: anglesOfIntersection, crossing };
         }
 
         return null;
@@ -366,8 +382,8 @@ namespace MakerJs.path {
     /**
      * @private
      */
-    function circleToCircle(circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions): number[][] {
-        
+    function circleToCircle(circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions): { crossing: boolean, angles: number[][] } {
+
         //no-op if either circle is degenerate
         if (circle1.radius <= 0 || circle2.radius <= 0) {
             return null;
@@ -378,9 +394,6 @@ namespace MakerJs.path {
             options.out_AreOverlapped = true;
             return null;
         }
-
-        //get offset from origin
-        var offset = point.subtract(point.zero(), circle1.origin);
 
         //clone circle1 and move to origin
         var c1 = new paths.Circle(point.zero(), circle1.radius);
@@ -407,7 +420,7 @@ namespace MakerJs.path {
                 return null;
             }
 
-            return [[unRotate(180)], [unRotate(180)]];
+            return { angles: [[unRotate(180)], [unRotate(180)]], crossing: false };
         }
 
         //see if circles are tangent interior on right side
@@ -417,7 +430,7 @@ namespace MakerJs.path {
                 return null;
             }
 
-            return [[unRotate(0)], [unRotate(0)]];
+            return { angles: [[unRotate(0)], [unRotate(0)]], crossing: false };
         }
 
         //see if circles are tangent exterior
@@ -427,7 +440,7 @@ namespace MakerJs.path {
                 return null;
             }
 
-            return [[unRotate(0)], [unRotate(180)]];
+            return { angles: [[unRotate(0)], [unRotate(180)]], crossing: false };
         }
 
         //see if c2 is outside of c1
@@ -452,6 +465,6 @@ namespace MakerJs.path {
         var c1IntersectionAngle = solvers.solveTriangleSSS(c2.radius, c1.radius, x);
         var c2IntersectionAngle = solvers.solveTriangleSSS(c1.radius, x, c2.radius);
 
-        return [bothAngles(c1IntersectionAngle), bothAngles(180 - c2IntersectionAngle)];
+        return { angles: [bothAngles(c1IntersectionAngle), bothAngles(180 - c2IntersectionAngle)], crossing: true };
     }
 }

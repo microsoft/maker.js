@@ -478,6 +478,11 @@ namespace MakerJs {
          * Optional output variable which will be set to true if the paths are overlapped.
          */
         out_AreOverlapped?: boolean;
+
+        /**
+         * Optional output variable which will be set to true if the paths are crossing.
+         */
+        out_AreCrossing?: boolean;
     }
 
     /**
