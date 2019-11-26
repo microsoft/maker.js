@@ -55,6 +55,45 @@ namespace MakerJs.model {
             return this.removed;
         }
 
+        public findValidDeadEnds(pointMatchingDistance: number, isValidValue: (value: T) => boolean, makeValidValue: (values: T[]) => boolean) {
+            if (pointMatchingDistance) {
+                this.pointGraph.mergePoints(pointMatchingDistance);
+            }
+
+            let i = 0;
+
+            this.pointGraph.forEachPoint((p: IPoint, values: IDeadEndGraphValue<T>[], pointId: number, el: IPointGraphIndexElement) => {
+                this.ordinals[pointId] = i++;
+                this.list.push(el);
+            });
+
+            i = 0;
+            while (i < this.list.length) {
+                let el = this.list[i];
+
+                //get values 
+                let invalidValueIds: number[] = [];
+                let validValueIds: number[] = [];
+                el.valueIds.forEach(valueId => {
+                    if (isValidValue(this.pointGraph.values[valueId].item)) {
+                        validValueIds.push(valueId);
+                    } else {
+                        invalidValueIds.push(valueId);
+                    }
+                });
+
+                if (validValueIds.length === 1 && invalidValueIds.length) {
+                    let values = invalidValueIds.map(valueId => this.pointGraph.values[valueId].item);
+                    if (makeValidValue(values)) {
+                        this.appendToList(el, i);
+                    }
+                }
+                i++;
+            }
+
+            return this.removed;
+        }
+
         private removePath(el: IPointGraphIndexElement, valueId: number, current: number) {
             const value = this.pointGraph.values[valueId];
             const otherPointId = this.getOtherPointId(value.endPoints, el.pointId);
