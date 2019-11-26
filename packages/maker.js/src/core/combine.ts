@@ -141,6 +141,7 @@
         duplicate?: boolean;
         deleted?: boolean;
         reason?: string;
+        shouldAdd?: boolean;
     }
 
     /**
@@ -149,9 +150,9 @@
     interface ICrossedPath extends IWalkPath {
         absolutePath: IPath;
         sourceIndex: number;
-        outerContour?: boolean;
         broken: boolean;
         segments: ICrossedPathSegment[];
+        inEndlessChain: boolean;
     }
 
     /**
@@ -282,7 +283,7 @@
     /**
      * @private
      */
-    function addOrDeleteSegments(crossedPath: ICrossedPath, includeInside: boolean, includeOutside: boolean, keepDuplicates: boolean, atlas: measure.Atlas, trackDeleted: ITrackDeleted) {
+    function addOrDeleteSegments(crossedPath: ICrossedPath) {
 
         function addSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
             var id = getSimilarPathId(modelContext, pathIdBase);
@@ -298,43 +299,45 @@
 
             modelContext.paths[id] = segment.addedPath;
 
-            if (crossedPath.broken) {
-                //save the new segment's measurement
-                var measurement = measure.pathExtents(segment.absolutePath);
-                atlas.pathMap[newRouteKey] = measurement;
-                atlas.modelsMeasured = false;
-            } else {
-                //keep the original measurement
-                atlas.pathMap[newRouteKey] = savedMeasurement;
-            }
+            // if (crossedPath.broken) {
+            //     //save the new segment's measurement
+            //     var measurement = measure.pathExtents(segment.absolutePath);
+            //     atlas.pathMap[newRouteKey] = measurement;
+            //     atlas.modelsMeasured = false;
+            // } else {
+            //     //keep the original measurement
+            //     atlas.pathMap[newRouteKey] = savedMeasurement;
+            // }
         }
 
         function checkAddSegment(modelContext: IModel, pathIdBase: string, segment: ICrossedPathSegment) {
-            if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
+            //            if (segment.isInside && includeInside || !segment.isInside && includeOutside) {
+            if (segment.shouldAdd) {
                 addSegment(modelContext, pathIdBase, segment);
-            } else {
-                atlas.modelsMeasured = false;
-                trackDeleted(segment.absolutePath, crossedPath.routeKey, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
             }
+            // } else {
+            //     atlas.modelsMeasured = false;
+            //     trackDeleted(segment.absolutePath, crossedPath.routeKey, 'segment is ' + (segment.isInside ? 'inside' : 'outside') + ' intersectionPoints=' + JSON.stringify(segment.uniqueForeignIntersectionPoints));
+            // }
         }
 
         //save the original measurement
-        var savedMeasurement = atlas.pathMap[crossedPath.routeKey];
+        //        var savedMeasurement = atlas.pathMap[crossedPath.routeKey];
 
         //delete the original, its segments will be added
         delete crossedPath.modelContext.paths[crossedPath.pathId];
-        delete atlas.pathMap[crossedPath.routeKey];
+        //      delete atlas.pathMap[crossedPath.routeKey];
 
         for (var i = 0; i < crossedPath.segments.length; i++) {
-            if (crossedPath.segments[i].duplicate) {
-                if (keepDuplicates) {
-                    addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
-                } else {
-                    trackDeleted(crossedPath.segments[i].absolutePath, crossedPath.routeKey, 'segment is duplicate');
-                }
-            } else {
-                checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
-            }
+            // if (crossedPath.segments[i].duplicate) {
+            //     if (keepDuplicates) {
+            //         addSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
+            //     } else {
+            //         trackDeleted(crossedPath.segments[i].absolutePath, crossedPath.routeKey, 'segment is duplicate');
+            //     }
+            // } else {
+            checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
+            //            }
         }
     }
 
@@ -359,7 +362,7 @@
         };
         extendObject(opts, options);
 
-        const { crossedPaths, insideChecks } = sweep([modelA, modelB], {
+        const { crossedPaths } = sweep([modelA, modelB], {
             ...options,
             flags: sourceIndex => {
                 if (sourceIndex === 0) {
@@ -375,75 +378,10 @@
                 }
             }
         });
-        //TODO out_deleted.models['insideChecks'] = insideChecks
 
-        //make sure model measurements capture all paths
-        //opts.measureA.measureModels();
-        //opts.measureB.measureModels();
-
-        // if (!opts.farPoint) {
-        //     var measureBoth = measure.increase(measure.increase({ high: [null, null], low: [null, null] }, opts.measureA.modelMap['']), opts.measureB.modelMap['']);
-        //     opts.farPoint = point.add(measureBoth.high, [1, 1]);
-        // }
-
-        // var pathsA = breakAllPathsAtIntersections(modelA, modelB, true, opts.measureA, opts.measureB, opts.farPoint);
-        // var pathsB = breakAllPathsAtIntersections(modelB, modelA, true, opts.measureB, opts.measureA, opts.farPoint);
-
-        // checkForEqualOverlaps(pathsA.overlappedSegments, pathsB.overlappedSegments, opts.pointMatchingDistance);
-
-        function trackDeleted(which: number, deletedPath: IPath, routeKey: string, reason: string) {
-            addPath(opts.out_deleted[which], deletedPath, 'deleted');
-            var p = deletedPath as IPathRemoved;
-            p.reason = reason;
-            p.routeKey = routeKey;
-        }
-
-        // for (var i = 0; i < pathsA.crossedPaths.length; i++) {
-        //     addOrDeleteSegments(pathsA.crossedPaths[i], includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, reason) => trackDeleted(0, p, id, reason));
-        // }
-
-        // for (var i = 0; i < pathsB.crossedPaths.length; i++) {
-        //     addOrDeleteSegments(pathsB.crossedPaths[i], includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, reason) => trackDeleted(1, p, id, reason));
-        // }
-
-        const addOrDelete = [
-            (cp: ICrossedPath) => {
-                addOrDeleteSegments(cp, includeAInsideB, includeAOutsideB, true, opts.measureA, (p, id, reason) => trackDeleted(0, p, id, reason));
-            },
-            (cp: ICrossedPath) => {
-                addOrDeleteSegments(cp, includeBInsideA, includeBOutsideA, false, opts.measureB, (p, id, reason) => trackDeleted(1, p, id, reason));
-            }
-        ];
-        crossedPaths.forEach(cp => addOrDelete[cp.sourceIndex](cp));
+        crossedPaths.forEach(addOrDeleteSegments);
 
         var result: IModel = { models: { a: modelA, b: modelB } };
-
-        // if (opts.trimDeadEnds) {
-
-        //     var shouldKeep: IWalkPathBooleanCallback;
-
-        //     //union
-        //     if (!includeAInsideB && !includeBInsideA) {
-        //         shouldKeep = function (walkedPath: IWalkPath): boolean {
-
-        //             //When A and B share an outer contour, the segments marked as duplicate will not pass the "inside" test on either A or B.
-        //             //Duplicates were discarded from B but kept in A
-        //             for (var i = 0; i < pathsA.overlappedSegments.length; i++) {
-        //                 if (pathsA.overlappedSegments[i].duplicate && walkedPath.pathContext === pathsA.overlappedSegments[i].addedPath) {
-        //                     return false;
-        //                 }
-        //             }
-
-        //             //default - keep the path
-        //             return true;
-        //         }
-        //     }
-
-        //     removeDeadEnds(result, null, shouldKeep, (wp, reason) => {
-        //         var which = wp.route[1] === 'a' ? 0 : 1;
-        //         trackDeleted(which, wp.pathContext, wp.routeKey, reason)
-        //     });
-        // }
 
         //pass options back to caller
         extendObject(options, opts);
@@ -540,8 +478,12 @@
         coarseBus.load();
         fineBus.load();
 
-        fineBus.duplicateGroups.forEach(dg => {
-            dg.slice(1).forEach(d => {
+        fineBus.duplicateGroups.forEach(group => {
+            const item = group[0];
+            const endPoints = point.fromPathEnds(item.segment.absolutePath);
+            item.segment.shouldAdd = false;
+            deadEndFinder.loadItem(endPoints, item);
+            group.slice(1).forEach(d => {
                 d.segment.deleted = true;
                 d.segment.reason = 'duplicate';
             });
@@ -567,19 +509,22 @@
             if (!segment.deleted) {
                 //insert into deadEndFinder
                 const endPoints = point.fromPathEnds(p.item.segment.absolutePath);
+                p.item.segment.shouldAdd = true;
                 deadEndFinder.loadItem(endPoints, p.item);
             }
         });
 
-        deadEndFinder.findDeadEnds(options.pointMatchingDistance, item => {
-            //TODO: determine if should keep based on insideA, outsideA
-            if (item.duplicateGroup !== undefined) {
-                //const duplicateGroup = fineBus.duplicateGroups[item.duplicateGroup];
-                //TODO keep via contour
-                //item.parent.item.outerContour
+        deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
+            item => item.segment.shouldAdd,
+            values => {
+                const duplicate = values.filter(value => value.segment.duplicate)[0];
+                if (duplicate) {
+                    duplicate.segment.shouldAdd = true;
+                    return true;
+                }
+                return false;
             }
-            return true;
-        });
+        );
 
         return { crossedPaths, insideChecks: fineBus.model };
     }
@@ -795,6 +740,8 @@
                     let riders = ridersBySource[sourceIndex];
                     let intersectionPoints: IPoint[] = [];
                     riders.forEach(rider => {
+                        if (rider.item.parent.item.inEndlessChain) return;
+
                         //lazy create a line
                         if (!dip) {
                             dip = new paths.Line(midPoint, [ev.x, 0]);
@@ -870,6 +817,28 @@
      * @private
      */
     function gatherPathsFromSource(sourceArray: (IChain | IModel)[]) {
+        const crossedPaths: ICrossedPath[] = [];
+
+        const add = (wp: IWalkPath, sourceIndex: number, inEndlessChain: boolean) => {
+            const absolutePath = path.clone(wp.pathContext, wp.offset);
+            //clone this path and make it the first segment
+            const segment: ICrossedPathSegment = {
+                absolutePath,
+                pathId: wp.pathId,
+                overlapped: false,
+                uniqueForeignIntersectionPoints: []
+            };
+            const crossedPath: ICrossedPath = {
+                ...wp,
+                absolutePath,
+                sourceIndex,
+                broken: false,
+                segments: [segment],
+                inEndlessChain
+            };
+            crossedPaths.push(crossedPath);
+        };
+
         //collect chains
         const sourceChains: ISource[] = [];
         sourceArray.forEach((source, sourceIndex) => {
@@ -879,8 +848,15 @@
             } else {
                 //find chains
                 const m = source as IModel;
-                const cs = model.findChains(m, { contain: true }) as IChain[];
-                const scs = cs.map(c => {
+                let chains: IChain[];
+                const cb: IChainCallback = (cs, loose, layer) => {
+                    chains = cs;
+                    loose.forEach(wp => {
+                        add(wp, sourceIndex, false);
+                    });
+                };
+                model.findChains(m, cb) as IChain[];
+                const scs = chains.map(c => {
                     const source: ISource = {
                         chain: c,
                         sourceIndex
@@ -892,36 +868,14 @@
         });
 
         //collect all links from all chains
-        const crossedPaths: ICrossedPath[] = [];
-        const getCrossedPathsFromChains = (c: IChain, outerContour: boolean, sourceIndex: number) => {
+        const getCrossedPathsFromChains = (c: IChain, sourceIndex: number) => {
             c.links.forEach(link => {
                 const wp = link.walkedPath;
-                const absolutePath = path.clone(wp.pathContext, wp.offset);
-                //clone this path and make it the first segment
-                const segment: ICrossedPathSegment = {
-                    absolutePath,
-                    pathId: wp.pathId,
-                    overlapped: false,
-                    uniqueForeignIntersectionPoints: []
-                };
-                const crossedPath: ICrossedPath = {
-                    ...wp,
-                    absolutePath,
-                    sourceIndex,
-                    broken: false,
-                    outerContour,
-                    segments: [segment]
-                };
-                crossedPaths.push(crossedPath);
+                add(wp, sourceIndex, c.endless);
             });
-            if (c.contains) {
-                c.contains.forEach(c2 => {
-                    getCrossedPathsFromChains(c2, !outerContour, sourceIndex);
-                });
-            }
         }
         sourceChains.forEach(sc => {
-            getCrossedPathsFromChains(sc.chain, true, sc.sourceIndex);
+            getCrossedPathsFromChains(sc.chain, sc.sourceIndex);
         });
         return crossedPaths;
     }
