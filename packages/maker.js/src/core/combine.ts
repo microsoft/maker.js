@@ -363,7 +363,6 @@
         extendObject(opts, options);
 
         const { crossedPaths } = sweep([modelA, modelB], {
-            ...options,
             flags: sourceIndex => {
                 if (sourceIndex === 0) {
                     return {
@@ -376,7 +375,8 @@
                         outside: includeBOutsideA
                     }
                 }
-            }
+            },
+            pointMatchingDistance: options.pointMatchingDistance
         });
 
         crossedPaths.forEach(addOrDeleteSegments);
