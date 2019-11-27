@@ -313,7 +313,7 @@
         };
         extendObject(opts, options);
 
-        const { crossedPaths, insideChecks } = sweep([modelA, modelB], {
+        const { crossedPaths, insideChecks, findAllDeadEnds } = sweep([modelA, modelB], {
             flags: sourceIndex => {
                 if (sourceIndex === 0) {
                     return {
@@ -330,15 +330,29 @@
             pointMatchingDistance: opts.pointMatchingDistance
         });
 
+        var result: IModel = { models: { a: modelA, b: modelB } };
+
         opts.out_deleted.push(insideChecks);
 
-        crossedPaths.forEach(cp => addOrDeleteSegments(cp, deletedSegment => {
-            addPath(opts.out_deleted[cp.sourceIndex], deletedSegment.absolutePath, deletedSegment.pathId);
-            const d = deletedSegment.absolutePath as IDeleted;
-            d.reason = deletedSegment.reason;
-        }));
+        if (opts.trimDeadEnds) {
+            const removed = findAllDeadEnds();
+            removed.forEach(dev => {
+                const { item } = dev;
+                const { segment } = item;
+                addPath(opts.out_deleted[item.parent.item.sourceIndex], segment.absolutePath, segment.pathId);
+                segment.shouldAdd = false;
+                segment.reason = 'dead end';
+            })
+        }
 
-        var result: IModel = { models: { a: modelA, b: modelB } };
+        crossedPaths.forEach(cp => addOrDeleteSegments(
+            cp,
+            deletedSegment => {
+                addPath(opts.out_deleted[cp.sourceIndex], deletedSegment.absolutePath, deletedSegment.pathId);
+                const d = deletedSegment.absolutePath as IDeleted;
+                d.reason = deletedSegment.reason;
+            })
+        );
 
         //pass options back to caller
         extendObject(options, opts);
@@ -474,7 +488,7 @@
             }
         });
 
-        deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
+        const { findAllDeadEnds } = deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
             item => item.segment.shouldAdd,
             valuePairs => {
                 const duplicate = valuePairs.filter(vp => vp.value.segment.duplicate && !vp.value.segment.shouldAdd)[0];
@@ -486,7 +500,7 @@
             }
         );
 
-        return { crossedPaths, insideChecks: fineBus.model };
+        return { crossedPaths, insideChecks: fineBus.model, findAllDeadEnds };
     }
 
     enum PassengerAction {
