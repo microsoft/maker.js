@@ -28,6 +28,10 @@ namespace MakerJs.model {
             if (pointMatchingDistance) {
                 this.pointGraph.mergePoints(pointMatchingDistance);
             }
+            return this._findDeadEndsInPointGraph(keep);
+        }
+
+        private _findDeadEndsInPointGraph(keep: (item: T) => boolean) {
 
             let i = 0;
 
@@ -97,7 +101,7 @@ namespace MakerJs.model {
                 i++;
             }
 
-            return this.removed;
+            return { findAllDeadEnds: () => this._findDeadEndsInPointGraph(() => false) };
         }
 
         private addPath(el: IPointGraphIndexElement, valueId: number, current: number) {
