@@ -286,7 +286,6 @@
 
         //delete the original, its segments will be added
         delete crossedPath.modelContext.paths[crossedPath.pathId];
-        //      delete atlas.pathMap[crossedPath.routeKey];
 
         for (var i = 0; i < crossedPath.segments.length; i++) {
             checkAddSegment(crossedPath.modelContext, crossedPath.pathId, crossedPath.segments[i]);
@@ -335,6 +334,8 @@
 
         crossedPaths.forEach(cp => addOrDeleteSegments(cp, deletedSegment => {
             addPath(opts.out_deleted[cp.sourceIndex], deletedSegment.absolutePath, deletedSegment.pathId);
+            const d = deletedSegment.absolutePath as IDeleted;
+            d.reason = deletedSegment.reason;
         }));
 
         var result: IModel = { models: { a: modelA, b: modelB } };
@@ -436,9 +437,12 @@
 
         fineBus.duplicateGroups.forEach(group => {
             const item = group[0];
-            const endPoints = point.fromPathEnds(item.segment.absolutePath);
-            item.segment.shouldAdd = false;
-            deadEndFinder.loadItem(endPoints, item);
+            if (item.parent.item.inEndlessChain) {
+                const endPoints = point.fromPathEnds(item.segment.absolutePath);
+                item.segment.reason = 'duplicate candidate';
+                item.segment.shouldAdd = false;
+                deadEndFinder.loadItem(endPoints, item);
+            }
             group.slice(1).forEach(d => {
                 d.segment.deleted = true;
                 d.segment.reason = 'duplicate';
@@ -462,7 +466,7 @@
                 segment.deleted = true;
                 segment.reason = 'segment is ' + (segment.isInside ? 'inside' : 'outside');
             }
-            if (!segment.deleted) {
+            if (!segment.deleted && p.item.parent.item.inEndlessChain && p.item.duplicateGroup === undefined) {
                 //insert into deadEndFinder
                 const endPoints = point.fromPathEnds(p.item.segment.absolutePath);
                 p.item.segment.shouldAdd = true;
@@ -472,13 +476,13 @@
 
         deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
             item => item.segment.shouldAdd,
-            values => {
-                const duplicate = values.filter(value => value.parent.item.inEndlessChain && value.segment.duplicate && !value.segment.shouldAdd)[0];
+            valuePairs => {
+                const duplicate = valuePairs.filter(vp => vp.value.segment.duplicate && !vp.value.segment.shouldAdd)[0];
                 if (duplicate) {
-                    duplicate.segment.shouldAdd = true;
-                    return true;
+                    duplicate.value.segment.shouldAdd = true;
+                    return duplicate;
                 }
-                return false;
+                return null;
             }
         );
 
@@ -548,6 +552,10 @@
     interface IDip extends IPathLine {
         for?: string;
         crosses?: string[];
+    }
+
+    interface IDeleted extends IPathLine {
+        reason?: string;
     }
 
     interface IFlags {
