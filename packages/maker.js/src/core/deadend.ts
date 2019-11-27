@@ -55,7 +55,7 @@ namespace MakerJs.model {
             return this.removed;
         }
 
-        public findValidDeadEnds(pointMatchingDistance: number, isValidValue: (value: T) => boolean, makeValidValue: (values: T[]) => boolean) {
+        public findValidDeadEnds(pointMatchingDistance: number, isValidValue: (value: T) => boolean, makeValidValue: (valuePairs: { valueId: number, value: T }[]) => { valueId: number, value: T }) {
             if (pointMatchingDistance) {
                 this.pointGraph.mergePoints(pointMatchingDistance);
             }
@@ -83,15 +83,31 @@ namespace MakerJs.model {
                 });
 
                 if (validValueIds.length === 1 && invalidValueIds.length) {
-                    let values = invalidValueIds.map(valueId => this.pointGraph.values[valueId].item);
-                    if (makeValidValue(values)) {
-                        this.appendToList(el, i);
+                    let valuePairs = invalidValueIds.map(valueId => {
+                        return {
+                            valueId,
+                            value: this.pointGraph.values[valueId].item
+                        };
+                    });
+                    const newValidValue = makeValidValue(valuePairs);
+                    if (newValidValue) {
+                        this.addPath(el, newValidValue.valueId, i);
                     }
                 }
                 i++;
             }
 
             return this.removed;
+        }
+
+        private addPath(el: IPointGraphIndexElement, valueId: number, current: number) {
+            const value = this.pointGraph.values[valueId];
+            const otherPointId = this.getOtherPointId(value.endPoints, el.pointId);
+            const otherElement = this.pointGraph.index[otherPointId];
+
+            if (otherElement.valueIds.length > 0) {
+                this.appendToList(otherElement, current);
+            }
         }
 
         private removePath(el: IPointGraphIndexElement, valueId: number, current: number) {
@@ -116,9 +132,9 @@ namespace MakerJs.model {
         }
 
         private appendToList(el: IPointGraphIndexElement, current: number) {
-            let otherOrdinal = this.ordinals[el.pointId];
-            if (otherOrdinal < current) {
-                this.list[otherOrdinal] = null;
+            let ordinal = this.ordinals[el.pointId];
+            if (ordinal < current) {
+                this.list[ordinal] = null;
                 this.list.push(el);
                 this.ordinals[el.pointId] = this.list.length;
             }
