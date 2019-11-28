@@ -16,8 +16,7 @@
          */
         constructor(font: opentype.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number, opentypeOptions?: opentype.RenderOptions) {
             var charIndex = 0;
-            var prevDeleted: IModel;
-            var prevChar: IModel;
+            var chars: IModel[] = [];
 
             var cb = (glyph: opentype.Glyph, x: number, y: number, _fontSize: number, options: opentype.RenderOptions) => {
                 var charModel = Text.glyphToModel(glyph, _fontSize, bezierAccuracy);
@@ -31,35 +30,16 @@
                     }
                 }
 
-                if (combine && charIndex > 0) {
-                    var combineOptions: ICombineOptions = {};
-                    var prev: IModel;
-
-                    if (prevDeleted) {
-
-                        //form a temporary complete geometry of the previous character using the previously deleted segments
-                        prev = {
-                            models: {
-                                deleted: prevDeleted,
-                                char: prevChar
-                            }
-                        }
-                    } else {
-                        prev = prevChar;
-                    }
-
-                    model.combine(prev, charModel, false, true, false, true, combineOptions);
-
-                    //save the deleted segments from this character for the next iteration
-                    prevDeleted = combineOptions.out_deleted[1];
-                }
-
+                chars.push(charModel);
                 this.models[charIndex] = charModel;
                 charIndex++;
-                prevChar = charModel;
             };
 
             font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
+
+            if (combine) {
+                model.combineArray(chars);
+            }
         }
 
         /**
