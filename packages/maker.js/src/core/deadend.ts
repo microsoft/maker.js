@@ -100,8 +100,6 @@ namespace MakerJs.model {
                 }
                 i++;
             }
-
-            return { findAllDeadEnds: () => this._findDeadEndsInPointGraph(() => false) };
         }
 
         private addPath(el: IPointGraphIndexElement, valueId: number, current: number) {
