@@ -270,7 +270,6 @@
      *
      * @param source Array of IModel or IChain, or IModelMap.
      * @param options Optional ICombineOptions object.
-     * @returns A new model containing all of the input models.
      */
     export function combineArray(source: (IChain | IModel)[] | IModelMap, options?: ICombineArrayOptions) {
 
@@ -298,8 +297,6 @@
             pointMatchingDistance: opts.pointMatchingDistance
         });
 
-        var result: IModel = { models: {} };
-
         opts.out_deleted.push(insideChecks);
 
         crossedPaths.forEach(cp => addOrDeleteSegments(
@@ -314,8 +311,6 @@
 
         //pass options back to caller
         extendObject(options, opts);
-
-        return result;
     }
 
     /**
