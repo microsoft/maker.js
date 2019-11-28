@@ -390,11 +390,19 @@
     /**
      * Combine an array of models or chains, resulting in a union. Each model will be modified accordingly.
      *
-     * @param sourceArray Array of IModel or IChain.
+     * @param source Array of IModel or IChain, or IModelMap.
      * @param options Optional ICombineOptions object.
      * @returns A new model containing all of the input models.
      */
-    export function combineArray(sourceArray: (IChain | IModel)[], options?: ICombineArrayOptions) {
+    export function combineArray(source: (IChain | IModel)[] | IModelMap, options?: ICombineArrayOptions) {
+
+        const sourceArray = Array.isArray(source) ? source : [];
+
+        if (!Array.isArray(source)) {
+            for (let modelId in source) {
+                sourceArray.push(source[modelId]);
+            }
+        }
 
         const opts: ICombineArrayOptions = {
             pointMatchingDistance: .005,

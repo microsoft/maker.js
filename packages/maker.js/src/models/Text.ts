@@ -16,7 +16,6 @@
          */
         constructor(font: opentype.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number, opentypeOptions?: opentype.RenderOptions) {
             var charIndex = 0;
-            var chars: IModel[] = [];
 
             var cb = (glyph: opentype.Glyph, x: number, y: number, _fontSize: number, options: opentype.RenderOptions) => {
                 var charModel = Text.glyphToModel(glyph, _fontSize, bezierAccuracy);
@@ -30,7 +29,6 @@
                     }
                 }
 
-                chars.push(charModel);
                 this.models[charIndex] = charModel;
                 charIndex++;
             };
@@ -38,7 +36,7 @@
             font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
 
             if (combine) {
-                model.combineArray(chars);
+                model.combineArray(this.models);
             }
         }
 
