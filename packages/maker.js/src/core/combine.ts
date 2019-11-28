@@ -307,7 +307,7 @@
     export function combine(modelA: IModel, modelB: IModel, includeAInsideB: boolean = false, includeAOutsideB: boolean = true, includeBInsideA: boolean = false, includeBOutsideA: boolean = true, options?: ICombineOptions) {
 
         var opts: ICombineOptions = {
-            trimDeadEnds: true,
+            trimDeadEnds: false,
             pointMatchingDistance: .005,
             out_deleted: [{ paths: {} }, { paths: {} }]
         };
