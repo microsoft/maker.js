@@ -394,7 +394,7 @@
      * @param options Optional ICombineOptions object.
      * @returns A new model containing all of the input models.
      */
-    export function combineArray(sourceArray: (IChain | IModel)[], options: ICombineArrayOptions) {
+    export function combineArray(sourceArray: (IChain | IModel)[], options?: ICombineArrayOptions) {
 
         const opts: ICombineArrayOptions = {
             pointMatchingDistance: .005,
@@ -873,14 +873,16 @@
                     });
                 };
                 model.findChains(m, cb) as IChain[];
-                const scs = chains.map(c => {
-                    const source: ISource = {
-                        chain: c,
-                        sourceIndex
-                    };
-                    return source;
-                });
-                sourceChains.push.apply(sourceChains, scs);
+                if (chains) {
+                    const scs = chains.map(c => {
+                        const source: ISource = {
+                            chain: c,
+                            sourceIndex
+                        };
+                        return source;
+                    });
+                    sourceChains.push.apply(sourceChains, scs);
+                }
             }
         });
 
