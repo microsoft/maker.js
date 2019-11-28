@@ -114,4 +114,15 @@ describe('Combine', function () {
         });
     });
 
+    it('should combine an array of models', function () {
+        var square = makerjs.model.move(new makerjs.models.Square(20), [15, 0]);
+        var spinner = makerjs.layout.cloneToRadial(square, 8, 45);
+
+        makerjs.model.combineArray(spinner.models);
+
+        makerjs.model.findChains(wedge, function (chains, loose, layer) {
+            assert.equal(loose.length, 0);
+            assert.equal(chains.length, 2);
+        });
+    });
 });
