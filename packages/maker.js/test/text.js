@@ -19,6 +19,6 @@ describe('Text', function () {
 
     it('should create text from ArbutusSlab-Regular font', textFromFont('arbutusslab/ArbutusSlab-Regular', 'A', 2, false));
     it('should create text from NewRocker-Regular font', textFromFont('newrocker/NewRocker-Regular', 'A', 2, false));
-    it('should create combined text from MontserratSubrayada-Regular font', textFromFont('montserratsubrayada/MontserratSubrayada-Regular.ttf', 'ABCD', 5, true));
+    it('should create combined text from MontserratSubrayada-Regular font', textFromFont('montserratsubrayada/MontserratSubrayada-Regular', 'ABCD', 5, true));
 
 });
