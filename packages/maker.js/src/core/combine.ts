@@ -109,26 +109,6 @@
     }
 
     /**
-     * DEPRECATED - use measure.isPointInsideModel instead.
-     * Check to see if a path is inside of a model.
-     * 
-     * @param pathContext The path to check.
-     * @param modelContext The model to check against.
-     * @param farPoint Optional point of reference which is outside the bounds of the modelContext.
-     * @returns Boolean true if the path is inside of the modelContext.
-     */
-    export function isPathInsideModel(pathContext: IPath, modelContext: IModel, pathOffset?: IPoint, farPoint?: IPoint, measureAtlas?: measure.Atlas): boolean {
-
-        var options: IMeasurePointInsideOptions = {
-            farPoint: farPoint,
-            measureAtlas: measureAtlas
-        };
-
-        var p = point.add(point.middle(pathContext), pathOffset);
-        return measure.isPointInsideModel(p, modelContext, options);
-    }
-
-    /**
      * @private
      */
     interface ICrossedPathSegment {
@@ -153,108 +133,6 @@
         broken: boolean;
         segments: ICrossedPathSegment[];
         inEndlessChain: boolean;
-    }
-
-    /**
-     * @private
-     */
-    interface ICombinedModel {
-        crossedPaths: ICrossedPath[];
-        overlappedSegments: ICrossedPathSegment[];
-    }
-
-    /**
-     * DEPRECATED
-     * Break a model's paths everywhere they intersect with another path.
-     *
-     * @param modelToBreak The model containing paths to be broken.
-     * @param modelToIntersect Optional model containing paths to look for intersection, or else the modelToBreak will be used.
-     * @returns The original model (for cascading).
-     */
-    export function breakPathsAtIntersections(modelToBreak: IModel, modelToIntersect?: IModel) {
-
-        var modelToBreakAtlas = new measure.Atlas(modelToBreak);
-        modelToBreakAtlas.measureModels();
-
-        var modelToIntersectAtlas: measure.Atlas;
-
-        if (!modelToIntersect) {
-            modelToIntersect = modelToBreak;
-            modelToIntersectAtlas = modelToBreakAtlas;
-        } else {
-            modelToIntersectAtlas = new measure.Atlas(modelToIntersect);
-            modelToIntersectAtlas.measureModels();
-        };
-
-        breakAllPathsAtIntersections(modelToBreak, modelToIntersect || modelToBreak, false, modelToBreakAtlas, modelToIntersectAtlas);
-
-        return modelToBreak;
-    }
-
-    /**
-     * @private
-     */
-    function breakAllPathsAtIntersections(modelToBreak: IModel, modelToIntersect: IModel, checkIsInside: boolean, modelToBreakAtlas: measure.Atlas, modelToIntersectAtlas: measure.Atlas, farPoint?: IPoint): ICombinedModel {
-
-        var crossedPaths: ICrossedPath[] = [];
-        var overlappedSegments: ICrossedPathSegment[] = [];
-
-        var walkModelToBreakOptions: IWalkOptions = {
-            onPath: function (outerWalkedPath: IWalkPath) {
-
-                //clone this path and make it the first segment
-                var segment: ICrossedPathSegment = {
-                    absolutePath: path.clone(outerWalkedPath.pathContext, outerWalkedPath.offset),
-                    pathId: outerWalkedPath.pathId,
-                    overlapped: false,
-                    uniqueForeignIntersectionPoints: []
-                };
-
-                var thisPath: ICrossedPath = <ICrossedPath>outerWalkedPath;
-                thisPath.broken = false;
-                thisPath.segments = [segment];
-
-                var walkModelToIntersectOptions: IWalkOptions = {
-                    onPath: function (innerWalkedPath: IWalkPath) {
-                        if (outerWalkedPath.pathContext !== innerWalkedPath.pathContext && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], modelToIntersectAtlas.pathMap[innerWalkedPath.routeKey])) {
-                            breakAlongForeignPath(thisPath, overlappedSegments, innerWalkedPath);
-                        }
-                    },
-                    beforeChildWalk: function (innerWalkedModel: IWalkModel): boolean {
-
-                        //see if there is a model measurement. if not, it is because the model does not contain paths.
-                        var innerModelMeasurement = modelToIntersectAtlas.modelMap[innerWalkedModel.routeKey];
-                        return innerModelMeasurement && measure.isMeasurementOverlapping(modelToBreakAtlas.pathMap[outerWalkedPath.routeKey], innerModelMeasurement);
-                    }
-                };
-
-                //keep breaking the segments anywhere they intersect with paths of the other model
-                walk(modelToIntersect, walkModelToIntersectOptions);
-
-                if (checkIsInside) {
-                    //check each segment whether it is inside or outside
-                    for (var i = 0; i < thisPath.segments.length; i++) {
-                        var p = point.middle(thisPath.segments[i].absolutePath);
-                        var pointInsideOptions: IMeasurePointInsideOptions = { measureAtlas: modelToIntersectAtlas, farPoint: farPoint };
-                        thisPath.segments[i].isInside = measure.isPointInsideModel(p, modelToIntersect, pointInsideOptions);
-                        thisPath.segments[i].uniqueForeignIntersectionPoints = pointInsideOptions.out_intersectionPoints;
-                    }
-                }
-
-                crossedPaths.push(thisPath);
-            }
-        };
-
-        walk(modelToBreak, walkModelToBreakOptions);
-
-        return { crossedPaths: crossedPaths, overlappedSegments: overlappedSegments };
-    }
-
-    /**
-     * @private
-     */
-    interface ITrackDeleted {
-        (pathToDelete: IPath, routeKey: string, reason: string): void;
     }
 
     /**
