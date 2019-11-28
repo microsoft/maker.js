@@ -313,7 +313,7 @@
         };
         extendObject(opts, options);
 
-        const { crossedPaths, insideChecks, findAllDeadEnds } = sweep([modelA, modelB], {
+        const { crossedPaths, insideChecks } = sweep([modelA, modelB], {
             flags: sourceIndex => {
                 if (sourceIndex === 0) {
                     return {
@@ -334,17 +334,6 @@
 
         opts.out_deleted.push(insideChecks);
 
-        if (opts.trimDeadEnds) {
-            const removed = findAllDeadEnds();
-            removed.forEach(dev => {
-                const { item } = dev;
-                const { segment } = item;
-                addPath(opts.out_deleted[item.parent.item.sourceIndex], segment.absolutePath, segment.pathId);
-                segment.shouldAdd = false;
-                segment.reason = 'dead end';
-            })
-        }
-
         crossedPaths.forEach(cp => addOrDeleteSegments(
             cp,
             deletedSegment => {
@@ -353,6 +342,10 @@
                 d.reason = deletedSegment.reason;
             })
         );
+
+        if (opts.trimDeadEnds) {
+            removeDeadEnds(result, opts.pointMatchingDistance);
+        }
 
         //pass options back to caller
         extendObject(options, opts);
@@ -488,7 +481,7 @@
             }
         });
 
-        const { findAllDeadEnds } = deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
+        deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
             item => item.segment.shouldAdd,
             valuePairs => {
                 const duplicate = valuePairs.filter(vp => vp.value.segment.duplicate && !vp.value.segment.shouldAdd)[0];
@@ -500,7 +493,7 @@
             }
         );
 
-        return { crossedPaths, insideChecks: fineBus.model, findAllDeadEnds };
+        return { crossedPaths, insideChecks: fineBus.model };
     }
 
     enum PassengerAction {
