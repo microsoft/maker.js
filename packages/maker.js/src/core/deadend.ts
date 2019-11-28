@@ -175,7 +175,7 @@ namespace MakerJs.model {
         //do not leave an empty model
         if (removed.length < deadEndFinder.pointGraph.values.length) {
             removed.forEach(x => {
-                trackDeleted(x.item, 'dead end');
+                trackDeleted && trackDeleted(x.item, 'dead end');
                 delete x.item.modelContext.paths[x.item.pathId];
             });
         }
