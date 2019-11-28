@@ -540,7 +540,18 @@ namespace MakerJs {
     /**
      * Options to pass to model.combine.
      */
-    export interface ICombineOptions extends IPointMatchOptions {
+    export interface ICombineArrayOptions extends IPointMatchOptions {
+        /**
+         * Output array of models (corresponding to the input models) containing paths that were deleted in the combination.
+         * Each path will be of type IPathRemoved, which has a .reason property describing why it was removed.
+         */
+        out_deleted?: IModel[];
+    }
+
+    /**
+     * Options to pass to model.combine.
+     */
+    export interface ICombineOptions extends ICombineArrayOptions {
 
         /**
          * Flag to remove paths which are not part of a loop.
@@ -561,12 +572,6 @@ namespace MakerJs {
          * Cached measurements for model B.
          */
         measureB?: measure.Atlas;
-
-        /**
-         * Output array of 2 models (corresponding to the input models) containing paths that were deleted in the combination.
-         * Each path will be of type IPathRemoved, which has a .reason property describing why it was removed.
-         */
-        out_deleted?: IModel[];
     }
 
     /**
@@ -792,7 +797,7 @@ namespace MakerJs {
      * Value used in a DeadEndFinder pointGraph.
      */
     export interface IDeadEndGraphValue<T> {
-        endPoints: IPoint[]; 
+        endPoints: IPoint[];
         item: T;
     }
 

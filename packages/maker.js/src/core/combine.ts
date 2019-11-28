@@ -338,8 +338,9 @@
             cp,
             deletedSegment => {
                 addPath(opts.out_deleted[cp.sourceIndex], deletedSegment.absolutePath, deletedSegment.pathId);
-                const d = deletedSegment.absolutePath as IDeleted;
+                const d = deletedSegment.absolutePath as IPathRemoved;
                 d.reason = deletedSegment.reason;
+                d.routeKey = cp.routeKey
             })
         );
 
@@ -393,22 +394,42 @@
      * @param options Optional ICombineOptions object.
      * @returns A new model containing all of the input models.
      */
-    export function combineArray(sourceArray: (IChain | IModel)[], options: IBusOptions) {
-        sweep(sourceArray, options);
+    export function combineArray(sourceArray: (IChain | IModel)[], options: ICombineArrayOptions) {
 
-        //TODO add/delete segments
-        //TODO remove duplicates
+        const opts: ICombineArrayOptions = {
+            pointMatchingDistance: .005,
+            out_deleted: sourceArray.map(s => { return { paths: {} }; })
+        };
+        extendObject(opts, options);
 
         const { crossedPaths, insideChecks } = sweep(sourceArray, {
-            ...options,
             flags: sourceIndex => {
                 return {
                     inside: false,
                     outside: true
                 };
-            }
+            },
+            pointMatchingDistance: opts.pointMatchingDistance
         });
 
+        var result: IModel = { models: {} };
+
+        opts.out_deleted.push(insideChecks);
+
+        crossedPaths.forEach(cp => addOrDeleteSegments(
+            cp,
+            deletedSegment => {
+                addPath(opts.out_deleted[cp.sourceIndex], deletedSegment.absolutePath, deletedSegment.pathId);
+                const d = deletedSegment.absolutePath as IPathRemoved;
+                d.reason = deletedSegment.reason;
+                d.routeKey = cp.routeKey
+            })
+        );
+
+        //pass options back to caller
+        extendObject(options, opts);
+
+        return result;
     }
 
     /**
@@ -559,10 +580,6 @@
     interface IDip extends IPathLine {
         for?: string;
         crosses?: string[];
-    }
-
-    interface IDeleted extends IPathLine {
-        reason?: string;
     }
 
     interface IFlags {
