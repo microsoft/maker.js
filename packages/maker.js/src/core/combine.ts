@@ -443,6 +443,79 @@
     /**
      * @private
      */
+    interface IDip extends IPathLine {
+        for?: string;
+        crosses?: string[];
+    }
+
+    /**
+     * @private
+     */
+    interface IFlags {
+        inside: boolean;
+        outside: boolean;
+    }
+
+    /**
+     * @private
+     */
+    type IGetFlags = IFlags | ((sourceIndex: number) => IFlags);
+
+    /**
+     * @private
+     */
+    interface IBusOptions extends IPointMatchOptions {
+        flags: IGetFlags;
+    }
+
+    /**
+     * @private
+     */
+    enum PassengerAction {
+        enter, midPoint, exit
+    }
+
+    /**
+     * @private
+     */
+    interface IPassengerEvent {
+        x: number;
+        y?: number;
+        event: PassengerAction;
+        passengerId: number;
+    }
+
+    /**
+     * @private
+     */
+    interface IPassenger<T> {
+        passengerId: number;
+        pathExtents: IMeasure;
+        ticketId: number;
+        item: T;
+    }
+
+    /**
+     * @private
+     */
+    interface ISource {
+        sourceIndex: number;
+        chain: IChain;
+    }
+
+    /**
+     * @private
+     */
+    interface IFineSegment {
+        parent: ICrossedPath;
+        segment: ICrossedPathSegment;
+        segmentIndex: number;
+        duplicateGroup?: number;
+    }
+
+    /**
+     * @private
+     */
     function sweep(sourceArray: (IChain | IModel)[], options: IBusOptions) {
         const crossedPaths = gatherPathsFromSource(sourceArray);
         const deadEndFinder = new DeadEndFinder<IFineSegment>();
@@ -458,7 +531,7 @@
             const crossedPath = dropOff.item;
             crossedPath.segments.forEach((segment, segmentIndex) => {
                 const midPoint = point.middle(segment.absolutePath);
-                const passengerId = itinerary.listPassenger(segment.absolutePath, { parent: dropOff, segment, segmentIndex });
+                const passengerId = itinerary.listPassenger(segment.absolutePath, { parent: dropOff.item, segment, segmentIndex });
                 itinerary.events.push({
                     event: PassengerAction.midPoint,
                     x: midPoint[0],
@@ -473,7 +546,7 @@
 
         fineBus.duplicateGroups.forEach(group => {
             const item = group[0];
-            if (item.parent.item.inEndlessChain) {
+            if (item.parent.inEndlessChain) {
                 const endPoints = point.fromPathEnds(item.segment.absolutePath);
                 item.segment.reason = 'duplicate candidate';
                 item.segment.shouldAdd = false;
@@ -495,14 +568,14 @@
             if (segment.deleted) return;
 
             if (typeof options.flags === 'function') {
-                flags = options.flags(p.item.parent.item.sourceIndex);
+                flags = options.flags(p.item.parent.sourceIndex);
             }
             //determine delete based on inside/outside
             if (!(segment.isInside && flags.inside || !segment.isInside && flags.outside)) {
                 segment.deleted = true;
                 segment.reason = 'segment is ' + (segment.isInside ? 'inside' : 'outside');
             }
-            if (!segment.deleted && p.item.parent.item.inEndlessChain && p.item.duplicateGroup === undefined) {
+            if (!segment.deleted && p.item.parent.inEndlessChain && p.item.duplicateGroup === undefined) {
                 //insert into deadEndFinder
                 const endPoints = point.fromPathEnds(p.item.segment.absolutePath);
                 p.item.segment.shouldAdd = true;
@@ -525,36 +598,9 @@
         return { crossedPaths, insideChecks: fineBus.model };
     }
 
-    enum PassengerAction {
-        enter, midPoint, exit
-    }
-
-    interface IPassengerEvent {
-        x: number;
-        y?: number;
-        event: PassengerAction;
-        passengerId: number;
-    }
-
-    interface IPassenger<T> {
-        passengerId: number;
-        pathExtents: IMeasure;
-        ticketId: number;
-        item: T;
-    }
-
-    interface ISource {
-        sourceIndex: number;
-        chain: IChain;
-    }
-
-    interface IFineSegment {
-        parent: IPassenger<ICrossedPath>;
-        segment: ICrossedPathSegment;
-        segmentIndex: number;
-        duplicateGroup?: number;
-    }
-
+    /**
+     * @private
+     */
     class Itinerary<T> {
         passengers: IPassenger<T>[];
         events: IPassengerEvent[];
@@ -585,22 +631,9 @@
         }
     }
 
-    interface IDip extends IPathLine {
-        for?: string;
-        crosses?: string[];
-    }
-
-    interface IFlags {
-        inside: boolean;
-        outside: boolean;
-    }
-
-    type IGetFlags = IFlags | { (sourceIndex: number): IFlags };
-
-    interface IBusOptions extends IPointMatchOptions {
-        flags: IGetFlags;
-    }
-
+    /**
+     * @private
+     */
     class Bus<T> {
         public riders: IPassenger<T>[];
         public lastX: number;
@@ -660,6 +693,9 @@
         }
     }
 
+    /**
+     * @private
+     */
     class CoarseBus extends Bus<ICrossedPath> {
         public overlappedSegments: ICrossedPathSegment[];
 
@@ -688,6 +724,9 @@
         }
     }
 
+    /**
+     * @private
+     */
     class FineBus extends Bus<IFineSegment> {
         public midpointChecks: { ev: IPassengerEvent, passenger: IPassenger<IFineSegment> }[];
         public model: IModel;
@@ -737,7 +776,7 @@
                 let dip: IDip
 
                 //const s = [];
-                const ridersBySource = this.getRidersBySource(item.parent.item.sourceIndex, ev.y);
+                const ridersBySource = this.getRidersBySource(item.parent.sourceIndex, ev.y);
                 for (let sourceIndex in ridersBySource) {
                     let ridersAboveBelow = ridersBySource[sourceIndex];
                     let intersectionPoints: IPoint[] = [];
@@ -749,7 +788,7 @@
                         if (item.duplicateGroup !== undefined && rider.item.duplicateGroup === item.duplicateGroup) return;
 
                         //only check within closed geometries
-                        if (!rider.item.parent.item.inEndlessChain) return;
+                        if (!rider.item.parent.inEndlessChain) return;
 
                         //lazy create a line
                         if (!dip) {
@@ -780,10 +819,6 @@
                         if (distinct) unique.push(p);
                     });
 
-                    if (dip) {
-                        dip.crosses.push(JSON.stringify(unique));
-                    }
-
                     //if number of intersections is an odd number, it's inside this source.
                     if (unique.length % 2 == 1) {
                         segment.isInside = true;
@@ -792,7 +827,6 @@
                         break;
                     }
                 }
-                //return `${passenger.ticketId} boards${s.length ? ` intersects with ${s.join()}` : ''}`;
                 if (dip) {
                     this.model.paths[this.midPointCount] = dip;
                     this.midPointCount++;
@@ -818,7 +852,7 @@
             const ridersBySource: { [sourceIndex: number]: { above: IPassenger<IFineSegment>[], below: IPassenger<IFineSegment>[] } } = {};
             this.riders.forEach(rider => {
                 if (!rider) return;
-                const { sourceIndex } = rider.item.parent.item;
+                const { sourceIndex } = rider.item.parent;
                 //do not check within same source
                 if (sourceIndex === currentSourceIndex) return;
 
