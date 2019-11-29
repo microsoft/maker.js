@@ -536,8 +536,8 @@
     function updateLockedPathNotes() {
         if (processed.model && processed.lockedPath) {
             const pathAndOffset = getLockedPathAndOffset();
-            const endpoints = makerjs.point.fromPathEnds(pathAndOffset.result as MakerJs.IPath, pathAndOffset.offset);
             if (pathAndOffset) {
+                const endpoints = makerjs.point.fromPathEnds(pathAndOffset.result as MakerJs.IPath, pathAndOffset.offset);
                 setNotes([
                     processed.lockedPath.notes + mdCode(pathAndOffset.result),
                     `Offset|${mdCode(pathAndOffset.offset)}`,
