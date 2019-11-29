@@ -459,7 +459,7 @@
         deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
             item => item.segment.shouldAdd,
             valuePairs => {
-                const duplicate = valuePairs.filter(vp => vp.value.segment.duplicate && !vp.value.segment.shouldAdd)[0];
+                const duplicate = valuePairs.filter(vp => vp.value.segment.duplicate && !vp.value.segment.shouldAdd && !vp.value.segment.deleted)[0];
                 if (duplicate) {
                     duplicate.value.segment.shouldAdd = true;
                     return duplicate;
@@ -667,7 +667,7 @@
                         if (!dip) {
                             dip = new paths.Line(midPoint, [ev.x, ev.y]);
                             dip.crosses = [];
-                            dip.for = segment.pathId + '_' + item.segmentIndex;
+                            dip.for = segment.pathId + ' [' + item.segmentIndex + ']';
                         }
 
                         //ensure end y position below this rider
@@ -695,6 +695,8 @@
                     //if number of intersections is an odd number, it's inside this source.
                     if (unique.length % 2 == 1) {
                         segment.isInside = true;
+
+                        dip.for += ' (inside)';
 
                         //only needs to be inside of one source, exit for all sources.
                         break;
