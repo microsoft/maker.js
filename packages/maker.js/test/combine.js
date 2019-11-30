@@ -13,6 +13,9 @@ describe('Combine', function () {
         makerjs.model.findChains(result, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 
@@ -26,6 +29,9 @@ describe('Combine', function () {
         makerjs.model.findChains(result, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 
@@ -42,6 +48,9 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 
@@ -58,6 +67,9 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 
@@ -78,6 +90,9 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 2);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 
@@ -100,6 +115,9 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 2);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 
@@ -111,6 +129,9 @@ describe('Combine', function () {
         makerjs.model.findChains(wedge, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 
@@ -120,9 +141,36 @@ describe('Combine', function () {
 
         makerjs.model.combineArray(spinner.models);
 
-        makerjs.model.findChains(wedge, function (chains, loose, layer) {
+        makerjs.model.findChains(spinner, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 2);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
+        });
+    });
+
+    it('should combine an array of models sharing a contour', function () {
+        var model = {};
+
+        makerjs.$(new makerjs.models.Square(20))
+        .move([15, 0])
+        .addTo(model)
+        .clone()
+        .rotate(-45)
+        .addTo(model);
+        
+        makerjs.$(new makerjs.models.Rectangle(40,4))
+        .addTo(model);
+        
+        makerjs.model.combineArray(model.models);
+        
+        makerjs.model.findChains(model, function (chains, loose, layer) {
+            assert.equal(loose.length, 0);
+            assert.equal(chains.length, 1);
+            chains.forEach(c=> {
+                assert.equal(c.endless, true);
+            });
         });
     });
 });
