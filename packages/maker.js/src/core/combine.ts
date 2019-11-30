@@ -237,10 +237,11 @@
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
-    export function combineIntersection(modelA: IModel, modelB: IModel) {
-        return combine(modelA, modelB, true, false, true, false);
+    export function combineIntersection(modelA: IModel, modelB: IModel, options?: ICombineOptions) {
+        return combine(modelA, modelB, true, false, true, false, options);
     }
 
     /**
@@ -248,10 +249,11 @@
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
-    export function combineSubtraction(modelA: IModel, modelB: IModel) {
-        return combine(modelA, modelB, false, true, true, false);
+    export function combineSubtraction(modelA: IModel, modelB: IModel, options?: ICombineOptions) {
+        return combine(modelA, modelB, false, true, true, false, options);
     }
 
     /**
@@ -259,10 +261,11 @@
      *
      * @param modelA First model to combine.
      * @param modelB Second model to combine.
+     * @param options Optional ICombineOptions object.
      * @returns A new model containing both of the input models as "a" and "b".
      */
-    export function combineUnion(modelA: IModel, modelB: IModel) {
-        return combine(modelA, modelB, false, true, false, true);
+    export function combineUnion(modelA: IModel, modelB: IModel, options?: ICombineOptions) {
+        return combine(modelA, modelB, false, true, false, true, options);
     }
 
     /**
@@ -384,6 +387,14 @@
         segment: ICrossedPathSegment;
         segmentIndex: number;
         duplicateGroup?: number;
+    }
+
+    /**
+     * @private
+     */
+    interface IIntersection {
+        point: IPoint;
+        isEndpointOfPath: boolean;
     }
 
     /**
@@ -652,7 +663,7 @@
                 const ridersBySource = this.getRidersBySource(item.parent.sourceIndex, ev.y);
                 for (let sourceIndex in ridersBySource) {
                     let ridersAboveBelow = ridersBySource[sourceIndex];
-                    let intersectionPoints: IPoint[] = [];
+                    let intersections: IIntersection[] = [];
                     const above = ridersAboveBelow.above < ridersAboveBelow.below;
                     const riders = above ? ridersAboveBelow.above : ridersAboveBelow.below;
                     riders.forEach(rider => {
@@ -681,25 +692,32 @@
                         const options: IPathIntersectionOptions = {};
                         const int = path.intersection(dip, rider.item.segment.absolutePath, options);
                         if (int && options.out_AreCrossing) {
-                            intersectionPoints.push.apply(intersectionPoints, int.intersectionPoints);
-                            dip.crosses.push(rider.item.segment.pathId + ' ' + JSON.stringify(intersectionPoints));
+                            int.intersectionPoints.forEach(p => {
+                                intersections.push({ point: p, isEndpointOfPath: isEndpointOfPath(p, rider.item.segment.absolutePath) });
+                            });
+                            dip.crosses.push(rider.item.segment.pathId + ' ' + JSON.stringify(intersections));
                         }
                     });
 
                     const unique: IPoint[] = [];
-                    intersectionPoints.forEach(p => {
-                        const distinct = measure.isPointDistinct(p, unique, this.options.pointMatchingDistance);
-                        if (distinct) unique.push(p);
+                    intersections.forEach(int => {
+                        const distinct = measure.isPointDistinct(int.point, unique, this.options.pointMatchingDistance);
+                        if (distinct) unique.push(int.point);
                     });
 
                     //if number of intersections is an odd number, it's inside this source.
                     if (unique.length % 2 == 1) {
-                        segment.isInside = true;
 
-                        dip.for += ' (inside)';
+                        //but not if the only intersection point is an endpoint
+                        if (!(intersections.length === 1 && intersections[0].isEndpointOfPath)) {
 
-                        //only needs to be inside of one source, exit for all sources.
-                        break;
+                            segment.isInside = true;
+
+                            dip.for += ' (inside)';
+
+                            //only needs to be inside of one source, exit for all sources.
+                            break;
+                        }
                     }
                 }
                 if (dip) {
@@ -816,4 +834,16 @@
         return crossedPaths;
     }
 
+    /**
+     * @private
+     */
+    function isEndpointOfPath(p: IPoint, pathContext: IPath) {
+        const endpoints = point.fromPathEnds(pathContext);
+        for (let i = 0; i < endpoints.length; i++) {
+            if (measure.isPointEqual(p, endpoints[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
