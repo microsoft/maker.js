@@ -640,7 +640,7 @@
                 const { item } = passenger;
 
                 if (item.duplicateGroup !== undefined && this.duplicateGroups[item.duplicateGroup][0] !== item) {
-                    //don't need to check for duplicates
+                    //don't need to repeat for each duplicate
                     return;
                 }
 
@@ -657,7 +657,7 @@
                     const riders = above ? ridersAboveBelow.above : ridersAboveBelow.below;
                     riders.forEach(rider => {
 
-                        //dont check duplicates
+                        //dont check against duplicates of itself
                         if (item.duplicateGroup !== undefined && rider.item.duplicateGroup === item.duplicateGroup) return;
 
                         //only check within closed geometries
