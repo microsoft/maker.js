@@ -397,6 +397,11 @@
         isEndpointOfPath: boolean;
     }
 
+    interface IDuplicateGroup {
+        sourceIndexes: { [sourceIndex: number]: true };
+        items: IFineSegment[];
+    }
+
     /**
      * @private
      */
@@ -429,14 +434,14 @@
         fineBus.load();
 
         fineBus.duplicateGroups.forEach(group => {
-            const item = group[0];
+            const item = group.items[0];
             if (item.parent.inEndlessChain) {
                 const endPoints = point.fromPathEnds(item.segment.absolutePath);
                 item.segment.reason = 'duplicate candidate';
                 item.segment.shouldAdd = false;
                 deadEndFinder.loadItem(endPoints, item);
             }
-            group.slice(1).forEach(d => {
+            group.items.slice(1).forEach(d => {
                 d.segment.deleted = true;
                 d.segment.reason = 'duplicate';
             });
@@ -615,7 +620,7 @@
         public midpointChecks: { ev: IPassengerEvent, passenger: IPassenger<IFineSegment> }[];
         public model: IModel;
         public midPointCount: number;
-        public duplicateGroups: IFineSegment[][];
+        public duplicateGroups: IDuplicateGroup[];
 
         constructor(options: IBusOptions) {
             super(options);
@@ -668,8 +673,16 @@
                     const riders = above ? ridersAboveBelow.above : ridersAboveBelow.below;
                     riders.forEach(rider => {
 
-                        //dont check against duplicates of itself
-                        if (item.duplicateGroup !== undefined && rider.item.duplicateGroup === item.duplicateGroup) return;
+                        //when item is marked as a duplicate
+                        if (item.duplicateGroup !== undefined) {
+
+                            //don't check against duplicates of itself
+                            if (rider.item.duplicateGroup === item.duplicateGroup) return;
+
+                            //don't check against sources with shared contour
+                            const duplicateGroup = this.duplicateGroups[item.duplicateGroup];
+                            if (duplicateGroup.sourceIndexes[rider.item.parent.sourceIndex]) return;
+                        }
 
                         //only check within closed geometries
                         if (!rider.item.parent.inEndlessChain) return;
@@ -732,9 +745,13 @@
         private markDuplicates(a: IFineSegment, b: IFineSegment) {
             if (b.duplicateGroup !== undefined) {
                 a.duplicateGroup = b.duplicateGroup;
-                this.duplicateGroups[b.duplicateGroup].push(a);
+                const duplicateGroup = this.duplicateGroups[b.duplicateGroup];
+                duplicateGroup.items.push(a);
+                duplicateGroup.sourceIndexes[a.parent.sourceIndex] = true;
             } else {
-                const duplicateGroup: IFineSegment[] = [b, a];
+                const duplicateGroup: IDuplicateGroup = { items: [b, a], sourceIndexes: {} };
+                duplicateGroup.sourceIndexes[a.parent.sourceIndex] = true;
+                duplicateGroup.sourceIndexes[b.parent.sourceIndex] = true;
                 a.duplicateGroup = b.duplicateGroup = this.duplicateGroups.length;
                 this.duplicateGroups.push(duplicateGroup);
             }
@@ -753,7 +770,7 @@
                     ridersBySource[sourceIndex] = { above: [], below: [] };
                 }
 
-                //see if passenger's bottom extent is at or below y
+                //see if passenger's extent is above or below y
                 if (rider.pathExtents.low[1] <= y) {
                     ridersBySource[sourceIndex].below.push(rider);
                 }
