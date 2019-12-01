@@ -433,17 +433,25 @@
         coarseBus.load();
         fineBus.load();
 
+        const markAdded = (segment: ICrossedPathSegment, shouldAdd: boolean, reason: string) => {
+            segment.shouldAdd = shouldAdd;
+            segment.reason = reason;
+        };
+
+        const markDeleted = (segment: ICrossedPathSegment, reason: string) => {
+            segment.deleted = true;
+            segment.reason = reason;
+        };
+
         fineBus.duplicateGroups.forEach(group => {
             const item = group.items[0];
             if (item.parent.inEndlessChain) {
                 const endPoints = point.fromPathEnds(item.segment.absolutePath);
-                item.segment.reason = 'duplicate candidate';
-                item.segment.shouldAdd = false;
+                markAdded(item.segment, false, 'duplicate candidate');
                 deadEndFinder.loadItem(endPoints, item);
             }
             group.items.slice(1).forEach(d => {
-                d.segment.deleted = true;
-                d.segment.reason = 'duplicate';
+                markDeleted(d.segment, 'duplicate');
             });
         });
 
@@ -461,13 +469,12 @@
             }
             //determine delete based on inside/outside
             if (!(segment.isInside && flags.inside || !segment.isInside && flags.outside)) {
-                segment.deleted = true;
-                segment.reason = 'segment is ' + (segment.isInside ? 'inside' : 'outside');
+                markDeleted(segment, 'segment is ' + (segment.isInside ? 'inside' : 'outside'));
             }
             if (!segment.deleted && p.item.parent.inEndlessChain && p.item.duplicateGroup === undefined) {
                 //insert into deadEndFinder
                 const endPoints = point.fromPathEnds(p.item.segment.absolutePath);
-                p.item.segment.shouldAdd = true;
+                markAdded(p.item.segment, true, 'normal');
                 deadEndFinder.loadItem(endPoints, p.item);
             }
         });
@@ -477,7 +484,7 @@
             valuePairs => {
                 const duplicate = valuePairs.filter(vp => vp.value.segment.duplicate && !vp.value.segment.shouldAdd && !vp.value.segment.deleted)[0];
                 if (duplicate) {
-                    duplicate.value.segment.shouldAdd = true;
+                    markAdded(duplicate.value.segment, true, 'fulfills dead end ' + duplicate.value.segmentIndex);
                     return duplicate;
                 }
                 return null;
@@ -494,7 +501,7 @@
         passengers: IPassenger<T>[];
         events: IPassengerEvent[];
 
-        constructor() {
+        constructor(public pointMatchingDistance: number) {
             this.passengers = [];
             this.events = [];
         }
@@ -507,9 +514,9 @@
                 pathExtents: measure.pathExtents(pz),
                 ticketId: null
             };
-            const enterEvent: IPassengerEvent = { event: PassengerAction.enter, passengerId: p.passengerId, x: round(p.pathExtents.low[0]) };
+            const enterEvent: IPassengerEvent = { event: PassengerAction.enter, passengerId: p.passengerId, x: p.pathExtents.low[0] - this.pointMatchingDistance };
             events.push(enterEvent);
-            const exitEvent: IPassengerEvent = { event: PassengerAction.exit, passengerId: p.passengerId, x: round(p.pathExtents.high[0]) };
+            const exitEvent: IPassengerEvent = { event: PassengerAction.exit, passengerId: p.passengerId, x: p.pathExtents.high[0] + this.pointMatchingDistance };
             events.push(exitEvent);
             passengers.push(p);
             return p.passengerId;
@@ -534,7 +541,7 @@
             this.riders = [];
             this.lastX = null;
             this.dropOffs = [];
-            this.itinerary = new Itinerary<T>();
+            this.itinerary = new Itinerary<T>(options.pointMatchingDistance || 0);
         }
 
         public onBoard(passenger: IPassenger<T>) {
