@@ -85,7 +85,7 @@ describe('Combine', function () {
 
         makerjs.model.combineSubtraction(s1, s5);
 
-        model = { models: [s1, s5] };
+        const model = { models: [s1, s5] };
 
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
@@ -155,14 +155,19 @@ describe('Combine', function () {
 
         makerjs.$(new makerjs.models.Square(20))
         .move([15, 0])
-        .addTo(model)
-        .clone()
+        .prefixPathIds('s1_')
+        .addTo(model, 's1');
+        
+        makerjs.$(new makerjs.models.Square(20))
+        .move([15, 0])
         .rotate(-45)
-        .addTo(model);
+        .prefixPathIds('s2_')
+        .addTo(model, 's2');
         
         makerjs.$(new makerjs.models.Rectangle(40,4))
-        .addTo(model);
-        
+        .prefixPathIds('r1_')
+        .addTo(model, 'r1');
+                
         makerjs.model.combineArray(model.models);
         
         makerjs.model.findChains(model, function (chains, loose, layer) {
