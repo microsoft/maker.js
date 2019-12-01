@@ -444,14 +444,12 @@
         };
 
         fineBus.duplicateGroups.forEach(group => {
-            const item = group.items[0];
-            if (item.parent.inEndlessChain) {
-                const endPoints = point.fromPathEnds(item.segment.absolutePath);
-                markAdded(item.segment, false, 'duplicate candidate');
-                deadEndFinder.loadItem(endPoints, item);
-            }
-            group.items.slice(1).forEach(d => {
-                markDeleted(d.segment, 'duplicate');
+            group.items.forEach(item => {
+                if (item.parent.inEndlessChain) {
+                    const endPoints = point.fromPathEnds(item.segment.absolutePath);
+                    markAdded(item.segment, false, 'duplicate candidate');
+                    deadEndFinder.loadItem(endPoints, item);
+                }
             });
         });
 
@@ -468,8 +466,9 @@
                 flags = options.flags(p.item.parent.sourceIndex);
             }
             //determine delete based on inside/outside
-            if (!(segment.isInside && flags.inside || !segment.isInside && flags.outside)) {
-                markDeleted(segment, 'segment is ' + (segment.isInside ? 'inside' : 'outside'));
+            let { isInside } = segment;
+            if (!(isInside && flags.inside || !isInside && flags.outside)) {
+                markDeleted(segment, isInside ? 'inside' : 'outside');
             }
             if (!segment.deleted && p.item.parent.inEndlessChain && p.item.duplicateGroup === undefined) {
                 //insert into deadEndFinder
@@ -661,11 +660,7 @@
             this.midpointChecks.forEach(mp => {
                 const { ev, passenger } = mp;
                 const { item } = passenger;
-
-                if (item.duplicateGroup !== undefined && this.duplicateGroups[item.duplicateGroup][0] !== item) {
-                    //don't need to repeat for each duplicate
-                    return;
-                }
+                const duplicateGroup = this.duplicateGroups[item.duplicateGroup];
 
                 const { segment } = item;
                 const midPoint = [ev.x, ev.y];
@@ -681,13 +676,12 @@
                     riders.forEach(rider => {
 
                         //when item is marked as a duplicate
-                        if (item.duplicateGroup !== undefined) {
+                        if (duplicateGroup) {
 
                             //don't check against duplicates of itself
                             if (rider.item.duplicateGroup === item.duplicateGroup) return;
 
                             //don't check against sources with shared contour
-                            const duplicateGroup = this.duplicateGroups[item.duplicateGroup];
                             if (duplicateGroup.sourceIndexes[rider.item.parent.sourceIndex]) return;
                         }
 
