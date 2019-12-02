@@ -215,4 +215,47 @@ describe('Combine', function () {
             });
         });
     });
+
+    it('should not obliterate an array union', function () {
+        var model = { models: { a: {}, b: {}, c: {} } };
+
+        makerjs.$(new makerjs.models.Square(10))
+            .prefixPathIds('a1_')
+            .addTo(model.models.a, 'a1');
+        
+        makerjs.$(new makerjs.models.Rectangle(5, 10))
+            .move([11, 0])
+            .prefixPathIds('a2_')
+            .addTo(model.models.a, 'a2');
+        
+        makerjs.$(new makerjs.models.Square(10))
+            .prefixPathIds('b1_')
+            .addTo(model.models.b, 'b1');
+        
+        makerjs.$(new makerjs.models.Square(10))
+            .move([11, 0])
+            .prefixPathIds('b2_')
+            .addTo(model.models.b, 'b2');
+        
+        makerjs.$(new makerjs.models.Square(10))
+            .move([22, 0])
+            .prefixPathIds('c1_')
+            .addTo(model.models.c, 'c1');
+        
+        makerjs.$(new makerjs.models.Rectangle(5, 10))
+            .move([16, 0])
+            .prefixPathIds('c2_')
+            .addTo(model.models.c, 'c2');
+        
+        makerjs.model.combineArray(model.models);
+        
+        makerjs.model.findChains(model, function (chains, loose, layer) {
+            assert.equal(loose.length, 0);
+            assert.equal(chains.length, 3);
+            chains.forEach(c => {
+                assert.equal(c.endless, true);
+            });
+        });
+    });
+
 });

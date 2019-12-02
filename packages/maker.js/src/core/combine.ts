@@ -90,6 +90,7 @@
                         var newSegment: ICrossedPathSegment = {
                             absolutePath: subSegments[1],
                             pathId: segments[0].pathId,
+                            groupIndex: segments[0].groupIndex,
                             overlapped: segments[i].overlapped,
                             uniqueForeignIntersectionPoints: []
                         };
@@ -122,6 +123,7 @@
         deleted?: boolean;
         reason?: string;
         shouldAdd?: boolean;
+        groupIndex: number;
     }
 
     /**
@@ -382,6 +384,16 @@
     /**
      * @private
      */
+    interface IOutputGroup {
+        groupIndex: number;
+        hasAdds: boolean;
+        hasDeletes: boolean;
+        items: IFineSegment[];
+    }
+
+    /**
+     * @private
+     */
     interface IFineSegment {
         parent: ICrossedPath;
         segment: ICrossedPathSegment;
@@ -406,7 +418,7 @@
      * @private
      */
     function sweep(sourceArray: (IChain | IModel)[], options: IBusOptions) {
-        const crossedPaths = gatherPathsFromSource(sourceArray);
+        const { crossedPaths, outputGroups } = gatherPathsFromSource(sourceArray);
         const deadEndFinder = new DeadEndFinder<IFineSegment>();
 
         const coarseBus = new CoarseBus(options);
@@ -436,19 +448,27 @@
         const markAdded = (segment: ICrossedPathSegment, shouldAdd: boolean, reason: string) => {
             segment.shouldAdd = shouldAdd;
             segment.reason = reason;
+            if (shouldAdd) {
+                outputGroups[segment.groupIndex].hasAdds = true;
+            }
         };
 
         const markDeleted = (segment: ICrossedPathSegment, reason: string) => {
             segment.deleted = true;
             segment.reason = reason;
+            outputGroups[segment.groupIndex].hasDeletes = true;
         };
 
-        fineBus.duplicateGroups.forEach(group => {
-            group.items.forEach(item => {
+        const insertIntoDeadEndFinder = (item: IFineSegment, shouldAdd: boolean, reason: string) => {
+            markAdded(item.segment, shouldAdd, reason);
+            const endPoints = point.fromPathEnds(item.segment.absolutePath);
+            deadEndFinder.loadItem(endPoints, item);
+        };
+
+        fineBus.duplicateGroups.forEach(duplicateGroup => {
+            duplicateGroup.items.forEach(item => {
                 if (item.parent.inEndlessChain) {
-                    const endPoints = point.fromPathEnds(item.segment.absolutePath);
-                    markAdded(item.segment, false, 'duplicate candidate');
-                    deadEndFinder.loadItem(endPoints, item);
+                    insertIntoDeadEndFinder(item, false, 'duplicate candidate');
                 }
             });
         });
@@ -471,11 +491,9 @@
                 markDeleted(segment, isInside ? 'inside' : 'outside');
             }
             if (!segment.deleted && p.item.parent.inEndlessChain && p.item.duplicateGroup === undefined) {
-                //insert into deadEndFinder
-                const endPoints = point.fromPathEnds(p.item.segment.absolutePath);
-                markAdded(p.item.segment, true, 'normal');
-                deadEndFinder.loadItem(endPoints, p.item);
+                insertIntoDeadEndFinder(p.item, true, 'normal');
             }
+            outputGroups[segment.groupIndex].items.push(p.item);
         });
 
         deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
@@ -489,6 +507,21 @@
                 return null;
             }
         );
+
+        outputGroups.forEach(group => {
+            if (!group.hasAdds && !group.hasDeletes) {
+                group.items.forEach(item => {
+                    markAdded(item.segment, true, 'rescue');
+                    const duplicateGroup = fineBus.duplicateGroups[item.duplicateGroup];
+                    if (duplicateGroup) {
+                        duplicateGroup.items.forEach(di => {
+                            if (di === item) return;
+                            markDeleted(di.segment, 'rescue deletion');
+                        });
+                    }
+                });
+            }
+        });
 
         return { crossedPaths, insideChecks: fineBus.model };
     }
@@ -789,12 +822,13 @@
     function gatherPathsFromSource(sourceArray: (IChain | IModel)[]) {
         const crossedPaths: ICrossedPath[] = [];
 
-        const add = (wp: IWalkPath, sourceIndex: number, inEndlessChain: boolean) => {
+        const add = (wp: IWalkPath, sourceIndex: number, inEndlessChain: boolean, groupIndex: number) => {
             const absolutePath = path.clone(wp.pathContext, wp.offset);
             //clone this path and make it the first segment
             const segment: ICrossedPathSegment = {
                 absolutePath,
                 pathId: wp.pathId,
+                groupIndex,
                 overlapped: false,
                 uniqueForeignIntersectionPoints: []
             };
@@ -810,6 +844,7 @@
         };
 
         //collect chains
+        let outputGroups: IOutputGroup[] = [];
         const sourceChains: ISource[] = [];
         sourceArray.forEach((source, sourceIndex) => {
             if (isChain(source)) {
@@ -822,7 +857,9 @@
                 const cb: IChainCallback = (cs, loose, layer) => {
                     chains = cs;
                     loose.forEach(wp => {
-                        add(wp, sourceIndex, false);
+                        const group: IOutputGroup = { groupIndex: outputGroups.length, hasAdds: false, hasDeletes: false, items: [] };
+                        outputGroups.push(group);
+                        add(wp, sourceIndex, false, group.groupIndex);
                     });
                 };
                 model.findChains(m, cb) as IChain[];
@@ -840,16 +877,18 @@
         });
 
         //collect all links from all chains
-        const getCrossedPathsFromChains = (c: IChain, sourceIndex: number) => {
+        const getCrossedPathsFromChains = (c: IChain, sourceIndex: number, setIndex: number) => {
             c.links.forEach(link => {
                 const wp = link.walkedPath;
-                add(wp, sourceIndex, c.endless);
+                add(wp, sourceIndex, c.endless, setIndex);
             });
         }
         sourceChains.forEach(sc => {
-            getCrossedPathsFromChains(sc.chain, sc.sourceIndex);
+            const group: IOutputGroup = { groupIndex: outputGroups.length, hasAdds: false, hasDeletes: false, items: [] };
+            outputGroups.push(group);
+            getCrossedPathsFromChains(sc.chain, sc.sourceIndex, group.groupIndex);
         });
-        return crossedPaths;
+        return { crossedPaths, outputGroups };
     }
 
     /**
