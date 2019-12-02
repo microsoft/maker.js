@@ -13,7 +13,7 @@ describe('Combine', function () {
         makerjs.model.findChains(result, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -29,7 +29,44 @@ describe('Combine', function () {
         makerjs.model.findChains(result, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
-            chains.forEach(c=> {
+            chains.forEach(c => {
+                assert.equal(c.endless, true);
+            });
+        });
+    });
+
+    it('should not obliterate a duplicate union', function () {
+        var model = { models: { a: {}, b: {}, c: {} } };
+
+        makerjs.$(new makerjs.models.Square(10))
+            .prefixPathIds('a1_')
+            .addTo(model.models.a, 'a1');
+
+        makerjs.$(new makerjs.models.Square(10))
+            .move([11, 0])
+            .prefixPathIds('a2_')
+            .addTo(model.models.a, 'a2');
+
+        makerjs.$(new makerjs.models.Square(10))
+            .prefixPathIds('b1_')
+            .addTo(model.models.b, 'b1');
+
+        makerjs.$(new makerjs.models.Square(10))
+            .move([11, 0])
+            .prefixPathIds('b2_')
+            .addTo(model.models.b, 'b2');
+
+        makerjs.$(new makerjs.models.Square(10))
+            .move([21, 0])
+            .prefixPathIds('c1_')
+            .addTo(model.models.c, 'c1');
+
+        var result = makerjs.model.combineUnion(model.models.a, model.models.b);
+
+        makerjs.model.findChains(result, function (chains, loose, layer) {
+            assert.equal(loose.length, 0);
+            assert.equal(chains.length, 2);
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -48,7 +85,7 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -67,7 +104,7 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -90,7 +127,7 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 2);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -115,7 +152,7 @@ describe('Combine', function () {
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 2);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -129,7 +166,7 @@ describe('Combine', function () {
         makerjs.model.findChains(wedge, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -144,7 +181,7 @@ describe('Combine', function () {
         makerjs.model.findChains(spinner, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 2);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
@@ -154,26 +191,26 @@ describe('Combine', function () {
         var model = {};
 
         makerjs.$(new makerjs.models.Square(20))
-        .move([15, 0])
-        .prefixPathIds('s1_')
-        .addTo(model, 's1');
-        
+            .move([15, 0])
+            .prefixPathIds('s1_')
+            .addTo(model, 's1');
+
         makerjs.$(new makerjs.models.Square(20))
-        .move([15, 0])
-        .rotate(-45)
-        .prefixPathIds('s2_')
-        .addTo(model, 's2');
-        
-        makerjs.$(new makerjs.models.Rectangle(40,4))
-        .prefixPathIds('r1_')
-        .addTo(model, 'r1');
-                
+            .move([15, 0])
+            .rotate(-45)
+            .prefixPathIds('s2_')
+            .addTo(model, 's2');
+
+        makerjs.$(new makerjs.models.Rectangle(40, 4))
+            .prefixPathIds('r1_')
+            .addTo(model, 'r1');
+
         makerjs.model.combineArray(model.models);
-        
+
         makerjs.model.findChains(model, function (chains, loose, layer) {
             assert.equal(loose.length, 0);
             assert.equal(chains.length, 1);
-            chains.forEach(c=> {
+            chains.forEach(c => {
                 assert.equal(c.endless, true);
             });
         });
