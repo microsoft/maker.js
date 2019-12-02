@@ -240,6 +240,7 @@
 
         walk(modelContext, walkOptions);
 
+        let calledBack = false;
         for (let layer in pointGraphsByLayer) {
             let pointGraph = pointGraphsByLayer[layer];
 
@@ -276,7 +277,14 @@
                 chainsByLayer[layer] = containedChains;
             }
 
-            if (callback) callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+            if (callback) {
+                callback(chainsByLayer[layer], loose, layer, ignored[layer]);
+                calledBack = true;
+            }
+        }
+
+        if (callback && !calledBack) {
+            callback([], [], null);
         }
 
         if (beziers) {
