@@ -57,7 +57,7 @@ describe('Combine', function () {
             .addTo(model.models.b, 'b2');
 
         makerjs.$(new makerjs.models.Square(10))
-            .move([21, 0])
+            .move([22, 0])
             .prefixPathIds('c1_')
             .addTo(model.models.c, 'c1');
 
