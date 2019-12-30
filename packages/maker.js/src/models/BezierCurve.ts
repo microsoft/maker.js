@@ -86,10 +86,8 @@
     /**
      * @private
      */
-    function getExtrema(b: BezierJs.Bezier) {
-
-        var extrema = b.extrema().values
-
+    function sort(n: number[]) {
+        n
             //round the numbers so we can compare them to each other
             .map(m => round(m))
 
@@ -99,19 +97,68 @@
             //and put them in order
             .sort();
 
-        if (extrema.length === 0) return [0, 1];
+        if (n.length === 0) return [0, 1];
 
         //ensure leading zero
-        if (extrema[0] !== 0) {
-            extrema.unshift(0);
+        if (n[0] !== 0) {
+            n.unshift(0);
         }
 
         //ensure ending 1
-        if (extrema[extrema.length - 1] !== 1) {
-            extrema.push(1);
+        if (n[n.length - 1] !== 1) {
+            n.push(1);
         }
 
-        return extrema;
+        return n;
+    }
+
+    function getHandles(b: BezierJs.Bezier) {
+        const line = (i: number, j: number) => new paths.Line(getIPoint(b.points[i]), getIPoint(b.points[j]));
+        switch (b.points.length) {
+            case 3: {
+                return [line(0, 1), line(1, 2)];
+            }
+            case 4: {
+                return [line(0, 1), line(2, 3)];
+            }
+        }
+    }
+
+    /**
+     * @private
+     * Our maximum circular arc span for accurate representation by a cubic curve.
+     */
+    var maxBezierArcspan = 45;
+
+    function isMild(b: BezierJs.Bezier) {
+        const handles = getHandles(b);
+        if (b.points.length === 4) {
+            const options: IPathIntersectionBaseOptions = {};
+            const int = point.fromSlopeIntersection(handles[0], handles[1], options);
+            if (!int) return false;
+            if (options.out_AreCrossing) return false;
+            //make sure int is not between the handle
+            for (let i = 0; i < handles.length; i++) {
+                if (measure.isBetweenPoints(int, handles[i], true)) return false;
+            }
+        }
+        const angles = handles.map(handle => angle.noRevolutions(angle.ofLineInDegrees(handle)));
+        const sweepAngle = angle.noRevolutions(Math.abs(angles[1] - angles[0]));
+        return sweepAngle <= maxBezierArcspan || (360 - sweepAngle) <= maxBezierArcspan;
+    }
+
+    function getMild(bs: IBSegment[], index: number) {
+        const b = bs[index];
+        if (!isMild(b.b)) {
+            const { left, right } = b.b.split(0.5);
+            const mid = (b.t1 - b.t0) / 2 + b.t0;
+            bs.splice(index, 1,
+                { b: left, t0: b.t0, t1: mid },
+                { b: right, t0: mid, t1: b.t1 }
+            );
+            getMild(bs, index + 1);
+            getMild(bs, index);
+        }
     }
 
     /**
@@ -126,9 +173,13 @@
      */
     class TPoint {
         public point: IPoint;
+        public normal: IPathLine;
 
         constructor(b: BezierJs.Bezier, public t: number, offset?: IPoint) {
             this.point = point.add(getIPoint(b.get(t)), offset);
+            const n = b.normal(t);
+            const end = point.add(this.point, getIPoint(n));
+            this.normal = new paths.Line(this.point, end);
         }
     }
 
@@ -148,19 +199,31 @@
         return m(0.25) + m(0.75);
     }
 
+    interface IBSegment {
+        b: BezierJs.Bezier;
+        t0: number;
+        t1: number;
+    }
+
+    interface IArcZ {
+        path: IPath;
+        bezierData: IBezierRange;
+        reversed?: boolean;
+    }
+
     /**
      * @private
      */
-    function getLargestArc(b: BezierJs.Bezier, startT: number, endT: number, accuracy: number): IPathArcInBezierCurve {
-
-        var arc: IPathArc, lastGoodArc: IPathArc;
-        var start = new TPoint(b, startT);
-        var end = new TPoint(b, endT);
-        var upper = end;
-        var lower = start;
-        var count = 0;
-        var test = upper;
-        var reversed: boolean;
+    function getLargestArc(b: BezierJs.Bezier, startT: number, endT: number, accuracy: number): IArcZ {
+        let arc: IPathArc;
+        let lastGood: IArcZ;
+        let start = new TPoint(b, startT);
+        let end = new TPoint(b, endT);
+        let upper = end;
+        let lower = start;
+        let count = 0;
+        let test = upper;
+        let reversed: boolean;
 
         while (count < 100) {
             const middle = getIPoint(b.get((start.t + test.t) / 2));
@@ -170,8 +233,8 @@
                 arc = new paths.Arc(start.point, middle, test.point);
             }
             catch (e) {
-                if (lastGoodArc) {
-                    return lastGoodArc as IPath as IPathArcInBezierCurve;
+                if (lastGood) {
+                    return lastGood;
                 } else {
                     break;
                 }
@@ -187,19 +250,22 @@
 
             //if error is within accuracy, this becomes the lower
             if (error <= accuracy) {
-                (arc as IPath as IPathArcInBezierCurve).bezierData = {
-                    startT: startT,
-                    endT: test.t
-                };
                 lower = test;
-                lastGoodArc = arc;
+                lastGood = {
+                    reversed,
+                    path: arc,
+                    bezierData: {
+                        startT: startT,
+                        endT: test.t
+                    }
+                };
             } else {
                 upper = test;
             }
 
             //exit if lower is the end
-            if (lower.t === upper.t || (lastGoodArc && (lastGoodArc !== arc) && (angle.ofArcSpan(arc) - angle.ofArcSpan(lastGoodArc)) < .5)) {
-                return lastGoodArc as IPath as IPathArcInBezierCurve;
+            if (lower.t === upper.t || (lastGood && (lastGood.path !== arc) && (angle.ofArcSpan(arc) - angle.ofArcSpan(lastGood.path as IPathArc)) < .5)) {
+                return lastGood;
             }
 
             count++;
@@ -207,39 +273,32 @@
         }
 
         //arc failed, so return a line
-        var line = new paths.Line(start.point, test.point) as IPath as IPathArcInBezierCurve;
-        line.bezierData = {
-            startT: startT,
-            endT: test.t
+        return {
+            path: new paths.Line(start.point, test.point),
+            bezierData: {
+                startT: startT,
+                endT: test.t
+            }
         };
-        return line;
     }
 
     /**
      * @private
      */
-    function getArcs(bc: BezierCurve, b: BezierJs.Bezier, accuracy: number, startT: number, endT: number, base: number): number {
-        var added = 0;
-        var arc: IPathArcInBezierCurve;
-
+    function getArcs(b: BezierJs.Bezier, accuracy: number) {
+        let startT = 0;
+        let endT = 1;
+        const results: IArcZ[] = [];
         while (startT < endT) {
-
-            arc = getLargestArc(b, startT, endT, accuracy);
-            //add an arc
-
-            startT = arc.bezierData.endT
-
-            var len = measure.pathLength(arc);
+            let result = getLargestArc(b, startT, endT, accuracy);
+            startT = result.bezierData.endT;
+            var len = measure.pathLength(result.path);
             if (len < .0001) {
                 continue;
             }
-
-            bc.paths[arc.type + '_' + (base + added)] = arc;
-
-            added++;
+            results.push(result);
         }
-
-        return added;
+        return results;
     }
 
     /**
@@ -483,7 +542,6 @@
             }
 
             var b = seedToBezier(this.seed);
-            var extrema = getExtrema(b);
 
             this.paths = {};
 
@@ -497,11 +555,58 @@
                 this.accuracy = len / 100;
             }
 
-            var count = 0;
-            for (var i = 1; i < extrema.length; i++) {
-                var extremaSpan = extrema[i] - extrema[i - 1];
-                count += getArcs(this, b, this.accuracy * extremaSpan, extrema[i - 1], extrema[i], count);
+            const inflections = sort(b.inflections());
+            let segmentCount = 0;
+
+            for (let i = 1; i < inflections.length; i++) {
+                let interval = [inflections[i - 1], inflections[i]];
+                let bSegment = b.split(interval[0], interval[1]);
+                let b2: IBSegment = {
+                    b: bSegment,
+                    t0: interval[0],
+                    t1: interval[1]
+                };
+                let bs = [b2];
+                getMild(bs, 0);
+
+                let segments: IArcZ[] = [];
+
+                bs.forEach(b1 => {
+                    const extremaSpan = b1.t1 - b1.t0;
+                    const arcs = getArcs(b1.b, this.accuracy * extremaSpan);
+                    arcs.forEach(arc => {
+                        segments.push({
+                            ...arc,
+                            bezierData: { //project into main bezier range
+                                startT: b1.t0 + extremaSpan * arc.bezierData.startT,
+                                endT: b1.t0 + extremaSpan * arc.bezierData.endT
+                            }
+                        });
+                    });
+                });
+
+                //TODO fix arcs
+
+                segments.forEach(segment => {
+                    const pb: IPathArcInBezierCurve = { ...segment.path, bezierData: segment.bezierData };
+                    this.paths[segment.path.type + '_' + segmentCount] = pb;
+                    segmentCount++;
+                });
             }
+
+            const lines: IModel = { layer: 'orange' };
+
+            model.walk(this, {
+                onPath: wp => {
+                    if (wp.pathContext.type === pathType.Arc) {
+                        const endpoints = point.fromPathEnds(wp.pathContext);
+                        model.addPath(lines, new paths.Line(wp.pathContext.origin, endpoints[0]), wp.routeKey + 'l1');
+                        model.addPath(lines, new paths.Line(wp.pathContext.origin, endpoints[1]), wp.routeKey + 'l2');
+                    }
+                }
+            });
+
+            model.addModel(this, lines, 'lines');
         }
 
         public static typeName = 'BezierCurve';
