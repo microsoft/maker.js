@@ -9,12 +9,12 @@
   },
   "devDependencies": {
     "browserify": "^16.2.2",
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.1",
     "lerna": "^3.0.3",
     "licensify": "^3.1.3",
     "mocha": "^5.2.0",
     "opentype.js": "^1.1.0",
-    "typedoc": "^0.11.1",
+    "typedoc": "^0.15.8",
     "typescript": "^2.7.2",
     "typescript-json-schema": "^0.31.0"
   },
@@ -25,7 +25,8 @@
     "demo": "lerna run demo",
     "docs": "lerna run docs",
     "start": "http-server -p 8020 -o http://localhost:8020/docs/playground/",
-    "test": "npm run bootstrap && npm run build && npm run build-tools && lerna run test && npm run docs"
+    "test": "npm run bootstrap && npm run build && npm run build-tools && lerna run test && npm run docs",
+    "postinstall": "npm run bootstrap"
   },
   "repository": {
     "type": "git",

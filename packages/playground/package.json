@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/codemirror": "0.0.38",
     "@types/marked": "^0.0.28",
+    "@types/node": "^7.0.5",
     "@types/opentype.js": "^0.7.0",
     "makerjs": "*"
   }
