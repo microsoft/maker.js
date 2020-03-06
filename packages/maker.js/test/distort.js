@@ -23,7 +23,7 @@ describe('Distort', function () {
     var originalChainLinkCount = chains && chains.length > 0 ? chains[0].links.length : 0;
     var isOriginalEndless = chains && chains.length > 0 && chains[0].endless;
 
-    scales.forEach(function(scale) {
+    scales.forEach(function (scale) {
         describe("by " + scale[0] + " x " + scale[1], function () {
 
             var scaled = makerjs.model.distort(model, scale[0], scale[1], 0.05);
@@ -51,7 +51,7 @@ describe('Distort', function () {
             it('should be endless if the original chain was endless', function () {
                 var isScaledEndless = chains && chains.length > 0 && chains[0].endless;
                 assert.equal(isOriginalEndless, isScaledEndless);
-            });    
+            });
         });
     });
 });
