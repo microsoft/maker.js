@@ -645,6 +645,11 @@ namespace MakerJs.exporter {
                 var d: ISvgPathData = [];
                 svgBezierData(d, seed, opts.accuracy);
                 drawPath(id, seed.origin[0], seed.origin[1], d, layer, route, point.middle(seed), annotate, flow);
+
+                if (flow) {
+                    //TODO 
+                    //addFlowMarks(flow, layer, arcPoints[1], arcPoints[0], angle.noRevolutions(arc.startAngle - 90));
+                }
             };
 
             function addFlowMarks(flow: IFlowAnnotation, layer: string, origin: IPoint, end: IPoint, endAngle: number) {

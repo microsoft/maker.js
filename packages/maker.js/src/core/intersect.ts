@@ -15,6 +15,7 @@ namespace MakerJs.path {
     map[pathType.Arc] = {};
     map[pathType.Circle] = {};
     map[pathType.Line] = {};
+    map[pathType.BezierSeed] = {};
 
     map[pathType.Arc][pathType.Arc] = function (arc1: IPathArc, arc2: IPathArc, options: IPathIntersectionOptions, swapOffsets: boolean) {
         var result: IPathIntersection = null;
@@ -123,6 +124,26 @@ namespace MakerJs.path {
         return result;
     };
 
+    map[pathType.Arc][pathType.BezierSeed] = function (arc: IPathArc, seed: IPathBezierSeed, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        var result: IPathIntersection = null;
+
+        moveTemp([arc, seed], options, swapOffsets, function () {
+
+            // var angles = bezierToArc(line, arc, options);
+            // if (angles) {
+            //     var arcAngles = getAnglesWithinArc(angles, arc, options);
+            //     if (arcAngles) {
+            //         result = {
+            //             intersectionPoints: pointsFromAnglesOnCircle(arcAngles, arc),
+            //             path1Angles: arcAngles
+            //         };
+            //     }
+            // }
+        });
+
+        return result;
+    };
+
     map[pathType.Circle][pathType.Arc] = function (circle: IPathCircle, arc: IPathArc, options: IPathIntersectionOptions) {
         var result = map[pathType.Arc][pathType.Circle](arc, circle, options, true);
         if (result) {
@@ -166,6 +187,23 @@ namespace MakerJs.path {
         return result;
     };
 
+    map[pathType.Circle][pathType.BezierSeed] = function (circle: IPathCircle, seed: IPathBezierSeed, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        var result: IPathIntersection = null;
+
+        moveTemp([circle, seed], options, swapOffsets, function () {
+
+            // var angles = bezierToCircle(line, circle, options);
+            // if (angles) {
+            //     result = {
+            //         intersectionPoints: pointsFromAnglesOnCircle(angles, circle),
+            //         path1Angles: angles
+            //     };
+            // }
+        });
+
+        return result;
+    };
+
     map[pathType.Line][pathType.Arc] = function (line: IPathLine, arc: IPathArc, options: IPathIntersectionOptions) {
         var result = map[pathType.Arc][pathType.Line](arc, line, options, true);
         if (result) {
@@ -200,6 +238,32 @@ namespace MakerJs.path {
         });
 
         return result;
+    };
+
+    map[pathType.Line][pathType.BezierSeed] = function (line: IPathLine, seed: IPathBezierSeed, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        var result: IPathIntersection = null;
+
+        moveTemp([line, seed], options, swapOffsets, function () {
+            //TODO
+        });
+
+        return result;
+    };
+
+    map[pathType.BezierSeed][pathType.Arc] = function (circle: IPathCircle, seed: IPathBezierSeed, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        return null; //TODO
+    };
+
+    map[pathType.BezierSeed][pathType.Circle] = function (circle: IPathCircle, seed: IPathBezierSeed, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        return null; //TODO
+    };
+
+    map[pathType.BezierSeed][pathType.Line] = function (circle: IPathCircle, seed: IPathBezierSeed, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        return null; //TODO
+    };
+
+    map[pathType.BezierSeed][pathType.BezierSeed] = function (circle: IPathCircle, seed: IPathBezierSeed, options: IPathIntersectionOptions, swapOffsets: boolean) {
+        return null; //TODO
     };
 
     /**
@@ -367,7 +431,7 @@ namespace MakerJs.path {
      * @private
      */
     function circleToCircle(circle1: IPathCircle, circle2: IPathCircle, options: IPathIntersectionOptions): number[][] {
-        
+
         //no-op if either circle is degenerate
         if (circle1.radius <= 0 || circle2.radius <= 0) {
             return null;
@@ -453,5 +517,21 @@ namespace MakerJs.path {
         var c2IntersectionAngle = solvers.solveTriangleSSS(c1.radius, x, c2.radius);
 
         return [bothAngles(c1IntersectionAngle), bothAngles(180 - c2IntersectionAngle)];
+    }
+
+    function bezierToBezier() {
+        //TODO
+    }
+
+    function bezierToLine() {
+        //TODO
+    }
+
+    function bezierToArc() {
+        //TODO
+    }
+
+    function bezierToCircle() {
+        //TODO
     }
 }

@@ -84,6 +84,19 @@
         return copy;
     };
 
+    breakPathFunctionMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, pointOfBreak: IPoint): IPath {
+
+        let t: number;
+        //TODO get t value of point on curve
+
+        if (t < 0 || t > 1) {
+            return null;
+        }
+
+        //TODO modify original
+        //TODO return split
+    };
+
     /**
      * Breaks a path in two. The supplied path will end at the supplied pointOfBreak, 
      * a new path is returned which begins at the pointOfBreak and ends at the supplied path's initial end point.

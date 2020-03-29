@@ -389,6 +389,13 @@ namespace MakerJs.measure {
         }
     }
 
+    pathExtentsMap[pathType.BezierSeed] = function (seed: IPathBezierSeed): IMeasure {
+        return {
+            low: null, //TODO
+            high: null //TODO
+        }
+    }
+
     /**
      * Calculates the smallest rectangle which contains a path.
      * 

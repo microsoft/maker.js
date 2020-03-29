@@ -151,7 +151,7 @@
     /**
      * @private
      */
-    function getLargestArc(b: BezierJs.Bezier, startT: number, endT: number, accuracy: number): IPathArcInBezierCurve {
+    function getLargestArc(b: BezierJs.Bezier, startT: number, endT: number, accuracy: number): IPathInBezierCurve {
 
         var arc: IPathArc, lastGoodArc: IPathArc;
         var start = new TPoint(b, startT);
@@ -171,7 +171,7 @@
             }
             catch (e) {
                 if (lastGoodArc) {
-                    return lastGoodArc as IPath as IPathArcInBezierCurve;
+                    return lastGoodArc as IPath as IPathInBezierCurve;
                 } else {
                     break;
                 }
@@ -187,7 +187,7 @@
 
             //if error is within accuracy, this becomes the lower
             if (error <= accuracy) {
-                (arc as IPath as IPathArcInBezierCurve).bezierData = {
+                (arc as IPath as IPathInBezierCurve).bezierData = {
                     startT: startT,
                     endT: test.t
                 };
@@ -199,7 +199,7 @@
 
             //exit if lower is the end
             if (lower.t === upper.t || (lastGoodArc && (lastGoodArc !== arc) && (angle.ofArcSpan(arc) - angle.ofArcSpan(lastGoodArc)) < .5)) {
-                return lastGoodArc as IPath as IPathArcInBezierCurve;
+                return lastGoodArc as IPath as IPathInBezierCurve;
             }
 
             count++;
@@ -207,7 +207,7 @@
         }
 
         //arc failed, so return a line
-        var line = new paths.Line(start.point, test.point) as IPath as IPathArcInBezierCurve;
+        var line = new paths.Line(start.point, test.point) as IPath as IPathInBezierCurve;
         line.bezierData = {
             startT: startT,
             endT: test.t
@@ -220,7 +220,7 @@
      */
     function getArcs(bc: BezierCurve, b: BezierJs.Bezier, accuracy: number, startT: number, endT: number, base: number): number {
         var added = 0;
-        var arc: IPathArcInBezierCurve;
+        var arc: IPathInBezierCurve;
 
         while (startT < endT) {
 
@@ -245,7 +245,7 @@
     /**
      * @private
      */
-    function getActualBezierRange(curve: BezierCurve, arc: IPathArcInBezierCurve, endpoints: IPoint[], offset: IPoint): IBezierRange {
+    function getActualBezierRange(curve: BezierCurve, arc: IPathInBezierCurve, endpoints: IPoint[], offset: IPoint): IBezierRange {
         var b = getScratch(curve.seed);
         var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(t => new TPoint(b, t, offset));
         var ends = endpoints.slice();
@@ -276,12 +276,12 @@
     function getChainBezierRange(curve: BezierCurve, c: IChain, layer: string, addToLayer: IAddToLayer): IBezierRange {
 
         var endLinks = [c.links[0], c.links[c.links.length - 1]];
-        if ((endLinks[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (endLinks[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT) {
+        if ((endLinks[0].walkedPath.pathContext as IPathInBezierCurve).bezierData.startT > (endLinks[1].walkedPath.pathContext as IPathInBezierCurve).bezierData.startT) {
             chain.reverse(c);
             endLinks.reverse();
         }
 
-        var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(curve, endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints, endLink.walkedPath.offset));
+        var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(curve, endLink.walkedPath.pathContext as IPathInBezierCurve, endLink.endPoints, endLink.walkedPath.offset));
 
         var result: IBezierRange = {
             startT: actualBezierRanges[0] ? actualBezierRanges[0].startT : null,
@@ -296,13 +296,13 @@
             if (result.startT === null) {
                 //exclude the first from the chain
                 addToLayer(c.links[0].walkedPath.pathContext, layer, true);
-                result.startT = (c.links[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT;
+                result.startT = (c.links[1].walkedPath.pathContext as IPathInBezierCurve).bezierData.startT;
             }
 
             if (result.endT === null) {
                 //exclude the last from the chain
                 addToLayer(c.links[c.links.length - 1].walkedPath.pathContext, layer, true);
-                result.endT = (c.links[c.links.length - 2].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.endT;
+                result.endT = (c.links[c.links.length - 2].walkedPath.pathContext as IPathInBezierCurve).bezierData.endT;
             }
 
             return result;
@@ -399,7 +399,7 @@
     }
 
     export class BezierCurve implements IModel {
-
+        protected isLinear: boolean;
         public models: IModelMap;
         public paths: IPathMap;
         public origin: IPoint;
@@ -471,7 +471,7 @@
                 //use a line and exit
 
                 var line = new paths.Line(point.clone(this.seed.origin), point.clone(this.seed.end));
-                (line as IPath as IPathArcInBezierCurve).bezierData = {
+                (line as IPath as IPathInBezierCurve).bezierData = {
                     startT: 0,
                     endT: 1
                 };
@@ -479,29 +479,14 @@
                 this.paths = {
                     "0": line
                 };
+
+                this.isLinear = true;
                 return;
             }
 
             var b = seedToBezier(this.seed);
-            var extrema = getExtrema(b);
 
-            this.paths = {};
-
-            //use arcs
-
-            if (!this.accuracy) {
-                //get a default accuracy relative to the size of the bezier
-                var len = b.length();
-
-                //set the default to be a combination of fast rendering and good smoothing.
-                this.accuracy = len / 100;
-            }
-
-            var count = 0;
-            for (var i = 1; i < extrema.length; i++) {
-                var extremaSpan = extrema[i] - extrema[i - 1];
-                count += getArcs(this, b, this.accuracy * extremaSpan, extrema[i - 1], extrema[i], count);
-            }
+            //TODO get mild
         }
 
         public static typeName = 'BezierCurve';
@@ -538,7 +523,7 @@
                         //bezier is linear
                         return addToLayer(wp.pathContext, layer, true);
                     }
-                    var range = getActualBezierRange(curve, wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext), wp.offset);
+                    var range = getActualBezierRange(curve, wp.pathContext as IPathInBezierCurve, point.fromPathEnds(wp.pathContext), wp.offset);
                     if (range) {
                         var b = getScratch(curve.seed);
                         var piece = b.split(range.startT, range.endT);
@@ -570,6 +555,36 @@
             return getIPoint(computedPoint);
         }
 
+    }
+
+    export class BezierCurveAsArcs extends BezierCurve {
+        constructor(...args) {
+            super(args);
+
+            if (this.isLinear) return;
+
+            var b = seedToBezier(this.seed);
+
+            //TODO use mild
+            
+            var extrema = getExtrema(b);
+
+            //use arcs
+
+            if (!this.accuracy) {
+                //get a default accuracy relative to the size of the bezier
+                var len = b.length();
+
+                //set the default to be a combination of fast rendering and good smoothing.
+                this.accuracy = len / 100;
+            }
+
+            var count = 0;
+            for (var i = 1; i < extrema.length; i++) {
+                var extremaSpan = extrema[i] - extrema[i - 1];
+                count += getArcs(this, b, this.accuracy * extremaSpan, extrema[i - 1], extrema[i], count);
+            }
+        }
     }
 
     (<IKit>BezierCurve).metaParameters = [

@@ -55,7 +55,7 @@ namespace MakerJs.exporter {
             return layerId;
         }
 
-        var map: { [type: string]: (pathValue: IPath, offset: IPoint, layer: string) => DxfParser.Entity; } = {};
+        var map: { [type: string]: (pathValue: IPath, offset: IPoint, layer: string) => DxfParser.Entity[]; } = {};
 
         map[pathType.Line] = function (line: IPathLine, offset: IPoint, layer: string) {
             const lineEntity: DxfParser.EntityLINE = {
@@ -72,7 +72,7 @@ namespace MakerJs.exporter {
                     }
                 ]
             };
-            return lineEntity;
+            return [lineEntity];
         };
 
         map[pathType.Circle] = function (circle: IPathCircle, offset: IPoint, layer: string) {
@@ -85,7 +85,7 @@ namespace MakerJs.exporter {
                 },
                 radius: round(circle.radius, opts.accuracy)
             };
-            return circleEntity;
+            return [circleEntity];
         };
 
         map[pathType.Arc] = function (arc: IPathArc, offset: IPoint, layer: string) {
@@ -100,11 +100,56 @@ namespace MakerJs.exporter {
                 startAngle: round(arc.startAngle, opts.accuracy),
                 endAngle: round(arc.endAngle, opts.accuracy)
             };
-            return arcEntity;
+            return [arcEntity];
         };
 
-        //TODO - handle scenario if any bezier seeds get passed
-        //map[pathType.BezierSeed]
+        map[pathType.BezierSeed] = function (seed: IPathBezierSeed, offset: IPoint, layer: string) {
+            const arcEntities: DxfParser.Entity[] = [];
+            const bc = new models.BezierCurve(seed); //TODO call bezierseed as arcs
+            model.walk(bc, {
+                onPath: wp => {
+                    const offset2 = point.add(offset, wp.offset);
+                    switch (wp.pathContext.type) {
+                        case pathType.Arc: {
+                            const arc = wp.pathContext as IPathArc;
+                            const arcEntity: DxfParser.EntityARC = {
+                                type: "ARC",
+                                layer: defaultLayer(arc, layer),
+                                center: {
+                                    x: round(arc.origin[0] + offset2[0], opts.accuracy),
+                                    y: round(arc.origin[1] + offset2[1], opts.accuracy)
+                                },
+                                radius: round(arc.radius, opts.accuracy),
+                                startAngle: round(arc.startAngle, opts.accuracy),
+                                endAngle: round(arc.endAngle, opts.accuracy)
+                            };
+                            arcEntities.push(arcEntity);
+                            break;
+                        }
+                        case pathType.Line: {
+                            const line = wp.pathContext as IPathLine;
+                            const lineEntity: DxfParser.EntityLINE = {
+                                type: "LINE",
+                                layer: defaultLayer(line, layer),
+                                vertices: [
+                                    {
+                                        x: round(line.origin[0] + offset2[0], opts.accuracy),
+                                        y: round(line.origin[1] + offset2[1], opts.accuracy)
+                                    },
+                                    {
+                                        x: round(line.end[0] + offset2[0], opts.accuracy),
+                                        y: round(line.end[1] + offset2[1], opts.accuracy)
+                                    }
+                                ]
+                            };
+                            arcEntities.push(lineEntity);
+                            break;
+                        }
+                    }
+                }
+            });
+            return arcEntities;
+        };
 
         function appendVertex(v: IPoint, layer: string, bulge?: number) {
             const vertex: DxfParser.EntityVERTEX = {
@@ -216,8 +261,8 @@ namespace MakerJs.exporter {
             walkedPaths.forEach((walkedPath: IWalkPath) => {
                 var fn = map[walkedPath.pathContext.type];
                 if (fn) {
-                    const entity = fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
-                    entityArray.push(entity);
+                    const entities = fn(walkedPath.pathContext, walkedPath.offset, walkedPath.layer);
+                    entities.forEach(entity => entityArray.push(entity));
                 }
             });
             entityArray.push.apply(entityArray, captions.map(text));

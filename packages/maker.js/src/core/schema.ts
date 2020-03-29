@@ -132,9 +132,9 @@ namespace MakerJs {
     }
 
     /**
-     * An arc path segment in a bezier curve.
+     * A path segment in a bezier curve.
      */
-    export interface IPathArcInBezierCurve extends IPath {
+    export interface IPathInBezierCurve extends IPath {
 
         bezierData: IBezierRange;
     }

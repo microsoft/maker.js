@@ -62,6 +62,10 @@
             exit = true;
         };
 
+        beginMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, link: IChainLink) {
+            //TODO
+        };
+
         beginMap[pathType.Line] = function (line: IPathLine, link: IChainLink) {
             let points = link.endPoints.map(p => point.rounded(p, accuracy));
             if (link.reversed) {
@@ -92,6 +96,10 @@
             var reverse = (reverseTail != link.reversed);
             var endPoint = point.rounded(link.endPoints[reverse ? 0 : 1], accuracy);
             append(wrap('.appendPoint', JSON.stringify(endPoint), true));
+        };
+
+        appendMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, link: IChainLink) {
+            //TODO
         };
 
         appendMap[pathType.Arc] = function (arc: IPathArc, link: IChainLink) {

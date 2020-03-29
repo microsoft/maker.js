@@ -11,11 +11,15 @@
 
     map[pathType.Circle] = function (circle: IPathCircle, expansion: number, isolateCaps: boolean) {
         return new models.Ring(circle.radius + expansion, circle.radius - expansion);
-    }
+    };
 
     map[pathType.Line] = function (line: IPathLine, expansion: number, isolateCaps: boolean) {
         return new models.Slot(line.origin, line.end, expansion, isolateCaps);
-    }
+    };
+
+    map[pathType.BezierSeed] = function (seed: IPathBezierSeed, expansion: number, isolateCaps: boolean) {
+        return new models.MildBezierExpansion(seed, expansion, isolateCaps);
+    };
 
     /**
      * Expand path by creating a model which surrounds it.

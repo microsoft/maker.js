@@ -45,6 +45,7 @@
     "src/core/svg.ts",
     "src/core/layout.ts",
     "src/models/BezierCurve.ts",
+    "src/models/MildBezierExpansion.ts",
     "src/models/Ellipse.ts",
     "src/models/ConnectTheDots.ts",
     "src/models/Polygon.ts",

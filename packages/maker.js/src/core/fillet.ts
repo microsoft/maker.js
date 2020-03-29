@@ -300,6 +300,7 @@ namespace MakerJs.path {
 
     /**
      * Adds a round corner to the outside angle between 2 lines. The lines must meet at one point.
+     * TODO dogbone bezier curve
      *
      * @param lineA First line to fillet, which will be modified to fit the fillet.
      * @param lineB Second line to fillet, which will be modified to fit the fillet.
@@ -365,6 +366,7 @@ namespace MakerJs.path {
 
     /**
      * Adds a round corner to the inside angle between 2 paths. The paths must meet at one point.
+     * TODO fillet bezier curve
      *
      * @param pathA First path to fillet, which will be modified to fit the fillet.
      * @param pathB Second path to fillet, which will be modified to fit the fillet.

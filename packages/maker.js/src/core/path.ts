@@ -28,7 +28,7 @@ namespace MakerJs.path {
 
         //carry extra props if this is an IPathArcInBezierCurve
         if (pathA && pathB && ('bezierData' in pathA)) {
-            (<IPathArcInBezierCurve>pathB).bezierData = (<IPathArcInBezierCurve>pathA).bezierData;
+            (<IPathInBezierCurve>pathB).bezierData = (<IPathInBezierCurve>pathA).bezierData;
         }
     }
 
@@ -184,6 +184,13 @@ namespace MakerJs.path {
     moveMap[pathType.Line] = function (line: IPathLine, origin: IPoint) {
         var delta = point.subtract(line.end, line.origin);
         line.end = point.add(origin, delta);
+    };
+
+    moveMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, origin: IPoint) {
+
+        //TODO
+        //var delta = point.subtract(seed.end, seed.origin);
+        //s.end = point.add(origin, delta);
     };
 
     /**
@@ -461,11 +468,11 @@ namespace MakerJs.path {
         } else {
             arc.endAngle += delta;
         }
-    }
+    };
 
     alterMap[pathType.Circle] = function (circle: IPathCircle, pathLength: number, distance: number, useOrigin: boolean) {
         circle.radius *= (pathLength + distance) / pathLength;
-    }
+    };
 
     alterMap[pathType.Line] = function (line: IPathLine, pathLength: number, distance: number, useOrigin: boolean) {
         var delta = point.scale(point.subtract(line.end, line.origin), distance / pathLength);
@@ -475,7 +482,11 @@ namespace MakerJs.path {
         } else {
             line.end = point.add(line.end, delta);
         }
-    }
+    };
+
+    alterMap[pathType.BezierSeed] = function (seed: IPathBezierSeed, pathLength: number, distance: number, useOrigin: boolean) {
+        //TODO
+    };
 
     /**
      * Alter a path by lengthening or shortening it.
@@ -536,6 +547,11 @@ namespace MakerJs.path {
 
     numberOfKeyPointsMap[pathType.Line] = function (line: IPathLine) {
         return 2;
+    };
+
+    numberOfKeyPointsMap[pathType.BezierSeed] = function (seed: IPathBezierSeed) {
+        //TODO
+        return null;
     };
 
     numberOfKeyPointsMap[pathType.Circle] = function (circle: IPathCircle, maxPointDistance?: number) {

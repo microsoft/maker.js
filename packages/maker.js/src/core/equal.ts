@@ -39,6 +39,10 @@
         return pathAreEqualMap[pathType.Circle](arcA, arcB, withinPointDistance) && isAngleEqual(arcA.startAngle, arcB.startAngle) && isAngleEqual(arcA.endAngle, arcB.endAngle);
     };
 
+    pathAreEqualMap[pathType.BezierSeed] = function (seedA: IPathBezierSeed, seedB: IPathBezierSeed, withinPointDistance): boolean {
+        return null; //TODO calc endpoints + control points
+    };
+
     /**
      * Find out if two paths are equal.
      * 
@@ -150,7 +154,7 @@
             return isBetweenArcAngles(a, arc, false);
         }
         return false;
-    }
+    };
 
     onPathMap[pathType.Line] = function (p: IPoint, line: IPathLine, withinDistance: number, options: IIsPointOnPathOptions) {
         const slope = (options && options.cachedLineSlope) || lineSlope(line);
@@ -158,7 +162,11 @@
             options.cachedLineSlope = slope;
         }
         return isPointOnSlope(p, slope, withinDistance) && isBetweenPoints(p, line, false);
-    }
+    };
+
+    onPathMap[pathType.BezierSeed] = function (p: IPoint, seed: IPathBezierSeed, withinDistance: number, options: IIsPointOnPathOptions) {
+        return null;    //TODO determine point on bezier
+    };
 
     /**
      * Find out if a point lies on a path.
