@@ -209,6 +209,11 @@
         path: IPath;
         bezierData: IBezierRange;
         reversed?: boolean;
+        correctStartAngle?: number;
+        correctEndAngle?: number;
+        correctOrigin?: IPoint;
+        endpoints: IPoint[];
+        arcRays?: IPathLine[];
     }
 
     /**
@@ -252,6 +257,11 @@
             if (error <= accuracy) {
                 lower = test;
                 lastGood = {
+                    arcRays: [
+                        new paths.Line(arc.origin, start.point),
+                        new paths.Line(arc.origin, test.point),
+                    ],
+                    endpoints: [start.point, test.point],
                     reversed,
                     path: arc,
                     bezierData: {
@@ -274,6 +284,7 @@
 
         //arc failed, so return a line
         return {
+            endpoints: [start.point, test.point],
             path: new paths.Line(start.point, test.point),
             bezierData: {
                 startT: startT,
@@ -299,6 +310,53 @@
             results.push(result);
         }
         return results;
+    }
+
+    function makeLineAtAngle(origin: IPoint, a: number) {
+        const line = new paths.Line([0, 0], [1, 0]);
+        path.rotate(line, a);
+        path.move(line, origin);
+        line.origin = line.end;
+        line.end = origin;
+        return line;
+    }
+
+    function getCommonAngle(a: IArcZ, b: IArcZ) {
+        let commonAngle: number;
+        if (a.reversed) {
+            commonAngle = ((a.path as IPathArc).startAngle + (b.path as IPathArc).endAngle) / 2;
+            a.correctStartAngle = commonAngle;
+            b.correctEndAngle = commonAngle;
+            a.arcRays[1] = makeLineAtAngle(a.endpoints[1], commonAngle);
+            b.arcRays[0] = a.arcRays[1];
+        } else {
+            commonAngle = ((a.path as IPathArc).endAngle + (b.path as IPathArc).startAngle) / 2;
+            a.correctEndAngle = commonAngle;
+            b.correctStartAngle = commonAngle;
+            a.arcRays[0] = makeLineAtAngle(a.endpoints[0], commonAngle);
+            b.arcRays[1] = a.arcRays[0];
+        }
+    }
+
+    function correctArcs(segments: IArcZ[]) {
+        for (let s = 1; s < segments.length; s++) {
+            let segment = segments[s];
+            let prev = segments[s - 1];
+            if (segment.path.type === pathType.Arc && prev.path.type === pathType.Arc && segment.reversed === prev.reversed) {
+                getCommonAngle(prev, segment);
+            }
+        }
+        for (let s = 0; s < segments.length; s++) {
+            let segment = segments[s];
+            if (segment.path.type === pathType.Arc) {
+                //let arc = segment.path as IPathArc;
+                segment.correctOrigin = point.fromSlopeIntersection(segment.arcRays[0], segment.arcRays[1]);
+                segment.arcRays[0].origin = segment.arcRays[1].origin = segment.correctOrigin;
+                //arc.startAngle = segment.correctStartAngle || arc.startAngle;
+                //arc.endAngle = segment.correctEndAngle || arc.endAngle;
+                //arc.radius = measure.pointDistance(arc.origin, segment.endpoints[0]);
+            }
+        }
     }
 
     /**
@@ -585,11 +643,15 @@
                     });
                 });
 
-                //TODO fix arcs
+                //fix arcs for perfect tangency
+                correctArcs(segments);
 
                 segments.forEach(segment => {
                     const pb: IPathArcInBezierCurve = { ...segment.path, bezierData: segment.bezierData };
                     this.paths[segment.path.type + '_' + segmentCount] = pb;
+                    this.paths[segment.path.type + '_0_' + segmentCount] = segment.arcRays[0];
+                    this.paths[segment.path.type + '_1_' + segmentCount] = segment.arcRays[1];
+                    this.paths[segment.path.type + '_c_' + segmentCount] = new paths.Circle(segment.correctOrigin, 1);// segment.arcRays[1];
                     segmentCount++;
                 });
             }

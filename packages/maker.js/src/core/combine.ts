@@ -148,6 +148,7 @@
             if (segment.shouldAdd) {
                 addSegment(modelContext, pathIdBase, segment);
             } else {
+                segment.reason += ' was not added';
                 deleted(segment);
             }
         }
@@ -455,14 +456,15 @@
 
         const markDeleted = (item: IFineSegment, reason: string) => {
             const { segment } = item;
+            segment.shouldAdd = false;
             segment.deleted = true;
             segment.reason = reason;
             outputGroups[item.parent.groupIndex].hasDeletes = true;
         };
 
         const insertIntoDeadEndFinder = (item: IFineSegment, shouldAdd: boolean, reason: string) => {
-            markAdded(item, shouldAdd, reason);
             const endPoints = point.fromPathEnds(item.segment.absolutePath);
+            markAdded(item, shouldAdd, reason);
             deadEndFinder.loadItem(endPoints, item);
         };
 
@@ -498,7 +500,16 @@
         });
 
         deadEndFinder.findValidDeadEnds(options.pointMatchingDistance,
-            item => item.segment.shouldAdd,
+            value => {
+                // if (measure.pointDistance(value.endPoints[0], value.endPoints[1]) < options.pointMatchingDistance) {
+                //     return false;
+                // }
+                if (deadEndFinder.pointGraph.getIdOfPoint(value.endPoints[0]) === deadEndFinder.pointGraph.getIdOfPoint(value.endPoints[1])) {
+                    markDeleted(value.item, 'too short');
+                    return false;
+                }
+                return value.item.segment.shouldAdd;
+            },
             valuePairs => {
                 const duplicate = valuePairs.filter(vp => vp.value.segment.duplicate && !vp.value.segment.shouldAdd && !vp.value.segment.deleted)[0];
                 if (duplicate) {

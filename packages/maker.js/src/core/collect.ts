@@ -299,7 +299,11 @@
             keep.merged = keep.merged || [];
             keep.merged.push(remove.pointId);
             this.merged[remove.pointId] = keep.pointId;
-            keep.valueIds.push.apply(keep.valueIds, remove.valueIds);
+            remove.valueIds.forEach(v => {
+                if (keep.valueIds.indexOf(v) < 0) {
+                    keep.valueIds.push(v);
+                }
+            });
             delete this.index[remove.pointId];
             return keep.pointId;
         }

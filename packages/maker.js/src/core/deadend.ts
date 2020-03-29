@@ -59,7 +59,7 @@ namespace MakerJs.model {
             return this.removed;
         }
 
-        public findValidDeadEnds(pointMatchingDistance: number, isValidValue: (value: T) => boolean, makeValidValue: (valuePairs: { valueId: number, value: T }[]) => { valueId: number, value: T }) {
+        public findValidDeadEnds(pointMatchingDistance: number, isValidValue: (value: IDeadEndGraphValue<T>) => boolean, makeValidValue: (valuePairs: { valueId: number, value: T }[]) => { valueId: number, value: T }) {
             if (pointMatchingDistance) {
                 this.pointGraph.mergePoints(pointMatchingDistance);
             }
@@ -79,7 +79,7 @@ namespace MakerJs.model {
                 let invalidValueIds: number[] = [];
                 let validValueIds: number[] = [];
                 el.valueIds.forEach(valueId => {
-                    if (isValidValue(this.pointGraph.values[valueId].item)) {
+                    if (isValidValue(this.pointGraph.values[valueId])) {
                         validValueIds.push(valueId);
                     } else {
                         invalidValueIds.push(valueId);

@@ -90,6 +90,23 @@
 namespace MakerJs.model {
 
     /**
+     * @private
+     */
+    class BezGroup {
+        public modelContext: IModel;
+        public links: IChainLink[];
+
+        constructor(beginLink: IChainLink) {
+            this.modelContext = beginLink.walkedPath.modelContext;
+            this.links = [];
+        }
+
+        public accumulate(link: IChainLink) {
+            this.links.push(link);
+        }
+    }
+
+    /**
      * Expand all paths in a model, then combine the resulting expansions.
      *
      * @param modelToExpand Model to expand.
@@ -102,108 +119,128 @@ namespace MakerJs.model {
 
         if (distance <= 0) return null;
 
-        var result: IModel = {
-            models: {
-                expansions: { models: {} },
-                caps: { models: {} }
+        const expansions: IModel = { models: {} };
+
+        const expandOnePath = (walkedPath: IWalkPath) => {
+            //don't expand paths shorter than the tolerance for combine operations
+            if (combineOptions.pointMatchingDistance && measure.pathLength(walkedPath.pathContext) < combineOptions.pointMatchingDistance) return;
+
+            const expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
+            if (expandedPathModel) {
+                moveRelative(expandedPathModel, walkedPath.offset);
+                originate(expandedPathModel);
             }
-        };
-
-        var first = true;
-        var lastFarPoint = combineOptions.farPoint;
-
-        var walkOptions: IWalkOptions = {
-            onPath: function (walkedPath: IWalkPath) {
-
-                //don't expand paths shorter than the tolerance for combine operations
-                if (combineOptions.pointMatchingDistance && measure.pathLength(walkedPath.pathContext) < combineOptions.pointMatchingDistance) return;
-
-                var expandedPathModel = path.expand(walkedPath.pathContext, distance, true);
-
-                if (expandedPathModel) {
-                    moveRelative(expandedPathModel, walkedPath.offset);
-
-                    var newId = getSimilarModelId(result.models['expansions'], walkedPath.pathId);
-
-                    prefixPathIds(expandedPathModel, walkedPath.pathId + '_');
-                    originate(expandedPathModel);
-
-                    if (!first) {
-                        combine(result, expandedPathModel, false, true, false, true, combineOptions);
-                        combineOptions.measureA.modelsMeasured = false;
-
-                        lastFarPoint = combineOptions.farPoint;
-                        delete combineOptions.farPoint;
-                        delete combineOptions.measureB;
-                    }
-
-                    result.models['expansions'].models[newId] = expandedPathModel;
-
-                    if (expandedPathModel.models) {
-                        var caps = expandedPathModel.models['Caps'];
-
-                        if (caps) {
-                            delete expandedPathModel.models['Caps'];
-
-                            result.models['caps'].models[newId] = caps;
-                        }
-                    }
-
-                    first = false;
-                }
-            }
-        };
-
-        walk(modelToExpand, walkOptions);
-
-        if (joints) {
-
-            var roundCaps = result.models['caps'];
-            var straightCaps: IModel = { models: {} };
-            result.models['straightcaps'] = straightCaps;
-
-            simplify(roundCaps);
-
-            //straighten each cap, optionally beveling
-            for (var id in roundCaps.models) {
-
-                //add a model container to the straight caps
-                straightCaps.models[id] = { models: {} };
-
-                walk(roundCaps.models[id], {
-
-                    onPath: function (walkedPath: IWalkPath) {
-
-                        var arc = <IPathArc>walkedPath.pathContext;
-
-                        //make a small closed shape using the straightened arc
-                        var straightened = path.straighten(arc, joints == 2, walkedPath.pathId + '_', true);
-
-                        //union this little pointy shape with the rest of the result
-                        combine(result, straightened, false, true, false, true, combineOptions);
-                        combineOptions.measureA.modelsMeasured = false;
-
-                        lastFarPoint = combineOptions.farPoint;
-
-                        delete combineOptions.farPoint;
-                        delete combineOptions.measureB;
-
-                        //replace the rounded path with the straightened model
-                        straightCaps.models[id].models[walkedPath.pathId] = straightened;
-
-                        //delete this path in the parent model
-                        delete walkedPath.modelContext.paths[walkedPath.pathId];
-                    }
-                });
-            }
-
-            //delete the round caps
-            delete result.models['caps'];
+            return expandedPathModel;
         }
 
-        combineOptions.farPoint = lastFarPoint;
+        const addExpandedPathModel = (expandedPathModel: IModel, pathId: string) => {
+            if (expandedPathModel) {
+                prefixPathIds(expandedPathModel, pathId + '_');
+                addModel(expansions, expandedPathModel, pathId);
+            }
+            return expandedPathModel;
+        }
 
-        return result;
+        const finalizeBezGroup = (bg: BezGroup) => {
+            const bgExpansions: IModel = {};
+            bg.links.forEach(link => {
+                const ex = expandOnePath(link.walkedPath);
+                if (ex) {
+                    addModel(bgExpansions, ex, link.walkedPath.pathId);
+                }
+            });
+            if (bgExpansions.models) {
+                combineArray(bgExpansions.models);
+                const cs = findChains(bgExpansions) as IChain[];
+                console.log(cs.length, cs[0].endless);
+                addExpandedPathModel(bgExpansions, bg.links[0].walkedPath.pathId);
+            }
+        };
+
+        findChains(modelToExpand, (chains, loose, layer) => {
+            loose.forEach(expandOnePath);
+            chains.forEach(c => {
+                let bg: BezGroup = null;
+
+                c.links.forEach((link, linkIndex) => {
+                    if (link.walkedPath.modelContext.type === models.BezierCurve.typeName) {
+                        if (!bg) {
+                            bg = new BezGroup(link);
+                        } else {
+                            if (bg.modelContext !== link.walkedPath.modelContext) {
+                                finalizeBezGroup(bg);
+                                bg = new BezGroup(link);
+                            }
+                        }
+                        bg.accumulate(link);
+                    } else {
+                        if (bg) {
+                            finalizeBezGroup(bg);
+                            bg = null;
+                        }
+
+                        addExpandedPathModel(expandOnePath(link.walkedPath), link.walkedPath.pathId);
+                    }
+
+
+
+                    if (joints) {
+                        //get next link
+                        //get common point
+                        //get endcaps
+                        //get overlapped arc
+                        //straighten
+                        //crate corner
+                    }
+                });
+
+                if (bg) {
+                    finalizeBezGroup(bg);
+                    bg = null;
+                }
+            });
+        });
+
+        combineArray(expansions.models, combineOptions);
+
+        // if (joints) {
+
+        //     var straightCaps: IModel = { models: {} };
+        //     result.models['straightcaps'] = straightCaps;
+
+        //     simplify(caps);
+
+        //     //straighten each cap, optionally beveling
+        //     for (var id in caps.models) {
+
+        //         //TODO: combine array here
+
+        //         //add a model container to the straight caps
+        //         straightCaps.models[id] = { models: {} };
+
+        //         walk(caps.models[id], {
+
+        //             onPath: function (walkedPath: IWalkPath) {
+
+        //                 var arc = <IPathArc>walkedPath.pathContext;
+
+        //                 //make a small closed shape using the straightened arc
+        //                 var straightened = path.straighten(arc, joints == 2, walkedPath.pathId + '_', true);
+
+        //                 //union this little pointy shape with the rest of the result
+        //                 combine(result, straightened, false, true, false, true, combineOptions);
+
+        //                 //replace the rounded path with the straightened model
+        //                 straightCaps.models[id].models[walkedPath.pathId] = straightened;
+
+        //                 //delete this path in the parent model
+        //                 delete walkedPath.modelContext.paths[walkedPath.pathId];
+        //             }
+        //         });
+        //     }
+        // }
+
+        return expansions;
     }
 
     /**
