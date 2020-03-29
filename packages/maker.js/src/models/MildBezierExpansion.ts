@@ -10,7 +10,7 @@ namespace MakerJs.models {
         }
     }
 
-    (<IKit>OvalArc).metaParameters = [
+    (<IKit>MildBezierExpansion).metaParameters = [
         {
             title: "seed", type: "select", value: [
                 <IPathBezierSeed>{ type: pathType.BezierSeed, origin: [0, 0], end: [100, 0], controls: [[50, 20]] }
