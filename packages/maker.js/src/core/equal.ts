@@ -195,7 +195,11 @@
         }
 
         //lines are parallel, but not vertical, see if y-intercept is the same
-        return round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+        //scale the intercepts to a uniform range first to make sure that the
+        //larger distances don't disproportionately affect their difference
+        const factor = 100 / slopeA.yIntercept;
+
+        return round(100 - factor * slopeB.yIntercept, .00001) == 0;
     }
 
     /**
