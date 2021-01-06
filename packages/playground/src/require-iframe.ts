@@ -45,7 +45,7 @@ namespace MakerJsRequireIframe {
             write: devNull
         };
         var Fn: any = new Function('require', 'module', 'document', 'console', 'alert', 'playgroundRender', javaScript);
-        var result: any = new Fn(window.require, window.module, mockDocument, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
+        var result: any = new Fn(window.require, window.module, mockDocument, (<Window & typeof globalThis>(parent)).console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
 
         return window.module.exports || result;
     }
@@ -222,7 +222,7 @@ namespace MakerJsRequireIframe {
 
         //return an object that may be treated like a class
         return Temp;
-    };
+    } as NodeRequire;
 
     window.module = { exports: null } as NodeModule;
 
