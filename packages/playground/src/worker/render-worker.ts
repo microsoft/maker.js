@@ -137,7 +137,7 @@ onmessage = (ev: MessageEvent) => {
 
     if (request.orderedDependencies) {
 
-        self.require = module.require;
+        self.require = module.require as NodeRequireFunction & NodeRequire;
 
         const loadErrors: string[] = [];
         request.orderedDependencies.forEach(function (id) {

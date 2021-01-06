@@ -8,7 +8,7 @@ let PDFDocument: PDFKit.PDFDocument;
 
 /* module system */
 
-var module = this as NodeModule;
+var module = this as unknown as NodeModule;
 
 module.require = (id: string): any => {
 

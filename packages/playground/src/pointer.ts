@@ -22,25 +22,11 @@ module Pointer {
         initial: IPointRelative;
         previous: IPointRelative;
         current: IPointRelative;
-        srcElement: Element;
+        eventTarget: EventTarget;
     }
 
     interface IPointerMap {
         [id: number]: IPointer;
-    }
-
-    //these are the limited subset of props we use
-    interface IMouseEvent {
-        pageX: number;
-        pageY: number;
-        preventDefault: Function;
-        srcElement: Element,
-        stopPropagation: Function;
-    }
-
-    interface IPointerEvent extends IMouseEvent {
-        pointerId: number;
-        pointerType: string;
     }
 
     function distanceBetweenCurrent2Points(all: IPointer[]) {
@@ -85,14 +71,14 @@ module Pointer {
             private margin: MakerJs.IPoint,
             private getZoom: () => IPanZoom,
             private setZoom: (panZoom: IPanZoom) => void,
-            private onClick: (srcElement: Element) => any,
+            private onClick: (target: EventTarget) => any,
             private onReset: () => any
         ) {
 
-            view.addEventListener('wheel', (e: MouseWheelEvent) => { this.viewWheel(e); });
-            view.addEventListener('pointerdown', (e: PointerEvent) => { this.viewPointerDown(e as IPointerEvent); });
-            view.addEventListener('pointermove', (e: PointerEvent) => { this.viewPointerMove(e as IPointerEvent); });
-            view.addEventListener('pointerup', (e: PointerEvent) => { this.viewPointerUp(e as IPointerEvent); });
+            view.addEventListener('wheel', (e: WheelEvent) => { this.viewWheel(e); });
+            view.addEventListener('pointerdown', (e: PointerEvent) => { this.viewPointerDown(e); });
+            view.addEventListener('pointermove', (e: PointerEvent) => { this.viewPointerMove(e); });
+            view.addEventListener('pointerup', (e: PointerEvent) => { this.viewPointerUp(e); });
 
             //listen to touchend on entire document since we do not always get a pointerup event, as when pointer is released outside of view
             document.addEventListener('touchend', (e: TouchEvent) => {
@@ -103,7 +89,7 @@ module Pointer {
             document.addEventListener('MSPointerUp', (e: MSPointerEvent) => { this.reset(); });
         }
 
-        public getPointRelative(ev: IMouseEvent): IPointRelative {
+        public getPointRelative(ev: MouseEvent): IPointRelative {
             var p = makerjs.point;
             var panZoom = this.getZoom();
             var fromCanvas = p.subtract([ev.pageX, ev.pageY], Pointer.pageOffset(this.view));
@@ -225,7 +211,7 @@ module Pointer {
             return true;
         }
 
-        public viewPointerDown(e: IPointerEvent) {
+        public viewPointerDown(e: PointerEvent) {
 
             clearTimeout(this.wheelTimer);
 
@@ -242,7 +228,7 @@ module Pointer {
                 initial: pointRelative,
                 previous: pointRelative,
                 current: pointRelative,
-                srcElement: e.srcElement
+                eventTarget: e.target
             };
 
             this.down[pointer.id] = pointer;
@@ -273,7 +259,7 @@ module Pointer {
             
         }
 
-        public viewPointerMove(e: IPointerEvent) {
+        public viewPointerMove(e: PointerEvent) {
             var pointer = this.down[e.pointerId];
             if (!pointer) return;
 
@@ -328,7 +314,7 @@ module Pointer {
             this.setZoom(panZoom);
         }
 
-        public viewPointerUp(e: IPointerEvent) {
+        public viewPointerUp(e: PointerEvent) {
 
             clearTimeout(this.wheelTimer);
 
@@ -348,7 +334,7 @@ module Pointer {
                         var clickTravel = makerjs.measure.pointDistance(pointer.initial.fromCanvas, pointer.current.fromCanvas);
 
                         if (clickTravel <= clickDistance) {
-                            this.onClick(pointer.srcElement);
+                            this.onClick(pointer.eventTarget);
                         }
                     }
 
@@ -372,7 +358,7 @@ module Pointer {
             panZoom.pan = p.add(panZoom.pan, centerPointDiff);
         }
 
-        public viewWheel(e: MouseWheelEvent) {
+        public viewWheel(e: WheelEvent) {
 
             this.isClick = false;
 
@@ -388,9 +374,9 @@ module Pointer {
                 initial: pointRelative,
                 previous: pointRelative,
                 current: pointRelative,
-                srcElement: e.srcElement
+                eventTarget: e.target
             };
-            var sign = (e.wheelDelta || e['deltaY']) > 0 ? 1 : -1;
+            var sign = e.deltaY > 0 ? 1 : -1;
             var newZoom = pointRelative.panZoom.zoom * (1 + sign * wheelZoomDelta);
 
             this.scaleCenterPoint(pointRelative.panZoom, newZoom, pointRelative.fromDrawingOrigin);
