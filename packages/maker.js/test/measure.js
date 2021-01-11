@@ -96,7 +96,7 @@ describe('Measure', function () {
 
     it('should find approximately equal slopes', function () {
         var line1 = new makerjs.paths.Line([1, 0], [2, 2]);
-        var line2 = new makerjs.paths.Line([1, 0], [2, 2.000001]);
+        var line2 = new makerjs.paths.Line([1, 0], [2, 2.000000001]);
         var slope1 = makerjs.measure.lineSlope(line1);
         var slope2 = makerjs.measure.lineSlope(line2);
         var translated1 = makerjs.path.moveRelative(line1, [10000, 0])
