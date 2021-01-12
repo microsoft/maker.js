@@ -125,7 +125,7 @@ project.children.forEach(
     function (externalModule) {
         if (externalModule.children) {
             externalModule.children.forEach(function (child) {
-                if (child.kindString === 'Module' && child.name === 'MakerJs') {
+                if (child.kindString === 'Namespace' && child.name === 'MakerJs') {
                     child.children.forEach(function (grandChild) {
                         processChild(project2, grandChild);
                     });
