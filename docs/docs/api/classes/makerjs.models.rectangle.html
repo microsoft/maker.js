@@ -51,7 +51,7 @@ title: Api - Rectangle Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/6c1e85c0/packages/maker.js/src/models/Rectangle.ts#L5">packages/maker.js/src/models/Rectangle.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/models/Rectangle.ts#L5">packages/maker.js/src/models/Rectangle.ts:5</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -60,7 +60,7 @@ title: Api - Rectangle Class
 					</div>
 					<p>Example:</p>
 					<pre><code><span class="hljs-comment">//Create a rectangle from width and height</span>
-<span class="hljs-keyword">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'makerjs'</span>);
+<span class="hljs-keyword">var</span> makerjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;makerjs&#x27;</span>);
 <span class="hljs-keyword">var</span> model = <span class="hljs-keyword">new</span> makerjs.models.Rectangle(<span class="hljs-number">50</span>, <span class="hljs-number">100</span>);
 <span class="hljs-keyword">var</span> svg = makerjs.exporter.toSVG(model);
 <span class="hljs-built_in">document</span>.write(svg);</code></pre>
@@ -89,7 +89,7 @@ title: Api - Rectangle Class
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/6c1e85c0/packages/maker.js/src/models/Rectangle.ts#L22">packages/maker.js/src/models/Rectangle.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/models/Rectangle.ts#L22">packages/maker.js/src/models/Rectangle.ts:22</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -98,7 +98,7 @@ title: Api - Rectangle Class
 					</div>
 					<p>Example:</p>
 					<pre><code><span class="hljs-comment">//Create a rectangle which will surround a model</span>
-var makerjs = require('makerjs');
+var makerjs = require(&#x27;makerjs&#x27;);
 var e = <span class="hljs-keyword">new</span> makerjs.models.<span class="hljs-constructor">Ellipse(17, 10)</span>; <span class="hljs-comment">// draw an ellipse so we have something to surround.</span>
 var r = <span class="hljs-keyword">new</span> makerjs.models.<span class="hljs-constructor">Rectangle(<span class="hljs-params">e</span>, 3)</span>; <span class="hljs-comment">// draws a rectangle surrounding the ellipse by 3 units.</span>
 var svg = makerjs.exporter.<span class="hljs-keyword">to</span><span class="hljs-constructor">SVG({ <span class="hljs-params">models</span>: { <span class="hljs-params">e</span>: <span class="hljs-params">e</span>, <span class="hljs-params">r</span>: <span class="hljs-params">r</span> }})</span>;
@@ -128,7 +128,7 @@ document.write(svg);</code></pre>
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/6c1e85c0/packages/maker.js/src/models/Rectangle.ts#L40">packages/maker.js/src/models/Rectangle.ts:40</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/models/Rectangle.ts#L40">packages/maker.js/src/models/Rectangle.ts:40</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -137,7 +137,7 @@ document.write(svg);</code></pre>
 					</div>
 					<p>Example:</p>
 					<pre><code><span class="hljs-comment">//Create a rectangle from a measurement.</span>
-var makerjs = require('makerjs');
+var makerjs = require(&#x27;makerjs&#x27;);
 var e = <span class="hljs-keyword">new</span> makerjs.models.<span class="hljs-constructor">Ellipse(17, 10)</span>; <span class="hljs-comment">// draw an ellipse so we have something to measure.</span>
 var m = makerjs.measure.model<span class="hljs-constructor">Extents(<span class="hljs-params">e</span>)</span>;    <span class="hljs-comment">// measure the ellipse.</span>
 var r = <span class="hljs-keyword">new</span> makerjs.models.<span class="hljs-constructor">Rectangle(<span class="hljs-params">m</span>)</span>;    <span class="hljs-comment">// draws a rectangle surrounding the ellipse.</span>
@@ -168,7 +168,7 @@ document.write(svg);</code></pre>
 		<div class="tsd-signature tsd-kind-icon">origin<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipoint.html" class="tsd-signature-type">IPoint</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/6c1e85c0/packages/maker.js/src/models/Rectangle.ts#L5">packages/maker.js/src/models/Rectangle.ts:5</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/models/Rectangle.ts#L5">packages/maker.js/src/models/Rectangle.ts:5</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -178,7 +178,7 @@ document.write(svg);</code></pre>
 		<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.ipathmap.html" class="tsd-signature-type">IPathMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/6c1e85c0/packages/maker.js/src/models/Rectangle.ts#L4">packages/maker.js/src/models/Rectangle.ts:4</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/models/Rectangle.ts#L4">packages/maker.js/src/models/Rectangle.ts:4</a></li>
 			</ul>
 		</aside>
 	</section>
