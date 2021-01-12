@@ -10,7 +10,7 @@
     "@types/graham_scan": "^1.0.28",
     "@types/opentype.js": "^0.7.0",
     "@types/pdfkit": "^0.7.36",
-    "dxf-parser-typings": "^1.2.1",
+    "dxf-parser-typings": "^1.3.0",
     "rimraf": "^2.6.2"
   },
   "scripts": {
