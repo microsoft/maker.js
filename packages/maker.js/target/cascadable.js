@@ -55,7 +55,7 @@ function getCascadable(project, namespaceArray, interfaceName) {
             var namespace = findNamespace(child, namespaceArray);
             if (namespace) {
                 var exportedFunctions = namespace.children.filter(function (c2) {
-                    return c2.kindString === 'Function' && c2.flags.isExported;
+                    return c2.kindString === 'Function';
                 });
                 if (exportedFunctions) {
                     exportedFunctions.forEach(function (ef) {
