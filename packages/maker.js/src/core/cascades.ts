@@ -246,7 +246,7 @@ modelContext.layer = layer;
          * Rotate a model.
          * 
          * @param angleInDegrees The amount of rotation, in degrees.
-         * @param rotationOrigin (default ...) The center point of rotation.
+         * @param rotationOrigin (default [0, 0]) The center point of rotation.
          * @returns this cascade container, this.$result will be The original model (for cascading).
 
          */
@@ -400,7 +400,7 @@ pathContext.layer = layer;
          * Rotate a path.
          * 
          * @param angleInDegrees The amount of rotation, in degrees.
-         * @param rotationOrigin (default ...) The center point of rotation.
+         * @param rotationOrigin (default [0, 0]) The center point of rotation.
          * @returns this cascade container, this.$result will be The original path (for cascading).
 
          */
@@ -486,7 +486,7 @@ pathContext.layer = layer;
          * Rotate a point.
          * 
          * @param angleInDegrees The amount of rotation, in degrees.
-         * @param rotationOrigin (default ...) The center point of rotation.
+         * @param rotationOrigin (default [0, 0]) The center point of rotation.
          * @returns this cascade container, this.$result will be A new point.
 
          */
