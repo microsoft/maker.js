@@ -19,7 +19,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build-tools": "lerna run build-tools",
-    "build": "npx -p typescript@4.1.3 -p typedoc@0.18.0 lerna run build --parallel",
+    "build": "npx -p typescript@4.1.3 -p typedoc@0.18.0 lerna run build",
     "demo": "lerna run demo",
     "docs": "npx -p typescript@4.1.3 -p typedoc@0.18.0 lerna run docs --parallel",
     "start": "npx http-server -p 8020 -o /docs/playground/",
