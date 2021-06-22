@@ -39,13 +39,13 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.17.0
+ *   version: 0.17.1
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
  *   author: James Halliday <mail@substack.net>
  *   homepage: https://github.com/browserify/browserify#readme
- *   version: 16.3.0
+ *   version: 17.0.0
  *
  * clone:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -71,7 +71,7 @@ and limitations under the License.
 require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
-(function (Buffer){
+(function (Buffer){(function (){
 var clone = (function() {
 'use strict';
 
@@ -239,7 +239,7 @@ if (typeof module === 'object' && module.exports) {
   module.exports = clone;
 }
 
-}).call(this,require("buffer").Buffer)
+}).call(this)}).call(this,require("buffer").Buffer)
 },{"buffer":1}],3:[function(require,module,exports){
 /**
  * Graham's Scan Convex Hull Algorithm
@@ -7456,7 +7456,7 @@ var MakerJs;
             var size = MakerJs.measure.modelExtents(scaledModel);
             var left = -size.low[0];
             var offset = [left, size.high[1]];
-            offset = MakerJs.point.add(offset, options.origin);
+            offset = MakerJs.point.add(offset, opts.origin);
             MakerJs.model.findChains(scaledModel, function (chains, loose, layer) {
                 function single(walkedPath) {
                     var pathData = exporter.pathToSVGPathData(walkedPath.pathContext, walkedPath.offset, offset);
@@ -9224,11 +9224,11 @@ var MakerJs;
         }
         var Ellipse = /** @class */ (function () {
             function Ellipse() {
+                var _this = this;
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i] = arguments[_i];
                 }
-                var _this = this;
                 this.models = {};
                 var n = 360 / maxBezierArcspan;
                 var accuracy;
@@ -9393,11 +9393,11 @@ var MakerJs;
         }
         var ConnectTheDots = /** @class */ (function () {
             function ConnectTheDots() {
+                var _this = this;
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i] = arguments[_i];
                 }
-                var _this = this;
                 this.paths = {};
                 var isClosed;
                 var points;
@@ -9778,9 +9778,9 @@ var MakerJs;
     (function (models) {
         var OvalArc = /** @class */ (function () {
             function OvalArc(startAngle, endAngle, sweepRadius, slotRadius, selfIntersect, isolateCaps) {
+                var _this = this;
                 if (selfIntersect === void 0) { selfIntersect = false; }
                 if (isolateCaps === void 0) { isolateCaps = false; }
-                var _this = this;
                 this.paths = {};
                 var capRoot;
                 if (isolateCaps) {
@@ -9903,9 +9903,10 @@ var MakerJs;
                     "Ring_inner": innerRadius
                 };
                 for (var id in radii) {
-                    if (radii[id] === void 0)
+                    var r = radii[id];
+                    if (r === undefined || r <= 0)
                         continue;
-                    this.paths[id] = new MakerJs.paths.Circle(MakerJs.point.zero(), radii[id]);
+                    this.paths[id] = new MakerJs.paths.Circle(MakerJs.point.zero(), r);
                 }
             }
             return Ring;
@@ -9999,8 +10000,8 @@ var MakerJs;
     (function (models) {
         var Slot = /** @class */ (function () {
             function Slot(origin, endPoint, radius, isolateCaps) {
-                if (isolateCaps === void 0) { isolateCaps = false; }
                 var _this = this;
+                if (isolateCaps === void 0) { isolateCaps = false; }
                 this.paths = {};
                 var capRoot;
                 if (isolateCaps) {
@@ -10124,9 +10125,9 @@ var MakerJs;
              * @returns Model of the text.
              */
             function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy, opentypeOptions) {
+                var _this = this;
                 if (combine === void 0) { combine = false; }
                 if (centerCharacterOrigin === void 0) { centerCharacterOrigin = false; }
-                var _this = this;
                 this.models = {};
                 var charIndex = 0;
                 var prevDeleted;
@@ -10232,6 +10233,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.17.0";
+MakerJs.version = "0.17.1";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);

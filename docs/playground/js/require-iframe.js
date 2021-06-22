@@ -28,7 +28,7 @@ var MakerJsRequireIframe;
             write: devNull
         };
         var Fn = new Function('require', 'module', 'document', 'console', 'alert', 'playgroundRender', javaScript);
-        var result = new Fn(window.require, window.module, mockDocument, parent.console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
+        var result = new Fn(window.require, window.module, mockDocument, (parent).console, devNull, devNull); //call function with the "new" keyword so the "this" keyword is an instance
         return window.module.exports || result;
     }
     function runCodeGlobal(javaScript) {

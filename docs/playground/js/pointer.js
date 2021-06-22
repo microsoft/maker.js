@@ -153,7 +153,7 @@ var Pointer;
                 initial: pointRelative,
                 previous: pointRelative,
                 current: pointRelative,
-                srcElement: e.srcElement
+                eventTarget: e.target
             };
             this.down[pointer.id] = pointer;
             this.count++;
@@ -223,7 +223,7 @@ var Pointer;
                     if (this.isClick) {
                         var clickTravel = makerjs.measure.pointDistance(pointer.initial.fromCanvas, pointer.current.fromCanvas);
                         if (clickTravel <= Pointer.clickDistance) {
-                            this.onClick(pointer.srcElement);
+                            this.onClick(pointer.eventTarget);
                         }
                     }
                     this.reset();
@@ -256,9 +256,9 @@ var Pointer;
                 initial: pointRelative,
                 previous: pointRelative,
                 current: pointRelative,
-                srcElement: e.srcElement
+                eventTarget: e.target
             };
-            var sign = (e.wheelDelta || e['deltaY']) > 0 ? 1 : -1;
+            var sign = e.deltaY > 0 ? 1 : -1;
             var newZoom = pointRelative.panZoom.zoom * (1 + sign * Pointer.wheelZoomDelta);
             this.scaleCenterPoint(pointRelative.panZoom, newZoom, pointRelative.fromDrawingOrigin);
             this.setZoom(pointRelative.panZoom);
