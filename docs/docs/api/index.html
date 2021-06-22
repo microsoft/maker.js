@@ -9,7 +9,8 @@ title: Api - MakerJs Namespace
 			<p>Root module for Maker.js.</p>
 		</div>
 		<p>Example: get a reference to Maker.js</p>
-		<pre><code><span class="hljs-attribute">var makerjs</span> = require(<span class="hljs-string">&#x27;makerjs&#x27;</span>);</code></pre>
+		<pre><code><span class="hljs-attribute">var makerjs</span> = require(<span class="hljs-string">&#x27;makerjs&#x27;</span>);
+</code></pre>
 	</div>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -150,7 +151,7 @@ title: Api - MakerJs Namespace
 		<div class="tsd-signature tsd-kind-icon">environment<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L63">packages/maker.js/src/core/maker.ts:63</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L63">src/maker.js/packages/maker.js/src/core/maker.ts:63</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -165,7 +166,7 @@ title: Api - MakerJs Namespace
 		<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L15">packages/maker.js/src/core/maker.ts:15</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L15">src/maker.js/packages/maker.js/src/core/maker.ts:15</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -189,13 +190,14 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L971">packages/maker.js/src/core/maker.ts:971</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L971">src/maker.js/packages/maker.js/src/core/maker.ts:971</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Create a container to cascade a series of functions upon a model. This allows JQuery-style method chaining, e.g.:</p>
-						<pre><code>makerjs.$(shape).center().<span class="hljs-keyword">rotate</span>(<span class="hljs-number">45</span>).$result</code></pre>
+						<pre><code>makerjs.$(shape)<span class="hljs-selector-class">.center</span>()<span class="hljs-selector-class">.rotate</span>(<span class="hljs-number">45</span>).<span class="hljs-variable">$result</span>
+</code></pre>
 						<p>The output of each function call becomes the first parameter input to the next function call.
 						The returned value of the last function call is available via the <code>.$result</code> property.</p>
 					</div>
@@ -215,13 +217,14 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L984">packages/maker.js/src/core/maker.ts:984</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L984">src/maker.js/packages/maker.js/src/core/maker.ts:984</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Create a container to cascade a series of functions upon a path. This allows JQuery-style method chaining, e.g.:</p>
-						<pre><code>makerjs.$(path).center().<span class="hljs-keyword">rotate</span>(<span class="hljs-number">90</span>).$result</code></pre>
+						<pre><code>makerjs.$(path)<span class="hljs-selector-class">.center</span>()<span class="hljs-selector-class">.rotate</span>(<span class="hljs-number">90</span>).<span class="hljs-variable">$result</span>
+</code></pre>
 						<p>The output of each function call becomes the first parameter input to the next function call.
 						The returned value of the last function call is available via the <code>.$result</code> property.</p>
 					</div>
@@ -241,13 +244,14 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L997">packages/maker.js/src/core/maker.ts:997</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L997">src/maker.js/packages/maker.js/src/core/maker.ts:997</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Create a container to cascade a series of functions upon a point. This allows JQuery-style method chaining, e.g.:</p>
-						<pre><code><span class="hljs-attribute">makerjs</span>.$([<span class="hljs-number">1</span>,<span class="hljs-number">0</span>]).scale(<span class="hljs-number">5</span>).rotate(<span class="hljs-number">60</span>).$result</code></pre>
+						<pre><code><span class="hljs-attribute">makerjs</span>.$([<span class="hljs-number">1</span>,<span class="hljs-number">0</span>]).scale(<span class="hljs-number">5</span>).rotate(<span class="hljs-number">60</span>).$result
+</code></pre>
 						<p>The output of each function call becomes the first parameter input to the next function call.
 						The returned value of the last function call is available via the <code>.$result</code> property.</p>
 					</div>
@@ -276,7 +280,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L229">packages/maker.js/src/core/maker.ts:229</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L229">src/maker.js/packages/maker.js/src/core/maker.ts:229</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -314,7 +318,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L164">packages/maker.js/src/core/maker.ts:164</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L164">src/maker.js/packages/maker.js/src/core/maker.ts:164</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -346,7 +350,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L245">packages/maker.js/src/core/maker.ts:245</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L245">src/maker.js/packages/maker.js/src/core/maker.ts:245</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -354,7 +358,8 @@ title: Api - MakerJs Namespace
 						<p>Copy the properties from one object to another object.</p>
 					</div>
 					<p>Example:</p>
-					<pre><code><span class="hljs-selector-tag">makerjs</span><span class="hljs-selector-class">.extendObject</span>({ <span class="hljs-attribute">abc</span>: <span class="hljs-number">123</span> }, { <span class="hljs-attribute">xyz</span>: <span class="hljs-number">789</span> }); //<span class="hljs-selector-tag">returns</span> { <span class="hljs-attribute">abc</span>: <span class="hljs-number">123</span>, xyz: <span class="hljs-number">789</span> }</code></pre>
+					<pre><code><span class="hljs-attribute">makerjs</span>.extendObject({ abc: <span class="hljs-number">123</span> }, { xyz: <span class="hljs-number">789</span> }); //returns { abc: <span class="hljs-number">123</span>, xyz: <span class="hljs-number">789</span> }
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -386,7 +391,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L736">packages/maker.js/src/core/maker.ts:736</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L736">src/maker.js/packages/maker.js/src/core/maker.ts:736</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -417,7 +422,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L262">packages/maker.js/src/core/maker.ts:262</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L262">src/maker.js/packages/maker.js/src/core/maker.ts:262</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -449,7 +454,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L629">packages/maker.js/src/core/maker.ts:629</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L629">src/maker.js/packages/maker.js/src/core/maker.ts:629</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -477,7 +482,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L272">packages/maker.js/src/core/maker.ts:272</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L272">src/maker.js/packages/maker.js/src/core/maker.ts:272</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -509,7 +514,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L282">packages/maker.js/src/core/maker.ts:282</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L282">src/maker.js/packages/maker.js/src/core/maker.ts:282</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -541,7 +546,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L385">packages/maker.js/src/core/maker.ts:385</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L385">src/maker.js/packages/maker.js/src/core/maker.ts:385</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -572,7 +577,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L412">packages/maker.js/src/core/maker.ts:412</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L412">src/maker.js/packages/maker.js/src/core/maker.ts:412</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -603,7 +608,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L421">packages/maker.js/src/core/maker.ts:421</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L421">src/maker.js/packages/maker.js/src/core/maker.ts:421</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -634,7 +639,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L403">packages/maker.js/src/core/maker.ts:403</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L403">src/maker.js/packages/maker.js/src/core/maker.ts:403</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -665,7 +670,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L394">packages/maker.js/src/core/maker.ts:394</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L394">src/maker.js/packages/maker.js/src/core/maker.ts:394</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -696,7 +701,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L293">packages/maker.js/src/core/maker.ts:293</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L293">src/maker.js/packages/maker.js/src/core/maker.ts:293</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -727,7 +732,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L127">packages/maker.js/src/core/maker.ts:127</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L127">src/maker.js/packages/maker.js/src/core/maker.ts:127</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -735,7 +740,8 @@ title: Api - MakerJs Namespace
 						<p>Numeric rounding</p>
 					</div>
 					<p>Example: round to 3 decimal places</p>
-					<pre><code><span class="hljs-attribute">makerjs</span>.round(<span class="hljs-number">3</span>.<span class="hljs-number">14159</span>, .<span class="hljs-number">001</span>); //returns <span class="hljs-number">3</span>.<span class="hljs-number">142</span></code></pre>
+					<pre><code><span class="hljs-attribute">makerjs</span>.round(<span class="hljs-number">3</span>.<span class="hljs-number">14159</span>, .<span class="hljs-number">001</span>); //returns <span class="hljs-number">3</span>.<span class="hljs-number">142</span>
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -767,7 +773,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L106">packages/maker.js/src/core/maker.ts:106</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L106">src/maker.js/packages/maker.js/src/core/maker.ts:106</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -775,7 +781,8 @@ title: Api - MakerJs Namespace
 						<p>Split a decimal into its whole and fractional parts as strings.</p>
 					</div>
 					<p>Example: get whole and fractional parts of 42.056</p>
-					<pre><code>makerjs.splitDecimal(<span class="hljs-number">42.056</span>); <span class="hljs-regexp">//</span>returns [<span class="hljs-string">&quot;42&quot;</span>, <span class="hljs-string">&quot;056&quot;</span>]</code></pre>
+					<pre><code>makerjs.splitDecimal(<span class="hljs-number">42.056</span>); <span class="hljs-regexp">//</span>returns [<span class="hljs-string">&quot;42&quot;</span>, <span class="hljs-string">&quot;056&quot;</span>]
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -801,7 +808,7 @@ title: Api - MakerJs Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L186">packages/maker.js/src/core/maker.ts:186</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L186">src/maker.js/packages/maker.js/src/core/maker.ts:186</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -846,7 +853,7 @@ title: Api - MakerJs Namespace
 		<div class="tsd-signature tsd-kind-icon">environment<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L20">packages/maker.js/src/core/maker.ts:20</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L20">src/maker.js/packages/maker.js/src/core/maker.ts:20</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -860,7 +867,7 @@ title: Api - MakerJs Namespace
 			<div class="tsd-signature tsd-kind-icon">BrowserUI<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L21">packages/maker.js/src/core/maker.ts:21</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L21">src/maker.js/packages/maker.js/src/core/maker.ts:21</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -870,7 +877,7 @@ title: Api - MakerJs Namespace
 			<div class="tsd-signature tsd-kind-icon">Node<wbr>Js<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L22">packages/maker.js/src/core/maker.ts:22</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L22">src/maker.js/packages/maker.js/src/core/maker.ts:22</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -880,7 +887,7 @@ title: Api - MakerJs Namespace
 			<div class="tsd-signature tsd-kind-icon">Unknown<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L24">packages/maker.js/src/core/maker.ts:24</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L24">src/maker.js/packages/maker.js/src/core/maker.ts:24</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -890,7 +897,7 @@ title: Api - MakerJs Namespace
 			<div class="tsd-signature tsd-kind-icon">Web<wbr>Worker<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L23">packages/maker.js/src/core/maker.ts:23</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L23">src/maker.js/packages/maker.js/src/core/maker.ts:23</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -901,7 +908,7 @@ title: Api - MakerJs Namespace
 		<div class="tsd-signature tsd-kind-icon">path<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L434">packages/maker.js/src/core/maker.ts:434</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L434">src/maker.js/packages/maker.js/src/core/maker.ts:434</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -909,8 +916,9 @@ title: Api - MakerJs Namespace
 				<p>String-based enumeration of all paths types.</p>
 			</div>
 			<p>Examples: use pathType instead of string literal when creating a circle.</p>
-			<pre><code>var <span class="hljs-attr">circle:</span> IPathCircle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class="hljs-attr">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-attr">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//typescript</span>
-var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class="hljs-attr">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-attr">radius:</span> <span class="hljs-number">7</span> };   <span class="hljs-comment">//javascript</span></code></pre>
+			<pre><code><span class="hljs-attr">var circle:</span> <span class="hljs-string">IPathCircle</span> <span class="hljs-string">=</span> { <span class="hljs-attr">type:</span> <span class="hljs-string">pathType.Circle</span>, <span class="hljs-attr">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-attr">radius:</span> <span class="hljs-number">7</span> }<span class="hljs-string">;</span>   <span class="hljs-string">//typescript</span>
+<span class="hljs-string">var</span> <span class="hljs-string">circle</span> <span class="hljs-string">=</span> { <span class="hljs-attr">type:</span> <span class="hljs-string">pathType.Circle</span>, <span class="hljs-attr">origin:</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-attr">radius:</span> <span class="hljs-number">7</span> }<span class="hljs-string">;</span>   <span class="hljs-string">//javascript</span>
+</code></pre>
 		</div>
 		<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
 			<a name="pathtype.arc" class="tsd-anchor"></a>
@@ -918,7 +926,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Arc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L437">packages/maker.js/src/core/maker.ts:437</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L437">src/maker.js/packages/maker.js/src/core/maker.ts:437</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -928,7 +936,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Bezier<wbr>Seed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L438">packages/maker.js/src/core/maker.ts:438</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L438">src/maker.js/packages/maker.js/src/core/maker.ts:438</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -938,7 +946,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Circle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L436">packages/maker.js/src/core/maker.ts:436</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L436">src/maker.js/packages/maker.js/src/core/maker.ts:436</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -948,7 +956,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L435">packages/maker.js/src/core/maker.ts:435</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L435">src/maker.js/packages/maker.js/src/core/maker.ts:435</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -959,7 +967,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 		<div class="tsd-signature tsd-kind-icon">unit<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L73">packages/maker.js/src/core/maker.ts:73</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L73">src/maker.js/packages/maker.js/src/core/maker.ts:73</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
@@ -976,7 +984,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Centimeter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L74">packages/maker.js/src/core/maker.ts:74</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L74">src/maker.js/packages/maker.js/src/core/maker.ts:74</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -986,7 +994,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Foot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L75">packages/maker.js/src/core/maker.ts:75</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L75">src/maker.js/packages/maker.js/src/core/maker.ts:75</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -996,7 +1004,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Inch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L76">packages/maker.js/src/core/maker.ts:76</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L76">src/maker.js/packages/maker.js/src/core/maker.ts:76</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -1006,7 +1014,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Meter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L77">packages/maker.js/src/core/maker.ts:77</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L77">src/maker.js/packages/maker.js/src/core/maker.ts:77</a></li>
 				</ul>
 			</aside>
 		</section>
@@ -1016,7 +1024,7 @@ var circle = { <span class="hljs-attr">type:</span> pathType.Circle, <span class
 			<div class="tsd-signature tsd-kind-icon">Millimeter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 			<aside class="tsd-sources">
 				<ul>
-					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/maker.ts#L78">packages/maker.js/src/core/maker.ts:78</a></li>
+					<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L78">src/maker.js/packages/maker.js/src/core/maker.ts:78</a></li>
 				</ul>
 			</aside>
 		</section>

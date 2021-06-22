@@ -35,7 +35,7 @@ title: Api - layout Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L183">packages/maker.js/src/core/layout.ts:183</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L183">src/maker.js/packages/maker.js/src/core/layout.ts:183</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -97,7 +97,7 @@ title: Api - layout Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L119">packages/maker.js/src/core/layout.ts:119</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L119">src/maker.js/packages/maker.js/src/core/layout.ts:119</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -161,7 +161,7 @@ title: Api - layout Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L445">packages/maker.js/src/core/layout.ts:445</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L445">src/maker.js/packages/maker.js/src/core/layout.ts:445</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -173,12 +173,14 @@ title: Api - layout Namespace
 <span class="hljs-keyword">var</span> m = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;makerjs&#x27;</span>);
 <span class="hljs-keyword">var</span> brick = <span class="hljs-keyword">new</span> m.models.RoundRectangle(<span class="hljs-number">50</span>, <span class="hljs-number">30</span>, <span class="hljs-number">4</span>);
 <span class="hljs-keyword">var</span> wall = m.layout.cloneToBrick(brick, <span class="hljs-number">8</span>, <span class="hljs-number">6</span>, <span class="hljs-number">3</span>);
-<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(wall));</code></pre>
+<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(wall));
+</code></pre>
 					<pre><code><span class="hljs-comment">//Fish scales</span>
 <span class="hljs-keyword">var</span> m = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;makerjs&#x27;</span>);
 <span class="hljs-keyword">var</span> arc = <span class="hljs-keyword">new</span> m.paths.Arc([<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-number">50</span>, <span class="hljs-number">20</span>, <span class="hljs-number">160</span>);
 <span class="hljs-keyword">var</span> scales = m.layout.cloneToBrick(arc, <span class="hljs-number">8</span>, <span class="hljs-number">20</span>);
-<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(scales));</code></pre>
+<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(scales));
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -219,7 +221,7 @@ title: Api - layout Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L321">packages/maker.js/src/core/layout.ts:321</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L321">src/maker.js/packages/maker.js/src/core/layout.ts:321</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -234,7 +236,8 @@ title: Api - layout Namespace
 
 <span class="hljs-keyword">var</span> grooves = m.layout.cloneToColumn(dogbone, <span class="hljs-number">5</span>, <span class="hljs-number">20</span>);
 
-<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(grooves));</code></pre>
+<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(grooves));
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -269,7 +272,7 @@ title: Api - layout Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L372">packages/maker.js/src/core/layout.ts:372</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L372">src/maker.js/packages/maker.js/src/core/layout.ts:372</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -281,7 +284,8 @@ title: Api - layout Namespace
 <span class="hljs-keyword">var</span> m = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;makerjs&#x27;</span>);
 <span class="hljs-keyword">var</span> square = <span class="hljs-keyword">new</span> m.models.Square(<span class="hljs-number">43</span>);
 <span class="hljs-keyword">var</span> grid = m.layout.cloneToGrid(square, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>);
-<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(grid));</code></pre>
+<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(grid));
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -322,7 +326,7 @@ title: Api - layout Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L477">packages/maker.js/src/core/layout.ts:477</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L477">src/maker.js/packages/maker.js/src/core/layout.ts:477</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -334,7 +338,8 @@ title: Api - layout Namespace
 <span class="hljs-keyword">var</span> m = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;makerjs&#x27;</span>);
 <span class="hljs-keyword">var</span> hex = <span class="hljs-keyword">new</span> m.models.Polygon(<span class="hljs-number">6</span>, <span class="hljs-number">50</span>, <span class="hljs-number">30</span>);
 <span class="hljs-keyword">var</span> pattern = m.layout.cloneToHoneycomb(hex, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>);
-<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(pattern));</code></pre>
+<span class="hljs-built_in">document</span>.write(m.exporter.toSVG(pattern));
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -375,7 +380,7 @@ title: Api - layout Namespace
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L250">packages/maker.js/src/core/layout.ts:250</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L250">src/maker.js/packages/maker.js/src/core/layout.ts:250</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -392,7 +397,8 @@ makerjs.model.move(belt, [<span class="hljs-number">25</span>, <span class="hljs
 
 <span class="hljs-keyword">var</span> petals = makerjs.layout.cloneToRadial(belt, <span class="hljs-number">8</span>, <span class="hljs-number">45</span>);
 
-<span class="hljs-built_in">document</span>.write(makerjs.exporter.toSVG(petals));</code></pre>
+<span class="hljs-built_in">document</span>.write(makerjs.exporter.toSVG(petals));
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
@@ -430,7 +436,7 @@ makerjs.model.move(belt, [<span class="hljs-number">25</span>, <span class="hljs
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/b18f8a8d/packages/maker.js/src/core/layout.ts#L350">packages/maker.js/src/core/layout.ts:350</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/layout.ts#L350">src/maker.js/packages/maker.js/src/core/layout.ts:350</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -450,7 +456,8 @@ groove.paths<span class="hljs-literal">[&#x27;<span class="hljs-identifier">righ
 
 var tongueAndGrooves = m.layout.clone<span class="hljs-constructor">ToRow(<span class="hljs-params">groove</span>, 3)</span>;
 
-document.write(m.exporter.<span class="hljs-keyword">to</span><span class="hljs-constructor">SVG(<span class="hljs-params">tongueAndGrooves</span>)</span>);</code></pre>
+document.write(m.exporter.<span class="hljs-keyword">to</span><span class="hljs-constructor">SVG(<span class="hljs-params">tongueAndGrooves</span>)</span>);
+</code></pre>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
