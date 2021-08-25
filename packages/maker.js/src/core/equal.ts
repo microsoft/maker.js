@@ -194,8 +194,26 @@
             return round(slopeA.line.origin[0] - slopeB.line.origin[0]) == 0;
         }
 
-        //lines are parallel, but not vertical, see if y-intercept is the same
-        return round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+        //lines are parallel, but not vertical
+
+        //rotate both to flat
+        const pA = yInterceptFromTranslateSlopeToZero(slopeA);
+        const pB = yInterceptFromTranslateSlopeToZero(slopeB);
+
+        //see if y-intercept is the same
+        return round(pA[1] - pB[1], .00001) == 0;
+    }
+
+    /**
+     * @private
+     */
+    function yInterceptFromTranslateSlopeToZero(s: ISlope): IPoint {
+        const yInterceptPoint: IPoint = [0, s.yIntercept];
+        if (s.slope === 0) {
+            return yInterceptPoint;
+        }
+        const a = angle.toDegrees(Math.atan(s.slope));
+        return point.rotate(yInterceptPoint, -a);
     }
 
     /**
