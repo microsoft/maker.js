@@ -77,7 +77,8 @@ function thumbnail(key, kit, baseUrl) {
     var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb' });
     div.innerText = svg;
     div.innerTextEscaped = true;
-    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true, 'thumb-link');
+    var name = removeOrg(key);
+    return anchor(div.toString(), baseUrl + 'playground/?script=' + name, name, true, 'thumb-link');
 }
 function jekyll(layout, title) {
     //Jekyll liquid layout
@@ -205,11 +206,12 @@ function homePage() {
         stream.end();
     });
 }
-function copyRequire(root, key, copyTo) {
+function copyRequire(hint, root, key, copyTo) {
     var dirpath = root + '/' + key + '/';
-    console.log(dirpath);
+    console.log(hint + " " + dirpath);
     var dirjson = null;
     try {
+        console.log("trying " + dirpath);
         dirjson = fs.readFileSync(dirpath + 'package.json', 'UTF8');
     }
     catch (e) {
@@ -219,16 +221,19 @@ function copyRequire(root, key, copyTo) {
         return;
     var djson = JSON.parse(dirjson);
     var main = djson.main;
+    console.log("src " + (dirpath + main));
     var src = fs.readFileSync(dirpath + main, 'UTF8');
     allRequires[key] = 1;
-    fs.writeFileSync('./js/' + copyTo + key + '.js', src, 'UTF8');
+    var name = removeOrg(key);
+    console.log("write copyTo:" + copyTo + " name:" + name);
+    fs.writeFileSync('./js/' + copyTo + name + '.js', src, 'UTF8');
     var requires = detective(src);
     console.log('...requires ' + requires.length + ' libraries');
     for (var i = 0; i < requires.length; i++) {
         var irequire = requires[i];
         if (!(irequire in allRequires)) {
             console.log('requiring ' + irequire);
-            if (!copyRequire(dirpath + 'node_modules', irequire, '')) {
+            if (!copyRequire('sub-requirement', dirpath + 'node_modules', irequire, '')) {
                 needToBrowserify.push({ parent: key, child: irequire });
             }
         }
@@ -238,10 +243,14 @@ function copyRequire(root, key, copyTo) {
     }
     return true;
 }
+function removeOrg(key) {
+    var afterSlash = key.indexOf('/') + 1;
+    return key.substring(afterSlash);
+}
 function copyDependencies() {
     var root = './';
     for (var key in package_json_1["default"].dependencies) {
-        copyRequire('./node_modules', key, '');
+        copyRequire('dependency', './node_modules', key, '');
     }
 }
 demoIndexPage();

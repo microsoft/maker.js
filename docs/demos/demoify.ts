@@ -62,7 +62,8 @@ function thumbnail(key: string, kit: Kit, baseUrl: string) {
     div.innerText = svg;
     div.innerTextEscaped = true;
 
-    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true, 'thumb-link');
+    const name = removeOrg(key);
+    return anchor(div.toString(), baseUrl + 'playground/?script=' + name, name, true, 'thumb-link');
 }
 
 function jekyll(layout: string, title: string) {
@@ -246,15 +247,16 @@ function homePage() {
 
 }
 
-function copyRequire(root, key, copyTo) {
+function copyRequire(hint: string, root: string, key: string, copyTo: string) {
 
     var dirpath = root + '/' + key + '/';
 
-    console.log(dirpath);
+    console.log(`${hint} ${dirpath}`);
 
     var dirjson: string = null;
 
     try {
+        console.log(`trying ${dirpath}`);
         dirjson = fs.readFileSync(dirpath + 'package.json', 'UTF8');
     }
     catch (e) {
@@ -265,11 +267,16 @@ function copyRequire(root, key, copyTo) {
 
     var djson = JSON.parse(dirjson);
     var main = djson.main;
+
+    console.log(`src ${dirpath + main}`);
     var src = fs.readFileSync(dirpath + main, 'UTF8');
 
     allRequires[key] = 1;
 
-    fs.writeFileSync('./js/' + copyTo + key + '.js', src, 'UTF8');
+    const name = removeOrg(key);
+
+    console.log(`write copyTo:${copyTo} name:${name}`);
+    fs.writeFileSync('./js/' + copyTo + name + '.js', src, 'UTF8');
 
     var requires = <string[]>detective(src);
 
@@ -281,7 +288,7 @@ function copyRequire(root, key, copyTo) {
         if (!(irequire in allRequires)) {
             console.log('requiring ' + irequire);
 
-            if (!copyRequire(dirpath + 'node_modules', irequire, '')) {
+            if (!copyRequire('sub-requirement', dirpath + 'node_modules', irequire, '')) {
                 needToBrowserify.push({ parent: key, child: irequire });
             }
         } else {
@@ -291,12 +298,17 @@ function copyRequire(root, key, copyTo) {
     return true;
 }
 
+function removeOrg(key: string) {
+    const afterSlash = key.indexOf('/') + 1;
+    return key.substring(afterSlash);
+}
+
 function copyDependencies() {
 
     var root = './';
 
     for (var key in packageJson.dependencies) {
-        copyRequire('./node_modules', key, '');
+        copyRequire('dependency', './node_modules', key, '');
     }
 
 }
