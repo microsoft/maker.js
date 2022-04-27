@@ -1,11 +1,33 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
 var fs = require("fs");
-var packageJson = require('./package.json');
-var makerjs = require('makerjs');
-var marked = require('marked');
-var detective = require('detective');
-var opentypeLib = require("opentype.js");
+var package_json_1 = __importDefault(require("./package.json"));
+var makerjs = require("makerjs");
+var marked_1 = require("marked");
+var detective = require("detective");
+var opentypeLib = __importStar(require("opentype.js"));
 var QueryStringParams = /** @class */ (function () {
     function QueryStringParams(querystring) {
         if (querystring === void 0) { querystring = document.location.search.substring(1); }
@@ -20,7 +42,7 @@ var QueryStringParams = /** @class */ (function () {
     return QueryStringParams;
 }());
 // Synchronous highlighting with highlight.js
-marked.setOptions({
+marked_1.marked.setOptions({
     highlight: function (code) {
         return require('highlight.js').highlightAuto(code).value;
     }
@@ -55,7 +77,8 @@ function thumbnail(key, kit, baseUrl) {
     var div = new makerjs.exporter.XmlTag('div', { "class": 'thumb' });
     div.innerText = svg;
     div.innerTextEscaped = true;
-    return anchor(div.toString(), baseUrl + 'playground/?script=' + key, key, true, 'thumb-link');
+    var name = removeOrg(key);
+    return anchor(div.toString(), baseUrl + 'playground/?script=' + name, name, true, 'thumb-link');
 }
 function jekyll(layout, title) {
     //Jekyll liquid layout
@@ -84,7 +107,7 @@ function getRequireKit(spec) {
     var key = split[0];
     var kvp = split[1];
     var result;
-    if (key in packageJson.dependencies) {
+    if (key in package_json_1["default"].dependencies) {
         result = {
             ctor: require(key)
         };
@@ -126,12 +149,12 @@ function demoIndexPage() {
         var st = sectionTag();
         stream.write(jekyll('default', 'Demos'));
         writeHeading(1, 'Demos');
-        var yourDemoHtml = marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/docs/demos/js).\n 3. Submit a pull request!');
+        var yourDemoHtml = marked_1.marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/docs/demos/js).\n 3. Submit a pull request!');
         stream.write(section(yourDemoHtml));
         stream.write(st.getOpeningTag(false));
         writeHeading(2, 'Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
-        for (var i = 0; i < packageJson.ordered_demo_list.length; i++) {
-            var key = packageJson.ordered_demo_list[i];
+        for (var i = 0; i < package_json_1["default"].ordered_demo_list.length; i++) {
+            var key = package_json_1["default"].ordered_demo_list[i];
             var kit = getRequireKit(key);
             writeThumbnail(key, kit, '../');
         }
@@ -160,13 +183,13 @@ function homePage() {
         var sections = readmeMarkdown.split('\n## ');
         //remove H1 tag and make the slogan an H2
         var topSection = sections[0].replace('# Maker.js\r\n\r\n', '## ');
-        stream.write(section(marked(topSection)) + '\n');
+        stream.write(section(marked_1.marked(topSection)) + '\n');
         var h2 = new makerjs.exporter.XmlTag('h2');
         h2.innerText = 'Latest demos';
         var demos = [h2.toString()];
         var max = 6;
-        for (var i = 0; i < packageJson.ordered_demo_list.length && i < max; i++) {
-            var key = packageJson.ordered_demo_list[i];
+        for (var i = 0; i < package_json_1["default"].ordered_demo_list.length && i < max; i++) {
+            var key = package_json_1["default"].ordered_demo_list[i];
             var kit = getRequireKit(key);
             demos.push(thumbnail(key, kit, ''));
         }
@@ -177,17 +200,18 @@ function homePage() {
         stream.write(section(demos.join('\n')) + '\n');
         //skip the first section, begin with 1
         for (var i = 1; i < sections.length; i++) {
-            var sectionHtml = marked('## ' + sections[i]);
+            var sectionHtml = marked_1.marked('## ' + sections[i]);
             stream.write(section(sectionHtml));
         }
         stream.end();
     });
 }
-function copyRequire(root, key, copyTo) {
+function copyRequire(hint, root, key, copyTo) {
     var dirpath = root + '/' + key + '/';
-    console.log(dirpath);
+    console.log(hint + " " + dirpath);
     var dirjson = null;
     try {
+        console.log("trying " + dirpath);
         dirjson = fs.readFileSync(dirpath + 'package.json', 'UTF8');
     }
     catch (e) {
@@ -197,16 +221,19 @@ function copyRequire(root, key, copyTo) {
         return;
     var djson = JSON.parse(dirjson);
     var main = djson.main;
+    console.log("src " + (dirpath + main));
     var src = fs.readFileSync(dirpath + main, 'UTF8');
     allRequires[key] = 1;
-    fs.writeFileSync('./js/' + copyTo + key + '.js', src, 'UTF8');
+    var name = removeOrg(key);
+    console.log("write copyTo:" + copyTo + " name:" + name);
+    fs.writeFileSync('./js/' + copyTo + name + '.js', src, 'UTF8');
     var requires = detective(src);
     console.log('...requires ' + requires.length + ' libraries');
     for (var i = 0; i < requires.length; i++) {
         var irequire = requires[i];
         if (!(irequire in allRequires)) {
             console.log('requiring ' + irequire);
-            if (!copyRequire(dirpath + 'node_modules', irequire, '')) {
+            if (!copyRequire('sub-requirement', dirpath + 'node_modules', irequire, '')) {
                 needToBrowserify.push({ parent: key, child: irequire });
             }
         }
@@ -216,10 +243,14 @@ function copyRequire(root, key, copyTo) {
     }
     return true;
 }
+function removeOrg(key) {
+    var afterSlash = key.indexOf('/') + 1;
+    return key.substring(afterSlash);
+}
 function copyDependencies() {
     var root = './';
-    for (var key in packageJson.dependencies) {
-        copyRequire('./node_modules', key, '');
+    for (var key in package_json_1["default"].dependencies) {
+        copyRequire('dependency', './node_modules', key, '');
     }
 }
 demoIndexPage();
