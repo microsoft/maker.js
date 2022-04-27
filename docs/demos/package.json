@@ -10,11 +10,14 @@
   "author": "Dan Marshall",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/marked": "^0.0.28",
+    "@types/detective": "^5.1.2",
+    "@types/marked": "^4.0.3",
     "@types/node": "^10.5.7",
     "@types/opentype.js": "^0.7.0",
-    "detective": "^5.1.0",
+    "detective": "^5.2.0",
+    "highlight.js": "^11.5.1",
     "makerjs": "*",
+    "marked": "^4.0.14",
     "opentype.js": "^0.9.0"
   },
   "dependencies": {

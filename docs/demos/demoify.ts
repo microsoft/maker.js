@@ -1,8 +1,8 @@
 ﻿import fs = require('fs');
-var packageJson = require('./package.json');
-var makerjs = require('makerjs') as typeof MakerJs;
-var marked = require('marked') as MarkedStatic;
-var detective = require('detective');
+import packageJson from './package.json';
+import makerjs = require('makerjs');
+import { marked } from 'marked';
+import detective = require('detective');
 import * as opentypeLib from 'opentype.js';
 
 class QueryStringParams {
