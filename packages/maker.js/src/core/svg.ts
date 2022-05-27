@@ -991,13 +991,16 @@ namespace MakerJs.importer {
             result.models['p_' + ++pathCount] = m;
         }
 
-        function getPoint(cmd: ISVGPathCommand, offset = 0) {
-            var p = point.mirror([cmd.data[0 + offset], cmd.data[1 + offset]], false, true);
+        function getPoint(cmd: ISVGPathCommand, offset = 0, from: IPoint = cmd.from): IPoint {            
+            if (offset < 0) { // get point from end of list (negative index)
+                offset = offset + cmd.data.length;
+            }
+            var p: IPoint = point.mirror([cmd.data[0 + offset], cmd.data[1 + offset]], false, true);
 
             if (cmd.absolute) {
                 return p;
             } else {
-                return point.add(p, cmd.from);
+                return point.add(p, from);
             }
         }
 
@@ -1012,7 +1015,14 @@ namespace MakerJs.importer {
 
         map['M'] = function (cmd: ISVGPathCommand) {
             firstPoint = getPoint(cmd);
-            return firstPoint;
+            if (cmd.data.length > 2) { // implicit lineTo
+                cmd.from = firstPoint;
+                for (let a = 2; a < cmd.data.length; a = a + 2) {
+                    cmd.from = lineTo(cmd, getPoint(cmd, a));
+                }
+                return cmd.from;
+            }
+            else return firstPoint;
         };
 
         map['Z'] = function (cmd: ISVGPathCommand) {
@@ -1045,115 +1055,157 @@ namespace MakerJs.importer {
         };
 
         map['L'] = function (cmd: ISVGPathCommand) {
-            var end = getPoint(cmd);
-            return lineTo(cmd, end);
+            var end: IPoint;
+            for (let a = 0; a < cmd.data.length; a = a + 2) {
+                end = getPoint(cmd, a);
+                cmd.from = lineTo(cmd, end);
+            }
+            return cmd.from;
         };
 
         map['A'] = function (cmd: ISVGPathCommand) {
-            var rx = cmd.data[0];
-            var ry = cmd.data[1];
-            var rotation = cmd.data[2];
-            var large = cmd.data[3] === 1;
-            var decreasing = cmd.data[4] === 1;
-            var end = getPoint(cmd, 5);
-            var elliptic = rx !== ry;
+            var rx: number;
+            var ry: number;
+            var rotation: number;
+            var large: boolean;
+            var decreasing: boolean;
+            var end: IPoint;
+            var elliptic: boolean;
+            var xAxis: IPathLine;
+            var arc: IPathArc;
+            var scaleUp: number;
+            var e: models.EllipticArc;
+            
+            for (let a = 0; a < cmd.data.length; a = a + 7) {
+                rx = cmd.data[0 + a];
+                ry = cmd.data[1 + a];
+                rotation = cmd.data[2 + a];
+                large = cmd.data[3 + a] === 1;
+                decreasing = cmd.data[4 + a] === 1;
+                end = getPoint(cmd, 5 + a);
+                elliptic = rx !== ry;
 
-            //first, rotate so we are dealing with a zero angle x-axis
-            var xAxis = new paths.Line(cmd.from, point.rotate(end, rotation, cmd.from));
+                //first, rotate so we are dealing with a zero angle x-axis
+                xAxis = new paths.Line(cmd.from, point.rotate(end, rotation, cmd.from));
 
-            //next, un-distort any ellipse back into a circle in terms of x axis
-            if (elliptic) {
-                xAxis = path.distort(xAxis, 1, rx / ry) as IPathLine;
-            }
-
-            //now create an arc, making sure we use the large and decreasing flags
-            var arc = new paths.Arc(xAxis.origin, xAxis.end, rx, large, decreasing);
-
-            if (elliptic) {
-
-                //scale up if radius was insufficient.
-                if (rx < arc.radius) {
-                    var scaleUp = arc.radius / rx;
-                    rx *= scaleUp;
-                    ry *= scaleUp;
+                //next, un-distort any ellipse back into a circle in terms of x axis
+                if (elliptic) {
+                    xAxis = path.distort(xAxis, 1, rx / ry) as IPathLine;
                 }
 
-                //create an elliptical arc, this will re-distort
-                var e = new models.EllipticArc(arc, 1, ry / rx, options.bezierAccuracy);
+                //now create an arc, making sure we use the large and decreasing flags
+                arc = new paths.Arc(xAxis.origin, xAxis.end, rx, large, decreasing);
 
-                //un-rotate back to where it should be.
-                model.rotate(e, -rotation, cmd.from);
+                if (elliptic) {
 
-                addModel(e);
+                    //scale up if radius was insufficient.
+                    if (rx < arc.radius) {
+                        scaleUp = arc.radius / rx;
+                        rx *= scaleUp;
+                        ry *= scaleUp;
+                    }
 
-            } else {
-                //just use the arc
+                    //create an elliptical arc, this will re-distort
+                    e = new models.EllipticArc(arc, 1, ry / rx, options.bezierAccuracy);
 
-                //un-rotate back to where it should be.
-                path.rotate(arc, -rotation, cmd.from);
+                    //un-rotate back to where it should be.
+                    model.rotate(e, -rotation, cmd.from);
 
-                addPath(arc);
+                    addModel(e);
+
+                } else {
+                    //just use the arc
+
+                    //un-rotate back to where it should be.
+                    path.rotate(arc, -rotation, cmd.from);
+
+                    addPath(arc);
+                }
+                cmd.from = end;
             }
 
             return end;
         };
 
         map['C'] = function (cmd: ISVGPathCommand) {
-            var control1 = getPoint(cmd, 0);
-            var control2 = getPoint(cmd, 2);
-            var end = getPoint(cmd, 4);
-            addModel(new models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
+            var control1: IPoint;
+            var control2: IPoint;
+            var start: IPoint = cmd.from;
+            var end: IPoint;
+            
+            for (let a = 0; a < cmd.data.length; a = a + 6) {
+                control1 = getPoint(cmd, 0 + a, start);
+                control2 = getPoint(cmd, 2 + a, start);
+                end = getPoint(cmd, 4 + a, start);
+                addModel(new models.BezierCurve(start, control1, control2, end, options.bezierAccuracy));
+                start = end;
+            }
             return end;
         };
 
         map['S'] = function (cmd: ISVGPathCommand) {
             var control1: IPoint;
             var prevControl2: IPoint;
+            var control2: IPoint;
+            var start: IPoint = cmd.from;
+            var end: IPoint;
 
-            if (cmd.prev.command === 'C') {
-                prevControl2 = getPoint(cmd.prev, 2);
-                control1 = point.rotate(prevControl2, 180, cmd.from);
-            } else if (cmd.prev.command === 'S') {
-                prevControl2 = getPoint(cmd.prev, 0);
-                control1 = point.rotate(prevControl2, 180, cmd.from);
+            if (cmd.prev.command === 'C' || cmd.prev.command === 'S') {
+                prevControl2 = getPoint(cmd.prev, -4);
             } else {
-                control1 = cmd.from;
+                prevControl2 = cmd.from;
             }
-
-            var control2 = getPoint(cmd, 0);
-            var end = getPoint(cmd, 2);
-            addModel(new models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
+            
+            for (let a = 0; a < cmd.data.length; a = a + 4) {
+                control1 = point.rotate(prevControl2, 180, start);
+                control2 = getPoint(cmd, 0 + a);
+                end = getPoint(cmd, 2 + a);
+                addModel(new models.BezierCurve(start, control1, control2, end, options.bezierAccuracy));
+                start = end;
+                prevControl2 = control2;
+            }
             return end;
         };
 
         map['Q'] = function (cmd: ISVGPathCommand) {
-            var control = getPoint(cmd, 0);
-            var end = getPoint(cmd, 2);
-            addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
+            var control: IPoint;
+            var end: IPoint;
+            
+            for (let a = 0; a < cmd.data.length; a = a + 4) {
+                control = getPoint(cmd, 0 + a);
+                end = getPoint(cmd, 2 + a);
+                addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
+                cmd.from = end;
+            }
             return end;
         };
 
         map['T'] = function (cmd: ISVGPathCommand) {
             var control: IPoint;
             var prevControl: IPoint;
+            var end: IPoint;
 
             if (cmd.prev.command === 'Q') {
-                prevControl = getPoint(cmd.prev, 0);
+                prevControl = getPoint(cmd.prev, -4);
                 control = point.rotate(prevControl, 180, cmd.from);
             } else if (cmd.prev.command === 'T') {
-                prevControl = getPoint(cmd.prev, 2); //see below *
+                prevControl = getPoint(cmd.prev, -2); //see below *
                 control = point.rotate(prevControl, 180, cmd.from);
             } else {
                 control = cmd.from;
             }
 
+            for (let a = 0; a < cmd.data.length; a = a + 2) {
+                end = getPoint(cmd, 0 + a);
+                addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
+                cmd.from = end;
+                control = point.rotate(point.mirror(control, false, true), 180, cmd.from);
+            }
+            
             //* save the control point in the data list, will be accessible from index 2
             var p = point.mirror(control, false, true);
             cmd.data.push.apply(cmd.data, p);
-
-            var end = getPoint(cmd, 0);
-
-            addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
+            
             return end;
         };
 
