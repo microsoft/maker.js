@@ -4979,13 +4979,14 @@ var MakerJs;
         function parseNumericList(s) {
             var result = [];
             //http://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly
-            var re = /[\.-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+            var re = /-?(?:0|[1-9]\d*)?(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
             var matches;
             while ((matches = re.exec(s)) !== null) {
                 if (matches.index === re.lastIndex) {
                     re.lastIndex++;
                 }
-                result.push(parseFloat(matches[0]));
+                if (matches[0] !== "")
+                    result.push(parseFloat(matches[0]));
             }
             return result;
         }
@@ -8120,14 +8121,18 @@ var MakerJs;
                 }
                 result.models['p_' + ++pathCount] = m;
             }
-            function getPoint(cmd, offset) {
+            function getPoint(cmd, offset, from) {
                 if (offset === void 0) { offset = 0; }
+                if (from === void 0) { from = cmd.from; }
+                if (offset < 0) { // get point from end of list (negative index)
+                    offset = offset + cmd.data.length;
+                }
                 var p = MakerJs.point.mirror([cmd.data[0 + offset], cmd.data[1 + offset]], false, true);
                 if (cmd.absolute) {
                     return p;
                 }
                 else {
-                    return MakerJs.point.add(p, cmd.from);
+                    return MakerJs.point.add(p, from);
                 }
             }
             function lineTo(cmd, end) {
@@ -8139,7 +8144,15 @@ var MakerJs;
             var map = {};
             map['M'] = function (cmd) {
                 firstPoint = getPoint(cmd);
-                return firstPoint;
+                if (cmd.data.length > 2) { // implicit lineTo
+                    cmd.from = firstPoint;
+                    for (var a = 2; a < cmd.data.length; a = a + 2) {
+                        cmd.from = lineTo(cmd, getPoint(cmd, a));
+                    }
+                    return cmd.from;
+                }
+                else
+                    return firstPoint;
             };
             map['Z'] = function (cmd) {
                 return lineTo(cmd, firstPoint);
@@ -8166,97 +8179,139 @@ var MakerJs;
                 return lineTo(cmd, end);
             };
             map['L'] = function (cmd) {
-                var end = getPoint(cmd);
-                return lineTo(cmd, end);
+                var end;
+                for (var a = 0; a < cmd.data.length; a = a + 2) {
+                    end = getPoint(cmd, a);
+                    cmd.from = lineTo(cmd, end);
+                }
+                return cmd.from;
             };
             map['A'] = function (cmd) {
-                var rx = cmd.data[0];
-                var ry = cmd.data[1];
-                var rotation = cmd.data[2];
-                var large = cmd.data[3] === 1;
-                var decreasing = cmd.data[4] === 1;
-                var end = getPoint(cmd, 5);
-                var elliptic = rx !== ry;
-                //first, rotate so we are dealing with a zero angle x-axis
-                var xAxis = new MakerJs.paths.Line(cmd.from, MakerJs.point.rotate(end, rotation, cmd.from));
-                //next, un-distort any ellipse back into a circle in terms of x axis
-                if (elliptic) {
-                    xAxis = MakerJs.path.distort(xAxis, 1, rx / ry);
-                }
-                //now create an arc, making sure we use the large and decreasing flags
-                var arc = new MakerJs.paths.Arc(xAxis.origin, xAxis.end, rx, large, decreasing);
-                if (elliptic) {
-                    //scale up if radius was insufficient.
-                    if (rx < arc.radius) {
-                        var scaleUp = arc.radius / rx;
-                        rx *= scaleUp;
-                        ry *= scaleUp;
+                var rx;
+                var ry;
+                var rotation;
+                var large;
+                var decreasing;
+                var end;
+                var elliptic;
+                var xAxis;
+                var arc;
+                var scaleUp;
+                var e;
+                for (var a = 0; a < cmd.data.length; a = a + 7) {
+                    rx = cmd.data[0 + a];
+                    ry = cmd.data[1 + a];
+                    rotation = cmd.data[2 + a];
+                    large = cmd.data[3 + a] === 1;
+                    decreasing = cmd.data[4 + a] === 1;
+                    end = getPoint(cmd, 5 + a);
+                    elliptic = rx !== ry;
+                    //first, rotate so we are dealing with a zero angle x-axis
+                    xAxis = new MakerJs.paths.Line(cmd.from, MakerJs.point.rotate(end, rotation, cmd.from));
+                    //next, un-distort any ellipse back into a circle in terms of x axis
+                    if (elliptic) {
+                        xAxis = MakerJs.path.distort(xAxis, 1, rx / ry);
                     }
-                    //create an elliptical arc, this will re-distort
-                    var e = new MakerJs.models.EllipticArc(arc, 1, ry / rx, options.bezierAccuracy);
-                    //un-rotate back to where it should be.
-                    MakerJs.model.rotate(e, -rotation, cmd.from);
-                    addModel(e);
-                }
-                else {
-                    //just use the arc
-                    //un-rotate back to where it should be.
-                    MakerJs.path.rotate(arc, -rotation, cmd.from);
-                    addPath(arc);
+                    //now create an arc, making sure we use the large and decreasing flags
+                    arc = new MakerJs.paths.Arc(xAxis.origin, xAxis.end, rx, large, decreasing);
+                    if (elliptic) {
+                        //scale up if radius was insufficient.
+                        if (rx < arc.radius) {
+                            scaleUp = arc.radius / rx;
+                            rx *= scaleUp;
+                            ry *= scaleUp;
+                        }
+                        //create an elliptical arc, this will re-distort
+                        e = new MakerJs.models.EllipticArc(arc, 1, ry / rx, options.bezierAccuracy);
+                        //un-rotate back to where it should be.
+                        MakerJs.model.rotate(e, -rotation, cmd.from);
+                        addModel(e);
+                    }
+                    else {
+                        //just use the arc
+                        //un-rotate back to where it should be.
+                        MakerJs.path.rotate(arc, -rotation, cmd.from);
+                        addPath(arc);
+                    }
+                    cmd.from = end;
                 }
                 return end;
             };
             map['C'] = function (cmd) {
-                var control1 = getPoint(cmd, 0);
-                var control2 = getPoint(cmd, 2);
-                var end = getPoint(cmd, 4);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
+                var control1;
+                var control2;
+                var start = cmd.from;
+                var end;
+                for (var a = 0; a < cmd.data.length; a = a + 6) {
+                    cmd.from = start;
+                    control1 = getPoint(cmd, 0 + a, start);
+                    control2 = getPoint(cmd, 2 + a, start);
+                    end = getPoint(cmd, 4 + a, start);
+                    addModel(new MakerJs.models.BezierCurve(start, control1, control2, end, options.bezierAccuracy));
+                    start = end;
+                }
                 return end;
             };
             map['S'] = function (cmd) {
                 var control1;
                 var prevControl2;
-                if (cmd.prev.command === 'C') {
-                    prevControl2 = getPoint(cmd.prev, 2);
-                    control1 = MakerJs.point.rotate(prevControl2, 180, cmd.from);
-                }
-                else if (cmd.prev.command === 'S') {
-                    prevControl2 = getPoint(cmd.prev, 0);
-                    control1 = MakerJs.point.rotate(prevControl2, 180, cmd.from);
+                var control2;
+                var start = cmd.from;
+                var end;
+                if (cmd.prev.command === 'C' || cmd.prev.command === 'S') {
+                    prevControl2 = getPoint(cmd.prev, -4);
                 }
                 else {
-                    control1 = cmd.from;
+                    prevControl2 = cmd.from;
                 }
-                var control2 = getPoint(cmd, 0);
-                var end = getPoint(cmd, 2);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control1, control2, end, options.bezierAccuracy));
+                for (var a = 0; a < cmd.data.length; a = a + 4) {
+                    cmd.from = start;
+                    control1 = MakerJs.point.rotate(prevControl2, 180, start);
+                    control2 = getPoint(cmd, 0 + a);
+                    end = getPoint(cmd, 2 + a);
+                    addModel(new MakerJs.models.BezierCurve(start, control1, control2, end, options.bezierAccuracy));
+                    start = end;
+                    prevControl2 = control2;
+                }
                 return end;
             };
             map['Q'] = function (cmd) {
-                var control = getPoint(cmd, 0);
-                var end = getPoint(cmd, 2);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
+                var control;
+                var start = cmd.from;
+                var end;
+                for (var a = 0; a < cmd.data.length; a = a + 4) {
+                    cmd.from = start;
+                    control = getPoint(cmd, 0 + a);
+                    end = getPoint(cmd, 2 + a);
+                    addModel(new MakerJs.models.BezierCurve(start, control, end, options.bezierAccuracy));
+                    start = end;
+                }
                 return end;
             };
             map['T'] = function (cmd) {
                 var control;
                 var prevControl;
+                var end;
                 if (cmd.prev.command === 'Q') {
-                    prevControl = getPoint(cmd.prev, 0);
+                    prevControl = getPoint(cmd.prev, -4);
                     control = MakerJs.point.rotate(prevControl, 180, cmd.from);
                 }
                 else if (cmd.prev.command === 'T') {
-                    prevControl = getPoint(cmd.prev, 2); //see below *
-                    control = MakerJs.point.rotate(prevControl, 180, cmd.from);
+                    cmd.prev.absolute = true;
+                    control = getPoint(cmd.prev, -2); //see below *
                 }
                 else {
                     control = cmd.from;
                 }
+                for (var a = 0; a < cmd.data.length; a = a + 2) {
+                    end = getPoint(cmd, 0 + a);
+                    addModel(new MakerJs.models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
+                    cmd.from = end;
+                    control = MakerJs.point.rotate(control, 180, cmd.from);
+                }
                 //* save the control point in the data list, will be accessible from index 2
                 var p = MakerJs.point.mirror(control, false, true);
                 cmd.data.push.apply(cmd.data, p);
-                var end = getPoint(cmd, 0);
-                addModel(new MakerJs.models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
                 return end;
             };
             var firstPoint = [0, 0];

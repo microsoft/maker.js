@@ -991,7 +991,7 @@ namespace MakerJs.importer {
             result.models['p_' + ++pathCount] = m;
         }
 
-        function getPoint(cmd: ISVGPathCommand, offset = 0, from: IPoint = cmd.from): IPoint {            
+        function getPoint(cmd: ISVGPathCommand, offset = 0, from: IPoint = cmd.from): IPoint {
             if (offset < 0) { // get point from end of list (negative index)
                 offset = offset + cmd.data.length;
             }
@@ -1134,6 +1134,7 @@ namespace MakerJs.importer {
             var end: IPoint;
             
             for (let a = 0; a < cmd.data.length; a = a + 6) {
+                cmd.from = start;
                 control1 = getPoint(cmd, 0 + a, start);
                 control2 = getPoint(cmd, 2 + a, start);
                 end = getPoint(cmd, 4 + a, start);
@@ -1157,6 +1158,7 @@ namespace MakerJs.importer {
             }
             
             for (let a = 0; a < cmd.data.length; a = a + 4) {
+                cmd.from = start;
                 control1 = point.rotate(prevControl2, 180, start);
                 control2 = getPoint(cmd, 0 + a);
                 end = getPoint(cmd, 2 + a);
@@ -1169,13 +1171,15 @@ namespace MakerJs.importer {
 
         map['Q'] = function (cmd: ISVGPathCommand) {
             var control: IPoint;
+            var start: IPoint = cmd.from;
             var end: IPoint;
             
             for (let a = 0; a < cmd.data.length; a = a + 4) {
+                cmd.from = start;
                 control = getPoint(cmd, 0 + a);
                 end = getPoint(cmd, 2 + a);
-                addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
-                cmd.from = end;
+                addModel(new models.BezierCurve(start, control, end, options.bezierAccuracy));
+                start = end;
             }
             return end;
         };
@@ -1189,8 +1193,8 @@ namespace MakerJs.importer {
                 prevControl = getPoint(cmd.prev, -4);
                 control = point.rotate(prevControl, 180, cmd.from);
             } else if (cmd.prev.command === 'T') {
-                prevControl = getPoint(cmd.prev, -2); //see below *
-                control = point.rotate(prevControl, 180, cmd.from);
+                cmd.prev.absolute = true;
+                control = getPoint(cmd.prev, -2); //see below *
             } else {
                 control = cmd.from;
             }
@@ -1199,7 +1203,7 @@ namespace MakerJs.importer {
                 end = getPoint(cmd, 0 + a);
                 addModel(new models.BezierCurve(cmd.from, control, end, options.bezierAccuracy));
                 cmd.from = end;
-                control = point.rotate(point.mirror(control, false, true), 180, cmd.from);
+                control = point.rotate(control, 180, cmd.from);
             }
             
             //* save the control point in the data list, will be accessible from index 2
