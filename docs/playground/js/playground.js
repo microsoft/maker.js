@@ -63,9 +63,6 @@ var MakerJsPlayground;
         SideBySide: 'side-by-side',
         FullScreen: 'full-screen'
     };
-    function isLandscapeOrientation() {
-        return (Math.abs(window.orientation) == 90) || window.orientation == 'landscape' || window.orientation === undefined;
-    }
     function isHttp(url) {
         return "http" === url.substr(0, 4);
     }
@@ -145,8 +142,8 @@ var MakerJsPlayground;
                         input = new makerjs.exporter.XmlTag('select', selectFontAttrs);
                         var fontOptions = '';
                         var added = false;
-                        for (var fontId in fonts) {
-                            var font = fonts[fontId];
+                        for (var fontId in playgroundFonts) {
+                            var font = playgroundFonts[fontId];
                             if (!MakerJsPlayground.FontLoader.fontMatches(font, attrs.value))
                                 continue;
                             if (!added) {
@@ -379,7 +376,7 @@ var MakerJsPlayground;
             }
             processed.lockedPath = {
                 route: route,
-                notes: "Path Info|\n---|---\nRoute|" + mdCode(crumb) + "\nJSON|"
+                notes: "Path Info|\n---|---\nRoute|".concat(mdCode(crumb), "\nJSON|")
             };
             updateLockedPathNotes();
         }
@@ -409,8 +406,8 @@ var MakerJsPlayground;
             if (pathAndOffset) {
                 setNotes([
                     processed.lockedPath.notes + mdCode(pathAndOffset.result),
-                    "Offset|" + mdCode(pathAndOffset.offset),
-                    "Endpoints|" + mdCode(endpoints)
+                    "Offset|".concat(mdCode(pathAndOffset.offset)),
+                    "Endpoints|".concat(mdCode(endpoints))
                 ].join('\n'));
             }
             else {
@@ -626,7 +623,7 @@ var MakerJsPlayground;
             var errorDetails = {
                 colno: 0,
                 lineno: 0,
-                message: 'error loading font ' + fontLoader.baseUrl + fonts[id].path,
+                message: 'error loading font ' + fontLoader.baseUrl + playgroundFonts[id].path,
                 name: 'Network error'
             };
             processResult({ result: errorDetails });
