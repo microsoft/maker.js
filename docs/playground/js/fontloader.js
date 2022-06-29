@@ -60,8 +60,8 @@ var MakerJsPlayground;
             return FontLoader.hasTags(font, constraints.add);
         };
         FontLoader.prototype.findFirstFontIdMatching = function (spec) {
-            for (var fontId in fonts) {
-                var font = fonts[fontId];
+            for (var fontId in playgroundFonts) {
+                var font = playgroundFonts[fontId];
                 if (FontLoader.fontMatches(font, spec))
                     return fontId;
             }
@@ -102,7 +102,7 @@ var MakerJsPlayground;
         FontLoader.prototype.loadFont = function (fontId) {
             var _this = this;
             //load a font asynchronously
-            this.opentypeLib.load(this.baseUrl + fonts[fontId].path, function (err, font) {
+            this.opentypeLib.load(this.baseUrl + playgroundFonts[fontId].path, function (err, font) {
                 if (err) {
                     _this.failureCb(fontId);
                 }

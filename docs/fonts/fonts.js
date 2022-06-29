@@ -1,4 +1,4 @@
-var fonts = {
+var playgroundFonts = {
   "allertastencil-regular": {
     "displayName": "Allerta Stencil",
     "path": "allertastencil/AllertaStencil-Regular.ttf",
