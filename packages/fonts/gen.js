@@ -2,9 +2,9 @@
 exports.__esModule = true;
 var fs = require("fs");
 var path = require("path");
+var changeCase = require("change-case");
 //TypeScript can't resolve import :(
 var sortKeys = require("sort-keys");
-var pc = require("pretty-camel");
 var fontRoot = "../../docs/fonts/";
 var tags = require(fontRoot + "tags");
 var out = {};
@@ -18,7 +18,7 @@ dirs.forEach(function (dir) {
     });
     fonts.forEach(function (font) {
         var name = font.substring(0, font.length - ext.length);
-        var display = pc(name.replace(/-regular/i, '').replace('-', ''));
+        var display = changeCase.capitalCase(name.replace(/-regular/i, '').replace('-', ''));
         var key = name.toLowerCase();
         out[key] = { displayName: display, path: [dir, font].join('/') };
     });
@@ -35,4 +35,5 @@ for (var id in sorted) {
     sorted[id].tags = tags[id];
 }
 var json = JSON.stringify(sorted, null, '  ');
-write('../../docs/fonts/fonts.js', 'var fonts = ' + json + ';\n');
+write('../../docs/fonts/fonts.js', 'var playgroundFonts = ' + json + ';\n');
+console.log('playgroundFonts written successfully');
