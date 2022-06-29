@@ -80,4 +80,4 @@ interface IFont {
     tags: string[];
 }
 
-declare var fonts: { [id: string]: IFont };
+declare var playgroundFonts: { [id: string]: IFont };

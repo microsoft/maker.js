@@ -86,7 +86,7 @@ module Pointer {
                 this.reset();
             });
             document.addEventListener('mouseup', (e: MouseEvent) => { this.reset(); });
-            document.addEventListener('MSPointerUp', (e: MSPointerEvent) => { this.reset(); });
+            document.addEventListener('MSPointerUp', (e: PointerEvent) => { this.reset(); });
         }
 
         public getPointRelative(ev: MouseEvent): IPointRelative {

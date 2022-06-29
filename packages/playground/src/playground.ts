@@ -93,10 +93,6 @@
         FullScreen: 'full-screen'
     }
 
-    function isLandscapeOrientation() {
-        return (Math.abs(<number>window.orientation) == 90) || window.orientation == 'landscape' || window.orientation === undefined;
-    }
-
     function isHttp(url: string): boolean {
         return "http" === url.substr(0, 4);
     }
@@ -206,8 +202,8 @@
 
                         var added = false;
 
-                        for (var fontId in fonts) {
-                            var font = fonts[fontId];
+                        for (var fontId in playgroundFonts) {
+                            var font = playgroundFonts[fontId];
 
                             if (!FontLoader.fontMatches(font, attrs.value)) continue;
 
@@ -818,7 +814,7 @@
             var errorDetails: MakerJsPlayground.IJavaScriptErrorDetails = {
                 colno: 0,
                 lineno: 0,
-                message: 'error loading font ' + fontLoader.baseUrl + fonts[id].path,
+                message: 'error loading font ' + fontLoader.baseUrl + playgroundFonts[id].path,
                 name: 'Network error'
             };
 
