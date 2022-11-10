@@ -200,7 +200,7 @@ onmessage = (ev: MessageEvent) => {
         };
 
         fontLoader.failureCb = function (id) {
-            postError(request.requestId, 'error loading font ' + fontLoader.baseUrl + fonts[id].path);
+            postError(request.requestId, 'error loading font ' + fontLoader.baseUrl + playgroundFonts[id].path);
         }
 
         fontLoader.load();
