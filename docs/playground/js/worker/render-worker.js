@@ -105,7 +105,7 @@ onmessage = function (ev) {
             }
         });
         if (loadErrors_1.length) {
-            postError(request.requestId, "errors loading these modules: " + loadErrors_1.join());
+            postError(request.requestId, "errors loading these modules: ".concat(loadErrors_1.join()));
         }
     }
     if (requireError) {
@@ -146,7 +146,7 @@ onmessage = function (ev) {
             }
         };
         fontLoader.failureCb = function (id) {
-            postError(request.requestId, 'error loading font ' + fontLoader.baseUrl + fonts[id].path);
+            postError(request.requestId, 'error loading font ' + fontLoader.baseUrl + playgroundFonts[id].path);
         };
         fontLoader.load();
     }
