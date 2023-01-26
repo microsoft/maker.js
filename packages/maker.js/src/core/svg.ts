@@ -413,8 +413,7 @@ namespace MakerJs.exporter {
             fillRule: "evenodd",
             fontSize: '9pt',
             useSvgPathOnly: true,
-            viewBox: true,
-            className:""
+            viewBox: true
         };
 
         extendObject(opts, options);
