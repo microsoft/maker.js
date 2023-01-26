@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -149,7 +153,7 @@ function demoIndexPage() {
         var st = sectionTag();
         stream.write(jekyll('default', 'Demos'));
         writeHeading(1, 'Demos');
-        var yourDemoHtml = marked_1.marked('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/docs/demos/js).\n 3. Submit a pull request!');
+        var yourDemoHtml = (0, marked_1.marked)('### How to add your own demo to this gallery:\n 1. Fork the Maker.js repo on GitHub.\n 2. Add your code to [the demos folder](https://github.com/Microsoft/maker.js/tree/master/docs/demos/js).\n 3. Submit a pull request!');
         stream.write(section(yourDemoHtml));
         stream.write(st.getOpeningTag(false));
         writeHeading(2, 'Models published on ' + anchor('NPM', 'https://www.npmjs.com/search?q=makerjs', 'search NPM for keyword "makerjs"'));
@@ -183,7 +187,7 @@ function homePage() {
         var sections = readmeMarkdown.split('\n## ');
         //remove H1 tag and make the slogan an H2
         var topSection = sections[0].replace('# Maker.js\r\n\r\n', '## ');
-        stream.write(section(marked_1.marked(topSection)) + '\n');
+        stream.write(section((0, marked_1.marked)(topSection)) + '\n');
         var h2 = new makerjs.exporter.XmlTag('h2');
         h2.innerText = 'Latest demos';
         var demos = [h2.toString()];
@@ -200,7 +204,7 @@ function homePage() {
         stream.write(section(demos.join('\n')) + '\n');
         //skip the first section, begin with 1
         for (var i = 1; i < sections.length; i++) {
-            var sectionHtml = marked_1.marked('## ' + sections[i]);
+            var sectionHtml = (0, marked_1.marked)('## ' + sections[i]);
             stream.write(section(sectionHtml));
         }
         stream.end();
@@ -208,10 +212,10 @@ function homePage() {
 }
 function copyRequire(hint, root, key, copyTo) {
     var dirpath = root + '/' + key + '/';
-    console.log(hint + " " + dirpath);
+    console.log("".concat(hint, " ").concat(dirpath));
     var dirjson = null;
     try {
-        console.log("trying " + dirpath);
+        console.log("trying ".concat(dirpath));
         dirjson = fs.readFileSync(dirpath + 'package.json', 'UTF8');
     }
     catch (e) {
@@ -221,11 +225,11 @@ function copyRequire(hint, root, key, copyTo) {
         return;
     var djson = JSON.parse(dirjson);
     var main = djson.main;
-    console.log("src " + (dirpath + main));
+    console.log("src ".concat(dirpath + main));
     var src = fs.readFileSync(dirpath + main, 'UTF8');
     allRequires[key] = 1;
     var name = removeOrg(key);
-    console.log("write copyTo:" + copyTo + " name:" + name);
+    console.log("write copyTo:".concat(copyTo, " name:").concat(name));
     fs.writeFileSync('./js/' + copyTo + name + '.js', src, 'UTF8');
     var requires = detective(src);
     console.log('...requires ' + requires.length + ' libraries');

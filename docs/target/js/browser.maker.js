@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.17.2
+ *   version: 0.17.3
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -7742,7 +7742,8 @@ var MakerJs;
                     "stroke": elOpts.stroke,
                     "stroke-width": elOpts.strokeWidth,
                     "fill": elOpts.fill,
-                    "style": elOpts.cssStyle || cssStyle(elOpts)
+                    "style": elOpts.cssStyle || cssStyle(elOpts),
+                    "class": elOpts.className
                 });
             }
             function colorLayerOptions(layer) {
@@ -10285,6 +10286,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.17.2";
+MakerJs.version = "0.17.3";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
