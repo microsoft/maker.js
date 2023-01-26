@@ -353,7 +353,8 @@ namespace MakerJs.exporter {
                 "stroke": elOpts.stroke,
                 "stroke-width": elOpts.strokeWidth,
                 "fill": elOpts.fill,
-                "style": elOpts.cssStyle || cssStyle(elOpts)
+                "style": elOpts.cssStyle || cssStyle(elOpts),
+                "class": elOpts.className
             });
         }
 
@@ -836,6 +837,11 @@ namespace MakerJs.exporter {
          * CSS style to apply to elements.
          */
         cssStyle?: string;
+
+        /**
+         * SVG class name of the rendered paths.
+         */
+        className? : string;
     }
 
     /**
