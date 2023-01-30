@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.17.3
+ *   version: 0.17.4
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -8384,10 +8384,12 @@ var MakerJs;
             cpa.sort(function (a, b) { return a.xRatio - b.xRatio; });
             var first = cpa[0];
             var last = cpa[cpa.length - 1];
-            var min = first.xRatio;
-            var max = last.xRatio;
-            var span = max - min;
-            cpa.forEach(function (cp) { return cp.xRatio = (cp.xRatio - min) / span; });
+            if (cpa.length > 1) {
+                var min = first.xRatio;
+                var max = last.xRatio;
+                var span = max - min;
+                cpa.forEach(function (cp) { return cp.xRatio = (cp.xRatio - min) / span; });
+            }
             return {
                 cpa: cpa,
                 firstX: xMap[first.childId],
@@ -8440,7 +8442,7 @@ var MakerJs;
             var result = getChildPlacement(parentModel, baseline);
             var cpa = result.cpa;
             var chosenPath = onPath;
-            if (contain) {
+            if (contain && cpa.length > 1) {
                 //see if we need to clip
                 var onPathLength = MakerJs.measure.pathLength(onPath);
                 if (result.firstX + result.lastX < onPathLength) {
@@ -8502,35 +8504,52 @@ var MakerJs;
             var result = getChildPlacement(parentModel, baseline);
             var cpa = result.cpa;
             var chainLength = onChain.pathLength;
-            if (contain)
-                chainLength -= result.firstX + result.lastX;
-            var absolutes = cpa.map(function (cp) { return (reversed ? 1 - cp.xRatio : cp.xRatio) * chainLength; });
-            var relatives;
-            if (reversed)
-                absolutes.reverse();
-            relatives = absolutes.map(function (ab, i) { return Math.abs(ab - (i == 0 ? 0 : absolutes[i - 1])); });
-            if (contain) {
-                relatives[0] += reversed ? result.lastX : result.firstX;
+            var points;
+            if (cpa.length > 1) {
+                if (contain)
+                    chainLength -= result.firstX + result.lastX;
+                var absolutes = cpa.map(function (cp) { return (reversed ? 1 - cp.xRatio : cp.xRatio) * chainLength; });
+                var relatives;
+                if (reversed)
+                    absolutes.reverse();
+                relatives = absolutes.map(function (ab, i) { return Math.abs(ab - (i == 0 ? 0 : absolutes[i - 1])); });
+                if (contain) {
+                    relatives[0] += reversed ? result.lastX : result.firstX;
+                }
+                else {
+                    relatives.shift();
+                }
+                //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
+                points = MakerJs.chain.toPoints(onChain, relatives);
+                if (points.length < cpa.length) {
+                    //add last point of chain, since our distances exceeded the chain
+                    var endLink = onChain.links[onChain.links.length - 1];
+                    points.push(endLink.endPoints[endLink.reversed ? 0 : 1]);
+                }
+                if (contain)
+                    points.shift(); //delete the first point which is the beginning of the chain
             }
             else {
-                relatives.shift();
+                //get the first point and the middle point of the chain
+                points = MakerJs.chain.toPoints(onChain, 0.5 * chainLength);
+                points.length = 2;
+                //add the last point of the chain
+                points.push(onChain.links[onChain.links.length - 1].endPoints[onChain.links[onChain.links.length - 1].reversed ? 0 : 1]);
             }
-            //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
-            var points = MakerJs.chain.toPoints(onChain, relatives);
-            if (points.length < cpa.length) {
-                //add last point of chain, since our distances exceeded the chain
-                var endLink = onChain.links[onChain.links.length - 1];
-                points.push(endLink.endPoints[endLink.reversed ? 0 : 1]);
-            }
-            if (contain)
-                points.shift(); //delete the first point which is the beginning of the chain
             if (reversed)
                 points.reverse();
             var angles = miterAngles(points, -90);
-            cpa.forEach(function (cp, i) {
-                cp.angle = angles[i];
-                cp.origin = points[i];
-            });
+            if (cpa.length > 1) {
+                cpa.forEach(function (cp, i) {
+                    cp.angle = angles[i];
+                    cp.origin = points[i];
+                });
+            }
+            else {
+                //use the middle point
+                cpa[0].angle = angles[1];
+                cpa[0].origin = points[1];
+            }
             moveAndRotate(parentModel, cpa, rotated);
             return parentModel;
         }
@@ -10286,6 +10305,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.17.3";
+MakerJs.version = "0.17.4";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
