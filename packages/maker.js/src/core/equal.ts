@@ -196,24 +196,26 @@
 
         //lines are parallel, but not vertical
 
-        //rotate both to flat
-        const pA = yInterceptFromTranslateSlopeToZero(slopeA);
-        const pB = yInterceptFromTranslateSlopeToZero(slopeB);
+        //create array of slopes
+        const slopes = [slopeA, slopeB];
+
+        //get angle of each line
+        const angles = slopes.map(s => angle.toDegrees(Math.atan(s.slope)));
+
+        //create an array of each line cloned
+        const lines = slopes.map(s => path.clone(s.line)) as IPathLine[];
+
+        //use the first line as the rotation origin
+        const origin = lines[0].origin;
+
+        //rotate each line to flat
+        lines.forEach((l, i) => path.rotate(l, -angles[i], origin));
+
+        //get average y-intercept of each line
+        const averageYs = lines.map(l => (l.origin[1] + l.end[1]) / 2);
 
         //see if y-intercept is the same
-        return round(pA[1] - pB[1], .00001) == 0;
-    }
-
-    /**
-     * @private
-     */
-    function yInterceptFromTranslateSlopeToZero(s: ISlope): IPoint {
-        const yInterceptPoint: IPoint = [0, s.yIntercept];
-        if (s.slope === 0) {
-            return yInterceptPoint;
-        }
-        const a = angle.toDegrees(Math.atan(s.slope));
-        return point.rotate(yInterceptPoint, -a);
+        return round(averageYs[0] - averageYs[1], .00001) == 0;
     }
 
     /**
@@ -226,7 +228,6 @@
     export function isSlopeParallel(slopeA: ISlope, slopeB: ISlope): boolean {
 
         if (!slopeA.hasSlope && !slopeB.hasSlope) {
-
             return true;
         }
 
