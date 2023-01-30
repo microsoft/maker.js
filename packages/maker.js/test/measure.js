@@ -87,20 +87,23 @@ describe('Measure', function () {
         var line1 = new makerjs.paths.Line([0, 0], [5, 5]);
         var line2 = new makerjs.paths.Line([3, 3], [7, 7]);
         var line3 = new makerjs.paths.Line([8, 8], [8, 0]);
+        var line4 = new makerjs.paths.Line([8, 8], [9, 9.00001]);
         var slope1 = makerjs.measure.lineSlope(line1);
         var slope2 = makerjs.measure.lineSlope(line2);
         var slope3 = makerjs.measure.lineSlope(line3);
+        var slope4 = makerjs.measure.lineSlope(line4);
         assert.ok(makerjs.measure.isSlopeEqual(slope1, slope2));
         assert.ok(!makerjs.measure.isSlopeEqual(slope1, slope3));
+        assert.ok(!makerjs.measure.isSlopeEqual(slope1, slope4));
     });
 
     it('should find approximately equal slopes', function () {
         var line1 = new makerjs.paths.Line([1, 0], [2, 2]);
-        var line2 = new makerjs.paths.Line([1, 0], [2, 2.000000001]);
+        var line2 = new makerjs.paths.Line([1, 0], [2, 2.000001]);
         var slope1 = makerjs.measure.lineSlope(line1);
         var slope2 = makerjs.measure.lineSlope(line2);
-        var translated1 = makerjs.path.moveRelative(line1, [10000, 0])
-        var translated2 = makerjs.path.moveRelative(line2, [10000, 0])
+        var translated1 = makerjs.path.moveRelative(line1, [100000, 0])
+        var translated2 = makerjs.path.moveRelative(line2, [100000, 0])
         var slope3 = makerjs.measure.lineSlope(translated1);
         var slope4 = makerjs.measure.lineSlope(translated2);
         assert.ok(makerjs.measure.isSlopeEqual(slope1, slope2));
