@@ -43,7 +43,7 @@
         var left = -size.low[0];
         var offset: IPoint = [left, size.high[1]];
 
-        offset = point.add(offset, options.origin);
+        offset = point.add(offset, opts.origin);
 
         model.findChains(
             scaledModel,

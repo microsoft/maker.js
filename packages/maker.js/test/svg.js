@@ -83,6 +83,7 @@ describe('Export SVG', function () {
             strokeWidth: "0.5mm",
             layerOptions: {
                 square: {
+                    className: 'square',
                     fill: "#999",
                     cssStyle: "fill-opacity: 0.2",
                 },
@@ -90,6 +91,7 @@ describe('Export SVG', function () {
                     stroke: "red",
                 },
             },
+            className: 'test'
         };
         var model = {};
         makerjs
@@ -101,8 +103,8 @@ describe('Export SVG', function () {
         const svg = makerjs.exporter.toSVG(model, exportOptions);
         const expected = [
             '<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">',
-                '<g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="8pt" stroke="#333" stroke-width="0.5mm" fill="green" style="stroke:#333;stroke-width:0.5mm;fill:green">',
-                    '<path d="M 0 50 L 50 50 L 50 0 L 0 0 L 0 50 Z" id="square" fill="#999" style="fill-opacity: 0.2" vector-effect="non-scaling-stroke"/>',
+                '<g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="8pt" stroke="#333" stroke-width="0.5mm" fill="green" style="stroke:#333;stroke-width:0.5mm;fill:green" class="test">',
+                    '<path d="M 0 50 L 50 50 L 50 0 L 0 0 L 0 50 Z" id="square" fill="#999" style="fill-opacity: 0.2" class="square" vector-effect="non-scaling-stroke"/>',
                     '<g id="captions">',
                         '<text alignment-baseline="middle" text-anchor="middle" transform="rotate(315,25,25)" x="25" y="25" stroke="red" style="stroke:red">fold here</text>',
                     '</g>',

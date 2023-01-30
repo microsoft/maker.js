@@ -15,14 +15,14 @@
         var result: number[] = [];
 
         //http://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly
-        var re = /[\.-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+        var re = /-?(?:0|[1-9]\d*)?(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
         var matches: RegExpExecArray;
 
         while ((matches = re.exec(s)) !== null) {
             if (matches.index === re.lastIndex) {
                 re.lastIndex++;
             }
-            result.push(parseFloat(matches[0]));
+            if (matches[0] !== "") result.push(parseFloat(matches[0]));
         }
 
         return result;

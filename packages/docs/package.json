@@ -10,14 +10,13 @@
     "@types/graham_scan": "^1.0.28",
     "@types/opentype.js": "^0.7.0",
     "@types/pdfkit": "^0.7.36",
-    "dxf-parser-typings": "^1.2.1",
+    "dxf-parser-typings": "^1.3.0",
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "project": "typedoc ../maker.js/src --json ./dist/project.json && node ./project-to-data.js > ../../docs/_data/project.json",
     "cleandocs": "rimraf ../../docs/docs/api",
-    "predocs": "npm run cleandocs && npm run project",
-    "docs": "typedoc ../maker.js/src --excludeExternals --excludePrivate --mode file --entryPoint MakerJs --readme none --theme ./typedoc-theme --out ../../docs/docs/api --ignoreCompilerErrors"
+    "predocs": "npm run cleandocs",
+    "docs": "typedoc ../maker.js/src --excludeExternals --excludePrivate --mode file --gitRevision master --entryPoint MakerJs --readme none --theme ./typedoc-theme --out ../../docs/docs/api --ignoreCompilerErrors"
   },
   "author": "Dan Marshall",
   "license": "Apache-2.0"

@@ -59,11 +59,14 @@ namespace MakerJs.layout {
 
         var first = cpa[0];
         var last = cpa[cpa.length - 1];
-        var min = first.xRatio;
-        var max = last.xRatio;
-        var span = max - min;
 
-        cpa.forEach(cp => cp.xRatio = (cp.xRatio - min) / span);
+        if (cpa.length > 1) {
+            var min = first.xRatio;
+            var max = last.xRatio;
+            var span = max - min;
+
+            cpa.forEach(cp => cp.xRatio = (cp.xRatio - min) / span);
+        }
 
         return {
             cpa,
@@ -122,7 +125,7 @@ namespace MakerJs.layout {
         var cpa = result.cpa;
         var chosenPath = onPath;
 
-        if (contain) {
+        if (contain && cpa.length > 1) {
             //see if we need to clip
             var onPathLength = measure.pathLength(onPath);
 
@@ -185,40 +188,57 @@ namespace MakerJs.layout {
         var cpa = result.cpa;
 
         var chainLength = onChain.pathLength;
-        if (contain) chainLength -= result.firstX + result.lastX;
+        var points: IPoint[]
 
-        var absolutes = cpa.map(cp => (reversed ? 1 - cp.xRatio : cp.xRatio) * chainLength);
-        var relatives: number[];
+        if (cpa.length > 1) {
+            if (contain) chainLength -= result.firstX + result.lastX;
 
-        if (reversed) absolutes.reverse();
+            var absolutes = cpa.map(cp => (reversed ? 1 - cp.xRatio : cp.xRatio) * chainLength);
+            var relatives: number[];
 
-        relatives = absolutes.map((ab, i) => Math.abs(ab - (i == 0 ? 0 : absolutes[i - 1])));
+            if (reversed) absolutes.reverse();
 
-        if (contain) {
-            relatives[0] += reversed ? result.lastX : result.firstX;
+            relatives = absolutes.map((ab, i) => Math.abs(ab - (i == 0 ? 0 : absolutes[i - 1])));
+
+            if (contain) {
+                relatives[0] += reversed ? result.lastX : result.firstX;
+            } else {
+                relatives.shift();
+            }
+
+            //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
+            points = chain.toPoints(onChain, relatives);
+
+            if (points.length < cpa.length) {
+                //add last point of chain, since our distances exceeded the chain
+                var endLink = onChain.links[onChain.links.length - 1];
+                points.push(endLink.endPoints[endLink.reversed ? 0 : 1]);
+            }
+
+            if (contain) points.shift(); //delete the first point which is the beginning of the chain
+
         } else {
-            relatives.shift();
+            //get the first point and the middle point of the chain
+            points = chain.toPoints(onChain, 0.5 * chainLength);
+            points.length = 2;
+            //add the last point of the chain
+            points.push(onChain.links[onChain.links.length - 1].endPoints[onChain.links[onChain.links.length - 1].reversed ? 0 : 1]);
         }
-
-        //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
-        var points = chain.toPoints(onChain, relatives);
-
-        if (points.length < cpa.length) {
-            //add last point of chain, since our distances exceeded the chain
-            var endLink = onChain.links[onChain.links.length - 1];
-            points.push(endLink.endPoints[endLink.reversed ? 0 : 1]);
-        }
-
-        if (contain) points.shift(); //delete the first point which is the beginning of the chain
 
         if (reversed) points.reverse();
 
         var angles = miterAngles(points, -90);
 
-        cpa.forEach((cp, i) => {
-            cp.angle = angles[i];
-            cp.origin = points[i];
-        });
+        if (cpa.length > 1) {
+            cpa.forEach((cp, i) => {
+                cp.angle = angles[i];
+                cp.origin = points[i];
+            });
+        } else {
+            //use the middle point
+            cpa[0].angle = angles[1];
+            cpa[0].origin = points[1];
+        }
 
         moveAndRotate(parentModel, cpa, rotated);
 

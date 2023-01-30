@@ -74,8 +74,8 @@
         }
 
         private findFirstFontIdMatching(spec: string) {
-            for (var fontId in fonts) {
-                var font = fonts[fontId];
+            for (var fontId in playgroundFonts) {
+                var font = playgroundFonts[fontId];
                 if (FontLoader.fontMatches(font, spec)) return fontId;
             }
             return null;
@@ -124,7 +124,7 @@
         private loadFont(fontId: string) {
 
             //load a font asynchronously
-            this.opentypeLib.load(this.baseUrl + fonts[fontId].path, (err, font) => {
+            this.opentypeLib.load(this.baseUrl + playgroundFonts[fontId].path, (err, font) => {
                 if (err) {
                     this.failureCb(fontId);
                 } else {
