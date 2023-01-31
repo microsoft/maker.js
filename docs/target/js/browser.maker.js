@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.17.4
+ *   version: 0.17.5
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -4104,8 +4104,21 @@ var MakerJs;
                 //lines are both vertical, see if x are the same
                 return MakerJs.round(slopeA.line.origin[0] - slopeB.line.origin[0]) == 0;
             }
-            //lines are parallel, but not vertical, see if y-intercept is the same
-            return MakerJs.round(slopeA.yIntercept - slopeB.yIntercept, .00001) == 0;
+            //lines are parallel, but not vertical
+            //create array of slopes
+            var slopes = [slopeA, slopeB];
+            //get angle of each line
+            var angles = slopes.map(function (s) { return MakerJs.angle.toDegrees(Math.atan(s.slope)); });
+            //create an array of each line cloned
+            var lines = slopes.map(function (s) { return MakerJs.path.clone(s.line); });
+            //use the first line as the rotation origin
+            var origin = lines[0].origin;
+            //rotate each line to flat
+            lines.forEach(function (l, i) { return MakerJs.path.rotate(l, -angles[i], origin); });
+            //get average y-intercept of each line
+            var averageYs = lines.map(function (l) { return (l.origin[1] + l.end[1]) / 2; });
+            //see if y-intercept is the same
+            return MakerJs.round(averageYs[0] - averageYs[1], .00001) == 0;
         }
         measure.isSlopeEqual = isSlopeEqual;
         /**
@@ -10305,6 +10318,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.17.4";
+MakerJs.version = "0.17.5";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
