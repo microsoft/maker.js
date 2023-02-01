@@ -115,7 +115,7 @@ namespace MakerJs.model {
 
         function tryAddCaption(m: IModel, offset: IPoint, layer: string) {
             if (m.caption) {
-                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, offset) as IPathLine, layer: (m.caption.anchor.layer || layer) });
+                captions.push({ text: m.caption.text, anchor: path.clone(m.caption.anchor, point.add(m.origin, offset)) as IPathLine, layer: (m.caption.anchor.layer || layer) });
             }
         }
 
