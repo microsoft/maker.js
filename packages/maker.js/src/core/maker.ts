@@ -783,6 +783,22 @@ namespace MakerJs {
     }
 
     /**
+     * A point reference in a path.
+     */
+    export interface IWalkChainPoints extends IWalkPath{
+        point: IPoint;
+        endPoints: IPoint[];
+    }
+
+    /**
+     * Callback signature for chain.toPoints().
+     */
+    export interface IChainPointsCallback {
+        
+        (chainPoints: IWalkChainPoints[]): void;
+    }
+
+    /**
      * Reference to a model within a model.
      */
     export interface IRefModelInModel {
