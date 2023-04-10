@@ -239,7 +239,7 @@ namespace MakerJs.layout {
 
         if (cpa.length > 1) {
             cpa.forEach((cp, i) => {
-                cp.angle = rotateAlongPath ? alongPathAngles[i] : angles[i];
+                cp.angle = rotateAlongPath ? alongPathAngles[i+1] : angles[i];
                 cp.origin = points[i];
             });
         } else {
