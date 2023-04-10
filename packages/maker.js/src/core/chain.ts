@@ -612,7 +612,6 @@ namespace MakerJs.chain {
         var di = 0;
         var t = 0;
         var distanceArray: number[];
-        let breakLoop = false;
 
         if (Array.isArray(distanceOrDistances)) {
             distanceArray = distanceOrDistances as number[];
@@ -642,8 +641,8 @@ namespace MakerJs.chain {
                 result.push(chainPoint);
 
                 if (maxPoints && result.length >= maxPoints) { 
-                    breakLoop = true;
-                    break;
+                    if (callback) callback(result);
+                    return result.map(x => x.point);
                 }
 
                 var distance: number;
@@ -652,8 +651,8 @@ namespace MakerJs.chain {
                     di++;
 
                     if (di > distanceArray.length) {
-                        breakLoop;
-                        break;
+                        if (callback) callback(result);
+                        return result.map(x => x.point);
                     }
 
                 } else {
@@ -663,7 +662,6 @@ namespace MakerJs.chain {
                 t += distance;
             }
             t -= len;
-            if(breakLoop) break;
         }
 
         removeDuplicateEnds(chainContext.endless, result);

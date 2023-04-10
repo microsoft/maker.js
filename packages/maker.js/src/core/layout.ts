@@ -213,7 +213,7 @@ namespace MakerJs.layout {
                 (chainPoints)=> {
                     for(let i = 0; i < chainPoints.length; i++)
                     {
-                        alongPathAngles.push(angle.ofPointInDegrees(chainPoints[i].endPoints[0], chainPoints[i].endPoints[0]));
+                        alongPathAngles.push(angle.ofPointInDegrees(chainPoints[i].endPoints[0], chainPoints[i].endPoints[1]));
                     }
             });
 
