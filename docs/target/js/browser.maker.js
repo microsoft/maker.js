@@ -6739,36 +6739,23 @@ var MakerJs;
         function removeDuplicateEnds(endless, points) {
             if (!endless || points.length < 2)
                 return;
-            if (MakerJs.measure.isPointEqual(points[0].point, points[points.length - 1].point, .00001)) {
+            if (MakerJs.measure.isPointEqual(points[0], points[points.length - 1], .00001)) {
                 points.pop();
             }
         }
-        function toPoints(chainContext, distanceOrDistances) {
-            var args = [];
-            for (var _i = 2; _i < arguments.length; _i++) {
-                args[_i - 2] = arguments[_i];
-            }
-            var maxPoints;
-            var callback;
-            switch (args.length) {
-                case 1:
-                    if (typeof args[0] === 'function') {
-                        callback = args[0];
-                    }
-                    else {
-                        maxPoints = args[0];
-                    }
-                    break;
-                case 2:
-                    callback = args[0];
-                    maxPoints = args[1];
-                    break;
-            }
+        /**
+         * Get points along a chain of paths.
+         *
+         * @param chainContext Chain of paths to get points from.
+         * @param distance Numeric distance along the chain between points, or numeric array of distances along the chain between each point.
+         * @param maxPoints Maximum number of points to retrieve.
+         * @returns Array of points which are on the chain spread at a uniform interval.
+         */
+        function toPoints(chainContext, distanceOrDistances, maxPoints) {
             var result = [];
             var di = 0;
             var t = 0;
             var distanceArray;
-            var breakLoop = false;
             if (Array.isArray(distanceOrDistances)) {
                 distanceArray = distanceOrDistances;
             }
@@ -6781,29 +6768,15 @@ var MakerJs;
                     if (link.reversed) {
                         r = 1 - r;
                     }
-                    var chainPoint = {
-                        point: MakerJs.point.add(MakerJs.point.middle(wp.pathContext, r), wp.offset),
-                        pathContext: wp.pathContext,
-                        modelContext: wp.modelContext,
-                        pathId: wp.pathId,
-                        layer: wp.layer,
-                        offset: wp.offset,
-                        route: wp.route,
-                        routeKey: wp.routeKey,
-                        endPoints: link.endPoints
-                    };
-                    result.push(chainPoint);
-                    if (maxPoints && result.length >= maxPoints) {
-                        breakLoop = true;
-                        break;
-                    }
+                    result.push(MakerJs.point.add(MakerJs.point.middle(wp.pathContext, r), wp.offset));
+                    if (maxPoints && result.length >= maxPoints)
+                        return result;
                     var distance;
                     if (distanceArray) {
                         distance = distanceArray[di];
                         di++;
                         if (di > distanceArray.length) {
-                            breakLoop;
-                            break;
+                            return result;
                         }
                     }
                     else {
@@ -6812,36 +6785,19 @@ var MakerJs;
                     t += distance;
                 }
                 t -= len;
-                if (breakLoop)
-                    break;
             }
             removeDuplicateEnds(chainContext.endless, result);
-            if (callback)
-                callback(result);
-            return result.map(function (x) { return x.point; });
+            return result;
         }
         chain.toPoints = toPoints;
-        function toKeyPoints(chainContext) {
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
-            var maxArcFacet;
-            var callback;
-            switch (args.length) {
-                case 1:
-                    if (typeof args[0] === 'function') {
-                        callback = args[0];
-                    }
-                    else {
-                        maxArcFacet = args[0];
-                    }
-                    break;
-                case 2:
-                    callback = args[0];
-                    maxArcFacet = args[1];
-                    break;
-            }
+        /**
+         * Get key points (a minimal a number of points) along a chain of paths.
+         *
+         * @param chainContext Chain of paths to get points from.
+         * @param maxArcFacet The maximum length between points on an arc or circle.
+         * @returns Array of points which are on the chain.
+         */
+        function toKeyPoints(chainContext, maxArcFacet) {
             var result = [];
             for (var i = 0; i < chainContext.links.length; i++) {
                 var link = chainContext.links[i];
@@ -6855,26 +6811,11 @@ var MakerJs;
                         keyPoints.shift();
                     }
                     var offsetPathPoints = keyPoints.map(function (p) { return MakerJs.point.add(p, wp.offset); });
-                    var chainPoints = offsetPathPoints.map(function (p) {
-                        return {
-                            point: p,
-                            pathContext: wp.pathContext,
-                            modelContext: wp.modelContext,
-                            pathId: wp.pathId,
-                            layer: wp.layer,
-                            offset: wp.offset,
-                            route: wp.route,
-                            routeKey: wp.routeKey,
-                            endPoints: link.endPoints
-                        };
-                    });
-                    result.push.apply(result, chainPoints);
+                    result.push.apply(result, offsetPathPoints);
                 }
             }
             removeDuplicateEnds(chainContext.endless, result);
-            if (callback)
-                callback(result);
-            return result.map(function (x) { return x.point; });
+            return result;
         }
         chain.toKeyPoints = toKeyPoints;
     })(chain = MakerJs.chain || (MakerJs.chain = {}));
@@ -8566,15 +8507,13 @@ var MakerJs;
          * @param reversed Flag to travel along the chain in reverse. Default is false.
          * @param contain Flag to contain the children layout within the length of the chain. Default is false.
          * @param rotate Flag to rotate the child to mitered angle. Default is true.
-         * @param rotateAlongPath Flag to rotate the child along the layout path. Default is false. Works only if rotate is set true.
          * @returns The parentModel, for cascading.
          */
-        function childrenOnChain(parentModel, onChain, baseline, reversed, contain, rotated, rotateAlongPath) {
+        function childrenOnChain(parentModel, onChain, baseline, reversed, contain, rotated) {
             if (baseline === void 0) { baseline = 0; }
             if (reversed === void 0) { reversed = false; }
             if (contain === void 0) { contain = false; }
             if (rotated === void 0) { rotated = true; }
-            if (rotateAlongPath === void 0) { rotateAlongPath = false; }
             var result = getChildPlacement(parentModel, baseline);
             var cpa = result.cpa;
             var chainLength = onChain.pathLength;
@@ -8593,13 +8532,8 @@ var MakerJs;
                 else {
                     relatives.shift();
                 }
-                var alongPathAngles = [];
                 //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
-                points = MakerJs.chain.toPoints(onChain, relatives, function (chainPoints) {
-                    for (var i = 0; i < chainPoints.length; i++) {
-                        alongPathAngles.push(MakerJs.angle.ofPointInDegrees(chainPoints[i].endPoints[0], chainPoints[i].endPoints[0]));
-                    }
-                });
+                points = MakerJs.chain.toPoints(onChain, relatives);
                 if (points.length < cpa.length) {
                     //add last point of chain, since our distances exceeded the chain
                     var endLink = onChain.links[onChain.links.length - 1];
@@ -8620,7 +8554,7 @@ var MakerJs;
             var angles = miterAngles(points, -90);
             if (cpa.length > 1) {
                 cpa.forEach(function (cp, i) {
-                    cp.angle = rotateAlongPath ? alongPathAngles[i] : angles[i];
+                    cp.angle = angles[i];
                     cp.origin = points[i];
                 });
             }
