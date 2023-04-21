@@ -27,6 +27,11 @@ namespace MakerJs {
     /**
      * @private
      */
+    var EPSILON = Number.EPSILON || Math.pow(2, -52);
+
+    /**
+     * @private
+     */
     function tryEval(name: string) {
         try {
             var value = eval(name);
@@ -129,10 +134,9 @@ namespace MakerJs {
         //optimize for early exit for integers
         if (n % 1 === 0) return n;
 
-        const temp = 1 / accuracy;
-        const eps = Number.EPSILON || Math.pow(2, -52);
+        var temp = 1 / accuracy;
 
-        return Math.round((n + eps) * temp) / temp;
+        return Math.round((n + EPSILON) * temp) / temp;
     }
 
     /**
