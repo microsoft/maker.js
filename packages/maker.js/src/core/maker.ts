@@ -130,8 +130,9 @@ namespace MakerJs {
         if (n % 1 === 0) return n;
 
         const temp = 1 / accuracy;
+        const eps = Number.EPSILON || Math.pow(2, -52);
 
-        return Math.round((n + Number.EPSILON) * temp) / temp;
+        return Math.round((n + eps) * temp) / temp;
     }
 
     /**
