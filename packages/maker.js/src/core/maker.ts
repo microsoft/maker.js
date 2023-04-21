@@ -784,10 +784,12 @@ namespace MakerJs {
 
     /**
      * A point reference in a path.
+     * Ratio is not available for toKeyPoints
      */
-    export interface IWalkChainPoints extends IWalkPath{
-        point: IPoint;
-        endPoints: IPoint[];
+    export interface IChainLinkKeyPoint{
+        keyPoint: IPoint;
+        link: IChainLink;
+        ratio: number | undefined;
     }
 
     /**
@@ -795,7 +797,7 @@ namespace MakerJs {
      */
     export interface IChainPointsCallback {
         
-        (chainPoints: IWalkChainPoints[]): void;
+        (chainPoints: IChainLinkKeyPoint[]): void;
     }
 
     /**

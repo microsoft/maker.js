@@ -560,9 +560,9 @@ namespace MakerJs.chain {
     /**
      * @private
      */
-    function removeDuplicateEnds(endless: boolean, points: IWalkChainPoints[]) {
+    function removeDuplicateEnds(endless: boolean, points: IChainLinkKeyPoint[]) {
         if (!endless || points.length < 2) return;
-        if (measure.isPointEqual(points[0].point, points[points.length - 1].point, .00001)) {
+        if (measure.isPointEqual(points[0].keyPoint, points[points.length - 1].keyPoint, .00001)) {
             points.pop();
         }
     }
@@ -608,7 +608,7 @@ namespace MakerJs.chain {
                 break;
         }
 
-        var result: IWalkChainPoints[] = [];
+        var result: IChainLinkKeyPoint[] = [];
         var di = 0;
         var t = 0;
         var distanceArray: number[];
@@ -627,22 +627,16 @@ namespace MakerJs.chain {
                 if (link.reversed) {
                     r = 1 - r;
                 }
-                let chainPoint: IWalkChainPoints = {
-                    point: point.add(point.middle(wp.pathContext, r), wp.offset),
-                    pathContext: wp.pathContext,
-                    modelContext: wp.modelContext,
-                    pathId: wp.pathId,
-                    layer: wp.layer,
-                    offset: wp.offset,
-                    route: wp.route,
-                    routeKey: wp.routeKey,
-                    endPoints: link.endPoints
+                let chainPoint: IChainLinkKeyPoint = {
+                    keyPoint: point.add(point.middle(wp.pathContext, r), wp.offset),
+                    link: link,
+                    ratio: r
                 };
                 result.push(chainPoint);
 
                 if (maxPoints && result.length >= maxPoints) { 
                     if (callback) callback(result);
-                    return result.map(x => x.point);
+                    return result.map(x => x.keyPoint);
                 }
 
                 var distance: number;
@@ -652,7 +646,7 @@ namespace MakerJs.chain {
 
                     if (di > distanceArray.length) {
                         if (callback) callback(result);
-                        return result.map(x => x.point);
+                        return result.map(x => x.keyPoint);
                     }
 
                 } else {
@@ -666,7 +660,7 @@ namespace MakerJs.chain {
 
         removeDuplicateEnds(chainContext.endless, result);
         if (callback) callback(result);
-        return result.map(x => x.point);
+        return result.map(x => x.keyPoint);
     }
 
     /**
@@ -686,7 +680,7 @@ namespace MakerJs.chain {
      * @param callback Callback function when points are found.
      * @returns Array of points which are on the chain.
      */
-    export function toKeyPoints(chainContext: IChain, callback: IWalkChainPoints, maxArcFacet?: number): IPoint[];
+    export function toKeyPoints(chainContext: IChain, callback: IChainLinkKeyPoint, maxArcFacet?: number): IPoint[];
     export function toKeyPoints(chainContext: IChain, ... args: any): IPoint[] {
         var maxArcFacet: number;
         var callback: IChainPointsCallback;
@@ -704,7 +698,7 @@ namespace MakerJs.chain {
                 maxArcFacet = args[1];
                 break;
         }
-        var result: IWalkChainPoints[] = [];
+        var result: IChainLinkKeyPoint[] = [];
 
         for (var i = 0; i < chainContext.links.length; i++) {
             var link = chainContext.links[i];
@@ -722,15 +716,8 @@ namespace MakerJs.chain {
                 
                 var chainPoints = offsetPathPoints.map(p=> {
                     return {
-                        point: p,
-                        pathContext: wp.pathContext,
-                        modelContext: wp.modelContext,
-                        pathId: wp.pathId,
-                        layer: wp.layer,
-                        offset: wp.offset,
-                        route: wp.route,
-                        routeKey: wp.routeKey,
-                        endPoints: link.endPoints
+                        keyPoint: p,
+                        link: link
                     }
                 });
                 result.push.apply(result, chainPoints);
@@ -739,7 +726,7 @@ namespace MakerJs.chain {
 
         removeDuplicateEnds(chainContext.endless, result);
         if (callback) callback(result);
-        return result.map(x=> x.point);
+        return result.map(x=> x.keyPoint);
     }
 
 }
