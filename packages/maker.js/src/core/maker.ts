@@ -784,7 +784,6 @@ namespace MakerJs {
 
     /**
      * A point reference in a path.
-     * Ratio is not available for toKeyPoints
      */
     export interface IChainLinkKeyPoint{
         keyPoint: IPoint;
