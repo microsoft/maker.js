@@ -560,9 +560,15 @@ namespace MakerJs.chain {
     /**
      * @private
      */
-    function removeDuplicateEnds(endless: boolean, points: IChainLinkKeyPoint[]) {
+    function removeDuplicateEnds(endless: boolean, points: IChainLinkKeyPoint[]);
+    function removeDuplicateEnds(endless: boolean, points: IPoint[]);
+    function removeDuplicateEnds(endless: boolean, points: (IPoint | IChainLinkKeyPoint)[]) {
         if (!endless || points.length < 2) return;
-        if (measure.isPointEqual(points[0].keyPoint, points[points.length - 1].keyPoint, .00001)) {
+        var firstPoint = points[0];
+        var lastPoint = points[points.length - 1];
+        var isPoint = Array.isArray(firstPoint);
+        if (isPoint ? measure.isPointEqual(firstPoint as IPoint, lastPoint as IPoint, .00001) : 
+        measure.isPointEqual((firstPoint as IChainLinkKeyPoint).keyPoint, (lastPoint as IChainLinkKeyPoint).keyPoint, .00001)) {
             points.pop();
         }
     }
@@ -670,35 +676,8 @@ namespace MakerJs.chain {
      * @param maxArcFacet The maximum length between points on an arc or circle.
      * @returns Array of points which are on the chain.
      */
-    export function toKeyPoints(chainContext: IChain, maxArcFacet?: number): IPoint[];
-
-    /**
-     * Get key points (a minimal a number of points) along a chain of paths.
-     * 
-     * @param chainContext Chain of paths to get points from.
-     * @param maxArcFacet The maximum length between points on an arc or circle.
-     * @param callback Callback function when points are found.
-     * @returns Array of points which are on the chain.
-     */
-    export function toKeyPoints(chainContext: IChain, callback: IChainLinkKeyPoint, maxArcFacet?: number): IPoint[];
-    export function toKeyPoints(chainContext: IChain, ... args: any): IPoint[] {
-        var maxArcFacet: number;
-        var callback: IChainPointsCallback;
-        switch (args.length) {
-            case 1:
-                if (typeof args[0] === 'function') {
-                    callback = args[0];
-                } else {
-                    maxArcFacet = args[0];
-                }
-                break;
-
-            case 2:
-                callback = args[0];
-                maxArcFacet = args[1];
-                break;
-        }
-        var result: IChainLinkKeyPoint[] = [];
+    export function toKeyPoints(chainContext: IChain, maxArcFacet?: number): IPoint[] {
+        var result: IPoint[] = [];
 
         for (var i = 0; i < chainContext.links.length; i++) {
             var link = chainContext.links[i];
@@ -714,19 +693,12 @@ namespace MakerJs.chain {
 
                 var offsetPathPoints = keyPoints.map(p => point.add(p, wp.offset));
                 
-                var chainPoints = offsetPathPoints.map(p=> {
-                    return {
-                        keyPoint: p,
-                        link: link
-                    }
-                });
-                result.push.apply(result, chainPoints);
+                result.push.apply(result, offsetPathPoints);
             }
         }
 
         removeDuplicateEnds(chainContext.endless, result);
-        if (callback) callback(result);
-        return result.map(x=> x.keyPoint);
+        return result;
     }
 
 }
