@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.17.6
+ *   version: 0.18.0
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -474,6 +474,10 @@ var MakerJs;
     /**
      * @private
      */
+    var EPSILON = Number.EPSILON || Math.pow(2, -52);
+    /**
+     * @private
+     */
     function tryEval(name) {
         try {
             var value = eval(name);
@@ -568,28 +572,8 @@ var MakerJs;
         //optimize for early exit for integers
         if (n % 1 === 0)
             return n;
-        var exp = 1 - String(Math.ceil(1 / accuracy)).length;
-        //Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
-        // If the exp is undefined or zero...
-        if (typeof exp === 'undefined' || +exp === 0) {
-            return Math.round(n);
-        }
-        n = +n;
-        exp = +exp;
-        // If the value is not a number or the exp is not an integer...
-        if (isNaN(n) || !(typeof exp === 'number' && exp % 1 === 0)) {
-            return NaN;
-        }
-        // If the value is negative...
-        if (n < 0) {
-            return -round(-n, accuracy);
-        }
-        // Shift
-        var a = split(n.toString(), 'e');
-        n = Math.round(+(a[0] + 'e' + (a[1] ? (+a[1] - exp) : -exp)));
-        // Shift back
-        a = split(n.toString(), 'e');
-        return +(a[0] + 'e' + (a[1] ? (+a[1] + exp) : exp));
+        var temp = 1 / accuracy;
+        return Math.round((n + EPSILON) * temp) / temp;
     }
     MakerJs.round = round;
     /**
@@ -10318,6 +10302,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.17.6";
+MakerJs.version = "0.18.0";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
