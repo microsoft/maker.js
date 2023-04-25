@@ -1,10 +1,10 @@
 var makerjs = require('makerjs');
 
 function Nameplate(font, text, fontSize, fontMargin, boltMargin, boltRadius, rounded) {
-
+    
     //generate the text using a font
     var textModel = new makerjs.models.Text(font, text, fontSize);
-
+    
     //move text to [0, 0]
     makerjs.model.zero(textModel);
 
@@ -31,7 +31,7 @@ function Nameplate(font, text, fontSize, fontMargin, boltMargin, boltRadius, rou
 
     //move everything to [0, 0]
     makerjs.model.zero(this);
-
+    
     this.units = makerjs.unitType.Millimeter;
 }
 
@@ -41,7 +41,7 @@ Nameplate.metaParameters = [
     { title: "font size", type: "range", min: 10, max: 200, value: 72 },
     { title: "font margin", type: "range", min: 1, max: 50, value: 20 },
     { title: "bolt margin", type: "range", min: 1, max: 50, value: 10 },
-    { title: "bolt radius", type: "range", min: 0.1, max: 10, value: 3, step: 0.1 },
+    { title: "bolt radius", type: "range", min: .1, max: 10, value: 3, step: .1 },
     { title: "rounded", type: "bool", value: true }
 ];
 
