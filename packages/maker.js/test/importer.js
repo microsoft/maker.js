@@ -61,6 +61,18 @@ describe('Importer', function () {
         }
     });
 
+    it("should import degenerate SVG arcs", () => {
+        let pathData = "M60 -60 A 10 10 0 0 0 60 -60 Z"
+        let expected = JSON.stringify({
+            paths: {
+                p_1: new makerjs.paths.Arc([60, 60], [60, 60], 10, false, false),
+            }
+        })
+        let arc = makerjs.importer.fromSVGPathData(pathData);
+        assert.ok(makerjs.isPathArc(arc.paths.p_1));
+        assert.equal(JSON.stringify(arc), expected)
+    })
+
     it("should import SVG elliptic arcs", () => {
         var pathData = [
             "M100-50A50 30 0 0 0 50-80A20 40 0 0 1 30-120Z",
