@@ -99,15 +99,15 @@ namespace MakerJs.paths {
                     } else {
 
                         //find the 2 potential origins
-                        var origins = path.intersection(
+                        let intersectionPoints = path.intersection(
                             new Circle(pointA, this.radius),
                             new Circle(pointB, this.radius)
-                        );
+                        )?.intersectionPoints ?? [pointA, pointB];
 
                         var spans: IArcSpan[] = [];
 
-                        for (var i = origins.intersectionPoints.length; i--;) {
-                            span = getSpan(origins.intersectionPoints[i])
+                        for (var i = intersectionPoints.length; i--;) {
+                            span = getSpan(intersectionPoints[i])
 
                             //insert sorted by size ascending
                             if (spans.length == 0 || span.size > spans[0].size) {
@@ -142,7 +142,7 @@ namespace MakerJs.paths {
                         Circle.apply(this, args);
 
                         var angles: number[] = [];
-                        for (var i = 0; i < 3; i++) {
+                        for (let i = 0; i < 3; i++) {
                             angles.push(angle.ofPointInDegrees(this.origin, args[i]));
                         }
 
