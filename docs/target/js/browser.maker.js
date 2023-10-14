@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.18.0
+ *   version: 0.18.1
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -2009,6 +2009,7 @@ var MakerJs;
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i] = arguments[_i];
                 }
+                var _a, _b;
                 function getSpan(origin) {
                     var startAngle = MakerJs.angle.ofPointInDegrees(origin, args[clockwise ? 1 : 0]);
                     var endAngle = MakerJs.angle.ofPointInDegrees(origin, args[clockwise ? 0 : 1]);
@@ -2039,10 +2040,10 @@ var MakerJs;
                         }
                         else {
                             //find the 2 potential origins
-                            var origins = MakerJs.path.intersection(new Circle(pointA, this.radius), new Circle(pointB, this.radius));
+                            var intersectionPoints = (_b = (_a = MakerJs.path.intersection(new Circle(pointA, this.radius), new Circle(pointB, this.radius))) === null || _a === void 0 ? void 0 : _a.intersectionPoints) !== null && _b !== void 0 ? _b : [pointA, pointB];
                             var spans = [];
-                            for (var i = origins.intersectionPoints.length; i--;) {
-                                span = getSpan(origins.intersectionPoints[i]);
+                            for (var i = intersectionPoints.length; i--;) {
+                                span = getSpan(intersectionPoints[i]);
                                 //insert sorted by size ascending
                                 if (spans.length == 0 || span.size > spans[0].size) {
                                     spans.push(span);
@@ -2069,8 +2070,8 @@ var MakerJs;
                             //from 3 points
                             Circle.apply(this, args);
                             var angles = [];
-                            for (var i = 0; i < 3; i++) {
-                                angles.push(MakerJs.angle.ofPointInDegrees(this.origin, args[i]));
+                            for (var i_1 = 0; i_1 < 3; i_1++) {
+                                angles.push(MakerJs.angle.ofPointInDegrees(this.origin, args[i_1]));
                             }
                             this.startAngle = angles[0];
                             this.endAngle = angles[2];
@@ -10302,6 +10303,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.18.0";
+MakerJs.version = "0.18.1";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
