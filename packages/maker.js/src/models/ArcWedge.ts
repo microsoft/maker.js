@@ -5,7 +5,7 @@ namespace MakerJs.models {
         public paths: IPathMap = {};
         public models: IModelMap;
 
-        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number, selfIntersect = false, isolateCaps = false) {
+        constructor(startAngle: number, endAngle: number, sweepRadius: number, slotRadius: number, isolateCaps = false) {
 
             var capRoot: IModel;
 
@@ -18,8 +18,6 @@ namespace MakerJs.models {
 
             startAngle = angle.noRevolutions(startAngle);
             endAngle = angle.noRevolutions(endAngle);
-
-            if (round(startAngle - endAngle) == 0) return;
 
             if (endAngle < startAngle) endAngle += 360;
 
@@ -41,24 +39,42 @@ namespace MakerJs.models {
                      pointB);                     
             };
 
-            var addSweep = (id: string, offsetRadius: number): IPathArc => {
-                return this.paths[id] = new paths.Arc(
-                    [0, 0],
-                    sweepRadius + offsetRadius,
-                    startAngle,
-                    endAngle);
-            };
+           	if(endAngle != startAngle){
+           		
+		        var addSweep = (id: string, offsetRadius: number): IPathArc => {
+		            return this.paths[id] = new paths.Arc(
+		                [0, 0],
+		                sweepRadius + offsetRadius,
+		                startAngle,
+		                endAngle);
+		        };
 
-            addSweep("Outer", slotRadius);
+	            addSweep("Outer", slotRadius);
 
-            var hasInner = (sweepRadius - slotRadius) > 0;
-            if (hasInner) {
-                addSweep("Inner", -slotRadius);
+	            var hasInner = (sweepRadius - slotRadius) > 0;
+	            if (hasInner) {
+	                addSweep("Inner", -slotRadius);
+	            }
+
+	            var caps = [];
+	            caps.push(addCap("StartCap", startAngle));
+	            caps.push(addCap("EndCap", endAngle));
+	            
+            }else{
+
+		        var addCirc = (id: string, offsetRadius: number): IPathCircle => {
+		            return this.paths[id] = new paths.Circle(
+		                [0, 0],
+		                sweepRadius + offsetRadius);
+		        };
+
+	            addCirc("Outer", slotRadius);
+
+	            var hasInner = (sweepRadius - slotRadius) > 0;
+	            if (hasInner) {
+	                addCirc("Inner", -slotRadius);
+	            }
             }
-
-            var caps = [];
-            caps.push(addCap("StartCap", startAngle));
-            caps.push(addCap("EndCap", endAngle));
         }
     }
 
@@ -67,6 +83,5 @@ namespace MakerJs.models {
         { title: "end angle", type: "range", min: -360, max: 360, step: 1, value: 0 },
         { title: "sweep", type: "range", min: 0, max: 100, step: 1, value: 50 },
         { title: "radius", type: "range", min: 0, max: 100, step: 1, value: 15 },
-        { title: "self intersect", type: "bool", value: false }
     ];
 }
