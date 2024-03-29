@@ -715,6 +715,10 @@ footer img {
     height: 20px;
 }
 
+footer #MicrosoftLogo {
+  float: left;
+}
+
 /* MISC */
 .clearfix:after {
   display: block;
