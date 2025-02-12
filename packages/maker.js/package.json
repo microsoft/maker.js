@@ -97,7 +97,7 @@
     "@jscad/csg": "^0.3.7",
     "@jscad/stl-serializer": "^0.1.0",
     "@types/graham_scan": "^1.0.28",
-    "dxf-parser-typings": "^1.3.0"
+    "dxf-parser-typings": "github:danmarshall/dxf-parser-typings"
   },
   "dependencies": {
     "@danmarshall/jscad-typings": "^1.0.0",
@@ -107,6 +107,7 @@
     "@types/pdfkit": "^0.7.34",
     "bezier-js": "^2.1.0",
     "clone": "^1.0.2",
+    "dxf-parser": "^1.1.2",
     "graham_scan": "^1.0.4",
     "kdbush": "^2.0.1"
   },

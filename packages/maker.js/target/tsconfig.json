@@ -5,6 +5,7 @@
     "lib": ["dom", "es2015"],
     "sourceMap": false,
     "types": [
+      "dxf-parser-typings/dxf-parser",
       "dxf-parser",
       "@danmarshall/jscad-typings",
       "bezier-js",
