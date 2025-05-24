@@ -245,7 +245,7 @@
     /**
      * @private
      */
-    function getActualBezierRange(curve: BezierCurve, arc: IPathArcInBezierCurve, endpoints: IPoint[], offset: IPoint): IBezierRange {
+    function getActualBezierRange(curve: BezierCurve, arc: IPathArcInBezierCurve, endpoints: IPoint[], offset: IPoint, pointMatchingDistance: number): IBezierRange {
         var b = getScratch(curve.seed);
         var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(t => new TPoint(b, t, offset));
         var ends = endpoints.slice();
@@ -255,7 +255,7 @@
         if (endpointDistancetoStart[0] > endpointDistancetoStart[1]) ends.reverse();
 
         for (var i = 2; i--;) {
-            if (!measure.isPointEqual(ends[i], tPoints[i].point)) {
+            if (!measure.isPointEqual(ends[i], tPoints[i].point, pointMatchingDistance)) {
                 return null;
             }
         }
@@ -273,7 +273,7 @@
     /**
      * @private
      */
-    function getChainBezierRange(curve: BezierCurve, c: IChain, layer: string, addToLayer: IAddToLayer): IBezierRange {
+    function getChainBezierRange(curve: BezierCurve, c: IChain, layer: string, addToLayer: IAddToLayer, pointMatchingDistance: number): IBezierRange {
 
         var endLinks = [c.links[0], c.links[c.links.length - 1]];
         if ((endLinks[0].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT > (endLinks[1].walkedPath.pathContext as IPathArcInBezierCurve).bezierData.startT) {
@@ -281,7 +281,7 @@
             endLinks.reverse();
         }
 
-        var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(curve, endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints, endLink.walkedPath.offset));
+        var actualBezierRanges = endLinks.map(endLink => getActualBezierRange(curve, endLink.walkedPath.pathContext as IPathArcInBezierCurve, endLink.endPoints, endLink.walkedPath.offset, pointMatchingDistance));
 
         var result: IBezierRange = {
             startT: actualBezierRanges[0] ? actualBezierRanges[0].startT : null,
@@ -523,7 +523,7 @@
             model.findChains(curve, function (chains: IChain[], loose: IWalkPath[], layer: string) {
 
                 chains.forEach(c => {
-                    var range = getChainBezierRange(curve, c, layer, addToLayer);
+                    var range = getChainBezierRange(curve, c, layer, addToLayer, options.pointMatchingDistance);
                     if (range) {
                         var b = getScratch(curve.seed);
                         var piece = b.split(range.startT, range.endT);
@@ -538,7 +538,7 @@
                         //bezier is linear
                         return addToLayer(wp.pathContext, layer, true);
                     }
-                    var range = getActualBezierRange(curve, wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext), wp.offset);
+                    var range = getActualBezierRange(curve, wp.pathContext as IPathArcInBezierCurve, point.fromPathEnds(wp.pathContext), wp.offset, options.pointMatchingDistance);
                     if (range) {
                         var b = getScratch(curve.seed);
                         var piece = b.split(range.startT, range.endT);

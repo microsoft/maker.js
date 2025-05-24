@@ -235,7 +235,7 @@
         var beziers: IWalkModel[];
         if (opts.unifyBeziers) {
             beziers = getBezierModels(modelContext);
-            swapBezierPathsWithSeeds(beziers, true);
+            swapBezierPathsWithSeeds(beziers, true, opts.pointMatchingDistance);
         }
 
         walk(modelContext, walkOptions);
@@ -280,7 +280,7 @@
         }
 
         if (beziers) {
-            swapBezierPathsWithSeeds(beziers, false);
+            swapBezierPathsWithSeeds(beziers, false, opts.pointMatchingDistance);
         }
 
         if (opts.byLayers) {
@@ -398,7 +398,7 @@
     /**
      * @private
      */
-    function swapBezierPathsWithSeeds(beziers: IWalkModel[], swap: boolean) {
+    function swapBezierPathsWithSeeds(beziers: IWalkModel[], swap: boolean, pointMatchingDistance: number) {
         const tempKey = 'tempPaths';
         const tempLayerKey = 'tempLayer';
 
@@ -414,7 +414,7 @@
                 }
 
                 //use seeds as path, hide the arc paths from findChains()
-                var bezierPartsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true });
+                var bezierPartsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true, pointMatchingDistance });
 
                 for (var layer in bezierPartsByLayer) {
                     var bezierSeeds = bezierPartsByLayer[layer];
@@ -436,7 +436,7 @@
                 //revert the above
 
                 if (tempKey in b) {
-                    b.paths = b[tempKey];
+                    b.paths = b[tempKey] as IPathMap;
                     delete b[tempKey];
                 }
 
@@ -444,7 +444,7 @@
                     if (b[tempLayerKey] == undefined) {
                         delete (b as IModel).layer;
                     } else {
-                        (b as IModel).layer = b[tempLayerKey];
+                        (b as IModel).layer = b[tempLayerKey] as string;
                     }
                     delete b[tempLayerKey];
                 }

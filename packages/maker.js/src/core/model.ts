@@ -475,7 +475,7 @@ namespace MakerJs.model {
 
         if (modelToDistort.type === models.BezierCurve.typeName) {
             const b = modelToDistort as models.BezierCurve;
-            const bezierPartsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true });
+            const bezierPartsByLayer = models.BezierCurve.getBezierSeeds(b, { byLayers: true, pointMatchingDistance: bezierAccuracy });
             for (let layer in bezierPartsByLayer) {
                 let pathArray = bezierPartsByLayer[layer]
                 pathArray.forEach((p, i) => {
