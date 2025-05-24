@@ -2674,7 +2674,7 @@ var MakerJs;
             }
             if (modelToDistort.type === MakerJs.models.BezierCurve.typeName) {
                 var b = modelToDistort;
-                var bezierPartsByLayer = MakerJs.models.BezierCurve.getBezierSeeds(b, { byLayers: true });
+                var bezierPartsByLayer = MakerJs.models.BezierCurve.getBezierSeeds(b, { byLayers: true, pointMatchingDistance: bezierAccuracy });
                 var _loop_1 = function (layer_1) {
                     var pathArray = bezierPartsByLayer[layer_1];
                     pathArray.forEach(function (p, i) {
@@ -6437,7 +6437,7 @@ var MakerJs;
             var beziers;
             if (opts.unifyBeziers) {
                 beziers = getBezierModels(modelContext);
-                swapBezierPathsWithSeeds(beziers, true);
+                swapBezierPathsWithSeeds(beziers, true, opts.pointMatchingDistance);
             }
             model.walk(modelContext, walkOptions);
             var _loop_3 = function (layer_2) {
@@ -6474,7 +6474,7 @@ var MakerJs;
                 _loop_3(layer_2);
             }
             if (beziers) {
-                swapBezierPathsWithSeeds(beziers, false);
+                swapBezierPathsWithSeeds(beziers, false, opts.pointMatchingDistance);
             }
             if (opts.byLayers) {
                 return chainsByLayer;
@@ -6571,7 +6571,7 @@ var MakerJs;
         /**
          * @private
          */
-        function swapBezierPathsWithSeeds(beziers, swap) {
+        function swapBezierPathsWithSeeds(beziers, swap, pointMatchingDistance) {
             var tempKey = 'tempPaths';
             var tempLayerKey = 'tempLayer';
             beziers.forEach(function (wm) {
@@ -6583,7 +6583,7 @@ var MakerJs;
                         b.layer = wm.layer;
                     }
                     //use seeds as path, hide the arc paths from findChains()
-                    var bezierPartsByLayer = MakerJs.models.BezierCurve.getBezierSeeds(b, { byLayers: true });
+                    var bezierPartsByLayer = MakerJs.models.BezierCurve.getBezierSeeds(b, { byLayers: true, pointMatchingDistance: pointMatchingDistance });
                     for (var layer in bezierPartsByLayer) {
                         var bezierSeeds = bezierPartsByLayer[layer];
                         if (bezierSeeds.length > 0) {
@@ -9002,7 +9002,7 @@ var MakerJs;
         /**
          * @private
          */
-        function getActualBezierRange(curve, arc, endpoints, offset) {
+        function getActualBezierRange(curve, arc, endpoints, offset, pointMatchingDistance) {
             var b = getScratch(curve.seed);
             var tPoints = [arc.bezierData.startT, arc.bezierData.endT].map(function (t) { return new TPoint(b, t, offset); });
             var ends = endpoints.slice();
@@ -9011,7 +9011,7 @@ var MakerJs;
             if (endpointDistancetoStart[0] > endpointDistancetoStart[1])
                 ends.reverse();
             for (var i = 2; i--;) {
-                if (!MakerJs.measure.isPointEqual(ends[i], tPoints[i].point)) {
+                if (!MakerJs.measure.isPointEqual(ends[i], tPoints[i].point, pointMatchingDistance)) {
                     return null;
                 }
             }
@@ -9020,13 +9020,13 @@ var MakerJs;
         /**
          * @private
          */
-        function getChainBezierRange(curve, c, layer, addToLayer) {
+        function getChainBezierRange(curve, c, layer, addToLayer, pointMatchingDistance) {
             var endLinks = [c.links[0], c.links[c.links.length - 1]];
             if (endLinks[0].walkedPath.pathContext.bezierData.startT > endLinks[1].walkedPath.pathContext.bezierData.startT) {
                 MakerJs.chain.reverse(c);
                 endLinks.reverse();
             }
-            var actualBezierRanges = endLinks.map(function (endLink) { return getActualBezierRange(curve, endLink.walkedPath.pathContext, endLink.endPoints, endLink.walkedPath.offset); });
+            var actualBezierRanges = endLinks.map(function (endLink) { return getActualBezierRange(curve, endLink.walkedPath.pathContext, endLink.endPoints, endLink.walkedPath.offset, pointMatchingDistance); });
             var result = {
                 startT: actualBezierRanges[0] ? actualBezierRanges[0].startT : null,
                 endT: actualBezierRanges[1] ? actualBezierRanges[1].endT : null
@@ -9188,7 +9188,7 @@ var MakerJs;
                 };
                 MakerJs.model.findChains(curve, function (chains, loose, layer) {
                     chains.forEach(function (c) {
-                        var range = getChainBezierRange(curve, c, layer, addToLayer);
+                        var range = getChainBezierRange(curve, c, layer, addToLayer, options.pointMatchingDistance);
                         if (range) {
                             var b = getScratch(curve.seed);
                             var piece = b.split(range.startT, range.endT);
@@ -9203,7 +9203,7 @@ var MakerJs;
                             //bezier is linear
                             return addToLayer(wp.pathContext, layer, true);
                         }
-                        var range = getActualBezierRange(curve, wp.pathContext, MakerJs.point.fromPathEnds(wp.pathContext), wp.offset);
+                        var range = getActualBezierRange(curve, wp.pathContext, MakerJs.point.fromPathEnds(wp.pathContext), wp.offset, options.pointMatchingDistance);
                         if (range) {
                             var b = getScratch(curve.seed);
                             var piece = b.split(range.startT, range.endT);
