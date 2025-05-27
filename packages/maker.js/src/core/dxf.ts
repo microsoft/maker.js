@@ -165,10 +165,11 @@ namespace MakerJs.exporter {
             return textEntity;
         }
 
-        function layerOut(layerId: string, layerColor: number) {
+        function layerOut(layerId: string, layerColor: number, layerLineWeight: number) {
             const layerEntity: DxfParser.Layer = {
                 name: layerId,
-                color: layerColor
+                color: layerColor,
+                lineWeight: layerLineWeight
             };
             return layerEntity;
         }
@@ -195,7 +196,7 @@ namespace MakerJs.exporter {
             layerIds.forEach(layerId => {
                 var layerOptions = colorLayerOptions(layerId);
                 if (layerOptions) {
-                    layerTable.layers[layerId] = layerOut(layerId, layerOptions.color);
+                    layerTable.layers[layerId] = layerOut(layerId, layerOptions.color, layerOptions.lineWeight);
                 }
             });
             const tableName: DxfParser.TableNames = 'layer';
@@ -206,6 +207,9 @@ namespace MakerJs.exporter {
             if (opts.units) {
                 var units = dxfUnit[opts.units];
                 doc.header["$INSUNITS"] = units;
+            }
+            if (opts.enableLineWeight) {
+                doc.header["$LWDISPLAY"] = 1;
             }
         }
 
@@ -285,6 +289,7 @@ namespace MakerJs.exporter {
 
         map["LINE"] = function (line: DxfParser.EntityLINE) {
             append("0", "LINE",
+                "370", "-1", // Set line weight to -1 to use the layer's line weight
                 "8",
                 line.layer,
                 "10",
@@ -300,6 +305,7 @@ namespace MakerJs.exporter {
 
         map["CIRCLE"] = function (circle: DxfParser.EntityCIRCLE) {
             append("0", "CIRCLE",
+                "370", "-1", // Set line weight to -1 to use the layer's line weight
                 "8",
                 circle.layer,
                 "10",
@@ -313,6 +319,7 @@ namespace MakerJs.exporter {
 
         map["ARC"] = function (arc: DxfParser.EntityARC) {
             append("0", "ARC",
+                "370", "-1", // Set line weight to -1 to use the layer's line weight
                 "8",
                 arc.layer,
                 "10",
@@ -348,6 +355,7 @@ namespace MakerJs.exporter {
 
         map["POLYLINE"] = function (polyline: DxfParser.EntityPOLYLINE) {
             append("0", "POLYLINE",
+                "370", "-1", // Set line weight to -1 to use the layer's line weight
                 "8",
                 polyline.layer,
                 "66",
@@ -418,6 +426,9 @@ namespace MakerJs.exporter {
                 "6",
                 "CONTINUOUS"
             );
+            if (layer.lineWeight) {
+                append("370", layer.lineWeight);
+            }
         }
 
         function lineTypeOut(lineType: DxfParser.LineType) {
@@ -523,6 +534,11 @@ namespace MakerJs.exporter {
          * Text size for TEXT entities.
          */
         fontSize?: number;
+
+        /**
+         * Line weight to control the thickness of the lines drawn.
+         */
+        lineWeight?: number;
     }
 
     /**
@@ -544,6 +560,11 @@ namespace MakerJs.exporter {
          * Flag to use POLYLINE
          */
         usePOLYLINE?: boolean;
+
+        /**
+         * Flag to enable line weight.
+         */
+        enableLineWeight?: boolean;
     }
 
     /**
@@ -552,5 +573,11 @@ namespace MakerJs.exporter {
     interface IChainOnLayer {
         chain: IChain;
         layer: string;
+    }
+}
+
+declare namespace DxfParser {
+    export interface Layer {
+        lineWeight?: number;
     }
 }
