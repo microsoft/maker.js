@@ -208,9 +208,7 @@ namespace MakerJs.exporter {
                 var units = dxfUnit[opts.units];
                 doc.header["$INSUNITS"] = units;
             }
-            if (opts.enableLineWeight) {
-                doc.header["$LWDISPLAY"] = 1;
-            }
+            doc.header["$LWDISPLAY"] = 1;
         }
 
         function entities(walkedPaths: IWalkPath[], chains: IChainOnLayer[], captions: (ICaption & { layer?: string })[]) {
@@ -560,11 +558,6 @@ namespace MakerJs.exporter {
          * Flag to use POLYLINE
          */
         usePOLYLINE?: boolean;
-
-        /**
-         * Flag to enable line weight.
-         */
-        enableLineWeight?: boolean;
     }
 
     /**
