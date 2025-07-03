@@ -20,7 +20,7 @@ describe('Export DXF', function() {
         .addTo(model, 'square');
 
     const expected = [
-        '0', 'SECTION', '2', 'HEADER', '9', '$INSUNITS', '70', '1', '0', 'ENDSEC',
+        '0', 'SECTION', '2', 'HEADER', '9', '$INSUNITS', '70', '1', '9', '$LWDISPLAY', '70', '1', '0', 'ENDSEC',
         '0', 'SECTION',
             '2', 'TABLES',
                 '0', 'TABLE', '2', 'LTYPE', '0', 'LTYPE', '72', '65', '70', '64', '2', 'CONTINUOUS', '3', '______', '73', '0', '40', '0', '0', 'ENDTAB',
