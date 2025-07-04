@@ -491,7 +491,7 @@ namespace MakerJs.measure {
      * @param atlas Optional atlas to save measurements.
      * @returns object with low and high points.
      */
-    export function modelExtents(modelToMeasure: IModel, atlas?: Atlas): IMeasureWithCenter {
+    export function modelExtents(modelToMeasure: IModel, atlas?: Atlas): IMeasureWithCenter | null {
 
         function increaseParentModel(childRoute: string[], childMeasurement: IMeasure) {
 
@@ -537,7 +537,7 @@ namespace MakerJs.measure {
             return augment(m);
         }
 
-        return m;
+        return null;
     }
 
 
