@@ -1,8 +1,12 @@
 {
     "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
         "lib": [
             "es2015"
-        ]
+        ],
+        "skipLibCheck": true,
+        "moduleResolution": "node"
     },
     "include": [
         "gen.ts"
