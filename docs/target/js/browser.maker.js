@@ -4594,7 +4594,7 @@ var MakerJs;
             if (m) {
                 return augment(m);
             }
-            return null;
+            return m;
         }
         measure.modelExtents = modelExtents;
         /**
