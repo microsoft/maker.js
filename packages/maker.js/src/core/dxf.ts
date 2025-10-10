@@ -1,23 +1,3 @@
-// Minimal DxfParser type declarations for DXF export functionality
-// Full types provided by dxf-parser-typings package when available
-declare namespace DxfParser {
-    interface Vertex { x: number; y: number; z?: number; bulge?: number; }
-    interface Entity { type?: string; layer?: string; [key: string]: any; }
-    interface EntityLINE extends Entity { type: 'LINE'; vertices?: Vertex[]; }
-    interface EntityCIRCLE extends Entity { type: 'CIRCLE'; center?: Vertex; radius?: number; }
-    interface EntityARC extends Entity { type: 'ARC'; center?: Vertex; radius?: number; startAngle?: number; endAngle?: number; }
-    interface EntityVERTEX extends Entity { x: number; y: number; z?: number; bulge?: number; }
-    interface EntityPOLYLINE extends Entity { type: 'POLYLINE'; vertices?: EntityVERTEX[]; }
-    interface EntityTEXT extends Entity { type: 'TEXT'; startPoint?: Vertex; text?: string; textHeight?: number; }
-    interface Layer { name?: string; colorIndex?: number; color?: number; }
-    interface LineType { name?: string; description?: string; pattern?: number[]; patternLength?: number; }
-    interface Table { handle?: string; }
-    interface TableLTYPE extends Table { lineTypes?: { [name: string]: LineType }; }
-    interface TableLAYER extends Table { layers?: { [name: string]: Layer }; }
-    type TableNames = 'layer' | 'lineType' | 'viewPort';
-    interface DXFDocument { entities?: Entity[]; header?: any; tables?: { [name: string]: Table }; }
-}
-
 namespace MakerJs.exporter {
 
     export function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;

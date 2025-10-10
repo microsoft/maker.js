@@ -4,6 +4,7 @@
     "outDir": "debug/",
     "sourceMap": true,
     "skipLibCheck": true,
+    "typeRoots": ["../../node_modules/@types"],
     "types": [
       "@danmarshall/jscad-typings",
       "bezier-js",
