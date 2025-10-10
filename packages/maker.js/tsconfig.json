@@ -3,6 +3,8 @@
     "lib": ["dom", "es2015"],
     "outDir": "debug/",
     "sourceMap": true,
+    "skipLibCheck": true,
+    "typeRoots": ["../../node_modules/@types", "../../node_modules/dxf-parser-typings"],
     "types": [
       "dxf-parser",
       "@danmarshall/jscad-typings",
