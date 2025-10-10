@@ -3,6 +3,7 @@
     "lib": ["dom", "es2015"],
     "outDir": "debug/",
     "sourceMap": true,
+    "skipLibCheck": true,
     "types": [
       "dxf-parser",
       "@danmarshall/jscad-typings",

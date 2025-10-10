@@ -4,6 +4,7 @@
     "outFile": "../dist/index.js",
     "lib": ["dom", "es2015"],
     "sourceMap": false,
+    "skipLibCheck": true,
     "types": [
       "dxf-parser",
       "@danmarshall/jscad-typings",
