@@ -5,7 +5,6 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "types": [
-      "dxf-parser",
       "@danmarshall/jscad-typings",
       "bezier-js",
       "graham_scan",

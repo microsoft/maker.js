@@ -1,3 +1,5 @@
+/// <reference path="../types/dxf-parser.d.ts" />
+
 namespace MakerJs.exporter {
 
     export function toDXF(modelToExport: IModel, options?: IDXFRenderOptions): string;
