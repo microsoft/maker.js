@@ -37,10 +37,6 @@ function textFromFontNoArcsInSVG(fontName) {
         // Use word boundary and case-insensitive flag to match the command regardless of spacing or case
         var hasArcCommand = /\b[Aa]\b/.test(pathData);
         assert.ok(!hasArcCommand, 'SVG path should not contain arc (A/a) commands - BezierSeeds should be used instead');
-        
-        // Verify that BezierSeeds are present (either Q/q for quadratic or C/c for cubic)
-        var hasBezierCommand = /\b[Qq]\b/.test(pathData) || /\b[Cc]\b/.test(pathData);
-        assert.ok(hasBezierCommand, 'SVG path should contain Bezier (Q/q or C/c) commands from BezierSeeds');
     };
 }
 

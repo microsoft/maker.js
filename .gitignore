@@ -15,12 +15,3 @@ Gemfile.lock
 _site
 .jekyll-metadata
 .jekyll-cache
-
-# Build artifacts
-docs/target/
-packages/*/gen.js
-*.map
-
-# Lockfiles
-package-lock.json
-**/package-lock.json
