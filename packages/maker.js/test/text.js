@@ -27,19 +27,19 @@ function textFromFontNoArcsInSVG(fontName) {
         assert.ok(svg);
         
         // Extract path data from SVG
-        var pathMatch = svg.match(/<path[^>]*d="([^"]*)"/);
+        var pathMatch = svg.match(/<path[^>]*d=['"]([^'"]*)['"]/);
         assert.ok(pathMatch, 'SVG should contain path element with d attribute');
         
         var pathData = pathMatch[1];
         
         // Check that there are NO arc commands (A) in the path data
         // Arc commands follow pattern: A rx ry x-axis-rotation large-arc-flag sweep-flag x y
-        // They appear as " A " with spaces in the path data
-        var hasArcCommand = / A /.test(pathData);
+        // Use word boundary to match the command regardless of spacing
+        var hasArcCommand = /\bA\b/.test(pathData);
         assert.ok(!hasArcCommand, 'SVG path should not contain arc (A) commands - BezierSeeds should be used instead');
         
         // Verify that BezierSeeds are present (either Q for quadratic or C for cubic)
-        var hasBezierCommand = / Q /.test(pathData) || / C /.test(pathData);
+        var hasBezierCommand = /\bQ\b/.test(pathData) || /\bC\b/.test(pathData);
         assert.ok(hasBezierCommand, 'SVG path should contain Bezier (Q or C) commands from BezierSeeds');
     };
 }
