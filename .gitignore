@@ -15,3 +15,8 @@ Gemfile.lock
 _site
 .jekyll-metadata
 .jekyll-cache
+
+# Temporary: prevent accidental commits
+docs/target/js/browser.maker.js
+package-lock.json
+packages/fonts/gen.js
