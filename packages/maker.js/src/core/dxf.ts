@@ -47,6 +47,13 @@ namespace MakerJs.exporter {
             }
         }
 
+        function lineTypeLayerOptions(layer: string): string {
+            if (opts.layerOptions && opts.layerOptions[layer] && opts.layerOptions[layer].lineType) {
+                return opts.layerOptions[layer].lineType;
+            }
+            return "CONTINUOUS";
+        }
+
         function defaultLayer(pathContext: IPath, parentLayer: string) {
             var layerId = (pathContext && pathContext.layer) || parentLayer || '0';
             if (layerIds.indexOf(layerId) < 0) {
@@ -58,9 +65,11 @@ namespace MakerJs.exporter {
         var map: { [type: string]: (pathValue: IPath, offset: IPoint, layer: string) => DxfParser.Entity; } = {};
 
         map[pathType.Line] = function (line: IPathLine, offset: IPoint, layer: string) {
+            const layerId = defaultLayer(line, layer);
+
             const lineEntity: DxfParser.EntityLINE = {
                 type: "LINE",
-                layer: defaultLayer(line, layer),
+                layer: layerId,
                 vertices: [
                     {
                         x: round(line.origin[0] + offset[0], opts.accuracy),
@@ -72,26 +81,34 @@ namespace MakerJs.exporter {
                     }
                 ]
             };
+
+            (lineEntity as any).lineType = lineTypeLayerOptions(layerId);
             return lineEntity;
         };
 
         map[pathType.Circle] = function (circle: IPathCircle, offset: IPoint, layer: string) {
+            const layerId = defaultLayer(circle, layer);
+
             const circleEntity: DxfParser.EntityCIRCLE = {
                 type: "CIRCLE",
-                layer: defaultLayer(circle, layer),
+                layer: layerId,
                 center: {
                     x: round(circle.origin[0] + offset[0], opts.accuracy),
                     y: round(circle.origin[1] + offset[1], opts.accuracy),
                 },
                 radius: round(circle.radius, opts.accuracy)
             };
+
+            (circleEntity as any).lineType = lineTypeLayerOptions(layerId);
             return circleEntity;
         };
 
         map[pathType.Arc] = function (arc: IPathArc, offset: IPoint, layer: string) {
+            const layerId = defaultLayer(arc, layer);
+
             const arcEntity: DxfParser.EntityARC = {
                 type: "ARC",
-                layer: defaultLayer(arc, layer),
+                layer: layerId,
                 center: {
                     x: round(arc.origin[0] + offset[0], opts.accuracy),
                     y: round(arc.origin[1] + offset[1], opts.accuracy)
@@ -100,6 +117,8 @@ namespace MakerJs.exporter {
                 startAngle: round(arc.startAngle, opts.accuracy),
                 endAngle: round(arc.endAngle, opts.accuracy)
             };
+
+            (arcEntity as any).lineType = lineTypeLayerOptions(layerId);
             return arcEntity;
         };
 
@@ -124,6 +143,8 @@ namespace MakerJs.exporter {
                 shape: c.chain.endless,
                 vertices: []
             };
+
+            (polylineEntity as any).lineType = lineTypeLayerOptions(polylineEntity.layer);
 
             c.chain.links.forEach((link, i) => {
                 let bulge: number;
@@ -169,19 +190,38 @@ namespace MakerJs.exporter {
             const layerEntity: DxfParser.Layer = {
                 name: layerId,
                 color: layerColor
-            };
+            } as any;
+
+            (layerEntity as any).lineType = lineTypeLayerOptions(layerId);
             return layerEntity;
         }
 
         function lineTypesOut() {
+            // Dash pattern convention: positive = drawn segment, negative = gap, 0 can be dot.
+            // patternLength is sum of absolute values.
             const lineStyleTable: DxfParser.TableLTYPE =
             {
                 lineTypes: {
                     "CONTINUOUS": {
                         name: "CONTINUOUS",
                         description: "______",
-                        patternLength: 0
-                    }
+                        patternLength: 0,
+                        elements: []
+                    } as any,
+
+                    "DASHED": {
+                        name: "DASHED",
+                        description: "_ _ _ ",
+                        elements: [5, -2.5],
+                        patternLength: 7.5
+                    } as any,
+
+                    "DOTTED": {
+                        name: "DOTTED",
+                        description: ". . . ",
+                        elements: [0.5, -1.0],
+                        patternLength: 1.5
+                    } as any
                 }
             };
             const tableName: DxfParser.TableNames = 'lineType';
@@ -286,7 +326,15 @@ namespace MakerJs.exporter {
         map["LINE"] = function (line: DxfParser.EntityLINE) {
             append("0", "LINE",
                 "8",
-                line.layer,
+                line.layer
+            );
+
+            const lt = (line as any).lineType as string | undefined;
+            if (lt) {
+                append("6", lt);
+            }
+
+            append(
                 "10",
                 line.vertices[0].x,
                 "20",
@@ -301,7 +349,15 @@ namespace MakerJs.exporter {
         map["CIRCLE"] = function (circle: DxfParser.EntityCIRCLE) {
             append("0", "CIRCLE",
                 "8",
-                circle.layer,
+                circle.layer
+            );
+
+            const lt = (circle as any).lineType as string | undefined;
+            if (lt) {
+                append("6", lt);
+            }
+
+            append(
                 "10",
                 circle.center.x,
                 "20",
@@ -314,7 +370,15 @@ namespace MakerJs.exporter {
         map["ARC"] = function (arc: DxfParser.EntityARC) {
             append("0", "ARC",
                 "8",
-                arc.layer,
+                arc.layer
+            );
+
+            const lt = (arc as any).lineType as string | undefined;
+            if (lt) {
+                append("6", lt);
+            }
+
+            append(
                 "10",
                 arc.center.x,
                 "20",
@@ -349,7 +413,15 @@ namespace MakerJs.exporter {
         map["POLYLINE"] = function (polyline: DxfParser.EntityPOLYLINE) {
             append("0", "POLYLINE",
                 "8",
-                polyline.layer,
+                polyline.layer
+            );
+
+            const lt = (polyline as any).lineType as string | undefined;
+            if (lt) {
+                append("6", lt);
+            }
+
+            append(
                 "66",
                 1,
                 "70",
@@ -408,6 +480,8 @@ namespace MakerJs.exporter {
         }
 
         function layerOut(layer: DxfParser.Layer) {
+            const lt = ((layer as any).lineType || "CONTINUOUS") as string;
+
             append("0", "LAYER",
                 "2",
                 layer.name,
@@ -416,25 +490,29 @@ namespace MakerJs.exporter {
                 "62",
                 layer.color,
                 "6",
-                "CONTINUOUS"
+                lt
             );
         }
 
         function lineTypeOut(lineType: DxfParser.LineType) {
+            const elements: number[] = (((lineType as any).elements) || []) as number[];
+
             append("0", "LTYPE",
                 "72", //72 Alignment code; value is always 65, the ASCII code for A
                 "65",
                 "70",
-                "64",
+                "0",
                 "2",
                 lineType.name,
                 "3",
                 lineType.description,
                 "73",
-                "0",
+                elements.length,
                 "40",
                 lineType.patternLength
             );
+
+            elements.forEach(e => append("49", e));
         }
 
         function lineTypesOut() {
@@ -523,6 +601,12 @@ namespace MakerJs.exporter {
          * Text size for TEXT entities.
          */
         fontSize?: number;
+
+        /**
+         * DXF linetype name for this layer.
+         * Example: "CONTINUOUS", "DASHED", "DOTTED"
+         */
+        lineType?: 'CONTINUOUS' | 'DASHED' | 'DOTTED';
     }
 
     /**
