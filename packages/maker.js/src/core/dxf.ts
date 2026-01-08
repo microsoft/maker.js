@@ -82,7 +82,7 @@ namespace MakerJs.exporter {
                 ]
             };
 
-            (lineEntity as any).lineType = lineTypeLayerOptions(layerId);
+            lineEntity.lineType = lineTypeLayerOptions(layerId);
             return lineEntity;
         };
 
@@ -99,7 +99,7 @@ namespace MakerJs.exporter {
                 radius: round(circle.radius, opts.accuracy)
             };
 
-            (circleEntity as any).lineType = lineTypeLayerOptions(layerId);
+            circleEntity.lineType = lineTypeLayerOptions(layerId);
             return circleEntity;
         };
 
@@ -118,7 +118,7 @@ namespace MakerJs.exporter {
                 endAngle: round(arc.endAngle, opts.accuracy)
             };
 
-            (arcEntity as any).lineType = lineTypeLayerOptions(layerId);
+            arcEntity.lineType = lineTypeLayerOptions(layerId);
             return arcEntity;
         };
 
@@ -144,7 +144,7 @@ namespace MakerJs.exporter {
                 vertices: []
             };
 
-            (polylineEntity as any).lineType = lineTypeLayerOptions(polylineEntity.layer);
+            polylineEntity.lineType = lineTypeLayerOptions(polylineEntity.layer);
 
             c.chain.links.forEach((link, i) => {
                 let bulge: number;
@@ -190,9 +190,9 @@ namespace MakerJs.exporter {
             const layerEntity: DxfParser.Layer = {
                 name: layerId,
                 color: layerColor
-            } as any;
+            };
 
-            (layerEntity as any).lineType = lineTypeLayerOptions(layerId);
+            layerEntity.lineType = lineTypeLayerOptions(layerId);
             return layerEntity;
         }
 
@@ -207,21 +207,21 @@ namespace MakerJs.exporter {
                         description: "______",
                         patternLength: 0,
                         elements: []
-                    } as any,
+                    },
 
                     "DASHED": {
                         name: "DASHED",
                         description: "_ _ _ ",
                         elements: [5, -2.5],
                         patternLength: 7.5
-                    } as any,
+                    },
 
                     "DOTTED": {
                         name: "DOTTED",
                         description: ". . . ",
                         elements: [0.5, -1.0],
                         patternLength: 1.5
-                    } as any
+                    }
                 }
             };
             const tableName: DxfParser.TableNames = 'lineType';
@@ -321,7 +321,7 @@ namespace MakerJs.exporter {
             dxf.push.apply(dxf, values);
         }
 
-        function appendLineType(entity: any) {
+        function appendLineType(entity: DxfParser.Entity) {
             const lt = entity.lineType as string | undefined;
             if (lt) {
                 append("6", lt);
@@ -475,7 +475,7 @@ namespace MakerJs.exporter {
         }
 
         function layerOut(layer: DxfParser.Layer) {
-            const lt = ((layer as any).lineType || "CONTINUOUS") as string;
+            const lt = (layer.lineType || "CONTINUOUS") as string;
 
             append("0", "LAYER",
                 "2",
@@ -490,7 +490,7 @@ namespace MakerJs.exporter {
         }
 
         function lineTypeOut(lineType: DxfParser.LineType) {
-            const elements: number[] = (((lineType as any).elements) || []) as number[];
+            const elements: number[] = ((lineType.elements) || []) as number[];
 
             append("0", "LTYPE",
                 "72", //72 Alignment code; value is always 65, the ASCII code for A
