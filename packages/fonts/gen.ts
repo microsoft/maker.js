@@ -4,8 +4,8 @@ import * as changeCase from "change-case";
 
 //TypeScript can't resolve import :(
 var sortKeys = require("sort-keys");
-var fontRoot = "../../docs/fonts/";
-var tags = require(fontRoot + "tags");
+var fontRoot = path.join(__dirname, "../../docs/fonts/");
+var tags = require(path.join(fontRoot, "tags.json"));
 
 var out = {};
 
