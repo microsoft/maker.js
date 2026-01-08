@@ -39,12 +39,12 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.18.1
+ *   version: 0.18.2
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
  *   author: James Halliday <mail@substack.net>
- *   version: 17.0.0
+ *   version: 17.0.1
  *
  * clone:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -54,9 +54,9 @@ and limitations under the License.
  *
  * graham_scan:
  *   license: MIT (http://opensource.org/licenses/MIT)
- *   author: Brian Barnett <brian@3kb.co.uk>
+ *   author: Brian Barnett <me@brianbar.net>
  *   homepage: http://brian3kb.github.io/graham_scan_js
- *   version: 1.0.4
+ *   version: 1.0.5
  *
  * kdbush:
  *   license: ISC (http://opensource.org/licenses/ISC)
@@ -242,9 +242,10 @@ if (typeof module === 'object' && module.exports) {
  * Graham's Scan Convex Hull Algorithm
  * @desc An implementation of the Graham's Scan Convex Hull algorithm in JavaScript.
  * @author Brian Barnett, brian@3kb.co.uk, http://brianbar.net/ || http://3kb.co.uk/
- * @version 1.0.4
+ * @version 1.0.5
  */
-function ConvexHullGrahamScan(){this.anchorPoint=void 0,this.reverse=!1,this.points=[]}ConvexHullGrahamScan.prototype={constructor:ConvexHullGrahamScan,Point:function(n,t){this.x=n,this.y=t},_findPolarAngle:function(n,t){var i,o,h=57.295779513082;if(!n||!t)return 0;if(i=t.x-n.x,o=t.y-n.y,0==i&&0==o)return 0;var r=Math.atan2(o,i)*h;return this.reverse?0>=r&&(r+=360):r>=0&&(r+=360),r},addPoint:function(n,t){return void 0===this.anchorPoint?void(this.anchorPoint=new this.Point(n,t)):this.anchorPoint.y>t&&this.anchorPoint.x>n||this.anchorPoint.y===t&&this.anchorPoint.x>n||this.anchorPoint.y>t&&this.anchorPoint.x===n?(this.points.push(new this.Point(this.anchorPoint.x,this.anchorPoint.y)),void(this.anchorPoint=new this.Point(n,t))):void this.points.push(new this.Point(n,t))},_sortPoints:function(){var n=this;return this.points.sort(function(t,i){var o=n._findPolarAngle(n.anchorPoint,t),h=n._findPolarAngle(n.anchorPoint,i);return h>o?-1:o>h?1:0})},_checkPoints:function(n,t,i){var o,h=this._findPolarAngle(n,t),r=this._findPolarAngle(n,i);return h>r?(o=h-r,!(o>180)):r>h?(o=r-h,o>180):!0},getHull:function(){var n,t,i=[];if(this.reverse=this.points.every(function(n){return n.x<0&&n.y<0}),n=this._sortPoints(),t=n.length,3>t)return n.unshift(this.anchorPoint),n;for(i.push(n.shift(),n.shift());;){var o,h,r;if(i.push(n.shift()),o=i[i.length-3],h=i[i.length-2],r=i[i.length-1],this._checkPoints(o,h,r)&&i.splice(i.length-2,1),0==n.length){if(t==i.length){var e=this.anchorPoint;return i=i.filter(function(n){return!!n}),i.some(function(n){return n.x==e.x&&n.y==e.y})||i.unshift(this.anchorPoint),i}n=i,t=n.length,i=[],i.push(n.shift(),n.shift())}}}},"function"==typeof define&&define.amd&&define(function(){return ConvexHullGrahamScan}),"undefined"!=typeof module&&(module.exports=ConvexHullGrahamScan);
+function ConvexHullGrahamScan(){this.anchorPoint=void 0,this.reverse=!1,this.points=[]}ConvexHullGrahamScan.prototype={constructor:ConvexHullGrahamScan,Point:function(a,b){this.x=a,this.y=b},_findPolarAngle:function(a,b){var c,d,e=57.295779513082;if(!a||!b)return 0;if(c=b.x-a.x,d=b.y-a.y,0==c&&0==d)return 0;var f=Math.atan2(d,c)*e;return this.reverse?0>=f&&(f+=360):f>=0&&(f+=360),f},addPoint:function(a,b){var c=void 0===this.anchorPoint||this.anchorPoint.y>b||this.anchorPoint.y===b&&this.anchorPoint.x>a;c?(void 0!==this.anchorPoint&&this.points.push(new this.Point(this.anchorPoint.x,this.anchorPoint.y)),this.anchorPoint=new this.Point(a,b)):this.points.push(new this.Point(a,b))},_sortPoints:function(){var a=this;return this.points.sort(function(b,c){var d=a._findPolarAngle(a.anchorPoint,b),e=a._findPolarAngle(a.anchorPoint,c);return e>d?-1:d>e?1:0})},_checkPoints:function(a,b,c){var d,e=this._findPolarAngle(a,b),f=this._findPolarAngle(a,c);return e>f?(d=e-f,!(d>180)):f>e?(d=f-e,d>180):!0},getHull:function(){var a,b,c=[];if(this.reverse=this.points.every(function(a){return a.x<0&&a.y<0}),a=this._sortPoints(),b=a.length,3>b)return a.unshift(this.anchorPoint),a;for(c.push(a.shift(),a.shift());;){var d,e,f;if(c.push(a.shift()),d=c[c.length-3],e=c[c.length-2],f=c[c.length-1],this._checkPoints(d,e,f)&&c.splice(c.length-2,1),0==a.length){if(b==c.length){var g=this.anchorPoint;return c=c.filter(function(a){return!!a}),c.some(function(a){return a.x==g.x&&a.y==g.y})||c.unshift(this.anchorPoint),c}a=c,b=a.length,c=[],c.push(a.shift(),a.shift())}}}},"function"==typeof define&&define.amd&&define(function(){return ConvexHullGrahamScan}),"undefined"!=typeof module&&(module.exports=ConvexHullGrahamScan);
+
 },{}],4:[function(require,module,exports){
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -4594,7 +4595,7 @@ var MakerJs;
             if (m) {
                 return augment(m);
             }
-            return m;
+            return null;
         }
         measure.modelExtents = modelExtents;
         /**
@@ -5029,6 +5030,12 @@ var MakerJs;
                     };
                 }
             }
+            function lineTypeLayerOptions(layer) {
+                if (opts.layerOptions && opts.layerOptions[layer] && opts.layerOptions[layer].lineType) {
+                    return opts.layerOptions[layer].lineType;
+                }
+                return "CONTINUOUS";
+            }
             function defaultLayer(pathContext, parentLayer) {
                 var layerId = (pathContext && pathContext.layer) || parentLayer || '0';
                 if (layerIds.indexOf(layerId) < 0) {
@@ -5038,9 +5045,10 @@ var MakerJs;
             }
             var map = {};
             map[MakerJs.pathType.Line] = function (line, offset, layer) {
+                var layerId = defaultLayer(line, layer);
                 var lineEntity = {
                     type: "LINE",
-                    layer: defaultLayer(line, layer),
+                    layer: layerId,
                     vertices: [
                         {
                             x: MakerJs.round(line.origin[0] + offset[0], opts.accuracy),
@@ -5052,24 +5060,28 @@ var MakerJs;
                         }
                     ]
                 };
+                lineEntity.lineType = lineTypeLayerOptions(layerId);
                 return lineEntity;
             };
             map[MakerJs.pathType.Circle] = function (circle, offset, layer) {
+                var layerId = defaultLayer(circle, layer);
                 var circleEntity = {
                     type: "CIRCLE",
-                    layer: defaultLayer(circle, layer),
+                    layer: layerId,
                     center: {
                         x: MakerJs.round(circle.origin[0] + offset[0], opts.accuracy),
                         y: MakerJs.round(circle.origin[1] + offset[1], opts.accuracy)
                     },
                     radius: MakerJs.round(circle.radius, opts.accuracy)
                 };
+                circleEntity.lineType = lineTypeLayerOptions(layerId);
                 return circleEntity;
             };
             map[MakerJs.pathType.Arc] = function (arc, offset, layer) {
+                var layerId = defaultLayer(arc, layer);
                 var arcEntity = {
                     type: "ARC",
-                    layer: defaultLayer(arc, layer),
+                    layer: layerId,
                     center: {
                         x: MakerJs.round(arc.origin[0] + offset[0], opts.accuracy),
                         y: MakerJs.round(arc.origin[1] + offset[1], opts.accuracy)
@@ -5078,6 +5090,7 @@ var MakerJs;
                     startAngle: MakerJs.round(arc.startAngle, opts.accuracy),
                     endAngle: MakerJs.round(arc.endAngle, opts.accuracy)
                 };
+                arcEntity.lineType = lineTypeLayerOptions(layerId);
                 return arcEntity;
             };
             //TODO - handle scenario if any bezier seeds get passed
@@ -5099,6 +5112,7 @@ var MakerJs;
                     shape: c.chain.endless,
                     vertices: []
                 };
+                polylineEntity.lineType = lineTypeLayerOptions(polylineEntity.layer);
                 c.chain.links.forEach(function (link, i) {
                     var bulge;
                     if (link.walkedPath.pathContext.type === MakerJs.pathType.Arc) {
@@ -5140,15 +5154,31 @@ var MakerJs;
                     name: layerId,
                     color: layerColor
                 };
+                layerEntity.lineType = lineTypeLayerOptions(layerId);
                 return layerEntity;
             }
             function lineTypesOut() {
+                // Dash pattern convention: positive = drawn segment, negative = gap, 0 can be dot.
+                // patternLength is sum of absolute values.
                 var lineStyleTable = {
                     lineTypes: {
                         "CONTINUOUS": {
                             name: "CONTINUOUS",
                             description: "______",
-                            patternLength: 0
+                            patternLength: 0,
+                            elements: []
+                        },
+                        "DASHED": {
+                            name: "DASHED",
+                            description: "_ _ _ ",
+                            elements: [5, -2.5],
+                            patternLength: 7.5
+                        },
+                        "DOTTED": {
+                            name: "DOTTED",
+                            description: ". . . ",
+                            elements: [0.5, -1.0],
+                            patternLength: 1.5
                         }
                     }
                 };
@@ -5240,15 +5270,27 @@ var MakerJs;
                 }
                 dxf.push.apply(dxf, values);
             }
+            function appendLineType(entity) {
+                var lt = entity.lineType;
+                if (lt) {
+                    append("6", lt);
+                }
+            }
             var map = {};
             map["LINE"] = function (line) {
-                append("0", "LINE", "8", line.layer, "10", line.vertices[0].x, "20", line.vertices[0].y, "11", line.vertices[1].x, "21", line.vertices[1].y);
+                append("0", "LINE", "8", line.layer);
+                appendLineType(line);
+                append("10", line.vertices[0].x, "20", line.vertices[0].y, "11", line.vertices[1].x, "21", line.vertices[1].y);
             };
             map["CIRCLE"] = function (circle) {
-                append("0", "CIRCLE", "8", circle.layer, "10", circle.center.x, "20", circle.center.y, "40", circle.radius);
+                append("0", "CIRCLE", "8", circle.layer);
+                appendLineType(circle);
+                append("10", circle.center.x, "20", circle.center.y, "40", circle.radius);
             };
             map["ARC"] = function (arc) {
-                append("0", "ARC", "8", arc.layer, "10", arc.center.x, "20", arc.center.y, "40", arc.radius, "50", arc.startAngle, "51", arc.endAngle);
+                append("0", "ARC", "8", arc.layer);
+                appendLineType(arc);
+                append("10", arc.center.x, "20", arc.center.y, "40", arc.radius, "50", arc.startAngle, "51", arc.endAngle);
             };
             //TODO - handle scenario if any bezier seeds get passed
             //map[pathType.BezierSeed]
@@ -5259,7 +5301,9 @@ var MakerJs;
                 }
             };
             map["POLYLINE"] = function (polyline) {
-                append("0", "POLYLINE", "8", polyline.layer, "66", 1, "70", polyline.shape ? 1 : 0);
+                append("0", "POLYLINE", "8", polyline.layer);
+                appendLineType(polyline);
+                append("66", 1, "70", polyline.shape ? 1 : 0);
                 polyline.vertices.forEach(function (vertex) { return map["VERTEX"](vertex); });
                 append("0", "SEQEND");
             };
@@ -5282,11 +5326,14 @@ var MakerJs;
                 table(layersOut);
             }
             function layerOut(layer) {
-                append("0", "LAYER", "2", layer.name, "70", "0", "62", layer.color, "6", "CONTINUOUS");
+                var lt = (layer.lineType || "CONTINUOUS");
+                append("0", "LAYER", "2", layer.name, "70", "0", "62", layer.color, "6", lt);
             }
             function lineTypeOut(lineType) {
+                var elements = ((lineType.elements) || []);
                 append("0", "LTYPE", "72", //72 Alignment code; value is always 65, the ASCII code for A
-                "65", "70", "64", "2", lineType.name, "3", lineType.description, "73", "0", "40", lineType.patternLength);
+                "65", "70", "0", "2", lineType.name, "3", lineType.description, "73", elements.length, "40", lineType.patternLength);
+                elements.forEach(function (e) { return append("49", e); });
             }
             function lineTypesOut() {
                 var lineTypeTableName = 'lineType';
@@ -10303,6 +10350,6 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.18.1";
+MakerJs.version = "0.18.2";
 
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
