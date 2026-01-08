@@ -321,6 +321,13 @@ namespace MakerJs.exporter {
             dxf.push.apply(dxf, values);
         }
 
+        function appendLineType(entity: any) {
+            const lt = entity.lineType as string | undefined;
+            if (lt) {
+                append("6", lt);
+            }
+        }
+
         var map: { [entityType: string]: (entity: DxfParser.Entity) => void; } = {};
 
         map["LINE"] = function (line: DxfParser.EntityLINE) {
@@ -329,10 +336,7 @@ namespace MakerJs.exporter {
                 line.layer
             );
 
-            const lt = (line as any).lineType as string | undefined;
-            if (lt) {
-                append("6", lt);
-            }
+            appendLineType(line);
 
             append(
                 "10",
@@ -352,10 +356,7 @@ namespace MakerJs.exporter {
                 circle.layer
             );
 
-            const lt = (circle as any).lineType as string | undefined;
-            if (lt) {
-                append("6", lt);
-            }
+            appendLineType(circle);
 
             append(
                 "10",
@@ -373,10 +374,7 @@ namespace MakerJs.exporter {
                 arc.layer
             );
 
-            const lt = (arc as any).lineType as string | undefined;
-            if (lt) {
-                append("6", lt);
-            }
+            appendLineType(arc);
 
             append(
                 "10",
@@ -416,10 +414,7 @@ namespace MakerJs.exporter {
                 polyline.layer
             );
 
-            const lt = (polyline as any).lineType as string | undefined;
-            if (lt) {
-                append("6", lt);
-            }
+            appendLineType(polyline);
 
             append(
                 "66",
