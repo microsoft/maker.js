@@ -1,8 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
-const path = require("path");
-const changeCase = require("change-case");
+exports.__esModule = true;
+var fs = require("fs");
+var path = require("path");
+var changeCase = require("change-case");
 //TypeScript can't resolve import :(
 var sortKeys = require("sort-keys");
 var fontRoot = "../../docs/fonts/";
@@ -29,7 +29,7 @@ function write(fileName, content) {
     fs.closeSync(fd);
 }
 var sorted = sortKeys(out, {
-    compare: (a, b) => out[a].displayName.localeCompare(out[b].displayName)
+    compare: function (a, b) { return out[a].displayName.localeCompare(out[b].displayName); }
 });
 for (var id in sorted) {
     sorted[id].tags = tags[id];
