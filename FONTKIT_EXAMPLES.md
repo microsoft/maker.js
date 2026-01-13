@@ -1,6 +1,6 @@
-# FontKit Adapter Example
+# FontKit Support Examples
 
-This example demonstrates how to use the FontKitAdapter to use fontkit fonts with Maker.js.
+This document demonstrates how to use fontkit fonts with Maker.js. The Text model now supports both opentype.js and fontkit fonts automatically.
 
 ## Installation
 
@@ -19,15 +19,11 @@ const fontkit = require('fontkit');
 // Load a font using fontkit
 const font = fontkit.openSync('path/to/font.ttf');
 
-// Option 1: Use the adapter explicitly
-const adapter = new makerjs.models.FontKitAdapter(font);
-const text1 = new makerjs.models.Text(adapter, 'Hello World', 72);
-
-// Option 2: Use TextAuto which auto-detects the font type
-const text2 = new makerjs.models.TextAuto(font, 'Hello World', 72);
+// Use directly with Text model - same API as opentype.js!
+const text = new makerjs.models.Text(font, 'Hello World', 72);
 
 // Export to SVG
-const svg = makerjs.exporter.toSVG(text2);
+const svg = makerjs.exporter.toSVG(text);
 console.log(svg);
 ```
 
@@ -40,8 +36,8 @@ import * as fontkit from 'fontkit';
 // Load font
 const font = fontkit.openSync('path/to/font.ttf');
 
-// Create text with fontkit font
-const text = new makerjs.models.TextAuto(font, 'Hello World', 72);
+// Create text - works exactly like opentype.js
+const text = new makerjs.models.Text(font, 'Hello World', 72);
 
 // Export
 const svg = makerjs.exporter.toSVG(text);
@@ -53,7 +49,7 @@ const svg = makerjs.exporter.toSVG(text);
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FontKit Adapter Example</title>
+    <title>FontKit Support Example</title>
     <script src="https://cdn.jsdelivr.net/npm/makerjs@0/target/js/browser.maker.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bezier-js@2/bezier.js"></script>
     <script src="https://unpkg.com/fontkit@2.0.4/dist/fontkit.browser.js"></script>
@@ -69,8 +65,8 @@ const svg = makerjs.exporter.toSVG(text);
                 // Create fontkit font from buffer
                 const font = fontkit.create(buffer);
                 
-                // Create text using TextAuto (auto-detects fontkit)
-                const text = new makerjs.models.TextAuto(font, 'Hello World', 72);
+                // Use with Text model - same API!
+                const text = new makerjs.models.Text(font, 'Hello World', 72);
                 
                 // Export to SVG
                 const svg = makerjs.exporter.toSVG(text);
@@ -84,6 +80,27 @@ const svg = makerjs.exporter.toSVG(text);
     </script>
 </body>
 </html>
+```
+
+## Color Glyphs (COLR Fonts)
+
+Fontkit supports color fonts with COLR/CPAL tables. Each color layer is automatically organized:
+
+```javascript
+const fontkit = require('fontkit');
+const makerjs = require('makerjs');
+
+// Load a color font (e.g., emoji font with COLR table)
+const font = fontkit.openSync('path/to/color-emoji.ttf');
+
+// Render color text
+const text = new makerjs.models.Text(font, '🎨🌈', 72);
+
+// Each color layer will have a 'layer' property with hex color
+// e.g., 'color_ff0000' for red, 'color_00ff00' for green
+// This allows you to export with proper colors
+
+const svg = makerjs.exporter.toSVG(text);
 ```
 
 ## Advanced Features with FontKit
@@ -104,7 +121,7 @@ const instance = font.getVariation({
 });
 
 // Use the variation
-const text = new makerjs.models.TextAuto(instance, 'Variable!', 72);
+const text = new makerjs.models.Text(instance, 'Variable!', 72);
 ```
 
 ### OpenType Features
@@ -116,7 +133,7 @@ const makerjs = require('makerjs');
 const font = fontkit.openSync('path/to/font.otf');
 
 // Enable ligatures and other OpenType features
-const text = new makerjs.models.TextAuto(
+const text = new makerjs.models.Text(
     font, 
     'ffi ffl', 
     72,
@@ -160,6 +177,8 @@ fs.writeFileSync('subset.ttf', subsetBuffer);
 
 ## Comparing opentype.js vs fontkit
 
+Both work with the same Text API:
+
 ```javascript
 const makerjs = require('makerjs');
 const opentype = require('opentype.js');
@@ -169,59 +188,40 @@ const fontkit = require('fontkit');
 const opentypeFont = opentype.loadSync('font.ttf');
 const fontkitFont = fontkit.openSync('font.ttf');
 
-// Create text with both
+// Create text with both - identical API
 const text1 = new makerjs.models.Text(opentypeFont, 'Test', 72);
-const text2 = new makerjs.models.TextAuto(fontkitFont, 'Test', 72);
+const text2 = new makerjs.models.Text(fontkitFont, 'Test', 72);
 
 // Compare output
 console.log('opentype.js chains:', makerjs.model.findChains(text1).length);
 console.log('fontkit chains:', makerjs.model.findChains(text2).length);
 ```
 
-## Error Handling
+## Mixed Usage
 
-```javascript
-const makerjs = require('makerjs');
-const fontkit = require('fontkit');
-
-try {
-    const font = fontkit.openSync('path/to/font.ttf');
-    
-    // FontKitAdapter validates the font
-    const adapter = new makerjs.models.FontKitAdapter(font);
-    const text = new makerjs.models.Text(adapter, 'Hello', 72);
-    
-} catch (error) {
-    if (error.message.includes('fontkit font')) {
-        console.error('Invalid font object provided');
-    } else {
-        console.error('Error:', error.message);
-    }
-}
-```
-
-## Testing Font Type Detection
+You can use both libraries in the same project:
 
 ```javascript
 const makerjs = require('makerjs');
 const opentype = require('opentype.js');
 const fontkit = require('fontkit');
 
-const opentypeFont = opentype.loadSync('font.ttf');
-const fontkitFont = fontkit.openSync('font.ttf');
+// Use opentype.js for basic fonts
+const basicFont = opentype.loadSync('basic.ttf');
+const basicText = new makerjs.models.Text(basicFont, 'Basic', 72);
 
-console.log('Is opentype.js font?', 
-    !makerjs.models.FontKitAdapter.isFontKitFont(opentypeFont)); // true
+// Use fontkit for variable fonts
+const varFont = fontkit.openSync('variable.ttf');
+const varInstance = varFont.getVariation({ wght: 700 });
+const varText = new makerjs.models.Text(varInstance, 'Bold', 72);
 
-console.log('Is fontkit font?', 
-    makerjs.models.FontKitAdapter.isFontKitFont(fontkitFont)); // true
-
-// Auto-adapt returns correct type
-const adapted1 = makerjs.models.FontKitAdapter.autoAdapt(opentypeFont);
-console.log('opentype.js needs adapter?', adapted1 instanceof makerjs.models.FontKitAdapter); // false
-
-const adapted2 = makerjs.models.FontKitAdapter.autoAdapt(fontkitFont);
-console.log('fontkit needs adapter?', adapted2 instanceof makerjs.models.FontKitAdapter); // true
+// Combine in a model
+const combined = {
+    models: {
+        basic: basicText,
+        variable: varText
+    }
+};
 ```
 
 ## Performance Considerations
@@ -230,7 +230,6 @@ console.log('fontkit needs adapter?', adapted2 instanceof makerjs.models.FontKit
 
 - **opentype.js**: ~60KB minified
 - **fontkit**: ~100KB minified  
-- **Including both**: ~160KB minified
 
 For web applications, consider:
 1. Use only one library if possible
@@ -244,31 +243,21 @@ Both libraries have similar performance for basic text rendering. fontkit may be
 - Advanced OpenType feature processing
 - Large amounts of text
 
-Benchmark your specific use case to determine if performance differences matter.
-
 ## Troubleshooting
 
-### "Missing layout method" Error
-
-This means you're trying to use FontKitAdapter with a non-fontkit font:
+### Font Not Loading
 
 ```javascript
-// Wrong - opentype.js font
-const font = opentype.loadSync('font.ttf');
-new makerjs.models.FontKitAdapter(font); // Error!
+// Wrong - fontkit.create needs a Buffer
+const font = fontkit.create('path/to/font.ttf'); // Error!
 
-// Right - fontkit font
-const font = fontkit.openSync('font.ttf');
-new makerjs.models.FontKitAdapter(font); // OK
+// Right - use openSync for file paths
+const font = fontkit.openSync('path/to/font.ttf'); // OK
+
+// Or create from buffer
+const buffer = fs.readFileSync('path/to/font.ttf');
+const font = fontkit.create(buffer); // OK
 ```
-
-### Geometric Differences
-
-If you notice slight differences between opentype.js and fontkit output:
-
-1. **Coordinate System**: Both use the same coordinate system but may handle edge cases differently
-2. **Rounding**: Floating point rounding may differ slightly
-3. **Bezier Conversion**: Check bezierAccuracy parameter
 
 ### Browser Issues
 
@@ -298,7 +287,7 @@ If fontkit doesn't work in the browser:
 ### Use both when:
 - ✅ Supporting variable fonts alongside basic fonts
 - ✅ Allowing users to choose font library
-- ✅ Gradually migrating from opentype.js to fontkit
+- ✅ Gradually exploring fontkit features
 
 ## Additional Resources
 
@@ -306,3 +295,4 @@ If fontkit doesn't work in the browser:
 - [opentype.js Documentation](https://opentype.js.org/)
 - [Maker.js Documentation](https://maker.js.org/docs/)
 - [OpenType Specification](https://docs.microsoft.com/en-us/typography/opentype/spec/)
+

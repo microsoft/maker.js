@@ -376,7 +376,7 @@ var MakerJsPlayground;
             }
             processed.lockedPath = {
                 route: route,
-                notes: "Path Info|\n---|---\nRoute|".concat(mdCode(crumb), "\nJSON|")
+                notes: "Path Info|\n---|---\nRoute|" + mdCode(crumb) + "\nJSON|"
             };
             updateLockedPathNotes();
         }
@@ -406,8 +406,8 @@ var MakerJsPlayground;
             if (pathAndOffset) {
                 setNotes([
                     processed.lockedPath.notes + mdCode(pathAndOffset.result),
-                    "Offset|".concat(mdCode(pathAndOffset.offset)),
-                    "Endpoints|".concat(mdCode(endpoints))
+                    "Offset|" + mdCode(pathAndOffset.offset),
+                    "Endpoints|" + mdCode(endpoints)
                 ].join('\n'));
             }
             else {
