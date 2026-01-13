@@ -200,6 +200,7 @@
                     switch (cmd.command) {
                         case 'moveTo':
                             firstPoint = points[0];
+                            currPoint = points[0];
                             break;
 
                         case 'closePath':
@@ -210,18 +211,19 @@
                             if (!measure.isPointEqual(currPoint, points[0])) {
                                 addPath(new paths.Line(currPoint, points[0]));
                             }
+                            currPoint = points[0];
                             break;
 
                         case 'bezierCurveTo':
                             addModel(new models.BezierCurve(currPoint, points[0], points[1], points[2], bezierAccuracy));
+                            currPoint = points[2];
                             break;
 
                         case 'quadraticCurveTo':
                             addModel(new models.BezierCurve(currPoint, points[0], points[1], bezierAccuracy));
+                            currPoint = points[1];
                             break;
                     }
-
-                    currPoint = points[0] || points[1] || points[2];
                 }
             } else {
                 // opentype.js glyph
