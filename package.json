@@ -23,6 +23,9 @@
     "typescript": "^4.1.3",
     "typescript-json-schema": "^0.53.1"
   },
+  "optionalDependencies": {
+    "fontkit": "^2.0.4"
+  },
   "scripts": {
     "build-tools": "npm run build-tools --workspaces --if-present",
     "build": "npx -p typescript@4.1.3 -p typedoc@0.18.0 npm run build --workspaces --if-present",

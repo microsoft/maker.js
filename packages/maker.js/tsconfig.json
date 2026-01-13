@@ -65,6 +65,7 @@
     "src/models/Slot.ts",
     "src/models/Square.ts",
     "src/models/Star.ts",
-    "src/models/Text.ts"
+    "src/models/Text.ts",
+    "src/models/FontKitAdapter.ts"
   ]
 }
