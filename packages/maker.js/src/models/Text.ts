@@ -272,7 +272,7 @@
         }
 
         /**
-         * Convert fontkit path command to points array with Y-axis flip
+         * Convert fontkit path command to points array
          * @param cmd Fontkit path command
          * @param scale Scale factor
          * @returns Array of points
@@ -283,20 +283,20 @@
             switch (cmd.command) {
                 case 'moveTo':
                 case 'lineTo':
-                    points.push([cmd.args[0] * scale, -cmd.args[1] * scale]);
+                    points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
                     break;
                     
                 case 'quadraticCurveTo':
                     // Control point, end point
-                    points.push([cmd.args[0] * scale, -cmd.args[1] * scale]);
-                    points.push([cmd.args[2] * scale, -cmd.args[3] * scale]);
+                    points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
+                    points.push([cmd.args[2] * scale, cmd.args[3] * scale]);
                     break;
                     
                 case 'bezierCurveTo':
                     // Control point 1, control point 2, end point
-                    points.push([cmd.args[0] * scale, -cmd.args[1] * scale]);
-                    points.push([cmd.args[2] * scale, -cmd.args[3] * scale]);
-                    points.push([cmd.args[4] * scale, -cmd.args[5] * scale]);
+                    points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
+                    points.push([cmd.args[2] * scale, cmd.args[3] * scale]);
+                    points.push([cmd.args[4] * scale, cmd.args[5] * scale]);
                     break;
             }
             
