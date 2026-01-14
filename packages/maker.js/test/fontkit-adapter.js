@@ -3,13 +3,13 @@
  * This test validates that the Text model works with both fontkit and
  * opentype.js fonts, producing geometrically equivalent results.
  * 
- * NOTE: These tests require fontkit to be installed:
- * npm install fontkit --save-optional
+ * NOTE: These tests require fontkit to be installed separately:
+ * npm install fontkit
  * 
  * Run with: npm test
  */
 
-// Check if fontkit is available (optional dependency)
+// Check if fontkit is available (not included as a dependency)
 let fontkit;
 try {
     fontkit = require('fontkit');

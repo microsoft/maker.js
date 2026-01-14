@@ -136,15 +136,25 @@ const emoji = new makerjs.models.Text(colorFont, '🎨', 72);
 ## Testing
 
 ```bash
-# Install optional dependency
+# fontkit is not included - install it to use fontkit features and run tests
 npm install fontkit
 
-# Run tests (fontkit tests will run)
+# Run tests (fontkit tests will run if fontkit is installed)
 npm test
 
 # Without fontkit installed
 npm test  # fontkit tests automatically skip
 ```
+
+## Installation
+
+fontkit is **not included** as a dependency. Users who want to use fontkit features must install it separately:
+
+```bash
+npm install fontkit
+```
+
+The Text model will automatically detect and use fontkit when a fontkit font object is provided.
 
 ## Architectural Decision
 
