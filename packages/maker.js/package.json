@@ -102,6 +102,7 @@
   "dependencies": {
     "@danmarshall/jscad-typings": "^1.0.0",
     "@types/bezier-js": "^0.0.6",
+    "@types/fontkit": "^2.0.8",
     "@types/node": "^7.0.5",
     "@types/opentype.js": "^0.7.0",
     "@types/pdfkit": "^0.7.34",

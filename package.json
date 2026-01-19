@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "browserify": "^17.0.0",
+    "fontkit": "^2.0.4",
     "licensify": "^3.1.3",
     "mocha": "^10.0.0",
     "opentype.js": "^1.1.0",
