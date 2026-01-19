@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.18.2
+ *   version: 0.19.0
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -448,6 +448,7 @@ return kdbush;
 })));
 
 },{}],"makerjs":[function(require,module,exports){
+(function (global){(function (){
 /**
  * Root module for Maker.js.
  *
@@ -479,26 +480,32 @@ var MakerJs;
     /**
      * @private
      */
-    function tryEval(name) {
-        try {
-            var value = eval(name);
-            return value;
-        }
-        catch (e) { }
-        return;
-    }
-    /**
-     * @private
-     */
     function detectEnvironment() {
-        if (tryEval('WorkerGlobalScope') && tryEval('self')) {
+        // Use a function to get the global object to avoid TypeScript checking specific globals
+        var getGlobal = function () {
+            // In browsers and workers, 'self' refers to the global scope
+            if (typeof self !== 'undefined') {
+                return self;
+            }
+            // In Node.js, 'global' refers to the global scope
+            if (typeof global !== 'undefined') {
+                return global;
+            }
+            // Fallback for older environments
+            return this || {};
+        };
+        var globalObj = getGlobal();
+        // Check for Web Worker environment
+        // Workers have 'self' and 'WorkerGlobalScope' but not 'window'
+        if (globalObj['self'] && globalObj['WorkerGlobalScope'] && !globalObj['window']) {
             return MakerJs.environmentTypes.WebWorker;
         }
-        if (tryEval('window') && tryEval('document')) {
+        // Check for Browser UI environment
+        if (globalObj['window'] && globalObj['document']) {
             return MakerJs.environmentTypes.BrowserUI;
         }
         //put node last since packagers usually add shims for it
-        if (tryEval('global') && tryEval('process')) {
+        if (globalObj['global'] && globalObj['process']) {
             return MakerJs.environmentTypes.NodeJs;
         }
         return MakerJs.environmentTypes.Unknown;
@@ -10225,6 +10232,7 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
+/// <reference types="fontkit" />
 var MakerJs;
 (function (MakerJs) {
     var models;
@@ -10232,13 +10240,13 @@ var MakerJs;
         var Text = /** @class */ (function () {
             /**
              * Renders text in a given font to a model.
-             * @param font OpenType.Font object.
+             * @param font OpenType.Font object or fontkit font object.
              * @param text String of text to render.
              * @param fontSize Font size.
              * @param combine Flag (default false) to perform a combineUnion upon each character with characters to the left and right.
              * @param centerCharacterOrigin Flag (default false) to move the x origin of each character to the center. Useful for rotating text characters.
              * @param bezierAccuracy Optional accuracy of Bezier curves.
-             * @param opentypeOptions Optional opentype.RenderOptions object.
+             * @param opentypeOptions Optional opentype.RenderOptions object or fontkit layout options.
              * @returns Model of the text.
              */
             function Text(font, text, fontSize, combine, centerCharacterOrigin, bezierAccuracy, opentypeOptions) {
@@ -10250,7 +10258,7 @@ var MakerJs;
                 var prevDeleted;
                 var prevChar;
                 var cb = function (glyph, x, y, _fontSize, options) {
-                    var charModel = Text.glyphToModel(glyph, _fontSize, bezierAccuracy);
+                    var charModel = Text.glyphToModel(glyph, _fontSize, bezierAccuracy, font);
                     charModel.origin = [x, 0];
                     if (centerCharacterOrigin && (charModel.paths || charModel.models)) {
                         var m = MakerJs.measure.modelExtents(charModel);
@@ -10282,61 +10290,226 @@ var MakerJs;
                     charIndex++;
                     prevChar = charModel;
                 };
-                font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
+                // Detect if font is fontkit (has layout method) or opentype.js (has forEachGlyph)
+                if (font.layout && typeof font.layout === 'function') {
+                    // fontkit font - use layout engine
+                    var fontkitFont = font;
+                    var layoutOpts = opentypeOptions;
+                    var run = fontkitFont.layout(text, layoutOpts === null || layoutOpts === void 0 ? void 0 : layoutOpts.features, layoutOpts === null || layoutOpts === void 0 ? void 0 : layoutOpts.script, layoutOpts === null || layoutOpts === void 0 ? void 0 : layoutOpts.language, layoutOpts === null || layoutOpts === void 0 ? void 0 : layoutOpts.direction);
+                    var scale = fontSize / fontkitFont.unitsPerEm;
+                    var currentX = 0;
+                    for (var i = 0; i < run.glyphs.length; i++) {
+                        var glyph = run.glyphs[i];
+                        var position = run.positions[i];
+                        var glyphX = currentX + (position.xOffset || 0) * scale;
+                        var glyphY = (position.yOffset || 0) * scale;
+                        cb(glyph, glyphX, glyphY, fontSize, opentypeOptions);
+                        currentX += (position.xAdvance || 0) * scale;
+                    }
+                }
+                else {
+                    // opentype.js font - use forEachGlyph
+                    var opentypeFont = font;
+                    opentypeFont.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
+                }
             }
             /**
-             * Convert an opentype glyph to a model.
-             * @param glyph Opentype.Glyph object.
+             * Convert an opentype glyph or fontkit glyph to a model.
+             * @param glyph Opentype.Glyph object or fontkit glyph.
              * @param fontSize Font size.
              * @param bezierAccuracy Optional accuracy of Bezier curves.
+             * @param font Optional font object (needed for fontkit to get scale).
              * @returns Model of the glyph.
              */
-            Text.glyphToModel = function (glyph, fontSize, bezierAccuracy) {
+            Text.glyphToModel = function (glyph, fontSize, bezierAccuracy, font) {
                 var charModel = {};
                 var firstPoint;
                 var currPoint;
                 var pathCount = 0;
-                function addPath(p) {
+                function addPath(p, layer) {
                     if (!charModel.paths) {
                         charModel.paths = {};
                     }
+                    if (layer) {
+                        if (!charModel.layer)
+                            charModel.layer = layer;
+                    }
                     charModel.paths['p_' + ++pathCount] = p;
                 }
-                function addModel(m) {
+                function addModel(m, layer) {
                     if (!charModel.models) {
                         charModel.models = {};
                     }
+                    if (layer) {
+                        if (!charModel.layer)
+                            charModel.layer = layer;
+                    }
                     charModel.models['p_' + ++pathCount] = m;
                 }
-                var p = glyph.getPath(0, 0, fontSize);
-                p.commands.map(function (command, i) {
-                    var points = [[command.x, command.y], [command.x1, command.y1], [command.x2, command.y2]].map(function (p) {
-                        if (p[0] !== void 0) {
-                            return MakerJs.point.mirror(p, false, true);
-                        }
-                    });
-                    switch (command.type) {
-                        case 'M':
-                            firstPoint = points[0];
-                            break;
-                        case 'Z':
-                            points[0] = firstPoint;
-                        //fall through to line
-                        case 'L':
-                            if (!MakerJs.measure.isPointEqual(currPoint, points[0])) {
-                                addPath(new MakerJs.paths.Line(currPoint, points[0]));
+                // Detect if this is a fontkit glyph (has path property) or opentype.js glyph (has getPath method)
+                var isFontkitGlyph = glyph.path && !glyph.getPath;
+                var p;
+                if (isFontkitGlyph && font) {
+                    // fontkit glyph
+                    var scale_1 = fontSize / font.unitsPerEm;
+                    p = glyph.path;
+                    // Check for color layers (COLR table support)
+                    if (glyph.layers && glyph.layers.length > 0) {
+                        // Handle color glyph with layers
+                        glyph.layers.forEach(function (layer, layerIndex) {
+                            var layerGlyph = font.getGlyph(layer.glyph);
+                            var layerPath = layerGlyph.path;
+                            if (layerPath && layerPath.commands) {
+                                // Get color from palette if available
+                                var layerColor = void 0;
+                                if (font['COLR'] && font['CPAL'] && layer.color !== undefined) {
+                                    // CPAL table structure varies, try to access color palettes
+                                    var cpal = font['CPAL'];
+                                    var colorPalettes = cpal.colorPalettes || cpal.colorRecords;
+                                    if (colorPalettes && colorPalettes.length > 0) {
+                                        // Get the first palette
+                                        var palette = colorPalettes[0];
+                                        if (palette && palette.length > layer.color) {
+                                            var color = palette[layer.color];
+                                            if (color) {
+                                                // Convert RGBA to hex color for layer name
+                                                var red = color.red !== undefined ? color.red : color.r || 0;
+                                                var green = color.green !== undefined ? color.green : color.g || 0;
+                                                var blue = color.blue !== undefined ? color.blue : color.b || 0;
+                                                layerColor = "color_".concat(red.toString(16).padStart(2, '0')).concat(green.toString(16).padStart(2, '0')).concat(blue.toString(16).padStart(2, '0'));
+                                            }
+                                        }
+                                    }
+                                }
+                                // Process layer path commands
+                                var layerFirstPoint = void 0;
+                                var layerCurrPoint = void 0;
+                                for (var _i = 0, _a = layerPath.commands; _i < _a.length; _i++) {
+                                    var cmd = _a[_i];
+                                    var points = Text.convertFontkitCommand(cmd, scale_1);
+                                    switch (cmd.command) {
+                                        case 'moveTo':
+                                            layerFirstPoint = points[0];
+                                            layerCurrPoint = points[0];
+                                            break;
+                                        case 'closePath':
+                                            points[0] = layerFirstPoint;
+                                        // fall through to line
+                                        case 'lineTo':
+                                            if (layerCurrPoint && !MakerJs.measure.isPointEqual(layerCurrPoint, points[0])) {
+                                                addPath(new MakerJs.paths.Line(layerCurrPoint, points[0]), layerColor);
+                                            }
+                                            layerCurrPoint = points[0];
+                                            break;
+                                        case 'bezierCurveTo':
+                                            if (layerCurrPoint) {
+                                                addModel(new models.BezierCurve(layerCurrPoint, points[0], points[1], points[2], bezierAccuracy), layerColor);
+                                            }
+                                            layerCurrPoint = points[2];
+                                            break;
+                                        case 'quadraticCurveTo':
+                                            if (layerCurrPoint) {
+                                                addModel(new models.BezierCurve(layerCurrPoint, points[0], points[1], bezierAccuracy), layerColor);
+                                            }
+                                            layerCurrPoint = points[1];
+                                            break;
+                                    }
+                                }
                             }
-                            break;
-                        case 'C':
-                            addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0], bezierAccuracy));
-                            break;
-                        case 'Q':
-                            addModel(new models.BezierCurve(currPoint, points[1], points[0], bezierAccuracy));
-                            break;
+                        });
+                        return charModel;
                     }
-                    currPoint = points[0];
-                });
+                    // Standard fontkit glyph (no color layers)
+                    if (!p || !p.commands) {
+                        return charModel; // Empty glyph (e.g., space)
+                    }
+                    for (var _i = 0, _a = p.commands; _i < _a.length; _i++) {
+                        var cmd = _a[_i];
+                        var points = Text.convertFontkitCommand(cmd, scale_1);
+                        switch (cmd.command) {
+                            case 'moveTo':
+                                firstPoint = points[0];
+                                currPoint = points[0];
+                                break;
+                            case 'closePath':
+                                points[0] = firstPoint;
+                            // fall through to line
+                            case 'lineTo':
+                                if (!MakerJs.measure.isPointEqual(currPoint, points[0])) {
+                                    addPath(new MakerJs.paths.Line(currPoint, points[0]));
+                                }
+                                currPoint = points[0];
+                                break;
+                            case 'bezierCurveTo':
+                                addModel(new models.BezierCurve(currPoint, points[0], points[1], points[2], bezierAccuracy));
+                                currPoint = points[2];
+                                break;
+                            case 'quadraticCurveTo':
+                                addModel(new models.BezierCurve(currPoint, points[0], points[1], bezierAccuracy));
+                                currPoint = points[1];
+                                break;
+                        }
+                    }
+                }
+                else {
+                    // opentype.js glyph
+                    p = glyph.getPath(0, 0, fontSize);
+                    p.commands.map(function (command, i) {
+                        var points = [[command.x, command.y], [command.x1, command.y1], [command.x2, command.y2]].map(function (p) {
+                            if (p[0] !== void 0) {
+                                return MakerJs.point.mirror(p, false, true);
+                            }
+                        });
+                        switch (command.type) {
+                            case 'M':
+                                firstPoint = points[0];
+                                break;
+                            case 'Z':
+                                points[0] = firstPoint;
+                            //fall through to line
+                            case 'L':
+                                if (!MakerJs.measure.isPointEqual(currPoint, points[0])) {
+                                    addPath(new MakerJs.paths.Line(currPoint, points[0]));
+                                }
+                                break;
+                            case 'C':
+                                addModel(new models.BezierCurve(currPoint, points[1], points[2], points[0], bezierAccuracy));
+                                break;
+                            case 'Q':
+                                addModel(new models.BezierCurve(currPoint, points[1], points[0], bezierAccuracy));
+                                break;
+                        }
+                        currPoint = points[0];
+                    });
+                }
                 return charModel;
+            };
+            /**
+             * Convert fontkit path command to points array
+             * @param cmd Fontkit path command
+             * @param scale Scale factor
+             * @returns Array of points
+             */
+            Text.convertFontkitCommand = function (cmd, scale) {
+                var points = [];
+                switch (cmd.command) {
+                    case 'moveTo':
+                    case 'lineTo':
+                        points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
+                        break;
+                    case 'quadraticCurveTo':
+                        // Control point, end point
+                        points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
+                        points.push([cmd.args[2] * scale, cmd.args[3] * scale]);
+                        break;
+                    case 'bezierCurveTo':
+                        // Control point 1, control point 2, end point
+                        points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
+                        points.push([cmd.args[2] * scale, cmd.args[3] * scale]);
+                        points.push([cmd.args[4] * scale, cmd.args[5] * scale]);
+                        break;
+                }
+                return points;
             };
             return Text;
         }());
@@ -10350,6 +10523,7 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.18.2";
+MakerJs.version = "0.19.0";
 
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
