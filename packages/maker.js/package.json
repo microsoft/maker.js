@@ -96,6 +96,7 @@
   "devDependencies": {
     "@jscad/csg": "^0.3.7",
     "@jscad/stl-serializer": "^0.1.0",
+    "@types/fontkit": "^2.0.8",
     "@types/graham_scan": "^1.0.28",
     "dxf-parser-typings": "^1.3.1"
   },
