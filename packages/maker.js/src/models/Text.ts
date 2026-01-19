@@ -1,4 +1,29 @@
-﻿namespace MakerJs.models {
+﻿/// <reference types="fontkit" />
+
+declare namespace fontkit {
+    export type Font = import('fontkit').Font;
+}
+
+namespace MakerJs {
+
+    /**
+     * Layout options for fontkit font rendering.
+     * These options are passed to the fontkit layout engine.
+     */
+    export interface IFontkitLayoutOptions {
+        /** OpenType features to enable/disable (array of feature tags or object mapping feature tags to boolean) */
+        features?: string[] | Record<string, boolean>;
+        /** Script code (e.g., 'latn', 'arab') */
+        script?: string;
+        /** Language code (e.g., 'ENG', 'ARA') */
+        language?: string;
+        /** Text direction ('ltr' or 'rtl') */
+        direction?: string;
+    }
+
+}
+
+namespace MakerJs.models {
 
     export class Text implements IModel {
         public models: IModelMap = {};
@@ -14,7 +39,7 @@
          * @param opentypeOptions Optional opentype.RenderOptions object or fontkit layout options.
          * @returns Model of the text.
          */
-        constructor(font: any, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number, opentypeOptions?: any) {
+        constructor(font: opentype.Font | fontkit.Font, text: string, fontSize: number, combine = false, centerCharacterOrigin = false, bezierAccuracy?: number, opentypeOptions?: opentype.RenderOptions | IFontkitLayoutOptions) {
             var charIndex = 0;
             var prevDeleted: IModel;
             var prevChar: IModel;
@@ -60,10 +85,18 @@
             };
 
             // Detect if font is fontkit (has layout method) or opentype.js (has forEachGlyph)
-            if (font.layout && typeof font.layout === 'function') {
+            if ((font as any).layout && typeof (font as any).layout === 'function') {
                 // fontkit font - use layout engine
-                const run = font.layout(text, opentypeOptions);
-                const scale = fontSize / font.unitsPerEm;
+                const fontkitFont = font as fontkit.Font;
+                const layoutOpts = opentypeOptions as IFontkitLayoutOptions | undefined;
+                const run = fontkitFont.layout(
+                    text,
+                    layoutOpts?.features,
+                    layoutOpts?.script,
+                    layoutOpts?.language,
+                    layoutOpts?.direction
+                );
+                const scale = fontSize / fontkitFont.unitsPerEm;
                 let currentX = 0;
 
                 for (let i = 0; i < run.glyphs.length; i++) {
@@ -79,7 +112,8 @@
                 }
             } else {
                 // opentype.js font - use forEachGlyph
-                font.forEachGlyph(text, 0, 0, fontSize, opentypeOptions, cb);
+                const opentypeFont = font as opentype.Font;
+                opentypeFont.forEachGlyph(text, 0, 0, fontSize, opentypeOptions as opentype.RenderOptions, cb);
             }
         }
 
@@ -132,7 +166,7 @@
                     glyph.layers.forEach((layer: any, layerIndex: number) => {
                         const layerGlyph = font.getGlyph(layer.glyph);
                         const layerPath = layerGlyph.path;
-                        
+
                         if (layerPath && layerPath.commands) {
                             // Get color from palette if available
                             let layerColor: string | undefined;
@@ -279,19 +313,19 @@
          */
         private static convertFontkitCommand(cmd: any, scale: number): IPoint[] {
             const points: IPoint[] = [];
-            
+
             switch (cmd.command) {
                 case 'moveTo':
                 case 'lineTo':
                     points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
                     break;
-                    
+
                 case 'quadraticCurveTo':
                     // Control point, end point
                     points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
                     points.push([cmd.args[2] * scale, cmd.args[3] * scale]);
                     break;
-                    
+
                 case 'bezierCurveTo':
                     // Control point 1, control point 2, end point
                     points.push([cmd.args[0] * scale, cmd.args[1] * scale]);
@@ -299,7 +333,7 @@
                     points.push([cmd.args[4] * scale, cmd.args[5] * scale]);
                     break;
             }
-            
+
             return points;
         }
     }
