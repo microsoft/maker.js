@@ -448,6 +448,7 @@ return kdbush;
 })));
 
 },{}],"makerjs":[function(require,module,exports){
+(function (global){(function (){
 /**
  * Root module for Maker.js.
  *
@@ -479,26 +480,31 @@ var MakerJs;
     /**
      * @private
      */
-    function tryEval(name) {
-        try {
-            var value = eval(name);
-            return value;
-        }
-        catch (e) { }
-        return;
-    }
-    /**
-     * @private
-     */
     function detectEnvironment() {
-        if (tryEval('WorkerGlobalScope') && tryEval('self')) {
+        // Use a function to get the global object to avoid TypeScript checking specific globals
+        var getGlobal = function () {
+            // In browsers and workers, 'self' refers to the global scope
+            if (typeof self !== 'undefined') {
+                return self;
+            }
+            // In Node.js, 'global' refers to the global scope
+            if (typeof global !== 'undefined') {
+                return global;
+            }
+            // Fallback for older environments
+            return this || {};
+        };
+        var globalObj = getGlobal();
+        // Check for Web Worker environment - workers have importScripts
+        if (globalObj['importScripts'] && globalObj['self']) {
             return MakerJs.environmentTypes.WebWorker;
         }
-        if (tryEval('window') && tryEval('document')) {
+        // Check for Browser UI environment
+        if (globalObj['window'] && globalObj['document']) {
             return MakerJs.environmentTypes.BrowserUI;
         }
         //put node last since packagers usually add shims for it
-        if (tryEval('global') && tryEval('process')) {
+        if (globalObj['global'] && globalObj['process']) {
             return MakerJs.environmentTypes.NodeJs;
         }
         return MakerJs.environmentTypes.Unknown;
@@ -10352,4 +10358,5 @@ var MakerJs;
 })(MakerJs || (MakerJs = {}));
 MakerJs.version = "0.18.2";
 
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);

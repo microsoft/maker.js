@@ -32,30 +32,32 @@ namespace MakerJs {
     /**
      * @private
      */
-    function tryEval(name: string) {
-        try {
-            var value = eval(name);
-            return value;
-        }
-        catch (e) { }
-        return;
-    }
-
-    /**
-     * @private
-     */
     function detectEnvironment() {
+        
+        // Use a function to get the global object to avoid TypeScript checking specific globals
+        var getGlobal = function(): any {
+            // In browsers and workers, 'self' refers to the global scope
+            if (typeof self !== 'undefined') { return self; }
+            // In Node.js, 'global' refers to the global scope
+            if (typeof global !== 'undefined') { return global; }
+            // Fallback for older environments
+            return this || {};
+        };
+        
+        var globalObj = getGlobal();
 
-        if (tryEval('WorkerGlobalScope') && tryEval('self')) {
+        // Check for Web Worker environment - workers have importScripts
+        if (globalObj['importScripts'] && globalObj['self']) {
             return environmentTypes.WebWorker;
         }
 
-        if (tryEval('window') && tryEval('document')) {
+        // Check for Browser UI environment
+        if (globalObj['window'] && globalObj['document']) {
             return environmentTypes.BrowserUI;
         }
 
         //put node last since packagers usually add shims for it
-        if (tryEval('global') && tryEval('process')) {
+        if (globalObj['global'] && globalObj['process']) {
             return environmentTypes.NodeJs;
         }
 
