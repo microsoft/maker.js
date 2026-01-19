@@ -6,8 +6,6 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -192,7 +190,7 @@ var MakerJsPlayground;
             for (var i = 0; i < all.length; i++)
                 all[i].classList.remove('selected');
             //select current
-            var div = document.querySelector(".download-option[data-format=\"".concat(formatId, "\"]"));
+            var div = document.querySelector(".download-option[data-format=\"" + formatId + "\"]");
             div.classList.add('selected');
             var formatClass = classes[format];
             FormatOptions.current = new formatClass(format, formatTitle, div, model);
