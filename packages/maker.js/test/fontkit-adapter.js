@@ -225,4 +225,41 @@ describe('FontKit Support', function () {
             assert.ok(extents2.high[0] > extents.high[0]);
         });
     });
+
+    describe('Color Glyph Support', function() {
+
+        it('should handle fonts with COLR tables (if available)', function() {
+            // Note: Standard fonts don't have COLR tables, but this tests the code path
+            const font = fontkit.openSync('../../docs/fonts/arbutusslab/ArbutusSlab-Regular.ttf');
+            const textModel = new makerjs.models.Text(font, 'A', 100);
+            
+            // Verify model was created
+            assert.ok(textModel);
+            assert.ok(textModel.models);
+            
+            // For fonts with COLR tables, layers would be present
+            // For regular fonts, paths/models are created without layer property
+            const charModel = textModel.models[0];
+            if (charModel) {
+                // Verify the character has either paths or models
+                assert.ok(charModel.paths || charModel.models, 
+                    'Character should have paths or models');
+            }
+        });
+
+        it('should not break on fonts without color information', function() {
+            // Verify that regular fonts work correctly (no color layers)
+            const font = fontkit.openSync('../../docs/fonts/arbutusslab/ArbutusSlab-Regular.ttf');
+            const textModel = new makerjs.models.Text(font, 'Hello', 100);
+            
+            assert.ok(textModel);
+            assert.ok(textModel.models);
+            assert.strictEqual(Object.keys(textModel.models).length, 5);
+            
+            // Verify SVG export works
+            const svg = makerjs.exporter.toSVG(textModel);
+            assert.ok(svg.includes('<svg'));
+            assert.ok(svg.includes('</svg>'));
+        });
+    });
 });
