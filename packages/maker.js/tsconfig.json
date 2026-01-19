@@ -9,6 +9,7 @@
       "dxf-parser",
       "@danmarshall/jscad-typings",
       "bezier-js",
+      "fontkit",
       "graham_scan",
       "node",
       "opentype.js",
