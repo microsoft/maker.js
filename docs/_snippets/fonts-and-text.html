@@ -7,9 +7,26 @@ title: Fonts and text
     Pass a font object, your text, and a font size. Each character of your text string will become a child model containing the paths for that character.
 </p>
 
+<h4>Compatible Font Libraries</h4>
+
 <p>
-    Maker.js uses <a href="http://opentype.js.org/">Opentype.js</a> by Frederik De Bleser to read TrueType and OpenType fonts.
-    Please visit the <a href="https://github.com/nodebox/opentype.js">Opentype.js GitHub</a> website for details on its API.
+    There are 2 font libraries compatible with Maker.js:
+</p>
+
+<ul>
+    <li>
+        <b><a href="http://opentype.js.org/">Opentype.js</a></b> by Frederik De Bleser - reads TrueType and OpenType fonts (.ttf, .otf).
+        Visit the <a href="https://github.com/nodebox/opentype.js">Opentype.js GitHub</a> for API details.
+    </li>
+    <li>
+        <b><a href="https://github.com/foliojs/fontkit">fontkit</a></b> by devongovett - an advanced font engine supporting TrueType, OpenType, WOFF/WOFF2, and font collections (.ttc, .dfont).
+        fontkit provides additional features including variable fonts, color glyphs (emoji), and advanced OpenType layout features (GSUB/GPOS).
+        When using fontkit with color fonts, glyphs are automatically organized into layers by color.
+    </li>
+</ul>
+
+<p>
+    The Text model automatically detects which library you're using and handles both transparently.
     You will need to know how to load font files before you can use them in Maker.js.
 </p>
 
@@ -76,7 +93,11 @@ opentype.load('/fonts/stardosstencil/StardosStencil-Bold.ttf', function (err, fo
 <h4>Loading fonts in Node.js</h4>
 
 <p>
-    Use opentype.loadSync(url) to load a font from a file and return a Font object. Throws an error if the font could not be parsed. This only works in Node.js.
+    <b>With Opentype.js:</b>
+</p>
+
+<p>
+    Use <code>opentype.loadSync(url)</code> to load a font from a file and return a Font object. Throws an error if the font could not be parsed. This only works in Node.js.
 </p>
 
 {% highlight javascript %}
@@ -84,6 +105,25 @@ var makerjs = require('makerjs');
 var opentype = require('opentype.js');
 
 var font = opentype.loadSync('./fonts/stardosstencil/StardosStencil-Regular.ttf');
+
+var textModel = new makerjs.models.Text(font, 'Hello', 100);
+
+console.log(makerjs.exporter.toSVG(textModel));
+{% endhighlight %}
+
+<p>
+    <b>With fontkit:</b>
+</p>
+
+<p>
+    Use <code>fontkit.openSync(filename)</code> to load a font from a file. fontkit must be installed separately: <code>npm install fontkit</code>
+</p>
+
+{% highlight javascript %}
+var makerjs = require('makerjs');
+var fontkit = require('fontkit');
+
+var font = fontkit.openSync('./fonts/stardosstencil/StardosStencil-Regular.ttf');
 
 var textModel = new makerjs.models.Text(font, 'Hello', 100);
 
