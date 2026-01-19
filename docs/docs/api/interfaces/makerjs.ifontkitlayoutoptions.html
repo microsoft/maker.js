@@ -1,12 +1,13 @@
 ---
 layout: posts
-title: Api - IJscadCagOptions Interface
+title: Api - IFontkitLayoutOptions Interface
 ---
 <div class="container container-main toggle-visibilityprivate toggle-public">
 <section class="tsd-panel tsd-comment">
 	<div class="tsd-comment tsd-typography">
 		<div class="lead">
-			<p>Jscad CAG export options.</p>
+			<p>Layout options for fontkit font rendering.
+			These options are passed to the fontkit layout engine.</p>
 		</div>
 	</div>
 </section>
@@ -14,20 +15,7 @@ title: Api - IJscadCagOptions Interface
 	<h3>Hierarchy</h3>
 	<ul class="tsd-hierarchy">
 		<li>
-			<span class="tsd-signature-type">IExportOptions</span>
-		</li>
-		<li>
-			<a href="makerjs.ipointmatchoptions.html" class="tsd-signature-type">IPointMatchOptions</a>
-			<ul class="tsd-hierarchy">
-				<li>
-					<span class="target">IJscadCagOptions</span>
-					<ul class="tsd-hierarchy">
-						<li>
-							<a href="makerjs.exporter.ijscadcsgoptions.html" class="tsd-signature-type">IJscadCsgOptions</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
+			<span class="target">IFontkitLayoutOptions</span>
 		</li>
 	</ul>
 </section>
@@ -38,12 +26,10 @@ title: Api - IJscadCagOptions Interface
 			<section class="tsd-index-section ">
 				<h3>Properties</h3>
 				<ul class="tsd-index-list">
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcagoptions.html#accuracy" class="tsd-kind-icon">accuracy</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ijscadcagoptions.html#bylayers" class="tsd-kind-icon">by<wbr>Layers</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ijscadcagoptions.html#maxarcfacet" class="tsd-kind-icon">max<wbr>Arc<wbr>Facet</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcagoptions.html#pointmatchingdistance" class="tsd-kind-icon">point<wbr>Matching<wbr>Distance</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.exporter.ijscadcagoptions.html#statuscallback" class="tsd-kind-icon">status<wbr>Callback</a></li>
-					<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="makerjs.exporter.ijscadcagoptions.html#units" class="tsd-kind-icon">units</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifontkitlayoutoptions.html#direction" class="tsd-kind-icon">direction</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifontkitlayoutoptions.html#features" class="tsd-kind-icon">features</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifontkitlayoutoptions.html#language" class="tsd-kind-icon">language</a></li>
+					<li class="tsd-kind-property tsd-parent-kind-interface"><a href="makerjs.ifontkitlayoutoptions.html#script" class="tsd-kind-icon">script</a></li>
 				</ul>
 			</section>
 		</div>
@@ -51,96 +37,63 @@ title: Api - IJscadCagOptions Interface
 </section>
 <section class="tsd-panel-group tsd-member-group ">
 	<h2>Properties</h2>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="accuracy" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> accuracy</h3>
-		<div class="tsd-signature tsd-kind-icon">accuracy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+		<a name="direction" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> direction</h3>
+		<div class="tsd-signature tsd-kind-icon">direction<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.exporter.idxfrenderoptions.html">IDXFRenderOptions</a>.<a href="makerjs.exporter.idxfrenderoptions.html#accuracy">accuracy</a></p>
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/exporter.ts#L11">src/maker.js/packages/maker.js/src/core/exporter.ts:11</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L21">src/maker.js/packages/maker.js/src/models/Text.ts:21</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional exemplar of number of decimal places.</p>
+				<p>Text direction (&#39;ltr&#39; or &#39;rtl&#39;)</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="bylayers" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> by<wbr>Layers</h3>
-		<div class="tsd-signature tsd-kind-icon">by<wbr>Layers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+		<a name="features" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> features</h3>
+		<div class="tsd-signature tsd-kind-icon">features<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/openjscad.ts#L506">src/maker.js/packages/maker.js/src/core/openjscad.ts:506</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L15">src/maker.js/packages/maker.js/src/models/Text.ts:15</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Flag to separate chains by layers.</p>
+				<p>OpenType features to enable/disable (array of feature tags or object mapping feature tags to boolean)</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="maxarcfacet" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> max<wbr>Arc<wbr>Facet</h3>
-		<div class="tsd-signature tsd-kind-icon">max<wbr>Arc<wbr>Facet<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+		<a name="language" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> language</h3>
+		<div class="tsd-signature tsd-kind-icon">language<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/openjscad.ts#L511">src/maker.js/packages/maker.js/src/core/openjscad.ts:511</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L19">src/maker.js/packages/maker.js/src/models/Text.ts:19</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>The maximum length between points on an arc or circle.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="pointmatchingdistance" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> point<wbr>Matching<wbr>Distance</h3>
-		<div class="tsd-signature tsd-kind-icon">point<wbr>Matching<wbr>Distance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.exporter.idxfrenderoptions.html">IDXFRenderOptions</a>.<a href="makerjs.exporter.idxfrenderoptions.html#pointmatchingdistance">pointMatchingDistance</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/maker.ts#L519">src/maker.js/packages/maker.js/src/core/maker.ts:519</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Max distance to consider two points as the same.</p>
+				<p>Language code (e.g., &#39;ENG&#39;, &#39;ARA&#39;)</p>
 			</div>
 		</div>
 	</section>
 	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-		<a name="statuscallback" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> status<wbr>Callback</h3>
-		<div class="tsd-signature tsd-kind-icon">status<wbr>Callback<span class="tsd-signature-symbol">:</span> <a href="makerjs.exporter.istatuscallback.html" class="tsd-signature-type">IStatusCallback</a></div>
+		<a name="script" class="tsd-anchor"></a>
+		<h3><span class="tsd-flag ts-flagOptional">Optional</span> script</h3>
+		<div class="tsd-signature tsd-kind-icon">script<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/openjscad.ts#L516">src/maker.js/packages/maker.js/src/core/openjscad.ts:516</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L17">src/maker.js/packages/maker.js/src/models/Text.ts:17</a></li>
 			</ul>
 		</aside>
 		<div class="tsd-comment tsd-typography">
 			<div class="lead">
-				<p>Optional callback to get status during the export.</p>
-			</div>
-		</div>
-	</section>
-	<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-		<a name="units" class="tsd-anchor"></a>
-		<h3><span class="tsd-flag ts-flagOptional">Optional</span> units</h3>
-		<div class="tsd-signature tsd-kind-icon">units<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-		<aside class="tsd-sources">
-			<p>Inherited from <a href="makerjs.exporter.idxfrenderoptions.html">IDXFRenderOptions</a>.<a href="makerjs.exporter.idxfrenderoptions.html#units">units</a></p>
-			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/core/exporter.ts#L16">src/maker.js/packages/maker.js/src/core/exporter.ts:16</a></li>
-			</ul>
-		</aside>
-		<div class="tsd-comment tsd-typography">
-			<div class="lead">
-				<p>Optional unit system to embed in exported file, if the export format allows alternate unit systems.</p>
+				<p>Script code (e.g., &#39;latn&#39;, &#39;arab&#39;)</p>
 			</div>
 		</div>
 	</section>

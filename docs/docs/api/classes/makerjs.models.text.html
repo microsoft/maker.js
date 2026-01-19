@@ -48,13 +48,13 @@ title: Api - Text Class
 		<a name="constructor" class="tsd-anchor"></a>
 		<h3>constructor</h3>
 		<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-			<li class="tsd-signature tsd-kind-icon">new <wbr>Text<span class="tsd-signature-symbol">(</span>font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Font</span>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, combine<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, centerCharacterOrigin<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, bezierAccuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, opentypeOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RenderOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.text.html" class="tsd-signature-type">Text</a></li>
+			<li class="tsd-signature tsd-kind-icon">new <wbr>Text<span class="tsd-signature-symbol">(</span>font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Font</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Font</span>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, combine<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, centerCharacterOrigin<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, bezierAccuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, opentypeOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">RenderOptions</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/makerjs.ifontkitlayoutoptions.html" class="tsd-signature-type">IFontkitLayoutOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="makerjs.models.text.html" class="tsd-signature-type">Text</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L4">src/maker.js/packages/maker.js/src/models/Text.ts:4</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L29">src/maker.js/packages/maker.js/src/models/Text.ts:29</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -65,10 +65,10 @@ title: Api - Text Class
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>font: <span class="tsd-signature-type">Font</span></h5>
+						<h5>font: <span class="tsd-signature-type">Font</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Font</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>OpenType.Font object.</p>
+								<p>OpenType.Font object or fontkit font object.</p>
 							</div>
 						</div>
 					</li>
@@ -113,10 +113,10 @@ title: Api - Text Class
 						</div>
 					</li>
 					<li>
-						<h5><span class="tsd-flag ts-flagOptional">Optional</span> opentypeOptions: <span class="tsd-signature-type">RenderOptions</span></h5>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> opentypeOptions: <span class="tsd-signature-type">RenderOptions</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/makerjs.ifontkitlayoutoptions.html" class="tsd-signature-type">IFontkitLayoutOptions</a></h5>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Optional opentype.RenderOptions object.</p>
+								<p>Optional opentype.RenderOptions object or fontkit layout options.</p>
 							</div>
 						</div>
 					</li>
@@ -135,7 +135,7 @@ title: Api - Text Class
 		<div class="tsd-signature tsd-kind-icon">models<span class="tsd-signature-symbol">:</span> <a href="../interfaces/makerjs.imodelmap.html" class="tsd-signature-type">IModelMap</a></div>
 		<aside class="tsd-sources">
 			<ul>
-				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L4">src/maker.js/packages/maker.js/src/models/Text.ts:4</a></li>
+				<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L29">src/maker.js/packages/maker.js/src/models/Text.ts:29</a></li>
 			</ul>
 		</aside>
 	</section>
@@ -146,26 +146,26 @@ title: Api - Text Class
 		<a name="glyphtomodel" class="tsd-anchor"></a>
 		<h3><span class="tsd-flag ts-flagStatic">Static</span> glyph<wbr>ToModel</h3>
 		<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-			<li class="tsd-signature tsd-kind-icon">glyph<wbr>ToModel<span class="tsd-signature-symbol">(</span>glyph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Glyph</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, bezierAccuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
+			<li class="tsd-signature tsd-kind-icon">glyph<wbr>ToModel<span class="tsd-signature-symbol">(</span>glyph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, bezierAccuracy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, font<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/makerjs.imodel.html" class="tsd-signature-type">IModel</a></li>
 		</ul>
 		<ul class="tsd-descriptions">
 			<li class="tsd-description">
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L72">src/maker.js/packages/maker.js/src/models/Text.ts:72</a></li>
+						<li>Defined in <a href="https://github.com/microsoft/maker.js/blob/master/packages/maker.js/src/models/Text.ts#L128">src/maker.js/packages/maker.js/src/models/Text.ts:128</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Convert an opentype glyph to a model.</p>
+						<p>Convert an opentype glyph or fontkit glyph to a model.</p>
 					</div>
 				</div>
 				<h4 class="tsd-parameters-title">Parameters</h4>
 				<ul class="tsd-parameters">
 					<li>
-						<h5>glyph: <span class="tsd-signature-type">Glyph</span></h5>
+						<h5>glyph: <span class="tsd-signature-type">any</span></h5>
 						<div class="tsd-comment tsd-typography">
-							<p>Opentype.Glyph object.</p>
+							<p>Opentype.Glyph object or fontkit glyph.</p>
 						</div>
 					</li>
 					<li>
@@ -178,6 +178,12 @@ title: Api - Text Class
 						<h5><span class="tsd-flag ts-flagOptional">Optional</span> bezierAccuracy: <span class="tsd-signature-type">number</span></h5>
 						<div class="tsd-comment tsd-typography">
 							<p>Optional accuracy of Bezier curves.</p>
+						</div>
+					</li>
+					<li>
+						<h5><span class="tsd-flag ts-flagOptional">Optional</span> font: <span class="tsd-signature-type">any</span></h5>
+						<div class="tsd-comment tsd-typography">
+							<p>Optional font object (needed for fontkit to get scale).</p>
 						</div>
 					</li>
 				</ul>
