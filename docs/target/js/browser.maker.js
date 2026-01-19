@@ -495,8 +495,9 @@ var MakerJs;
             return this || {};
         };
         var globalObj = getGlobal();
-        // Check for Web Worker environment - workers have importScripts
-        if (globalObj['importScripts'] && globalObj['self']) {
+        // Check for Web Worker environment
+        // Workers have 'self' and 'WorkerGlobalScope' but not 'window'
+        if (globalObj['self'] && globalObj['WorkerGlobalScope'] && !globalObj['window']) {
             return MakerJs.environmentTypes.WebWorker;
         }
         // Check for Browser UI environment
