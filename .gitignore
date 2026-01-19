@@ -4,6 +4,7 @@ web.config
 .vs
 .vscode
 docs/docs/api/assets
+docs/target/js/browser.maker.js
 debug.log
 packages/docs/dist
 packages/maker.js/debug
