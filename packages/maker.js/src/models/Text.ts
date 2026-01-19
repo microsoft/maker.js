@@ -171,11 +171,24 @@ namespace MakerJs.models {
                             // Get color from palette if available
                             let layerColor: string | undefined;
                             if (font['COLR'] && font['CPAL'] && layer.color !== undefined) {
-                                const palette = font['CPAL'].colorPalettes[0]; // Use first palette
-                                if (palette && palette[layer.color]) {
-                                    const color = palette[layer.color];
-                                    // Convert RGBA to hex color for layer name
-                                    layerColor = `color_${color.red.toString(16).padStart(2, '0')}${color.green.toString(16).padStart(2, '0')}${color.blue.toString(16).padStart(2, '0')}`;
+                                // CPAL table structure varies, try to access color palettes
+                                const cpal = font['CPAL'];
+                                const colorPalettes = cpal.colorPalettes || cpal.colorRecords;
+                                
+                                if (colorPalettes && colorPalettes.length > 0) {
+                                    // Get the first palette
+                                    const palette = colorPalettes[0];
+                                    
+                                    if (palette && palette.length > layer.color) {
+                                        const color = palette[layer.color];
+                                        if (color) {
+                                            // Convert RGBA to hex color for layer name
+                                            const red = color.red !== undefined ? color.red : color.r || 0;
+                                            const green = color.green !== undefined ? color.green : color.g || 0;
+                                            const blue = color.blue !== undefined ? color.blue : color.b || 0;
+                                            layerColor = `color_${red.toString(16).padStart(2, '0')}${green.toString(16).padStart(2, '0')}${blue.toString(16).padStart(2, '0')}`;
+                                        }
+                                    }
                                 }
                             }
 
