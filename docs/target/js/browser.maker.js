@@ -10267,6 +10267,124 @@ var MakerJs;
                             MakerJs.model.originate(charModel, [m.low[0] + w / 2, 0]);
                         }
                     }
+                    // If combine is enabled, check if this glyph has multiple closed geometries that overlap
+                    // (e.g., fonts with serifs as separate shapes that overlap the main letter body)
+                    // and combine them within the glyph first before combining with other glyphs.
+                    // Note: Letters like 'i', 'j', 'o' have multiple closed chains (dot+body, inner+outer)
+                    // but these don't overlap, so they should remain separate.
+                    if (combine) {
+                        var chainsResult = MakerJs.model.findChains(charModel);
+                        // findChains can return an array or a map, ensure we have an array
+                        var chains = Array.isArray(chainsResult) ? chainsResult : [];
+                        if (chains && chains.length > 1) {
+                            // Count only endless (closed) chains
+                            var closedChains = chains.filter(function (chain) { return chain.endless; });
+                            if (closedChains.length > 1) {
+                                // We have multiple closed geometries within this glyph
+                                // Create separate models for each closed chain
+                                var chainModels = [];
+                                closedChains.forEach(function (chain, i) {
+                                    var chainModel = { paths: {}, models: {} };
+                                    chain.links.forEach(function (link) {
+                                        var pathId = link.walkedPath.pathId;
+                                        var pathContext = link.walkedPath.pathContext;
+                                        if (charModel.paths && charModel.paths[pathId]) {
+                                            chainModel.paths[pathId] = charModel.paths[pathId];
+                                        }
+                                        else if (charModel.models && charModel.models[pathId]) {
+                                            chainModel.models[pathId] = charModel.models[pathId];
+                                        }
+                                    });
+                                    chainModels.push(chainModel);
+                                });
+                                // Check which chains overlap with each other and combine only those
+                                // We'll use a union-find approach: merge overlapping chains iteratively
+                                var merged = new Array(chainModels.length).fill(false);
+                                var mergeGroups = [];
+                                for (var i = 0; i < chainModels.length; i++) {
+                                    if (merged[i])
+                                        continue;
+                                    var currentGroup = [chainModels[i]];
+                                    merged[i] = true;
+                                    // Check if any other unmerged chain intersects with any chain in the current group
+                                    var foundIntersection = true;
+                                    while (foundIntersection) {
+                                        foundIntersection = false;
+                                        for (var j = 0; j < chainModels.length; j++) {
+                                            if (merged[j])
+                                                continue;
+                                            // Check if chainModels[j] intersects with any model in currentGroup
+                                            for (var k = 0; k < currentGroup.length; k++) {
+                                                var intersection = MakerJs.model.findChains(MakerJs.model.combine(MakerJs.model.clone(currentGroup[k]), MakerJs.model.clone(chainModels[j]), true, false, true, false // intersection
+                                                ));
+                                                var hasIntersection = Array.isArray(intersection) && intersection.length > 0;
+                                                if (hasIntersection) {
+                                                    currentGroup.push(chainModels[j]);
+                                                    merged[j] = true;
+                                                    foundIntersection = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (foundIntersection)
+                                                break;
+                                        }
+                                    }
+                                    mergeGroups.push(currentGroup);
+                                }
+                                // Now combine chains within each merge group and rebuild charModel
+                                if (mergeGroups.length < chainModels.length) {
+                                    // Some chains were merged, rebuild the character model
+                                    charModel = { paths: {}, models: {} };
+                                    mergeGroups.forEach(function (group) {
+                                        if (group.length === 1) {
+                                            // Single chain, just add it to charModel
+                                            var singleChain = group[0];
+                                            if (singleChain.paths) {
+                                                Object.assign(charModel.paths, singleChain.paths);
+                                            }
+                                            if (singleChain.models) {
+                                                Object.assign(charModel.models, singleChain.models);
+                                            }
+                                        }
+                                        else {
+                                            // Multiple overlapping chains, combine them with union
+                                            var combinedGroup = group[0];
+                                            for (var i = 1; i < group.length; i++) {
+                                                var unionResult = MakerJs.model.combineUnion(MakerJs.model.clone(combinedGroup), MakerJs.model.clone(group[i]));
+                                                combinedGroup = { paths: {}, models: {} };
+                                                if (unionResult.models) {
+                                                    if (unionResult.models.a) {
+                                                        if (unionResult.models.a.paths) {
+                                                            Object.assign(combinedGroup.paths, unionResult.models.a.paths);
+                                                        }
+                                                        if (unionResult.models.a.models) {
+                                                            Object.assign(combinedGroup.models, unionResult.models.a.models);
+                                                        }
+                                                    }
+                                                    if (unionResult.models.b) {
+                                                        if (unionResult.models.b.paths) {
+                                                            Object.assign(combinedGroup.paths, unionResult.models.b.paths);
+                                                        }
+                                                        if (unionResult.models.b.models) {
+                                                            Object.assign(combinedGroup.models, unionResult.models.b.models);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            // Add the combined group to charModel
+                                            if (combinedGroup.paths) {
+                                                Object.assign(charModel.paths, combinedGroup.paths);
+                                            }
+                                            if (combinedGroup.models) {
+                                                Object.assign(charModel.models, combinedGroup.models);
+                                            }
+                                        }
+                                    });
+                                    charModel.origin = [x, 0];
+                                }
+                            }
+                        }
+                    }
                     if (combine && charIndex > 0) {
                         var combineOptions = {};
                         var prev;
