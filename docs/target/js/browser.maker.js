@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.19.0
+ *   version: 0.19.1
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -7592,20 +7592,29 @@ var MakerJs;
         /**
          * Convert a chain to SVG path data.
          *
-         * @param chain Chain to convert.
+         * @param c Chain to convert.
          * @param offset IPoint relative offset point.
          * @param accuracy Optional accuracy of SVG path data.
+         * @param clockwise Optional flag to specify desired winding direction for nonzero fill rule.
          * @returns String of SVG path data.
          */
-        function chainToSVGPathData(chain, offset, accuracy) {
+        function chainToSVGPathData(c, offset, accuracy, clockwise) {
             function offsetPoint(p) {
                 return MakerJs.point.add(p, offset);
             }
-            var first = chain.links[0];
+            // If clockwise direction is specified, check if chain needs to be reversed
+            if (clockwise !== undefined) {
+                var isClockwise = MakerJs.measure.isChainClockwise(c);
+                if (isClockwise !== null && isClockwise !== clockwise) {
+                    c = MakerJs.cloneObject(c);
+                    MakerJs.chain.reverse(c);
+                }
+            }
+            var first = c.links[0];
             var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0]));
             var d = ['M', MakerJs.round(firstPoint[0], accuracy), MakerJs.round(firstPoint[1], accuracy)];
-            for (var i = 0; i < chain.links.length; i++) {
-                var link = chain.links[i];
+            for (var i = 0; i < c.links.length; i++) {
+                var link = c.links[i];
                 var pathContext = link.walkedPath.pathContext;
                 var fn = chainLinkToPathDataMap[pathContext.type];
                 if (fn) {
@@ -7617,7 +7626,7 @@ var MakerJs;
                     fn(fixedPath, offsetPoint(svgCoords(link.endPoints[link.reversed ? 0 : 1])), link.reversed, d, accuracy);
                 }
             }
-            if (chain.endless) {
+            if (c.endless) {
                 d.push('Z');
             }
             return d.join(' ');
@@ -7693,16 +7702,16 @@ var MakerJs;
                 }
                 pathDataByLayer[layer] = [];
                 function doChains(cs, clockwise) {
-                    cs.forEach(function (chain) {
-                        if (chain.links.length > 1) {
-                            var pathData = chainToSVGPathData(chain, offset, accuracy);
+                    cs.forEach(function (c) {
+                        if (c.links.length > 1) {
+                            var pathData = chainToSVGPathData(c, offset, accuracy, clockwise);
                             pathDataByLayer[layer].push(pathData);
                         }
                         else {
-                            single(chain.links[0].walkedPath, clockwise);
+                            single(c.links[0].walkedPath, clockwise);
                         }
-                        if (chain.contains) {
-                            doChains(chain.contains, !clockwise);
+                        if (c.contains) {
+                            doChains(c.contains, !clockwise);
                         }
                     });
                 }
@@ -10523,7 +10532,7 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.19.0";
+MakerJs.version = "0.19.1";
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
