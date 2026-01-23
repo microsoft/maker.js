@@ -70,24 +70,34 @@ namespace MakerJs.exporter {
     /**
      * Convert a chain to SVG path data.
      *
-     * @param chain Chain to convert.
+     * @param c Chain to convert.
      * @param offset IPoint relative offset point.
      * @param accuracy Optional accuracy of SVG path data.
+     * @param clockwise Optional flag to specify desired winding direction for nonzero fill rule.
      * @returns String of SVG path data.
      */
-    export function chainToSVGPathData(chain: IChain, offset: IPoint, accuracy?: number): string {
+    export function chainToSVGPathData(c: IChain, offset: IPoint, accuracy?: number, clockwise?: boolean): string {
 
         function offsetPoint(p: IPoint) {
             return point.add(p, offset);
         }
 
-        var first = chain.links[0];
+        // If clockwise direction is specified, check if chain needs to be reversed
+        if (clockwise !== undefined) {
+            var isClockwise = measure.isChainClockwise(c);
+            if (isClockwise !== null && isClockwise !== clockwise) {
+                c = cloneObject(c);
+                chain.reverse(c);
+            }
+        }
+
+        var first = c.links[0];
         var firstPoint = offsetPoint(svgCoords(first.endPoints[first.reversed ? 1 : 0]));
 
         var d: ISvgPathData = ['M', round(firstPoint[0], accuracy), round(firstPoint[1], accuracy)];
 
-        for (var i = 0; i < chain.links.length; i++) {
-            var link = chain.links[i];
+        for (var i = 0; i < c.links.length; i++) {
+            var link = c.links[i];
             var pathContext = link.walkedPath.pathContext;
 
             var fn = chainLinkToPathDataMap[pathContext.type];
@@ -102,7 +112,7 @@ namespace MakerJs.exporter {
             }
         }
 
-        if (chain.endless) {
+        if (c.endless) {
             d.push('Z');
         }
 
@@ -209,15 +219,15 @@ namespace MakerJs.exporter {
                 pathDataByLayer[layer] = [];
 
                 function doChains(cs: IChain[], clockwise: boolean) {
-                    cs.forEach(function (chain: IChain) {
-                        if (chain.links.length > 1) {
-                            var pathData = chainToSVGPathData(chain, offset, accuracy);
+                    cs.forEach(function (c: IChain) {
+                        if (c.links.length > 1) {
+                            var pathData = chainToSVGPathData(c, offset, accuracy, clockwise);
                             pathDataByLayer[layer].push(pathData);
                         } else {
-                            single(chain.links[0].walkedPath, clockwise);
+                            single(c.links[0].walkedPath, clockwise);
                         }
-                        if (chain.contains) {
-                            doChains(chain.contains, !clockwise);
+                        if (c.contains) {
+                            doChains(c.contains, !clockwise);
                         }
                     });
                 }
