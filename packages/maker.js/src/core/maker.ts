@@ -232,7 +232,8 @@ namespace MakerJs {
     export function extendObject(target: Object, other: Object) {
         if (target && other) {
             for (var key in other) {
-                if (typeof other[key] !== 'undefined') {
+                if (other.hasOwnProperty(key) && typeof other[key] !== 'undefined') {
+                    if (key === '__proto__' || key === 'constructor' || key === 'prototype') continue;
                     target[key] = other[key];
                 }
             }
