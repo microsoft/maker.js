@@ -39,7 +39,7 @@ and limitations under the License.
  *   author: Dan Marshall / Microsoft Corporation
  *   maintainers: Dan Marshall <danmar@microsoft.com>
  *   homepage: https://maker.js.org
- *   version: 0.19.1
+ *   version: 0.19.2
  *
  * browserify:
  *   license: MIT (http://opensource.org/licenses/MIT)
@@ -670,7 +670,9 @@ var MakerJs;
     function extendObject(target, other) {
         if (target && other) {
             for (var key in other) {
-                if (typeof other[key] !== 'undefined') {
+                if (other.hasOwnProperty(key) && typeof other[key] !== 'undefined') {
+                    if (key === '__proto__' || key === 'constructor' || key === 'prototype')
+                        continue;
                     target[key] = other[key];
                 }
             }
@@ -10532,7 +10534,7 @@ var MakerJs;
         ];
     })(models = MakerJs.models || (MakerJs.models = {}));
 })(MakerJs || (MakerJs = {}));
-MakerJs.version = "0.19.1";
+MakerJs.version = "0.19.2";
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"clone":2,"graham_scan":3,"kdbush":4}]},{},[]);
