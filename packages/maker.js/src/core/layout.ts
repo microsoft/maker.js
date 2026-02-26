@@ -181,9 +181,10 @@ namespace MakerJs.layout {
      * @param reversed Flag to travel along the chain in reverse. Default is false.
      * @param contain Flag to contain the children layout within the length of the chain. Default is false.
      * @param rotate Flag to rotate the child to mitered angle. Default is true.
+     * @param rotateAlongPath Flag to rotate the child along the layout path. Default is false. Works only if rotate is set true.
      * @returns The parentModel, for cascading.
      */
-    export function childrenOnChain(parentModel: IModel, onChain: IChain, baseline = 0, reversed = false, contain = false, rotated = true) {
+    export function childrenOnChain(parentModel: IModel, onChain: IChain, baseline = 0, reversed = false, contain = false, rotated = true, rotateAlongPath = false) {
         var result = getChildPlacement(parentModel, baseline);
         var cpa = result.cpa;
 
@@ -206,8 +207,15 @@ namespace MakerJs.layout {
                 relatives.shift();
             }
 
+            var alongPathAngles: number[] = [];
             //chain.toPoints always follows the chain in its order, from beginning to end. This is why we needed to contort the points input
-            points = chain.toPoints(onChain, relatives);
+            points = chain.toPoints(onChain, relatives, 
+                (chainPoints)=> {
+                    for(let i = 0; i < chainPoints.length; i++)
+                    {
+                        alongPathAngles.push(angle.ofPointInDegrees(chainPoints[i].link.endPoints[0], chainPoints[i].link.endPoints[1]));
+                    }
+            });
 
             if (points.length < cpa.length) {
                 //add last point of chain, since our distances exceeded the chain
@@ -231,7 +239,7 @@ namespace MakerJs.layout {
 
         if (cpa.length > 1) {
             cpa.forEach((cp, i) => {
-                cp.angle = angles[i];
+                cp.angle = rotateAlongPath ? alongPathAngles[i+1] : angles[i];
                 cp.origin = points[i];
             });
         } else {
