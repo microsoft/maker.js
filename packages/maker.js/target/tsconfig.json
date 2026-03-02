@@ -1,4 +1,4 @@
-﻿{
+{
   "compilerOptions": {
     "declaration": true,
     "outFile": "../dist/index.js",
@@ -59,6 +59,7 @@
     "../src/models/RoundRectangle.ts",
     "../src/models/Oval.ts",
     "../src/models/OvalArc.ts",
+    "../src/models/ArcWedge.ts",
     "../src/models/Rectangle.ts",
     "../src/models/Ring.ts",
     "../src/models/Belt.ts",
