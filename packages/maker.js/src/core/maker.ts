@@ -771,6 +771,23 @@ namespace MakerJs {
     }
 
     /**
+     * A point reference in a path.
+     */
+    export interface IChainLinkKeyPoint{
+        keyPoint: IPoint;
+        link: IChainLink;
+        ratio: number | undefined;
+    }
+
+    /**
+     * Callback signature for chain.toPoints().
+     */
+    export interface IChainPointsCallback {
+        
+        (chainPoints: IChainLinkKeyPoint[]): void;
+    }
+
+    /**
      * Reference to a model within a model.
      */
     export interface IRefModelInModel {
