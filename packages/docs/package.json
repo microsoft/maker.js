@@ -11,7 +11,7 @@
     "@types/opentype.js": "^0.7.0",
     "@types/pdfkit": "^0.7.36",
     "dxf-parser-typings": "^1.3.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^6.1.3"
   },
   "scripts": {
     "cleandocs": "rimraf ../../docs/docs/api",
