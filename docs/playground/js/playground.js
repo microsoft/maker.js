@@ -856,7 +856,8 @@ var MakerJsPlayground;
         document.body.appendChild(iframe);
         var scripts = ['js/require-iframe.js', '../external/bezier-js/bezier.js', '../external/opentype/opentype.js'];
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '<script>var paramValues=' + JSON.stringify(paramValues) + ';</script></head><body></body></html>');
+        iframe.contentWindow.document.write('<html><head>' + scripts.map(function (src) { return '<script src="' + src + '"></script>'; }).join() + '</head><body></body></html>');
+        iframe.contentWindow.paramValues = paramValues;
         iframe.contentWindow.document.close();
     }
     MakerJsPlayground.runCodeFromEditor = runCodeFromEditor;
