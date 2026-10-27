@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "makerjs-playground": {
+      "command": "node",
+      "args": ["tools/playground-mcp/server.mjs"],
+      "env": {
+        "PLAYGROUND_PORT": "8020"
+      }
+    }
+  }
+}
