@@ -15,6 +15,7 @@
     "prebuild": "npm run gen-cascades",
     "build": "tsc -p target && node ./target/build.js",
     "test": "mocha --timeout 15000",
+    "test-fillet": "mocha --timeout 15000 test/fillet.js",
     "prepublish": "node ./target/prepublish.js"
   },
   "maintainers": [
